@@ -79,10 +79,13 @@ Digitization already pushed the marginal reproduction costs and distribution cos
 
 \paragraph{Tasks have a recursive structure}
 Every task can be divided into smaller sub-tasks, creating a recursive structure.
+For a human, we think of anyone as being able to do a task as also being able to do every constituent sub-task.
+A machine might only be able to do some sub-set of those tasks. 
+
 And what constitutes a ``task'' is likely to move to higher and higher levels of abstraction: 
 From ``find typos in this ad copy'' to ``create ad copy'' to ``create a marketing campaign, launch, execute and monitor performance'' to ``increase sales'' to ``run the business profitably'' to $\ldots$.  
 
-\paragraph{The logic of comparative advantage and communication costs tend to create serial dependencies between tasks within jobs, creating an o-ring like production structure}
+\paragraph{The logic of comparative advantage and communication costs tend to create serial dependencies between tasks within jobs, creating an o-ring-like production structure}
 In the model, tasks within a job have serial dependencies. 
 There are economic forces that push this characterization to be true. 
 If a job lacked serial dependencies between tasks, we could likely reap more gains for specialization.
@@ -136,17 +139,16 @@ This is precisely the kind of task that the relative benefit of using an AI migh
 \paragraph{Generative AI substitutes ``maker labor'' and complements ``manager labor'' in the short-run.}
 In the model, there are just two broad ``kinds'' of labor: 
 Labor that does tasks, and labor that manages an AI doing that task. 
-While we might think there is some correlation between the cost of the machine doing the task and the human doing the task, this seems like an imprudent assumption.
+While we might think there is some correlation between the cost of the machine and the human doing the task, this seems like an imprudent assumption.
 
 We should not presume that tasks that are hard for humans are easy for computers or vice versa. 
 We do hard, time-consuming tasks because the output is valued. 
 Playing excellent chess \emph{seemed} like the kind of thing computers can do well. 
 Generating photorealistic art, playing diplomacy, and generating new programs on the fly did not seem like tasks where computers would show capabilities.
 
-All else equal, more capable management increases the number of tasks performed by an AI, holding AI capabilities fixed. 
+All else equal, more capable management increases the number of tasks an AI performs, holding AI capabilities fixed. 
 
 \paragraph{A automation chain is when constituent tasks are chained together without a human requesting an output or evaluating that output.}
-Two tasks can be done by humans without necessarily being chained together. 
 
 \paragraph{A ``job'' will disappear when every constituent task is subsumed by an automation chain.}
 Jobs can disappear when all the tasks in the sequence can be chained without human oversight between tasks. 
@@ -160,23 +162,22 @@ Language models have existed for years.
 One could have tried to use it for any number of tasks. 
 
 \paragraph{More capable models will require more expressive domain-specific languages, making ``asking'' a highly skilled task}
-The set of possible things an AI can return has to be as 
-Imagine I ask an AI to do some task.
-There is a set of all possible responses that AI could make, $R$.
-Let the index of that task be $i$.
-Let $A_i$ be the ``acceptable'' answers that could be returned. 
+%The set of possible things an AI can return has to  
+%Imagine I ask an AI to do some task.
+%There is a set of all possible responses that AI could make, $R$.
+%Let the index of that task be $i$.
+%Let $A_i$ be the ``acceptable'' answers that could be returned. 
 $q_i = Pr\{R(i) \in A_i\}$
 
-We might think of the space of all things that could be returned in response to some prompt, a subset of which is ``acceptable.'' 
+%We might think of the space of all things that could be returned in response to some prompt, a subset of which is %``acceptable.'' 
 $q = Pr(a \subset A)$.
-If every point in $A$ is reachable with a prompt, the expressiveness of the prompt language has to be as large as the space of answers. 
-What is the pre-image of $A$?
+%If every point in $A$ is reachable with a prompt, the expressiveness of the prompt language has to be as large as the space of answers. 
+%What is the pre-image of $A$?
 
-A new domain-specific language for asking a machine to create information goods.
-This new language is far closer to English. 
-It will not remain primarily written but will, over time, be multi-modal.
-The limit becomes how well you can express what you want, 
-
+%A new domain-specific language for asking a machine to create information goods.
+%This new language is far closer to English. 
+%It will not remain primarily written but will, over time, be multi-modal.
+%The limit becomes how well you can express what you want, 
 
 \paragraph{Useful simplifications in the characterizations of technology}
 
@@ -189,7 +190,22 @@ The rise of generative AI has challenged the plausibility of older simplificatio
 The fraction of tasks currently performed by workers in the US that might be done or augmented with LLMs is considerable \citep{eloundou2023gpts}.
 The other problem is that these new technologies have not yet had their economic impact, so our historical data can tell us little about how technology is likely to affect the economy. 
 
+\paragraph{Jobs with few tasks are more prone to full automation}
+
+\paragraph{Jobs where the next task is unpredictable are more resistant to full automation}
+
 \section{Task-based view}
+
+Imagine there are just two tasks, $q_1$ and $q_2$.
+The possibilities are
+\begin{enumerate}
+ \item Both done by human: $(1)(2)$
+ \item Both done by machine, but not chained: $<1><2>$
+  \item Both done by machine and chained: $<1|2>$
+  \item One by machine, 
+
+ 
+\end{enumerate}
 
 \subsection{Definition of a ``task''}
 A natural question is the delineation of these tasks---where does one begin and the other end? 
@@ -287,6 +303,54 @@ We chunk to tasks if
 \end{align}
 which is true when $q_2 + q_1 > 1$, otherwise they should be split. 
 \end{proof}
+
+\begin{lemma}
+A $T^*$ cannot have a chained machine sequence with sum of $q$ values less than 1.
+\end{lemma}
+\begin{proof}
+Suppose we have a chain in $T^*$ with $Q = q_1 q_2\ldots q_k$.
+WLOG, take the smallest $q$ in the chain, $q_\epsilon$.
+\begin{align}
+ \frac{1}{q_{\epsilon}} + \frac{1}{Q/q_{\epsilon}} < \frac{1}{Q}\\
+ \frac{Q/q_{\epsilon}}{Q} + \frac{q_{\epsilon}}{Q} < \frac{1}{Q}\\
+ Q/q_{\epsilon} + q_{\epsilon} < 1 \\
+ Q + q_\epsilon^2 < q_{\epsilon}
+\end{align}
+
+\end{proof}
+
+\subsection{Cost minimization problem: shortest path through a tree}
+The cost minimization each $A$ node splits into three possibilities: a) have a human do the task, b) have a machine do the task, but do not chain it with the previous task, (c) add another task and chain it. 
+Figure\ref{fig:tree} illustrates the tree. 
+The cost minimization problem is to find the shortest path through the tree. 
+
+We can prune the tree by removing all nodes where $\human{i}$ is in the label, but $\cost{\human{i}} > \cost{\machine{i}}$ and the AI-equivalent, i.e., $\machine{i}$ is in the label but $\cost{\human{i}} < \cost{\machine{i}}$.
+We can also prune all nodes where there is a machine sequence $\machine{K}$ and $\sum_{k \in K} q_k < 1$ because such a node can be split up.
+
+\begin{figure}
+\caption{The possible production scenarios with an $n=2$ task job}
+\label{fig:tree}
+\begin{tikzpicture}[
+  level/.style={sibling distance=60mm/#1}
+]
+\node[circle, draw] (S) at (0,0) {Job}
+  child {node[circle, draw] (A) {$\machine{1}$}
+    child {node[circle, draw] (AA) {$\machine{1}\machine{2}$}}
+    child {node[circle, draw] (AAC) {$\machine{1|2}$}} 
+    child {node[circle, draw] (AH) {$\machine{1}\human{2}$}} 
+  }
+  child {node[circle, draw] (H) {$\human{1}$}
+    child {node[circle, draw] (HA) {$\human{1}\machine{2}$}}
+    child {node[circle, draw] (HH) {$\human{1}\human{2}$}}
+  };
+\path (S) edge node[midway, above] {AI} (A);
+\path (S) edge node[midway, above] {human} (H);
+\path (A) edge node[midway, above] {chained} (AAC);
+\end{tikzpicture}
+\end{figure}
+
+When $n = 1$, there are just two child nodes, one human, one AI: $H_1 = 1$, $A = 1$.
+With $A_{n+1} = 3 A_{n}$ and $H_n = 2 H_n$
 
 \paragraph{If you should chunk a task, it should be with the relatively more reliable process}
 
