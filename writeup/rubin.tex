@@ -333,8 +333,10 @@ All else equal, more capable management increases the number of tasks an AI perf
 Being adjacent to a highly automatable task will tend to ``pull'' that task into an automated chain.
 
 \section{A model of production}
-To start, imagine a job that consists of just one task, task 1.
+To start, imagine a job that consists of just a single task: task 1.
 A human can do the task at a cost of $c_h$.
+To indicate a task being done by a human, we will use the notation $\human{1}$.
+
 An AI that can \emph{try} do the task instantly at zero cost and if ``prompted'' by a human.
 However, it it only succeeds with probability $q$, given the optimal effort by the human at ``prompting.''
 This $q$ captures the model's capability but also reflects the capability of the human at prompting and judging.
@@ -343,6 +345,8 @@ Let $c_p + c_e = c_m$, with $m$ for ``management.''
 
 If the machine fails at a task, it is kicked back for the human to try again with another prompt, at another cost of $c_p$ and then $c_e$.
 Success and failures are independent, and so it always makes sense to keep trying with the AI, conditional upon it making sense to try once.
+For a task don by a machine, we use the notation $\machine{\cdot}$.
+As a memory aid, note the curved parenthesis captures of $\human{\cdot{}}$ the greater ``flexibility'' of humans. 
 Figure~\ref{fig:flow} illustrates the situation.
 
 \begin{figure}
@@ -350,10 +354,7 @@ Figure~\ref{fig:flow} illustrates the situation.
 \includegraphics[width = \textwidth]{flow.png}
 \end{figure}
 
-To indicate a task being done by a human, we will use the notation $\human{\cdot}$.
-For a machine, $\machine{\cdot}$.
-As a memory aid, note the curved parenthesis captures of $\human{\cdot{}}$ the greater ``flexibility'' of humans. 
-Lemma~\ref{lemma:when} gives the intuitive criteria for automation when considering a task in isolation: is $c_h > c_m / q$.
+Lemma~\ref{lemma:when} gives the criterion for automation when considering a task in isolation: is $c_h > c_m / q$.
 
 \begin{lemma} \label{lemma:when}
  For a given task, it is cheaper to automate if $\cost{\machine{1}} < \cost{\human{1}}$, which happens when $c_m / q < c_h$.
@@ -366,18 +367,19 @@ Lemma~\ref{lemma:when} gives the intuitive criteria for automation when consider
   \end{align}
 and so the task will be automated if $q > \frac{c_m}{c_h}.$
 \end{proof}
-Note that we are ignoring capital costs---all that are present are labor costs.
-Note that with a high capable AI $(q = 1)$ that is very easy to use ($c_m \approx 0$), costs can be very low.
 
-This decision criterion has some intuitive properties..
+This decision criterion has some intuitive properties.
 The higher the human performance costs, the more likely a worker is to try an AI, even a fairly incapable one (i.e., low $q$).
 The lower the prompting and evaluation costs, the more likely an AI will be used.
 If we think of novice workers as having higher own-performance costs, or high $c_h$ values, they might be more likely to use an AI.
 
-In isolation, raising $q$ has two effects on labor.
-It displaces direct doing labor, as it is more likely that $c_m/q < c_h$, but increases the demand for management-labor of the extensive margin, as more tasks flip from being done by a human to being done by a machine.
+Note that we are ignoring capital costs---all that are present are labor costs.
+Note that with a high capable AI $(q = 1)$ that is very easy to use ($c_m \approx 0$), costs can be very low.
 
-This constant $q$ is a simplification, as we might expect the ``first'' $q$ to be low for a given prompt, but then increase with each subsequent prompt that is a refinement.
+In isolation, raising $q$ has two effects on labor.
+It displaces direct labor, as it is more likely that $c_m/q < c_h$, but increases the demand for management-labor of the extensive margin, as more tasks flip from being done by a human to being done by a machine.
+
+This constant $q$ even for a single task is a simplification, as we might expect the ``first'' $q$ to be low for a given prompt, but then increase with each subsequent prompt that is a refinement.
 However, it will still have a finite expectation.
 
 It seems likely, empirically, that prompting costs are sub-linear with respect to $c_h$ for many tasks.
@@ -385,19 +387,21 @@ The prompt ``write me a haiku about economics'' is about the same effort as ``wr
 To the extent $c_h$ and $c_e$ vary less than $c_h$, we should expect a size bias, with more attempts to use for larger tasks in the $c_h$ sense.  
 
 \subsection{A job with two tasks}
-Now imagine two tasks, 1 and 2, with AI success probabilities $q_1$ and $q_2$, respetcively.
-The 4 human/machine possibilities are: both are done by human, $\cost{\human{1}\human{2}} = 2 c_h$; both done by machine, $\cost{\machine{1}\machine{2}} = c_m (1/q_1 + 1/q_2)$; one by a machine and two by hand, $\cost{\machine{1}\human{2}} = c_m/q_1 + c_h$; and one by hand and two by machine $\cost{\human{1}\machine{2}} = c_h + c_m/q_2$.
+Now imagine two tasks, 1 and 2, with AI success probabilities $q_1$ and $q_2$, respectively.
+The 4 human/machine possibilities are: both tasks are done by human, $\cost{\human{1}\human{2}} = 2 c_h$;
+both are done by machine, $\cost{\machine{1}\machine{2}} = c_m (1/q_1 + 1/q_2)$;
+task 1 by a machine and task 2 by hand, $\cost{\machine{1}\human{2}} = c_m/q_1 + c_h$; and task 1 by hand and task 2 by machine $\cost{\human{1}\machine{2}} = c_h + c_m/q_2$.
 
-We now introduce another possibility: chaining of AI tasks.
-AI tasks can be chained together, creating a new task with a success probability equal to the product of the success probabilities of the constituent tasks.
-The chained-together task still has human prompting and evaluation at the start and end.
-Notation-wise, a ``$|$'' indicates chained-together tasks, e.g.,  $\machine{1|2}$ indicates a machine does tasks 1 and 2.
-The ``$|$'' is meant to evoke the *nix pipe.
+We now introduce another possibility: the ``chaining'' of AI tasks.
+Doing this creates a new task with a success probability equal to the product of the success probabilities of the constituent tasks.
+It is similar to \cite{kremer1993}'s model of production.
+The chained-together task still has human prompting and evaluation at the start and end, inheriting the $c_p$ of the first task and the $c_e$ of the last task.
+Notation-wise, a ``$|$'' indicates chained-together tasks, e.g.,  $\machine{1|2}$ indicates a machine does tasks 1 and 2 in sequence.
 This creates a fifth possibility in the two-task scenario, $\cost{\machine{1|2}} = c_m/(q_1q_2)$.
 
-We can think of $q_k$ as the probability of success when it gets a perfect input.
+For a given task $k$, we can think of $q_k$ as the probability of success when it gets a perfect input.
 When a human did the preceeding task or a human managed the AI process, $\machine{k-1}$ or $\human{k-1}$, the task is done perfectly.
-In contrast, when the asks are chained, $\machine{k-1|k}$, there is no quality assurance, and so the probability that the $k$ task gets a perfect hand-off is only $q_{k-1}$.
+In contrast, when the asks are chained, $\machine{k-1|k}$, there is no quality assurance between tasks, and so the probability that the $k$ task gets a perfect hand-off is only $q_{k-1}$.
 
 Figure~\ref{fig:diagram} illustrates the possibilities with the unit square, with $q_1$ on the x-axis and $q_2$ on the y-axis.
 It is a contour plot showing costs of production.
@@ -405,7 +409,7 @@ For purposes of example, both tasks have same human cost and management costs, $
 The unit square is divided into five regions, corresponding to the five possibilities for a two-task job.
 
 \begin{figure}
-  \caption{Two task example} \label{fig:diagram}
+  \caption{Production costs with a two task job} \label{fig:diagram}
   \centering
     \includegraphics[width = 0.7 \linewidth]{images/diagram.pdf}
 \end{figure}
@@ -445,7 +449,7 @@ If we do the first by hand and automate the second, we have total costs of $c_h 
 Thus, even though humans have a comparative advantage in a task, we might chain it with another task and manage the combined task.
 \end{proof}
 
-\subsection{When to chain}
+\subsection{When to chain to tasks}
 The decision to chain two automated tasks is simple: chain if $q_1 + q_2 > 1$.
 This is given in Lemma~\ref{lemma:chain}.
 
@@ -467,10 +471,10 @@ A related implication of Lemma~\ref{lemma:chain} is that the success probabiliti
 A cost-minimizing sequence, $T^*$, cannot have a chained machine sequence with sum of $q$ values less than 1.
 \end{lemma}
 \begin{proof}
-  Suppose we have a chain in $T'$ with $Q = q_1 q_2\ldots q_k$ and that $\sum_k q_k < 1$ and that it is cost-minimiziing i.e., $T' = T^*$.
-  WLOG, take the smallest $q$ internal to the chain and call it $q_\epsilon$.
-  We can treat the situation as a three-chain problem, $q_l$, $q_\epsilon$ and $q_r$, with $l$ and $r$ for left and right.
-  The fully automated chain has greater costs that the ``separated'' chain $\cost{\machine{l|\epsilon|r}} > \cost{\machine{l}\machine{\epsilon}\machine{r}}$ if
+Suppose we have a chain in $T'$ with $Q = q_1 q_2\ldots q_k$ and that $\sum_k q_k < 1$ and that it is cost-minimiziing i.e., $T' = T^*$.
+Take the smallest $q$ internal to the chain and call it $q_\epsilon$.
+We can treat the situation as a three-chain problem, $q_l$, $q_\epsilon$ and $q_r$, with $l$ and $r$ for left and right.
+The fully automated chain has greater costs that the ``separated'' chain $\cost{\machine{l|\epsilon|r}} > \cost{\machine{l}\machine{\epsilon}\machine{r}}$ if
 \begin{align}
   \frac{1}{q_lq_{\epsilon}q_r} > \frac{1}{q_l} + \frac{1}{q_\epsilon} + \frac{1}{q_r}  \nonumber \\
    \frac{1}{q_lq_{\epsilon}q_r} > \frac{q_r q_\epsilon}{q_l} + \frac{q_rq_l}{q_\epsilon} + \frac{q_lq_\epsilon}{q_r} \nonumber \\
@@ -483,7 +487,7 @@ Therore, $T'$ is not the cost-minimizing sequence.
 Lemma~\ref{lemma:sum1} will prove useful later for computing cost-minimizing allocations, as it allows us to further prune the tree.  
 
 \begin{lemma} \label{lemma:pair_better}
- If a task can be combined with either a more or less reliable cahin, if it should be combined, it should be combined with the more reliable chain.
+If a task can be combined with either a more or less reliable chain, if it should be combined, it should be combined with the more reliable chain.
  If $\cost{\machine{1}} > \cost{\machine{3}}$, then $\cost{\machine{1}\machine{2|3}} < \cost{\machine{1|2}\machine{3}}$.
  \end{lemma}
 \begin{proof}
@@ -499,32 +503,29 @@ Assuming you will chunk left or right, which chunk to you choose?
 Humans can ``hand-over'' tasks to an AI---but can the AI hand over tasks to the human?
 In the model, when a chain goes from $\human{0}\machine{1|2}\human{3}$, we can think of the human as handing off tasks 1 and 2 to the machine, but we can also think of the machine as handing off task 3 to a human.
 
-\subsection{Multiple tasks: A job}
+\subsection{Multiple tasks}
 Now we will consider a job that is a sequence of tasks to be performed $1, 2, \ldots n$.
 Here, we will focus on the computational aspects of the problem.
 
 Let $C_h$ be a vector of costs to a human for performing each task.
-Consider an $n = 5$ job. 
-If $\machine{1|2}\human{3}\human{4}\machine{5}$, it would indicate tasks 1 and 2 done in a chain by a machine.  
-The per-pass success probability of $\machine{1|2}$ is $q_1q_2$. 
-Tasks 3 and 4 would be done by humans, while task 5 would be done by an AI. 
-Total costs for the good would be $\frac{c_m}{q_1 q_2} + c_{h(3)} + c_{h(4)} + \frac{c_m}{q_5}$.
-
+%% Consider an $n = 5$ job. 
+%% If $\machine{1|2}\human{3}\human{4}\machine{5}$, it would indicate tasks 1 and 2 done in a chain by a machine.  
+%% The per-pass success probability of $\machine{1|2}$ is $q_1q_2$. 
+%% Tasks 3 and 4 would be done by humans, while task 5 would be done by an AI. 
+%% Total costs for the good would be $\frac{c_m}{q_1 q_2} + c_{h(3)} + c_{h(4)} + \frac{c_m}{q_5}$.
 Note that with an $n$ task jobs, there are $2^{n-1}$ possible task partitions.
-Each singleton can be done by a human or a machine; each sequence is done only by a machine.
+And each singleton can be done by a human or a machine; each sequence is done only by a machine.
 
 The cost minimization problem is equilvalent to finding the shortest path in a tree.
+To grow the tree, start with the first task.
+It can be automated or done by a human.
+It then has up to two children---the next task is either machine or human, and if machine, it could also be part of a chain.
 Figure\ref{fig:tree} illustrates the tree. 
-The cost minimization problem is to find the shortest path through the tree. 
 
-At each step, a node has three possibilities:
-H) have a human do the task,
-M) have a machine do the task, but do not chain it with the previous task,
-C) add another task and chain it.
-However, it is either $H$ or $M$, not both, and so the tree grows, worse-cast to $2^n$ children.
-This has an exponential computation complexity---it is unclear if there is a polynomial time algorithm.
-The fact that an $H$ node can only have one child helps.
-And machine chains tend to end because of Lemma\ref{lemma:sum1}.
+The tree grows to, worse-cast, $2^n$ children where $n$ is the number of tasks.
+It would be less than this because human-done nodes only have one child: either machine or human.
+Growing the tree has an exponential computation complexity---it is unclear if there is a polynomial time algorithm.
+It might also be possible to prune certain leafs using the logic of Lemma~\ref{lemma:sum1}.
 
 \begin{figure}
 \caption{The possible production scenarios with an $n=2$ task job}
@@ -547,15 +548,6 @@ And machine chains tend to end because of Lemma\ref{lemma:sum1}.
 \path (A) edge node[midway, above] {chained} (AAC);
 \end{tikzpicture}
 \end{figure}
-
-\subsection{So-so technologies}
-Marginal tasks are those where $\cost{\machine{k}} \approx \cost{\human{k}}$.
-If in constrast, $q = 0$ and goes to $1$, then $c_h - c_m$ could be quite large.
-But the more exciting possibility is when we can chain.
-Suppose we have $q_1 = 0$ and $q_3 = 0$ and $q_2 = 1$ and $q_4 = 1$.
-We have $\human{1}\machine{2}\human{3}\machine{4}$, as a cost of $2c_h + 2c_m$.
-If can improve $q_1$ and $q_3$ to 1, we can do $\machine{1}\machine{2}\machine{3}\machine{4}$,  we can get cost savings of $2 (c_h - c_m)$, leaving us with costs of $c_m$.
-But if we consider the chaining possibility, letting us go to $\machine{1|2|3|4} $, we can go from $2c_h + 2c_m$ to just $c_m$. 
 
 \section{Product market sketch}
 Suppose there are $N_K$ tasks an economy which can be configured into $N_S$ slots.
@@ -589,8 +581,8 @@ Demand for other skills that appear in $I$ jobs also decreases due to automation
 Consider that with $k$ automated, there are other workers who could now potentially compete for jobs in $I$.
 Let $I_H$ bet the set of jobs where $k$ was the only skill workers there were ``missing.''
 These are Rick Rubins.
-This is a positive labor supply shock to the $I$-tasks market, further pushing down costs.
-But it is a negative supply shock in the $I_H$ market, raising costs there.
+This is a positive labor supply shock to the $I$-tasks market.
+But it is a different supply shock in the $I_H$ markets---those that were paying higher wages will likely see an increase and wages wall, those that were paying lower wages will likely see wages rise---it depends on where they were prior to the collapse.
 This is just Baumol's cost disease due to rising productivity in the $I$ sector.
 By raising $c_h$ in $I_H$ sector, that increases the incentives to invest in automation.
 
@@ -638,6 +630,15 @@ Increases in capabilities of AI (lower $q$) (a) deceases costs of existing goods
 \end{lemma}
 
 \section{Discussion}
+
+\subsection{So-so technologies}
+Marginal tasks are those where $\cost{\machine{k}} \approx \cost{\human{k}}$.
+If in constrast, $q = 0$ and goes to $1$, then $c_h - c_m$ could be quite large.
+But the more exciting possibility is when we can chain.
+Suppose we have $q_1 = 0$ and $q_3 = 0$ and $q_2 = 1$ and $q_4 = 1$.
+We have $\human{1}\machine{2}\human{3}\machine{4}$, as a cost of $2c_h + 2c_m$.
+If can improve $q_1$ and $q_3$ to 1, we can do $\machine{1}\machine{2}\machine{3}\machine{4}$,  we can get cost savings of $2 (c_h - c_m)$, leaving us with costs of $c_m$.
+But if we consider the chaining possibility, letting us go to $\machine{1|2|3|4} $, we can go from $2c_h + 2c_m$ to just $c_m$. 
 
 \subsection{What does ``full automation'' mean?}
 Full automation consists of finding places in the production process where the costs of replacing the asking and evaluation steps with an AI are economical because the quality is sufficiently good and the cost of an evaluation failure is relatively low. 
