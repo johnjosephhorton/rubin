@@ -1,4 +1,6 @@
 import random 
+import numpy as np
+import pandas as pd
 
 def random_between(a, b):
     return a + (b-a)*random.random()
@@ -10,6 +12,7 @@ class Task:
         self._parent = None
         self.total_cost = 0
         self.notation = "root" 
+        self.human_count = 0
 
     def add_child(self, child):
         self.children.append(child)
@@ -64,9 +67,11 @@ class Job:
             if ch < cm/q:
                 task = Task("HUMAN")
                 task.marginal_cost = ch
+                task.human_count = node.human_count + 1 
                 child_notation = f"({task_number})"
             else:
                 task = Task("MACHINE")
+                task.human_count = node.human_count
                 task.marginal_cost = cm/q
                 task.chain_product = q # we need this for the machine-chain calculation
                 child_notation = f"<{task_number}>"
@@ -85,6 +90,7 @@ class Job:
                 task.add_parent(node)
                 task.chain_product = q * node.chain_product
                 task.marginal_cost = (1.0 / (node.chain_product)) * (1 - q)/(q)
+                task.human_count = node.human_count
                 # remove the last character from the sting, and add the new notation
                 child_notation = f"| {task_number}>"
                 task.notation = node.notation[:-1] + child_notation
@@ -95,22 +101,83 @@ class Job:
         return node    
  
 
-import numpy as np 
+class Simulation: 
+    # n is how many tasks
+    def __init__(self, cm, qmin, cmin, cmax, n):
+        self.cm = cm
+        self.qmin = qmin
+        self.cmin = cmin
+        self.cmax = cmax
+        self.n = n
+        self.costs = [] 
+        self.human_count = []
+    def run(self, num_simulations):
+        for _ in range(num_simulations):      
+            J = Job.fromRandom(
+                cm = self.cm, 
+                qmin = self.qmin, 
+                cmin = self.cmin, 
+                cmax = self.cmax, n = self.n)
+            J.GrowTree()
+            self.costs.append(J.min_cost)
+            self.human_count.append(J.best_node.human_count)
+
+    @property
+    def avg_human_count(self):
+        return np.average(self.human_count)
+
+    @property
+    def avg_cost(self):
+        return np.average(self.costs)
+    
+    @property
+    def min_cost(self):
+        return np.min(self.costs)
+    
+    @property
+    def max_cost(self):
+        return np.max(self.costs)
+    
+    @property
+    def std_cost(self):
+        # compute standard deviation of costs
+        return np.std(self.costs) 
+
+    def parameters_as_dictionary(self):
+        return dict({"cm": self.cm, "qmin": self.qmin, "cmin": self.cmin, "cmax": self.cmax, "n": self.n})
+        
+    def summary_stats(self):
+        return dict({"avg_cost": self.avg_cost,"max_cost": self.max_cost, "min_cost": self.min_cost, "std_cost": self.std_cost, 
+                     "avg_human_count": self.avg_human_count})
+
+    def results(self):
+        params = self.parameters_as_dictionary()
+        stats = self.summary_stats()
+        return {**params, **stats}
+
+
 
 if __name__ == "__main__":
-    costs1 = []
-    for _ in range(10000):
-        J = Job.fromRandom(cm = 1, qmin = 0.6, cmin = 0.1, cmax = 2, n = 10)
-        J.GrowTree()
-        costs1.append(J.min_cost)
-    costs2 = []
-    for _ in range(10000):
-        J = Job.fromRandom(cm = 1.1, qmin = 0.6, cmin = 0.1, cmax = 2, n = 10)
-        J.GrowTree()
-        costs2.append(J.min_cost)
+    num_sim = 100
+    results = [] 
+    nrange = range(2, 11)
+    # create range of values between start and stop, spaced by epsilon
+    cmin_range = np.arange(0.1, 2, 0.1)
+    qmin_range = np.arange(0.1, 1, 0.1)
+    cm_range = np.arange(0.1, 2, 0.1)
+    n_range = range(2, 11)
+    for cmin in cmin_range:
+        print(f"On cmin {cmin}")
+        for qmin in qmin_range:
+            for cm in cm_range:
+                for n in n_range:
+                    S = Simulation(cm = cm, qmin = qmin, cmin = cmin, cmax = 2, n = n)
+                    S.run(num_sim)
+                    results.append(S.results())
 
-    c1 = np.average(costs1)
-    c2 = np.average(costs2)
-    pct_change = (c2 - c1)/c1
-    print(pct_change)
-       
+    # write a list of dictionaries to a pandas dataframe
+    df = pd.DataFrame(results)
+    # write the dataframe to a csv file
+    df.to_csv("../computed_objects/simulation_results.csv")
+
+    J = Job.fromRandom(cm = 1, qmin = 0.1, cmin = 0.1, cmax = 2, n = 3)

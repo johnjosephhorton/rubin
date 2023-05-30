@@ -4,6 +4,9 @@ project_name = rubin
 tables = 
 plots = 
 
+computed_objects/simulation_results.csv:
+	cd ../analysis && python min_cost.py
+
 parameters.tex:
 	touch parameters.tex
 
