@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from LLM import LanguageModel
+import json
 
 from jinja2 import Template
 from jinja2 import Environment, FileSystemLoader
@@ -85,6 +86,25 @@ class Task(Object):
         q = Question(library.get_template_string("llm_rubin.txt"))
         return self.ask(q)
 
+def integer_to_base(n, base):
+    if n == 0:
+        return (0,)
+    digits = []
+    while n != 0:
+        digit = n % base
+        digits.append(digit)
+        n //= base
+    return tuple(reversed(digits))
+
+def alpha_label_generator():
+    index = 0
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    while True:
+        digits = integer_to_base(index, 26)
+        label = "".join([letters[d] for d in digits])
+        yield label
+        index += 1
+
 class Occupation(Object):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -95,6 +115,41 @@ class Occupation(Object):
             if task.onetsoc_code == self.onetsoc_code:
                 self.tasks.append(task)
 
+    @staticmethod
+    def append_labels(task_list):
+        """Takes a list of tasks and returns a string with labels and a dictionary mapping labels to tasks.
+        E.g., a. bake a cake\nb. make a cake\nc. make a pie\n
+        """
+        results = ""
+        d = dict()
+        g = alpha_label_generator()
+        for task in task_list:
+            label = next(g)
+            results += f"{label}. {task}\n"
+            d[label] = task
+        return results, d
+        
+    def task_grouping(self):
+        "Uses the ocupations assigned to tasks"
+        tasks = [t.task for t in self.tasks]
+        task_list, d = self.append_labels(tasks)
+        groupings = self.get_groupings(task_list)
+        return groupings, d
+
+    def get_groupings(self, task_list):
+        q = Question(library.get_template_string("task_grouping.txt"))
+        groupings = self.ask(q, {"task_list": task_list})
+        return groupings       
+
+    @staticmethod
+    def clean_groupings(groupings):
+        j = json.loads(groupings)
+        s = j["groupings"].split(")(")
+        k = [l.replace("(", "").replace(")", "") for l in s]
+        m = [l.split(",") for l in k]
+        n = [[l.strip() for l in o] for o in m]
+        return n
+    
     def assess_tasks(self):
         self.scores = {}
         for task in self.tasks:
@@ -105,9 +160,10 @@ class Occupation(Object):
             self.scores[task.task] = {'score_rubin': score_rubin, 'score_llm': score_llm}
 
     def task_ordering(self, task1, task2):
-        d = dict{"task1": task1, "task2": task2}
+        d = dict({"task1": task1, "task2": task2})
         q = Question(library.get_template_string("task_ordering.txt"))
         return self.ask(q, d)
+    
 
 
 if __name__ == "__main__":
@@ -119,7 +175,7 @@ if __name__ == "__main__":
     L = LanguageModel(**params)
     library = PromptLibrary()
 
-    if True:
+    if False:
         task1 = Task(**{'task': "Mix ingredients"})
         task1.add_LLM(L)
         library = PromptLibrary()
@@ -131,7 +187,7 @@ if __name__ == "__main__":
         print(task1.ask(q1))
         print(task1.ask(q2))
 
-    if False:
+    if True:
         table_name = 'task_statements'
         TableClass = Base.classes[table_name]
         session = Session(engine)
@@ -151,6 +207,22 @@ if __name__ == "__main__":
         index = int(input(f'Enter a number between 1 and {len(Occupations)}: '))
         code, o = list(Occupations.items())[index]
 
+        params = dict({
+            "model": "gpt-4",
+            "family": "openai",
+            "temperature": 1.0
+        })
+        L = LanguageModel(**params)
+        o.add_LLM(L)
+        print("Task grouping")
+        #print(o.get_task_list())
+        groupings, d = o.task_grouping()
+        cleaned = o.clean_groupings(groupings)
+        print(cleaned)
+
+
+
+    if False:
         params = dict({
             "model": "gpt-3.5-turbo",
             "family": "openai",
