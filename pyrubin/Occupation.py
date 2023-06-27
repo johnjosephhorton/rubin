@@ -137,12 +137,14 @@ class Occupation(Object):
         return groupings, d
 
     def get_groupings(self, task_list):
+        "Gets the groupings of tasks from the LLM - only works with GPT-4"
         q = Question(library.get_template_string("task_grouping.txt"))
         groupings = self.ask(q, {"task_list": task_list})
         return groupings       
 
     @staticmethod
     def clean_groupings(groupings):
+        "Gets the groupings from the LLM and turns them into usable lists of lists"
         j = json.loads(groupings)
         s = j["groupings"].split(")(")
         k = [l.replace("(", "").replace(")", "") for l in s]
