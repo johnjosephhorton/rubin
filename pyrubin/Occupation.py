@@ -12,6 +12,37 @@ from jinja2 import Environment, FileSystemLoader
 
 from Question import Question
 
+# Goals
+# 1. Group tasks into groups of similar tasks
+# 2. Get the rigth sequencing of tasks for a given occupation
+# 3. Get labels on each task 
+
+def truncate_string(s, max_length = 90):
+    if len(s) > max_length:
+        return s[:max_length] + "..."
+    else:
+        return s
+
+def integer_to_base(n, base):
+    if n == 0:
+        return (0,)
+    digits = []
+    while n != 0:
+        digit = n % base
+        digits.append(digit)
+        n //= base
+    return tuple(reversed(digits))
+
+def alpha_label_generator():
+    "Generates a, b, c, ... aa, ab, ac, ... for labeling tasks"
+    index = 0
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    while True:
+        digits = integer_to_base(index, 26)
+        label = "".join([letters[d] for d in digits])
+        yield label
+        index += 1
+
 class PromptLibrary:
     def __init__(self, template_dir = "prompt_templates"):
         self.template_dir = template_dir
@@ -64,7 +95,7 @@ class Object:
         self.prompt_library = prompt_library
 
     def __repr__(self):
-        return f'<Object {self.__class__.__name__}>'
+        return f'<{self.__class__.__name__}>'
 
 class Task(Object):
 
@@ -73,6 +104,7 @@ class Task(Object):
         self.occupation = None
     
     def add_occupation(self, Occupations):
+        "Checks to see if this occupation requires this task (presumes one occupation per task)"
         for _, occupation in Occupations.items():
             if occupation.onetsoc_code == self.onetsoc_code:
                 self.occupation = occupation
@@ -86,24 +118,6 @@ class Task(Object):
         q = Question(library.get_template_string("llm_rubin.txt"))
         return self.ask(q)
 
-def integer_to_base(n, base):
-    if n == 0:
-        return (0,)
-    digits = []
-    while n != 0:
-        digit = n % base
-        digits.append(digit)
-        n //= base
-    return tuple(reversed(digits))
-
-def alpha_label_generator():
-    index = 0
-    letters = "abcdefghijklmnopqrstuvwxyz"
-    while True:
-        digits = integer_to_base(index, 26)
-        label = "".join([letters[d] for d in digits])
-        yield label
-        index += 1
 
 class Occupation(Object):
     def __init__(self, **kwargs):
@@ -144,7 +158,7 @@ class Occupation(Object):
 
     @staticmethod
     def clean_groupings(groupings):
-        "Gets the groupings from the LLM and turns them into usable lists of lists"
+        "Gets the groupings from the LLM and turns them into usable lists of lists."
         j = json.loads(groupings)
         s = j["groupings"].split(")(")
         k = [l.replace("(", "").replace(")", "") for l in s]
@@ -219,8 +233,16 @@ if __name__ == "__main__":
         print("Task grouping")
         #print(o.get_task_list())
         groupings, d = o.task_grouping()
+        print(d)
         cleaned = o.clean_groupings(groupings)
         print(cleaned)
+
+        print(f"Task decomposition for: {o.title}")
+
+        for groups in cleaned:
+            print("Cluster:")
+            for task in groups:
+                print("\t" + task + "." + truncate_string(d[task]))
 
 
 

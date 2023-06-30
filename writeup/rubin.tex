@@ -631,6 +631,50 @@ An improvement in AI capabilities does not increase costs: ${\cost{T^*_{Q'}} \le
 Increases in capabilities of AI (lower $q$) (a) deceases costs of existing goods, (b) expand the goods that are economical to produce in equilibrium, (c) give workers more income to purchase goods.  
 \end{lemma}
 
+\section{Model simulations}
+
+I ran a simulation of many ``jobs'' with chained tasks and found
+the lowest cost combination under different assumptions about human
+and machine labor.
+Human costs were fixed $c_h = 1$. 
+I draw the $q$ from a unform distribution between $U[q_{min}, 1]$,
+varying $q_{min}$.
+The number of tasks in the chain was $n$.
+$c_m$ was changed in each simulation, ranging from $0.1$ to $2$, in
+$0.1$ increments.
+The simulation parameters are: 
+
+\begin{verbatim}
+    num_sim = 100
+    nrange = range(2, 11)
+    cmin_range = np.arange(0.1, 2, 0.1)
+    qmin_range = np.arange(0.1, 1, 0.1)
+    cm_range = np.arange(0.1, 2, 0.1)
+    n_range = range(2, 11)
+\end{verbatim}
+
+You can see how in the simulation, average task costs fall with longer chains.
+This is presumably because longer chains can be full automated.
+
+When AI management costs are higher, more tasks are done by humans.
+When AI quality is higher, more tasks are done by machines.
+
+\input{tables/simulation_results.tex}
+
+Figure~\ref{fig:avg_cost_by_management_cost} shows that average prices increase in management costs (unsurprisingly) but that that the relationship appears to be either concave or convex depending on the baseline level of model quality.
+
+\begin{figure}
+\caption{Average costs versus management costs, by model quality} \label{fig:avg_cost_by_management_cost}
+\includegraphics[width = \textwidth]{plots/avg_cost_by_management_cost.pdf}
+\end{figure}
+
+
+\begin{figure}
+\caption{Average costs versus management costs, by model quality} \label{fig:fraction_of_tasks_done_by_human}
+\includegraphics[width = \textwidth]{plots/fraction_of_tasks_done_by_human.pdf}
+\end{figure}
+
+
 \section{Discussion}
 
 \subsection{So-so technologies}

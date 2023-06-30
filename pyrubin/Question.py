@@ -11,6 +11,11 @@ class PromptFragment:
         self.template_string = template_string
         self.template = Template(self.template_string)
 
+    @classmethod
+    def from_template(cls, template):
+        
+        return cls(template.template_string)
+
     def __add__(self, fragment):
         "Adds two PromptFragments together and returns a new PromptFragment."
         return PromptFragment(self.template_string + fragment.template_string)
