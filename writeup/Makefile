@@ -10,7 +10,7 @@ plots =
 
 tables += tables/simulation_results.tex
 tables/simulation_results.tex: ../analysis/table_simulation_results.R ../computed_objects/simulation_results.csv
-	cd ../analysis && ./table_simulation_results.R
+	cd ../analysis && Rscript table_simulation_results.R
 
 parameters.tex:
 	touch parameters.tex
