@@ -19,7 +19,7 @@
 \newtheorem{definition}[theorem]{Definition}
 
 \begin{document}
-\title{The Task-Based View and Generative AI}
+\title{The Economics of Generative AI}
 \author{John Horton\\MIT \& NBER}
 \date{\today{}}
 
@@ -35,319 +35,67 @@
 \maketitle
 
 \begin{abstract}
-\noindent The distinctive feature of generative AI is that it generates: code, writing, images, music, videos, and so on, and does so at essentially zero marginal creation cost.
-These generations are made in response to some request or ``prompt.''
-But these AI generations only become economic goods if judged suitable for some human need.
-This depends on human judgment in the evaluation, the skill in crafting the prompt, and the technical capability of the generative model. 
+\noindent The distinctive feature of generative AI is that it generates: code, writing, images, music, videos, and so on.
+It does this at essentially zero marginal creation cost.
+These generations are made in response to some request or ``prompts,'' but these AI generations only become economic goods if judged suitable for some human need.
+This depends on human judgment in evaluation, the skill in crafting the prompt, and the technical capability of the generative model  jointly determines the productivity. 
 When deciding to route a task to an  AI, the question is whether the prompt-evaluation loop inherent in using that AI will be more efficient than simply doing the task by hand. 
-Tasks can be efficiently changed together in the sense that each task feeds into the next without human intervention.
+Tasks can be efficiently ``chained'' together in the sense that each task produces someting that feeds into the next without human intervention.
 A task might be added to an automated chain even if the human has an absolute advantage in that task in isolation.
 \end{abstract}
 
 \onehalfspacing
 
 \section{Introduction}
-\topic{Economic models on the effects of technology have to make simplifying assumptions about what that technology can and cannot do.}
-The problem with generative AI---from an economic modeling standpoint---is that it is unclear what this kind of AI \emph{cannot} do even now, never mind over the next 5 or 10 years.
-There is now talk about AGI that might occur in our lifetimes.
-As such, it seems prudent to move away from what AI cannot do and instead try to identify what is likely to be fundamentally human, no matter how much AI capabilities advance.
+One economic approach to understanding a new technology is to frame it as a change in costs.
+This approach has been applied to illumination (electicity), mechanical power (the steam engine), personal tranportation (the automobile), computation (the computer)---all of which made some recognizable economic good much cheaper.
+But the approach rests on undestanding what the new technology does and hence what is it making cheaper. 
+The problem with generative AI---from an economic modeling standpoint at least---is that it is unclear what this kind of AI \emph{cannot} do even now, never mind over the next 5 or 10 years.
+%This is makes it difficult to reason about this technology in terms of ``types'' of tasks.
+%There is talk about Artificial General Intelligence (AGI) that might occur in our lifetimes.
 
-For example, \cite{autor2003skill}'s ``computation substitutes for routine cognitive tasks and complements non-routine cognitive tasks'' is a useful simplification of what computers do. 
-Or technology automates some tasks previously done by humans but also spurs new tasks which only humans can do, at least for some time \citep{acemoglu2019}. 
-Or AI is a prediction technology that lowers prediction costs, increasing the value added by labor that complements prediction \citep{agrawal2019}. 
-
-Economists have framed advances in AI as advances in prediction technology \citep{agrawal2019}.
-While forecasting and prediction are certain key firm tasks, relatively few workers have that as a task. 
-By comparison, the outputs of generative AI---things like writing, research, or analysis (which could include prediction) are commonplace. 
-As a case in point, on ONET, only 22 occupations are returned for the search term ``predicting.'' 
-By comparison, the occupations returned for communicating, writing and analysis are 426, 332, and 408, respectively. 
-
-\topic{There are contrasting ways consider the effect of technology on labor markets.}
-One approach to understanding the impact of technology on labor markets has been to focus at the ``task'' level.
-Goods are produced by the completion of tasks and those tasks can be assigned to the factor of production with the comparative advantage in that task.
-This approach has been applied not just to technology but also to trade and offshoring.
-But specifically with respect to AI and automation, the task-based view is that labor, by being more flexible \citep{acemoglu2011skills}, has an absolute advantage in ``new'' tasks, but that as time passes, they become susceptible to automation \citep{acemoglu2018}.
-
-%\cite{acemoglu2022artificial}
-
-A contrasting view is offered by \cite{bresnahan2020artificial}, who argues there has been no task-level substitution with the AI systems we actually see in production: ``The transition to ICT-based production has largely proceeded at the system level, not the task level.''
-It has all been capital deepening.
-To the extent there is important labor-capital substitution, it will happen at the system level.
-There is a long tradition in studies of ICT to take a ``systems'' view---that ICT requires a reconfiguration of production to reap the benefits (Cite Erik).
-
-\topic{Generative AI certainly seems to be task-related and not just systems-related.}
-The things it can do well: analyzing data, writing reports, drafting communications, doing research, coming up with plans, etc., certainly seem like the kinds of tasks common across large numbers of workers.
-The product market success and adoption of ChatGPT is a testament to this: there are 100M users of OpenAI and presumably, many are using it for their work.
-Even the names of these technologies indicate their role of helping individuals: the names people use like ``co-pilot'' and ``assistant.'' 
-
-\topic{The literature to date on AI specifically (as opposed to automation) has emphasized AI as a prediction technology \citep{agrawal2019}.} 
-Although this is an area where machines can excel---and fit \cite{bresnahan2020artificial}'s examples perfectly---this seems, with hindsight, to be too narrow of a framing.
-Generative AI models have shown the ability to create output similar to or better than even expert humans can produce over a broad class of knowledge-processing tasks.  
-Consistent with this view, experimental evidence at knowledge worker tasks shows large productivity gains using ChatGPT for a collection of knowledge worker tasks \citep{noy2023experimental}.
-
-They can do tasks that we would have thought impossible for computers to do even a short time ago.
-Given these capabilities, it is widely anticipated that they \emph{will} have labor market effects, but what those effects are remains to be seen. 
-We would like to have the generative AI version of \cite{autor2003skill}, but our problem is the same as if \cite{autor2003skill} tried to write their paper in 1960.
-With the caveat that predicting the future is a mug's game, can we examine what these technologies do and try to sketch out the likely labor market implications now? 
-
-\topic{The rise of generative AI has challenged the plausibility of older simplifications about the nature of AI.}
-The fraction of tasks currently performed by workers in the US that might be done or augmented with LLMs is considerable \citep{eloundou2023gpts}.
-The other problem is that these new technologies have not yet had their economic impact, so our historical data can tell us little about how technology is likely to affect the economy. 
-
-\paragraph{Economic forces tend to create dependencies between tasks both within in a job and within a firm.}
-Since economists first recognized the division of labor as an essential part of production, the interdependence between tasks has been noted.
-The manufacture of pins proceeds linearly, with each step serving as an input to the next step in the productive process.
-First, the wire is washed and spooled, then pulled straight, then cut into lengths, then ground to a point, and so on.
-A failure at any step jeopardizes the final product. 
-This is at the heart of the \cite{kremer1993} o-ring model.
-
-Tasks also have a recursive structure.
-Every task can be divided into smaller sub-tasks.
-For a human, we think of anyone as being able to ``do a task'' as also being able to do every constituent sub-task in combination with the appropriate capital.
-A machine might only be able to do some sub-set of those tasks. 
-If tasks did not have a recursive structure, the division of labor would reach some atomic limit. 
-
-Smith identified the limit to division of labor as not about hitting some atomic limit, but rather it was about the extent of the market. 
-If you produce so much, you can employ one person or one machine doing the tiniest of tasks.
-With a smaller market, less so.
-But there is another cost, at least for labor: switching costs and communication costs.
-When I hand off my output in some chain if I need to explain what should happen next.
-
-The logic of comparative advantage and communication costs tend to create serial dependencies between tasks within jobs, creating an o-ring-like production structure.
-In the model, tasks within a job have serial dependencies. 
-There are economic forces that push this characterization to be true. 
-If a job lacked serial dependencies between tasks, we could likely reap more gains for specialization.
-It costs us too much to hand off a task.
-We only do it when we cannot do the task or the labor savings are so great it is worth it. 
-The labor savings are great when management costs are low: the task is easy to describe, easy to evaluate, and has a high probability of success. 
-
-For Coasian reasons, we also expect inter-dependencies between jobs within the firm.
-%When we aggregate to level of the firm, things are not quite so linear.
-
-A natural question is the delineation of these tasks---where does one begin and the other end? 
-Tasks can be subdivided, with every step capable of being broken into smaller steps.\footnote{
-    Writing a memo has the subtask ``write the first line of the memo'' then ``write the second line of the memo.''
-    ``Write the first line of the memo'' and can be broken into ``first word'' and ``first letter'' and ``keystroke down, then keystroke up.''    
-}
-For our purposes, a helpful delineation is some sequence of tasks such that an AI could, in principle, do that whole sequence of constituent sub-tasks.
-The capabilities of the AI model make the tasks. 
-The start of the task is the first point where some human direction about what to do is required. 
-
-\paragraph{Offering a system and task unified view}
-
-\topic{The distinctive feature of generative AI is that it generates: writing, code, images, music, videos, and so on---but only in response to a human prompt.}
+One thing that is clear is that is does seem reasonable to analogize generative AI to a kind of labor.
+It performs idenfiable human ``tasks'' in a way, say, a steam engine does not.
+However, unlike with computers where we can it replaces rote computation, what generative AI does it not so clearly defined.
+Stepping back, the distinctive feature of generative AI is, at least in part, right there in the name: it generates.
+Writing, code, images, music, videos, and so on---but only in response to a human request, or ``prompt.''
 What the AI generates is not simply a random draw of things the AI could produce.
 Rather, it produces something in response to some human request or prompt.
 
-\topic{What AI generates is not inherently useful but rather depends on human judgment.} 
+What AI generates is not inherently useful, but rather depends on human judgment.
 The raw output must be evaluated and deemed suitable through judgment.
 This assessment can then influence where the human asks the AI to modify the output in the required direction. 
 This creates a human-AI hybrid loop of prompting and judging. 
 And upstream of all of this is the necessary human insight into routing, or whether the task is one that an AI is likely to lead to a good outcome, with the prompting and evaluation the worker can provide. 
 
 In addition to whatever other tasks for which a comparative advantage exists, no matter how capable these models become, two human tasks remain:
-2) asking the AI to do that task, and 
-3) evaluating the machine's efforts. 
+1) asking the AI to do that task, and 
+2) evaluating the machine's efforts. 
 Each of these steps is a human-provided task that can, in turn, be AI-augmented. 
 
-\topic{This paper offers a way to unify a task- and systems-based view of AI and labor.}
-Like in the task-based view, a productive process is a collection of tasks.
+This paper presents a simple task-based model of generative AI. 
+A productive process is a collection of tasks.
 However, those tasks are assumed to be done in sequence, with interdependecies.
-At each step, the task is given to the factor with the comparative advantage---though this can depend on what tasks are nearby.
+At each step, the task is given to the factor with the \emph{conditional} comparative advantage---though this can depend on what tasks are nearby.
 But when a task is given to an AI, there is still human involvement in (1) communicating what is desired to the AI and (2) assess the output and potentially reformualting the preompt as needed.
 The decision to route to an AI depends not only on the theoretical capabilities of the AI for a task, but how well the AI is likely to do, given the prompting and judgment of the human. 
 
-If they choose to use an AI, the human asks the AI to perform the task with a prompt. 
-The AI tries to perform the task, generating output.
-The worker then evaluates the output to decide if it is suitable. 
-If it is, the worker can continue to the next task 
-If it is not, the human can try to modify the prompt and re-evaluate the new output until the need is satisfied. 
-
-One might think that evaluation itself could be the domain of the AI, but if the model could have improved the chance the output would be evaluated positively, that process would have already been incorporated into the model. 
-What is left is the residual evaluation that a human must uniquely supply: judgment.
-
-There is no imposed structure on the kinds of tasks that humand and machines have advantages in.
-If we want to assume a machine cannot do a task, we can assume it has a zero probability chance of completing the task; if we want to assume that a human cannot do a task, we can assume infinite cost.
-
-\topic{The paper offers a computational model in that the allocation of tasks to factors happens within a sequence.}
-Unlike the task-in-isolation view, it is possible to reap further benefits from automation even from tasks where humans have an advantage.
-Namely, tasks can be ``chained'' together in automation to create entire ``systems.''
-Note that with this chaining ``tasks'' can become increasingly large and abstract as models increase, generating something that looks like an entire ``system'' and not just a task.
-As this occurs, what constitutes a ``task'' moves to higher and higher levels of abstraction: 
-From ``find typos in this ad copy'' to ``create ad copy'' to ``create a marketing campaign, launch, execute and monitor performance'' to ``increase sales'' to ``run the business profitably'' to $\ldots$.  
-
-The advantage of an automation system is that marginal costs can very, very low.
-If having something produced is as simple as asking for it, costs can be very low indeed.
-If some combination of tasks can be created so that there is no need for a human in the loop at any step, the whole process can be automated. 
-
-\topic{There are numerous advantages to this computation approach to tasks.}
-It matters what tasks are ``next'' to each other in some productive process, because tasks that have a high ability to be automated can be chained together.
-As such, we can get ``automation dispersion'' where tasks are automated in some production settings but not others.
-
-For example, consider the task ``answer questions about the text in a document'' and whether an AI can do this task depends on the payoff to doing it correctly. 
-The firm might be fine letting a machine do low-level customer service support; we might be very hesitant to let it handle queries from major institutional investors, in part because what constitutes ``good enough'' might differ.
-But also, the next task might be follow-questions about the state of the business that only the CFO can credibly answer.
-
-This approach offers a point of view of what kinds of tasks are likely to be targets for automation---namely those that allow not just one-off task replacement but system-level replacement.
-It also highlights that we are likely to see investment not only in direct model capabilities, but the ways in which they can be prompted and the results evaluated. 
-
-The model gives another interpretation of the Acemoglu observation about so-so technologies: ```Examples of so-so technologies include automated customer service, which has displaced human service representatives but is generally deemed to be low quality and thus unlikely to have generated large productivity gains.''
-While being able to replace human labor in some produce process can be cost saving, if the underlying technology is improving just incrementally and getting ``almost'' good enough, the benefit is likely to be small.
-In contrast large jumps in model ability can have large effects, particularly if they facilitate chaining.
-
-\topic{The model primitives map to things that can be measured.}
-The time it takes to do a task; the task composition of a job; the capabilities of an AI in some area.
-These are measuable things, and so the model is easy to take to data. 
-
-\topic{The prompting/evaluating distinction gives us a new way to think about human complementarities to AI.}
-Prompting is really the human skill of getting what you want out of some AI system.
-There is no inherent reason to think that this will itself be a low-skill job---just a different skill job.
-Most of management is deciding what you want done, asking right people to do it, in a way that leads to an effective outcome, and then monitoring the process to see if it acheiving the desired goals.
-No one thinks of this as a ``low skill'' propostiion.
-
-\topic{The literature on the cost of evaluation of goods---search goods, inspection goods, experience goods, credence goods---gives us an economic think about what tasks are are likely to be automated.}
-
-\topic{It gives us a new way to think about changing who is eligible to fulfill some role in the productive process.}
-To the extent there is some different in the requirements to do some task, ask for some task to be done, and evaluating the output of that ask, there is a possibility to use different kinds of workers in a productive task.
-
-The approach gives a way to think about an occupation ``disappearing.''
-In the model, an occupation only disappears when all of its task are subsumed in an automation chain.
-Take an job that truly disappeared: elevator operator. 
-The tasks were 1) ``Announce the direction of the elevator,'' 2) ``ask people what floors they are going to'' 3) ``bring the elevator to the appropriate floors'', 4) ``open the doors'' as well as some other non-sequential tasks like inspect for defects or machine failures.  
-This got turned into an automation chain where the customer was given the ``prompting'' task of selecting a floor; the evaluation task is just seeing that the elevator was the appropriate floor---an inspection good with a low $c_e$.
-If it was hard to know if you had gotten the right floor, we might expect that task to still be done by humans.
-
-Although there are advantages to thinking in terms of tasks, most labor market participants thing in terms of ``occupations.'' 
-Our training and human capital acquistion is structured as occupations.
-People want to know which whole occupations will disappear, and what occupations have good prospects. 
-
-\paragraph{A fully human task that remains has no economically viable sub-tasks to send to an AI.}
-
-Suppose there is some sub-task of a human task that takes $c_h'$.
-That the task is not broken down further implies that $c_h' < c_m / q$ for that task. 
-It means there is no sub-task for which 
-
-
-\paragraph{Jobs with few tasks are more prone to full automation}
-All else equal, a job with a single task is more prone to automation compared to one with multiple distinct tasks.
-
-\paragraph{Jobs where the next task is unpredictable are more resistant to full automation}
-The benefits to combining multiple tasks into an automation ``chain''
-But if task 1 and task 2 rarely occur together, chaining them together is not likely to work well if that requires some set up.
-
-\paragraph{Serial correlation in AI features of tasks types facilitates chaining}
-
-\paragraph{Net effects on labor}
-
-As an information good, competition seems likely to push marginal costs of using these tools to zero.
-There might be tasks that have a zero sumness where people will pay a premium for the very best models.
-
-One might argue there will be increases in employment in developing AI tools, but consider that OpenAI has less than a thousand employees.\footnote{ 
-  https://www.linkedin.com/company/openai/
-}
-The most likely effects will be due to productivity effects.
-The new products that can be created when costs are lower.
-
-\paragraph{Generative AI is an information goods factory, but it has human workers.}
-Generative AI is that it works with us to produce information goods. 
-And the economic-so-what is that the machines can do their part of the productive process at zero marginal cost---or at least at a cost that will likely trend to zero.
-
-Digitization already pushed the marginal reproduction costs and distribution costs for information goods to zero---but the costs of initially producing those goods remained high: I could costlessly share an ebook with you, but writing a book was still a long, hard slog.
-
-A prediction is an information good. 
-But it is also an experience good that might reveal its quality over a long time frame, depending on the nature of the prediction. 
-Once you know a prediction is good; it is probably useless other than as a data point that you should value the predictions of the machine more.
-If it is a prediction about what might happen, but that could be changed given the firm's actions, it could be a credence good.
-This is precisely the kind of task that the relative benefit of using an AI might be quite low if the ability to judge is low. 
-
-\paragraph{Using an AI for some task has qualitative similarities to delegating a task to another human or team.}
-The decision to use an AI bears similarities to the decision to delegate some task to a subordinate.
-And conditional upon delegation, the skill of using AI bears similarities to the management of people and teams. 
-Deciding whether the output is sufficient requires judgment, whether the output is human-produced or otherwise. 
-
-\paragraph{Goods differ in their cost of human evaluation, which changes the cost of using AI for production.}
-The extent of generative AI usage depends on the costs of judging the model's output.
-This cost could vary considerably based on the nature of the good.
-An analogy is drawn to the process by which consumers evaluate goods. 
-Search goods are trivially easy to evaluate (and hence ideal candidates for AI creation), whereas inspection goods and credence goods might have prohibitively expensive evaluation costs. 
-These differences will affect the adoption of AI by task.
-
-\paragraph{Entrepreneurial innovation will focusing reducing AI management tasks as well as increasing model abilities}
-We will see investment to improve the capabilities of models but also try to reduce the costs of prompting and to reduce the cost of the evaluation. 
-The skills that AI complements are themselves potential targets for AI assistance. 
-We will likely see AIs that help write prompts or make it easier for humans to express themselves.  
-We will see AIs and related technologies that help evaluate output. 
-
-\paragraph{AI will create new labor-labor substitution possibilities for ``Rick Rubin'' reasons.}
-In light of the change in what is delegated, I discuss how labor-labor substitution might change who performs a task. 
-In particular, job redesign will take advantage of the fact that skills in judging output are separate from the skill of creating some output.
-There are food critics who cannot cook; record producers who cannot play instruments; technologists who cannot program, and so on.
-As AI makes it so that humans no longer have to do every task in a job, AI might open up jobs to people who are otherwise blocked by a skill they lack.
-
-There are likely to be numerous tasks when prompting and judgment can lead to good outcomes even when the human offering those judgments cannot do it themselves.
-One reason is that the pool of people who can offer judgment is larger than the pool that can do the task. 
-This might be particularly true for tasks that require a great deal of skill.
-As a recent illustrative example,  the famed record product Rick Rubin described his value in a recent interview with Anderson Cooper:
-\begin{dialogue}
-\speak{Rick Rubin} I’ve no technical ability. And I know nothing about music
-\speak{Anderson Cooper} Well, you must know something.
-\speak{Rick Rubin} I know what I like and what I don’t like. I’m decisive about what I like and what I don’t like.
-\speak{Anderson Cooper} So what are you being paid for?
-\speak{Rick Rubin} The confidence that I have in my taste, and my ability to express what I feel, has proven helpful for artists.
-\end{dialogue}
-
-However, that task has to be marginal (assuming other blocking tasks are not also automated). 
-For example, identifying a bone fracture in an X-ray does not mean a person is ready to be a radiologist.
-I.e., if there was only one task that precluded them from doing some occupation, then AI might allow them to do that occupation.
-Allowing more people to do more tasks could have an indirect productivity effect. 
-Ironically, the harder the task to perform, the more potential for AI to unlock this substitution potential, as the pool of potential prompters and judges is much larger than the pool of doers.
-
-\topic{Generative AI might allow for a kind of pseudo-human capital acquistiion.}
-Substitution to another human might require a hand-off if all the rest of the tasks still need to be done by the ``original'' human. 
-But AI augmentation might allow for a task re-design. 
-Consider that for some occupations, there are necessary tasks such that $c_h$ is essentially infinite, or so high that it would be uneconomic for that person to pursue that job because their effective efficiency wage would be lower than their next best alternative.  
-Take, for example, a master carpenter versus a handyman.
-There are many tasks in common between the two: driving to the job site, carrying tools, buying supplies, swinging a hammer, etc.
-But what is distinguishing is that there are tasks required of the master carpenter that the handyman is incapable of performing. 
-This drives down their wage below the handyman wage, and so they are handymen.
-If generative AI is inequality-reducing, I think this will be the mechanism: taking people that currently lack certain skills and letting them ``jump'' up. 
-
-This framing gives an interesting characterization of the human capital acquisition process  generally: learn skills that will lower your performance costs across tasks \emph{if} you can make the job requiring those tasks better than your best job option.
-The skills you acquire need to make that job marginal. 
-For example, the task ``read an MRI scan to detect a bone fracture'' is highly remunerative but only if learned in with all the other tasks in the ``Radiologist'' task sequence.
-Licensing aside---this skill alone is essentially worthless.  
-With AI augmentation, the marginal blocking skill might no longer be blocking. 
-
-\paragraph{Generative AI substitutes ``maker labor'' and complements ``manager labor'' in the short-run.}
-In the model, there are just two broad ``kinds'' of labor: 
-Labor that does tasks, and labor that manages an AI doing that task. 
-While we might think there is some correlation between the cost of the machine and the human doing the task, this seems like an imprudent assumption.
-
-We should not presume that tasks that are hard for humans are easy for computers or vice versa. 
-We do hard, time-consuming tasks because the output is valued. 
-Playing excellent chess \emph{seemed} like the kind of thing computers can do well. 
-Generating photorealistic art, playing diplomacy, and generating new programs on the fly did not seem like tasks where computers would show capabilities.
-
-All else equal, more capable management increases the number of tasks an AI performs, holding AI capabilities fixed. 
-
-Being adjacent to a highly automatable task will tend to ``pull'' that task into an automated chain.
-
-
 \section{A model of production}
-To start, imagine a job that consists of just a single task: task 1.
+To start, imagine a job that consists of just a single task.
 A human can do the task at a cost of $c_h$.
+Note that we are ignoring capital costs---all that are present are labor costs.
 An AI that can \emph{try} do the task instantly at zero cost and if ``prompted'' by a human.
 However, it it only succeeds with probability $q$, given the optimal effort by the human at ``prompting.''
-This $q$ captures the model's capability but also reflects the capability of the human at prompting and judging.
+This $q$ captures the model's capability but also reflects the capability of the human at prompting and judging and the nature of the task.\footnote{
+  This constant $q$ even for a single task is a simplification, as we might expect the ``first'' $q$ to be low for a given prompt, but then increase with each subsequent prompt that is a refinement.
+  However, it will still have a finite expectation.
+}
 Each prompt costs the human $c_p$, and each evaluation of an AI output costs the human $c_e$.
 Let $c_p + c_e = c_m$, with $m$ for ``management.''
-
 If the machine fails at a task, it is kicked back for the human to try again with another prompt, at another cost of $c_p$ and then $c_e$.
 Success and failures are independent, and so it always makes sense to keep trying with the AI, conditional upon it making sense to try once.
 
-
-To indicate a task being done by a human, we will use the notation $\human{\cdot}$.
-For a task don by a machine, we use the notation $\machine{\cdot}$.
+To indicate a task being done by a human, we will use the notation $\human{\cdot}$ and we will use $\machine{\cdot}$ for a task done by a machine.
 As a memory aid, note the curved parenthesis captures of $\human{\cdot{}}$ the greater ``flexibility'' of humans. 
 Figure~\ref{fig:flow} illustrates the situation.
 
@@ -356,8 +104,7 @@ Figure~\ref{fig:flow} illustrates the situation.
 \includegraphics[width = \textwidth]{flow.png}
 \end{figure}
 
-Lemma~\ref{lemma:when} gives the criterion for automation when considering a task in isolation: is $c_h > c_m / q$.
-
+Lemma~\ref{lemma:when} gives the criterion for automation when considering a task in isolation: is $c_h > c_m / q$?
 \begin{lemma} \label{lemma:when}
  For a given task, it is cheaper to automate if $\cost{\machine{1}} < \cost{\human{1}}$, which happens when $c_m / q < c_h$.
 \end{lemma}
@@ -371,18 +118,16 @@ and so the task will be automated if $q > \frac{c_m}{c_h}.$
 \end{proof}
 
 This decision criterion has some intuitive properties.
-The higher the human performance costs, the more likely a worker is to try an AI, even a fairly incapable one (i.e., low $q$).
+The higher the human performance costs for a task, the more likely a worker is to try an AI, even a fairly incapable one (i.e., low $q$).
 The lower the prompting and evaluation costs, the more likely an AI will be used.
-If we think of novice workers as having higher own-performance costs, or high $c_h$ values, they might be more likely to use an AI.
+%If we think of novice workers as having higher own-performance costs, or high $c_h$ values, they might be more likely to use an AI.
+%Note that we are ignoring capital costs---all that are present are labor costs.
+Note that with a high capable AI $(q = 1)$ with output that is very cheap to evaluate ($c_m \approx 0$), costs can be very low.
 
-Note that we are ignoring capital costs---all that are present are labor costs.
-Note that with a high capable AI $(q = 1)$ that is very easy to use ($c_m \approx 0$), costs can be very low.
+In isolation, raising $q$ has two effects on the kinds of labor that is used.
+It displaces direct labor doing tasks, as it is more likely that $c_m/q < c_h$.
+But it increases the demand for management-labor of the extensive margin, as more tasks flip from being done by a human to being done by a machine.
 
-In isolation, raising $q$ has two effects on labor.
-It displaces direct labor, as it is more likely that $c_m/q < c_h$, but increases the demand for management-labor of the extensive margin, as more tasks flip from being done by a human to being done by a machine.
-
-This constant $q$ even for a single task is a simplification, as we might expect the ``first'' $q$ to be low for a given prompt, but then increase with each subsequent prompt that is a refinement.
-However, it will still have a finite expectation.
 
 It seems likely, empirically, that prompting costs are sub-linear with respect to $c_h$ for many tasks.
 The prompt ``write me a haiku about economics'' is about the same effort as ``write me an epic poem about economics'' but the $c_h$ differs radically. 
@@ -392,7 +137,7 @@ To the extent $c_h$ and $c_e$ vary less than $c_h$, we should expect a size bias
 Now imagine two tasks, 1 and 2, with AI success probabilities $q_1$ and $q_2$, respectively.
 The 4 human/machine possibilities are: both tasks are done by human, $\cost{\human{1}\human{2}} = 2 c_h$;
 both are done by machine, $\cost{\machine{1}\machine{2}} = c_m (1/q_1 + 1/q_2)$;
-task 1 by a machine and task 2 by hand, $\cost{\machine{1}\human{2}} = c_m/q_1 + c_h$; and task 1 by hand and task 2 by machine $\cost{\human{1}\machine{2}} = c_h + c_m/q_2$.
+task 1 by a machine and task 2 by human, $\cost{\machine{1}\human{2}} = c_m/q_1 + c_h$; and task 1 by human and task 2 by machine $\cost{\human{1}\machine{2}} = c_h + c_m/q_2$.
 
 We now introduce another possibility: the ``chaining'' of AI tasks.
 Doing this creates a new task with a success probability equal to the product of the success probabilities of the constituent tasks.
@@ -508,7 +253,6 @@ In the model, when a chain goes from $\human{0}\machine{1|2}\human{3}$, we can t
 \subsection{Multiple tasks}
 Now we will consider a job that is a sequence of tasks to be performed $1, 2, \ldots n$.
 Here, we will focus on the computational aspects of the problem.
-
 Let $C_h$ be a vector of costs to a human for performing each task.
 %% Consider an $n = 5$ job. 
 %% If $\machine{1|2}\human{3}\human{4}\machine{5}$, it would indicate tasks 1 and 2 done in a chain by a machine.  
@@ -522,7 +266,7 @@ The cost minimization problem is equilvalent to finding the shortest path in a t
 To grow the tree, start with the first task.
 It can be automated or done by a human.
 It then has up to two children---the next task is either machine or human, and if machine, it could also be part of a chain.
-Figure\ref{fig:tree} illustrates the tree. 
+Figure~\ref{fig:tree} illustrates the tree. 
 
 The tree grows to, worse-cast, $2^n$ children where $n$ is the number of tasks.
 It would be less than this because human-done nodes only have one child: either machine or human.
@@ -552,6 +296,51 @@ It might also be possible to prune certain leafs using the logic of Lemma~\ref{l
 \end{figure}
 
 \section{Product market sketch}
+Imagine there is a measure 1 of worker/consumers.
+Workers supply labor inelastically.
+There are $M$ \emph{potential} products in the market which have idiosyncratic chains of tasks and associated costs.
+%NB: It might be useful to create a two task economy where all potential products are considered e.g., 11, 12, 22, 21, 22. 
+%with $c_1, c_2, q_1, q_2$.
+Each product has the same demand curve,
+\begin{align}
+  d(p) = \max \{ 0, \frac{\bar{p} - p}{\bar{p}} \}.
+\end{align}
+where $\bar{p}$ is exogenous and $p$ is the product market price of the good.
+Note that when $p \ge \bar{p}$, no one buys the good; when $p = 0$, everyone buys the good. 
+
+Let $l_i$ be the labor required to create one unit of good $i$, under the optimal production chain, given $w$.
+There are constant returns to scale in production i.e., to product N units of the good, it requires $N l_i$ units of labor.
+A unit of the good has a cost of $p_i = l_i w$ where $w$ is the market wage, and so $d(l_i w)$ is how much of good $i$ gets produced.
+
+Market clearing is defined by a wage, $w$ and a set of products, $M' \subseteq M$, that are produced in equlibrium.
+The set $M'$ is defined as those with labor requirements such that $\bar{p} < l_i w$.
+Total expenditure equals total labor income at market clearing, or
+\begin{align}
+  w  &= \sum_{i \in M'} p_i d(l_i w).
+%  1  &= \sum_{i \in M'} l_i d(l_i w).\\
+%  1  &= \sum_{i \in M'} l_i \frac{\bar{p} - w l_i}{\bar{p}}.\\
+%  1  &= \sum_{i \in M'} l_i .\\
+% \frac{1}{(1 - \frac{w}{\bar{p}})} &= \sum l_i
+\end{align}
+If we let $\bar{l}$ be the average amount of labor used per good and $|M'|$ is the number of good produced in equilibrium, we have
+\begin{align}
+  w = \bar{p} \left(1 - \frac{1}{|M'|\bar{l}} \right).
+\end{align}
+
+(Not formal - economic intuition - not proven!)
+What happens when $q$ increases i.e., AI models become more capable? 
+This causes all $l_i$ to fall or at least stay the same, as goods need less labor to produce.
+This tends to lower wages (NB: Welfare increases, as total consumption increases. In real terms, I don't think wages fall(?)
+This raising of $q$ also causes $|M'|$ to increase, as more goods now become economical to produce.
+There are two reasons: technical production costs fall for these marginal costs, pushing them over the limit, plus labor is freed up from all the products previously produced.
+These marginal goods are also particularly labor intensive goods, having $l_i \approx \bar{p}/w$---the highest possible labor usage.
+This will tend to damped the shock.
+NB: This re-creates the Acemoglu ``labor has an advantage in new tasks'' (here, products) type result but for economic reasons rather than by assumption. 
+
+
+Other thought---if automation chains cause more goes to go to $l_i \approx 0$, further advances in $q$ become irrelevant, meaning a smaller pool of workers are ``freed up'' by advances in $q$. 
+
+\subsection{Scratch}
 Suppose there are $N_K$ tasks an economy which can be configured into $N_S$ slots.
 This economy has ${N_K \choose N_S}$ possible products.
 Let $d_i(p)$ be the quantity demanded for good $i$ when the price for that good is $p$.
@@ -591,7 +380,6 @@ By raising $c_h$ in $I_H$ sector, that increases the incentives to invest in aut
 The automation of $k$ also has impacts on the space of products produced in equilibrium.
 Tasks with high $k$ costs might now become feasible, with tends to increase demand for labor with skills that complement $k$---which are precisely the skills those workers specializing in $k$ also had. 
 
-
 \begin{proposition}
 Lowering costs of any kind does not reduce the number of viable products.
 \end{proposition}
@@ -604,7 +392,6 @@ An improvement in AI is when there exists a $j$ such that $Q'_i > Q_i$ and for a
 An improvement in AI capabilities does not increase costs: ${\cost{T^*_{Q'}} \le \cost{T^*_{Q}}}$.
 \end{proposition}
 % NB: There is some assumption to be made about distribution of tasks and costs such that costs decrease
-
 
 \begin{lemma}
   Total costs stay the same or decline in $c_h$ and $c_m$.
@@ -633,8 +420,7 @@ Increases in capabilities of AI (lower $q$) (a) deceases costs of existing goods
 
 \section{Model simulations}
 
-I ran a simulation of many ``jobs'' with chained tasks and found
-the lowest cost combination under different assumptions about human
+I ran a simulation of many ``jobs'' with chained tasks and found the lowest cost combination under different assumptions about human
 and machine labor.
 Human costs were fixed $c_h = 1$. 
 I draw the $q$ from a unform distribution between $U[q_{min}, 1]$,
@@ -668,11 +454,273 @@ Figure~\ref{fig:avg_cost_by_management_cost} shows that average prices increase 
 \includegraphics[width = \textwidth]{plots/avg_cost_by_management_cost.pdf}
 \end{figure}
 
-
 \begin{figure}
 \caption{Average costs versus management costs, by model quality} \label{fig:fraction_of_tasks_done_by_human}
 \includegraphics[width = \textwidth]{plots/fraction_of_tasks_done_by_human.pdf}
 \end{figure}
+
+\section{Discussion}
+
+If they choose to use an AI, the human asks the AI to perform the task with a prompt. 
+The AI tries to perform the task, generating output.
+The worker then evaluates the output to decide if it is suitable. 
+If it is, the worker can continue to the next task. 
+If it is not, the human can try to modify the prompt and re-evaluate the new output until the need is satisfied. 
+
+One might think that evaluation itself could be the domain of the AI, but if the model could have improved the chance the output would be evaluated positively, that process would have already been incorporated into the model. 
+What is left is the residual evaluation that a human must uniquely supply: judgment.
+
+There is no imposed structure on the kinds of tasks that humand and machines have advantages in.
+If we want to assume a machine cannot do a task, we can assume it has a zero probability chance of completing the task; if we want to assume that a human cannot do a task, we can assume infinite cost.
+
+Unlike the task-in-isolation view, it is possible to reap further benefits from automation even from tasks where humans have an absolute advantage.
+Namely, tasks can be ``chained'' together in automation to create entire systems.
+Note that with this chaining tasks can become increasingly large and abstract as models increase, generating something that looks like an entire system and not just a task.
+This chaining builds into the model a consideration pointed out by \cite{bresnahan2020artificial}, who argues there has been little to no task-level substitution with the AI systems we actually see in production:
+``the transition to ICT-based production has largely proceeded at the system level, not the task level.''
+It has all been capital deepening.
+In the language of our model, system-level substitution would just be characterized as long chains of task automation.
+%To the extent there is important labor-capital substitution, it will happen at the system level.
+%There is a long tradition in studies of ICT to take a ``systems'' view---that ICT requires a reconfiguration of production to reap the benefits \citep{bresnahan2002information}. %(Cite Erik).
+As this occurs, what constitutes a ``task'' moves to higher and higher levels of abstraction: 
+From ``find typos in this ad copy'' to ``create ad copy'' to ``create a marketing campaign, launch, execute and monitor performance'' to ``increase sales'' to ``run the business profitably'' to $\ldots$.  
+In the model, it is the possibility of chaining that can create large productivity gains. 
+
+The model offers several insights.
+First, it predicts what kinds of tasks tend to be amenable to automation in terms of economic fundamentals.
+Tasks that are expensive for humans to do are natural candidates for automation.
+But a less obvious insight is that the extent of generative AI usage depends on the costs of judging the model's output.
+This cost could vary considerably based on the nature of the good.
+An analogy is drawn to the process by which consumers evaluate goods. 
+Search goods are trivially easy to evaluate, whereas inspection goods and credence goods might have prohibitively expensive evaluation costs. 
+These differences will affect the adoption of AI by task.
+
+Endogenizing whether an AI can ``do'' a task as depending on the stakes of the productive context likely allows for insights into the pace and location of adoption. 
+For example, consider the task ``answer questions about the text in a document'' and whether an AI can do this task depends on the payoff to doing it correctly. 
+The firm might be fine letting a machine do low-level customer service support; we might be very hesitant to let it handle queries from major institutional investors, in part because what constitutes ``good enough'' might differ.
+But also, the next task might be follow-questions about the state of the business that only the CFO can credibly answer.
+
+In the model, it matters what tasks are ``next'' to each other in some productive process, because tasks that have a high ability to be automated can be chained together.
+
+But beyond tasks considered in isolation, the model predicts, qualitatively tasks are likely to be targets for automation---namely those that allow not just one-off task replacement but system-level replacement.
+
+As such, we can get ``automation dispersion'' where tasks are automated in some production settings but not others.
+
+%% The model gives another interpretation of the Acemoglu observation about so-so technologies:
+%% ```Examples of so-so technologies include automated customer service, which has displaced human service representatives but is generally deemed to be low quality and thus unlikely to have generated large productivity gains.''
+%% While being able to replace human labor in some produce process can be cost saving, if the underlying technology is improving just incrementally and getting ``almost'' good enough, the benefit is likely to be small.
+%% %In contrast large jumps in model ability can have large effects, particularly if they facilitate chaining.
+
+Prompting is really the human skill of getting what you want out of some AI system.
+There is no inherent reason to think that this will itself be a low-skill job---just a different skill job.
+Most of management is deciding what you want done, asking right people to do it, in a way that leads to an effective outcome, and then monitoring the process to see if it acheiving the desired goals.
+No one thinks of this as a ``low skill'' propostiion.
+The literature on the cost of evaluation of goods---search goods, inspection goods, experience goods, credence goods---gives us an economic way to think about what tasks are are likely to be automated.
+
+(1) The model primitives map to things that can be measured.
+The time it takes to do a task; the task composition of a job; the capabilities of an AI in some area.
+(2)
+
+Even if only some tasks are automated, it still might facilitate labor-labor substitution.
+This might change who eligible to fulfill some role in the productive process.
+To the extent there is some different in the requirements to do some task, ask for some task to be done, and evaluating the output of that ask, there is a possibility to use different kinds of workers in a productive task.
+
+(4) It also highlights that we are likely to see investment not only in direct model capabilities, but the ways in which they can be prompted and the results evaluated. 
+
+Although there are advantages to thinking in terms of tasks, most labor market participants thing in terms of ``occupations.'' 
+Our training and human capital acquistion is structured as occupations.
+People want to know which whole occupations will disappear, and what occupations have good prospects. 
+
+The approach gives a way to think about an occupation ``disappearing.''
+In the model, an occupation only disappears when all of its task are subsumed in an automation chain.
+Take an job that truly disappeared: elevator operator. 
+The tasks were 1) ``Announce the direction of the elevator,'' 2) ``ask people what floors they are going to'' 3) ``bring the elevator to the appropriate floors'', 4) ``open the doors'' as well as some other non-sequential tasks like inspect for defects or machine failures.  
+This got turned into an automation chain where the customer was given the ``prompting'' task of selecting a floor; the evaluation task is just seeing that the elevator was the appropriate floor---an inspection good.
+If it was hard to know if you had gotten the right floor, we might expect that task to still be done by humans.
+Jobs with few tasks are more prone to full automation.
+All else equal, a job with a single task is more prone to automation compared to one with multiple distinct tasks.
+Jobs where the next task is unpredictable are more resistant to full automation.
+The model highlights the benefits to combining multiple tasks into an automation ``chain.''
+But if task 1 and task 2 rarely occur together, chaining them together is not likely to work well if that requires some set up.
+
+Examples include \cite{autor2003skill}'s ``computation substitutes for routine cognitive tasks and complements non-routine cognitive tasks'' is a useful simplification of what computers do. 
+Or technology automates some tasks previously done by humans but also spurs new tasks which only humans can do, at least for some time \citep{acemoglu2019}. 
+Or AI is a prediction technology that lowers prediction costs, increasing the value added by labor that complements prediction \citep{agrawal2019}. 
+
+
+\section{The economic approach to modeling technology}
+%\topic{There are contrasting ways consider the effect of technology on labor markets.}
+There are contrasting ways consider the effect of technology on labor markets.
+One approach to understanding the impact of technology on labor markets has been to focus at the ``task'' level.
+Goods are produced by the completion of tasks and those tasks can be assigned to the factor of production with the comparative advantage in that task.
+This approach has been applied not just to technology but also to trade and offshoring.
+But specifically with respect to AI and automation, the task-based view is that labor, by being more flexible \citep{acemoglu2011skills}, has an absolute advantage in ``new'' tasks, but that as time passes, they become susceptible to automation \citep{acemoglu2018}.
+
+%\cite{acemoglu2022artificial}
+There are criticisms of the task view of technology. 
+A contrasting view is offered by \cite{bresnahan2020artificial}, who argues there has been no task-level substitution with the AI systems we actually see in production:
+``the transition to ICT-based production has largely proceeded at the system level, not the task level.''
+It has all been capital deepening.
+To the extent there is important labor-capital substitution, it will happen at the system level.
+There is a long tradition in studies of ICT to take a ``systems'' view---that ICT requires a reconfiguration of production to reap the benefits \citep{bresnahan2002information}. %(Cite Erik).
+
+%\topic{Generative AI certainly seems to be task-related and not just systems-related.}
+An argument for a task-based view with respect to generative AI is that it does due a number of distinct \emph{tasks}.
+The things it can do well: analyzing data, writing reports, drafting communications, doing research, coming up with plans, etc., certainly seem like the kinds of tasks common across large numbers of workers.
+This stands in contrast to, say, ICT like databases, servers, data centers, recommender systems, etc. are better characterized as technologies that can be used to build systems that might do some tasks or replace whole collections of tasks.  
+The product market success and adoption of ChatGPT is a testament to this: there are 100M users of OpenAI and presumably, many are using it for their work.
+Even the names of these technologies indicate their role of helping individuals: the names people use like ``co-pilot'' and ``assistant.'' 
+
+The literature to date on AI specifically (as opposed to automation) in the task-based tradition has emphasized AI as a prediction technology \citep{agrawal2019}.
+While forecasting and prediction are certainly key firm tasks, relatively few workers have that as a task. 
+By comparison, the outputs of generative AI---things like writing, research, or analysis (which could include prediction) are commonplace. 
+As a case in point, on ONET, only 22 occupations are returned for the search term ``predicting.'' 
+By comparison, the occupations returned for communicating, writing and analysis are 426, 332, and 408, respectively. 
+
+Although this is an area where machines can excel---and fit \cite{bresnahan2020artificial}'s examples perfectly---this seems, with hindsight, to be too narrow of a framing.
+Generative AI models have shown the ability to create output similar to or better than even expert humans can produce over a broad class of knowledge-worker tasks.  
+Consistent with this view, experimental evidence at knowledge worker tasks shows large productivity gains using ChatGPT for a collection of knowledge worker tasks \citep{noy2023experimental}.
+The fraction of tasks currently performed by workers in the US that might be done or augmented with LLMs is considerable \citep{eloundou2023gpts}.
+
+They can do tasks that we would have thought impossible for computers to do even a short time ago.
+Given these capabilities, it is widely anticipated that they \emph{will} have labor market effects, but what those effects are remains to be seen. 
+We would like to have the generative AI version of \cite{autor2003skill}, but our problem is the same as if \cite{autor2003skill} tried to write their paper in 1960.
+With the caveat that predicting the future is a mug's game, can we examine what these technologies do and try to sketch out the likely labor market implications now? 
+
+A natural starting point for the effects of generative AI on labor markets is to try to classify tasks as being the kinds of the things generative AI can ``do'' or ``not do.''
+But this misses two considerations.
+First, tasks are not done in isolation and most productive tasks are interpendent.
+Second, whether a model's output at some task is sufficient depends largely on what that output will be used for.
+For example, for the task ``summarizing a document'': whether the AI can do this task, in an economic sense, depends if the document is being summarized is the Supreme Court or for Steve Caruthers.\footnote{A guy I made up who is just browsing Wikipedia.} 
+
+Economic forces tend to create dependencies between tasks both within in a job and within a firm.
+Since economists first recognized the division of labor as an essential consideration, the interdependence between tasks has been noted.
+The manufacture of pins proceeds linearly, with each step serving as an input to the next step in the productive process.
+First, the wire is washed and spooled, then pulled straight, then cut into lengths, then ground to a point, and so on.
+A failure at any step jeopardizes the final product. 
+This is at the heart of the \cite{kremer1993} o-ring model.
+
+Tasks also have a recursive structure.
+Every task can be divided into smaller sub-tasks.
+For a human, we think of anyone as being able to ``do a task'' as also being able to do every constituent sub-task in combination with the appropriate capital.
+A machine might only be able to do some sub-set of those tasks. 
+If tasks did not have a recursive structure, the division of labor would reach some atomic limit. 
+
+Smith identified the limit to division of labor as not about hitting some atomic limit, but rather it was about the extent of the market. 
+If you produce so much, you can employ one person or one machine doing the tiniest of tasks.
+With a smaller market, less so.
+But there is another cost, at least for labor: switching costs and communication costs.
+When I hand off my output in some chain if I need to explain what should happen next.
+
+The logic of comparative advantage and communication costs tend to create serial dependencies between tasks within jobs, creating an o-ring-like production structure.
+In the model, tasks within a job have serial dependencies. 
+There are economic forces that push this characterization to be true. 
+If a job lacked serial dependencies between tasks, we could likely reap more gains for specialization.
+It costs us too much to hand off a task.
+We only do it when we cannot do the task or the labor savings are so great it is worth it. 
+The labor savings are great when management costs are low: the task is easy to describe, easy to evaluate, and has a high probability of success.
+For Coasian reasons, we also expect inter-dependencies between jobs within the firm.
+
+A natural question is the delineation of these tasks---where does one begin and the other end? 
+Tasks can be subdivided, with every step capable of being broken into smaller steps.\footnote{
+    Writing a memo has the subtask ``write the first line of the memo'' then ``write the second line of the memo.''
+    ``Write the first line of the memo'' and can be broken into ``first word'' and ``first letter'' and ``keystroke down, then keystroke up.''    
+}
+For our purposes, a helpful delineation is some sequence of tasks such that an AI could, in principle, do that whole sequence of constituent sub-tasks.
+The capabilities of the AI model make the tasks. 
+The start of the task is the first point where some human direction about what to do is required. 
+
+
+%% Suppose there is some sub-task of a human task that takes $c_h'$.
+%% That the task is not broken down further implies that $c_h' < c_m / q$ for that task. 
+%% It means there is no sub-task for which 
+
+%% As an information good, competition seems likely to push marginal costs of using these tools to zero.
+%% There might be tasks that have a zero-sumness where people will pay a premium for the very best models.
+%% One might argue there will be increases in employment in developing AI tools, but consider that OpenAI has less than a thousand employees.\footnote{ 
+%%   https://www.linkedin.com/company/openai/
+%% }
+%% The most likely effects will be due to productivity effects.
+%% The new products that can be created when costs are lower.
+
+Digitization already pushed the marginal reproduction costs and distribution costs for information goods to zero---but the costs of initially producing those goods remained high: I could costlessly share an ebook with you, but writing a book was still a long, hard slog.
+
+Generative AI is an information goods factory, but it has human workers.
+Generative AI is that it works with us to produce information goods. 
+And the economic-so-what is that the machines can do their part of the productive process at zero marginal cost---or at least at a cost that will likely trend to zero.
+
+A prediction is an information good. 
+But it is also an experience good that might reveal its quality over a long time frame, depending on the nature of the prediction. 
+Once you know a prediction is good; it is probably useless other than as a data point that you should value the predictions of the machine more.
+If it is a prediction about what might happen, but that could be changed given the firm's actions, it could be a credence good.
+This is precisely the kind of task that the relative benefit of using an AI might be quite low if the ability to judge is low. 
+
+\subsection{Using an AI for some task has qualitative similarities to delegating a task to another human or team.}
+The decision to use an AI bears similarities to the decision to delegate some task to a subordinate.
+And conditional upon delegation, the skill of using AI bears similarities to the management of people and teams. 
+Deciding whether the output is sufficient requires judgment, whether the output is human-produced or otherwise. 
+
+
+%\subsection{Goods differ in their cost of human evaluation, which changes the cost of using AI for production.}
+
+\paragraph{Entrepreneurial innovation will focusing reducing AI management tasks as well as increasing model abilities}
+We will see investment to improve the capabilities of models but also try to reduce the costs of prompting and to reduce the cost of the evaluation. 
+The skills that AI complements are themselves potential targets for AI assistance. 
+We will likely see AIs that help write prompts or make it easier for humans to express themselves.  
+We will see AIs and related technologies that help evaluate output. 
+
+\subsection{AI will create new labor-labor substitution possibilities for ``Rick Rubin'' reasons.}
+In light of the change in what is delegated, I discuss how labor-labor substitution might change who performs a task. 
+In particular, job redesign will take advantage of the fact that skills in judging output are separate from the skill of creating some output.
+There are food critics who cannot cook; record producers who cannot play instruments; technologists who cannot program, and so on.
+As AI makes it so that humans no longer have to do every task in a job, AI might open up jobs to people who are otherwise blocked by a skill they lack.
+
+There are likely to be numerous tasks when prompting and judgment can lead to good outcomes even when the human offering those judgments cannot do it themselves.
+One reason is that the pool of people who can offer judgment is larger than the pool that can do the task. 
+This might be particularly true for tasks that require a great deal of skill.
+As a recent illustrative example,  the famed record product Rick Rubin described his value in a recent interview with Anderson Cooper:
+\begin{dialogue}
+\speak{Rick Rubin} I’ve no technical ability. And I know nothing about music
+\speak{Anderson Cooper} Well, you must know something.
+\speak{Rick Rubin} I know what I like and what I don’t like. I’m decisive about what I like and what I don’t like.
+\speak{Anderson Cooper} So what are you being paid for?
+\speak{Rick Rubin} The confidence that I have in my taste, and my ability to express what I feel, has proven helpful for artists.
+\end{dialogue}
+
+However, that task has to be marginal (assuming other blocking tasks are not also automated). 
+For example, identifying a bone fracture in an X-ray does not mean a person is ready to be a radiologist.
+I.e., if there was only one task that precluded them from doing some occupation, then AI might allow them to do that occupation.
+Allowing more people to do more tasks could have an indirect productivity effect. 
+Ironically, the harder the task to perform, the more potential for AI to unlock this substitution potential, as the pool of potential prompters and judges is much larger than the pool of doers.
+
+\subsection{Generative AI might allow for a kind of pseudo-human capital acquistiion.}
+Substitution to another human might require a hand-off if all the rest of the tasks still need to be done by the ``original'' human. 
+But AI augmentation might allow for a task re-design. 
+Consider that for some occupations, there are necessary tasks such that $c_h$ is essentially infinite, or so high that it would be uneconomic for that person to pursue that job because their effective efficiency wage would be lower than their next best alternative.  
+Take, for example, a master carpenter versus a handyman.
+There are many tasks in common between the two: driving to the job site, carrying tools, buying supplies, swinging a hammer, etc.
+But what is distinguishing is that there are tasks required of the master carpenter that the handyman is incapable of performing. 
+This drives down their wage below the handyman wage, and so they are handymen.
+If generative AI is inequality-reducing, I think this will be the mechanism: taking people that currently lack certain skills and letting them ``jump'' up. 
+
+This framing gives an interesting characterization of the human capital acquisition process  generally: learn skills that will lower your performance costs across tasks \emph{if} you can make the job requiring those tasks better than your best job option.
+The skills you acquire need to make that job marginal. 
+For example, the task ``read an MRI scan to detect a bone fracture'' is highly remunerative but only if learned in with all the other tasks in the ``Radiologist'' task sequence.
+Licensing aside---this skill alone is essentially worthless.  
+With AI augmentation, the marginal blocking skill might no longer be blocking. 
+
+\subsection{Generative AI substitutes ``maker labor'' and complements ``manager labor'' in the short-run.}
+In the model, there are just two broad ``kinds'' of labor: 
+Labor that does tasks, and labor that manages an AI doing that task. 
+While we might think there is some correlation between the cost of the machine and the human doing the task, this seems like an imprudent assumption.
+
+We should not presume that tasks that are hard for humans are easy for computers or vice versa. 
+We do hard, time-consuming tasks because the output is valued. 
+Playing excellent chess \emph{seemed} like the kind of thing computers can do well. 
+Generating photorealistic art, playing diplomacy, and generating new programs on the fly did not seem like tasks where computers would show capabilities.
+
+All else equal, more capable management increases the number of tasks an AI performs, holding AI capabilities fixed. 
+Being adjacent to a highly automatable task will tend to ``pull'' that task into an automated chain.
 
 
 \section{Discussion}
