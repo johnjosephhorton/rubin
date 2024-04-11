@@ -2,11 +2,9 @@ from textwrap import dedent
 from edsl import QuestionMultipleChoice
 from edsl.questions import QuestionLinearScale, QuestionNumerical
 
-### About the good being produced
-
-############################
-## Task within an occupation
-############################
+#############################
+## Tasks within an occupation
+#############################
 
 q_info = QuestionMultipleChoice(
     question_name = "info_good",
@@ -87,18 +85,4 @@ q_ratio_describe_to_do = q_describe = QuestionNumerical(
 
 from edsl import Survey
 task_survey = Survey([q_info, q_gen_ai_help, q_trigger, q_easy_to_tell, q_manager_task, q_ratio_describe_to_do])
-
-
-## This is overall question about sequencing - takes occupations and tasks as input
-
-q_task_sequence = QuestionLinearScale(
-    question_name = "task_sequence",
-    question_text = dedent("""\
-        For this: \"{{occupation}}\"
-        Consider the sequence of tasks: \"{{tasks}}\"
-        On a scale of 1 to 10, to what extent would these tasks happen in a predictable sequence of steps vs. be done in arbitrary order?
-        """), 
-    question_options = list(range(0, 11)), 
-    option_labels = {0:"Completely random order", 10: "Exact same sequence every time"}
-)
 
