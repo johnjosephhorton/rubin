@@ -7,6 +7,17 @@ from edsl import Scenario
 conn = sqlite3.connect('data.db')
 cursor = conn.cursor()
 
+def search_title(partial_title):
+    query = f"select * from occupation_data where title like '%{partial_title}%'"
+    tables = pd.read_sql_query(query, conn)
+    return tables
+
+def get_index(title):
+    titles = get_titles()
+    if title not in titles: 
+        raise Exception("Title not found")
+    return titles.index(title)
+
 def get_tasks(title):
     query = dedent(f"""\
         SELECT title, task 
@@ -23,27 +34,13 @@ def get_titles():
     titles = pd.read_sql_query(query, conn)['title'].tolist()
     return titles
 
-titles = get_titles()
-
-def get_single_scenarios(index):
-    if index < 0 or index >= len(titles):
-        raise ValueError(f"Index {index} is out of range. There are only {len(titles)} occupations.")
-    title = titles[index]
+def get_single_scenarios(title):
     tasks = get_tasks(title)
     return [Scenario({'occupation': title, 'task':task}) for task in tasks]
 
-def get_scenarios(index_or_slice):
+def get_scenarios(title_list):
     all_scenarios = []
-    if isinstance(index_or_slice, int):  # Single index
-        indexes = [index_or_slice]  # Convert to list for uniform processing
-    elif isinstance(index_or_slice, slice):  # Slice object (range)
-        start, stop, step = index_or_slice.indices(len(titles))  # Get slice parameters within range
-        indexes = range(start, stop, step)
-    else:
-        raise TypeError("Input must be an integer or a slice.")
-
-    # Process each index in the list or range
-    for index in indexes:
-        all_scenarios.extend(get_single_scenarios(index))
+    for title in title_list:
+        all_scenarios.extend(get_single_scenarios(title))
 
     return all_scenarios
