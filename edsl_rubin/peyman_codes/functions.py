@@ -54,29 +54,31 @@ def node_positions(occupation):
         (200, 200),
         'Record and maintain information on clients, vendors, and travel packages.':
         (200, -200),
-        '"Sink"':
-        (300, 0)
+        #'"Sink"':
+        #(300, 0)
         }
     elif occupation == 'insuranceUnderwriters':
         fixed_positions = {
         'Decline excessive risks.': 
-        (500, -150),
+        (200, -150),
         'Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.': 
-        (0, 0),
+        (-300, 0),
         'Evaluate possibility of losses due to catastrophe or excessive insurance.': 
-        (200, 300),
+        (-100, 300),
         'Decrease value of policy when risk is substandard and specify applicable endorsements or apply rating to ensure safe, profitable distribution of risks, using reference materials.': 
-        (300, 0),
+        (0, 0),
         'Review company records to determine amount of insurance in force on single risk or group of closely related risks.':
-        (200, -300),
+        (-100, -300),
         'Authorize reinsurance of policy when risk is high.':
-        (500, 150),
+        (200, 150),
         'Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.':
-        (-200, 0),
-        '"Sink"':
-        (600, 0)
+        (-500, 0),
+        #'"Sink"':
+        #(300, 0)
         }
     return fixed_positions
+
+
 
 
 # Plotting interactive graph - two functions: compare_graphs and plot_graphs
@@ -138,7 +140,8 @@ def plot_graphs(occupation,
                 df1_comment, 
                 df2_comment,
                 df1_unique_color, df2_unique_color, 
-                save_plot):
+                graph_title,
+                save_path):
     # Compare two graphs
     common, unique_to_df1, unique_to_df2 = compare_graphs(df1, df2)
 
@@ -150,8 +153,8 @@ def plot_graphs(occupation,
     net = Network(notebook=True, directed=True, cdn_resources="remote",
                 height = "800px",
                     width = "125%",
-                    select_menu = True,
-                    filter_menu = True,)
+                    select_menu = False,
+                    filter_menu = False,)
 
     # Add nodes with fixed positions and labels
     fixed_positions = node_positions(occupation)
@@ -160,11 +163,23 @@ def plot_graphs(occupation,
 
     # Add edges with corresponding labels
     for index, row in common.iterrows():
-        net.add_edge(row['source'], row['target'], title='In both', color='grey')
+        net.add_edge(row['source'], row['target'], title='In both', color='darkgrey')
     for index, row in unique_to_df1.iterrows():
         net.add_edge(row['source'], row['target'], title=df1_comment + row['comment'], color=df1_unique_color)
     for index, row in unique_to_df2.iterrows():
         net.add_edge(row['source'], row['target'], title=df2_comment + row['comment'], color=df2_unique_color)
 
     # Save interactive graph
-    net.save_graph(save_plot)
+    net.save_graph(save_path)
+
+    # Read the saved HTML file and insert the title
+    with open(save_path, 'r') as file:
+        html_content = file.read()
+
+    # Insert title in the HTML content
+    title_html = f"<center><h2>{graph_title}</h2></center>"
+    html_content = html_content.replace("<body>", f"<body>{title_html}", 1)
+
+    # Write the updated HTML content back to the file
+    with open(save_path, 'w') as file:
+        file.write(html_content)

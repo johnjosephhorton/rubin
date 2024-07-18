@@ -21,6 +21,7 @@ warnings.filterwarnings('ignore')
 pd.set_option('display.max_rows', 200)
 
 import itertools 
+import ast # for converting outputs to a list
 import networkx as nx
 from pyvis.network import Network
 
@@ -37,3 +38,4 @@ from textwrap import dedent
 
 Model.available()
 m4 = Model('gpt-4o')
+#m4 = Model('gemini-pro')
