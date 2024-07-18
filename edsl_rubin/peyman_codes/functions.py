@@ -10,6 +10,18 @@ def pick_occupation(occupation):
         GPT_input_occupation = 'insurance underwriters'
         plot_title_occupation = 'Insurance Underwriters'
         occupation_code = '13-2053'
+    elif occupation == 'pileDriverOperators':
+        GPT_input_occupation = 'pile dirver operator'
+        plot_title_occupation = 'Pile Driver Operators'
+        occupation_code = '47-2072'
+    elif occupation == 'shampooers':
+        GPT_input_occupation = 'shampooers'
+        plot_title_occupation = 'Shampooers'
+        occupation_code = '39-5093'
+    elif occupation == 'dredgeOperators':
+        GPT_input_occupation = 'dredge operators'
+        plot_title_occupation = 'Dredge Operators'
+        occupation_code = '53-7031'
     
     occupation_folder = f'{data_path}/daily_tasks_occupations_analysis/{occupation}'
     return GPT_input_occupation, plot_title_occupation, occupation_code, occupation_folder
@@ -38,43 +50,67 @@ def add_sink_node(dag_matrix, occupation):
 def node_positions(occupation):
     if occupation == 'travelAgents':
         fixed_positions = {
-        'Collect payment for transportation and accommodations from customer.': 
-        (0, -100),
-        'Converse with customer to determine destination, mode of transportation, travel dates, financial considerations, and accommodations required.': 
-        (-400, 200),
-        "Compute cost of travel and accommodations, using calculator, computer, carrier tariff books, and hotel rate books, or quote package tour's costs.": 
-        (-200, -100),
-        'Book transportation and hotel reservations, using computer or telephone.': 
-        (100, 0),
-        'Plan, describe, arrange, and sell itinerary tour packages and promotional travel incentives offered by various travel carriers.':
-        (-300, 0),
-        'Provide customer with brochures and publications containing travel information, such as local customs, points of interest, or foreign country regulations.':
-        (-400, -200),
-        'Print or request transportation carrier tickets, using computer printer system or system link to travel carrier.':
-        (200, 200),
-        'Record and maintain information on clients, vendors, and travel packages.':
-        (200, -200),
-        #'"Sink"':
-        #(300, 0)
+            'Collect payment for transportation and accommodations from customer.': 
+            (0, -100),
+            'Converse with customer to determine destination, mode of transportation, travel dates, financial considerations, and accommodations required.': 
+            (-400, 200),
+            "Compute cost of travel and accommodations, using calculator, computer, carrier tariff books, and hotel rate books, or quote package tour's costs.": 
+            (-200, -100),
+            'Book transportation and hotel reservations, using computer or telephone.': 
+            (100, 0),
+            'Plan, describe, arrange, and sell itinerary tour packages and promotional travel incentives offered by various travel carriers.':
+            (-300, 0),
+            'Provide customer with brochures and publications containing travel information, such as local customs, points of interest, or foreign country regulations.':
+            (-400, -200),
+            'Print or request transportation carrier tickets, using computer printer system or system link to travel carrier.':
+            (200, 200),
+            'Record and maintain information on clients, vendors, and travel packages.':
+            (200, -200),
+            #'"Sink"':
+            #(300, 0)
         }
     elif occupation == 'insuranceUnderwriters':
         fixed_positions = {
-        'Decline excessive risks.': 
-        (200, -150),
-        'Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.': 
-        (-300, 0),
-        'Evaluate possibility of losses due to catastrophe or excessive insurance.': 
-        (-100, 300),
-        'Decrease value of policy when risk is substandard and specify applicable endorsements or apply rating to ensure safe, profitable distribution of risks, using reference materials.': 
-        (0, 0),
-        'Review company records to determine amount of insurance in force on single risk or group of closely related risks.':
-        (-100, -300),
-        'Authorize reinsurance of policy when risk is high.':
-        (200, 150),
-        'Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.':
-        (-500, 0),
-        #'"Sink"':
-        #(300, 0)
+            'Decline excessive risks.': 
+            (200, -150),
+            'Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.': 
+            (-300, 0),
+            'Evaluate possibility of losses due to catastrophe or excessive insurance.': 
+            (-100, 300),
+            'Decrease value of policy when risk is substandard and specify applicable endorsements or apply rating to ensure safe, profitable distribution of risks, using reference materials.': 
+            (0, 0),
+            'Review company records to determine amount of insurance in force on single risk or group of closely related risks.':
+            (-100, -300),
+            'Authorize reinsurance of policy when risk is high.':
+            (200, 150),
+            'Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.':
+            (-500, 0),
+            #'"Sink"':
+            #(300, 0)
+        }
+    elif occupation == 'pileDriverOperators':
+        fixed_positions = {
+            'Move hand and foot levers of hoisting equipment to position piling leads, hoist piling into leads, and position hammers over pilings.':
+            (100, -250),
+            'Conduct pre-operational checks on equipment to ensure proper functioning.':
+            (-300, 0),
+            'Drive pilings to provide support for buildings or other structures, using heavy equipment with a pile driver head.':
+            (300, 0),
+            'Move levers and turn valves to activate power hammers, or to raise and lower drophammers that drive piles to required depths.':
+            (100, -100),
+            'Clean, lubricate, and refill equipment.':
+            (-100, 0)
+        }
+    elif occupation == 'shampooers':
+        fixed_positions = {
+            "Massage, shampoo, and condition patron's hair and scalp to clean them and remove excess oil.":
+            (100, 50),
+            'Advise patrons with chronic or potentially contagious scalp conditions to seek medical treatment.':
+            (0, 0),
+            'Treat scalp conditions and hair loss, using specialized lotions, shampoos, or equipment such as infrared lamps or vibrating equipment.':
+            (100, -50),
+            'Maintain treatment records.':
+            (200, 0)
         }
     return fixed_positions
 
@@ -177,7 +213,7 @@ def plot_graphs(occupation,
         html_content = file.read()
 
     # Insert title in the HTML content
-    title_html = f"<center><h2>{graph_title}</h2></center>"
+    title_html = f'<center><h2 style="font-size: 30px;">{graph_title}</h2></center>'
     html_content = html_content.replace("<body>", f"<body>{title_html}", 1)
 
     # Write the updated HTML content back to the file
