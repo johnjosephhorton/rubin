@@ -196,7 +196,8 @@ def plot_graphs(occupation,
                 df2_comment,
                 df1_unique_color, df2_unique_color, 
                 graph_title,
-                save_path):
+                save_path,
+                plot_removed_edges=True):
     # Compare two graphs
     common, unique_to_df1, unique_to_df2, flag_entries_df1, flag_entries_df2 = compare_graphs(df1, df2)
 
@@ -227,12 +228,13 @@ def plot_graphs(occupation,
         net.add_edge(row['source'], row['target'], title=df2_comment + row['comment'], color=df2_unique_color)
 
     # Add pseudo edges for removed triangle edges with dashed lines
-    if not flag_entries_df1.empty:
-        for index, row in flag_entries_df1.iterrows():
-            net.add_edge(row['source'], row['target'], title='Triangle edge removed:\n' + row['comment'], color='green', dashes=True)
-    if not flag_entries_df2.empty:
-        for index, row in flag_entries_df2.iterrows():
-            net.add_edge(row['source'], row['target'], title='Triangle edge removed:\n' + row['comment'], color='orange', dashes=True)
+    if plot_removed_edges == True:
+        if not flag_entries_df1.empty:
+            for index, row in flag_entries_df1.iterrows():
+                net.add_edge(row['source'], row['target'], title='Triangle edge removed:\n' + row['comment'], color='green', dashes=True)
+        if not flag_entries_df2.empty:
+            for index, row in flag_entries_df2.iterrows():
+                net.add_edge(row['source'], row['target'], title='Triangle edge removed:\n' + row['comment'], color='orange', dashes=True)
 
     # Save interactive graph
     net.save_graph(save_path)
