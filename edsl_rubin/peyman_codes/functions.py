@@ -122,20 +122,29 @@ def compare_graphs(df1, df2):
     '''
     For getting common elements of both graphs + unique elements of each graph
     '''
-    # Find common rows based on columns "scenario.task_A" and "scenario.task_B"
+    # Find entries in df1 where 'comment' ends with 'Flag'
+    flag_entries_df1 = df1[df1['comment'].str.endswith('TriangleRemovedFlag')]
+    
+    # Find entries in df2 where 'comment' ends with 'Flag'
+    flag_entries_df2 = df2[df2['comment'].str.endswith('TriangleRemovedFlag')]
+
+    # Remove flagged entries from df1 and df2
+    df1 = df1[~df1.index.isin(flag_entries_df1.index)]
+    df2 = df2[~df2.index.isin(flag_entries_df2.index)]
+
+    # Find common rows based on columns "source" and "target"
     common = pd.merge(df1, df2, 
                     on=['source', 'target'], 
                     suffixes=('_df1', '_df2'))
 
-    # Find unique rows in w
+    # Find unique rows in df1
     merged = pd.merge(df1, common[['source', 'target']], 
                     on=['source', 'target'], 
                     how='outer', 
                     indicator=True)
     in1_notIn2 = merged[merged['_merge'] == 'left_only'].drop(columns=['_merge'])
 
-
-    # Find unique rows in wo
+    # Find unique rows in df2
     merged = pd.merge(df2, common[['source', 'target']], 
                     on=['source', 'target'], 
                     how='outer', 
@@ -144,31 +153,41 @@ def compare_graphs(df1, df2):
     # Keep only rows that are in df1 but not in df2
     in2_notIn1 = merged[merged['_merge'] == 'left_only'].drop(columns=['_merge'])
 
-    return common, in1_notIn2, in2_notIn1
+    return common, in1_notIn2, in2_notIn1, flag_entries_df1, flag_entries_df2
 
 
 def insert_line_breaks(text, max_length=80):
     '''
-    For breaking long GPT comment lines 
+    For breaking long GPT comment lines while keeping existing line breaks
     '''
-    words = text.split()
-    lines = []
-    current_line = []
-    current_length = 0
-    
-    for word in words:
-        if current_length + len(word) + 1 > max_length:
+    def break_line(line, max_length):
+        words = line.split()
+        lines = []
+        current_line = []
+        current_length = 0
+
+        for word in words:
+            if current_length + len(word) + 1 > max_length:
+                lines.append(" ".join(current_line))
+                current_line = [word]
+                current_length = len(word) + 1
+            else:
+                current_line.append(word)
+                current_length += len(word) + 1
+
+        if current_line:
             lines.append(" ".join(current_line))
-            current_line = [word]
-            current_length = len(word) + 1
-        else:
-            current_line.append(word)
-            current_length += len(word) + 1
+        
+        return "\n".join(lines)
+
+    # Split the text by newline characters
+    segments = text.split('\n')
     
-    if current_line:
-        lines.append(" ".join(current_line))
+    # Apply line breaking to each segment
+    broken_segments = [break_line(segment, max_length) for segment in segments]
     
-    return "\n".join(lines)
+    # Reassemble the text with the original newlines
+    return "\n".join(broken_segments)
 
 
 def plot_graphs(occupation, 
@@ -179,11 +198,13 @@ def plot_graphs(occupation,
                 graph_title,
                 save_path):
     # Compare two graphs
-    common, unique_to_df1, unique_to_df2 = compare_graphs(df1, df2)
+    common, unique_to_df1, unique_to_df2, flag_entries_df1, flag_entries_df2 = compare_graphs(df1, df2)
 
     # Break down long comments into multiple lines
     unique_to_df1['comment'] = unique_to_df1['comment'].apply(lambda x: insert_line_breaks(x))
     unique_to_df2['comment'] = unique_to_df2['comment'].apply(lambda x: insert_line_breaks(x))
+    flag_entries_df1['comment'] = flag_entries_df1['comment'].apply(lambda x: insert_line_breaks(x[:-19])) # 19 is length of label 'TriangleRemovedFlag'
+    flag_entries_df2['comment'] = flag_entries_df2['comment'].apply(lambda x: insert_line_breaks(x[:-19]))
 
     # Create a Pyvis network
     net = Network(notebook=True, directed=True, cdn_resources="remote",
@@ -204,6 +225,14 @@ def plot_graphs(occupation,
         net.add_edge(row['source'], row['target'], title=df1_comment + row['comment'], color=df1_unique_color)
     for index, row in unique_to_df2.iterrows():
         net.add_edge(row['source'], row['target'], title=df2_comment + row['comment'], color=df2_unique_color)
+
+    # Add pseudo edges for removed triangle edges with dashed lines
+    if not flag_entries_df1.empty:
+        for index, row in flag_entries_df1.iterrows():
+            net.add_edge(row['source'], row['target'], title='Triangle edge removed:\n' + row['comment'], color='green', dashes=True)
+    if not flag_entries_df2.empty:
+        for index, row in flag_entries_df2.iterrows():
+            net.add_edge(row['source'], row['target'], title='Triangle edge removed:\n' + row['comment'], color='orange', dashes=True)
 
     # Save interactive graph
     net.save_graph(save_path)
