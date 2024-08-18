@@ -52,24 +52,6 @@ def pick_occupation(occupation):
 
 
 
-# Hacky way of fixing "Sink" node
-def add_sink_node(dag_matrix, occupation):
-    n = dag_matrix.shape[0]
-    tasks = dag_matrix.columns.tolist()
-    
-    if '"Sink"' in tasks:
-        return dag_matrix
-    elif occupation == 'travelAgents':
-        dag_matrix.loc['"Sink"'] = [0] * n
-        dag_matrix['"Sink"'] = [0, 0, 0, 0, 0, 0, 1, 1, 0]
-    elif occupation == 'insuranceUnderwriters':
-        dag_matrix.loc['"Sink"'] = [0] * n
-        dag_matrix['"Sink"'] = [1, 0, 0, 1, 0, 1, 0, 0]
-    
-    return dag_matrix 
-
-
-
 # For HTML graph positions
 def node_positions(occupation):
     if occupation == 'travelAgents':
@@ -90,8 +72,8 @@ def node_positions(occupation):
             (200, 200),
             'Record and maintain information on clients, vendors, and travel packages.':
             (200, -200),
-            #'"Sink"':
-            #(300, 0)
+            '"Target"':
+            (300, 0)
         }
     elif occupation == 'insuranceUnderwriters':
         fixed_positions = {
@@ -109,8 +91,8 @@ def node_positions(occupation):
             (200, 150),
             'Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.':
             (-500, 0),
-            #'"Sink"':
-            #(300, 0)
+            '"Target"':
+            (300, 0)
         }
     elif occupation == 'pileDriverOperators':
         fixed_positions = {
