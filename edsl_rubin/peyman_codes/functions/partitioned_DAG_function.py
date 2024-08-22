@@ -330,7 +330,14 @@ def partitioned_DAG(GPT_input_occupation,
 
     # Get last task(s) to be done in occupation
     last_task = get_last_tasks(GPT_input_occupation, tasks)
-    last_tasks_df = pd.DataFrame({'last_task': [last_task]})
+
+    # Check whether "artificial" last task is needed given DAG structure and last task(s) generated
+    source_tasks = set(partitions_DAG_df['source'].unique())
+    target_tasks = set(partitions_DAG_df['target'].unique())
+    DAG_implied_last_task = list(target_tasks - source_tasks - set(last_task))
+
+    last_tasks_df = pd.DataFrame({'last_task': [last_task],
+                                'implied_last_task': [DAG_implied_last_task]})
     last_tasks_df.to_csv(lastTask_output_filename, index=False)
 
 
@@ -338,6 +345,12 @@ def partitioned_DAG(GPT_input_occupation,
 
 
     # Add outgoing edges from last task(s) to "Target" node
+    # first combine original last task(s) with implied last task(s)
+    if len(DAG_implied_last_task) > 0:
+        print(f'Warning: {len(DAG_implied_last_task)} DAG implied last task(s) found.')
+        for task in DAG_implied_last_task:
+            last_task.append(task)
+
     for task in last_task:
         aux_df = pd.DataFrame({'source': [task],
                             'target': ['"Target"'],

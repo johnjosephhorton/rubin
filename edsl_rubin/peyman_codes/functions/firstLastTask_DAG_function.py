@@ -105,8 +105,6 @@ def firstLastTask_DAG(GPT_input_occupation,
 
     # Get first and last task(s) to be done in occupation
     first_task, last_task = get_first_last_tasks(GPT_input_occupation, tasks)
-    firstLast_tasks_df = pd.DataFrame({'first_task': [first_task], 'last_task': [last_task]})
-    firstLast_tasks_df.to_csv(firstLastTask_output_filename, index=False)
 
 
     # ### Compare pair of tasks
@@ -135,7 +133,28 @@ def firstLastTask_DAG(GPT_input_occupation,
     # In[148]:
 
 
+
+    # Check whether "artificial" last task is needed given DAG structure and last task(s) generated
+    source_tasks = set(GPT_firstLast_df['source'].unique())
+    target_tasks = set(GPT_firstLast_df['target'].unique())
+    DAG_implied_last_task = list(target_tasks - source_tasks - set(last_task))
+
+    firstLast_tasks_df = pd.DataFrame({'first_task': [first_task], 
+                                       'last_task': [last_task],
+                                       'implied_last_task': [DAG_implied_last_task]})
+    firstLast_tasks_df.to_csv(firstLastTask_output_filename, index=False)
+
+
+    # In[23]:
+
+
     # Add outgoing edges from last task(s) to "Target" node
+    # first combine original last task(s) with implied last task(s)
+    if len(DAG_implied_last_task) > 0:
+        print(f'Warning: {len(DAG_implied_last_task)} DAG implied last task(s) found.')
+        for task in DAG_implied_last_task:
+            last_task.append(task)
+
     for task in last_task:
         aux_df = pd.DataFrame({'source': [task],
                             'target': ['"Target"'],

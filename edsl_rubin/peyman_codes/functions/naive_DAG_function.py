@@ -83,13 +83,8 @@ def naive_DAG(GPT_input_occupation,
         return last_task
 
 
-    # In[210]:
-
-
     # Get last task(s) to be done in occupation
     last_task = get_last_tasks(GPT_input_occupation, tasks)
-    last_tasks_df = pd.DataFrame({'last_task': [last_task]})
-    last_tasks_df.to_csv(lastTask_output_filename, index=False)
 
 
     # ### 2.1) One Step Method: Directly ask for pairwise comparison w/o giving the "either" option
@@ -135,7 +130,24 @@ def naive_DAG(GPT_input_occupation,
     # In[213]:
 
 
+    # Check whether "artificial" last task is needed given DAG structure and last task(s) generated
+    source_tasks = set(pairwise_relationships_wo['source'].unique())
+    target_tasks = set(pairwise_relationships_wo['target'].unique())
+    DAG_implied_last_task = list(target_tasks - source_tasks - set(last_task))
+
+    last_tasks_df = pd.DataFrame({'last_task': [last_task],
+                                'implied_last_task': [DAG_implied_last_task]})
+    last_tasks_df.to_csv(lastTask_output_filename, index=False)
+
+
+
     # Add outgoing edges from last task(s) to "Target" node
+    # first combine original last task(s) with implied last task(s)
+    if len(DAG_implied_last_task) > 0:
+        print(f'Warning: {len(DAG_implied_last_task)} DAG implied last task(s) found.')
+        for task in DAG_implied_last_task:
+            last_task.append(task)
+
     for task in last_task:
         aux_df = pd.DataFrame({'source': [task],
                             'target': ['"Target"'],
@@ -230,12 +242,30 @@ def naive_DAG(GPT_input_occupation,
     # In[218]:
 
 
+    # Check whether "artificial" last task is needed given DAG structure and last task(s) generated
+    source_tasks = set(pairwise_relationships_w['source'].unique())
+    target_tasks = set(pairwise_relationships_w['target'].unique())
+    DAG_implied_last_task = list(target_tasks - source_tasks - set(last_task))
+
+    last_tasks_df = pd.DataFrame({'last_task': [last_task],
+                                'implied_last_task': [DAG_implied_last_task]})
+    last_tasks_df.to_csv(lastTask_output_filename, index=False)
+
+
+
     # Add outgoing edges from last task(s) to "Target" node
+    # first combine original last task(s) with implied last task(s)
+    if len(DAG_implied_last_task) > 0:
+        print(f'Warning: {len(DAG_implied_last_task)} DAG implied last task(s) found.')
+        for task in DAG_implied_last_task:
+            last_task.append(task)
+
     for task in last_task:
         aux_df = pd.DataFrame({'source': [task],
                             'target': ['"Target"'],
                             'comment': ['Job Completion Indicator']})
         pairwise_relationships_w = pd.concat([pairwise_relationships_w, aux_df], ignore_index=True)
+
 
 
     # In[219]:
