@@ -37,5 +37,5 @@ from edsl.questions.derived.QuestionLinearScale import QuestionLinearScale
 from textwrap import dedent
 
 Model.available()
-m4 = Model('gpt-4o', temprature = 0.25)
+m4 = Model('gpt-4o', temprature = 0)
 #m4 = Model('gemini-pro')
