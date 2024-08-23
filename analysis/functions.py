@@ -114,10 +114,13 @@ def pick_occupation(occupation):
         occupation_code = '39-5093'
     
     occupation_folder = f'{data_path}/daily_tasks_occupations_analysis/{occupation}'
+    indiffCurve_folder = f'{data_path}/daily_tasks_occupations_analysis/{occupation}/indiffCurves'
 
     # create folder in directory if it doesn't exist
     if not os.path.exists(occupation_folder):
         os.makedirs(occupation_folder)
+    if not os.path.exists(indiffCurve_folder):
+        os.makedirs(indiffCurve_folder)
 
     return GPT_input_occupation, plot_title_occupation, occupation_code, occupation_folder
 
