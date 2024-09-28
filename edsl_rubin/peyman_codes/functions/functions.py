@@ -114,6 +114,18 @@ def pick_occupation(occupation):
         GPT_input_occupation = 'shampooers'
         plot_title_occupation = 'Shampooers'
         occupation_code = '39-5093'
+    elif occupation == 'sociologists':
+        GPT_input_occupation = 'Sociologists'
+        plot_title_occupation = 'Sociologists'
+        occupation_code = '47-2041'
+    elif occupation == 'carpetInstallers':
+        GPT_input_occupation = 'Carpet installers'
+        plot_title_occupation = 'Carpet Installers'
+        occupation_code = '19-3041'
+    elif occupation == 'dancers':
+        GPT_input_occupation = 'Dancers'
+        plot_title_occupation = 'Dancers'
+        occupation_code = '27-2031'
     
     occupation_folder = f'{data_path}/daily_tasks_occupations_analysis/{occupation}'
 
