@@ -29,13 +29,14 @@ from pyvis.network import Network
 import copy
 import random
 
-# from edsl.questions import QuestionCheckBox, QuestionFreeText
-# from edsl import Scenario, Model
-# from edsl.questions import QuestionMultipleChoice
-# from itertools import combinations
-# from edsl.questions.derived.QuestionLinearScale import QuestionLinearScale
-# from textwrap import dedent
+import edsl
+from edsl.questions import QuestionCheckBox, QuestionFreeText
+from edsl import Scenario, Model
+from edsl.questions import QuestionMultipleChoice
+from itertools import combinations
+from edsl.questions.derived.QuestionLinearScale import QuestionLinearScale
+from textwrap import dedent
 
-# Model.available()
-# m4 = Model('gpt-4o', temprature = 0)
-# #m4 = Model('gemini-pro')
+Model.available()
+m4 = Model('gpt-4', temprature = 0.01)
+#m4 = Model('gemini-pro')
