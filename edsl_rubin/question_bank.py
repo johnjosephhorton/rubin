@@ -43,7 +43,8 @@ q_easy_to_tell = QuestionLinearScale(
     question_text = dedent("""\
         Consider the occupation {{ occupation }}. 
         And consider the task done by someone in this occupation: {{ task }}.
-        Rate how easy it is for a non-expert to tell if the task is done correctly, on a scale of 1 to 10.
+        Rate how easy it is for a non-expert to tell if the task is done correctly, 
+        on a scale of 1 to 10.
         
         The task: {{ task }}.
         1 = Very easy for a non-expert to tell if done correctly.
@@ -61,10 +62,13 @@ q_manager_task = QuestionMultipleChoice(
     Part of this occupation is this task: {{ task }}.
     
     Imagine a manager who was in this occupation is now asking a worker with the same occupation to do the task. 
-    How much specific instruction is this task likely to require? 
+    How much specific instruction does this task likely require? 
     """,
     question_name = "manager_task", 
-    question_options = ["None", "Almost none", "Some - less than an hour", "Great deal - mulitple hours"]
+    question_options = ["None", 
+                        "Almost none", 
+                        "Some - less than an hour", 
+                        "Great deal - mulitple hours"]
 )
 
 q_ratio_describe_to_do = q_describe = QuestionNumerical(
