@@ -37,6 +37,9 @@ purge:
 	cd ../computed_objects && find . -maxdepth 1 -type f -print0 | xargs -0 -I {} mv {} unused && touch PLACEHOLDER.txt
 	cd parameters && find . -maxdepth 1 -type f -print0 | xargs -0 -I {} mv {} unused && touch PLACEHOLDER.txt
 
+plots += plots/two_tasks.pdf
+plots/two_tasks.pdf: ../analysis/create_two_task_plot.py ../analysis/CostVisualization.py
+	 cd ../analysis && python create_two_task_plot.py
 
 $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $(LEVEL_PLOTS) $(LINE_PLOTS) $(WRAPPERS) $(COMBINED_TABLES) $(plots) $(tables)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
