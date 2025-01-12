@@ -41,6 +41,12 @@ plots += plots/two_tasks.pdf
 plots/two_tasks.pdf: ../analysis/create_two_task_plot.py ../analysis/CostVisualization.py
 	 cd ../analysis && python create_two_task_plot.py
 
+plots += plots/optimal_paths.pdf
+plots/optimal_paths.pdf: ../analysis/create_optimal_paths.py ../analysis/CostVisualization.py
+	 cd ../analysis && python create_optimal_paths.py
+
+
+
 $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $(LEVEL_PLOTS) $(LINE_PLOTS) $(WRAPPERS) $(COMBINED_TABLES) $(plots) $(tables)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
