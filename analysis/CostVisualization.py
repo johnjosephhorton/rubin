@@ -127,7 +127,7 @@ class CostVisualization:
         return V[0, i0, j0], path
 
     def create_visualization(self, resolution=300, figsize=(10, 10)):
-        """Create the base visualization without saving."""
+        """Create the base visualization."""
         # Create grid
         q1 = np.linspace(0.001, 1, resolution)
         q2 = np.linspace(0.001, 1, resolution)
@@ -138,7 +138,7 @@ class CostVisualization:
         min_cost = np.min(costs, axis=0)
 
         # Set up figure
-        self.current_fig = plt.figure(figsize=figsize)
+        plt.figure(figsize=figsize)
 
         # Create contour plot
         min_val = min_cost.min()
@@ -148,7 +148,6 @@ class CostVisualization:
         if np.isclose(min_val, max_val):
             levels = np.linspace(min_val - 0.1, min_val + 0.1, 20)
         else:
-            # Add a small epsilon to max_val to ensure strictly increasing levels
             levels = np.linspace(min_val, max_val + 1e-10, 20)
 
         plt.contourf(Q1, Q2, min_cost, levels=levels, cmap="Blues", alpha=0.5)
@@ -217,17 +216,25 @@ class CostVisualization:
         plt.ylim(0, 1)
         plt.xlabel("$q_1$")
         plt.ylabel("$q_2$")
-        plt.title("Figure 2: Cost minimization with two tasks")
         plt.tight_layout(pad=1.5)
 
+        # Store the current figure
+        self.current_fig = plt.gcf()
+
     def plot_optimal_paths(
-        self, starting_points, T, m=100, marker_size=100, colors=None, show_labels=True
+        self,
+        starting_points,
+        time_horizons,
+        m=100,
+        marker_size=100,
+        colors=None,
+        show_labels=True,
     ):
-        """Plot multiple optimal paths from different starting points.
+        """Plot multiple optimal paths from different starting points with different time horizons.
 
         Args:
             starting_points (list): List of (q1, q2) tuples for starting points
-            T (int): Number of time periods
+            time_horizons (list): List of T values (time horizons) for each starting point
             m (int): Grid resolution for discretization
             marker_size (float): Size of the markers
             colors (list, optional): List of colors for each path. If None, uses default color cycle
@@ -235,6 +242,11 @@ class CostVisualization:
         """
         if self.current_fig is None:
             self.create_visualization()
+
+        if len(starting_points) != len(time_horizons):
+            raise ValueError(
+                "Number of starting points must match number of time horizons"
+            )
 
         if colors is None:
             # Use a colorblind-friendly palette
@@ -253,8 +265,8 @@ class CostVisualization:
         while len(colors) < len(starting_points):
             colors.extend(colors)
 
-        for idx, ((q1_start, q2_start), color) in enumerate(
-            zip(starting_points, colors)
+        for idx, ((q1_start, q2_start), T, color) in enumerate(
+            zip(starting_points, time_horizons, colors)
         ):
             # Find optimal path
             cost, path = self.find_optimal_path(q1_start, q2_start, T, m)
@@ -271,7 +283,7 @@ class CostVisualization:
                 alpha=0.6,
                 linewidth=2,
                 zorder=5,
-                label=f"Path {idx+1}",
+                label=f"Path {idx+1} (T={T})",
             )
 
             # Add transparent markers along the path
@@ -310,35 +322,25 @@ class CostVisualization:
 
     def save_figure(self, filepath):
         """Save the current figure to a file."""
-        if self.current_fig is not None:
-            plt.savefig(filepath)
-            plt.close()
-            self.current_fig = None
+        if self.current_fig is None:
+            self.create_visualization()
+        plt.savefig(filepath)
+        plt.close()
+        self.current_fig = None
 
 
 if __name__ == "__main__":
     # Create visualization instance
-    viz = CostVisualization(c_m=1.0, c_h=3)
+    viz = CostVisualization(c_m=1.0, c_h=3.0)
 
-    starting_points = [
-        (0.1, 0.1),  # Point 1
-        (0.3, 0.2),  # Point 2
-        (0.2, 0.4),  # Point 3
-        (0.4, 0.3),  # Point 4
-        (0.7, 0.6),
-    ]
+    # Example usage:
+    # Option 1: Just the base visualization
+    viz.create_visualization()
+    viz.save_figure("cost_visualization.pdf")
 
-    # Plot all paths
-    viz.plot_optimal_paths(starting_points, T=150, m=100)
-
-    # Save the result
-    viz.save_figure("multiple_paths_visualization.pdf")
-
-    # Create base visualization
-    # viz.create_visualization()
-
-    # # Add optimal path starting from (0.1, 0.1)
-    # viz.plot_optimal_path(0.5, 0.1, T=150, m=100, path_color="red")
-
-    # # Save the result
-    # viz.save_figure("optimal_path_visualization.pdf")
+    # Option 2: With optimal paths
+    viz = CostVisualization(c_m=1.0, c_h=3.0)
+    starting_points = [(0.1, 0.1), (0.3, 0.2), (0.2, 0.4)]
+    time_horizons = [50, 100, 150]
+    viz.plot_optimal_paths(starting_points, time_horizons)
+    viz.save_figure("cost_visualization_with_paths.pdf")

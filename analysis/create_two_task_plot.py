@@ -1,4 +1,6 @@
 from CostVisualization import CostVisualization
 
-c = CostVisualization(c_m=1, c_h=3)
-c.save_figure("../writeup/plots/two_tasks.pdf")
+# Create visualization instance
+viz = CostVisualization(c_m=1.0, c_h=3)
+
+viz.save_figure("../writeup/plots/two_tasks.pdf")

@@ -22,7 +22,7 @@
 
 \begin{document}
 %\title{The Economics of Generative and Agentic AI}
-\title{The Labor Economics of Agentic AI}
+\title{Agentic AI}
 \author{John Horton\footnote{I used AI extensively to write this paper, particularly Claude 3.5 Sonnet and o1 pro from OpenAI. Thanks for complementing my labor, AI agents!}\\MIT \& NBER}
 \date{\today{}}
 
@@ -43,135 +43,117 @@ The model focuses on the decision to use an AI for a task based on the cost of h
 Unlike other tasks models, it considers the interdependence of tasks in a sequence. 
 Tasks can be efficiently ``chained'' together in the sense that each task produces someting that feeds into the next without human intervention.
 A task might be added to an automated chain even if the human has an absolute advantage in that task in isolation, reversing the usual comparative advantage calculation.
+Furthermore, where investments should be make in AI that can minimize costs depends on the timeline of the investment and can have surprising dyanmics, such as abruptly stopping work to focus on tasks that are still far away from automation.
 \end{abstract}
 
 \onehalfspacing
   
 \section{Introduction}
-The distinctive feature of generative AI is captured in its name: it generates---writing, code, images, music, and videos---in response to human requests, or ``prompts.''
-Yet these model generations only become (potentially) economically valuable when humans judge these model outputs as suitable for their needs.
-If the model outputs are generally poor or too unreliable, the human might eschew AI and do the task themselves.
-This creates a practical question: what tasks should be routed to an AI versus performed directly by a worker?
-And if a job consists of multiple tasks, what should the allocation between human and machine be, collectively?
-
 Multiple AIs working in concert, or so-called ``Agentic AI,'' has captured the imagination of researchers and practitioners alike.\footnote{See a report written Gemini Advanced here: https://bit.ly/40cYsH1.}
-The enthusiasm reflects the usefulness of the task-based view of production: many goods are produced by the completion of tasks.
-And these tasks often have a recursive sub-structure, allowing them to be decomposed into smaller, simpler tasks.
-Those simpler tasks might more plausibly done by capable AIs rather than humans, particularly as model capabilities improve.
-But even with powerful AI models, in designing AI agents, specialization is not just for humans.
+The enthusiasm reflects the usefulness of the economist's task-based view of production: many goods are produced by the completion of identifiable tasks, and those tasks often have a recursive sub-structure, allowing them to be decomposed into smaller, simpler tasks.
+Those simpler tasks might more plausibly done by AIs, particularly as model capabilities improve and the AI agent is specialized for that task. 
+Adam Smith and Henry Ford would both see the point immediately. 
 
-The ``agentic'' of agentic AI captures the notion that an AI working on a particular task should be specialized for that task: 
-the agent should have resources, knowledge and capabilities needed for that task and that task alone.
-It likely needs input from other agents and will pass off completed tasks to other agents.
-It likely needs to know the overall goal of the project, but it cannot be asked to know every detail of every other agent's role.
-In short, the agent is specialized in the same way that a human worker might be specialized. 
-While engineers might cast this as simply reflecting good software engineering principles---separation of concerns, modularity, clean interfaces between sub-components---it also describes an effective productive process in general.
-In short, enthusiasm for Agentic AI is enthusiasm for the division of labor---old wine in new bottles. 
+% But even with powerful AI models, in designing AI agents for work, specialization is not just for humans.
+% The ``agentic'' of agentic AI captures the notion that an AI working on a particular task should be specialized for that task: 
+% The agent should have the resources, knowledge, and capabilities needed for that task and that task alone.
+% It will need inputs from other agents and will pass off completed tasks to other agents.
+% While engineers might cast this as simply reflecting good software engineering principles---separation of concerns, modularity, clean interfaces between sub-components---it also describes an effective production process in general.
+% In short, enthusiasm for Agentic AI is partially enthusiasm for the division of labor---old wine in new bottles.
 
-This paper presents a simple task-based model of agentic AI and human labor.
+A natural question, of course, is how far might Agentic AI go?
+This is difficult to answer credibly, as technological progress in AI is happening quickly and the answer depends on entrepreneurial activity we cannot hope to fully anticipate.
+Predictions based on task content seem inherently difficult; as a comparative exercise, our failure to predict the extent of offshoring---arguably a far simpler forecasting problem---should be humbling \citep{ozimek2019overboard}.
+Even at present, we see AI models that can do super-human work in some domains, but then make childish mistakes in others, with no obvious or unifying point of view that could explain the gaps \citep{vafa2024large}.
+This incoherence makes the standard economist trick with new technology---treat it as a fall in the cost of ``X'' where ``X'' is, say, prediction, rote computation, light, or locomotive force---difficult to apply.
+
+Although we cannot credibly claim to know what AIs can or will do, we can describe in general terms how they are---and likely will be---used in production.
+Stepping back, the distinctive feature of generative AI is in the name: it generates---writing, code, images, music, and videos---in response to human requests, or ``prompts.''
+But these model generations only become (potentially) economically valuable when humans judge these model outputs as suitable for their needs.
+If the model outputs are generally poor or too unreliable for a given application, the human might eschew AI and do the task themselves; if the model outputs are good enough, the human role might simpy be juding the output and giving feedback to the AI as needed (with less capable AIs requiring more human supervision).
+
+The key question---should an AI do a task instead of a human, given the costs and benefits?---is not a technical question, but an economic one.
+It is also both a practical question and a research question: practitioners want to know how to efficiently redesign the productive process; researchers want to know what this transformation implies for the economy and the labor market.
+Policy makers in particular are interested in whether technology can be guided to be more complementary to human labor rather than displacing it \citep{acemoglu2018automation}.
+
+Understandably, most work to date has addressed this question by focusing on the actual content of the tasks and technical capabilities of machines, as determined by some engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
+This work has also kept with the conceit of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
+This is a useful simplification (or perhaps viewed as a question for operations research), but, of course, actual production involves the output of a completed task often being used as input to the next task.
+
+We present asimple task-based model of agentic AI and human labor, but a) is agnostic about the capabilities of AIs now or in the future and b) focuses on the interdependence of tasks in the productive process rather than their content.
 As with other task-based models, the focus is on whether labor or capital (here, AI) is assigned to each task.
-In the model, the decision to use an AI is based on comparing two costs: the cost of having a human direct and evaluate the AI's output versus the cost of having the human do the task directly.
-This might seem like another way of stating that tasks get assigned to whichever factor has the comparative advantage, but this is not the case:
-the model considers that each task's output often serves as input to subsequent tasks in a sequence.
-This interdependence can profoundly change the optimal allocation of tasks between humans and machines, even reversing the usual comparative advantage argument.
+In the model, the decision to use an AI is based on comparing two costs: the cost of having a human direct and evaluate the AI's output (which depends on the capabilities of the AI at that task) versus the cost of having the human do the task directly.
+This might seem like another way of stating that tasks get assigned to whichever factor has the comparative advantage in that task, but this is not the case: the position of tasks within the productive process profoundly change the optimal allocation of tasks between humans and machines.
+This in turn changes the returns to investing in various AI capabilities both statically and dynamically.
 
-In the model, when a single task is performed by an AI, there is still a human asking for the task to be done and evaluating the output.
-However, it is also possible to create an automation chain where an AI completing one task feeds the output into the next task, without a human intervening between the two tasks.
-This amortizes the cost of the human's supervision over multiple tasks, but with the downside that a larger chain is more likely to have failures.
+When a single task is performed by an AI, there is a human asking for the task to be done and evaluating the output.
+However, it is also possible to create an automation ``chain'' where an AI completing one task passes the output into the next task, without human intervention.
+This possibility is supposed to capture the idea of ``agentic AI'' that can complete a sequence of tasks autonomously, albeit with a human providing initial instructions and final evaluation.
+This chaining amortizes the cost of the human's supervision over multiple tasks, but with the downside that a larger chain is more likely to have failures and require human supervision or intervention more often.
 This chaining is potentially a source of enormous productivity gains, \emph{but} it requires more powerful AIs that can do each task with a high probability of success, as in the O-ring model of production \citep{kremer1993}.
-The role humans plays in the model as offering judgement is consistent with the emphasis in \cite{agrawal2019exploring}.
+The role humans play in the model as offering judgment is consistent with the emphasis in \cite{agrawal2019exploring}.
 
-A key implication of the model is that the possibility of ``chaining'' automated tasks together can reverse comparative advantage calculations for individual tasks.
-It can be efficient to use an AI for a task even if humans have a comparative advantage in that task, if chaining allows for a longer chain of tasks to be fully automated.
-A surprisingly implication of chaining is that improvement the AI for a seemingly unrelated task can cause a task to go directly from being done by human to being done by machine.
-Allocating tasks to either a single human, a single AI, or a chain of AIs can be structured as a dynamic programing problem that can be solved numerically in $O(n^2)$ time.
+A key implication of the model is that the possibility of ``chaining'' automated tasks together can reverse comparative advantage assignments for individual tasks. 
+It can be efficient to use an AI for a task even if humans have a comparative advantage in that task in isolation, if chaining allows for a longer chain of tasks to be fully automated.
+A surprising implication of chaining is that improvements in AI for a seemingly unrelated task can cause a task to go directly from being done by human to being done by machine.
 
-The model provides a way to calculate the return to investing in AI capabilities. 
-These returns also depend on interdependencies between tasks and the state of the art of AI in other tasks.
-First, for task far away from automation, investments in AI capabilities offer no return because the AI is inframarginal.
-But once above the threshold, however, and the human is replaced by AI, further improvements in AI capabilities offer first-order returns. 
-However, investments in that task might in turn cause other tasks to be chained, which can lead to a second-order return.
-And when that occurs, new investment opportunities open up in those tasks.
-Once chained, improvements in AI capabilities at one task increases the return to investing in other tasks in the same chain.
+In the paper, we explore the $n = 2$ case in detail, which can illustrate the main points of the model, but we also discuss the general $n$-task problem. 
+We show that there are $F(2n + 1)$ possible production arrangements, where $F(k)$ is the $k$th Fibonacci number.
+We also show how the allocation problem can be solved numerically in $O(n^2)$ time using dynamic programming.
 
-This task but with chaining framework helps conceptually reconcile competing views about automation in production. 
+Beyond just allocation, the model provides a way to calculate the return to investing in AI capabilities in specific tasks.
+These returns depend on interdependencies between tasks and the state of AI capabilities in other tasks.
+For tasks far from economical automation, investments in AI capabilities offer no return because the AI remains inframarginal.
+However, once capabilities exceed the threshold where AI replaces humans, further improvements in AI capabilities offer first-order returns.
+But beyond the first-oder, investments in the AI doing that task might in turn enable task-chaining.
+When that occurs, new investment opportunities emerge in those tasks.
+And once tasks are chained, improvements in AI capabilities for one task increase the returns to investing in other tasks in the same chain.
+
+In the $n = 2$ case, we show directly how the time horizon matters in investing in AI capabilities. 
+With a short time horizon (or say, a high discount rate), it can be optimal to invest heavily in a single AI capability, leaving the other task to always be done by humans.
+But with a long horizon (or low discount rate), the strategy changes. 
+As with other optimal growth problems, there's a ``get on the turnpike'' effect: the optimal path is to invest heavily in the lagging task until it too can be automated, after which we have balanced investment across AI tasks.
+
+Another way to think about it is that over short horizons we have task-level substitution, but over long horizons we have system-level substitution.
+This feature of the model connects to and potentially reconcile competing views about automation in production. 
 Some researchers emphasize task-level substitution between AI and labor \citep{autor2003skill, acemoglu2018automation}, while others argue that meaningful substitution happens primarily at the system level \citep{bresnahan2020artificial}. 
 One could interpret the model as showing how task-level decisions aggregate into system-level automation through task chaining.
 
-The model predicts that improvements in AI will inherently reduce labor use per unit of the good, and hence the price. 
-But whether this increases or decreases the demand for labor even for that task depends on the elasticity of demand for that good in the product market.
-As a historical touchpoint, consider that the enormous increases in agricultural were not manifested by humans eating 40x more food, but rather having a shrinking agricultural sector, in terms of headcount.
-Perhaps even more important, the creation of new goods requiring new tasks is likely to be of first-order importance in the economy, and yet these are hard to model credibly---though it does seem likely that ``freed up'' labor will tend to create new goods that tend be complement that labor, not because of some technicalogical reason but simply because of the incentives to do so.
-As such, the paper stays silent on these questions and does not offer a general equilibrium model of the economy.
-The reason is simple: if AI has productivity effects that are so large they are worth paying attention to, the less likely we could say something meaningful in highly a stylized model.
+Although the model is deveoped as a kind of algorithmic cost function, it ultimately produces cost functions that have standard properties and can be nested within a more general model of the economy. 
+The model predicts that improvements in AI will inherently reduce labor use per unit of the good and hence the price.
+Whether this increases or decreases the demand for labor even for that task depends on the elasticity of demand for that good in the product market---an often unknown quantity, particualrly for very large changes in costs\footnote{E.g., if an MRI and full expert-level report could be had for \$15, how many more MRIs would be done in the US? This is not a question that can be answered with identification coming from by a 5\% change in medical reimbursement rates.}.
+Further complicating things, if AI has wide-ranging effects, changing the cost of many goods at once, then a partial equilibrium analysis that ignores income effects or cross-price elasticities would be insufficient, even setting aside the change in task composition from new goods and services.
+This limitation suggests the need for complementary empirical work tracking the evolution of tasks and occupations as AI capabilities advance.
 
-\section{Economic treatment of technological innovation and labor markets}
-% Good
-One approach to understanding the impact of technology on labor markets has been to focus at the ``task'' level.
-Goods are produced by the completion of tasks and those tasks can be assigned to the factor of production with the comparative advantage in that task.
-This approach has been applied not just to technology but also to trade and offshoring.
-But specifically with respect to AI and automation, the task-based view is that labor, by being more flexible \citep{acemoglu2011skills}, has an absolute advantage in ``new'' tasks, but that as time passes, they become susceptible to automation \citep{acemoglu2018}.
-
-% Good
-A contrasting view of technology is offered by \cite{bresnahan2020artificial}, who argues there has been no task-level substitution with the AI systems we actually see in production: ``the transition to ICT-based production has largely proceeded at the system level, not the task level.''
-To the extent there is important labor-capital substitution, the argument is that it will happen at the system level.
-There is a long tradition in studies of ICT to take a ``systems'' view---that ICT requires a reconfiguration of production to reap the benefits \citep{bresnahan2002information}. %(Cite Erik).
-
-An argument for a task-based view with respect to generative AI is that it does tasks.
-The things it can do well: analyzing data, writing reports, drafting communications, doing research, coming up with plans, etc., certainly seem like the kinds of tasks common across large numbers of workers.
-This stands in contrast to earlier views of AI as primarily a prediction technology \citep{agrawal2019}.
-It is still a prediction technology is a sense, but is also a information goods factory. 
-Experimental evidence at knowledge worker tasks shows large productivity gains using ChatGPT for a collection of knowledge worker tasks \citep{noy2023experimental}.
-The fraction of tasks currently performed by workers in the US that might be done or augmented with LLMs is considerable \citep{eloundou2023gpts}.
-This is perhaps not surprising given the models were explicit trained on data that was generated by humans doing these tasks.
-This stands in contrast to, say, ICT like databases, servers, data centers, recommender systems, etc. are better characterized as technologies that can be used to build systems that might do some tasks or replace whole collections of tasks.  
-The product market success and adoption of ChatGPT is a testament to this: there are 100M users of OpenAI and presumably, many are using it for their work.
-Even the names of these technologies indicate their role of helping individuals: the names people use like ``co-pilot'' and ``assistant'' 
-
-The literature to date on AI specifically (as opposed to automation more generally) in the task-based tradition has emphasized AI as a prediction technology \citep{agrawal2019}.
-While forecasting and prediction are certainly key firm tasks, relatively few workers have that as a task \emph{per se}. 
-By comparison, the outputs of generative AI---things like writing, research, or analysis (which could include prediction) are commonplace. 
-As a case in point, on ONET, only 22 occupations are returned for the search term ``predicting.'' 
-By comparison, the occupations returned for ``communicating,'' ``writing'' and ``analysis'' are 426, 332, and 408, respectively. 
-Furthremore, it really does make sense to think of tasks as having outputs that feed into other tasks.
-
-\section{A model of production}
-
-We begin by analyzing the production process for a single task before extending to multiple interdependent tasks.
-This approach allows us to isolate the fundamental economic trade-offs before introducing task interdependencies.
-
+\section{A model of production} \label{sec:model}
 Consider a worker completing some sequence of tasks as part of their job.
+They can do teh task themselves, at a cost of $c_h$.
 If they choose to use an AI, the human asks the AI to perform the task with a ``prompt''---a request to the model. 
+Prompting costs them $c_p$.
 The AI tries to perform the task, generating output.
-The worker then evaluates the output to decide if it is suitable for their needs. 
-If it is, the worker can continue to the next task; 
-if it is not, the worker can try to modify the prompt and re-evaluate the new output until the need is satisfied. 
-Figure~\ref{fig:flow} shows this process.
+That output is then evaluated by the human, at a cost to them of $c_e$.
+The human can evaluate perfectly.
 
-\begin{figure}
-  \caption{Using AI at Work} \label{fig:flow}
+After we evaluation, we learn if the AI succeeded or failed.
+The AI produces the output with a probability $q$, failing with a probability $1-q$.
+If the AI fails, the human can provide a new prompt and evaluate a new attempt, incurring costs $c_p$ and $c_e$ again.
+Let $c_m = c_p + c_e$ denote the total ``management'' costs associated with using the AI.
+Figure~\ref{fig:flow} shows this process graphically.
+
+\begin{figure}[h]
+  \centering
+  \caption{Using AI to complete a task} \label{fig:flow}
   \includegraphics[width = \textwidth]{images/flow.png}
+  \footnotesize{Notes: This figure illustrates the iterative process of using AI to complete a task. The human provides a prompt, the AI generates output, and the human evaluates whether the output meets their needs. If not, the process repeats with a refined prompt.}
 \end{figure}
 
-To make predictions, we need to make some assumptions about the costs of the different components of the process.
-Let us define the following:
-\begin{itemize}
-    \item $c_h$: The cost of human performance of the task
-    \item $c_p$: The cost of providing instructions (``prompting'') to the AI
-    \item $c_e$: The cost of evaluating the AI's output
-    \item $q$: The probability that the AI successfully completes the task, given the prompt
-\end{itemize}
-
-Let $c_m = c_p + c_e$ denote the total ``management'' costs associated with using the AI.
-In terms of notation, the tasks are numbered 1, 2, 3, and so on.
-When a human performs the task, we denote this as $\human{\cdot}$ with cost $\cost{\human{\cdot}} = c_h$.
+When a human performs the task, we denote this as $\human{\cdot}$.
 When an AI attempts the task under human supervision, we denote this as $\machine{\cdot}$.
-
-If the AI fails (with probability $1-q$), the human can provide a new prompt and evaluate a new attempt, incurring costs $c_m$ again.
-Attempts are independent, leading to the following result:
+For a multiple task example, if the first task was done by AI and the other two by humans, we would write $\machine{1}\human{2}\human{3}$.
+Success or failure attempts are assumed to be independent, leading to the following simple Lemma~\ref{lemma:single}.
 
 \begin{lemma}[Single Task Automation Criterion] \label{lemma:single}
-A task should be automated if and only if $\cost{\machine{1}} < \cost{\human{1}}$, which occurs when $c_m/q < c_h$.
+A job with a single task should be automated if and only if AI quality exceeds the threshold $\underline{q} := c_m / c_h$.
 \end{lemma}
 \begin{proof}
 The expected cost of using the AI is:
@@ -183,116 +165,64 @@ where the second line follows from the standard result for the expectation of a 
 Therefore, automation is optimal when $c_m/q < c_h$.
 \end{proof}
 
-This criterion has intuitive comparative statics.
-Automation becomes more attractive when:
-\begin{enumerate}
-    \item Human performance costs ($c_h$) are high
-    \item Management costs ($c_m$) are low
-    \item AI success probability ($q$) is high
-\end{enumerate}
+This criterion has intuitive comparative statics: automation becomes more attractive when human performance costs are high, management costs are low, and the AI's success probability is high.
+One implications is that improvements in tools for prompting and evaluation that lower human costs can reduce management costs and thus make automation more attractive, even if the AI's success probability is unchanged.
 
-Note that improvements in tools for prompting and evaluation can reduce management costs and thus make automation more attractive, even if the AI's success probability is unchanged.
-
-\begin{tcolorbox}
-\subsection{Discussion: Is that what prompting is really like?}
-There is some unrealism in the model that makes the presentation simpler but elides from pracical considerations.
-First, the model assumes that failures and sucesses are independent, when they might be correlated.
-A bad initial prompt might lead to a bad output, which might be hard to fix, causing the system to get stuck and perhaps never succeed. 
-Second, we might expect that subsequent attempts are easier fix and less costly, perhaps requiring less work. 
-While true, the main economic feature to capture is that a low $q$ raises management costs.
-The simplicity of the math makes it easier to see the main points and the model is not intended to be a literal description of the process.
-\end{tcolorbox}
-
-\begin{tcolorbox}
-\subsection{Discussion: Are management costs low?}
-Prompting and evaluation are human skills.
-How high are $c_p$ and $c_e$?
-One question is simply how long theose tasks take to do; other is how widely held these skills are in the population.
-There is no inherent reason to think that eitehr will itself be a low-skill task.
-Most of management is deciding what you want done, asking right people to do it, in a way that leads to an effective outcome, and then monitoring the process to see if it acheiving the desired goals.
-\end{tcolorbox}
-
-\begin{tcolorbox}
-\subsection{Comment: Managing an AI is similar to managing people}
-The decision to use an AI bears similarities to the decision to delegate some task to a subordinate or team.
-Doing this well requires being a judge of talent, scoping and explaining projects in ways people will understand, giving good, actionable feedback, and so on. 
-And conditional upon delegation, the skill of using AI bears similarities to the management of people and teams. 
-Deciding whether the output is sufficient requires judgment, whether the output is human-produced or otherwise. 
-But given humans are harder to change the machines, it seems likely that AIs will continue to be modified to make it so that humans can manage them more easily. 
-\end{tcolorbox}
-
-\begin{tcolorbox}
-\subsection{Discussion: Is the output a search good, inspection good, or credence good?}
-The costs of judging the model's output could vary widely depending on the nature of the task and the person assiged to it.
-An analogy can be drawn to the process by which consumers evaluate goods. 
-Search goods are trivially easy to evaluate, whereas inspection goods might have prohibitively expensive evaluation costs. 
-Or, goods that are credence goods---goods that that the consumer has to take on faith work---might have de facto infinite evaluation costs.
-Some goods might be inspection goods for some people and search goods for others. 
-If a task requires true expertise to evaluate, the cost of evaluation might be de facto infinite.
-\end{tcolorbox}
-
-\begin{tcolorbox}
-\subsection{Comment: There will be efforts to lower evaluation costs}
-Economics classifies goods by the evaluation costs required to assess them, with some tasks like LLM-generated ad copy requiring minimal oversight while others like surgical plans or judicial opinions demand much more rigorous evaluation.
-For some tasks, the human is the final arbiter and can immediately decide if the outcome is sufficient, with no further sources needed. 
-For example, a model-generated meeting agenda can be evaluated at a glance. 
-Other information goods require more costly inspection, like computer code which LLMs can produce but must be tested across different inputs (though test-driven development helps systematize this verification). 
-Similarly, math problems often use guess-and-verify approaches or require checking if answers are sensible, even when following standard procedures. 
-While critics often point to ChatGPT's factual errors, AIs that can cite sources effectively transform these inspection goods into more easily verifiable search goods.
-\end{tcolorbox}
-
-\begin{tcolorbox}
-\subsection{Comment: One-off nature of AI output hampers the ability to use reviews to evaluate}
-  Some information goods are consumed over time, and learning about their quality might take time. 
-A person might not know if they enjoyed a movie until they have actually watched it. 
-For information experience goods, we tend to rely heavily on reviews. 
-But this only works when many people potentially evaluate the same good. 
-With generative AI, the information good is likely generated uniquely for that particular worker. 
-A non-lawyer could not verify whether a commercial contract is likely to hold up to scrutiny by the courts. 
-A course of advised medical treatment might be very difficult to judge by a non-expert.
-\end{tcolorbox}
-
-\begin{tcolorbox}
-\subsection{Discussion: Model evaluation in a work context is an economic consideration, not a purely technical one}
-Consider the task ``answer questions about the text in a document'' and whether an AI can do this task depends on the payoff to doing it correctly. 
-The firm might be fine letting a machine do low-level customer service support; we might be very hesitant to let it handle queries from major institutional investors, in part because what constitutes ``good enough'' differs.
-But also, the next task might be follow-questions about the state of the business that only the CFO can credibly answer.
-\end{tcolorbox}
-
-\subsection{Two task production with chaining}
-Now we move from a single task to two tasks in sequence. 
-While we will consider arbitrary sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
-Consider a job consisting of two sequential tasks with AI success probabilities $q_1$ and $q_2$.
+\subsection{Two task production with the possibility of chaining}
+Now we move from a single task to two tasks.  
+Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
+The AI success probabilities are $q_1$ and $q_2$ and $c_h$ and $c_m$ are the same for both tasks.
 With two tasks, there are four possible direct production arrangements:
 \begin{align*}
     \cost{\human{1}\human{2}} &= 2c_h & \text{(fully human)} \\
-    \cost{\machine{1}\machine{2}} &= \frac{c_m}{q_1} + \frac{c_m}{q_2} & \text{(independent automation)} \\
     \cost{\machine{1}\human{2}} &= \frac{c_m}{q_1} + c_h & \text{(partial automation)} \\
     \cost{\human{1}\machine{2}} &= c_h + \frac{c_m}{q_2} & \text{(partial automation)} \\
+    \cost{\machine{1}\machine{2}} &= \frac{c_m}{q_1} + \frac{c_m}{q_2} & \text{(independent automation)}. \\
 \end{align*}
-However, there is a fifth arrangement where the completed first task is used as input for the second task without human intervention.
-When tasks are chained, denoted by $\machine{1|2}$, they are executed sequentially by the AI with a single prompt and final evaluation.
+
+There is a fifth arrangement where the completed first task is used as input for the second task without human intervention.
+This captures the notion of agentic AI that can complete a sequence of tasks autonomously, without human intervention between the two tasks.
+When tasks are chained, denoted by $\machine{1|2}$, they are executed by the AI with a single prompt and final evaluation.
+Both tasks must succeed for the chain to be successful in a single step.
+The cost of this arrangement is:
+\begin{align*}
+\cost{\machine{1|2}} &= \frac{c_m}{q_1q_2} & \text{(chained automation)}.
+\end{align*}
+If $c_h$ and $c_m$ are common across tasks, the full cost function for this productive arrangement when costs are minimizedis thus: 
 \begin{align}
-\cost{\machine{1|2}} &= \frac{c_m}{q_1q_2} & \text{(chained automation)}
+  C(\mathbf{q}) = \min \left\{2c_h, 2 \frac{c_m}{q_1}, \frac{c_m}{q_1} + c_h, c_h + \frac{c_m}{q_2}, \frac{c_m}{q_1q_2} \right\}
 \end{align}
 
-Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of $q_1$ and $q_2$.
-A few things to note, graphically: the ration of $c_m / c_h$ is the threshold for automating a task. 
-We can see interior to this, we strictly have human production for both tasks, or $\human{1}\human{2}$.
+Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of $q_1$ and $q_2$, with fixed $c_h$ and $c_m$.
+It partitions the $q_1$ and $q_2$ space into five regions, corresponding to the five production arrangements.
 
+A few things to note, graphically: the ratio of $\underline{q} := c_m / c_h$ is the threshold for automating a task alone.  
+We can see interior to this $\underline{q}$-box, we strictly have human production for both tasks, or $\human{1}\human{2}$.
+Investing in $q_1$ and $q_2$ offers no immediate return in the $\human{1}\human{2}$ region.
+However, once either task is automated, we gain from increasing AI quaility further, but at a diminishing rate, so long as the other task is still done by humans.
+These regions are the $\machine{1}\human{2}$ and $\human{1}\machine{2}$ regions.
 
 \begin{figure}
-  \caption{Cost minimization with two tasks} \label{fig:two_tasks}
-  \includegraphics[width = 0.8 \textwidth]{plots/two_tasks.pdf}
+  \caption{Cost-minimizing production arrangements with two tasks with levels of AI capabilities} \label{fig:two_tasks}
+  \begin{center}
+  \includegraphics[width = 0.8 \textwidth]{plots/two_tasks.pdf} \\
+  \end{center}
+\begin{footnotesize}
+  \emph{Note:} This contour plot shows the cost-minimizing production arrangement for different levels of $q_1$ and $q_2$.
+  The regions are $\human{1}\human{2}$ (both done by humans), $\machine{1}\machine{2}$ (both done by AI), $\machine{1}\human{2}$ (Task 1 done by AI, Task 2 done by human), $\human{1}\machine{2}$ (Task 1 done by human, Task 2 done by AI), and $\machine{1|2}$ (both tasks done by AI, and chained).
+\end{footnotesize}
 \end{figure}
 
-A key implication is that chaining can be optimal even when humans have a comparative advantage in one of the tasks in isolation, as formalized in the following lemma:
+The most intestingly-shaped region is $\machine{1|2}$---the cost-minimizing arrangement is to chain the two tasks.
+Note that its boundaries with the half-automated regions are sloped, meaning that improvements in one task's AI quality can bring it into the $\machine{1|2}$ region, without an intervening partial automation step.
+
+This curve boundary is the reason for a key implication of the model---namely that chaining can be optimal even when humans have a comparative advantage in one of the tasks in isolation, as formalized in Lemma~\ref{lemma:interdependence}.
+It can shown simply with a numerical example.
 
 \begin{lemma}[Task Interdependence] \label{lemma:interdependence}
 A task might be optimally automated as part of a chain even when humans have a comparative advantage in that task in isolation.
 Specifically, $\cost{\human{1}\machine{2}} < \cost{\machine{1}\machine{2}}$ does not imply $\cost{\human{1}\machine{2}} < \cost{\machine{1|2}}$.
 \end{lemma}
-
 \begin{proof}
 Consider $q_1 = 3/5$, $q_2 = 4/5$, $c_m = 1$, and $c_h = 3/2$.
 For task 1 in isolation, human performance is cheaper: $c_h = 3/2 < 5/3 = c_m/q_1$.
@@ -304,328 +234,174 @@ However:
 Thus, chaining is optimal despite human comparative advantage in task 1.
 \end{proof}
 
-For the more general case, fix $n$ tasks with success probability $q \in (0,1)$ and costs $c_m = 1$, $c_{h,i} = c_h$ for all $i$.
-We require:
-\begin{align*}
-c_h &< \frac{1}{q} && \text{(human cheaper per task)} \\
-n c_h &> \frac{1}{q^n} && \text{(machine chain cheaper overall)}
-\end{align*}
-These conditions are compatible when:
-\[
-\frac{1}{n q^n} < c_h < \frac{1}{q}
-\]
-which requires $q^{n-1} < n$.
-We can pick any $c_h$ in the open interval $(\frac{1}/{nq^n}, \frac{1}{2})$ to satisfy the conditions.
+\subsection{Comparative statics of investment in AI capabilities}
+As one might intuit, because the automation of a focal task depends on the AI capabilities of the other tasks, the returns to investment in AI for a particular task are affected by AI capabilities in other tasks.
+Before a task is automated, there is no return to investment in an AI that does that task because it is inframarginal.
+Once a task is automated, there are returns to investment in a task, but these are unaffected by the other task's AI capabilities.
+Once we move into the $\machine{1|2}$ region, the returns to investment in one task are affected by the other task's AI capabilities.
+The cost reduction gets steeper immediately when switching into the $\machine{1|2}$ region but then flattens out, as the second derivative of the cost function with respect to $q_i$ is positive.
+These properties are formalized in Proposition~\ref{prop:comparative_statics}.
 
-A direct implication of the above is that improvements in the AI capabilities of an adjacent task can cause a a task to go directly from being done by human to being done by machine (as part of a chain).
-Assume the following baseline parameters:
-\begin{align*}
-    c_h &= 1, \\
-    c_m &= 1, \\
-    q_1 &= 0.6, \\
-    q_2 &= 0.8.
-\end{align*}
-The cheapest option is fully human production:\
-\begin{align*}
-    \cost{\human{1}\human{2}} = 2.
-\end{align*}
-Thus, both tasks are done by humans. In particular, \textbf{Task 1 is performed by a human.}
-Now suppose we invest in improving the AI's success probability for Task 2, raising $q_2$ from $0.8$ to $1.0$. The new costs are:
-\begin{enumerate}
-    \item \textbf{Human-Human:}
-    \begin{align*}
-        \cost{\human{1}\human{2}} &= 2 \quad \text{(unchanged)}.
-    \end{align*}
-    \item \textbf{Chaining:}
-    \begin{align*}
-        \cost{\machine{1|2}} &= \frac{c_m}{q_1 q_2} \\
-        &= \frac{1}{0.6 \times 1.0} = \frac{1}{0.6} = 1.666\ldots
-    \end{align*}
-\end{enumerate}
-With $q_2 = 1.0$, the cheapest option is now chaining:\
-\begin{align*}
-    \cost{\machine{1|2}} = 1.666\ldots < \cost{\human{1}\human{2}} = 2.
-\end{align*}
-Although Task 1's parameters ($c_h, q_1$) are unchanged, it flips from human to machine because chaining amortizes the management cost $c_m$ across both tasks. 
-The improvement in Task 2's success probability reduces the expected cost of chaining both tasks, making automation optimal.
-This example illustrates how investments in one task's AI performance can cause an adjacent task to switch to automation, even when the adjacent task itself has not improved. 
-The interdependence of tasks through chaining creates complementarities in automation decisions.
-This effect can be seen graphically in Figure~\ref{fig:two_tasks}.
-Note that that the $\human{1}\human{2}$ to $\machine{1|2}$ frontier is sloped, meaning an increase in $q_2$ can bring you directly from human to automation (in a chain) but not to automation in isolation.
+\begin{proposition}[Comparative Statics] \label{prop:comparative_statics}
+  The effect of improving AI capabilities has the following properties:
+  \begin{enumerate}
+  \item In human-only production, improvements in AI have no effect on costs:
+  \[\frac{\partial \cost{\human{1}\human{2}}}{\partial q_i} = 0 \text{ for } i \in \{1,2\}\]
+  \item In independent AI production, improvements reduce costs independently:
+  \[\frac{\partial \cost{\machine{1}\machine{2}}}{\partial q_i} = -\frac{c_m}{q_i^2}, \quad \frac{\partial^2 \cost{\machine{1}\machine{2}}}{\partial q_1 \partial q_2} = 0\]
+  \item In mixed production, only improvements in the specific task matter:
+  \[\frac{\partial \cost{\machine{1}\human{2}}}{\partial q_1} = -\frac{c_m}{q_1^2}, \quad \frac{\partial \cost{\machine{1}\human{2}}}{\partial q_2} = 0\]
+  \item In chained production, improvements are complementary:
+  \[\frac{\partial \cost{\machine{1|2}}}{\partial q_i} = -\frac{c_m}{q_i^2q_j}, \quad \frac{\partial^2 \cost{\machine{1|2}}}{\partial q_1 \partial q_2} = \frac{c_m}{q_1^2q_2^2} > 0\]
+  where $j \neq i$.
+  \end{enumerate}
 
-Improvements in AI for one task can flip a sequence of tasks to a chain, even if the task with improvements in far away. 
+  In chained production, improvements in AI capabilities eventually flatten out, as the second derivative of the cost function with respect to $q_i$ is positive.
+  \begin{equation}
+      \frac{\partial^2}{\partial q_1 \partial q_2} \cost{\machine{1|2}} = \frac{c_m}{q_1^2q_2^2} > 0
+  \end{equation}
+
+\end{proposition}
+ 
+We will later consider the more general $n$ task case, but note that immediate adjacency is not required for a task where humans have a comparative advantage to be pulled into a chain.
 Consider a scenario with $n$ tasks, each with the same success probability $q$ and the same $c_m$ and $c_h$.
 To start, all are done by humans, implying that $n c_h < c_m / q^n$.
 Now suppose we can increase the $q$ of the first task by $\delta q$. 
-If 
+If it is possible that  
 \begin{align}
-  \delta q > \frac{c_m}{n q^{n-1}} - q
-\end{align}, 
+  \delta q > \frac{c_m}{n q^{n-1}} - q,
+\end{align} 
 then all tasks will be done by machine, in one chain.
 
-\begin{tcolorbox}
-  \subsection{Comment: The division of labor tends to create interdependence of tasks within jobs}
-  Economic forces create dependencies between tasks within jobs. 
-  Consider pin manufacturing: each step (washing wire, spooling, straightening, cutting, grinding) serves as input to the next, with failures at any point endangering the final product. 
-  The limit to this division of labor is not technical but economic, as Smith noted.
-  These tasks could be split more finely, but the costs of switching and communication between workers would outweigh the benefits.
-  While specialization is primarily constrained by market size, it also faces switching and communication costs when work is handed off between workers. 
-  These costs create serial dependencies between tasks done with a job---the tasks that make up a job are precisely those tasks that are hard to hand-off to someone else. 
-  It is unclear why this would be different when we try to automate tasks with machines.
-  % endregion: Division of labor creates interdependence of tasks within jobs
-\end{tcolorbox}
+\subsection{Optimal investment paths in the two-task case}
+A natural question is how firms or a social planner should allocate R\&D effort to improve AI capabilities on a task level.
+Rather than taking $q_1$ and $q_2$ as given, we can consider the optimal investment paths, or allocation of R\&D effort.
+\[
+\begin{aligned}
+\text{Choose } &q_1(\cdot), \; q_2(\cdot) \quad \text{for } t \in [0, T]\\
+\text{to minimize } &
+   \int_{0}^{T}
+   e^{-\rho t} C\bigl(q_1(t), q_2(t)\bigr) \, dt \\[1em]
+\text{subject to:} & \\[-1em]
+&(1)\quad q_1(0) = q_{1,0}, \quad q_2(0) = q_{2,0}, \\[6pt]
+&(2)\quad q_1'(t) + q_2'(t) \le r, \quad \text{for almost all } t \in [0, T], \\[6pt]
+&(3)\quad q_1(t) \geq 0, \quad q_2(t) \geq 0, \quad \forall t \in [0, T], \\[6pt]
+\end{aligned}
+\]
 
-The optimal assignment of tasks to humans or AI depends not just on isolated comparative advantage, but on the relationships between tasks.
-
-\begin{tcolorbox}
-\subsection{Comment: Chained tasks create systems}
-Once a task is changed, it can be thought of as a new, single task.
-What constitutes a ``task'' moves to higher and higher levels of abstraction: 
-From ``find typos in this ad copy'' to ``create ad copy'' to ``create a marketing campaign, launch, execute and monitor performance'' to ``increase sales'' to ``run the business profitably'' to $\ldots$.  
-Note that with this chaining tasks can become increasingly large and abstract as models increase, generating something that looks like an entire system and not just a task \cite{bresnahan2020artificial}.
-\end{tcolorbox}
-
-\begin{tcolorbox}
-\subsection{Comment: Chained tasks can be re-factored by machines as they see fit}
-We might also imagine that once fully chained, the system is free to ``re-factor'' production within the chain---it simply takes inputs and generates outputs.
-The details of how this is done is up to the model. 
-In the language of our model, system-level substitution would just be characterized as long chains of task automation.
-\end{tcolorbox}
-
-\subsection{Properties of Chained Production}
-The cost gradient with respect to AI capabilities has different properties under chaining versus independent automation.
-For independent automation, improving $q_i$ only affects tasks where the AI is used in isolation.
-Under chaining, we have:
-
-\begin{proposition}[Chain Complementarity]
-In chained production, improvements in AI capabilities for different tasks are substitutes in cost reduction:
-\begin{equation}
-    \frac{\partial^2}{\partial q_1 \partial q_2} \cost{\machine{1|2}} = \frac{c_m}{q_1^2q_2^2} > 0
-\end{equation}
-\end{proposition}
-
-This creates incentives for balanced investment in AI capabilities across chain components, as improvements in the weakest link generate the largest cost reductions.
-
-\subsection{Effect of AI Improvements}
-The impact of improving AI capabilities (increasing $q_1$ or $q_2$) varies systematically across production arrangements:
-
-\begin{proposition}[Comparative Statics]
-The effect of improving AI capabilities has the following properties:
-\begin{enumerate}
-\item In human-only production, improvements in AI have no effect on costs:
-\[\frac{\partial \cost{\human{1}\human{2}}}{\partial q_i} = 0 \text{ for } i \in \{1,2\}\]
-\item In independent AI production, improvements reduce costs independently:
-\[\frac{\partial \cost{\machine{1}\machine{2}}}{\partial q_i} = -\frac{c_m}{q_i^2}, \quad \frac{\partial^2 \cost{\machine{1}\machine{2}}}{\partial q_1 \partial q_2} = 0\]
-\item In mixed production, only improvements in the automated task matter:
-\[\frac{\partial \cost{\machine{1}\human{2}}}{\partial q_1} = -\frac{c_m}{q_1^2}, \quad \frac{\partial \cost{\machine{1}\human{2}}}{\partial q_2} = 0\]
-\item In chained production, improvements are complementary:
-\[\frac{\partial \cost{\machine{1|2}}}{\partial q_i} = -\frac{c_m}{q_i^2q_j}, \quad \frac{\partial^2 \cost{\machine{1|2}}}{\partial q_1 \partial q_2} = \frac{c_m}{q_1^2q_2^2} > 0\]
-where $j \neq i$.
-\end{enumerate}
-\end{proposition}
-
-Figure~\ref{fig:optimal_paths} shows the optimal investment paths to minimize costs.
-I discretized the $q_1$ and $q_2$ space into a grid of 100x100 points and then using a dynamic programing approach to find the optimal path to minimize total costs for T steps. 
-
-Note that a greedy appraoch is not optimal until in the $\machine{1|2}$ region.
+Figure~\ref{fig:optimal_paths} shows numerical optimal investment paths to minimize total costs, using the same parameters as in Figure~\ref{fig:two_tasks}.
+I also set the discount rate $\rho = 0$ and the total amount of R\&D resources $r = 1$.
+I discretized the $q_1$ and $q_2$ space into a grid (so investments had to be made each period on one task or the other) and then used dynamic programing to find the optimal path.
+Paths for a few select initial conditions are shown.
 
 \begin{figure}
+  \begin{center}
   \caption{Optimal investment paths to minimize costs} \label{fig:optimal_paths}
   \includegraphics[width = 0.8 \textwidth]{plots/optimal_paths.pdf}
+  \end{center}
+  \begin{footnotesize}
+  \emph{Note:} This plot shows the optimal investment paths to minimize costs, using the same parameters as in Figure~\ref{fig:two_tasks}, with a number of different initial conditions.
+\end{footnotesize}
 \end{figure}
 
+We can see that the optimal path genreally has a ``turnpike'' characteristic where we move towards the 45 degree line and then make equal investments in $q_1$ and $q_2$.
+However, it does not typicaly go there directly but, if already in a semi-automated region, it will increase capabilities in that task for soem time, taking advantage of the relatively steep slope. 
+In the $\machine{1|2}$ region, the optimal path is to directy move towards the 45 degree line.
 
-We now characterize when tasks should be chained together versus performed independently.
-The analysis reveals that the optimal structure depends on both the absolute and relative success probabilities of the component tasks.
-We begin with the fundamental decision of whether to chain two automated tasks:
+Figure~\ref{fig:horizon_effects} shows the effect of the time horizon on the optimal path.
+As in Figure~\ref{fig:optimal_paths}, a dynamic program is used to find the optimal path that minimizes costs.
+However, we vary the number of steps $T$ in the dynamic program.
 
-\begin{proposition}[Optimal Chaining for \(n\) Tasks]
-  Chaining \(n\) automated tasks is optimal if and only if:
-  \[
-  \sum_{i=1}^n \prod_{j \neq i} q_j > 1.
-  \]
-  \end{proposition}
-  
-  \begin{proof}
-  Chaining is optimal if:
-  \[
-  \frac{c_m}{\prod_{i=1}^n q_i} < \sum_{i=1}^n \frac{c_m}{q_i}.
-  \]
-  Dividing by \(c_m > 0\) and multiplying by \(\prod_{i=1}^n q_i\) yields:
-  \[
-  1 < \sum_{i=1}^n \prod_{j \neq i} q_j.
-  \]
-  Thus, chaining is optimal if and only if the inequality holds.
-  \end{proof}
-
-For a more constructive example with $n$ tasks, 
-
-This result has an intuitive interpretation: chaining eliminates duplicate management costs but increases the chance of overall failure.
-The sum of success probabilities must exceed one to make this trade-off worthwhile.
-The basic chaining criterion extends to longer sequences in systematic ways:
-
-\begin{proposition}[Chain Composition]
-Optimal task chains have the following properties:
-\begin{enumerate}
-\item A cost-minimizing sequence cannot contain a chain where the success probabilities sum to less than one
-\item When choosing which tasks to chain together, higher probability tasks should be chained first
-\end{enumerate}
-\end{proposition}
-
-\begin{proof}
-For part (1), consider any three consecutive tasks in a chain with probabilities $(q_l, q_\epsilon, q_r)$.
-If $q_l + q_\epsilon + q_r < 1$, then:
-\[\frac{1}{q_lq_\epsilon q_r} > \frac{1}{q_l} + \frac{1}{q_\epsilon} + \frac{1}{q_r}\]
-Therefore breaking the chain would reduce costs.
-
-For part (2), consider combining task $q$ with either $q_H$ or $q_L$ where $q_H > q_L$.
-Chaining with $q_H$ is preferred when:
-\[q(q_H - q_L) < q_H - q_L\]
-which always holds when $q_H > q_L$ and $q < 1$.
-\end{proof}
-
-For the the $n$ task case, consider a sequence of \(n\) tasks, each of which can be:
-\begin{enumerate}
-    \item Done by humans, with cost \(c_{h,i}\), assumed success probability \(1\),
-    \item Done by the machine:
-    \begin{itemize}
-        \item \textbf{Independently}: The expected cost is \(\frac{c_m}{q_i}\),
-        \item \textbf{Chained}: For a block of tasks \(B \subseteq \{1, \dots, n\}\), the cost is \(\frac{c_m}{\prod_{i \in B} q_i}\).
-    \end{itemize}
-\end{enumerate}
-
-The \textbf{optimal cost} \(C(q_1, \dots, q_n)\) is determined by solving:
-\[
-C(q_1, \dots, q_n) = \min_{\substack{\text{a partition of } \{1, \dots, n\} \\ \text{into blocks } B_1, \dots, B_k}} \sum_{\alpha=1}^k \CostBlock(B_\alpha),
-\]
-where each block \(B_\alpha\) is either:
-\begin{itemize}
-    \item A \textbf{human block}: \(\sum_{i \in B_\alpha} c_{h,i}\),
-    \item A \textbf{machine chain block}: \(\frac{c_m}{\prod_{i \in B_\alpha} q_i}\).
-\end{itemize}
-
-This minimization is often solved using a DP, building \(C(q_1, \dots, q_n)\) from smaller subproblems.
-The cost function \(C(q_1, \dots, q_n)\) is defined as the \textbf{minimum} over all partitions \(P\). For a given partition \(P = \{B_1, \dots, B_k\}\), the cost is:
-\[
-C_P(q_1, \dots, q_n) = \sum_{\alpha=1}^k
-\begin{cases}
-\sum_{i \in B_\alpha} c_{h,i}, & \text{if } B_\alpha \text{ is a human block}, \\[6pt]
-\frac{c_m}{\prod_{i \in B_\alpha} q_i}, & \text{if } B_\alpha \text{ is a machine chain block}.
-\end{cases}
-\]
-
-The optimal cost is:
-\[
-C(q_1, \dots, q_n) = \min_{P} C_P(q_1, \dots, q_n).
-\]
-
-This implies that \(C(q_1, \dots, q_n)\) is a \textbf{piecewise minimum} of sums of terms involving \(\frac{1}{q_i}\). Consequently:
-\begin{itemize}
-    \item \(C(q_1, \dots, q_n)\) is continuous but generally only \textbf{piecewise differentiable}.
-    \item At points where the optimal partition changes, \(C(q_1, \dots, q_n)\) may have “kinks” or non-smooth transitions.
-\end{itemize}
-
-For any region where a single partition \(P\) is optimal, the partial derivatives of \(C(q_1, \dots, q_n)\) match those of \(C_P(q_1, \dots, q_n)\). Using the envelope theorem:
-\begin{itemize}
-    \item \(\frac{\partial C}{\partial q_i} \leq 0\), with equality if task \(i\) is handled by humans (since \(q_i\) does not affect human costs).
-    \item If tasks \(i\) and \(j\) are in the \textbf{same machine chain block}, then:
-    \[
-    \frac{\partial^2 C}{\partial q_i \partial q_j} > 0,
-    \]
-    reflecting \textbf{complementarity}. Otherwise, the cross partials are zero.
-\end{itemize}
-
-\begin{enumerate}
-    \item \textbf{Human-assigned tasks}: If task \(i\) is assigned to humans, then:
-    \[
-    \frac{\partial C}{\partial q_i} = 0.
-    \]
-
-    \item \textbf{Stand-alone machine tasks}: If task \(i\) is handled independently by the machine, then:
-    \[
-    \frac{\partial C}{\partial q_i} = -\frac{c_m}{q_i^2}, \quad \frac{\partial^2 C}{\partial q_i \partial q_j} = 0 \text{ for } j \neq i.
-    \]
-
-    \item \textbf{Chained machine tasks}: If tasks \(i\) and \(j\) are in the same machine chain block, then:
-    \[
-    \frac{\partial C}{\partial q_i} = -\frac{c_m}{q_i^2} \cdot \frac{1}{\prod_{k \neq i} q_k},
-    \]
-    \[
-    \frac{\partial^2 C}{\partial q_i \partial q_j} = \frac{c_m}{q_i^2 q_j^2} \cdot \frac{1}{\prod_{k \not\in \{i, j\}} q_k} > 0.
-    \]
-    Tasks in the same chain exhibit \textbf{complementarity}, but tasks in different chains or assigned to humans do not (\(\frac{\partial^2 C}{\partial q_i \partial q_j} = 0\)).
-\end{enumerate}
-
-\begin{enumerate}
-    \item \textbf{Monotonicity}: Increasing any machine success probability \(q_i\) (\(q_i \uparrow\)) never increases the optimal cost:
-    \[
-    \frac{\partial C}{\partial q_i} \leq 0.
-    \]
-    This inequality is strict if task \(i\) is in a machine block.
-
-    \item \textbf{Complementarity}: Tasks within the same chain exhibit complementarity:
-    \[
-    \frac{\partial^2 C}{\partial q_i \partial q_j} > 0 \quad \text{if tasks } i \text{ and } j \text{ are in the same chain block}.
-    \]
-    Tasks in different blocks or assigned to humans have zero cross partials.
-
-    \item \textbf{Piecewise Differentiability}: Across regions where the optimal partition changes, \(C(q_1, \dots, q_n)\) may exhibit kinks but remains continuous and everywhere bounded.
-\end{enumerate}
-
-The comparative statics of the 2-task case extend naturally to \(n\)-task settings:
-\begin{itemize}
-    \item Human tasks remain unaffected by \(q_i\).
-    \item Stand-alone machine tasks have monotonic but independent cost reductions.
-    \item Chained machine tasks exhibit complementarity among tasks in the same chain.
-\end{itemize}
-
-\begin{tcolorbox}
-  \subsection{Model innovation will focus on tasks that are inputs and outputs of each other}
-  Because of chaining, it matters what tasks are ``next'' to each other in some productive process, because tasks that have a high ability to be automated can be chained together.
-  In different occupations, different tasks might appear adjacent to each other. 
-  Writing might appear next to hundreds of different tasks, from ``send your economics paper to a journal (after writing)'' to ``drop your maintence report slip into a box'' at the end of a shift driving a bus.
-  As such, we can get ``automation dispersion'' where tasks are automated in some production settings but not others because of task adjacency.
-  \end{tcolorbox}
-  
-The \(n\)-task generalization preserves the key qualitative insights: improvements in AI capabilities lower costs and create synergies when tasks are chained.
-
-\subsection{Longer tasks sequences}
-Now we will consider a job that is a sequence of tasks to be performed $1, 2, \ldots n$.
-Note that with an $n$ task jobs, there are $2^{n-1}$ possible task partitions.
-And each singleton can be done by a human or a machine; each sequence is done only by a machine.
-
-The cost minimization problem is equilvalent to finding the shortest path in a tree.
-To grow the tree, start with the first task.
-It can be automated or done by a human.
-It then has up to two children---the next task is either machine or human, and if machine, it could also be part of a chain.
-Figure~\ref{fig:tree} illustrates the tree. 
-The tree grows to, worse-case, $2^n$ children where $n$ is the number of tasks.
-It would be less than this because human-done nodes only have one child: either machine or human.
+We can see that this can create fundamental differences in the optimal path.
+With a relatively short horizon, the optimal path is simply to keep investing in the already-automated task. 
+The reason is that with this horizon, we never get to the $\machine{1|2}$ region.
+With a longer horizon, we just keep going farther in $q_1$, neglecting $q_2$. 
+With with a long-enough horizon, we actualy stop work on $q_1$ in begin workign on $q_2$. 
+This is despite the fact that $q_2$ offers no benefit at this region. 
+However, it is worth it because it gets us to the $\machine{1|2}$ region. 
+We then make a beeline for the 45 degree line, at which point we then make equal investments in $q_1$ and $q_2$.
 
 \begin{figure}
-\caption{The possible production scenarios with an $n=2$ task job}
-\label{fig:tree}
-\begin{tikzpicture}[
-  level/.style={sibling distance=60mm/#1}
-]
-\node[circle, draw] (S) at (0,0) {Job}
-  child {node[circle, draw] (A) {$\machine{1}$}
-    child {node[circle, draw] (AA) {$\machine{1}\machine{2}$}}
-    child {node[circle, draw] (AAC) {$\machine{1|2}$}} 
-    child {node[circle, draw] (AH) {$\machine{1}\human{2}$}} 
-  }
-  child {node[circle, draw] (H) {$\human{1}$}
-    child {node[circle, draw] (HA) {$\human{1}\machine{2}$}}
-    child {node[circle, draw] (HH) {$\human{1}\human{2}$}}
-  };
-\path (S) edge node[midway, above] {AI} (A);
-\path (S) edge node[midway, above] {human} (H);
-\path (A) edge node[midway, above] {chained} (AAC);
-\end{tikzpicture}
+  \begin{center}
+  \caption{Horizon effects} \label{fig:horizon_effects}
+  \includegraphics[width = 0.8 \textwidth]{plots/horizon_effects.pdf}
+  \end{center}
 \end{figure}
 
-Finding the minimum cost chain is a dynamic programing problem.
-Consider a sequence of $n$ tasks that must be completed sequentially. 
+\section{Tasks sequences with $n > 2$ tasks}
+Now we will consider a job that is a sequence of tasks to be performed $1, 2, \ldots n$.
+The number of valid ways to arrange $n$ tasks is given by Lemma~\ref{lem:num_arrangements}.
+The number of ways to $n$ tasks is the Fibonacci number $F(2n+1)$ where $F(0) = 1$.
+Note that when $n=1$, we had either $\human{1}$ or $\machine{1}$, so $F(3) = 2$.
+With two tasks, we have $F(5) = 5$ possible arrangements, and so on. 
+
+\begin{lemma}[Recurrence for Valid Arrangements] \label{lem:num_arrangements}
+  Let $f(n)$ denote the number of valid arrangements of $n$ tasks, where each task can be either performed by a human (exactly one task per human block) or as part of a machine chain (a consecutive sequence of tasks). Then the following recurrence holds:
+  \[
+  f(n) = f(n-1) + \sum_{k=1}^{n} f(n-k),
+  \]
+  with the base case $f(0) = 1$.
+  \end{lemma}
+  
+  \begin{proof}
+  Consider the first block in the arrangement of $n$ tasks:
+  \begin{itemize}
+      \item \textbf{Case 1: Human block.} If the first task is performed by a human, then the remaining $(n-1)$ tasks can be arranged in any valid way. This contributes $f(n-1)$ arrangements.
+      \item \textbf{Case 2: Machine chain.} If the first block is a machine chain covering $k$ tasks ($1 \leq k \leq n$), then the remaining $(n-k)$ tasks can be arranged in any valid way. Summing over all possible lengths of the first machine chain gives $\sum_{k=1}^{n} f(n-k)$ arrangements.
+  \end{itemize}
+  Adding the contributions from both cases, we obtain:
+  \[
+  f(n) = f(n-1) + \sum_{k=1}^{n} f(n-k).
+  \]
+  \end{proof}
+ 
+Although the number of possible arrangements grows large, the cost minimization problem is tree traversal.
+To see this tree, start with the first task.
+It can be automated or done by a human.
+It then has up to two children---the next task is either machine or human, and if machine, it could also be part of a chain.
+Figure~\ref{fig:tree} illustrates the tree with $n=3$ tasks.
+
+\begin{figure}
+  \caption{The possible production scenarios with an $n=3$ task job}
+  \label{fig:tree_extended}
+  \begin{tikzpicture}[
+    grow=right,
+    level 1/.style={sibling distance=20mm},  % dramatically reduced from 100mm
+    level 2/.style={sibling distance=20mm},   % dramatically reduced from 45mm
+    level 3/.style={sibling distance=5mm},    % reduced from 20mm
+    level distance=30mm,                      % kept this to maintain horizontal spacing
+    every node/.style={font=\small}
+  ]
+  \node {Job}
+    child {node (AI) {$\langle 1 \rangle$}
+      child {node (AIAI) {$\langle 1 \rangle \langle 2 \rangle$}
+        child {node {$\langle 1 \rangle \langle 2 \rangle \langle 3 \rangle$}}
+        child {node {$\langle 1 \rangle \langle 2|3 \rangle$}}
+      }
+      child {node (AIAICH) {$\langle 1|2 \rangle$}
+        child {node {$\langle 1|2 \rangle \langle 3 \rangle$}}
+        child {node {$\langle 1|2|3 \rangle$}}
+      }
+      child {node (AIAH) {$\langle 1 \rangle (2)$}
+        child {node {$\langle 1 \rangle (2) \langle 3 \rangle$}}
+        child {node {$\langle 1 \rangle (2) (3)$}}
+      }
+    }
+    child {node (H) {$(1)$}
+      child {node (HA) {$(1) \langle 2 \rangle$}
+        child {node {$(1) \langle 2 \rangle \langle 3 \rangle$}}
+        child {node {$(1) \langle 2 \rangle (3)$}}
+      }
+      child {node (HH) {$(1) (2)$}
+        child {node {$(1) (2) \langle 3 \rangle$}}
+        child {node {$(1) (2) (3)$}}
+      }
+    };
+  \end{tikzpicture}
+\end{figure}
+
+With this structure, finding the minimum cost arrangement is a dynamic programing problem.
+Consider a sequence of $n$ tasks that must be completed in order. 
 Each task $i \in \{0,\ldots,n-1\}$ can be completed either by a human at cost $c_h[i] \in \mathbb{R}_+$ or attempted by an AI with success probability $q[i] \in (0,1]$.
 Multiple consecutive tasks can be assigned to the AI as a single chain, incurring a fixed management cost $c_m \in \mathbb{R}_+$ per chain. 
 When tasks $i$ through $j$ are chained, the expected cost is $\frac{c_m}{\prod_{k=i}^j q[k]}$, reflecting the expected number of attempts needed for success.
@@ -660,231 +436,128 @@ The minimum total cost is given by $V(0)$.
 \begin{proof}
 The optimality follows from standard dynamic programming arguments. The boundary condition ensures well-definedness, and the principle of optimality holds as the problem exhibits optimal substructure: the optimal solution to subproblem $i$ through $n-1$ depends only on optimal solutions to subproblems $j+1$ through $n-1$ for $j \geq i$. The computational complexity follows from the fact that for each state $i$, we must evaluate at most $n-i$ possible chain lengths.
 \end{proof}
+
+Proposition~\ref{prop:optimal_chaining} gives the optimal chaining condition for a sequence of $n$ tasks that would each be individually automated.
+In terms of intuition, it captures the notion that a chain is only as strong as its weakest link, so one ``bad'' $q$ in the collection will lower each of the product sums, but for the one it is in. 
+
+\begin{proposition}[Optimal Chaining for \(n\) Tasks] \label{prop:optimal_chaining}
+  Chaining \(n\) automated tasks is optimal if and only if:
+  \[
+  \sum_{i=1}^n \prod_{j \neq i} q_j > 1.
+  \]
+  \end{proposition}
   
-What would determine the use of AI? 
-Clearly the capabilities of the model itself---if the model will fail with a high probability, using it is less attractive.
-Tasks that are expensive for humans to do are natural candidates for automation.
+  \begin{proof}
+  Chaining is optimal if:
+  \[
+  \frac{c_m}{\prod_{i=1}^n q_i} < \sum_{i=1}^n \frac{c_m}{q_i}.
+  \]
+  Dividing by \(c_m > 0\) and multiplying by \(\prod_{i=1}^n q_i\) yields:
+  \[
+  1 < \sum_{i=1}^n \prod_{j \neq i} q_j.
+  \]
+  Thus, chaining is optimal if and only if the inequality holds.
+  \end{proof}
+  
+\section{Discussion}
 
-\section{Production Cost with Task Chaining}
-Consider a sequence of $n$ tasks indexed by $i \in \{1, 2, \dots, n\}$:
-\begin{itemize}
-    \item Each task $i$ can be performed by humans (cost $c_{h,i}$, success probability 1) or by AI with success probability $q_i \in (0, 1]$.
-    \item Multiple consecutive tasks can be grouped into a single \emph{machine chain}, with an expected cost of
-    \[
-        \frac{c_m}{q_i \cdot q_{i+1} \cdots q_j},
-    \]
-    where $c_m$ is the fixed management cost per chain.
-    \item Tasks can also be partitioned into blocks, where each block is either all-human or a machine chain.
-\end{itemize}
+\subsection{Model innovation will focus on tasks that are inputs and outputs of each other}
+Because of chaining, it matters what tasks are ``next'' to each other in some productive process, because tasks that have a high ability to be automated can be chained together.
+In different occupations, different tasks might appear adjacent to each other. 
+Writing might appear next to hundreds of different tasks, from ``send your economics paper to a journal (after writing)'' to ``drop your maintence report slip into a box'' at the end of a shift driving a bus.
+As such, we can get ``automation dispersion'' where tasks are automated in some production settings but not others because of task adjacency.
 
-The cost of a partition $P = \{B_1, \dots, B_k\}$ of tasks is:
-\begin{align*}
-    \text{Cost}(P; q) = \sum_{\alpha=1}^k \begin{cases}
-        \sum_{i \in B_\alpha} c_{h,i}, & \text{if $B_\alpha$ is human-performed}, \\
-        \frac{c_m}{\prod_{i \in B_\alpha} q_i}, & \text{if $B_\alpha$ is a machine chain}.
-    \end{cases}
-\end{align*}
+\subsection{Is that what prompting is really like?}
+  There is some unrealism in the model that makes the presentation simpler but elides from pracical considerations.
+  First, the model assumes that failures and sucesses are independent, when they might be correlated.
+  A bad initial prompt might lead to a bad output, which might be hard to fix, causing the system to get stuck and perhaps never succeed. 
+  Second, we might expect that subsequent attempts are easier fix and less costly, perhaps requiring less work. 
+  While true, the main economic feature to capture is that a low $q$ raises management costs.
+  The simplicity of the math makes it easier to see the main points and the model is not intended to be a literal description of the process. 
+  It also gives us a single index for the AI's performance, which is a useful simplification.
+  
+\subsection{Are management costs low skill?}
+Prompting and evaluation are human skills.
+How high are $c_p$ and $c_e$?
+One question is simply how long theose tasks take to do; other is how widely held these skills are in the population.
+There is no inherent reason to think that eitehr will itself be a low-skill task.
+Most of management is deciding what you want done, asking right people to do it, in a way that leads to an effective outcome, and then monitoring the process to see if it acheiving the desired goals.
+  
+\subsection{Managing an AI is similar to managing people}
+The decision to use an AI bears similarities to the decision to delegate some task to a subordinate or team.
+Doing this well requires being a judge of talent, scoping and explaining projects in ways people will understand, giving good, actionable feedback, and so on. 
+And conditional upon delegation, the skill of using AI bears similarities to the management of people and teams. 
+Deciding whether the output is sufficient requires judgment, whether the output is human-produced or otherwise. 
+But given humans are harder to change the machines, it seems likely that AIs will continue to be modified to make it so that humans can manage them more easily. 
+  
+\subsection{For evaluation, is the intermediate output a search good, inspection good, or credence good?}
+The costs of judging the model's output could vary widely depending on the nature of the task and the person assiged to it.
+An analogy can be drawn to the process by which consumers evaluate goods. 
+Search goods are trivially easy to evaluate, whereas inspection goods might have prohibitively expensive evaluation costs. 
+Or, goods that are credence goods---goods that that the consumer has to take on faith work---might have de facto infinite evaluation costs.
+Some goods might be inspection goods for some people and search goods for others. 
+If a task requires true expertise to evaluate, the cost of evaluation might be de facto infinite.
+  
+\subsection{There will be efforts to lower evaluation costs}
+Economics classifies goods by the evaluation costs required to assess them, with some tasks like LLM-generated ad copy requiring minimal oversight while others like surgical plans or judicial opinions demand much more rigorous evaluation.
+For some tasks, the human is the final arbiter and can immediately decide if the outcome is sufficient, with no further sources needed. 
+For example, a model-generated meeting agenda can be evaluated at a glance. 
+Other information goods require more costly inspection, like computer code which LLMs can produce but must be tested across different inputs (though test-driven development helps systematize this verification). 
+Similarly, math problems often use guess-and-verify approaches or require checking if answers are sensible, even when following standard procedures. 
+While critics often point to ChatGPT's factual errors, AIs that can cite sources effectively transform these inspection goods into more easily verifiable search goods.
+  
+\subsection{One-off nature of AI output hampers the ability to use reviews to evaluate}
+Some information goods are consumed over time, and learning about their quality might take time. 
+A person might not know if they enjoyed a movie until they have actually watched it. 
+For information experience goods, we tend to rely heavily on reviews. 
+But this only works when many people potentially evaluate the same good. 
+With generative AI, the information good is likely generated uniquely for that particular worker. 
+A non-lawyer could not verify whether a commercial contract is likely to hold up to scrutiny by the courts. 
+A course of advised medical treatment might be very difficult to judge by a non-expert. 
 
-The total production cost for a given set of success probabilities $\{q_i\}$ is:
-\[
-    C(q_1, q_2, \dots, q_n) = \min_P \text{Cost}(P; q),
-\]
-where the minimum is taken over all possible partitions of the tasks.
+\subsection{Model evaluation in a work context is an economic consideration, not a purely technical one}
+Consider the task ``answer questions about the text in a document'' and whether an AI can do this task depends on the payoff to doing it correctly. 
+The firm might be fine letting a machine do low-level customer service support; we might be very hesitant to let it handle queries from major institutional investors, in part because what constitutes ``good enough'' differs.
+But also, the next task might be follow-questions about the state of the business that only the CFO can credibly answer.
+  
+\subsection{The division of labor tends to create interdependence of tasks within jobs}
+  Economic forces create dependencies between tasks within jobs. 
+  Consider pin manufacturing: each step (washing wire, spooling, straightening, cutting, grinding) serves as input to the next, with failures at any point endangering the final product. 
+  The limit to this division of labor is not technical but economic, as Smith noted.
+  These tasks could be split more finely, but the costs of switching and communication between workers would outweigh the benefits.
+  While specialization is primarily constrained by market size, it also faces switching and communication costs when work is handed off between workers. 
+  These costs create serial dependencies between tasks done with a job---the tasks that make up a job are precisely those tasks that are hard to hand-off to someone else. 
+  It is unclear why this would be different when we try to automate tasks with machines.
+  % endregion: Division of labor creates interdependence of tasks within jobs
 
-\section{Modeling Investment in AI Capabilities}
-To endogenize $q_i$, assume that each $q_i$ depends on an investment $I_i \geq 0$, with diminishing returns. Let:
-\[
-    q_i = f_i(I_i), \quad f_i'(I_i) > 0, \; f_i''(I_i) < 0, \; 0 \leq f_i(0) < 1.
-\]
-The function $f_i(I_i)$ captures the relationship between investment $I_i$ and the AI's success probability for task $i$. The total investment cost is:
-\[
-    \sum_{i=1}^n \kappa_i(I_i),
-\]
-where $\kappa_i(I_i)$ is the cost function for investing in task $i$, assumed increasing and convex.
+%A key point is that even the static assignment of tasks to humans or AI depends not just on isolated comparative advantage, but on %the relationships between tasks.
+\subsection{Chained tasks create systems}
+Once a task is changed, it can be thought of as a new, single task.
+What constitutes a ``task'' moves to higher and higher levels of abstraction: 
+From ``find typos in this ad copy'' to ``create ad copy'' to ``create a marketing campaign, launch, execute and monitor performance'' to ``increase sales'' to ``run the business profitably'' to $\ldots$.  
+Note that with this chaining tasks can become increasingly large and abstract as models increase, generating something that looks like an entire system and not just a task \cite{bresnahan2020artificial}.
 
-\subsection{Overall Cost Function}
-The total cost of production and investment is:
-\[
-    \Gamma(I_1, I_2, \dots, I_n) = C(f_1(I_1), \dots, f_n(I_n)) + \sum_{i=1}^n \kappa_i(I_i).
-\]
-The goal is to minimize $\Gamma$:
-\[
-    \{I_1^*, I_2^*, \dots, I_n^*\} = \arg\min_{I_i \geq 0} \Gamma(I_1, I_2, \dots, I_n).
-\]
-
-\section{Path to full automation}
-Consider the two-task case where we start at some level $(q_{1, t = 0}, q_{2, t = 0})$.
-We have $e$ units of resources to invest in improving $q_1$ and $q_2$ each period, with diminishing returns to each task.
-Suppose our goal is reach $\machine{1 | 2}$ as quickly as possible, ignoring the cost of output along the way.
-Does a greedy approach work? 
-The goal is to get $q_1 q_2$ above a threshold as quickly as possible.
-
-We consider the problem of dynamically allocating effort to maximize the product \( q_1 \cdot q_2 \) over time. 
-Each period, we have a total of \( e > 0 \) effort units to allocate. 
-Allocating \( i \) effort to \( q_1 \) and \( e - i \) effort to \( q_2 \) results in:
-\[
-q_1 \to q_1 + i, \quad q_2 \to q_2 + (e - i).
-\]
-The goal is to maximize \( q_1 \cdot q_2 \) at every period, starting with initial values \( q_1(0) \) and \( q_2(0) \).
-
-\subsection{Single-Period Allocation}
-
-For a single period, let:
-\[
-f(i) = (q_1 + i)(q_2 + e - i).
-\]
-We aim to maximize \( f(i) \) with respect to \( i \), where \( i \in [0, e] \). Expanding \( f(i) \),
-\[
-f(i) = q_1 q_2 + e q_1 + e q_2 + i(e - q_1 + q_2) - i^2.
-\]
-Differentiating with respect to \( i \),
-\[
-f'(i) = q_2 + e - 2i - q_1.
-\]
-Setting \( f'(i) = 0 \), we solve for the critical point:
-\[
-i^* = \frac{q_2 + e - q_1}{2}.
-\]
-
-\subsubsection*{Boundary Conditions and Solution}
-
-The critical point \( i^* \) is only valid if \( i^* \in [0, e] \). Considering the boundaries:
-
-\begin{itemize}
-    \item If \( i^* < 0 \), the maximum occurs at \( i = 0 \). This happens when:
-    \[
-    q_1 > q_2 + e.
-    \]
-    In this case, all effort should be allocated to \( q_2 \) (\( i = 0 \)).
-    \item If \( i^* > e \), the maximum occurs at \( i = e \). This happens when:
-    \[
-    q_2 > q_1 + e.
-    \]
-    In this case, all effort should be allocated to \( q_1 \) (\( i = e \)).
-    \item If \( 0 \leq i^* \leq e \), the maximum occurs at \( i^* \). Substituting \( i^* \), we find:
-    \[
-    i^* = \frac{q_2 + e - q_1}{2}.
-    \]
-    This allocation balances \( q_1 \) and \( q_2 \) such that:
-    \[
-    q_1 + i^* = q_2 + (e - i^*).
-    \]
-\end{itemize}
-
-\subsection{Dynamic Multi-Period Allocation}
-
-Over multiple periods, the optimal strategy is to:
-\begin{enumerate}
-    \item Allocate all effort to the smaller of \( q_1 \) and \( q_2 \) until their values are within \( e \) of each other.
-    \item Once \( |q_1 - q_2| \leq e \), allocate effort to bring \( q_1 \) and \( q_2 \) to exact parity in one period.
-    \item After parity is reached (\( q_1 = q_2 \)), split \( e \) equally between \( q_1 \) and \( q_2 \) in all subsequent periods to maintain parity.
-\end{enumerate}
-
-This strategy ensures that \( q_1 \cdot q_2 \) grows as quickly as possible at every stage.
-
-\subsection{Proof of Optimality}
-
-The concavity of \( f(i) \) ensures that the above allocation maximizes \( q_1 \cdot q_2 \) at each step:
-\[
-f''(i) = -2 < 0.
-\]
-Thus, \( f(i) \) is concave, and \( i^* \) is a global maximum in the feasible range \( [0, e] \).
-
-Over multiple periods, maintaining \( q_1 \approx q_2 \) maximizes the growth of \( q_1 \cdot q_2 \). This follows from the AM-GM inequality:
-\[
-\frac{q_1 + q_2}{2} \geq \sqrt{q_1 q_2}.
-\]
-Equality occurs when \( q_1 = q_2 \). Therefore, the strategy of balancing \( q_1 \) and \( q_2 \) ensures maximal growth of their product.
-
-\subsection{What about if we care about costs?}
-Let $C(q_1, q_2)$ be the cost of producing output with $q_1$ and $q_2$.
-Let $I(t)$ be the total amount of R\&D resources invested in $q_1$ at time $t$.
-If we care about the cost of production while on the path to full automation, we can write the problem as:
-\begin{align}
-\arg\min_{i(t)} \int e^{-\gamma t} C(q_1(t), q_2(t)) dt \\
-s.t. \\
-q_1(t) = q_1(0) + I(t) \\
-q_2(t) = q_2(0) + (te - I(t))
-\end{align}
-where $\gamma$ is the discount rate.
-
-
-\section{Why Investing in One Task Unlocks Others}
-
-\subsection{Non-Smooth Cost Surface from Chaining}
-The function $C(q_1, \dots, q_n)$ exhibits discrete drops when tasks are grouped into chains. For example, tasks $1$ and $2$ might be performed by humans until $q_2$ crosses a threshold $\bar{q}_2$, making it optimal to chain tasks $1$ and $2$. This reduces costs by:
-\[
-    \Delta C = \text{Cost with separate blocks} - \text{Cost with one chain}.
-\]
-Such threshold effects create complementarities between tasks in a chain.
-
-\subsection{Unlocking New Investment Opportunities}
-Once tasks $i$ and $j$ are chained, improving $q_i$ or $q_j$ benefits the entire chain, increasing the marginal returns to investment in those tasks. Formally, if tasks $i$ and $j$ are in the same chain:
-\[
-    \text{Chained cost: } \frac{c_m}{q_i \cdot q_j} \quad \implies \quad \frac{\partial}{\partial q_i} \left( \frac{c_m}{q_i \cdot q_j} \right) = -\frac{c_m}{q_i^2 \cdot q_j}.
-\]
-This complementarity encourages balanced investment across all tasks in the chain.
-
-\section{Optimal Path of Investment}
-\subsection{One-Shot Optimization}
-If all investments can be planned simultaneously, solve:
-\[
-    \min_{I_1, \dots, I_n \geq 0} \left[ C(f_1(I_1), \dots, f_n(I_n)) + \sum_{i=1}^n \kappa_i(I_i) \right].
-\]
-This problem is piecewise-defined due to changes in the optimal partition $P$, requiring specialized numerical techniques for global optimization.
-
-\subsection{Iterative Heuristic Approach}
-An iterative strategy might proceed as follows:
-\begin{enumerate}
-    \item Start with initial $q_i = f_i(0)$ (no investment).
-    \item Compute the optimal partition $P$ minimizing $C(q_1, \dots, q_n)$.
-    \item Calculate the marginal benefit of investing in each task $i$:
-    \[
-        \text{Marginal Benefit}(i) = \frac{-\frac{\partial}{\partial q_i} C(q_1, \dots, q_n)}{\frac{d}{d I_i} f_i(I_i)}.
-    \]
-    \item Invest in the task with the highest marginal benefit, update $q_i$, and re-optimize $P$.
-    \item Repeat until no profitable investments remain.
-\end{enumerate}
-
-\subsection{Complementarity and Balanced Investment}
-\begin{itemize}
-    \item Tasks in the same chain exhibit complementarity: improving one increases the marginal benefit of improving others.
-    \item Diminishing returns ensure that investments are distributed to keep tasks balanced, avoiding weak links in the chain.
-\end{itemize}
-
-\section{Conclusion}
-The model demonstrates how investments in AI capabilities can be optimally allocated across tasks to minimize costs. Complementarities in chaining create threshold effects and synergies, leading to a dynamic interplay between tasks. Iterative approaches capture key insights:
-\begin{enumerate}
-    \item Investments in one task can unlock opportunities in others by enabling chaining.
-    \item Balanced investment is critical to avoid bottlenecks within chains.
-    \item Optimal strategies combine complementarity exploitation with diminishing returns management.
-\end{enumerate}
-
-
+\subsection{Chained tasks can be re-factored by machines as they see fit}
+We might also imagine that once fully chained, the system is free to ``re-factor'' production within the chain---it simply takes inputs and generates outputs.
+The details of how this is done is up to the model. 
+In the language of our model, system-level substitution would just be characterized as long chains of task automation.
 
 % region: Chaining tasks 
-
 % endregion: Chaining tasksh
-
 % region: Division of labor creates interdependence of tasks within jobs
 
-\begin{tcolorbox}
-\subsection{Comment: Ability implies judgement but lack of ability does not imply lack of judgement}
+\subsection{Ability implies judgement but lack of ability does not imply lack of judgement}
 Do not deny the antecedent.
 While the ability to perform a task often implies the ability to evaluate it (as performers must understand their goal), the reverse is not necessarily true---there are many cases where humans can effectively judge and direct task completion without being able to execute the task themselves. 
 This is particularly relevant for highly skilled work, where the pool of qualified evaluators may be larger than those who can perform the task, and mirrors traditional management relationships where managers direct work they cannot personally execute. 
 Just as a person with broken arms could still evaluate if a coffee was properly served despite being unable to serve it themselves, the key insight is that prompting and judgment capabilities can be decoupled from task execution abilities when delegating work to AI systems.
-\end{tcolorbox}
 
-
-\begin{tcolorbox}
-\subsection{Comment: AI systems could potentially evaluate their own outputs}
+\subsection{AI systems could potentially evaluate their own outputs}
 While AI systems could potentially evaluate their own outputs, this misses a key point: if an AI model could reliably improve its own evaluation process, those improvements likely would already be incorporated into the model's training and deployment.
 Modern AI systems do engage in more sophisticated self-evaluation and reasoning during inference. 
 However, what remains is human asking and human evaluation.
 This could be entirey deskilled, reduced to cliking a button and rubber-stamp acceptence of what comes out of the model---similar to using a vending machine.
 But is could also remain a highly skilled task on both ends.
-\end{tcolorbox}
 
 \subsection{Incentives for investment}
 One concern in Acemoglu model is what he calls ``so-so'' technologies that automate but show little net productivity benefit, merely displacing labor: ```Examples of so-so technologies include automated customer service, which has displaced human service representatives but is generally deemed to be low quality and thus unlikely to have generated large productivity gains.''
@@ -908,8 +581,7 @@ Although there are advantages to thinking in terms of tasks, most labor market p
 Our training and human capital acquistion is structured as occupations.
 People want to know which whole occupations will disappear, and what occupations have good prospects. 
 
-\begin{tcolorbox}
-\subsection{Comment: Disappeared occupations often just gave prompting and judging tasks to customers}
+\subsection{Disappeared occupations often just gave prompting and judging tasks to customers}
 The approach gives a way to think about an occupation ``disappearing.''
 In the model, an occupation only disappears when all of its task are subsumed in an automation chain.
 In this case, AI, but we can think of AI as capital more generally that can be directed by humans. 
@@ -922,16 +594,13 @@ If it was hard to know if you had gotten the right floor, we might expect that t
 Or consider retail in the past where all items were on shelves behind counters. 
 The consumer would prompt the clerk to fetch items (perhaps asking for recommendations) and then the clerk would handle the merchandize. 
 It was not until Piggly Wiggly allowed customers to select the merchandise directly that this task disappeared. 
-\end{tcolorbox}
 
-\begin{tcolorbox}
 \subsection{Jobs many tasks and complex dependencies are more resistant to full auomation}
 Jobs with few tasks are more prone to full automation.
 All else equal, a job with a single task is more prone to automation compared to one with multiple distinct tasks.
 Jobs where the next task is unpredictable are more resistant to full automation.
 The model highlights the benefits to combining multiple tasks into an automation ``chain.''
 But if task 1 and task 2 rarely occur together, chaining them together is not likely to work well if that requires some set up.
-\end{tcolorbox}
 
 \subsection{Generative AI might allow for a kind of pseudo-human capital acquistiion.}
 Substitution to another human might require a hand-off if all the rest of the tasks still need to be done by the ``original'' human. 
@@ -958,7 +627,6 @@ I.e., if there was only one task that precluded them from doing some occupation,
 Allowing more people to do more tasks could have an indirect productivity effect. 
 Ironically, the harder the task to perform, the more potential for AI to unlock this substitution potential, as the pool of potential prompters and judges is much larger than the pool of doers.
 
-
 \subsection{Equilibrium considerations}
 If a sector has a large increase in AI usage, labor demand will fall. 
 Let $l_j(w)$ be the labor demand for good $j$ at wage $w$ to produce 1 unit of output.
@@ -984,14 +652,14 @@ The demand for labor is minimal, seemingly implying low wages, but also goods ar
 
 \section{Conclusion}
 
-For those interested in AI that complements human capabilties---there are some direct ones complemented in this framework: asking and judging. 
-But it also suggests asking and judging has particularly high value when it bookends long sequences of AI-chained tasks.  
-Asking a model to proofread a memo is not particularly hig value; 
-asking a model to do foundational and autonomous research on drug discovery by pointing it in a promising direction could be enormously valuable on the margin if that skill itself is rare. 
-Indeed, \cite{toner2024artificial} provides an remarkable example of thi kind of change in the value of asking and judging: 
-research productivity is dramatically increased using an AI tool by allowing highly skilled researchers to focus on evaluating the output of the AI tool. 
-In other domains, this seem phenomena might benefit less-skilled workers were actually doing the task is the bottleneck.
-This seems to be the case in \cite{brynjolfsson2023generative}, for example. 
+For those interested in AI that complements human capabilities---there are some direct ones complemented in this framework: asking and judging.
+But it also suggests asking and judging has particularly high value when it bookends long sequences of AI-chained tasks.
+Asking a model to proofread a memo is not particularly high value;
+asking a model to do foundational and autonomous research on drug discovery by pointing it in a promising direction could be enormously valuable on the margin if that skill itself is rare.
+Indeed, \cite{toner2024artificial} provides a remarkable example of this kind of change in the value of asking and judging:
+research productivity is dramatically increased using an AI tool by allowing highly skilled researchers to focus on evaluating the output of the AI tool.
+In other domains, this same phenomenon might benefit less-skilled workers where actually doing the task is the bottleneck.
+This seems to be the case in \cite{brynjolfsson2023generative}, for example.
 
 The automation can enable new forms of labor-labor substitution by separating task execution from task evaluation, allowing workers to leverage judgment skills even in domains where they lack execution abilities.
 \begin{dialogue}
@@ -1013,6 +681,86 @@ As AI makes it so that humans no longer have to do every task in a job, AI might
 
 \bibliographystyle{aer}
 \bibliography{rubin}
+
+
+\end{document}
+
+\appendix
+
+\section{Extending the Model: Theoretical Propositions and Insights}
+
+\subsection{Chaining with Correlated Success Probabilities}
+
+\begin{proposition}[Chaining with Correlated Success]
+Suppose the probability of success on each task is marginally \(q_i\), but the success events are correlated with a correlation coefficient \(\rho\). Let \(\text{CostBlock}(i\text{ through }j)\) denote the expected cost of chaining tasks \(i\) through \(j\). Then:
+\[
+\text{CostBlock}(i\text{ through }j) = \frac{c_m}{\mathbb{P}(\text{all succeed})},
+\]
+where \(\mathbb{P}(\text{all succeed}) = \mathbb{P}(\bigcap_{k=i}^j S_k)\) depends on \(\rho\). If \(\rho > 0\), the threshold for cost-effective chaining is strictly higher than in the \(\rho = 0\) (independent) case. Conversely, if \(\rho < 0\), chaining becomes more attractive.
+\end{proposition}
+
+\subsection{Chaining in Non-Linear or Tree-Structured Production}
+
+\begin{theorem}[Cost-Minimizing Chaining in a Directed Acyclic Graph]
+Let the production process be represented by a DAG \(G = (V, E)\), where each node \(i \in V\) is a task requiring cost \(c_h[i] \in \mathbb{R}_+\) by humans or \(\frac{c_m}{\prod_{k \in \text{chain}} q[k]}\) if executed in a chained block of tasks. The cost-minimization problem:
+\[
+\min_{\text{valid assignments respecting DAG dependencies}} \sum_{b \in B} \text{CostBlock}(b),
+\]
+can be solved in \(O(|V|^2 2^{|E|})\) using a dynamic program processing nodes in topological order. The solution involves sub-DAGs where each is either a single-human-task node or a fully machine-chained component.
+\end{theorem}
+
+\subsection{Endogenizing Prompting and Evaluation Costs}
+
+\begin{proposition}[Joint Investment in Capability and Prompt Tuning]
+Let a firm allocate resources to improve AI success probabilities \(q_i\) and reduce management costs \(c_m\) over time, facing cost functions \(R(q_i)\) and \(S(c_m)\). The total cost per period is:
+\[
+C(\mathbf{q}, c_m) = \min\left\{\text{production costs with } q_i \text{ and } c_m\right\}.
+\]
+If improvements in \(q_i\) and \(c_m\) are complementary (i.e., \(\frac{\partial^2 C}{\partial q_i \partial c_m} < 0\)), the firm will invest in both dimensions simultaneously, rather than prioritizing one exclusively.
+\end{proposition}
+
+\subsection{Multiple Humans with Heterogeneous Skills}
+
+\begin{proposition}[Heterogeneous Human Costs]
+Suppose there are two human types, \(H_1\) and \(H_2\), with costs \(c_{h1} < c_{h2}\) and \(c_{m1} < c_{m2}\). Let \(\CostBlock_{i,\text{type}}(\cdots)\) be the expected cost if tasks \(i\) through \(j\) are done by AI under type \(\text{type}\). The dynamic program chooses both:
+\begin{itemize}
+    \item Who supervises each AI chain (\(H_1\) or \(H_2\)),
+    \item Who performs human-executed tasks.
+\end{itemize}
+The segmentation of tasks depends on \(\frac{c_{m1}}{q_1q_2\cdots q_k}\) versus \(\frac{c_{m2}}{q_1q_2\cdots q_k}\), which affects allocation efficiency.
+\end{proposition}
+
+\subsection{Optimal Partitioning of Chains}
+
+\begin{proposition}[Optimal Chaining Partition]
+Suppose a block of \(k\) tasks has success probabilities \(q_i\). The tasks can be chained in one go or partitioned into smaller subchains. The cost of \(m\) subchains is:
+\[
+\sum_{\ell=1}^m \frac{c_m}{\prod_{i \in \ell\text{-th subchain}} q[i]}.
+\]
+An optimal partition \(\Pi^*\) minimizes this sum and can be found via a dynamic program in \(O(k^2)\). If \(\prod_{i=1}^k q[i]\) is sufficiently high, the entire block is assigned to a single chain.
+\end{proposition}
+
+\subsection{Learning-by-Doing and Dynamic Probabilities}
+
+\begin{theorem}[Optimal Usage Trajectories Under Learning-by-Doing]
+Let \(q_i(t)\) be the AI’s success probability on task \(i\) at time \(t\), improving with usage: \(q_i(t+1) = \min\{q_i(t) + \Delta, 1\}\). If improvements in \(q_i\) are convex in attempts, there exists a threshold policy:
+\begin{itemize}
+    \item If \(q_i(t) < q_i^*\), the firm uses AI for the task to accumulate learning.
+    \item If \(q_i(t) \ge q_i^*\), the firm assigns the task to AI or humans, depending on cost.
+\end{itemize}
+\end{theorem}
+
+\subsection{General Equilibrium with Multiple Sectors}
+
+\begin{proposition}[General Equilibrium with Two Goods]
+Consider two sectors producing goods \(X\) and \(Y\), each requiring a sequence of tasks. Labor is mobile, and the equilibrium prices \((w^*, p_X^*, p_Y^*)\) satisfy:
+\[
+L_j(w) = d_j(p_j) l_j(w; q_1, q_2, \dots, q_n),
+\]
+where \(L_j\) is labor demand and \(d_j(p_j)\) is product demand. If AI improvement \(\Delta q\) reduces the cost of key tasks in \(X\), the labor effect in \(X\) depends on the demand elasticity \(\epsilon_j\), while sector \(Y\) may experience wage effects or reallocation.
+\end{proposition}
+
+
 
 \end{document}
 

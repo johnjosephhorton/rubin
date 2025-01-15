@@ -46,6 +46,10 @@ plots/optimal_paths.pdf: ../analysis/create_optimal_paths.py ../analysis/CostVis
 	 cd ../analysis && python create_optimal_paths.py
 
 
+plots += plots/horizon_effects.pdf
+plots/horizon_effects.pdf: ../analysis/create_horizon_effects.py ../analysis/CostVisualization.py
+	 cd ../analysis && python create_horizon_effects.py
+
 
 $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $(LEVEL_PLOTS) $(LINE_PLOTS) $(WRAPPERS) $(COMBINED_TABLES) $(plots) $(tables)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
@@ -58,4 +62,5 @@ $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $
 
 
 toread: $(project_name).pdf
-	scp $(project_name).pdf bandit-local.local:/home/john/Dropbox/toread/$(project_name)_$(ts).pdf || cp $(project_name).pdf ~/Dropbox/toread/$(project_name)_$(ts).pdf 
+	## scp $(project_name).pdf bandit-local.local:/home/john/Dropbox/toread/$(project_name)_$(ts).pdf || 
+	cp $(project_name).pdf ~/Dropbox/toread/$(project_name)_$(ts).pdf 
