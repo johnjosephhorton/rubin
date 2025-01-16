@@ -1,3 +1,5 @@
+placebo_analysis = True
+
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -16,6 +18,7 @@ import numpy as np
 import pandas as pd
 from collections import defaultdict
 import itertools
+import random 
 
 ## formatting number to appear comma separated and with two digits after decimal: e.g, 1000 shown as 1,000.00
 pd.set_option("float_format", "{:,.2f}".format)
@@ -34,16 +37,17 @@ pd.set_option("display.max_rows", 200)
 # In[2]:
 
 
-# # determine paths
-# user = getpass.getuser()
-# if user == 'peymanshahidi':
-#     main_folder_path = f'/Users/{user}/Dropbox (MIT)/Research/AI and Occupations/ai-exposure'
-#     data_path = f'{main_folder_path}/output/data'
-#     output_path = f'{main_folder_path}/output/agentic_ai'
-
+# Determine paths
 main_folder_path = ".."
-data_path = f"{main_folder_path}/data"
-output_path = f"{main_folder_path}/writeup/plots/"
+input_data_path = f"{main_folder_path}/data"
+output_data_path = f'{input_data_path}/computed_objects'
+output_plot_path = f"{main_folder_path}/writeup/plots"
+
+# Create directories if they don't exist
+import os
+for path in [output_data_path, output_plot_path]:
+    if not os.path.exists(path):
+        os.makedirs(path)
 
 
 # ### Main Code Starts Here
@@ -56,7 +60,7 @@ output_path = f"{main_folder_path}/writeup/plots/"
 
 
 # Read O*NET data
-onet = pd.read_csv(f"{data_path}/onet_occupations_yearly.csv")
+onet = pd.read_csv(f"{input_data_path}/onet_occupations_yearly.csv")
 
 # keep 2023 entries only
 onet = onet[onet["year"] == 2023].reset_index(drop=True)
@@ -112,6 +116,53 @@ onet.replace("NaN", np.nan, inplace=True)
 onet.dropna(how="any", inplace=True)
 
 
+
+
+# ### Randomly assign tasks to occupations (note that each occupation gets assigned the same number of tasks it had in the original dataset)
+
+# Get unique tasks
+unique_tasks = onet[task_variable].unique().tolist()
+
+# Count the number of tasks for each occupation
+occupation_task_counts = onet.groupby(occupation_variable).size()
+
+# Prepare a list for the new dataset
+randomized_data = []
+
+# Assign tasks randomly for each occupation
+for occupation, task_count in occupation_task_counts.items():
+    # Shuffle tasks and pick the required number of tasks
+    assigned_tasks = random.sample(unique_tasks, task_count)
+    # Add entries to the new dataset
+    for task in assigned_tasks:
+        randomized_data.append({occupation_variable: occupation, task_variable: task})
+
+# Create the new DataFrame
+onet_random_tasks = pd.DataFrame(randomized_data)
+
+# Save the new DataFrame
+onet_random_tasks.to_csv(f'{output_data_path}/onet_random_tasks.csv', index=False)
+
+
+
+
+# ## Decide if want to run placebo or original analysis
+
+# For placebo, change onet to onet_random_tasks
+if placebo_analysis == True:
+    # Update the onet data to be the randomized version
+    onet = pd.read_csv(f'{output_data_path}/onet_random_tasks.csv')
+
+    # Update paths
+    output_data_path = f'{input_data_path}/computed_objects/placebo'
+    output_plot_path = f"{main_folder_path}/writeup/plots/placebo"
+
+    for path in [output_data_path, output_plot_path]:
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+
+
 # ### Create task-task co-occurrence matrix
 
 # In[6]:
@@ -162,7 +213,7 @@ cooccurrence_matrix = create_task_task_cooc_matrix(
     onet, occupation_variable, task_variable
 )  # in dataframe format
 cooccurrence_matrix.to_csv(
-    f"{output_path}/task_task_cooccurrence_matrix.csv", index=True
+    f"{output_data_path}/task_task_cooccurrence_matrix.csv", index=True
 )
 
 
@@ -187,7 +238,7 @@ task_scores_df = task_scores_df.rename_axis(occupation_variable).reset_index(
 )
 
 # Save the sorted row means to a CSV file
-task_scores_df.to_csv(f"{output_path}/indiv_task_cooccurrence_scores.csv", header=False)
+task_scores_df.to_csv(f"{output_data_path}/indiv_task_cooccurrence_scores.csv", header=False)
 
 
 # #### Get occupation co-occurrence scores
@@ -247,7 +298,7 @@ occupation_scores_df = occupation_scores_df.sort_values(
     by=["cooccurrence_score"], ascending=False
 )
 occupation_scores_df.to_csv(
-    f"{output_path}/indiv_occupation_cooccurrence_scores.csv", index=False
+    f"{output_data_path}/indiv_occupation_cooccurrence_scores.csv", index=False
 )
 
 
@@ -263,7 +314,7 @@ occupation_scores_df["cooccurrence_score"].hist(bins=30, ax=ax)
 ax.set_title(f"Histogram of Occupation Co-occurrence Scores")
 ax.set_xlabel("Occupation Co-occurrence Score")
 ax.set_ylabel("Frequency")
-plt.savefig(f"{output_path}/indiv_occupation_cooccurrence_score_histogram.png", dpi=300)
+plt.savefig(f"{output_plot_path}/indiv_occupation_cooccurrence_score_histogram.png", dpi=300)
 plt.show()
 
 # Task Scores
@@ -272,7 +323,7 @@ task_scores_df["cooccurrence_score"].hist(bins=30, ax=ax)
 ax.set_title("Histogram of Task Co-occurrence Scores")
 ax.set_xlabel("Task Co-occurrence Score")
 ax.set_ylabel("Frequency")
-plt.savefig(f"{output_path}/indiv_task_cooccurrence_score_histogram.png", dpi=300)
+plt.savefig(f"{output_plot_path}/indiv_task_cooccurrence_score_histogram.png", dpi=300)
 plt.show()
 
 
@@ -339,7 +390,7 @@ pair_counts_df = pd.DataFrame(
 pair_counts_df = pair_counts_df.sort_values(by="Count", ascending=False)
 
 # Save to csv
-pair_counts_df.to_csv(f"{output_path}/task_pair_counts.csv", index=False)
+pair_counts_df.to_csv(f"{output_data_path}/task_pair_counts.csv", index=False)
 
 
 # ### Plot non-weighted task pair repetition score
@@ -348,26 +399,25 @@ pair_counts_df.to_csv(f"{output_path}/task_pair_counts.csv", index=False)
 
 
 truncation_threhsold = 15
+if placebo_analysis:
+    truncation_threhsold = 1
 truncated_pair_counts = pair_counts_df[pair_counts_df.Count > truncation_threhsold]
 
-print(f"Length of task pair counts: {len(pair_counts_df)}")
-print(
-    f"Length of task pair counts w/ >{truncation_threhsold} repeats: {len(truncated_pair_counts)}"
-)
-
 n_bins = truncated_pair_counts.Count.max() - truncation_threhsold + 1
+if placebo_analysis:
+    n_bins = 30
+
+print(f'Length of task pair counts: {len(pair_counts_df)}')
+print(f'Length of task pair counts w/ >{truncation_threhsold} repeats: {len(truncated_pair_counts)}')
 
 # Plot task pair counts
 fig, ax = plt.subplots(figsize=(10, 8))
-truncated_pair_counts["Count"].hist(bins=n_bins, ax=ax)
-ax.set_title(
-    f"Histogram of Task Pairs Appearing in >{truncation_threhsold} Occupations\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs Appearing in >{truncation_threhsold} Occupations: {len(truncated_pair_counts)}"
-)
-ax.set_xlabel("Task Pair Count")
-ax.set_ylabel("Frequency")
-plt.savefig(f"{output_path}/task_pair_counts_histogram.png", dpi=300)
+truncated_pair_counts['Count'].hist(bins=n_bins, ax=ax)
+ax.set_title(f'Histogram of Task Pairs Appearing in >{truncation_threhsold} Occupations\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs Appearing in >{truncation_threhsold} Occupations: {len(truncated_pair_counts)}')
+ax.set_xlabel('Task Pair Count')
+ax.set_ylabel('Frequency')
+plt.savefig(f'{output_plot_path}/task_pair_counts_histogram.png', dpi=300)
 plt.show()
-
 
 # In[12]:
 
@@ -429,7 +479,7 @@ occupation_overlap_df = create_occupation_similarity_matrix(
 
 # Save the occupation overlap matrix to a CSV file
 occupation_overlap_df.to_csv(
-    f"{output_path}/occupation_similarity_matrix.csv", index=True
+    f"{output_data_path}/occupation_similarity_matrix.csv", index=True
 )
 
 
@@ -521,7 +571,7 @@ weighted_pairs_df = weighted_pairs_df[weighted_pairs_df["Weighted_Count"] > 0]
 weighted_pairs_df = weighted_pairs_df.sort_values(by="Weighted_Count", ascending=False)
 
 # Save the results
-weighted_pairs_df.to_csv(f"{output_path}/task_pair_weightedScores.csv", index=False)
+weighted_pairs_df.to_csv(f"{output_data_path}/task_pair_weightedScores.csv", index=False)
 weighted_pairs_df
 
 
@@ -533,30 +583,24 @@ weighted_pairs_df
 # Filter 1) by weighted count and 2) by number of occupations
 # 1)
 truncation_threhsold = 0
-truncated_pair_counts = weighted_pairs_df[
-    weighted_pairs_df.Weighted_Count > truncation_threhsold
-]
+truncated_pair_counts = weighted_pairs_df[weighted_pairs_df.Weighted_Count > truncation_threhsold]
 
 # 2)
 num_occs_threshold = 10
-truncated_pair_counts = truncated_pair_counts[
-    truncated_pair_counts.Num_Occupations > num_occs_threshold
-]
+if placebo_analysis:
+    num_occs_threshold = 1
+truncated_pair_counts = truncated_pair_counts[truncated_pair_counts.Num_Occupations > num_occs_threshold]
 
 # Print Stats
-print(f"Length of task pair counts: {len(weighted_pairs_df)}")
-print(
-    f"Length of task pair counts w/ >{num_occs_threshold} repeats: {len(truncated_pair_counts)}"
-)
+print(f'Length of task pair counts: {len(weighted_pairs_df)}')
+print(f'Length of task pair counts w/ >{num_occs_threshold} repeats: {len(truncated_pair_counts)}')
 
 
 # Plot weighted task pair count
 fig, ax = plt.subplots(figsize=(10, 8))
-truncated_pair_counts["Weighted_Count"].hist(bins=30, ax=ax)
-ax.set_title(
-    f"Histogram of Occupation-Similarity-Weighted Task Pair Scores\nfor Task Pairs Appearing in >{num_occs_threshold} Occupations\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs in >{num_occs_threshold} Occupations: {len(truncated_pair_counts)}"
-)
-ax.set_xlabel("Task Pair Counts")
-ax.set_ylabel("Frequency")
-plt.savefig(f"{output_path}/task_pair_weightedScore_histogram.png", dpi=300)
+truncated_pair_counts['Weighted_Count'].hist(bins=30, ax=ax)
+ax.set_title(f'Histogram of Occupation-Similarity-Weighted Task Pair Scores\nfor Task Pairs Appearing in >{num_occs_threshold} Occupations\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs in >{num_occs_threshold} Occupations: {len(truncated_pair_counts)}')
+ax.set_xlabel('Task Pair Counts')
+ax.set_ylabel('Frequency')
+plt.savefig(f'{output_plot_path}/task_pair_weightedScore_histogram.png', dpi=300)
 plt.show()
