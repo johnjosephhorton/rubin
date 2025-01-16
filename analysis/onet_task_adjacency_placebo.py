@@ -1,4 +1,4 @@
-placebo_analysis = False
+placebo_analysis = True
 
 #!/usr/bin/env python
 # coding: utf-8

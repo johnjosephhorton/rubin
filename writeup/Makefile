@@ -70,6 +70,26 @@ plots/task_pair_counts_histogram.png: ../analysis/onet_task_adjacency.py ../data
 plots/task_pair_weightedScore_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
 	cd ../analysis && python onet_task_adjacency.py
 
+# The placebo analysis plots
+
+plots += plots/placebo/indiv_occupation_cooccurrence_score_histogram.png
+plots += plots/placebo/indiv_task_cooccurrence_score_histogram.png
+plots += plots/placebo/task_pair_counts_histogram.png
+plots += plots/placebo/task_pair_weightedScore_histogram.png
+
+plots/placebo/indiv_occupation_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency_placebo.py
+
+plots/placebo/indiv_task_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency_placebo.py
+
+plots/placebo/task_pair_counts_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency_placebo.py
+
+plots/placebo/task_pair_weightedScore_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency_placebo.py
+
+
 $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $(LEVEL_PLOTS) $(LINE_PLOTS) $(WRAPPERS) $(COMBINED_TABLES) $(plots) $(tables)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
