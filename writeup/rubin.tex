@@ -150,7 +150,7 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
-\section{Job design before AI}
+\section{Job design}
 Imagine a productive process that is a sequence of tasks that must be done in order. 
 A task $i$ takes $t_i \ge 0$ units of time to complete.
 Learning how to do that task costs a worker $C_i \ge 0$. 
@@ -159,7 +159,9 @@ The firm posts jobs, $J$ that are sub-sequence of tasks.
 The the union of the tasks in all jobs is the set of tasks $T$.
 
 Workers pay for the human capital to do those tasks. 
-Workers make zero profit in equilbrium, so $w = \sum_{i \in J} C_i$.
+All workers work $l$ hours over their lifetime, at a wage $w \sum C$. 
+To recoup their training costs, $w l = \sum_{i \in J} C_i$.
+
 Firms have to pay workers for their time, regardless of the task, so the job cost for a job $J$ is 
 \begin{align*}
    C(J) = \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} C_j\right).
@@ -167,6 +169,13 @@ Firms have to pay workers for their time, regardless of the task, so the job cos
 The firm is free to choose the tasks in the job, but at every transition at a point $i$ there is a cost of $H_i$ that must be paid.
 This is the cost of context-switching / hand-off between workers. 
 The firm's problem is to minimize the cost of production by job design
+
+Figure~\ref{fig:job_design} shows the cost-minimizing job design for a sequence of tasks.
+\begin{figure}[htbp]
+  \centering
+  \caption{Job design} \label{fig:job_design}
+  \includegraphics[width=0.8\textwidth]{plots/job_design.png}
+\end{figure}
 
 
 The firm faces the problem of designing jobs in a production process consisting of a sequence of tasks, $T = \{1, 2, \dots, n\}$, that must be completed in order. Task $i$ requires $t_i \geq 0$ units of time to complete and imposes a training cost of $C_i \geq 0$ for workers to acquire the necessary human capital. Jobs are defined as consecutive sub-sequences of tasks, $J = \{a, a+1, \dots, b\}$, and each job $J$ is performed by a single worker.
@@ -191,13 +200,6 @@ The firm’s optimization problem is therefore to minimize the total cost:
 
 This optimization balances the trade-off between grouping tasks into fewer jobs, which minimizes handoff costs, and the increasing job costs associated with larger task groups.
 
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{plots/job_design.png}
-  \caption{Job design}
-  \label{fig:job_design}
-\end{figure}
 
 
 \section{A model of production} \label{sec:model}
