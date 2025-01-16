@@ -1,12 +1,11 @@
 """
-dp_idiosyncratic_handoff.py
+handoff_solutions.py
 
-Solve a sequence-partitioning problem where each block (i..j) has a cost:
-   (sum(C[i..j])) * (sum(t[i..j]))
-and each new block starting at index m > 1 incurs a hand-off cost h[m].
-
-We also reconstruct the partition (list of blocks) and the wage for each block.
+Contains both the dynamic programming and brute force solutions to the 
+sequence-partitioning problem with idiosyncratic handoff costs.
 """
+
+# -------------- Dynamic Programming Solution --------------
 
 
 def solve_dp(C, t, h):
@@ -45,8 +44,6 @@ def solve_dp(C, t, h):
     h_ = [0] + h  # h_[i] = cost if we start a block at task i (1-based)
 
     # 1) Build prefix sums for C and t for fast block cost calculation
-    #    S_C[i] = sum of C_ up to index i
-    #    S_t[i] = sum of t_ up to index i
     S_C = [0] * (T + 1)
     S_t = [0] * (T + 1)
     for i in range(1, T + 1):
@@ -60,7 +57,6 @@ def solve_dp(C, t, h):
         return sumC * sumT
 
     # 2) dp[i] = minimal cost to complete tasks i..T
-    #    We'll also store choice[i] = j that achieves the minimum
     dp = [0] * (T + 2)
     choice = [0] * (T + 2)
 
@@ -89,37 +85,121 @@ def solve_dp(C, t, h):
         dp[i] = best_cost
         choice[i] = best_j
 
-    # 4) dp[1] is the minimal total cost. Reconstruct the partition:
+    # 4) Reconstruct the partition
     blocks = []
     current = 1
     while current <= T:
-        j = choice[current]  # endpoint of the block
-        # wage for tasks current..j is sum of C
+        j = choice[current]
         wage = S_C[j] - S_C[current - 1]
         blocks.append((current, j, wage))
-        current = j + 1  # move to the next block
+        current = j + 1
 
-    # Return the minimal cost and the partition
     return dp[1], blocks
 
 
+# -------------- Brute Force Solution --------------
+
+
+def calculate_block_cost(C, t, start, end):
+    """Calculate the cost of a single block from start to end (0-based indices)."""
+    sumC = sum(C[start : end + 1])
+    sumT = sum(t[start : end + 1])
+    return sumC * sumT
+
+
+def generate_all_partitions(n):
+    """
+    Generate all possible partitions of sequence 0..n-1.
+    Each partition is represented as a list of (start, end) pairs.
+    """
+
+    def recursive_partition(start, partitions):
+        if start == n:
+            yield partitions[:]
+            return
+
+        # Try ending current block at each possible position
+        for end in range(start, n):
+            partitions.append((start, end))
+            yield from recursive_partition(end + 1, partitions)
+            partitions.pop()
+
+    yield from recursive_partition(0, [])
+
+
+def solve_brute_force(C, t, h):
+    """
+    Solve for the minimal total cost by trying all possible partitions.
+
+    Parameters are the same as in solve_dp:
+    C : list of training costs
+    t : list of times
+    h : list of hand-off costs (h[i] = cost to start block at i+1)
+
+    Returns (min_cost, best_partition) where best_partition is list of
+    (start, end, wage) tuples in 1-based indexing.
+    """
+    T = len(C)
+    min_cost = float("inf")
+    best_partition = None
+
+    # Try each possible partition
+    for partition in generate_all_partitions(T):
+        total_cost = 0
+
+        # Calculate cost for each block
+        for i, (start, end) in enumerate(partition):
+            # Block cost
+            block_cost = calculate_block_cost(C, t, start, end)
+            total_cost += block_cost
+
+            # Hand-off cost if not last block
+            if end < T - 1:
+                # Note: h[i] is cost to start at i+1, so we use end+1
+                total_cost += h[end + 1]
+
+        # Update best if this is better
+        if total_cost < min_cost:
+            min_cost = total_cost
+            best_partition = partition
+
+    # Convert partition to same format as DP solution (1-based indices)
+    result_partition = []
+    for start, end in best_partition:
+        # Calculate wage (sum of C in block)
+        wage = sum(C[start : end + 1])
+        # Convert to 1-based indices
+        result_partition.append((start + 1, end + 1, wage))
+
+    return min_cost, result_partition
+
+
+def validate_solutions(C, t, h):
+    """Compare brute force and DP solutions."""
+    bf_cost, bf_partition = solve_brute_force(C, t, h)
+    dp_cost, dp_partition = solve_dp(C, t, h)
+
+    print("Brute Force solution:")
+    print(f"Cost: {bf_cost:.2f}")
+    print("Partition:", bf_partition)
+    print("\nDP solution:")
+    print(f"Cost: {dp_cost:.2f}")
+    print("Partition:", dp_partition)
+    print("\nSolutions match?", abs(bf_cost - dp_cost) < 1e-10)
+
+
 def main():
-    """
-    Example usage of solve_dp with tasks 1..5.
-    """
+    """Run example cases to compare solutions."""
+    print("Example case (T=5):")
     # Example data
-    # Let T=5
     C = [3, 1, 2, 2, 5]  # training costs
     t = [1, 4, 2, 1, 3]  # times
-    h = [
-        7 * x for x in [0.5, 2, 0, 1, 5]
-    ]  # if we start at task i(1-based), cost is h[i-1]
+    h = [7 * x for x in [0.5, 2, 0, 1, 5]]  # hand-off costs
 
-    total_cost, partition = solve_dp(C, t, h)
-    print(f"Minimal total cost = {total_cost:.2f}")
-    print("Partition (start, end, wage):")
-    for start, end, wage in partition:
-        print(f"  - Tasks {start}..{end}, wage = {wage}")
+    validate_solutions(C, t, h)
+
+    print("\nSmall test case (T=3):")
+    validate_solutions(C=[1, 2, 3], t=[1, 1, 1], h=[1, 1, 1])
 
 
 if __name__ == "__main__":
