@@ -5,8 +5,8 @@ tables =
 plots = 
 
 
-../computed_objects/simulation_results.csv: ../analysis/min_cost.py
-	cd ../analysis && python min_cost.py
+# ../computed_objects/simulation_results.csv: ../analysis/min_cost.py
+# 	cd ../analysis && python min_cost.py
 
 tables += tables/simulation_results.tex
 tables/simulation_results.tex: ../analysis/table_simulation_results.R ../computed_objects/simulation_results.csv
