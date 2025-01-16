@@ -51,6 +51,25 @@ plots/horizon_effects.pdf: ../analysis/create_horizon_effects.py ../analysis/Cos
 	 cd ../analysis && python create_horizon_effects.py
 
 
+## New Agentic AI stuff 
+
+plots += plots/indiv_occupation_cooccurrence_score_histogram.png
+plots += plots/indiv_task_cooccurrence_score_histogram.png
+plots += plots/task_pair_counts_histogram.png
+plots += plots/task_pair_weightedScore_histogram.png
+
+plots/indiv_occupation_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency.py
+
+plots/indiv_task_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency.py
+
+plots/task_pair_counts_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency.py
+
+plots/task_pair_weightedScore_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency.py
+
 $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $(LEVEL_PLOTS) $(LINE_PLOTS) $(WRAPPERS) $(COMBINED_TABLES) $(plots) $(tables)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
 	pdflatex -shell-escape -interaction=batchmode $(project_name)
