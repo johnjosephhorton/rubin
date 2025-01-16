@@ -150,6 +150,56 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
+\section{Job design before AI}
+Imagine a productive process that is a sequence of tasks that must be done in order. 
+A task $i$ takes $t_i \ge 0$ units of time to complete.
+Learning how to do that task costs a worker $C_i \ge 0$. 
+The market is perfectly competitive and workers are \emph{ex ante} identical.
+The firm posts jobs, $J$ that are sub-sequence of tasks.
+The the union of the tasks in all jobs is the set of tasks $T$.
+
+Workers pay for the human capital to do those tasks. 
+Workers make zero profit in equilbrium, so $w = \sum_{i \in J} C_i$.
+Firms have to pay workers for their time, regardless of the task, so the job cost for a job $J$ is 
+\begin{align*}
+   C(J) = \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} C_j\right).
+\end{align*}
+The firm is free to choose the tasks in the job, but at every transition at a point $i$ there is a cost of $H_i$ that must be paid.
+This is the cost of context-switching / hand-off between workers. 
+The firm's problem is to minimize the cost of production by job design
+
+
+The firm faces the problem of designing jobs in a production process consisting of a sequence of tasks, $T = \{1, 2, \dots, n\}$, that must be completed in order. Task $i$ requires $t_i \geq 0$ units of time to complete and imposes a training cost of $C_i \geq 0$ for workers to acquire the necessary human capital. Jobs are defined as consecutive sub-sequences of tasks, $J = \{a, a+1, \dots, b\}$, and each job $J$ is performed by a single worker.
+
+Workers pay the training cost $\sum_{i \in J} C_i$ for the tasks in their assigned job $J$ and, in equilibrium, are compensated exactly for this cost in a perfectly competitive labor market. The firm, however, must also pay for the time workers spend on their assigned tasks. Consequently, the total cost for a single job $J$ is given by
+\[
+\text{JobCost}(J) = \left(\sum_{i \in J} t_i\right)\left(\sum_{i \in J} C_i\right).
+\]
+
+In addition to these job costs, there is a handoff cost, $H_i \geq 0$, whenever a job boundary is placed after task $i$ and before task $i+1$. The firm seeks to minimize the total cost of production by choosing how to partition the sequence of tasks $T$ into $M$ consecutive jobs, $\{J_1, \dots, J_M\}$, where $J_m = \{i_m, i_m+1, \dots, i_{m+1}-1\}$ and $1 = i_1 < i_2 < \cdots < i_{M+1} = n+1$. The total cost of a partition is
+\[
+\text{TotalCost} = \sum_{m=1}^M \left(\left(\sum_{i = i_m}^{i_{m+1}-1} t_i\right)\left(\sum_{i = i_m}^{i_{m+1}-1} C_i\right)\right) + \sum_{m=1}^{M-1} H_{i_{m+1}-1}.
+\]
+
+The firm’s optimization problem is therefore to minimize the total cost:
+\[
+\min_{\substack{1 = i_1 < i_2 < \cdots < i_{M+1} = n+1 \\ M \text{ can vary}}}
+\left\{
+\sum_{m=1}^M \left(\left(\sum_{i = i_m}^{i_{m+1}-1} t_i\right)\left(\sum_{i = i_m}^{i_{m+1}-1} C_i\right)\right) + \sum_{m=1}^{M-1} H_{i_{m+1}-1}
+\right\}.
+\]
+
+This optimization balances the trade-off between grouping tasks into fewer jobs, which minimizes handoff costs, and the increasing job costs associated with larger task groups.
+
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/job_design.png}
+  \caption{Job design}
+  \label{fig:job_design}
+\end{figure}
+
+
 \section{A model of production} \label{sec:model}
 Consider a worker completing some sequence of tasks as part of their job.
 They can do the task themselves, at a time cost of $c_h$.

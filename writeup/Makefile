@@ -51,6 +51,11 @@ plots/horizon_effects.pdf: ../analysis/create_horizon_effects.py ../analysis/Cos
 	 cd ../analysis && python create_horizon_effects.py
 
 
+plots += plots/job_design.png
+plots/job_design.png: ../analysis/visualize_job.py
+	cd ../analysis && python visualize_job.py
+
+
 ## New Agentic AI stuff 
 
 plots += plots/indiv_occupation_cooccurrence_score_histogram.png
