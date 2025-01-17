@@ -33,14 +33,18 @@ class CostVisualization:
             ]
         )
 
-    def _add_label_with_background(self, x, y, text, fontsize=12):
+    def _add_label_with_background(
+        self, x, y, text, fontsize=16
+    ):  # Increased default fontsize
         """Add text label with white background."""
         plt.text(
             x,
             y,
             text,
             fontsize=fontsize,
-            bbox=dict(facecolor="white", edgecolor="none", alpha=0.7, pad=3),
+            bbox=dict(
+                facecolor="white", edgecolor="none", alpha=0.9, pad=5
+            ),  # Increased padding
             horizontalalignment="center",
             verticalalignment="center",
         )
@@ -68,17 +72,7 @@ class CostVisualization:
         return cost_table
 
     def find_optimal_path(self, q1_start, q2_start, T, m=100):
-        """Find optimal path from starting point using dynamic programming.
-
-        Args:
-            q1_start (float): Starting q1 value between 0 and 1
-            q2_start (float): Starting q2 value between 0 and 1
-            T (int): Number of time periods
-            m (int): Grid resolution for discretization
-
-        Returns:
-            tuple: (minimal cost, list of (q1, q2) coordinates for optimal path)
-        """
+        """Find optimal path from starting point using dynamic programming."""
         # Convert continuous coordinates to grid coordinates
         i0 = int(round(q1_start * m))
         j0 = int(round(q2_start * m))
@@ -140,7 +134,7 @@ class CostVisualization:
         # Set up figure
         plt.figure(figsize=figsize)
 
-        # Create contour plot
+        # Create contour plot with minimal styling
         min_val = min_cost.min()
         max_val = min_cost.max()
 
@@ -150,7 +144,7 @@ class CostVisualization:
         else:
             levels = np.linspace(min_val, max_val + 1e-10, 20)
 
-        plt.contourf(Q1, Q2, min_cost, levels=levels, cmap="Blues", alpha=0.5)
+        # Only draw the contour lines, no shading
         plt.contour(Q1, Q2, min_cost, levels=levels, colors="k", alpha=0.2)
 
         # Add boundary lines
@@ -160,24 +154,24 @@ class CostVisualization:
         q1_line = np.linspace(start, 1 - start, 200)
         q2_mc_chained = 1 - q1_line
         valid = (q2_mc_chained >= 0) & (q2_mc_chained <= 1)
-        plt.plot(q1_line[valid], q2_mc_chained[valid], "white", lw=2)
+        plt.plot(q1_line[valid], q2_mc_chained[valid], "black", lw=2)
 
         # M1H2-Chained boundary
         q1_line = np.linspace(1 - start, 1, 200)
         q2_m1h2_chained = self.c_m / (self.c_m + self.c_h * q1_line)
         valid = (q2_m1h2_chained > 0) & (q2_m1h2_chained <= 1)
-        plt.plot(q1_line[valid], q2_m1h2_chained[valid], "white", lw=2)
+        plt.plot(q1_line[valid], q2_m1h2_chained[valid], "black", lw=2)
 
         # H1M2-Chained boundary
         q1_line = np.linspace(0.001, start, 200)
         q2_h1m2_chained = self.c_m * (1 - q1_line) / (self.c_h * q1_line)
         valid = (q2_h1m2_chained > 0) & (q2_h1m2_chained <= 1)
-        plt.plot(q1_line[valid], q2_h1m2_chained[valid], "white", lw=2)
+        plt.plot(q1_line[valid], q2_h1m2_chained[valid], "black", lw=2)
 
         # Threshold lines
         plt.axhline(
             y=self.q_threshold,
-            color="white",
+            color="black",
             linestyle="-",
             alpha=1,
             lw=2,
@@ -186,7 +180,7 @@ class CostVisualization:
         )
         plt.axvline(
             x=self.q_threshold,
-            color="white",
+            color="black",
             linestyle="-",
             alpha=1,
             lw=2,
@@ -194,28 +188,33 @@ class CostVisualization:
             ymax=1 - start,
         )
 
-        # Add threshold labels
-        plt.text(self.q_threshold + 0.01, 0.02, r"$q_1 = c_m/c_h$", rotation=90)
-        plt.text(0.01, self.q_threshold + 0.01, r"$q_2 = c_m/c_h$")
+        # Add threshold labels with larger font
+        plt.text(
+            self.q_threshold + 0.01, 0.02, r"$q_1 = c_m/c_h$", rotation=90, fontsize=14
+        )
+        plt.text(0.01, self.q_threshold + 0.01, r"$q_2 = c_m/c_h$", fontsize=14)
 
-        # Add region labels
+        # Add region labels with larger font
         self._add_label_with_background(
-            self.q_threshold / 2, self.q_threshold / 2, "(1)(2)"
+            self.q_threshold / 2, self.q_threshold / 2, "(1)(2)", fontsize=18
         )
         self._add_label_with_background(
-            self.q_threshold / 2, (1 + self.q_threshold) / 2, "(1)<2>"
+            self.q_threshold / 2, (1 + self.q_threshold) / 2, "(1)<2>", fontsize=18
         )
         self._add_label_with_background(
-            (1 + self.q_threshold) / 2, self.q_threshold / 2, "<1>(2)"
+            (1 + self.q_threshold) / 2, self.q_threshold / 2, "<1>(2)", fontsize=18
         )
-        self._add_label_with_background(0.4, 0.4, "<1><2>")
-        self._add_label_with_background(1 - start, 1 - start, "<1|2>")
+
+        self._add_label_with_background(1, 1, "$c_{p}$ \n \u263A", fontsize=18)
+        self._add_label_with_background(0.45, 0.45, "<1><2>", fontsize=18)
+
+        self._add_label_with_background(1 - start, 1 - start, "<1|2>", fontsize=18)
 
         # Final plot settings
         plt.xlim(0, 1)
         plt.ylim(0, 1)
-        plt.xlabel("$q_1$")
-        plt.ylabel("$q_2$")
+        plt.xlabel("$q_1$", fontsize=14)
+        plt.ylabel("$q_2$", fontsize=14)
         plt.tight_layout(pad=1.5)
 
         # Store the current figure
@@ -230,16 +229,7 @@ class CostVisualization:
         colors=None,
         show_labels=True,
     ):
-        """Plot multiple optimal paths from different starting points with different time horizons.
-
-        Args:
-            starting_points (list): List of (q1, q2) tuples for starting points
-            time_horizons (list): List of T values (time horizons) for each starting point
-            m (int): Grid resolution for discretization
-            marker_size (float): Size of the markers
-            colors (list, optional): List of colors for each path. If None, uses default color cycle
-            show_labels (bool): Whether to show index labels at starting points
-        """
+        """Plot multiple optimal paths from different starting points with different time horizons."""
         if self.current_fig is None:
             self.create_visualization()
 
@@ -274,24 +264,24 @@ class CostVisualization:
             # Extract coordinates
             q1_coords, q2_coords = zip(*path)
 
-            # Plot path with transparency
+            # Plot path
             plt.plot(
                 q1_coords,
                 q2_coords,
                 color=color,
                 linestyle="-",
-                alpha=0.6,
+                alpha=0.8,  # Increased visibility
                 linewidth=2,
                 zorder=5,
                 label=f"Path {idx+1} (T={T})",
             )
 
-            # Add transparent markers along the path
+            # Add markers along the path
             plt.scatter(
                 q1_coords,
                 q2_coords,
                 color=color,
-                alpha=0.4,
+                alpha=0.6,  # Increased visibility
                 s=marker_size / 2,
                 zorder=5,
             )
@@ -318,7 +308,9 @@ class CostVisualization:
                 )
 
         if show_labels:
-            plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+            plt.legend(
+                bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=12
+            )  # Increased legend font size
 
     def save_figure(self, filepath):
         """Save the current figure to a file."""
@@ -327,20 +319,3 @@ class CostVisualization:
         plt.savefig(filepath)
         plt.close()
         self.current_fig = None
-
-
-if __name__ == "__main__":
-    # Create visualization instance
-    viz = CostVisualization(c_m=1.0, c_h=3.0)
-
-    # Example usage:
-    # Option 1: Just the base visualization
-    viz.create_visualization()
-    viz.save_figure("cost_visualization.pdf")
-
-    # Option 2: With optimal paths
-    viz = CostVisualization(c_m=1.0, c_h=3.0)
-    starting_points = [(0.1, 0.1), (0.3, 0.2), (0.2, 0.4)]
-    time_horizons = [50, 100, 150]
-    viz.plot_optimal_paths(starting_points, time_horizons)
-    viz.save_figure("cost_visualization_with_paths.pdf")
