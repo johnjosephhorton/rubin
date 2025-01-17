@@ -86,6 +86,22 @@ This is a useful simplification, but actual production involves the output of a 
 A natural question is whether this interdependence of tasks matters for the factor assignment question in the case of AI? 
 
 We present asimple task-based model of agentic AI and human labor that focuses on the interdependence of tasks in the productive process rather than the content of the tasks.
+We start with a model of production that is a sequence of tasks that must be done in order.
+Those tasks require human capital to perform, but differ in how long they take to complete.
+They also differ in how easily they can be handed-off from one worker to the next.
+This is used to develop a model of the division of labor in production.
+
+There are, of course, numerous economic models of the division of labor\citep{becker1992division, deming2017growing}---why do we need another, especially one that is not as analytically tractable as more stylized models?
+The short answer is that because AI cannot easily be characterized as a fall in the cost of ``X'', we need to get into the micro-details of the production process. 
+More stylized models cannot easily be paired with engineering estimates focusing on the content of the tasks. 
+Second, if we hope to do some kind of comparative statics, we need to have a model of production and jobs with and without an AI that reflects the actual change in capabilities.
+Right now, we have AIs now that can do \emph{certain} tasks in minutes (and eventually miliseconds) that a skilled human would have needed a week to perform. 
+These can be done at essentially zero marginal cost (but perhaps hundreds or thousands of dollars in average cost). 
+These are not marginal changes. 
+And yet there are other, seemingly similar tasks an AI cannot do.
+If we want to guide technological development, we need to understand the returns to investing in specific AI capabilities.
+
+After developing the model of production, we consider how the development of AI that can do certain tasks changes the division of labor.
 In the model, the decision to use an AI is based on comparing two costs: the cost of having a human direct and evaluate the AI's output (which depends on the capabilities of the AI at that particular task) versus the cost of having the human do the task directly.
 This might seem like another way of stating that tasks get assigned to whichever factor has the comparative advantage in that task, but this is not the case: the position of tasks within the productive process profoundly change the optimal allocation of tasks between humans and machines.
 
@@ -150,59 +166,60 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
-\section{Job design}
-Imagine a productive process that is a sequence of tasks that must be done in order. 
-A task $i$ takes $t_i \ge 0$ units of time to complete.
-Learning how to do that task costs a worker $C_i \ge 0$. 
-The market is perfectly competitive and workers are \emph{ex ante} identical.
-The firm posts jobs, $J$ that are sub-sequence of tasks.
-The the union of the tasks in all jobs is the set of tasks $T$.
+ 
+\section{A model of production}
 
-Workers pay for the human capital to do those tasks. 
-All workers work $l$ hours over their lifetime, at a wage $w \sum C$. 
-To recoup their training costs, $w l = \sum_{i \in J} C_i$.
+The firm's product requires workers to completed a sequence of tasks, $T = \{1, 2, \dots, n\}$.
+Tasks must be completed in order. 
+A task $i$ takes $t_i \ge 0$ time to complete.
+Learning how to do that task costs a worker $c_i \ge 0$.
+The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
+All workers work $l$ hours over their lifetime, which we normalize to 1.
+To recoup their training costs and make zero profit, $w = \sum_{i \in J} c_i$.
+The firm faces a perfectly elastic labor supply at any job it designs.
 
-Firms have to pay workers for their time, regardless of the task, so the job cost for a job $J$ is 
+Firms have to pay workers for their time, regardless of the task, so the wage bill for a job $J$ is 
 \begin{align*}
-   C(J) = \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} C_j\right).
+   C(J) = \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} c_j\right).
 \end{align*}
-The firm is free to choose the tasks in the job, but at every transition at a point $i$ there is a cost of $H_i$ that must be paid.
+Without any additional assumptions, the firm could minimize the cost of production by assigning a single worker to each task.
+What prevents this is a handoff cost, $H_i \geq 0$, whenever a job boundary is placed after task $i$ and before task $i+1$. 
 This is the cost of context-switching / hand-off between workers. 
-The firm's problem is to minimize the cost of production by job design
 
-Figure~\ref{fig:job_design} shows the cost-minimizing job design for a sequence of tasks.
+The firm's problem has a nice geometric interpretation, as shown in Figure~\ref{fig:job_design}.
+The productive process is a sequence of stacked rectangles of height $c_i$ and width $t_i$.
+A job is a bounding box around a sequence of tasks, with a wage bill equal to the area of the box. 
+But if a bouddary is drawn, the the switching cost rectangle's area gets added to the cost. 
+Note that each rectangle could, in turn be thought of as a sequence of tasks (smaller reactangles filling in the larger rectangle).
+At the limit, we would have a smooth curve of tasks. 
+
+Figure~\ref{fig:job_design} shows a potential job design for a sequence of 6 tasks. 
+For notation, a job is indicated by enclosing tasks within a rectangle, e.g., $J_1 = [(1),(2), (3)]$.
+Putting tasks in paraenthesis indicates that the task is done by a human---later we will have the notion of tasks done by an AI.
+
 \begin{figure}[htbp]
   \centering
-  \caption{Job design} \label{fig:job_design}
+  \caption{Allocation of workers to tasks when $n = 6$} \label{fig:job_design}
   \includegraphics[width=0.8\textwidth]{plots/job_design.png}
+  \footnotesize{Notes: This figure shows a potential job design for a sequence of 6 tasks.
+  The total cost of the job is the area of the bounding box, plus the area of the switching cost rectangles.
+  The optimal job design is to assign workers to tasks 1, 2, and 3, with a handoff cost at task 4.}
 \end{figure}
 
-
-The firm faces the problem of designing jobs in a production process consisting of a sequence of tasks, $T = \{1, 2, \dots, n\}$, that must be completed in order. Task $i$ requires $t_i \geq 0$ units of time to complete and imposes a training cost of $C_i \geq 0$ for workers to acquire the necessary human capital. Jobs are defined as consecutive sub-sequences of tasks, $J = \{a, a+1, \dots, b\}$, and each job $J$ is performed by a single worker.
-
-Workers pay the training cost $\sum_{i \in J} C_i$ for the tasks in their assigned job $J$ and, in equilibrium, are compensated exactly for this cost in a perfectly competitive labor market. The firm, however, must also pay for the time workers spend on their assigned tasks. Consequently, the total cost for a single job $J$ is given by
-\[
-\text{JobCost}(J) = \left(\sum_{i \in J} t_i\right)\left(\sum_{i \in J} C_i\right).
-\]
-
-In addition to these job costs, there is a handoff cost, $H_i \geq 0$, whenever a job boundary is placed after task $i$ and before task $i+1$. The firm seeks to minimize the total cost of production by choosing how to partition the sequence of tasks $T$ into $M$ consecutive jobs, $\{J_1, \dots, J_M\}$, where $J_m = \{i_m, i_m+1, \dots, i_{m+1}-1\}$ and $1 = i_1 < i_2 < \cdots < i_{M+1} = n+1$. The total cost of a partition is
-\[
+The firm seeks to minimize the total cost of production by choosing how to partition the sequence of tasks $T$ into $M$ consecutive jobs, $\{J_1, \dots, J_M\}$, where $J_m = \{i_m, i_m+1, \dots, i_{m+1}-1\}$ and $1 = i_1 < i_2 < \cdots < i_{M+1} = n+1$. 
+The total cost of a partition is
+\begin{align*}
 \text{TotalCost} = \sum_{m=1}^M \left(\left(\sum_{i = i_m}^{i_{m+1}-1} t_i\right)\left(\sum_{i = i_m}^{i_{m+1}-1} C_i\right)\right) + \sum_{m=1}^{M-1} H_{i_{m+1}-1}.
-\]
+\end{align*}
 
-The firm’s optimization problem is therefore to minimize the total cost:
-\[
-\min_{\substack{1 = i_1 < i_2 < \cdots < i_{M+1} = n+1 \\ M \text{ can vary}}}
-\left\{
-\sum_{m=1}^M \left(\left(\sum_{i = i_m}^{i_{m+1}-1} t_i\right)\left(\sum_{i = i_m}^{i_{m+1}-1} C_i\right)\right) + \sum_{m=1}^{M-1} H_{i_{m+1}-1}
-\right\}.
-\]
+This is a straightforward optimization problem that can be solved in $O(n^2)$ time using dynamic programming.
+But even without doing it, the firm's incentives are clear. 
+What is \emph{particularly} costly to the firm are tall and narrow tasks right next to short and wide tasks that have high handoff cost boundaries: when the productive process requires lots of work nearly anyone could do next to high-skilled work that only a few can do, but cannot be easily broken up.
+For example, professors at business schools are quite highly paid to teach and do reearch, but (the good ones at least) are also paid to clean blackboards. 
+This is very expensive blackboard cleaning services in isolation, but it cannot be helped because handing this off to another worker at that moment is too costly and the duration of the task is so short it does not matter much. 
+But if it were still impossible to split to another worker but took an hour instead of a minute, the university would badly lament the situation.
 
-This optimization balances the trade-off between grouping tasks into fewer jobs, which minimizes handoff costs, and the increasing job costs associated with larger task groups.
-
-
-
-\section{A model of production} \label{sec:model}
+\subsection{A model of production with AI} \label{sec:model}
 Consider a worker completing some sequence of tasks as part of their job.
 They can do the task themselves, at a time cost of $c_h$.
 If they choose to use an AI, the human asks the AI to perform the task with a ``prompt''---a request to the model. 
@@ -558,6 +575,46 @@ In terms of intuition, it captures the notion that a chain is only as strong as 
 \section{Discussion}
 Below, we discuss some of the implications and features of the model. 
 %\subsection{The importance of task adjacency means that automation dispersion is likely}
+
+\subsection{YADOLM: Yet Another Division of Labor Model}
+We need to get into the micro-details of the production process to understand how AI might be used and how it might change the division of labor. 
+Extant models are too stylized to be paired with, say tasks-specific engineering estimates focusing on the content of the tasks.
+Second, the model is not just about the division of labor but also the returns to investing in AI capabilities.
+
+Adam Smith attributed the division of labor being limited only by the extent of the market. 
+When considering the production of physical goods, this is perhaps a reasonable description. 
+But for most knowledge work or complex work generally, modern authors have emphasized the costs of conveying context to some other worker.
+For example, \cite{becker1992division} provides a model of the division of labor, with workers choosing to invest in task-specific human capital.
+In the model, what constrains further specialization is the cost of coordination between workers, which is just assumed to grow with the size of the team.
+There is no notion of the order in which tasks are done, nor some notion of an occupation per se. 
+
+The tasks and sequences of tasks is not completely arbitrary but dictated by the physical, logical, and engineering constraints of the production process.
+Some tasks do need to be done in a certain order because some workers will be working on the intermediate goods produced by others.  
+Consider the paradigmatic high-skilled knowledge workers creating technology products.
+A product manager has to have an idea for how to meet a customer's need. 
+That need might be articulated by a customer support rep or a by an analyst pouring over feedback data, or results from a customer survey.
+A product designer might need come up with with a sketch for how it might work. 
+A financial analyst would model out potential revenue. 
+This likely happens in concert with an engineering manager to designan engineering estimate based on preliminary designs. 
+Engineer actually needs to build the product and test it.  
+Legal has to sign-off and the terms-of-use need to updated.
+Once built, it needs to be marketed and supported going forward.
+While parallization in tasks is possible, it is constrained by some tasks needing input from other tasks being completed: customer service cannot write a support script until they know what the product is and how it works. 
+Engineers can not build it until they have a design.
+A designer will not to able to design until they know what problem is being solved and what constraints are being placed on the solution.
+And so on.
+The \cite{lazear2004balanced} model of balanced entrepreneurship makes the point that for a brand-new startup building its first product, the entrepreneur needs to be able to do everything. 
+
+This modern process requires intense coordination and considerable social skills in a way that putting a head on a pin would not. 
+\cite{deming2017growing} provides a model where workers trade with each other to complete tasks; greater social skills unlock benefits from trade in tasks.
+The data is very much consistent with his view of increased need to coordinate tasks:
+various teams described above might write detailed memos and spend considerable time in meetings, talking and presenting to each other to accompish these hand-offs.
+A person with a keen understanding of others likely does this better. 
+
+While the product process is not pin-like, it is also not a free-free-all or self-organized process with trade in tasks: 
+each worker is paid to do their part of the process and was hired with a good understanding of the process and their role in it. 
+No engineer is free to say ``What has finance done for me lately?'' and hold up a product they are directed to work on.
+This is not to ignore the vast literature on incentives problems within firms or the need for coordination, but a lot of coordination has because we have designed jobs with understandable input/output relationships with other workers and peope will do what is expected of them.
 
 \subsection{What about more complex patterns of production?}
 Sometimes what triggers a task is not the completion of a previous task, but some other event. 

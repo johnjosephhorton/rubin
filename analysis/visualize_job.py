@@ -45,7 +45,7 @@ def draw_rect_square_unit(ax, x, y, t, c, h, task_idx):
     - coords: list of important coordinates for boundary calculation
     """
     # Draw rectangle
-    rect = plt.Rectangle((x, y), t, c, fill=False, color="blue", linewidth=2)
+    rect = plt.Rectangle((x, y), t, c, fill=False, color="blue", linewidth=1)
     ax.add_patch(rect)
 
     # Add task index at center of rectangle
@@ -155,8 +155,8 @@ def draw_rect_square_sequence(T, C, H, W):
     x_max, y_max = all_coords.max(axis=0)
 
     # Draw vertical lines at all worker transitions
-    for x in x_positions:
-        ax.axvline(x=x, color="gray", linestyle="--", alpha=0.7)
+    # for x in x_positions:
+    #     ax.axvline(x=x, color="gray", linestyle="--", alpha=0.7)
 
     # Draw worker bounding boxes and labels
     max_y = y_max + (y_max - y_min) * 0.1  # Position for labels
@@ -167,7 +167,7 @@ def draw_rect_square_sequence(T, C, H, W):
             total_t,  # Width is sum of T values
             total_c,  # Height is sum of C values
             fill=True,
-            facecolor="lightblue",
+            facecolor="blue",
             edgecolor="blue",
             linestyle="--",
             linewidth=1,
@@ -175,15 +175,15 @@ def draw_rect_square_sequence(T, C, H, W):
         )
         ax.add_patch(worker_box)
 
-        # Add worker label
-        center_x = (start_x + end_x) / 2
-        ax.text(
-            center_x,
-            max_y,
-            f"Worker {worker_id}",
-            horizontalalignment="center",
-            verticalalignment="bottom",
-        )
+        # # Add worker label
+        # center_x = (start_x + end_x) / 2
+        # ax.text(
+        #     center_x,
+        #     max_y,
+        #     f"Worker {worker_id}",
+        #     horizontalalignment="center",
+        #     verticalalignment="bottom",
+        # )
 
     # Draw transition squares with pink fill
     for x, y, h in transition_squares:
@@ -197,7 +197,7 @@ def draw_rect_square_sequence(T, C, H, W):
             edgecolor="#FF9999",  # Lighter red
             linestyle="--",
             linewidth=1,
-            alpha=0.3,
+            alpha=0.4,
         )
         ax.add_patch(handoff_square)
 
@@ -212,7 +212,9 @@ def draw_rect_square_sequence(T, C, H, W):
 
     # Remove grid but keep the legend
     ax.grid(False)
-    ax.legend()
+    # ax.legend()
+    ax.set_xticks([])
+    ax.set_yticks([])
 
     return fig, ax
 
