@@ -591,6 +591,9 @@ if placebo_analysis:
     num_occs_threshold = 1
 truncated_pair_counts = truncated_pair_counts[truncated_pair_counts.Num_Occupations > num_occs_threshold]
 
+# Save to output
+truncated_pair_counts.to_csv(f'{output_data_path}/task_pair_weightedScores_truncated.csv', index=False)
+
 # Print Stats
 print(f'Length of task pair counts: {len(weighted_pairs_df)}')
 print(f'Length of task pair counts w/ >{num_occs_threshold} repeats: {len(truncated_pair_counts)}')

@@ -398,7 +398,7 @@ pair_counts_df.to_csv(f"{output_data_path}/task_pair_counts.csv", index=False)
 # In[11]:
 
 
-truncation_threhsold = 15
+truncation_threhsold = 10
 if placebo_analysis:
     truncation_threhsold = 1
 truncated_pair_counts = pair_counts_df[pair_counts_df.Count > truncation_threhsold]
@@ -590,6 +590,9 @@ num_occs_threshold = 10
 if placebo_analysis:
     num_occs_threshold = 1
 truncated_pair_counts = truncated_pair_counts[truncated_pair_counts.Num_Occupations > num_occs_threshold]
+
+# Save to output
+truncated_pair_counts.to_csv(f'{output_data_path}/task_pair_weightedScores_truncated.csv', index=False)
 
 # Print Stats
 print(f'Length of task pair counts: {len(weighted_pairs_df)}')
