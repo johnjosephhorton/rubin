@@ -172,15 +172,18 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 The firm's product requires workers to completed a sequence of tasks, $T = \{1, 2, \dots, n\}$.
 Tasks must be completed in order. 
 A task $i$ takes $t_i \ge 0$ time to complete.
+The sum of the task durations is normalized to 1, $\sum_i t_i = 1$.
+
 Learning how to do that task costs a worker $c_i \ge 0$.
 The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
 All workers work $l$ hours over their lifetime, which we normalize to 1.
-To recoup their training costs and make zero profit, $w = \sum_{i \in J} c_i$.
+Workers value leisure at $1$ and are perfectly elastic in their labor supply.
+To recoup their training costs and be indifferent between working and not working, $w = 1 + \sum_{i \in J} c_i$.
 The firm faces a perfectly elastic labor supply at any job it designs.
 
 Firms have to pay workers for their time, regardless of the task, so the wage bill for a job $J$ is 
 \begin{align*}
-   C(J) = \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} c_j\right).
+   C(J) = 1 + \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} c_j\right).
 \end{align*}
 Without any additional assumptions, the firm could minimize the cost of production by assigning a single worker to each task.
 What prevents this is a handoff cost, $H_i \geq 0$, whenever a job boundary is placed after task $i$ and before task $i+1$. 
@@ -224,13 +227,23 @@ The total cost of a partition is
 
 This is a straightforward optimization problem that can be solved in $O(n^2)$ time using dynamic programming.
 But even without doing it, the firm's incentives are clear. 
-What is \emph{particularly} costly to the firm are tall and narrow tasks right next to short and wide tasks that have high handoff cost boundaries: when the productive process requires lots of work nearly anyone could do next to high-skilled work that only a few can do, but cannot be easily broken up.
-For example, professors at business schools are quite highly paid to teach and do reearch, but (the good ones at least) are also paid to clean blackboards. 
+What is \emph{particularly} costly to the firm are ``tall and narrow'' tasks right next to ``short and wide'' task(s) that have high handoff cost boundaries: when the productive process requires lots of work nearly anyone could do next to high-skilled work that only a few can do, but cannot be easily broken up.
+For example, professors at business schools are quite highly paid to teach and do reearch, but are also paid to clean blackboards (the good ones at least). 
 This is very expensive blackboard cleaning services in isolation, but it cannot be helped because handing this off to another worker at that moment is too costly and the duration of the task is so short it does not matter much. 
 But if it were still impossible to split to another worker but took an hour instead of a minute, the university would badly lament the situation.
 
+\subsubsection{General equilibrium}
+Each worker has $1$ to spend on consumption, as their wage is $1$ after recouping their training costs.
+There are $K$ goods produced in the product market. 
+Balanced budgets required $1 = \sum_{k=1}^K p_k x_k$.
+
+Workers have CES utility over the goods, with elasticity of substitution $\sigma$.
+Let $l_k$ be the labor cost of producing one unit of the good $k$.
+Firms have reproducible technology so they can just scale up the task sequence by any amount. 
+This allows workers, even if their job has a small $\sum t$ to still work $l = 1$, which allows the labor market to clear.
+
 \subsection{Adding AI} \label{sec:model}
-Consider a worker completing some sequence of tasks as part of their designed job.
+Now consider a worker completing some sequence of tasks as part of their designed job.
 For a single task, we will drop the index. 
 As before, they can do the task themselves, at a time cost of $t$.
 Let us call that cost $c_h$.
@@ -554,7 +567,51 @@ In terms of intuition, it captures the notion that a chain is only as strong as 
   \]
   Thus, chaining is optimal if and only if the inequality holds.
   \end{proof}
-  
+
+\subsection{Job Re-design in light of AI: Handoff Costs $=$ Prompting Costs}
+
+Once a firm has a job design, if there is an advance in AI capabilities, how does it re-design the job?
+The problem is not simply what what rectangles are ``tall'' but also which ones, if eliminated, would allow the firm to redesign a job optimally.
+
+\subsection{Powerful AI means powerful prompts}
+There are good reasons to think that handoff costs are similar to prompting and evaluation costs.
+AI, no matter how good, is not a mind-reader; neither are your coworkers.
+Consider the AI system as a function:
+\begin{align}
+f : \mathcal{P} \longrightarrow \mathcal{O},
+\end{align}
+where $\mathcal{P}$ is the set of all possible prompts (inputs), and $\mathcal{O}$ is the set of all possible outputs the AI can produce.
+If the AI is powerful enough to generate a large range of outputs $\mathcal{O}$, ensuring that every desired output can be uniquely generated requires (at minimum) a surjective mapping:
+\begin{align}
+\forall o \in \mathcal{O}, \; \exists p \in \mathcal{P} \; \text{such that} \; f(p) = o.
+\end{align}
+If we require that each output is generated by exactly one unique prompt, then $f$ must be a bijection, and:
+\begin{align}
+|\mathcal{P}| = |\mathcal{O}|.
+\end{align}
+In other words, the cardinality of the prompt space must match or exceed the cardinality of the output space.
+
+Using an information-theoretic perspective, if the AI can reliably produce $N$ distinct outputs, it effectively has to ``choose'' among $N$ possibilities. 
+To specify which of those $N$ outputs is desired, the prompt must carry at least:
+\begin{align}
+\log_2(N) \quad \text{bits of information.}
+\end{align}
+As $N$ (the size of the AI's output repertoire) grows, the information capacity of the prompt must also grow proportionally.
+To summarize, as the AI’s capacity expands, the size of the output space $|\mathcal{O}|$ increases, and so must the size of the prompt space $|\mathcal{P}|$ to allow precise mapping from inputs to outputs:
+\begin{align}
+|\mathcal{P}| \geq |\mathcal{O}|.
+\end{align}
+This means that increasingly powerful AI systems require increasingly sophisticated prompts to uniquely and effectively specify desired outputs.
+
+\subsection{Labor market inequality}
+In the model, workers all have the same pay-off---namely $0$---high earnings are perfectly offset by high education costs.
+Of course, we can still look at the wage distribution.
+A highly equal distribution in one in which all workers have rectangles of similar height.
+If we imagine that the next task is a random draw from the set of tasks, then high hand-off costs tend to equalitize rectangle heights because it makes more sense to combine tasks. 
+It's just a LLN argument.
+
+
+
 \section{Empirics}
 
 \begin{figure}[htbp]
