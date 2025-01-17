@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
 
+\usepackage{subcaption}
 \usepackage{float}
 \usepackage{dialogue}
 \usepackage{tikz}
@@ -166,7 +167,6 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
- 
 \section{A model of production}
 
 The firm's product requires workers to completed a sequence of tasks, $T = \{1, 2, \dots, n\}$.
@@ -194,16 +194,26 @@ Note that each rectangle could, in turn be thought of as a sequence of tasks (sm
 At the limit, we would have a smooth curve of tasks. 
 
 Figure~\ref{fig:job_design} shows a potential job design for a sequence of 6 tasks. 
+Note that for $n$ tasks, there $2^(n-1)$ possible job arrangements. 
 For notation, a job is indicated by enclosing tasks within a rectangle, e.g., $J_1 = [(1),(2), (3)]$.
 Putting tasks in paraenthesis indicates that the task is done by a human---later we will have the notion of tasks done by an AI.
 
 \begin{figure}[htbp]
-  \centering
-  \caption{Allocation of workers to tasks when $n = 6$} \label{fig:job_design}
-  \includegraphics[width=0.8\textwidth]{plots/job_design.png}
-  \footnotesize{Notes: This figure shows a potential job design for a sequence of 6 tasks.
-  The total cost of the job is the area of the bounding box, plus the area of the switching cost rectangles.
-  The optimal job design is to assign workers to tasks 1, 2, and 3, with a handoff cost at task 4.}
+  \begin{center}
+  \caption{Example allocations of workers to tasks when $n = 6$} \label{fig:job_design}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{plots/job_design.png}
+    \caption{Allocation of $n=6$ task production to $m = 3$ workers}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{plots/combined_grid.png}
+    \caption{All possible allocations of $n=6$ task production}
+  \end{subfigure}
+  \end{center}
+  \footnotesize{Notes: This figure shows potential job designs for a sequence of 6 tasks.
+  The total cost of each job is the area of the bounding box, plus the area of the switching cost rectangles.
+  }
 \end{figure}
 
 The firm seeks to minimize the total cost of production by choosing how to partition the sequence of tasks $T$ into $M$ consecutive jobs, $\{J_1, \dots, J_M\}$, where $J_m = \{i_m, i_m+1, \dots, i_{m+1}-1\}$ and $1 = i_1 < i_2 < \cdots < i_{M+1} = n+1$. 
@@ -219,13 +229,16 @@ For example, professors at business schools are quite highly paid to teach and d
 This is very expensive blackboard cleaning services in isolation, but it cannot be helped because handing this off to another worker at that moment is too costly and the duration of the task is so short it does not matter much. 
 But if it were still impossible to split to another worker but took an hour instead of a minute, the university would badly lament the situation.
 
-\subsection{A model of production with AI} \label{sec:model}
-Consider a worker completing some sequence of tasks as part of their job.
-They can do the task themselves, at a time cost of $c_h$.
+\subsection{Adding AI} \label{sec:model}
+Consider a worker completing some sequence of tasks as part of their designed job.
+For a single task, we will drop the index. 
+As before, they can do the task themselves, at a time cost of $t$.
+Let us call that cost $c_h$.
+
 If they choose to use an AI, the human asks the AI to perform the task with a ``prompt''---a request to the model. 
-Prompting costs them $c_p$.
+Prompting costs them $c_{p}$.
 The AI tries to perform the task, generating output.
-That output is then evaluated by the worker at a cost to them of $c_e$.
+That output is then evaluated by the worker at a cost to them of $c_{e}$.
 The human can evaluate perfectly.
 
 After we evaluation, we learn if the AI succeeded or failed.

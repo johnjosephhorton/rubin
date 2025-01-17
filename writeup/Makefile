@@ -50,11 +50,13 @@ plots += plots/horizon_effects.pdf
 plots/horizon_effects.pdf: ../analysis/create_horizon_effects.py ../analysis/CostVisualization.py
 	 cd ../analysis && python create_horizon_effects.py
 
-
 plots += plots/job_design.png
 plots/job_design.png: ../analysis/visualize_job.py
 	cd ../analysis && python visualize_job.py
 
+plots += plots/combined_grid.png
+plots/combined_grid.png: ../analysis/combined_grid.py
+	cd ../analysis && python combined_grid.py
 
 ## New Agentic AI stuff 
 
