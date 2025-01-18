@@ -56,7 +56,13 @@ plots/horizon_effects.pdf: ../analysis/create_horizon_effects.py ../analysis/Cos
 plots += plots/indiv_occupation_cooccurrence_score_histogram.png
 plots += plots/indiv_task_cooccurrence_score_histogram.png
 plots += plots/task_pair_counts_histogram.png
+plots += plots/occupation_overlap_score_histogram.png
 plots += plots/task_pair_weightedScore_histogram.png
+
+plots += plots/highly_cooccurring_tasks_occupation_repetition_count.png
+plots += plots/highly_cooccurring_tasks_task_repetition_count.png
+plots += plots/occupation_group_common_tasks_heatmap.png
+
 
 plots/indiv_occupation_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
 	cd ../analysis && python onet_task_adjacency.py
@@ -67,27 +73,21 @@ plots/indiv_task_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacen
 plots/task_pair_counts_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
 	cd ../analysis && python onet_task_adjacency.py
 
+plots/occupation_overlap_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency.py
+
 plots/task_pair_weightedScore_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
 	cd ../analysis && python onet_task_adjacency.py
 
-# The placebo analysis plots
 
-plots += plots/placebo/indiv_occupation_cooccurrence_score_histogram.png
-plots += plots/placebo/indiv_task_cooccurrence_score_histogram.png
-plots += plots/placebo/task_pair_counts_histogram.png
-plots += plots/placebo/task_pair_weightedScore_histogram.png
+plots/highly_cooccurring_tasks_occupation_repetition_count.png: ../analysis/cooccurring_tasks_analysis.py ../data/onet_occupations_yearly.csv ../data/SOC_Structure.csv 
+	cd ../analysis && python cooccurring_tasks_analysis.py
 
-plots/placebo/indiv_occupation_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
-	cd ../analysis && python onet_task_adjacency_placebo.py
+plots/highly_cooccurring_tasks_task_repetition_count.png: ../analysis/cooccurring_tasks_analysis.py ../data/onet_occupations_yearly.csv ../data/SOC_Structure.csv 
+	cd ../analysis && python cooccurring_tasks_analysis.py
 
-plots/placebo/indiv_task_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
-	cd ../analysis && python onet_task_adjacency_placebo.py
-
-plots/placebo/task_pair_counts_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
-	cd ../analysis && python onet_task_adjacency_placebo.py
-
-plots/placebo/task_pair_weightedScore_histogram.png: ../analysis/onet_task_adjacency_placebo.py ../data/onet_occupations_yearly.csv
-	cd ../analysis && python onet_task_adjacency_placebo.py
+plots/occupation_group_common_tasks_heatmap.png: ../analysis/cooccurring_tasks_analysis.py ../data/onet_occupations_yearly.csv ../data/SOC_Structure.csv 
+	cd ../analysis && python cooccurring_tasks_analysis.py
 
 
 $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $(LEVEL_PLOTS) $(LINE_PLOTS) $(WRAPPERS) $(COMBINED_TABLES) $(plots) $(tables)
