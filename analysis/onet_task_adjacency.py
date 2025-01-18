@@ -9,7 +9,7 @@
 # 
 # <br>
 
-# In[431]:
+# In[20]:
 
 
 #Python
@@ -32,7 +32,7 @@ warnings.filterwarnings('ignore')
 pd.set_option('display.max_rows', 200)
 
 
-# In[432]:
+# In[21]:
 
 
 main_folder_path = ".."
@@ -41,7 +41,7 @@ output_data_path = f'{input_data_path}/computed_objects'
 output_plot_path = f"{main_folder_path}/writeup/plots"
 
 
-# In[433]:
+# In[22]:
 
 
 # Create directories if they don't exist
@@ -58,7 +58,7 @@ for path in [output_data_path, output_plot_path]:
 # 
 # ## Section (1)
 
-# In[434]:
+# In[23]:
 
 
 # Read O*NET data
@@ -75,7 +75,7 @@ onet = onet.sort_values(by=['occ_code', 'task_id', 'wa_id', 'dwa_id']).reset_ind
 onet = onet.applymap(lambda x: x.replace("'", "") if isinstance(x, str) else x)
 
 
-# In[435]:
+# In[24]:
 
 
 # Print ONET stats
@@ -90,7 +90,7 @@ print(f'Number of unique detailed work activities in ONET data: {len(onet["dwa_i
 
 # ### Remove "Teachers"-related occupations
 
-# In[436]:
+# In[25]:
 
 
 # Filter rows that contain "Teacher" (case-insensitive)
@@ -104,7 +104,7 @@ print(f'Number of unique occupations containing the word "Teachers": {unique_tea
 onet = onet[~onet['occ_title'].str.contains('Teachers', case=False, na=False)].reset_index(drop=True)
 
 
-# In[437]:
+# In[26]:
 
 
 # Variables to work with
@@ -121,7 +121,7 @@ onet.dropna(how='any', inplace=True)
 
 # ### Randomly assign tasks to occupations (note that each occupation gets assigned the same number of tasks it had in the original dataset)
 
-# In[438]:
+# In[27]:
 
 
 random.seed(123)
@@ -152,7 +152,7 @@ onet_random_tasks.to_csv(f'{output_data_path}/onet_random_tasks.csv', index=Fals
 
 # ### Create task-task co-occurrence matrix
 
-# In[440]:
+# In[28]:
 
 
 def create_task_task_cooc_matrix(df, 
@@ -211,7 +211,7 @@ cooccurrence_matrix.to_csv(f'{output_data_path}/task_task_cooccurrence_matrix.cs
 
 # #### Get individual task co-occurrence score
 
-# In[441]:
+# In[29]:
 
 
 def get_task_scores(cooccurrence_matrix):
@@ -238,7 +238,7 @@ task_scores_df.to_csv(f'{output_data_path}/indiv_task_cooccurrence_scores.csv', 
 
 # #### Get occupation co-occurrence scores
 
-# In[442]:
+# In[30]:
 
 
 def compute_cooccurrence_scores(df, cooccurrence_matrix, occupation_variable, task_variable):
@@ -291,7 +291,7 @@ occupation_scores_df.to_csv(f'{output_data_path}/indiv_occupation_cooccurrence_s
 
 # ### Plot individual occupation co-occurrence score and individual task co-occurrence score histograms
 
-# In[443]:
+# In[31]:
 
 
 # Plot histogram of co-occurrence scores
@@ -299,23 +299,23 @@ occupation_scores_df.to_csv(f'{output_data_path}/indiv_occupation_cooccurrence_s
 fig, ax = plt.subplots(figsize=(10, 8))
 ax.hist(task_scores_df['cooccurrence_score'], bins=50, edgecolor='black', alpha=0.7, label='Original')
 ax.hist(task_scores_df_random['cooccurrence_score'], bins=50, edgecolor='black', alpha=0.7, color='orange', label='Randomized')
-ax.set_title('Histogram of Average Task Co-occurrence Scores')
+ax.set_title('Distribution of Task Co-occurrence Scores')
 ax.set_xlabel('Average Task Co-occurrence Score')
 ax.set_ylabel('Frequency')
 ax.legend(loc='upper right')
 plt.savefig(f'{output_plot_path}/indiv_task_cooccurrence_score_histogram.png', dpi=300)
-plt.show()
+plt.close()
 
 # Occupation scores
 fig, ax = plt.subplots(figsize=(10, 8))
 ax.hist(occupation_scores_df['cooccurrence_score'], bins=50, edgecolor='black', alpha=0.7, label='Original')
 ax.hist(occupation_scores_df_random['cooccurrence_score'], bins=25, edgecolor='black', alpha=0.7, color='orange', label='Randomized')
-ax.set_title(f'Histogram of Occupations\' Average Task Co-occurrence Scores')
+ax.set_title(f'Distribution of Occupation Co-occurrence Scores')
 ax.set_xlabel('Occupation Average Task Co-occurrence Score')
 ax.set_ylabel('Frequency')
 ax.legend(loc='upper right')
 plt.savefig(f'{output_plot_path}/indiv_occupation_cooccurrence_score_histogram.png', dpi=300)
-plt.show()
+plt.close()
 
 
 # ## Section 2
@@ -324,7 +324,7 @@ plt.show()
 # 
 # ### Get non-weighted task pair repetition score
 
-# In[444]:
+# In[32]:
 
 
 def count_task_pairs(df, occupation_variable, task_variable):
@@ -388,17 +388,13 @@ pair_counts_df.to_csv(f'{output_data_path}/task_pair_counts.csv', index=False)
 
 # ### Plot non-weighted task pair repetition score
 
-# In[445]:
+# In[33]:
 
 
-# truncation_threhsold = 0
-# if placebo_analysis:
-#     truncation_threhsold = 1
-# truncated_pair_counts = pair_counts_df[pair_counts_df.Count > truncation_threhsold]
+truncation_threhsold = 10
+truncated_pair_counts = pair_counts_df[pair_counts_df.Count > truncation_threhsold]
 
-# n_bins = truncated_pair_counts.Count.max() - truncation_threhsold + 1
-# if placebo_analysis:
-#     n_bins = 30
+n_bins = truncated_pair_counts.Count.max() - truncation_threhsold + 1
 
 print(f'Length of task pair counts: {len(pair_counts_df)}')
 print(f'Length of task pair counts w/ >{truncation_threhsold} repeats: {len(truncated_pair_counts)}')
@@ -408,12 +404,13 @@ fig, ax = plt.subplots(figsize=(10, 8))
 ax.hist(pair_counts_df['Count'], bins=25, edgecolor='black', alpha=0.7, label='Original')
 ax.hist(pair_counts_df_random['Count'], bins=2, edgecolor='black', alpha=0.7, label='Randomized', color='orange')
 ax.set_yscale('log')  # Set y-axis to log scale
-ax.set_title(f'Histogram of Task Pair Repetitions Across Occupations')# (for Pairs Appearing in >{truncation_threhsold} Occupations)')#\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs Appearing in >{truncation_threhsold} Occupations: {len(truncated_pair_counts)}')
+ax.set_title(f'Histogram of Task Pair Repetition Counts Across Occupations')# (for Pairs Appearing in >{truncation_threhsold} Occupations)')#\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs Appearing in >{truncation_threhsold} Occupations: {len(truncated_pair_counts)}')
 ax.set_xlabel('Task Pair Repetition Count')
 ax.set_ylabel('Frequency')
 ax.legend(loc='upper right')
+ax.axvline(x=truncation_threhsold, color='red', linestyle='--', label=f'x={truncation_threhsold}')  # Vertical line at x=5
 plt.savefig(f'{output_plot_path}/task_pair_counts_histogram.png', dpi=300)
-plt.show()
+plt.close()
 
 
 # ## Section 3
@@ -422,7 +419,7 @@ plt.show()
 # 
 # ### Get Occupation Task Overlap (a.k.a. Occupation Similarity Score)
 
-# In[446]:
+# In[34]:
 
 
 def create_occupation_similarity_matrix(onet, occupation_variable, task_variable):
@@ -465,7 +462,7 @@ occupation_overlap_df_random = create_occupation_similarity_matrix(onet_random_t
 occupation_overlap_df.to_csv(f'{output_data_path}/occupation_similarity_matrix.csv', index=True)
 
 
-# In[447]:
+# In[35]:
 
 
 def get_occupation_overlap_scores(occupation_overlap_df):
@@ -494,24 +491,24 @@ avg_occupation_overlap_scores_df_random = get_occupation_overlap_scores(occupati
 avg_occupation_overlap_scores_df.to_csv(f'{output_data_path}/occupation_overlap_scores.csv', index=False)
 
 
-# In[448]:
+# In[36]:
 
 
 # Plot histogram of occupation overlap scores
 fig, ax = plt.subplots(figsize=(10, 8))
 ax.hist(avg_occupation_overlap_scores_df['Avg_Overlap_Score'], bins=30, edgecolor='black', alpha=0.7, label='Original')
 ax.hist(avg_occupation_overlap_scores_df_random['Avg_Overlap_Score'], bins=15, edgecolor='black', alpha=0.7, label='Randomized', color='orange')
-ax.set_title(f'Histogram of Average Occupation Overlap/Similarity Scores')
-ax.set_xlabel('Avgerage Occupation Overlap/Similarity Score')
+ax.set_title(f'Distribution of Occupation Similarity Scores')
+ax.set_xlabel('Avgerage Occupation Similarity Score')
 ax.set_ylabel('Frequency')
 ax.legend(loc='upper right')
-plt.savefig(f'{output_plot_path}/occupation_overlap_score_histogram.png', dpi=300)
-plt.show()
+plt.savefig(f'{output_plot_path}/occupation_similarity_score_histogram.png', dpi=300)
+plt.close()
 
 
 # ### Get occupation-similarity-weighted task pair repetition score
 
-# In[449]:
+# In[37]:
 
 
 def weighted_task_pairs_count(df, occupation_overlap_df, occupation_variable, task_variable):
@@ -605,9 +602,11 @@ print(f'Length of task pair counts w/ >{num_occs_threshold} repeats: {len(trunca
 fig, ax = plt.subplots(figsize=(10, 8))
 ax.hist(weighted_pairs_df['Weighted_Count'], bins=30, edgecolor='black', alpha=0.7, label='Original')
 ax.hist(weighted_pairs_df_random['Weighted_Count'], bins=30, edgecolor='black', alpha=0.7, label='Randomized', color='orange')
-ax.set_title(f'Histogram of Occupation-Similarity-Weighted Task Pair Repetition Count')#\nfor Task Pairs Appearing in >{num_occs_threshold} Occupations\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs in >{num_occs_threshold} Occupations: {len(truncated_pair_counts)}')
+ax.set_title(f'Histogram of Occupation-Similarity-Weighted Task Pair Repetition Scores')#\nfor Task Pairs Appearing in >{num_occs_threshold} Occupations\n\nCount of All Task Pairs: {len(pair_counts_df)}\nCount of Task Pairs in >{num_occs_threshold} Occupations: {len(truncated_pair_counts)}')
 ax.set_xlabel('Occupation-Similarity-Weighted Task Pair Count')
 ax.set_ylabel('Frequency')
+ax.set_yscale('log')  # Set y-axis to log scale
+ax.legend(loc='upper right')
 plt.savefig(f'{output_plot_path}/task_pair_weightedScore_histogram.png', dpi=300)
-plt.show()
+plt.close()
 
