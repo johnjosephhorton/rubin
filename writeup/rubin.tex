@@ -624,13 +624,29 @@ It's just a LLN argument.
 
 We turn to the 2023 O*NET dataset to motivate the ordered-task-sequence view of jobs. 
 O*NET provides a comprehensive list of U.S. occupations, each paired with a corresponding set of tasks. 
-These tasks are organized into three levels, ranging from the most specific to the most general: task, detailed work activity, and work activity. 
-In the 2023 dataset, there are 798 unique occupations, 19,294 unique tasks, 2,086 unique detailed work activities, and 38 unique work activities.
-
-For our analysis, we exclude any occupation that contains the word “Teachers,” as these occupations tend to exhibit significant task overlap. 
-We formally define occupation task overlap later, but for now, we note that of the 798 O*NET occupations, 50 include the term “Teachers.” 
-Examples include “Computer Science Teachers, Postsecondary,” “Mathematical Science Teachers, Postsecondary,” and “Engineering Teachers, Postsecondary.” 
-These occupations are removed from the analysis due to their highly similar tasks, such as preparing tests and evaluating student work, to avoid overrepresentation of the same job in the analysis that follows.
+These tasks are organized into three levels, ranging from the most specific to the most general: \textit{task}, \textit{detailed work activity}, and \textit{work activity}.
+To clarify these distinctions, Table \ref{tab:task_examples} provides examples of tasks at each level for the \textit{``Accountants and Auditors''} occupation. 
+The table helps illustrate how tasks become broader as they move from the task level to the work activity level.
+\begin{table}[htbp]
+\begin{center}
+\caption{Examples of Tasks, Detailed Work Activities, and Work Activities}
+\label{tab:task_examples}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|p{0.4\textwidth}|p{0.37\textwidth}|p{0.55\textwidth}|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Work Activity}} & \multicolumn{1}{c|}{\textbf{Detailed Work Activity}} & \multicolumn{1}{c|}{\textbf{Task}} \\ \hline
+Developing Objectives and Strategies & Develop business or financial information systems. & Develop, implement, modify, and document recordkeeping and accounting systems, making use of current computer technology. \\ \hline
+Processing Information & Verify accuracy of financial information. & Review taxpayer accounts, and conduct audits on-site, by correspondence, or by summoning taxpayer to office. \\ \hline
+Processing Information & Verify accuracy of financial information. & Prepare, analyze, or verify annual reports, financial statements, and other records, using accepted accounting and statistical procedures to assess financial condition and facilitate financial planning. \\ \hline
+Processing Information & Verify accuracy of records. & Inspect cash on hand, notes receivable and payable, negotiable securities, and canceled checks to confirm records are accurate. \\ \hline
+Processing Information & Verify accuracy of records. & Examine inventory to verify journal and ledger entries. \\ \hline
+\end{tabular}
+}
+\end{center}
+\vspace{-0.15cm}
+\textit{Note: This table provides a subset of tasks associated with the``Accountants and Auditors'' occupation.}
+\end{table}
+In the 2023 dataset, there are 748 unique occupations, 17,945 unique tasks, 2,081 unique detailed work activities, and 38 unique work activities.\footnote{Originally, the O*NET dataset included 798 unique occupations. We exclude 50 of them, all containing the word ``Teachers,'' as these occupations exhibit significant task overlap with highly similar tasks which could otherwise overrepresent the same job in the results.}
 
 In our analysis, we focus on detailed work activities as the main task unit in an occupation. 
 From here onward, when we refer to a “task” in the O*NET dataset, we are specifically referring to the detailed work activity associated with each occupation. 
