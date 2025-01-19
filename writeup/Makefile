@@ -50,40 +50,43 @@ plots += plots/horizon_effects.pdf
 plots/horizon_effects.pdf: ../analysis/create_horizon_effects.py ../analysis/CostVisualization.py
 	 cd ../analysis && python create_horizon_effects.py
 
+plots += plots/job_design.png
+plots/job_design.png: ../analysis/visualize_job.py
+	cd ../analysis && python visualize_job.py
+
+plots += plots/combined_grid.png
+plots/combined_grid.png: ../analysis/combined_grid.py
+	cd ../analysis && python combined_grid.py
 
 ## New Agentic AI stuff 
 
-plots += plots/indiv_occupation_cooccurrence_score_histogram.png
 plots += plots/indiv_task_cooccurrence_score_histogram.png
+plots += plots/indiv_occupation_cooccurrence_score_histogram.png
+plots += plots/occupation_similarity_score_histogram.png
 plots += plots/task_pair_counts_histogram.png
-plots += plots/occupation_overlap_score_histogram.png
-plots += plots/task_pair_weightedScore_histogram.png
 
-plots += plots/highly_cooccurring_tasks_occupation_repetition_count.png
 plots += plots/highly_cooccurring_tasks_task_repetition_count.png
+plots += plots/highly_cooccurring_tasks_occupation_repetition_count.png
 plots += plots/occupation_group_common_tasks_heatmap.png
 
+
+plots/indiv_task_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
+	cd ../analysis && python onet_task_adjacency.py
 
 plots/indiv_occupation_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
 	cd ../analysis && python onet_task_adjacency.py
 
-plots/indiv_task_cooccurrence_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
+plots/occupation_similarity_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
 	cd ../analysis && python onet_task_adjacency.py
 
 plots/task_pair_counts_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
 	cd ../analysis && python onet_task_adjacency.py
 
-plots/occupation_overlap_score_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
-	cd ../analysis && python onet_task_adjacency.py
-
-plots/task_pair_weightedScore_histogram.png: ../analysis/onet_task_adjacency.py ../data/onet_occupations_yearly.csv
-	cd ../analysis && python onet_task_adjacency.py
-
-
-plots/highly_cooccurring_tasks_occupation_repetition_count.png: ../analysis/cooccurring_tasks_analysis.py ../data/onet_occupations_yearly.csv ../data/SOC_Structure.csv 
-	cd ../analysis && python cooccurring_tasks_analysis.py
 
 plots/highly_cooccurring_tasks_task_repetition_count.png: ../analysis/cooccurring_tasks_analysis.py ../data/onet_occupations_yearly.csv ../data/SOC_Structure.csv 
+	cd ../analysis && python cooccurring_tasks_analysis.py
+
+plots/highly_cooccurring_tasks_occupation_repetition_count.png: ../analysis/cooccurring_tasks_analysis.py ../data/onet_occupations_yearly.csv ../data/SOC_Structure.csv 
 	cd ../analysis && python cooccurring_tasks_analysis.py
 
 plots/occupation_group_common_tasks_heatmap.png: ../analysis/cooccurring_tasks_analysis.py ../data/onet_occupations_yearly.csv ../data/SOC_Structure.csv 

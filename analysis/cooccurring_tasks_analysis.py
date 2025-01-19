@@ -7,7 +7,7 @@
 # #### By: Peyman Shahidi
 # #### Created: Jan 15, 2025
 
-# In[45]:
+# In[113]:
 
 
 #Python
@@ -30,7 +30,7 @@ warnings.filterwarnings('ignore')
 pd.set_option('display.max_rows', 200)
 
 
-# In[46]:
+# In[114]:
 
 
 main_folder_path = ".."
@@ -41,7 +41,7 @@ output_plot_path = f"{main_folder_path}/writeup/plots"
 placebo_analysis = True
 
 
-# In[47]:
+# In[115]:
 
 
 # Create directories if they don't exist
@@ -58,7 +58,7 @@ for path in [output_data_path, output_plot_path]:
 # 
 # ## Section (1)
 
-# In[48]:
+# In[116]:
 
 
 # Read O*NET data
@@ -77,14 +77,14 @@ onet = onet.applymap(lambda x: x.replace("'", "") if isinstance(x, str) else x)
 
 # ### Remove "Teachers"-related occupations
 
-# In[49]:
+# In[117]:
 
 
 # Remove rows that contain "Teacher" (case-insensitive)
 onet = onet[~onet['occ_title'].str.contains('Teachers', case=False, na=False)].reset_index(drop=True)
 
 
-# In[50]:
+# In[118]:
 
 
 # Variables to work with
@@ -99,13 +99,13 @@ onet.replace("NaN", np.nan, inplace=True)
 onet.dropna(how='any', inplace=True)
 
 
-# In[51]:
+# In[119]:
 
 
 onet = onet[['occ_code', occupation_variable, task_variable]]
 
 
-# In[52]:
+# In[120]:
 
 
 # Read datasets
@@ -122,7 +122,7 @@ truncated_pair_counts = pd.read_csv(f'{output_data_path}/task_pair_weightedScore
 
 # #### Occupations
 
-# In[53]:
+# In[121]:
 
 
 from collections import Counter
@@ -151,7 +151,7 @@ unique_occupations_df.to_csv(f'{output_data_path}/cooccurring_tasks_occupation_d
 
 # #### Tasks
 
-# In[54]:
+# In[122]:
 
 
 # Step 1: Combine all tasks from both columns into a single list
@@ -170,12 +170,12 @@ unique_tasks_df = unique_tasks_df.sort_values(by='Count', ascending=False).reset
 unique_tasks_df.to_csv(f'{output_data_path}/cooccurring_tasks_task_dist.csv', index=False)
 
 
-# In[ ]:
+# In[123]:
 
 
 # Plot occupations
 plt.figure(figsize=(8, 6))
-plt.hist(unique_occupations_df['Count'], bins=20, edgecolor='black', alpha=0.7)
+plt.hist(unique_occupations_df['Count'], bins=30, edgecolor='black', alpha=0.7)
 plt.title('Distribution of Occupation Repetition Counts Among Highly Co-occurring Task Pairs')
 plt.xlabel('Occupation Repetition Count')
 plt.ylabel('Frequency')
@@ -185,7 +185,7 @@ plt.close()
 
 # Plot tasks
 plt.figure(figsize=(8, 6))
-plt.hist(unique_tasks_df['Count'], bins=20, edgecolor='black', alpha=0.7)
+plt.hist(unique_tasks_df['Count'], bins=30, edgecolor='black', alpha=0.7)
 plt.title('Distribution of Task Repetition Counts Among Highly Co-occurring Task Pairs')
 plt.xlabel('Task Repetition Count')
 plt.ylabel('Frequency')
@@ -196,7 +196,7 @@ plt.close()
 
 # ## Analysis: See what fraction of each occupation is comprised of co-occurring tasks
 
-# In[56]:
+# In[124]:
 
 
 # Get list of tasks
@@ -204,7 +204,7 @@ unique_tasks_list = unique_tasks_df['Task'].tolist()
 print(f'Number of unique highly co-occurring tasks: {len(unique_tasks_list)}')
 
 
-# In[57]:
+# In[125]:
 
 
 # Step 1: Extract the first two characters of "occ_code" to define groups
@@ -227,7 +227,7 @@ outside_group_tasks_dict = {
 }
 
 
-# In[58]:
+# In[126]:
 
 
 # Create a variable in ONET data to indicate if a task is co-occurring or not, based on co-occurring tasks both inside and outside the group
@@ -257,7 +257,7 @@ fraction_tasks_cooccurring_df
 
 # #### Merge SOC groups to 2 digit ONET occupation codes
 
-# In[59]:
+# In[127]:
 
 
 # Merge SOC groups to 2 digit codes
@@ -283,7 +283,7 @@ fraction_tasks_cooccurring_df.to_csv(f'{output_data_path}/fraction_tasks_cooccur
 fraction_tasks_cooccurring_df
 
 
-# In[60]:
+# In[128]:
 
 
 # Step 1: Normalize the measure by number of tasks in each group
@@ -308,7 +308,7 @@ combined_df['normalized_avg'] = combined_df['avg_normalized_fraction_tasks_coocc
 combined_df = combined_df.sort_values(by='normalized_avg', ascending=False).reset_index(drop=True)
 
 
-# In[61]:
+# In[129]:
 
 
 # Plot the raw average histogram
@@ -357,7 +357,7 @@ plt.savefig(f'{output_plot_path}/fraction_cooccurring_task_normalized.png', dpi=
 plt.close()
 
 
-# In[62]:
+# In[130]:
 
 
 # Get list of tasks
@@ -365,7 +365,7 @@ unique_tasks_list = unique_tasks_df['Task'].tolist()
 print(f'Number of unique co-occurring tasks: {len(unique_tasks_list)}')
 
 
-# In[63]:
+# In[131]:
 
 
 # Step 1: Extract the first two characters of "occ_code" to define groups
@@ -388,7 +388,7 @@ outside_group_tasks_dict = {
 }
 
 
-# In[64]:
+# In[132]:
 
 
 # Create a variable in ONET data to indicate if a task is co-occurring or not, based on co-occurring tasks outside the group
@@ -408,7 +408,7 @@ fraction_tasks_cooccurring_df
 
 # ### Check common tasks (not necessarily co-occurring) between occupation groups
 
-# In[65]:
+# In[133]:
 
 
 # Step 1: Extract the first two characters of "occ_code" to define groups
@@ -441,7 +441,7 @@ matrix.rename(index=occ_group_dict, columns=occ_group_dict, inplace=True)
 matrix.to_csv(f'{output_data_path}/occupation_group_task_overlap_count.csv', index=True)
 
 
-# In[ ]:
+# In[162]:
 
 
 from matplotlib.colors import LinearSegmentedColormap
@@ -450,7 +450,7 @@ from matplotlib.colors import LinearSegmentedColormap
 matrix_with_nan_diag = matrix.where(~np.eye(matrix.shape[0], dtype=bool))
 
 # To save the heatmap as an image with integer numbers, we plot it
-plt.figure(figsize=(12, 12))
+plt.figure(figsize=(16, 16))
 cax = plt.imshow(matrix_with_nan_diag, cmap='Blues', interpolation='nearest', vmin=0, vmax=100)
 
 # Drop the color bar
@@ -462,13 +462,19 @@ for i in range(matrix.shape[0]):
         plt.text(j, i, f'{matrix.iloc[i, j]}', ha='center', va='center', color='black')
 
 # Set the labels for rows and columns
-plt.xticks(ticks=np.arange(matrix.shape[1]), labels=matrix.columns, rotation=90)
-plt.yticks(ticks=np.arange(matrix.shape[0]), labels=matrix.index)
+plt.xticks(ticks=np.arange(matrix.shape[1]), labels=matrix.columns, rotation=90, fontsize=14)
+plt.yticks(ticks=np.arange(matrix.shape[0]), labels=matrix.index, fontsize=14)
 
-plt.title("Count of Common Tasks Between Occupation Groups", fontsize=14)
+plt.title("Number of Tasks Shared Between Two-digit SOC Occupation Groups", fontsize=18)
 plt.tight_layout()
 
 # Save the heatmap as an image
 plt.savefig(f'{output_plot_path}/occupation_group_common_tasks_heatmap.png', dpi=300)
 plt.close()
+
+
+# In[ ]:
+
+
+
 

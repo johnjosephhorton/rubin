@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx} % Required for inserting images
 
+\usepackage{subcaption}
 \usepackage{float}
 \usepackage{dialogue}
 \usepackage{tikz}
@@ -78,6 +79,7 @@ Policy makers in particular are interested in whether technology can be guided t
 
 Answering these questions about AI and human labor requires a model of the productive process.
 Although much progress can be made using our standad tools (see \citep{korinek2018artificial}), \cite{acemoglu2024task} argues persuasively that the standard production function approach (i.e., $Y = F(K, L)$) is not adequate for understanding the impact of technology on labor markets, and that instead a task-based approach is needed.
+\cite{aghion2024ai}.
 
 The task-based approach dispenses with a single aggregate production function to instead modeling the productive process in terms of tasks which can be assigned to humans or machines---and perhaps humans of different skill-levels.
 The equilibrium is then some allocation of tasks to different factors of production, based on which factor has the comparative advantage in that task.
@@ -86,6 +88,22 @@ This is a useful simplification, but actual production involves the output of a 
 A natural question is whether this interdependence of tasks matters for the factor assignment question in the case of AI? 
 
 We present asimple task-based model of agentic AI and human labor that focuses on the interdependence of tasks in the productive process rather than the content of the tasks.
+We start with a model of production that is a sequence of tasks that must be done in order.
+Those tasks require human capital to perform, but differ in how long they take to complete.
+They also differ in how easily they can be handed-off from one worker to the next.
+This is used to develop a model of the division of labor in production.
+
+There are, of course, numerous economic models of the division of labor\citep{becker1992division, deming2017growing}---why do we need another, especially one that is not as analytically tractable as more stylized models?
+The short answer is that because AI cannot easily be characterized as a fall in the cost of ``X'', we need to get into the micro-details of the production process. 
+More stylized models cannot easily be paired with engineering estimates focusing on the content of the tasks. 
+Second, if we hope to do some kind of comparative statics, we need to have a model of production and jobs with and without an AI that reflects the actual change in capabilities.
+Right now, we have AIs now that can do \emph{certain} tasks in minutes (and eventually miliseconds) that a skilled human would have needed a week to perform. 
+These can be done at essentially zero marginal cost (but perhaps hundreds or thousands of dollars in average cost). 
+These are not marginal changes. 
+And yet there are other, seemingly similar tasks an AI cannot do.
+If we want to guide technological development, we need to understand the returns to investing in specific AI capabilities.
+
+After developing the model of production, we consider how the development of AI that can do certain tasks changes the division of labor.
 In the model, the decision to use an AI is based on comparing two costs: the cost of having a human direct and evaluate the AI's output (which depends on the capabilities of the AI at that particular task) versus the cost of having the human do the task directly.
 This might seem like another way of stating that tasks get assigned to whichever factor has the comparative advantage in that task, but this is not the case: the position of tasks within the productive process profoundly change the optimal allocation of tasks between humans and machines.
 
@@ -150,13 +168,91 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
-\section{A model of production} \label{sec:model}
-Consider a worker completing some sequence of tasks as part of their job.
-They can do the task themselves, at a time cost of $c_h$.
+\section{A model of production}
+
+The firm's product requires workers to completed a sequence of tasks, $T = \{1, 2, \dots, n\}$.
+Tasks must be completed in order. 
+A task $i$ takes $t_i \ge 0$ time to complete.
+The sum of the task durations is normalized to 1, $\sum_i t_i = 1$.
+
+Learning how to do that task costs a worker $c_i \ge 0$.
+The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
+All workers work $l$ hours over their lifetime, which we normalize to 1.
+Workers value leisure at $1$ and are perfectly elastic in their labor supply.
+To recoup their training costs and be indifferent between working and not working, $w = 1 + \sum_{i \in J} c_i$.
+The firm faces a perfectly elastic labor supply at any job it designs.
+
+Firms have to pay workers for their time, regardless of the task, so the wage bill for a job $J$ is 
+\begin{align*}
+   C(J) = 1 + \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} c_j\right).
+\end{align*}
+Without any additional assumptions, the firm could minimize the cost of production by assigning a single worker to each task.
+What prevents this is a handoff cost, $H_i \geq 0$, whenever a job boundary is placed after task $i$ and before task $i+1$. 
+This is the cost of context-switching / hand-off between workers. 
+
+The firm's problem has a nice geometric interpretation, as shown in Figure~\ref{fig:job_design}.
+The productive process is a sequence of stacked rectangles of height $c_i$ and width $t_i$.
+A job is a bounding box around a sequence of tasks, with a wage bill equal to the area of the box. 
+But if a bouddary is drawn, the the switching cost rectangle's area gets added to the cost. 
+Note that each rectangle could, in turn be thought of as a sequence of tasks (smaller reactangles filling in the larger rectangle).
+At the limit, we would have a smooth curve of tasks. 
+
+Figure~\ref{fig:job_design} shows a potential job design for a sequence of 6 tasks. 
+Note that for $n$ tasks, there $2^(n-1)$ possible job arrangements. 
+For notation, a job is indicated by enclosing tasks within a rectangle, e.g., $J_1 = [(1),(2), (3)]$.
+Putting tasks in paraenthesis indicates that the task is done by a human---later we will have the notion of tasks done by an AI.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \caption{Example allocations of workers to tasks when $n = 6$} \label{fig:job_design}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=0.8\textwidth]{plots/job_design.png}
+    \caption{Allocation of $n=6$ task production to $m = 3$ workers}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=0.8\textwidth]{plots/combined_grid.png}
+    \caption{All possible allocations of $n=6$ task production}
+  \end{subfigure}
+  \end{center}
+  \footnotesize{Notes: This figure shows potential job designs for a sequence of 6 tasks.
+  The total cost of each job is the area of the bounding box, plus the area of the switching cost rectangles.
+  }
+\end{figure}
+
+The firm seeks to minimize the total cost of production by choosing how to partition the sequence of tasks $T$ into $M$ consecutive jobs, $\{J_1, \dots, J_M\}$, where $J_m = \{i_m, i_m+1, \dots, i_{m+1}-1\}$ and $1 = i_1 < i_2 < \cdots < i_{M+1} = n+1$. 
+The total cost of a partition is
+\begin{align*}
+\text{TotalCost} = \sum_{m=1}^M \left(\left(\sum_{i = i_m}^{i_{m+1}-1} t_i\right)\left(\sum_{i = i_m}^{i_{m+1}-1} C_i\right)\right) + \sum_{m=1}^{M-1} H_{i_{m+1}-1}.
+\end{align*}
+
+This is a straightforward optimization problem that can be solved in $O(n^2)$ time using dynamic programming.
+But even without doing it, the firm's incentives are clear. 
+What is \emph{particularly} costly to the firm are ``tall and narrow'' tasks right next to ``short and wide'' task(s) that have high handoff cost boundaries: when the productive process requires lots of work nearly anyone could do next to high-skilled work that only a few can do, but cannot be easily broken up.
+For example, professors at business schools are quite highly paid to teach and do reearch, but are also paid to clean blackboards (the good ones at least). 
+This is very expensive blackboard cleaning services in isolation, but it cannot be helped because handing this off to another worker at that moment is too costly and the duration of the task is so short it does not matter much. 
+But if it were still impossible to split to another worker but took an hour instead of a minute, the university would badly lament the situation.
+
+\subsubsection{General equilibrium}
+Each worker has $1$ to spend on consumption, as their wage is $1$ after recouping their training costs.
+There are $K$ goods produced in the product market. 
+Balanced budgets required $1 = \sum_{k=1}^K p_k x_k$.
+
+Workers have CES utility over the goods, with elasticity of substitution $\sigma$.
+Let $l_k$ be the labor cost of producing one unit of the good $k$.
+Firms have reproducible technology so they can just scale up the task sequence by any amount. 
+This allows workers, even if their job has a small $\sum t$ to still work $l = 1$, which allows the labor market to clear.
+
+\subsection{Adding AI} \label{sec:model}
+Now consider a worker completing some sequence of tasks as part of their designed job.
+For a single task, we will drop the index. 
+As before, they can do the task themselves, at a time cost of $t$.
+Let us call that cost $c_h$.
+
 If they choose to use an AI, the human asks the AI to perform the task with a ``prompt''---a request to the model. 
-Prompting costs them $c_p$.
+Prompting costs them $c_{p}$.
 The AI tries to perform the task, generating output.
-That output is then evaluated by the worker at a cost to them of $c_e$.
+That output is then evaluated by the worker at a cost to them of $c_{e}$.
 The human can evaluate perfectly.
 
 After we evaluation, we learn if the AI succeeded or failed.
@@ -263,6 +359,12 @@ However:
 \end{align*}
 Thus, chaining is optimal despite human comparative advantage in task 1.
 \end{proof}
+
+\subsection{General equilibrium in the two-task case}
+If there is only one consumption good produced in the $n=2$ case, in equilibium, the firm has to earn zero profit. 
+As such, price has to equal marginal cost so $p = w L_{min}$. 
+Normalizing the price to $1$, we have $w = \frac{1}{L_{min}}$.
+We immediately see that cost-reductions increase the real wage and consumption, despite being whole labor-saving. 
 
 \subsection{Comparative statics of investment in AI capabilities}
 The returns to investment in AI for a particular task are affected by AI capabilities in other tasks.
@@ -472,15 +574,77 @@ In terms of intuition, it captures the notion that a chain is only as strong as 
   \]
   Thus, chaining is optimal if and only if the inequality holds.
   \end{proof}
-  
+
+\subsection{Job Re-design in light of AI: Handoff Costs $=$ Prompting Costs}
+
+Once a firm has a job design, if there is an advance in AI capabilities, how does it re-design the job?
+The problem is not simply what what rectangles are ``tall'' but also which ones, if eliminated, would allow the firm to redesign a job optimally.
+
+\subsection{Powerful AI means powerful prompts}
+There are good reasons to think that handoff costs are similar to prompting and evaluation costs.
+AI, no matter how good, is not a mind-reader; neither are your coworkers.
+Consider the AI system as a function:
+\begin{align}
+f : \mathcal{P} \longrightarrow \mathcal{O},
+\end{align}
+where $\mathcal{P}$ is the set of all possible prompts (inputs), and $\mathcal{O}$ is the set of all possible outputs the AI can produce.
+If the AI is powerful enough to generate a large range of outputs $\mathcal{O}$, ensuring that every desired output can be uniquely generated requires (at minimum) a surjective mapping:
+\begin{align}
+\forall o \in \mathcal{O}, \; \exists p \in \mathcal{P} \; \text{such that} \; f(p) = o.
+\end{align}
+If we require that each output is generated by exactly one unique prompt, then $f$ must be a bijection, and:
+\begin{align}
+|\mathcal{P}| = |\mathcal{O}|.
+\end{align}
+In other words, the cardinality of the prompt space must match or exceed the cardinality of the output space.
+
+Using an information-theoretic perspective, if the AI can reliably produce $N$ distinct outputs, it effectively has to ``choose'' among $N$ possibilities. 
+To specify which of those $N$ outputs is desired, the prompt must carry at least:
+\begin{align}
+\log_2(N) \quad \text{bits of information.}
+\end{align}
+As $N$ (the size of the AI's output repertoire) grows, the information capacity of the prompt must also grow proportionally.
+To summarize, as the AI’s capacity expands, the size of the output space $|\mathcal{O}|$ increases, and so must the size of the prompt space $|\mathcal{P}|$ to allow precise mapping from inputs to outputs:
+\begin{align}
+|\mathcal{P}| \geq |\mathcal{O}|.
+\end{align}
+This means that increasingly powerful AI systems require increasingly sophisticated prompts to uniquely and effectively specify desired outputs.
+
+\subsection{Labor market inequality}
+In the model, workers all have the same pay-off---namely $0$---high earnings are perfectly offset by high education costs.
+Of course, we can still look at the wage distribution.
+A highly equal distribution in one in which all workers have rectangles of similar height.
+If we imagine that the next task is a random draw from the set of tasks, then high hand-off costs tend to equalitize rectangle heights because it makes more sense to combine tasks. 
+It's just a LLN argument.
+
+
+
 \section{Empirics}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{plots/indiv_occupation_cooccurrence_score_histogram.png}
-  \caption{Distribution of occupation co-occurrence scores. Higher scores indicate occupations whose tasks frequently appear together across different occupations.}
-  \label{fig:occ_cooc}
-\end{figure}
+We turn to the 2023 O*NET dataset to motivate the ordered-task-sequence view of jobs. 
+O*NET provides a comprehensive list of U.S. occupations, each paired with a corresponding set of tasks. 
+These tasks are organized into three levels, ranging from the most specific to the most general: task, detailed work activity, and work activity. 
+In the 2023 dataset, there are 798 unique occupations, 19,294 unique tasks, 2,086 unique detailed work activities, and 38 unique work activities.
+
+For our analysis, we exclude any occupation that contains the word “Teachers,” as these occupations tend to exhibit significant task overlap. 
+We formally define occupation task overlap later, but for now, we note that of the 798 O*NET occupations, 50 include the term “Teachers.” 
+Examples include “Computer Science Teachers, Postsecondary,” “Mathematical Science Teachers, Postsecondary,” and “Engineering Teachers, Postsecondary.” 
+These occupations are removed from the analysis due to their highly similar tasks, such as preparing tests and evaluating student work, to avoid overrepresentation of the same job in the analysis that follows.
+
+In our analysis, we focus on detailed work activities as the main task unit in an occupation. 
+From here onward, when we refer to a “task” in the O*NET dataset, we are specifically referring to the detailed work activity associated with each occupation. 
+With this definition, the dataset contains 15,645 unique occupation-task pairs, with the average occupation consisting of 21 tasks.
+
+We define the task pair co-occurrence score between tasks $i$ and $j$  as:
+$$C_{ij} = \frac{\text{Number of unique occupations in which both $i$ and $j$ appear}}{\text{Number of unique occupations in which at least one of $i$ or $j$ appears}}.$$
+For any task pair, this measure ranges from 0 to 1, with higher values indicating a greater likelihood of the tasks appearing together in an occupation.
+For task $i$, the (individual) task co-occurrence score is defined as the average of the pairwise co-occurrence scores across all its task pairs. Specifically:
+$$C_{i}=\frac{1}{n-1}\sum_{j\neq i}C_{ij},$$ 
+where $n$ is the number of unique tasks in the dataset.
+Figure \ref{fig:task_cooc} shows the distribution of individual task co-occurrence scores. 
+To check that these co-occurrences are not driven by chance, we perform a placebo test by randomly assigning tasks to occupations and plotting both the original and randomized distributions in the same graph. 
+As shown in the figure, the blue distribution (original co-occurrence) has a noticeably higher mass on the right tail compared to the orange distribution (randomized co-occurrence), suggesting that a meaningful subset of tasks frequently co-occur across multiple occupations. 
+This is counterbalanced by the higher mass on the left tail, indicating that some tasks tend to be specialized and appear only in a few occupations in the original dataset.
 
 \begin{figure}[htbp]
   \centering
@@ -489,23 +653,152 @@ In terms of intuition, it captures the notion that a chain is only as strong as 
   \label{fig:task_cooc}
 \end{figure}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{plots/task_pair_counts_histogram.png}
-  \caption{Histogram showing the frequency of task pairs that appear in more than 15 occupations. This visualizes the raw count of how often specific task combinations occur across different occupations.}
-  \label{fig:pair_counts}
-\end{figure}
+Next, we examine how co-occurring tasks are distributed across occupations. 
+Figure \ref{fig:occ_cooc} displays the distribution of occupation co-occurrence scores, defined as the average pairwise co-occurrence score of the tasks that comprise each occupation.
+Formally, for occupation $o$, the co-occurrence score is given by:
+$$C^o=\frac{1}{|\mathcal{T}_o| ( |\mathcal{T}_o|-1)} \sum_{i\in\mathcal{T}_o} \sum_{j\in\mathcal{T}_o,j\neq i} C_{ij},$$
+where $\mathcal{T}_o$ denotes the set of tasks in $o$. 
+A higher occupation co-occurrence score suggests that the tasks within the occupation are more likely to appear in pairs with other tasks, indicating a greater likelihood of completing the occupation in “blocks” or “pairs” of tasks. 
+We observe in the graph that the majority of occupations exhibit a substantial degree of co-occurrence, which is clearly not random.
+
+% Peyman: here come up with a nice intuition about what this exactly shows. Something like: "A co-occurrence score of 0.1, for example, roughly means that 10\% of an occupation’s tasks are likely those that can be performed in pairs."
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{plots/task_pair_weightedScore_histogram.png}
-  \caption{Distribution of occupation-similarity-weighted task pair scores for task pairs appearing in more than 10 occupations. This metric accounts for both the frequency of task co-occurrence and the similarity between occupations containing these task pairs.}
-  \label{fig:weighted_pairs}
+  \includegraphics[width=0.8\textwidth]{plots/indiv_occupation_cooccurrence_score_histogram.png}
+  \caption{Distribution of occupation co-occurrence scores. Higher scores indicate occupations whose tasks frequently appear together across different occupations.}
+  \label{fig:occ_cooc}
 \end{figure}
+
+Another way to evaluate how tasks are shared between occupations is to use a measure similar to task co-occurrence, but defined specifically for occupations. 
+That is, instead of defining a metric at the task level and aggregating it at the occupation level, we directly define the measure at the occupation level. 
+This is the approach we take next.
+Let
+$$S^{xy} = \frac{\text{Number of common tasks between $x$ and $y$}}{\text{Number of all unique tasks across $x$ and $y$}}$$
+represent the pairwise occupation similarity score between occupations $x$ and $y$. 
+The similarity score quantifies the overlap in tasks between a pair of occupations. 
+As with the task-level measure, for occupation $x$, the (individual) occupation similarity score is defined as the average of the pairwise similarity scores across all occupation pairs. 
+Specifically:
+$$S^{x}=\frac{1}{q-1}\sum_{y\neq x}S^{xy},$$ where $q$ is the total number of unique occupations.
+Figure \ref{fig:occ_similarity} shows the distribution of occupation similarity scores. 
+We observe that task overlap between occupations is meaningfully different from the scenario in which tasks are randomly assigned to occupations, providing evidence in support of occupations sharing common tasks (though not necessarily in pairs, according to this measure).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/occupation_similarity_score_histogram.png}
+  \caption{Distribution of occupation similarity scores. Higher scores indicate occupations whose tasks are shared across more occupations.}
+  \label{fig:occ_similarity}
+\end{figure}
+
+% Peyman: The occupation similarity-weighted measure doesn't make sense, and thus I cut it from the draft. First, because we decided to remove the "Teachers" occupations which motivated the use of a weighted measure in the first place. Secondly, because the measure isn't perfect as it overweights pairs appearing in occupations with very little task overlap (b/c the small occupation overlap score is inverted). In the graph the orange bars show a higher weighted score exactly because they appear in fewer occupations which have lower task overlap.
+
+% We also calculate the occupation-similarity-weighted task pair scores. In doing so, we weight every task pair occurrence by the inverse of pairwise occupation similarity scores for any two pair of occupations the task pair appears in. 
+% Formally: 
+% [To fill with a "proper" measure if decided to include it]
+
+% \begin{figure}[htbp]
+%  \centering
+%  \includegraphics[width=0.8\textwidth]{plots/task_pair_weightedScore_histogram.png}
+%  \caption{Distribution of occupation-similarity-weighted task pair scores for task pairs appearing in more than 10 occupations. This metric accounts for both the frequency of task co-occurrence and the similarity between occupations containing these task pairs.}
+%  \label{fig:weighted_pairs}
+% \end{figure}
+
+Next, let us examine how often specific task combinations occur across different occupations. 
+Figure \ref{fig:pair_counts} plots the frequency of co-occurring task pairs. 
+Note that the y-axis represents the frequency on a logarithmic scale. 
+In the placebo test, almost all task pairs appear in only one or two occupations, whereas in the original data, many pairs appear in multiple occupations. 
+Since it is possible that a non-trivial number of pairs co-occur across different occupations due to the way O*NET defines tasks and occupations, we conservatively focus on task pairs that appear in more than 10 occupations and refer to them as “highly co-occurring” tasks.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/task_pair_counts_histogram.png}
+  \caption{Histogram showing the frequency of task pairs. This visualizes the raw count of how often specific task combinations occur across different occupations. Task pairs to the right of the red dashed line indicate the “highly co-occurring” subset.}
+  \label{fig:pair_counts}
+\end{figure}
+
+Out of more than 100,000 co-occurring pairs, only 588 are classified as highly co-occurring tasks. 
+Although this represents a small fraction of the total co-occurrences, it provides a meaningful subset for analysis.
+Within this subset, we observe tasks that appear only a few times in combination with others, as well as tasks that frequently occur across multiple pairs. 
+Figure \ref{fig:high_cooc_task} illustrates the distribution of task repetition counts within the highly co-occurring pairs. 
+While many tasks appear only a handful of times (on the left side of the graph), some are observed as frequently as 30 or 40 times in different pairs.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/highly_cooccurring_tasks_task_repetition_count.png}
+  \caption{Distribution of task repetition counts within highly co-occurring tasks. The figure highlights the frequency of tasks appearing in multiple pairs.}
+  \label{fig:high_cooc_task}
+\end{figure}
+
+Figure \ref{fig:high_cooc_occ} complements the previous finding by showing the distribution of how often a task pair from the same occupation appears within the subset of highly co-occurring combinations.
+The more frequently an occupation’s (unique) task pairs appear in this subset, the more likely it is that the occupation consists of different “blocks” of tasks\textemdash if there are no common tasks across appearing pairs\textemdash or that there are potentially more ways to combine or automate tasks\textemdash if the appearing pairs share some tasks.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/highly_cooccurring_tasks_occupation_repetition_count.png}
+  \caption{Distribution of task pair occurrences within highly co-occurring combinations across occupations. The figure illustrates task pair repetition at the occupation level.}
+  \label{fig:high_cooc_occ}
+\end{figure}
+
+A somewhat surprising result is that when we aggregate occupations at the two-digit SOC code level, we find that our notion of high task co-occurrence is confined to occupations within two-digit occupation groups. 
+This suggests that there will be little to no spillover effects from technological impacts in one group to another.
+This occurs despite the fact that these groups share a non-trivial number of tasks with one another. 
+Figure \ref{fig:occ_gp_task_heatmap} presents a heatmap showing the number of shared tasks between two-digit SOC occupation groups. 
+Lighter cells indicate fewer shared tasks, while darker cells represent more tasks in common between pairs of occupation groups. 
+Although many pairs have zero or one shared task, we also observe a significant number of shared tasks. 
+However, none of these shared tasks are highly co-occurring tasks, implying that they are more specific to individual occupation groups.
+Another way to put this is to say these shared tasks are those very small co-occurrence scores in the left side of Figure \ref{fig:task_cooc}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{plots/occupation_group_common_tasks_heatmap.png}
+  \caption{Heatmap showing the number of shared tasks between two-digit SOC occupation groups. Lighter cells indicate fewer shared tasks, while darker cells represent more shared tasks.}
+  \label{fig:occ_gp_task_heatmap}
+\end{figure}
+
 
 \section{Discussion}
 Below, we discuss some of the implications and features of the model. 
 %\subsection{The importance of task adjacency means that automation dispersion is likely}
+
+\subsection{YADOLM: Yet Another Division of Labor Model}
+We need to get into the micro-details of the production process to understand how AI might be used and how it might change the division of labor. 
+Extant models are too stylized to be paired with, say tasks-specific engineering estimates focusing on the content of the tasks.
+Second, the model is not just about the division of labor but also the returns to investing in AI capabilities.
+
+Adam Smith attributed the division of labor being limited only by the extent of the market. 
+When considering the production of physical goods, this is perhaps a reasonable description. 
+But for most knowledge work or complex work generally, modern authors have emphasized the costs of conveying context to some other worker.
+For example, \cite{becker1992division} provides a model of the division of labor, with workers choosing to invest in task-specific human capital.
+In the model, what constrains further specialization is the cost of coordination between workers, which is just assumed to grow with the size of the team.
+There is no notion of the order in which tasks are done, nor some notion of an occupation per se. 
+
+The tasks and sequences of tasks is not completely arbitrary but dictated by the physical, logical, and engineering constraints of the production process.
+Some tasks do need to be done in a certain order because some workers will be working on the intermediate goods produced by others.  
+Consider the paradigmatic high-skilled knowledge workers creating technology products.
+A product manager has to have an idea for how to meet a customer's need. 
+That need might be articulated by a customer support rep or a by an analyst pouring over feedback data, or results from a customer survey.
+A product designer might need come up with with a sketch for how it might work. 
+A financial analyst would model out potential revenue. 
+This likely happens in concert with an engineering manager to designan engineering estimate based on preliminary designs. 
+Engineer actually needs to build the product and test it.  
+Legal has to sign-off and the terms-of-use need to updated.
+Once built, it needs to be marketed and supported going forward.
+While parallization in tasks is possible, it is constrained by some tasks needing input from other tasks being completed: customer service cannot write a support script until they know what the product is and how it works. 
+Engineers can not build it until they have a design.
+A designer will not to able to design until they know what problem is being solved and what constraints are being placed on the solution.
+And so on.
+The \cite{lazear2004balanced} model of balanced entrepreneurship makes the point that for a brand-new startup building its first product, the entrepreneur needs to be able to do everything. 
+
+This modern process requires intense coordination and considerable social skills in a way that putting a head on a pin would not. 
+\cite{deming2017growing} provides a model where workers trade with each other to complete tasks; greater social skills unlock benefits from trade in tasks.
+The data is very much consistent with his view of increased need to coordinate tasks:
+various teams described above might write detailed memos and spend considerable time in meetings, talking and presenting to each other to accompish these hand-offs.
+A person with a keen understanding of others likely does this better. 
+
+While the product process is not pin-like, it is also not a free-free-all or self-organized process with trade in tasks: 
+each worker is paid to do their part of the process and was hired with a good understanding of the process and their role in it. 
+No engineer is free to say ``What has finance done for me lately?'' and hold up a product they are directed to work on.
+This is not to ignore the vast literature on incentives problems within firms or the need for coordination, but a lot of coordination has because we have designed jobs with understandable input/output relationships with other workers and peope will do what is expected of them.
 
 \subsection{What about more complex patterns of production?}
 Sometimes what triggers a task is not the completion of a previous task, but some other event. 
