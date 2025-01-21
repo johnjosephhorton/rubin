@@ -15,6 +15,24 @@
 \usepackage{amssymb}
 \usepackage{tcolorbox}
 
+
+% For appendix math formulas
+\theoremstyle{plain}
+    \ifx\thechapter\undefined
+      \newtheorem{lem}{\protect\lemmaname}
+    \else
+      \newtheorem{lem}{\protect\lemmaname}[chapter]
+    \fi
+\theoremstyle{plain}
+    \ifx\thechapter\undefined
+  \newtheorem{cor}{\protect\corollaryname}
+\else
+      \newtheorem{cor}{\protect\corollaryname}[chapter]
+    \fi
+\providecommand{\corollaryname}{Corollary}
+\providecommand{\lemmaname}{Lemma}
+
+
 \DeclareMathOperator{\CostBlock}{CostBlock}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -422,8 +440,11 @@ It we have $T$ periods, then
 &(2)\quad q_1'(t) + q_2'(t) \le r, \quad \text{for almost all } t \in [0, T], \\[6pt]
 &(3)\quad q_1(t) \geq 0, \quad q_2(t) \geq 0, \quad \forall t \in [0, T], \\[6pt]
 \end{aligned}
+\label{eq:dp_problem}
 \]
 where $q_{1,0}$ and $q_{2,0}$ are the initial AI capabilities in the two tasks.
+The properties of the optimal paths for this dynamic programming problem are analyzed in detail in Appendix~\ref{app:dp_proof}. 
+There, we outline the structure of the solution, provide comparative statics, and derive the necessary conditions for optimality.
 
 Figure~\ref{fig:optimal_paths} shows numerical optimal investment paths to minimize total costs, using the same parameters as in Figure~\ref{fig:two_tasks}.
 I also set the discount rate $\rho = 0$ and the total amount of R\&D resources per period  to $r = 1$.
@@ -433,6 +454,7 @@ Paths for a few select initial conditions are shown.
 \begin{figure}
   \begin{center}
   \caption{Optimal investment paths to minimize costs} \label{fig:optimal_paths}
+  \label{fig:optimal_paths} 
   \includegraphics[width = 0.8 \textwidth]{plots/optimal_paths.pdf}
   \end{center}
   \begin{footnotesize}
@@ -1044,10 +1066,279 @@ As AI makes it so that humans no longer have to do every task in a job, AI might
 \bibliographystyle{aer}
 \bibliography{rubin}
 
+\newpage
+\appendix
+\section*{Appendix}
+
+\section{Optimal Paths in the Dynamic Programming Problem}
+\label{app:dp_proof}
+
+In this appendix, we analyze the properties of the optimal paths for the dynamic programming problem specified in \pageref{eq:dp_problem}.
+The solution follows this structure: allocate all resources to the larger of $q_{1}$ and $q_{2}$ until a specific point, then switch to investing all resources in the other task’s capability until parity between $q_{1}$ and $q_{2}$ is achieved. 
+After reaching parity, resources are evenly distributed between both tasks. 
+While we are unable to analytically determine the exact values of $q_{1}$ and $q_{2}$ at the turning point, we provide comparative statics with respect to the initial values and the discount rate.
+
+We reformulate the problem as a maximization problem, and omit time dependencies in all variables for simplicity of notation.
+\begin{align*}
+\max_{q_{1},q_{2}} & \int_{0}^{T}-e^{-\rho t}C(q_{1},q_{2})dt\\
+s.t. & \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}+s(t)=r,\\
+ & q_{1},q_{2}\geq0,\\
+ & q_{1}(0)=q_{1,0},q_{2}(0)=q_{2,0}.
+\end{align*}
+Here, $q_{1},q_{2}$ are the state variables, while $\frac{dq_{1}}{dt}$ and $\frac{dq_{2}}{dt}$ are control variables. 
+We form the Hamiltonian as follows: 
+\[
+H=-e^{-\rho t}C(q_{1},q_{2})+\lambda_{1}\frac{dq_{1}}{dt}+\lambda_{2}\frac{dq_{2}}{dt}+\mu\left(r-\frac{dq_{1}}{dt}-\frac{dq_{2}}{dt}\right),
+\]
+where $\lambda_{1},\lambda_{2}$ are costate variables, and $\mu$ is the Lagrange multiplier associated with the investment constraint.
+The necessary conditions for an interior solution are: %% \underline{interior}
+
+\begin{align*}
+\frac{dq_{i}}{dt} & =\frac{\partial H}{\partial\lambda_{i}},\tag{State Dynamics}\\
+\frac{d\lambda_{i}}{dt} & =-\frac{\partial H}{\partial q_{i}},\tag{Costate Dynamics}\\
+\frac{\partial H}{\partial\left(\frac{dq_{i}}{dt}\right)} & =0,\tag{Stationarity}\\
+\mu\left(r-\frac{dq_{1}}{dt}-\frac{dq_{2}}{dt}-s\right) & =0.\tag{Complementary Slackness}
+\end{align*}
+Expanding the formulas, we obtain:
+\begin{align*}
+\frac{dq_{1}}{dt} & =\frac{dq_{1}}{dt},\\
+\frac{dq_{2}}{dt} & =\frac{dq_{2}}{dt},\\
+\frac{d\lambda_{1}}{dt} & =e^{-\rho t}\frac{\partial C}{\partial q_{1}},\\
+\frac{d\lambda_{2}}{dt} & =e^{-\rho t}\frac{\partial C}{\partial q_{2}},\\
+\lambda_{1}-\mu & =0,\\
+\lambda_{2}-\mu & =0,\\
+\mu>0\ and\ \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}=r, & \ or\ \mu=0\ and\ \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}<r.
+\end{align*}
+The costate dynamics imply
+\[
+\frac{\frac{d\lambda_{1}}{dt}}{\frac{d\lambda_{2}}{dt}}=\frac{\frac{\partial C}{\partial q_{1}}}{\frac{\partial C}{\partial q_{2}}},
+\]
+and from the stationarity conditions, we have:
+\[
+\lambda_{1}=\lambda_{2}=\mu.
+\]
+
+The $\mu=0$ case can happen only if:
+\[
+\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}=0
+\]
+for all times. 
+In this scenario, any $q_{1}$ and $q_{2}$ would suffice since neither contributes to the objective function. 
+However, this is not applicable in our setup because, as soon as task $i$ becomes automated, the corresponding partial derivative changes from 0 to $-\frac{cm}{q_{i}^{2}}$.\footnote{We assume $c_{m}$ and $c_{h}$ are such that some level of automation is preferred over no automation. 
+Otherwise, the solution would be trivial, and no tasks would be automated.} 
+Therefore, we must have $\mu>0$, and the investment endowment is always fully utilized.
+
+If the solution is interior, then %% \underline{If}
+\[
+\lambda_{1}=\lambda_{2}=\mu>0
+\]
+and the following holds for all $t$:
+\[
+\bar{\lambda}_{1}+\int_{0}^{t}e^{-\rho s}\frac{\partial C}{\partial q_{1}}ds=\bar{\lambda}_{2}+\int_{0}^{t}e^{-\rho s}\frac{\partial C}{\partial q_{2}}ds
+\]
+Assume that at $t=T$ (the horizon), $\lambda_{1}=\lambda_{2}>0$.\footnote{Intuitively, this means that at the horizon, we stop investing in either variable, resulting in a ``steady state.'' 
+This is reasonable because, once $q=1$, no further investments are required.} 
+This implies at the optimum, the marginal cost with respect to task capabilities must be equal. 
+Thus:
+\[
+\forall t:\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}
+\]
+Given the functional form of the cost function, such scenario can occur only when both tasks are automated, \underline{and} $q_{1}=q_{2}$. 
+Specifically:
+\[
+\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}=\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}\Leftrightarrow-\frac{c_{m}}{q_{1}^{2}q_{2}}=-\frac{c_{m}}{q_{1}q_{2}^{2}}\Leftrightarrow q_{1}=q_{2}.
+\]
+Unless this condition is met, we have a corner solution where all the available endowment is allocated to improving only one task’s AI capability. 
+
+We conjecture that at a sufficiently long horizon, $q_{1}=q_{2}$, and proceed to determine the optimal trajectories of $q_{1}$ and $q_{2}$ using backward induction. % \underline{conjecture}
+Now, imagine we are in the $\machine{1|2}$ region. 
+Let $\tilde{T}$ denote the earliest time at which $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$
+holds.\footnote{We assume that the parameters $c_m$ and $c_h$ are such that this equality is guaranteed to occur.  
+Otherwise, the solution would trivially involve investing in only one q, fully maximizing it before switching to the other until it too is maximized.} % \underline{all of second sentence} 
+Formally: 
+\[
+\tilde{T}=inf\{t:\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}\}.
+\]
+For $t<\tilde{T}$, we have a corner solution. 
+Without loss of generality, assume that $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$ when $t<\tilde{T}$. 
+With a slight abuse of notation, consider a time $\delta$ arbitrarily close to and just before $\tilde{T}$. 
+At such times, we can write:
+\[
+\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}\approx-\frac{c_{m}}{q_{1}^{2}q_{2}}>-\frac{c_{m}}{q_{1}q_{2}^{2}}\approx\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}.
+\]
+This simplifies to:
+\[
+-\frac{1}{q_{1}}>-\frac{1}{q_{2}}\Leftrightarrow q_{1}>q_{2}.
+\]
+Therefore, for times $t<\tilde{T}$, we must invest exclusively in $q_{2}$ until parity between $q_{1}$ and $q_{2}$ is achieved. 
+This also implies that we are in the region below the 45-degree line and are moving toward it.
+
+Now, we continue going backward until we reach either the boundary of $\machine{1}\machine{2}$ or $\machine{1}\human{2}$.
+Here we only consider the case where we hit the boundary of $\machine{1}\machine{2}$.\footnote{The dynamics of transitioning directly from $\machine{1|2}$ to $\machine{1}\human{2}$ are less
+complicated than transitioning through $\machine{1}\machine{2}$ first and then to $\machine{1}\human{2}$. 
+For brevity, we do not describe the direct transition separately, as the mechanism is similar and requires one less step of analysis.} 
+Given that we are in the region where $q_{1}>q_{2}$, the following conditions hold:
+\[
+q_{1}>q_{2}\Leftrightarrow-\frac{c_{m}}{q_{1}^{2}}>-\frac{c_{m}}{q_{2}^{2}}\Leftrightarrow\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{1}}>\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{2}}.
+\]
+Thus, in the $\machine{1}\machine{2}$ region, we must continue investing in $q_{2}$.
+This remains true even if we enter $\machine{1}\machine{2}$ from the point of parity in $\machine{1|2}$. 
+In other words, in the moments leading up to $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$, we will allocate all resources to $q_{2}$, regardless of whether
+we will be in $\machine{1|2}$ or $\machine{1}\machine{2}$ at $\tilde{T}$.
+
+Now imagine transitioning from $\machine{1}\machine{2}$ to $\machine{1}\human{2}$. 
+The cost function changes from:
+\[
+C\{\machine{1}\machine{2}\}=\frac{c_{m}}{q_{1}}+\frac{c_{m}}{q_{2}}
+\]
+to 
+\[
+C\{\machine{1}\human{2}\}=\frac{c_{m}}{q_{1}}+c_{h}.
+\]
+Let us maintain the assumption that $q_{1}>q_{2}$ as we cross the horizontal boundary in Figure \ref{fig:two_tasks} and enter the new region.  
+In the $\machine{1}\machine{2}$ region, we have: $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$.
+However, on the $\machine{1}\human{2}$ side, the derivatives change to $\frac{\partial C}{\partial q_{1}}=-\frac{c_{m}}{q_{1}^{2}}<0$ and $\frac{\partial C}{\partial q_{2}}=0$. 
+This implies that the task contributing more to the objective function differs across these regions.
+However, this does not mean the optimal investment path switches instantaneously. 
+While the instantaneous benefits shift at the boundary, the decision maker must account for the continuation value of investments in future periods. 
+This is because, despite the discontinuity in the objective function, the state variables change continuously. % \underline{state variables change continuously}
+
+Thus, when transitioning from $\machine{1}\machine{2}$ to $\machine{1}\human{2}$, we continue investing in $q_{2}$ even though $q_{1}$ provides a higher instantaneous utility. 
+We maintain this allocation until reaching a point where the continuation value of investing in $q_{2}$ equals the benefit of switching to $q_{1}$. 
+This point represents a kink in the optimal trajectory of the state variables. 
+Let $\hat{T}$ denote the time at which we reach this kink. 
+At $\hat{T}$, the following condition must hold:
+\begin{equation}
+\begin{split}
+    & \underbrace{\int_{\hat{T}}^{\tau} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}} + c_{h}\right) ds}_{\text{from \ensuremath{\hat{T}} to automating task 2}} 
+    + \underbrace{\int_{\tau}^{\tilde{T}} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}(q_{2,0} + rs)}\right) ds}_{\text{from automation of task 2 to parity of \ensuremath{q}s}} \\
+    & \quad + \underbrace{\int_{\tilde{T}}^{\bar{T}} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}^{2}}\right) ds}_{\text{after parity}} 
+    = \underbrace{\int_{\hat{T}}^{\bar{T}} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1} + rs} + c_{h}\right) ds}_{\text{continue investing on \ensuremath{q_{1}}}}.
+\end{split}
+\label{eq:kink_eq}
+\end{equation}
+Here, $\hat{q}_{1}$ denotes the value of $q_{1}$ at the kink, $\tau$ is the time we cross the boundary to automating task 2, and $\tilde{T}$ is the time when parity between $q_{1}$ and $q_{2}$ is achieved.
+For $t<\hat{T}$, the right-hand side (RHS) of the equation is smaller than the left-hand side (LHS). 
+Thus, the agent continues investing in $q_{1}$ until the two sides are equalized. 
+This condition holds regardless of whether we are in the $\machine{1}\human{2}$ region or cross the boundary to (1)(2). 
+Specifically: 
+\[
+\frac{\partial C\{(1)(2)\}}{\partial q_{1}}=\frac{\partial C\{(1)(2)\}}{\partial q_{2}}=0,
+\]
+whereas:
+\[
+\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{1}}=-\frac{c_{m}}{q_{1}^{2}}<0=\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{2}}.
+\]
+This completes the characterization of the optimal trajectory of the state variables, starting from any point on the $q_{1}$-$q_{2}$ grid.
+
+\subsection{Comparative Statics}
+
+The following lemmas provide comparative statics of optimal trajectories with respect to $q_{2,0}$ and $\rho$. 
+We continue to maintain the assumption that we are below the 45 degree line in the $q_{1}-q_{2}$ plane (i.e., $q_{1}>q_{2}$ region).
+\begin{lem}
+$\frac{\partial\hat{T}}{\partial q_{2,0}}<0$.
+\end{lem}
+
+\begin{proof}
+We have:
+\begin{align*}
+\frac{\partial\hat{T}}{\partial q_{2,0}} & =-\int_{\tau}^{\tilde{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)^{2}})ds<0.
+\end{align*}
+
+\noindent Lemma 1 states that if the initial value of $q_{2,0}$ increases, the switch from investing in $q_{1}$ to $q_{2}$ occurs earlier. 
+This explains the shift in kinks of the optimal paths in Figure \ref{fig:optimal_paths}\textendash moving from light blue to green to dark blue\textendash as they shift upward and to the left.
+\end{proof}
+\begin{lem}
+$\frac{\partial\hat{q}_{1}}{\partial q_{2,0}}<0$.
+\end{lem}
+
+\begin{proof}
+Note that $\frac{\partial\hat{q}_{1}}{\partial\hat{T}}=r$, because $\hat{T}$ is defined as the time during which all resources ($r$) are allocated exclusively to $q{1}$ for $t<\hat{T}$. 
+Using this, we can write:
+\begin{align*}
+\frac{\partial\hat{q}_{1}}{\partial q_{2,0}} & =\frac{\partial\hat{q}_{1}}{\partial\hat{T}}\frac{\partial\hat{T}}{\partial q_{2,0}}\\
+ & =r\times\frac{\partial\hat{T}}{\partial q_{2,0}}\\
+ & <0,
+\end{align*}
+where the last line follows from Lemma 1.
+\end{proof}
+
+\begin{lem}
+A sufficient condition for $\frac{\partial\hat{T}}{\partial\rho}<0$
+is $\frac{c_{m}}{c_{h}}>Q(\hat{q}_{1})$, where $Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}$,
+the machine-to-human comparative advantage bound, is increasing in
+$\hat{q}_{1}$. 
+\end{lem}
+
+\begin{proof}
+We take partial derivative of both sides of the \ref{eq:kink_eq} with respect to $\rho$, treating $\hat{T}$ as a variable:
+\[
+\int_{\hat{T}}^{\tau}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds+\int_{\tau}^{\tilde{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds+\int_{\tilde{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds=\int_{\hat{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds
+\]
+Differentiating with respect to $\rho$ gives: 
+\begin{align*}
+-\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds 
+-\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds 
+-\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds
+-\left[\frac{\partial\hat{T}}{\partial\rho}e^{-\rho\hat{T}}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})\right] \\ 
+= -\int_{\hat{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds
+-\left[\frac{\partial\hat{T}}{\partial\rho}e^{-\rho\hat{T}}\left(\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h}\right)\right] &
+\end{align*}
+Rearrange terms, we get: 
+\begin{align*}
+\frac{\partial\hat{T}}{\partial\rho} & =\frac{\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds+\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds+\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds-\int_{\hat{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds}{e^{-\rho\hat{T}}\left(\frac{c_{m}}{\hat{q}_{1}+rt}-\frac{c_{m}}{\hat{q}_{1}}\right)}
+\end{align*}
+Since the denominator is always negative ($\hat{q}_{1}+rt>\hat{q}_{1}$), the sign of $\frac{\partial\hat{T}}{\partial\rho}$ depends on the numerator. Breaking the last integral into three intervals, the numerator becomes:
+\begin{align*}
+ & \underbrace{\int_{\hat{T}}^{\tau} s e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}} - \frac{c_{m}}{\hat{q}_{1} + rs}\right) ds}_{>0} 
++ \int_{\tau}^{\tilde{T}} s e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}(q_{2,0} + rs)} - \frac{c_{m}}{\hat{q}_{1} + rs} - c_{h}\right) ds \\ 
+& + \int_{\tilde{T}}^{\bar{T}} s e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}^{2}} - \frac{c_{m}}{\hat{q}_{1} + rs} - c_{h}\right) ds.
+\end{align*}
+Now we look for sufficient conditions that guarantee the numerator is positive. 
+First, notice that $\left(-\frac{c_{m}}{\hat{q}_{1}+rt}-c_{h}\right)$ appears in both the middle and right terms. 
+To ensure the numerator is positive, we require:
+\[
+\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h}\leq min\{\frac{c_{m}}{\hat{q}_{1}^{2}},\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rt)}\}
+\]
+In the region where $q_{1}>q_{2}$ and $q_{2}+rt\leq\hat{q}_{1}$ until parity is achieved, the minimum is $\frac{c_{m}}{\hat{q}{1}^{2}}$.
+Therefore, the condition becomes: 
+\begin{align*}
+\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h} & <\frac{c_{m}}{\hat{q}_{1}^{2}}
+\end{align*}
+At $t=0$ (just after the investment switch), this simplifies to:
+\[
+\frac{c_{m}}{\hat{q}_{1}}+c_{h}<\frac{c_{m}}{\hat{q}_{1}^{2}},
+\]
+or equivalently:
+\begin{align*}
+\frac{c_{m}}{c_{h}}\left(\frac{1}{\hat{q}_{1}^{2}}-\frac{1}{\hat{q}_{1}}\right) & >1,\\
+\frac{c_{m}}{c_{h}}\frac{1-\hat{q}_{1}}{\hat{q}_{1}^{2}} & >1,\\
+\frac{c_{m}}{c_{h}} & >\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}},\\
+\frac{c_{m}}{c_{h}} & >Q(\hat{q}_{1}).
+\end{align*}
+Thus, $\frac{c_{m}}{c_{h}}>Q(\hat{q}_{1})$ is a sufficient condition to ensure $\frac{\partial\hat{T}}{\partial\rho}<0$. 
+Intuitively, if machine costs dominate human costs, increasing the discount rate makes the switch occur earlier ($\hat{T}\downarrow$).
+\end{proof}
+
+\begin{cor}
+The machine-to-human comparative advantage bound decreases as the initial AI capability of the disadvantaged task increases.
+\end{cor}
+
+\begin{proof}
+Using Lemma 2, we have:
+\[
+Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}.
+\]
+Taking the derivative with respect to $q_{2,0}$:
+\[
+\frac{\partial Q(\hat{q}_{1})}{\partial q_{2,0}}=\frac{\partial\left(\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}\right)}{\partial\hat{q}_{1}}\frac{\partial\hat{q}_{1}}{\partial q_{2,0}}<0.
+\]
+This implies that as $q_{2,0}$ increases, maintaining $\frac{\partial\hat{T}}{\partial\rho}<0$ requires less comparative machine cost advantage (i.e., lower $\frac{c_{m}}{c_{h}}$).
+\end{proof}
+
 
 \end{document}
 
-\appendix
 
 \section{Extending the Model: Theoretical Propositions and Insights}
 
@@ -1121,7 +1412,6 @@ L_j(w) = d_j(p_j) l_j(w; q_1, q_2, \dots, q_n),
 \]
 where \(L_j\) is labor demand and \(d_j(p_j)\) is product demand. If AI improvement \(\Delta q\) reduces the cost of key tasks in \(X\), the labor effect in \(X\) depends on the demand elasticity \(\epsilon_j\), while sector \(Y\) may experience wage effects or reallocation.
 \end{proposition}
-
 
 
 \end{document}

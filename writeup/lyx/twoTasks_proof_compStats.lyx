@@ -1,0 +1,1068 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\begin_modules
+theorems-ams-chap-bytype
+\end_modules
+\maintain_unincluded_children no
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.75cm
+\topmargin 2cm
+\rightmargin 1.75cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content true
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+In this appendix,
+ we analyze the properties of the optimal paths for the dynamic programming problem specified in [].
+ The solution follows this structure:
+ allocate all resources to the larger of 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ until a specific point,
+ then switch to investing all resources in the other task’s capability until parity between 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ is achieved.
+ After reaching parity,
+ resources are evenly distributed between both tasks.
+ While we are unable to analytically determine the exact values of 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ at the turning point,
+ we provide comparative statics with respect to the initial values and the discount rate.
+\end_layout
+
+\begin_layout Standard
+We reformulate the problem as a maximization problem:
+\begin_inset Formula 
+\begin{align*}
+\max_{q_{1}(t),q_{2}(t)} & \int_{0}^{T}-e^{-\rho t}C(q_{1},q_{2})dt\\
+s.t. & \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}+s(t)=r,\\
+ & q_{1},q_{2}\geq0,\\
+ & q_{1}(0)=q_{1,0},q_{2}(0)=q_{2,0}.
+\end{align*}
+
+\end_inset
+
+Here,
+ 
+\begin_inset Formula $q_{1},q_{2}$
+\end_inset
+
+ are the state variables,
+ while 
+\begin_inset Formula $\frac{dq_{1}}{dt}$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{dq_{2}}{dt}$
+\end_inset
+
+ are control variables.
+ We form the Hamiltonian as follows:
+ 
+\begin_inset Formula 
+\[
+H=-e^{-\rho t}C(q_{1},q_{2})+\lambda_{1}\frac{dq_{1}}{dt}+\lambda_{2}\frac{dq_{2}}{dt}+\mu\left(r-\frac{dq_{1}}{dt}-\frac{dq_{2}}{dt}\right),
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\lambda_{1},\lambda_{2}$
+\end_inset
+
+ are costate variables,
+ and 
+\begin_inset Formula $\mu$
+\end_inset
+
+ is the Lagrange multiplier associated with the investment constraint.
+ The necessary conditions for an 
+\bar under
+interior
+\bar default
+ solution are:
+\begin_inset Formula 
+\begin{align*}
+\frac{dq_{i}}{dt} & =\frac{\partial H}{\partial\lambda_{i}},\tag{State Dynamics}\\
+\frac{d\lambda_{i}}{dt} & =-\frac{\partial H}{\partial q_{i}},\tag{Costate Dynamics}\\
+\frac{\partial H}{\partial\left(\frac{dq_{i}}{dt}\right)} & =0,\tag{Stationarity}\\
+\mu\left(r-\frac{dq_{1}}{dt}-\frac{dq_{2}}{dt}-s\right) & =0.\tag{Complementary Slackness}
+\end{align*}
+
+\end_inset
+
+Expanding the formulas,
+ we obtain:
+\begin_inset Formula 
+\begin{align*}
+\frac{dq_{1}}{dt} & =\frac{dq_{1}}{dt},\\
+\frac{dq_{2}}{dt} & =\frac{dq_{2}}{dt},\\
+\frac{d\lambda_{1}}{dt} & =e^{-\rho t}\frac{\partial C}{\partial q_{1}},\\
+\frac{d\lambda_{2}}{dt} & =e^{-\rho t}\frac{\partial C}{\partial q_{2}},\\
+\lambda_{1}-\mu & =0,\\
+\lambda_{2}-\mu & =0,\\
+\mu>0\ and\ \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}=r, & \ or\ \mu=0\ and\ \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}<r.
+\end{align*}
+
+\end_inset
+
+The costate dynamics imply
+\begin_inset Formula 
+\[
+\frac{\frac{d\lambda_{1}}{dt}}{\frac{d\lambda_{2}}{dt}}=\frac{\frac{\partial C}{\partial q_{1}}}{\frac{\partial C}{\partial q_{2}}},
+\]
+
+\end_inset
+
+and from the stationarity conditions,
+ we have:
+\begin_inset Formula 
+\[
+\lambda_{1}=\lambda_{2}=\mu.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $\mu=0$
+\end_inset
+
+ case can happen only if:
+\begin_inset Formula 
+\[
+\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}=0
+\]
+
+\end_inset
+
+for all times.
+ In this scenario,
+ any 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ would suffice since neither contributes to the objective function.
+ However,
+ this is not applicable in our setup because,
+ as soon as task 
+\begin_inset Formula $i$
+\end_inset
+
+ becomes automated,
+ the corresponding partial derivative changes from 0 to 
+\begin_inset Formula $-\frac{cm}{q_{i}^{2}}$
+\end_inset
+
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+We assume 
+\begin_inset Formula $c_{m}$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{h}$
+\end_inset
+
+ are such that some level of automation is preferred over no automation.
+ Otherwise,
+ the solution would be trivial,
+ and no tasks would be automated.
+\end_layout
+
+\end_inset
+
+ Therefore,
+ we must have 
+\begin_inset Formula $\mu>0$
+\end_inset
+
+,
+ and the investment endowment is always fully utilized.
+\end_layout
+
+\begin_layout Standard
+
+\bar under
+If
+\bar default
+ the solution is interior,
+ then 
+\begin_inset Formula 
+\[
+\lambda_{1}=\lambda_{2}=\mu>0
+\]
+
+\end_inset
+
+and the following holds for all 
+\begin_inset Formula $t$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\bar{\lambda}_{1}+\int_{0}^{t}e^{-\rho s}\frac{\partial C}{\partial q_{1}}ds=\bar{\lambda}_{2}+\int_{0}^{t}e^{-\rho s}\frac{\partial C}{\partial q_{2}}ds
+\]
+
+\end_inset
+
+Assume that at 
+\begin_inset Formula $t=T$
+\end_inset
+
+ (the horizon),
+ 
+\begin_inset Formula $\lambda_{1}=\lambda_{2}>0$
+\end_inset
+
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Intuitively,
+ this means that at the horizon,
+ we stop investing in either variable,
+ resulting in a “steady state.” This is reasonable because,
+ once 
+\begin_inset Formula $q=1$
+\end_inset
+
+,
+ no further investments are required.
+\end_layout
+
+\end_inset
+
+ This implies at the optimum,
+ the marginal cost with respect to task capabilities must be equal.
+ Thus:
+\begin_inset Formula 
+\[
+\forall t:\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}
+\]
+
+\end_inset
+
+Given the functional form of the cost function,
+ such scenario can occur only when both tasks are automated,
+ 
+\bar under
+and
+\bar default
+ 
+\begin_inset Formula $q_{1}=q_{2}$
+\end_inset
+
+.
+ Specifically:
+\begin_inset Formula 
+\[
+\frac{\partial C\{<1|2>\}}{\partial q_{1}}=\frac{\partial C\{<1|2>\}}{\partial q_{2}}\Leftrightarrow-\frac{c_{m}}{q_{1}^{2}q_{2}}=-\frac{c_{m}}{q_{1}q_{2}^{2}}\Leftrightarrow q_{1}=q_{2}.
+\]
+
+\end_inset
+
+Unless this condition is met,
+ we have a corner solution where all the available endowment is allocated to improving only one task’s AI capability.
+ 
+\end_layout
+
+\begin_layout Standard
+We 
+\bar under
+conjecture
+\bar default
+ that at a sufficiently long horizon,
+ 
+\begin_inset Formula $q_{1}=q_{2}$
+\end_inset
+
+,
+ and proceed to determine the optimal trajectories of 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ using backward induction.
+ Now,
+ imagine we are in the <1|2> region.
+ Let 
+\begin_inset Formula $\tilde{T}$
+\end_inset
+
+ denote the earliest time at which 
+\begin_inset Formula $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$
+\end_inset
+
+ holds.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+We assume that the parameters c_{m} and c_{h} are such that this equality is guaranteed to occur.
+ 
+\bar under
+Otherwise,
+ the solution would trivially involve investing in only one q,
+ fully maximizing it before switching to the other until it too is maximized.
+\end_layout
+
+\end_inset
+
+ Formally:
+ 
+\begin_inset Formula 
+\[
+\tilde{T}=inf\{t:\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}\}.
+\]
+
+\end_inset
+
+For 
+\begin_inset Formula $t<\tilde{T}$
+\end_inset
+
+,
+ we have a corner solution.
+ Without loss of generality,
+ assume that 
+\begin_inset Formula $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$
+\end_inset
+
+ when 
+\begin_inset Formula $t<\tilde{T}$
+\end_inset
+
+.
+ With a slight abuse of notation,
+ consider a time 
+\begin_inset Formula $\delta$
+\end_inset
+
+ arbitrarily close to and just before 
+\begin_inset Formula $\tilde{T}$
+\end_inset
+
+.
+ At such times,
+ we can write:
+\begin_inset Formula 
+\[
+\frac{\partial C\{<1|2>\}}{\partial q_{1}}\approx-\frac{c_{m}}{q_{1}^{2}q_{2}}>-\frac{c_{m}}{q_{1}q_{2}^{2}}\approx\frac{\partial C\{<1|2>\}}{\partial q_{2}}.
+\]
+
+\end_inset
+
+This simplifies to:
+\begin_inset Formula 
+\[
+-\frac{1}{q_{1}}>-\frac{1}{q_{2}}\Leftrightarrow q_{1}>q_{2}.
+\]
+
+\end_inset
+
+ Therefore,
+ for times 
+\begin_inset Formula $t<\tilde{T}$
+\end_inset
+
+,
+ we must invest exclusively in 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ until parity between 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ is achieved.
+ This also implies that we are in the region below the 45-degree line and are moving toward it.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now,
+ we continue going backward until we reach either the boundary of 
+\begin_inset Formula $<1><2>$
+\end_inset
+
+ or 
+\begin_inset Formula $<1>(2)$
+\end_inset
+
+.
+ Here we only consider the case where we hit the boundary of 
+\begin_inset Formula $<1><2>$
+\end_inset
+
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The dynamics of transitioning directly from <1|2> to <1>(2) are less complicated than transitioning through <1><2> first and then to <1>(2).
+ For brevity,
+ we do not describe the direct transition separately,
+ as the mechanism is similar and requires one less step of analysis.
+\end_layout
+
+\end_inset
+
+ Given that we are in the region where 
+\begin_inset Formula $q_{1}>q_{2}$
+\end_inset
+
+,
+ the following conditions hold:
+\begin_inset Formula 
+\[
+q_{1}>q_{2}\Leftrightarrow-\frac{c_{m}}{q_{1}^{2}}>-\frac{c_{m}}{q_{2}^{2}}\Leftrightarrow\frac{\partial C\{<1><2>\}}{\partial q_{1}}>\frac{\partial C\{<1><2>\}}{\partial q_{2}}.
+\]
+
+\end_inset
+
+Thus,
+ in the <1><2> region,
+ we must continue investing in 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+.
+ This remains true even if we enter <1><2> from the point of parity in <1|2>.
+ In other words,
+ in the moments leading up to 
+\begin_inset Formula $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$
+\end_inset
+
+,
+ we will allocate all resources to 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+,
+ regardless of whether we will be in <1|2> or <1><2> at 
+\begin_inset Formula $\tilde{T}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Now imagine transitioning from <1><2> to <1>(2).
+ The cost function changes from:
+\begin_inset Formula 
+\[
+C\{<1><2>\}=\frac{c_{m}}{q_{1}}+\frac{c_{m}}{q_{2}}
+\]
+
+\end_inset
+
+to 
+\begin_inset Formula 
+\[
+C\{<1>(2)\}=\frac{c_{m}}{q_{1}}+c_{h}.
+\]
+
+\end_inset
+
+Let us maintain the assumption that 
+\begin_inset Formula $q_{1}>q_{2}$
+\end_inset
+
+ as we cross the horizontal boundary in Figure 3 and enter the new region.
+ In the <1><2> region,
+ we have:
+ 
+\begin_inset Formula $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$
+\end_inset
+
+.
+ However,
+ on the <1>(2) side,
+ the derivatives change to 
+\begin_inset Formula $\frac{\partial C}{\partial q_{1}}=-\frac{c_{m}}{q_{1}^{2}}<0$
+\end_inset
+
+ and 
+\begin_inset Formula $\frac{\partial C}{\partial q_{2}}=0$
+\end_inset
+
+.
+ This implies that the task contributing more to the objective function differs across these regions.
+ However,
+ this does not mean the optimal investment path switches instantaneously.
+ While the instantaneous benefits shift at the boundary,
+ the agent must account for the continuation value of investments in future periods.
+ This is because,
+ despite the discontinuity in the objective function,
+ the 
+\bar under
+state variables change continuously
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Thus,
+ when transitioning from <1><2> to <1>(2),
+ we continue investing in 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ even though 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ provides a higher instantaneous utility.
+ We maintain this allocation until reaching a point where the continuation value of investing in 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ equals the benefit of switching to 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+.
+ This point represents a kink in the optimal trajectory of the state variables.
+ Let 
+\begin_inset Formula $\hat{T}$
+\end_inset
+
+ denote the time at which we reach this kink.
+ At 
+\begin_inset Formula $\hat{T}$
+\end_inset
+
+,
+ the following condition must hold:
+\begin_inset Formula 
+\[
+\underbrace{\int_{\hat{T}}^{\tau}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds}_{\text{from \ensuremath{\hat{T}}to when automate task 2}}+\underbrace{\int_{\tau}^{\tilde{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds}_{\text{from automation of task 2 to parity of \ensuremath{q}s}}+\underbrace{\int_{\tilde{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds}_{\text{after parity}}=\underbrace{\int_{\hat{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds}_{\text{continue investing on \ensuremath{q_{1}}}}.\tag{Kink Equation}
+\]
+
+\end_inset
+
+Here,
+ 
+\begin_inset Formula $\hat{q}_{1}$
+\end_inset
+
+ denotes the value of 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ at the kink,
+ 
+\begin_inset Formula $\tau$
+\end_inset
+
+ is the time we cross the boundary to automating task 2,
+ and 
+\begin_inset Formula $\tilde{T}$
+\end_inset
+
+ is the time when parity between 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ is achieved.
+ For 
+\begin_inset Formula $t<\hat{T}$
+\end_inset
+
+,
+ the right-hand side (RHS) of the equation is smaller than the left-hand side (LHS).
+ Thus,
+ the agent continues investing in 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ until the two sides are equalized.
+ This condition holds regardless of whether we are in the <1>(2) region or cross the boundary to (1)(2).
+ Specifically:
+ 
+\begin_inset Formula 
+\[
+\frac{\partial C\{(1)(2)\}}{\partial q_{1}}=\frac{\partial C\{(1)(2)\}}{\partial q_{2}}=0,
+\]
+
+\end_inset
+
+whereas:
+\begin_inset Formula 
+\[
+\frac{\partial C\{<1>(2)\}}{\partial q_{1}}=-\frac{c_{m}}{q_{1}^{2}}<0=\frac{\partial C\{<1>(2)\}}{\partial q_{2}}.
+\]
+
+\end_inset
+
+This completes the characterization of the optimal trajectory of the state variables,
+ starting from any point on the 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+-
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ grid.
+\end_layout
+
+\begin_layout Section*
+Comparative Statics
+\end_layout
+
+\begin_layout Standard
+The following lemmas provide comparative statics of optimal trajectories with respect to 
+\begin_inset Formula $q_{2,0}$
+\end_inset
+
+ and 
+\begin_inset Formula $\rho$
+\end_inset
+
+.
+ We continue to maintain the assumption that we are below the 45 degree line in the 
+\begin_inset Formula $q_{1}-q_{2}$
+\end_inset
+
+ plane (i.e.,
+ 
+\begin_inset Formula $q_{1}>q_{2}$
+\end_inset
+
+ region).
+ 
+\end_layout
+
+\begin_layout Lemma
+\begin_inset Formula $\frac{\partial\hat{T}}{\partial q_{2,0}}<0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Proof
+We have:
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial\hat{T}}{\partial q_{2,0}} & =-\int_{\tau}^{\tilde{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)^{2}})ds<0.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+\noindent
+\align block
+Lemma 1 states that if the initial value of 
+\begin_inset Formula $q_{2,0}$
+\end_inset
+
+ increases,
+ the switch from investing in 
+\begin_inset Formula $q_{1}$
+\end_inset
+
+ to 
+\begin_inset Formula $q_{2}$
+\end_inset
+
+ occurs earlier.
+ This explains the shift in kinks of the optimal paths in Figure 4—
+moving from light blue to green to dark blue—
+as they shift upward and to the left.
+\end_layout
+
+\begin_layout Lemma
+\begin_inset Formula $\frac{\partial\hat{q}_{1}}{\partial q_{2,0}}<0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Proof
+Note that 
+\begin_inset Formula $\frac{\partial\hat{q}_{1}}{\partial\hat{T}}=r$
+\end_inset
+
+,
+ because 
+\begin_inset Formula $\hat{T}$
+\end_inset
+
+ is defined as the time during which all resources (
+\begin_inset Formula $r$
+\end_inset
+
+) are allocated exclusively to 
+\begin_inset Formula $q{1}$
+\end_inset
+
+ for 
+\begin_inset Formula $t<\hat{T}$
+\end_inset
+
+.
+ Using this,
+ we can write:
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial\hat{q}_{1}}{\partial q_{2,0}} & =\frac{\partial\hat{q}_{1}}{\partial\hat{T}}\frac{\partial\hat{T}}{\partial q_{2,0}}\\
+ & =r\times\frac{\partial\hat{T}}{\partial q_{2,0}}\\
+ & <0,
+\end{align*}
+
+\end_inset
+
+where the last line follows from Lemma 1.
+\end_layout
+
+\begin_layout Lemma
+A sufficient condition for 
+\begin_inset Formula $\frac{\partial\hat{T}}{\partial\rho}<0$
+\end_inset
+
+ is 
+\begin_inset Formula $\frac{c_{m}}{c_{h}}>Q(\hat{q}_{1})$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}$
+\end_inset
+
+,
+ the machine-to-human comparative advantage bound,
+ is increasing in 
+\begin_inset Formula $\hat{q}_{1}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Proof
+We take partial derivative of both sides of the Kink equation [] with respect to 
+\begin_inset Formula $\rho$
+\end_inset
+
+,
+ treating 
+\begin_inset Formula $\hat{T}$
+\end_inset
+
+ as a variable:
+\end_layout
+
+\begin_layout Proof
+\begin_inset Formula 
+\[
+\int_{\hat{T}}^{\tau}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds+\int_{\tau}^{\tilde{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds+\int_{\tilde{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds=\int_{\hat{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds
+\]
+
+\end_inset
+
+Differentiating with respect to 
+\begin_inset Formula $\rho$
+\end_inset
+
+ gives:
+ 
+\begin_inset Formula 
+\begin{align*}
+-\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds-\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds\\
+-\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds-\left[\frac{\partial\hat{T}}{\partial\rho}e^{-\rho\hat{T}}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})\right] & =-\int_{\hat{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds-\left[\frac{\partial\hat{T}}{\partial\rho}e^{-\rho\hat{T}}\left(\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h}\right)\right]
+\end{align*}
+
+\end_inset
+
+Rearrange terms,
+ we get:
+ 
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial\hat{T}}{\partial\rho} & =\frac{\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds+\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds+\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds-\int_{\hat{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds}{e^{-\rho\hat{T}}\left(\frac{c_{m}}{\hat{q}_{1}+rt}-\frac{c_{m}}{\hat{q}_{1}}\right)}
+\end{align*}
+
+\end_inset
+
+Since the denominator is always negative (
+\begin_inset Formula $\hat{q}_{1}+rt>\hat{q}_{1}$
+\end_inset
+
+),
+ the sign of 
+\begin_inset Formula $\frac{\partial\hat{T}}{\partial\rho}$
+\end_inset
+
+ depends on the numerator.
+ Breaking the last integral into three intervals:
+\begin_inset Formula 
+\begin{align*}
+\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds+\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds+\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds-\int_{\hat{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds\\
+=\underbrace{\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}-\frac{c_{m}}{\hat{q}_{1}+rs})ds}_{>0}+\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)}-\frac{c_{m}}{\hat{q}_{1}+rs}-c_{h})ds+\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}}-\frac{c_{m}}{\hat{q}_{1}+rs}-c_{h})ds
+\end{align*}
+
+\end_inset
+
+Now we look for sufficient conditions that guarantee the numerator is positive.
+ First,
+ notice that 
+\begin_inset Formula $\left(-\frac{c_{m}}{\hat{q}_{1}+rt}-c_{h}\right)$
+\end_inset
+
+ appears in both the middle and right terms.
+ To ensure the numerator is positive,
+ we require:
+\begin_inset Formula 
+\[
+\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h}\leq min\{\frac{c_{m}}{\hat{q}_{1}^{2}},\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rt)}\}
+\]
+
+\end_inset
+
+In the region where 
+\begin_inset Formula $q_{1}>q_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}+rt\leq\hat{q}_{1}$
+\end_inset
+
+ until parity is achieved,
+ the minimum is 
+\begin_inset Formula $\frac{c_{m}}{\hat{q}{1}^{2}}$
+\end_inset
+
+.
+ Therefore,
+ the condition becomes:
+ 
+\begin_inset Formula 
+\begin{align*}
+\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h} & <\frac{c_{m}}{\hat{q}_{1}^{2}}
+\end{align*}
+
+\end_inset
+
+At 
+\begin_inset Formula $t=0$
+\end_inset
+
+ (just after the investment switch),
+ this simplifies to:
+\begin_inset Formula 
+\[
+\frac{c_{m}}{\hat{q}_{1}}+c_{h}<\frac{c_{m}}{\hat{q}_{1}^{2}},
+\]
+
+\end_inset
+
+or equivalently:
+\begin_inset Formula 
+\begin{align*}
+\frac{c_{m}}{c_{h}}\left(\frac{1}{\hat{q}_{1}^{2}}-\frac{1}{\hat{q}_{1}}\right) & >1,\\
+\frac{c_{m}}{c_{h}}\frac{1-\hat{q}_{1}}{\hat{q}_{1}^{2}} & >1,\\
+\frac{c_{m}}{c_{h}} & >\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}},\\
+\frac{c_{m}}{c_{h}} & >Q(\hat{q}_{1}).
+\end{align*}
+
+\end_inset
+
+Thus,
+ 
+\begin_inset Formula $\frac{c_{m}}{c_{h}}>Q(\hat{q}_{1})$
+\end_inset
+
+ is a sufficient condition to ensure 
+\begin_inset Formula $\frac{\partial\hat{T}}{\partial\rho}<0$
+\end_inset
+
+.
+ Intuitively,
+ if machine costs dominate human costs,
+ increasing the discount rate makes the switch occur earlier (
+\begin_inset Formula $\hat{T}\downarrow$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Corollary
+The machine-to-human comparative advantage bound decreases as the initial AI capability of the disadvantaged task increases.
+\end_layout
+
+\begin_layout Proof
+Using Lemma 2,
+ we have:
+\begin_inset Formula 
+\[
+Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}.
+\]
+
+\end_inset
+
+Taking the derivative with respect to 
+\begin_inset Formula $q_{2,0}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\frac{\partial Q(\hat{q}_{1})}{\partial q_{2,0}}=\frac{\partial\left(\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}\right)}{\partial\hat{q}_{1}}\frac{\partial\hat{q}_{1}}{\partial q_{2,0}}<0.
+\]
+
+\end_inset
+
+This implies that as 
+\begin_inset Formula $q_{2,0}$
+\end_inset
+
+ increases,
+ maintaining 
+\begin_inset Formula $\frac{\partial\hat{T}}{\partial\rho}<0$
+\end_inset
+
+ requires less comparative machine cost advantage (i.e.,
+ lower 
+\begin_inset Formula $\frac{c_{m}}{c_{h}}$
+\end_inset
+
+).
+\end_layout
+
+\end_body
+\end_document
