@@ -199,9 +199,9 @@ The sum of the task durations is normalized to 1, $\sum_i t_i = 1$.
 Learning how to do that task costs a worker $c_i \ge 0$.
 The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
 All workers work $l$ hours over their lifetime, which we normalize to 1.
-Workers value leisure at $1$ and are perfectly elastic in their labor supply.
+Workers value leisure at $1$ and are perfectly inelastic in their labor supply.
 To recoup their training costs and be indifferent between working and not working, $w = 1 + \sum_{i \in J} c_i$.
-The firm faces a perfectly elastic labor supply at any job it designs.
+The firm faces a perfectly inelastic labor supply at any job it designs.
 
 Firms have to pay workers for their time, regardless of the task, so the wage bill for a job $J$ is 
 \begin{align*}
@@ -254,15 +254,185 @@ For example, professors at business schools are quite highly paid to teach and d
 This is very expensive blackboard cleaning services in isolation, but it cannot be helped because handing this off to another worker at that moment is too costly and the duration of the task is so short it does not matter much. 
 But if it were still impossible to split to another worker but took an hour instead of a minute, the university would badly lament the situation.
 
-\subsubsection{General equilibrium (Sketch)}
-Each worker has $1$ to spend on consumption, as their wage is $1$ after recouping their training costs.
-There are $K$ goods produced in the product market. 
-Balanced budgets required $1 = \sum_{k=1}^K p_k x_k$.
 
-Workers have CES utility over the goods, with elasticity of substitution $\sigma$.
-Let $l_k$ be the labor cost of producing one unit of the good $k$.
-Firms have reproducible technology so they can just scale up the task sequence by any amount. 
-This allows workers, even if their job has a small $\sum t$ to still work $l = 1$, which allows the labor market to clear.
+\subsection{General Equilibrium with Task-Based Production}
+
+Consider an economy with $K$ final goods. 
+A representative consumer supplies one unit of labor inelastically and has a CES utility function over the goods:
+\[
+U(x_{1}, \ldots, x_{K}) 
+= 
+\Bigl(\sum_{k=1}^{K} \delta_k \,x_k^{\tfrac{\sigma - 1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
+\quad
+0 < \delta_k < 1, 
+\quad
+\sum_{k=1}^{K} \delta_k = 1,
+\quad
+\sigma > 0.
+\]
+Here, goods are substitutes if $\sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ gives the Cobb-Douglas case. 
+The consumer faces a budget constraint 
+\[
+\sum_{k=1}^K p_k \,x_k = w.
+\]
+
+A single (representative) firm produces all $K$ goods under perfect competition, using labor as the only input. 
+Each good $k \in \{1,\ldots,K\}$ is produced by completing a specific set of tasks $\mathcal{T}_k$. 
+A worker employed in task $i \in \mathcal{T}_k$ must acquire human capital $c_i^k > 0$. 
+We assume tasks in $\mathcal{T}_k$ must be done in fixed proportions to yield one unit of good $k$. 
+For instance, if task $i \in \mathcal{T}_k$ takes 30 minutes and task $j \in \mathcal{T}_k$ (where $j \neq i$) takes 45 minutes, then producing 1 unit of good $k$ requires a total of 75 minutes.
+It is not possible to perform task $i$ multiple times while doing $j$ only once: the tasks have a fixed ratio. 
+Hence, rather than specifying labor for each task separately, we let $l_k$ be the total labor required for one unit of good $k$, aggregating over all tasks.
+
+We further assume the firm fully compensates workers for the human capital they acquire. 
+Thus, the price of good $k$ is
+\[
+p_{k} = 1 + \sum_{i \in \mathcal{T}_k} c_{i}^k.
+\]
+Under perfect competition, $p_k$ also equals the marginal cost $w \,l_k$. 
+Normalizing the wage to $w=1$ gives
+\[
+p_{k} \;=\; l_{k} \;=\; 1 \;+\; \sum_{i \in \mathcal{T}_k} c_i^k.
+\]
+
+\subsubsection{Labor Market Constraint}
+
+Because the consumer inelastically supplies one unit of labor, the labor-market clearing condition is
+\[
+\sum_{k=1}^K l_k \,x_k \;=\; 1.
+\]
+Since $p_k = l_k$ and $w=1$, this matches the budget constraint 
+\(\sum_{k=1}^K p_k\,x_k = 1\).
+
+\subsubsection{Solving for $\{x_k\}$}
+
+The consumer chooses $\{x_k\}$ to maximize 
+\[
+U(x_1,\dots,x_K)
+=
+\Bigl(\sum_{k=1}^K \delta_k \,x_k^{\tfrac{\sigma-1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
+\]
+subject to
+\[
+\sum_{k=1}^K l_k\,x_k = 1.
+\]
+By the standard first-order conditions, the ratio of marginal utilities equals the ratio of prices:
+\[
+\frac{\partial U/\partial x_i}{\partial U/\partial x_j}
+\;=\;
+\frac{\,l_i\,}{\,l_j\,}
+\quad
+\forall i,j.
+\]
+From CES properties, we get
+\[
+\left(\frac{x_i}{x_j}\right)^{-\tfrac{1}{\sigma}}
+=\;
+\frac{l_i}{l_j}\,\cdot\,\frac{\delta_j}{\delta_i},
+\quad
+\Longrightarrow
+\quad
+\frac{x_i}{x_j}
+=
+\left(\frac{\delta_i}{\delta_j}\,\cdot\,\frac{\,l_j\,}{\,l_i\,}\right)^{\sigma}.
+\]
+Define
+\[
+R_j
+=
+\frac{x_j}{x_1}
+=
+\Bigl(\frac{\,l_1\,}{\,l_j\,} \cdot \frac{\delta_j}{\delta_1}\Bigr)^{\sigma},
+\]
+where $R_1 = 1$. 
+Substitute $x_j = R_j \, x_1$ into $\sum_{k=1}^K l_k x_k = 1$:
+
+\[
+\sum_{k=1}^K l_k\,\bigl(R_k\,x_1\bigr)
+=
+x_1\Bigl[\sum_{k=1}^K l_k R_k\Bigr]
+=
+1,
+\]
+giving
+\[
+x_1^*
+=
+\frac{1}{\sum_{k=1}^K l_k\,R_k\,},
+\quad
+x_j^*
+=
+R_j\,x_1^*
+=
+\frac{\,R_j\,}{\,\sum_{k=1}^K l_k\,R_k\,}.
+\]
+
+\subsubsection{Sectoral Employment and Equilibrium}
+
+Labor used in good $k$ is $L_k^* = l_k\,x_k^*$. 
+Thus the equilibrium can be summarized as
+\[
+w = 1,
+\quad
+p_k = l_k = 1 + \sum_{i\in \mathcal{T}_k}c_i^k,
+\quad
+x_k^* = \frac{R_k}{\sum_{\ell=1}^K l_\ell\,R_\ell},
+\quad
+L_k^* = l_k\,x_k^*,
+\]
+where
+\[
+R_k
+=
+\Bigl(\frac{l_1}{l_k}\,\cdot\,\frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
+\]
+In this way, the task composition $\mathcal{T}_k$ (and corresponding $c_i^k$s) fixes $l_k$, which then fixes $p_k$, and thus fully determines the consumption bundle $\{x_k^*\}$ and labor allocations $\{L_k^*\}$.
+
+\subsubsection{Comparative Statics with Respect to Automation}
+
+In this task-based model, automation corresponds to reducing $c_i^k$ for some tasks (partial automation) or removing them entirely (full automation). 
+Suppose $\mathcal{A}_1 \subseteq \mathcal{T}_1$ is automated in good~1’s production, reducing $\sum_{i\in\mathcal{T}_1}c_i^1$ and thus lowering $l_1$ and $p_1$. 
+The following comparative statics apply:
+
+\paragraph{Price Effects.}
+Only $p_1^* = l_1^*$ falls; prices $p_j^*$ for $j\neq 1$ remain unaffected (unless their own tasks change).
+
+\paragraph{Effects on Consumption.}
+We find
+\[
+\frac{\partial x_{1}^*}{\partial l_{1}}
+=
+-\,
+\frac{\,l_{1} \;+\;\sigma\,\bigl(\sum_{k\neq 1}l_{k}R_{k}\bigr)\,}{
+       l_{1}\,\Bigl(\sum_{k}l_{k}R_{k}\Bigr)^{2}}
+<0,
+\qquad
+\frac{\partial x_{j}^*}{\partial l_{1}}
+=
+(\sigma-1)
+\,\frac{\,R_{j}\,}{\bigl(\sum_{k}l_{k}R_{k}\bigr)^{2}}
+\quad(\text{for }j\neq 1).
+\]
+Hence, when $l_{1}$ decreases (automation makes good 1 cheaper), $x_{1}^*$ unambiguously rises, while $x_{j}^*$ moves in the opposite direction if $\sigma>1$ (substitutes) or in the same direction if $0<\sigma<1$ (complements).
+
+\paragraph{Effects on Sectoral Labor Shares.}
+Similarly, 
+\[
+\frac{\partial L_{1}^*}{\partial l_{1}}
+=
+x_{1}^*\,(1-\sigma)\bigl(1 - l_{1}x_{1}^*\bigr),
+\quad
+\frac{\partial L_{j}^*}{\partial l_{1}}
+=
+(\sigma-1)\,
+\frac{\,l_{j}R_{j}\,}{\bigl(\sum_{k}l_{k}R_{k}\bigr)^{2}}
+\quad (j\neq 1).
+\]
+If $\sigma>1$, a reduction in $l_{1}$ shifts labor towards good~1 and away from the other goods (since $\tfrac{\partial L_j^*}{\partial l_1}>0$, a lower $l_1$ means a lower $L_j^*$), consistent with substitutability. 
+If $0<\sigma<1$, goods act more like complements, and lowering $l_{1}$ increases labor usage in other sectors.
+In all cases, total labor remains $1$.
+
+
 
 One could have two goods, A and B. 
 The A good is exclusively produced by human labor; the B task is the two task model. 
