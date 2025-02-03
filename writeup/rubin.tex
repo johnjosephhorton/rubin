@@ -187,6 +187,8 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
+
+Why are there still so many jobs \citep{autor2015}?
 \section{A model of production}
 
 The firm's product requires workers to completed a sequence of tasks, $T = \{1, 2, \dots, n\}$.
@@ -429,6 +431,101 @@ x_{1}^*\,(1-\sigma)\bigl(1 - l_{1}x_{1}^*\bigr),
 If $\sigma>1$, a reduction in $l_{1}$ shifts labor towards good~1 and away from the other goods (since $\tfrac{\partial L_j^*}{\partial l_1}>0$, a lower $l_1$ means a lower $L_j^*$), consistent with substitutability. 
 If $0<\sigma<1$, goods act more like complements, and lowering $l_{1}$ increases labor usage in other sectors.
 In all cases, total labor remains $1$.
+
+
+
+One could have two goods, A and B. 
+The A good is exclusively produced by human labor; the B task is the two task model. 
+In equilibrium, the firm has to earn zero profits price has to equal marginal cost, so $p_A = w t_h$. 
+The B good is produced by a chain of tasks, so $p_B = w l_{B}(w)$.
+The relatively prices of the two goods will just be their relative labor costs. 
+
+
+We could have a third good that consumers value at 
+
+\section*{Sketch: Consumer Problem with Utility Function}
+
+We have the utility function:
+\[
+u(x, y) = \ln\left(x + \frac{1}{\underline{p}}\right) + \ln(y),
+\]
+subject to the budget constraint:
+\[
+p_x x + y = B.
+\]
+Here, \(y\) is the numeraire good (\(p_y = 1\)), \(p_x > 0\) is the price of good \(x\), and \(B > 0\) is the total budget.
+
+\subsection*{Corner Solution: \(x = 0\)}
+If \(x = 0\), then the budget constraint implies:
+\[
+y = B.
+\]
+The utility in this case is:
+\[
+u(0, B) = \ln\left(\frac{1}{\underline{p}}\right) + \ln(B).
+\]
+To determine if the consumer will deviate from \(x = 0\), we compare the marginal rate of substitution (MRS) with the price ratio.
+
+\subsubsection*{Marginal Rate of Substitution}
+The marginal rate of substitution is:
+\[
+\text{MRS}(x, y) = \frac{\frac{\partial u}{\partial x}}{\frac{\partial u}{\partial y}} = \frac{\frac{1}{x + \frac{1}{\underline{p}}}}{\frac{1}{y}} = \frac{y}{x + \frac{1}{\underline{p}}}.
+\]
+At \(x = 0\) and \(y = B\):
+\[
+\text{MRS}(0, B) = \frac{B}{\frac{1}{\underline{p}}} = B \, \underline{p}.
+\]
+
+\subsubsection*{Condition for Corner Solution}
+The slope of the budget line is:
+\[
+\frac{p_x}{p_y} = p_x.
+\]
+A corner solution occurs if:
+\[
+\text{MRS}(0, B) \leq p_x \quad \Longrightarrow \quad B \, \underline{p} \leq p_x.
+\]
+Thus, the corner solution is:
+\[
+x^* = 0, \quad y^* = B, \quad \text{if } B \, \underline{p} < p_x.
+\]
+
+\subsection*{Interior Solution}
+If \(B \, \underline{p} \geq p_x\), the consumer chooses a positive amount of \(x\). The first-order condition is:
+\[
+\text{MRS}(x, y) = p_x \quad \Longrightarrow \quad \frac{y}{x + \frac{1}{\underline{p}}} = p_x.
+\]
+This simplifies to:
+\[
+y = p_x \left(x + \frac{1}{\underline{p}}\right).
+\]
+Substitute this into the budget constraint:
+\[
+p_x x + y = B \quad \Longrightarrow \quad p_x x + p_x \left(x + \frac{1}{\underline{p}}\right) = B.
+\]
+Simplify:
+\[
+2 p_x x + \frac{p_x}{\underline{p}} = B \quad \Longrightarrow \quad x = \frac{B - \frac{p_x}{\underline{p}}}{2 p_x}.
+\]
+Substitute \(x\) back into the expression for \(y\):
+\[
+y = p_x \left(x + \frac{1}{\underline{p}}\right) = p_x \left(\frac{B - \frac{p_x}{\underline{p}}}{2 p_x} + \frac{1}{\underline{p}}\right).
+\]
+Simplify:
+\[
+y = \frac{B - \frac{p_x}{\underline{p}}}{2} + \frac{p_x}{\underline{p}} = \frac{B + \frac{p_x}{\underline{p}}}{2}.
+\]
+
+\subsection*{Summary of the Solution}
+\textbf{Corner Solution:} If \(B \, \underline{p} < p_x\),
+\[
+x^* = 0, \quad y^* = B.
+\]
+
+\textbf{Interior Solution:} If \(B \, \underline{p} \geq p_x\),
+\[
+x^* = \frac{B - \frac{p_x}{\underline{p}}}{2 p_x}, \quad y^* = \frac{B + \frac{p_x}{\underline{p}}}{2}.
+\]
 
 
 
@@ -971,6 +1068,12 @@ Below, we discuss some of the implications and features of the model.
 \subsection{How consequential is linear production?}
 If two tasks can proceed in parallel, we can simply model them as having no hand-off costs, of $c_h = 0$.
 It never makes sense to combine two tasks within a single job if with hand-off in between because a less expensive occupation can always be created as $(C_1 + C_2) (t_1 + t_2) > c_1 t_1 + c_2 t_2$.
+
+
+A lot of multi-tasking in jobs is really more like ``async'' in programming: you get blocked on some task, so you switch to some other task in the iterim.
+Despite this, production is still linear---it's just not exactly linear in time.
+There are still a sequence of tasks done in order, it is just that you can pause on one for some period of time.
+
 
 
 \subsection{YADOLM: Yet Another Division of Labor Model}
