@@ -2,6 +2,7 @@
 \usepackage{graphicx} % Required for inserting images
 
 \usepackage{subcaption}
+\usepackage{subcaption}
 \usepackage{float}
 \usepackage{dialogue}
 \usepackage{tikz}
@@ -14,6 +15,24 @@
 \usepackage{amssymb}
 \usepackage{tcolorbox}
 
+
+% For appendix math formulas
+\theoremstyle{plain}
+    \ifx\thechapter\undefined
+      \newtheorem{lem}{\protect\lemmaname}
+    \else
+      \newtheorem{lem}{\protect\lemmaname}[chapter]
+    \fi
+\theoremstyle{plain}
+    \ifx\thechapter\undefined
+  \newtheorem{cor}{\protect\corollaryname}
+\else
+      \newtheorem{cor}{\protect\corollaryname}[chapter]
+    \fi
+\providecommand{\corollaryname}{Corollary}
+\providecommand{\lemmaname}{Lemma}
+
+
 \DeclareMathOperator{\CostBlock}{CostBlock}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -23,7 +42,7 @@
 \begin{document}
 %\title{The Economics of Generative and Agentic AI}
 \title{Agentic AI, Tasks and Judgement:\\ A Model of Rick Rubin}
-\author{John Horton\footnote{I used AI extensively to write this paper, particularly Claude 3.5 Sonnet and o1 pro from OpenAI. Thanks for complementing my labor, AI agents!}\\MIT \& NBER}
+\author{\normalsize John J. Horton\footnote{I used AI extensively to write this paper, particularly Claude 3.5 Sonnet and o1 pro from OpenAI. Thanks for complementing my labor, AI agents!}  \\ \normalsize MIT \& NBER  \and \normalsize Peyman Shahidi \\  \normalsize MIT}
 \date{\today{}}
 
 \newcommand{\machine}[1]{\langle #1 \rangle}
@@ -168,6 +187,8 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
+
+Why are there still so many jobs \citep{autor2015}?
 \section{A model of production}
 
 The firm's product requires workers to completed a sequence of tasks, $T = \{1, 2, \dots, n\}$.
@@ -178,9 +199,9 @@ The sum of the task durations is normalized to 1, $\sum_i t_i = 1$.
 Learning how to do that task costs a worker $c_i \ge 0$.
 The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
 All workers work $l$ hours over their lifetime, which we normalize to 1.
-Workers value leisure at $1$ and are perfectly elastic in their labor supply.
+Workers value leisure at $1$ and are perfectly inelastic in their labor supply.
 To recoup their training costs and be indifferent between working and not working, $w = 1 + \sum_{i \in J} c_i$.
-The firm faces a perfectly elastic labor supply at any job it designs.
+The firm faces a perfectly inelastic labor supply at any job it designs.
 
 Firms have to pay workers for their time, regardless of the task, so the wage bill for a job $J$ is 
 \begin{align*}
@@ -233,15 +254,186 @@ For example, professors at business schools are quite highly paid to teach and d
 This is very expensive blackboard cleaning services in isolation, but it cannot be helped because handing this off to another worker at that moment is too costly and the duration of the task is so short it does not matter much. 
 But if it were still impossible to split to another worker but took an hour instead of a minute, the university would badly lament the situation.
 
-\subsubsection{General equilibrium}
-Each worker has $1$ to spend on consumption, as their wage is $1$ after recouping their training costs.
-There are $K$ goods produced in the product market. 
-Balanced budgets required $1 = \sum_{k=1}^K p_k x_k$.
 
-Workers have CES utility over the goods, with elasticity of substitution $\sigma$.
-Let $l_k$ be the labor cost of producing one unit of the good $k$.
-Firms have reproducible technology so they can just scale up the task sequence by any amount. 
-This allows workers, even if their job has a small $\sum t$ to still work $l = 1$, which allows the labor market to clear.
+\subsection{General Equilibrium with Task-Based Production}
+
+\subsubsection{Setup}
+
+Consider an economy with $K$ final goods. 
+A representative consumer supplies one unit of labor inelastically and has a CES utility function over the goods:
+\[
+U(x_{1}, \ldots, x_{K}) 
+= 
+\Bigl(\sum_{k=1}^{K} \delta_k \,x_k^{\tfrac{\sigma - 1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
+\quad
+0 < \delta_k < 1, 
+\quad
+\sum_{k=1}^{K} \delta_k = 1,
+\quad
+\sigma > 0.
+\]
+Here, goods are substitutes if $\sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ gives the Cobb-Douglas case. 
+The consumer faces a budget constraint 
+\[
+\sum_{k=1}^K p_k \,x_k = w.
+\]
+
+A single (representative) firm produces all $K$ goods under perfect competition, using labor as the only input. 
+Each good $k \in \{1,\ldots,K\}$ is produced by completing a specific set of tasks $\mathcal{T}_k$. 
+A worker employed in task $i \in \mathcal{T}_k$ must acquire human capital $c_i^k > 0$. 
+We assume tasks in $\mathcal{T}_k$ must be done in fixed proportions to yield one unit of good $k$. 
+For instance, if task $i \in \mathcal{T}_k$ takes 30 minutes and task $j \in \mathcal{T}_k$ (where $j \neq i$) takes 45 minutes, then producing 1 unit of good $k$ requires a total of 75 minutes.
+It is not possible to perform task $i$ multiple times while doing $j$ only once: the tasks have a fixed ratio. 
+Hence, rather than specifying labor for each task separately, we let $l_k$ be the total labor required for one unit of good $k$, aggregating over all tasks.
+
+We further assume the firm fully compensates workers for the human capital they acquire. 
+Thus, the price of good $k$ in a competitive market is
+\[
+p_{k} = 1 + \sum_{i \in \mathcal{T}_k} c_{i}^k.
+\]
+Under perfect competition, $p_k$ also equals the marginal cost $w \,l_k$. 
+Normalizing the wage to $w=1$ gives
+\[
+p_{k} \;=\; l_{k} \;=\; 1 \;+\; \sum_{i \in \mathcal{T}_k} c_i^k.
+\]
+
+\subsubsection{Labor Market Constraint}
+
+Because the consumer inelastically supplies one unit of labor, the labor-market clearing condition is
+\[
+\sum_{k=1}^K l_k \,x_k \;=\; 1.
+\]
+Since $p_k = l_k$ and $w=1$, this matches the budget constraint 
+\(\sum_{k=1}^K p_k\,x_k = 1\).
+
+\subsubsection{Solving for $\{x_k\}$}
+
+The consumer chooses $\{x_k\}$ to maximize 
+\[
+U(x_1,\dots,x_K)
+=
+\Bigl(\sum_{k=1}^K \delta_k \,x_k^{\tfrac{\sigma-1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
+\]
+subject to
+\[
+\sum_{k=1}^K l_k\,x_k = 1.
+\]
+By the standard first-order conditions, the ratio of marginal utilities equals the ratio of prices:
+\[
+\frac{\partial U/\partial x_i}{\partial U/\partial x_j}
+\;=\;
+\frac{\,l_i\,}{\,l_j\,}
+\quad
+\forall i,j.
+\]
+From CES properties, we get
+\[
+\left(\frac{x_i}{x_j}\right)^{-\tfrac{1}{\sigma}}
+=\;
+\frac{l_i}{l_j}\,\cdot\,\frac{\delta_j}{\delta_i},
+\quad
+\Longrightarrow
+\quad
+\frac{x_i}{x_j}
+=
+\left(\frac{\delta_i}{\delta_j}\,\cdot\,\frac{\,l_j\,}{\,l_i\,}\right)^{\sigma}.
+\]
+Define
+\[
+R_j
+=
+\frac{x_j}{x_1}
+=
+\Bigl(\frac{\,l_1\,}{\,l_j\,} \cdot \frac{\delta_j}{\delta_1}\Bigr)^{\sigma},
+\]
+where $R_1 = 1$. 
+Substitute $x_j = R_j \, x_1$ into $\sum_{k=1}^K l_k x_k = 1$:
+
+\[
+\sum_{k=1}^K l_k\,\bigl(R_k\,x_1\bigr)
+=
+x_1\Bigl[\sum_{k=1}^K l_k R_k\Bigr]
+=
+1,
+\]
+giving
+\[
+x_1^*
+=
+\frac{1}{\sum_{k=1}^K l_k\,R_k\,},
+\quad
+x_j^*
+=
+R_j\,x_1^*
+=
+\frac{\,R_j\,}{\,\sum_{k=1}^K l_k\,R_k\,}.
+\]
+
+\subsubsection{Sectoral Employment and Equilibrium}
+
+Labor used in good $k$ is $L_k^* = l_k\,x_k^*$. 
+Thus the equilibrium can be summarized as
+\[
+w = 1,
+\quad
+p_k = l_k = 1 + \sum_{i\in \mathcal{T}_k}c_i^k,
+\quad
+x_k^* = \frac{R_k}{\sum_{\ell=1}^K l_\ell\,R_\ell},
+\quad
+L_k^* = l_k\,x_k^*,
+\]
+where
+\[
+R_k
+=
+\Bigl(\frac{l_1}{l_k}\,\cdot\,\frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
+\]
+In this way, the task composition $\mathcal{T}_k$ (and corresponding $c_i^k$s) fixes $p_k$, which then fixes $l_k$, and thus fully determines the consumption bundle $\{x_k^*\}$ and labor allocations $\{L_k^*\}$.
+
+\subsubsection{Comparative Statics with Respect to Automation}
+
+In this task-based model, automation corresponds to reducing $c_i^k$ for some tasks (partial automation) or removing them entirely (full automation). 
+Suppose $\mathcal{A}_1 \subseteq \mathcal{T}_1$ is automated in good~1’s production, reducing $\sum_{i\in\mathcal{T}_1}c_i^1$ and thus lowering $l_1$ and $p_1$. 
+The following comparative statics apply:
+
+\paragraph{Price Effects.}
+Only $p_1^* = l_1^*$ falls; prices $p_j^*$ for $j\neq 1$ remain unaffected (unless their own tasks change).
+
+\paragraph{Effects on Consumption.}
+We find
+\[
+\frac{\partial x_{1}^*}{\partial l_{1}}
+=
+-\,
+\frac{\,l_{1} \;+\;\sigma\,\bigl(\sum_{k\neq 1}l_{k}R_{k}\bigr)\,}{
+       l_{1}\,\Bigl(\sum_{k}l_{k}R_{k}\Bigr)^{2}}
+<0,
+\qquad
+\frac{\partial x_{j}^*}{\partial l_{1}}
+=
+(\sigma-1)
+\,\frac{\,R_{j}\,}{\bigl(\sum_{k}l_{k}R_{k}\bigr)^{2}}
+\quad(\text{for }j\neq 1).
+\]
+Hence, when $l_{1}$ decreases (automation makes good 1 cheaper), $x_{1}^*$ unambiguously rises, while $x_{j}^*$ moves in the opposite direction if $\sigma>1$ (substitutes) or in the same direction if $0<\sigma<1$ (complements).
+
+\paragraph{Effects on Sectoral Labor Shares.}
+Similarly, 
+\[
+\frac{\partial L_{1}^*}{\partial l_{1}}
+=
+x_{1}^*\,(1-\sigma)\bigl(1 - l_{1}x_{1}^*\bigr),
+\quad
+\frac{\partial L_{j}^*}{\partial l_{1}}
+=
+(\sigma-1)\,
+\frac{\,l_{j}R_{j}\,}{\bigl(\sum_{k}l_{k}R_{k}\bigr)^{2}}
+\quad (j\neq 1).
+\]
+If $\sigma>1$, a reduction in $l_{1}$ shifts labor towards good~1 and away from the other goods (since $\tfrac{\partial L_j^*}{\partial l_1}>0$, a lower $l_1$ means a lower $L_j^*$), consistent with substitutability. 
+If $0<\sigma<1$, goods act more like complements, and lowering $l_{1}$ increases labor usage in other sectors.
+In all cases, total labor remains $1$.
+
 
 \subsection{Adding AI} \label{sec:model}
 Now consider a worker completing some sequence of tasks as part of their designed job.
@@ -421,8 +613,11 @@ It we have $T$ periods, then
 &(2)\quad q_1'(t) + q_2'(t) \le r, \quad \text{for almost all } t \in [0, T], \\[6pt]
 &(3)\quad q_1(t) \geq 0, \quad q_2(t) \geq 0, \quad \forall t \in [0, T], \\[6pt]
 \end{aligned}
+\label{eq:dp_problem}
 \]
 where $q_{1,0}$ and $q_{2,0}$ are the initial AI capabilities in the two tasks.
+The properties of the optimal paths for this dynamic programming problem are analyzed in detail in Appendix~\ref{app:dp_proof}. 
+There, we outline the structure of the solution, provide comparative statics, and derive the necessary conditions for optimality.
 
 Figure~\ref{fig:optimal_paths} shows numerical optimal investment paths to minimize total costs, using the same parameters as in Figure~\ref{fig:two_tasks}.
 I also set the discount rate $\rho = 0$ and the total amount of R\&D resources per period  to $r = 1$.
@@ -432,6 +627,7 @@ Paths for a few select initial conditions are shown.
 \begin{figure}
   \begin{center}
   \caption{Optimal investment paths to minimize costs} \label{fig:optimal_paths}
+  \label{fig:optimal_paths} 
   \includegraphics[width = 0.8 \textwidth]{plots/optimal_paths.pdf}
   \end{center}
   \begin{footnotesize}
@@ -621,12 +817,46 @@ It's just a LLN argument.
 
 \section{Empirics}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{plots/indiv_occupation_cooccurrence_score_histogram.png}
-  \caption{Distribution of occupation co-occurrence scores. Higher scores indicate occupations whose tasks frequently appear together across different occupations.}
-  \label{fig:occ_cooc}
-\end{figure}
+We turn to the 2023 O*NET dataset to motivate the ordered-task-sequence view of jobs. 
+O*NET provides a comprehensive list of U.S. occupations, each paired with a corresponding set of tasks. 
+These tasks are organized into three levels, ranging from the most specific to the most general: \textit{task}, \textit{detailed work activity}, and \textit{work activity}.
+To clarify these distinctions, Table \ref{tab:task_examples} provides examples of tasks at each level for the \textit{``Accountants and Auditors''} occupation. 
+The table helps illustrate how tasks become broader as they move from the task level to the work activity level.
+\begin{table}[htbp]
+\begin{center}
+\caption{Examples of Tasks, Detailed Work Activities, and Work Activities}
+\label{tab:task_examples}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|p{0.4\textwidth}|p{0.37\textwidth}|p{0.55\textwidth}|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Work Activity}} & \multicolumn{1}{c|}{\textbf{Detailed Work Activity}} & \multicolumn{1}{c|}{\textbf{Task}} \\ \hline
+Developing Objectives and Strategies & Develop business or financial information systems. & Develop, implement, modify, and document recordkeeping and accounting systems, making use of current computer technology. \\ \hline
+Processing Information & Verify accuracy of financial information. & Review taxpayer accounts, and conduct audits on-site, by correspondence, or by summoning taxpayer to office. \\ \hline
+Processing Information & Verify accuracy of financial information. & Prepare, analyze, or verify annual reports, financial statements, and other records, using accepted accounting and statistical procedures to assess financial condition and facilitate financial planning. \\ \hline
+Processing Information & Verify accuracy of records. & Inspect cash on hand, notes receivable and payable, negotiable securities, and canceled checks to confirm records are accurate. \\ \hline
+Processing Information & Verify accuracy of records. & Examine inventory to verify journal and ledger entries. \\ \hline
+\end{tabular}
+}
+\end{center}
+\vspace{-0.15cm}
+\textit{Note: This table provides a subset of tasks associated with the``Accountants and Auditors'' occupation.}
+\end{table}
+In the 2023 dataset, there are 748 unique occupations, 17,945 unique tasks, 2,081 unique detailed work activities, and 38 unique work activities.\footnote{Originally, the O*NET dataset included 798 unique occupations. We exclude 50 of them, all containing the word ``Teachers,'' as these occupations exhibit significant task overlap with highly similar tasks which could otherwise overrepresent the same job in the results.}
+
+In our analysis, we focus on detailed work activities as the main task unit in an occupation. 
+From here onward, when we refer to a “task” in the O*NET dataset, we are specifically referring to the detailed work activity associated with each occupation. 
+With this definition, the dataset contains 15,645 unique occupation-task pairs, with the average occupation consisting of 21 tasks.
+
+We define the task pair co-occurrence score between tasks $i$ and $j$  as:
+$$C_{ij} = \frac{\text{Number of unique occupations in which both $i$ and $j$ appear}}{\text{Number of unique occupations in which at least one of $i$ or $j$ appears}}.$$
+For any task pair, this measure ranges from 0 to 1, with higher values indicating a greater likelihood of the tasks appearing together in an occupation.
+For task $i$, the (individual) task co-occurrence score is defined as the average of the pairwise co-occurrence scores across all its task pairs. Specifically:
+$$C_{i}=\frac{1}{n-1}\sum_{j\neq i}C_{ij},$$ 
+where $n$ is the number of unique tasks in the dataset.
+Figure \ref{fig:task_cooc} shows the distribution of individual task co-occurrence scores. 
+To check that these co-occurrences are not driven by chance, we perform a placebo test by randomly assigning tasks to occupations and plotting both the original and randomized distributions in the same graph. 
+As shown in the figure, the blue distribution (original co-occurrence) has a noticeably higher mass on the right tail compared to the orange distribution (randomized co-occurrence), suggesting that a meaningful subset of tasks frequently co-occur across multiple occupations. 
+This is counterbalanced by the higher mass on the left tail, indicating that some tasks tend to be specialized and appear only in a few occupations in the original dataset.
 
 \begin{figure}[htbp]
   \centering
@@ -635,23 +865,122 @@ It's just a LLN argument.
   \label{fig:task_cooc}
 \end{figure}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.8\textwidth]{plots/task_pair_counts_histogram.png}
-  \caption{Histogram showing the frequency of task pairs that appear in more than 15 occupations. This visualizes the raw count of how often specific task combinations occur across different occupations.}
-  \label{fig:pair_counts}
-\end{figure}
+Next, we examine how co-occurring tasks are distributed across occupations. 
+Figure \ref{fig:occ_cooc} displays the distribution of occupation co-occurrence scores, defined as the average pairwise co-occurrence score of the tasks that comprise each occupation.
+Formally, for occupation $o$, the co-occurrence score is given by:
+$$C^o=\frac{1}{|\mathcal{T}_o| ( |\mathcal{T}_o|-1)} \sum_{i\in\mathcal{T}_o} \sum_{j\in\mathcal{T}_o,j\neq i} C_{ij},$$
+where $\mathcal{T}_o$ denotes the set of tasks in $o$. 
+A higher occupation co-occurrence score suggests that the tasks within the occupation are more likely to appear in pairs with other tasks, indicating a greater likelihood of completing the occupation in “blocks” or “pairs” of tasks. 
+We observe in the graph that the majority of occupations exhibit a substantial degree of co-occurrence, which is clearly not random.
+
+% Peyman: here come up with a nice intuition about what this exactly shows. Something like: "A co-occurrence score of 0.1, for example, roughly means that 10\% of an occupation’s tasks are likely those that can be performed in pairs."
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{plots/task_pair_weightedScore_histogram.png}
-  \caption{Distribution of occupation-similarity-weighted task pair scores for task pairs appearing in more than 10 occupations. This metric accounts for both the frequency of task co-occurrence and the similarity between occupations containing these task pairs.}
-  \label{fig:weighted_pairs}
+  \includegraphics[width=0.8\textwidth]{plots/indiv_occupation_cooccurrence_score_histogram.png}
+  \caption{Distribution of occupation co-occurrence scores. Higher scores indicate occupations whose tasks frequently appear together across different occupations.}
+  \label{fig:occ_cooc}
 \end{figure}
+
+Another way to evaluate how tasks are shared between occupations is to use a measure similar to task co-occurrence, but defined specifically for occupations. 
+That is, instead of defining a metric at the task level and aggregating it at the occupation level, we directly define the measure at the occupation level. 
+This is the approach we take next.
+Let
+$$S^{xy} = \frac{\text{Number of common tasks between $x$ and $y$}}{\text{Number of all unique tasks across $x$ and $y$}}$$
+represent the pairwise occupation similarity score between occupations $x$ and $y$. 
+The similarity score quantifies the overlap in tasks between a pair of occupations. 
+As with the task-level measure, for occupation $x$, the (individual) occupation similarity score is defined as the average of the pairwise similarity scores across all occupation pairs. 
+Specifically:
+$$S^{x}=\frac{1}{q-1}\sum_{y\neq x}S^{xy},$$ where $q$ is the total number of unique occupations.
+Figure \ref{fig:occ_similarity} shows the distribution of occupation similarity scores. 
+We observe that task overlap between occupations is meaningfully different from the scenario in which tasks are randomly assigned to occupations, providing evidence in support of occupations sharing common tasks (though not necessarily in pairs, according to this measure).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/occupation_similarity_score_histogram.png}
+  \caption{Distribution of occupation similarity scores. Higher scores indicate occupations whose tasks are shared across more occupations.}
+  \label{fig:occ_similarity}
+\end{figure}
+
+% Peyman: The occupation similarity-weighted measure doesn't make sense, and thus I cut it from the draft. First, because we decided to remove the "Teachers" occupations which motivated the use of a weighted measure in the first place. Secondly, because the measure isn't perfect as it overweights pairs appearing in occupations with very little task overlap (b/c the small occupation overlap score is inverted). In the graph the orange bars show a higher weighted score exactly because they appear in fewer occupations which have lower task overlap.
+
+% We also calculate the occupation-similarity-weighted task pair scores. In doing so, we weight every task pair occurrence by the inverse of pairwise occupation similarity scores for any two pair of occupations the task pair appears in. 
+% Formally: 
+% [To fill with a "proper" measure if decided to include it]
+
+% \begin{figure}[htbp]
+%  \centering
+%  \includegraphics[width=0.8\textwidth]{plots/task_pair_weightedScore_histogram.png}
+%  \caption{Distribution of occupation-similarity-weighted task pair scores for task pairs appearing in more than 10 occupations. This metric accounts for both the frequency of task co-occurrence and the similarity between occupations containing these task pairs.}
+%  \label{fig:weighted_pairs}
+% \end{figure}
+
+Next, let us examine how often specific task combinations occur across different occupations. 
+Figure \ref{fig:pair_counts} plots the frequency of co-occurring task pairs. 
+Note that the y-axis represents the frequency on a logarithmic scale. 
+In the placebo test, almost all task pairs appear in only one or two occupations, whereas in the original data, many pairs appear in multiple occupations. 
+Since it is possible that a non-trivial number of pairs co-occur across different occupations due to the way O*NET defines tasks and occupations, we conservatively focus on task pairs that appear in more than 10 occupations and refer to them as “highly co-occurring” tasks.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/task_pair_counts_histogram.png}
+  \caption{Histogram showing the frequency of task pairs. This visualizes the raw count of how often specific task combinations occur across different occupations. Task pairs to the right of the red dashed line indicate the “highly co-occurring” subset.}
+  \label{fig:pair_counts}
+\end{figure}
+
+Out of more than 100,000 co-occurring pairs, only 588 are classified as highly co-occurring tasks. 
+Although this represents a small fraction of the total co-occurrences, it provides a meaningful subset for analysis.
+Within this subset, we observe tasks that appear only a few times in combination with others, as well as tasks that frequently occur across multiple pairs. 
+Figure \ref{fig:high_cooc_task} illustrates the distribution of task repetition counts within the highly co-occurring pairs. 
+While many tasks appear only a handful of times (on the left side of the graph), some are observed as frequently as 30 or 40 times in different pairs.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/highly_cooccurring_tasks_task_repetition_count.png}
+  \caption{Distribution of task repetition counts within highly co-occurring tasks. The figure highlights the frequency of tasks appearing in multiple pairs.}
+  \label{fig:high_cooc_task}
+\end{figure}
+
+Figure \ref{fig:high_cooc_occ} complements the previous finding by showing the distribution of how often a task pair from the same occupation appears within the subset of highly co-occurring combinations.
+The more frequently an occupation’s (unique) task pairs appear in this subset, the more likely it is that the occupation consists of different “blocks” of tasks\textemdash if there are no common tasks across appearing pairs\textemdash or that there are potentially more ways to combine or automate tasks\textemdash if the appearing pairs share some tasks.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{plots/highly_cooccurring_tasks_occupation_repetition_count.png}
+  \caption{Distribution of task pair occurrences within highly co-occurring combinations across occupations. The figure illustrates task pair repetition at the occupation level.}
+  \label{fig:high_cooc_occ}
+\end{figure}
+
+A somewhat surprising result is that when we aggregate occupations at the two-digit SOC code level, we find that our notion of high task co-occurrence is confined to occupations within two-digit occupation groups. 
+This suggests that there will be little to no spillover effects from technological impacts in one group to another.
+This occurs despite the fact that these groups share a non-trivial number of tasks with one another. 
+Figure \ref{fig:occ_gp_task_heatmap} presents a heatmap showing the number of shared tasks between two-digit SOC occupation groups. 
+Although many pairs have zero or one shared task, we also observe a significant number of common tasks. 
+However, none of these shared tasks are highly co-occurring tasks, implying that they are more specific to individual occupation groups.
+Put differently, these shared tasks correspond to the very small co-occurrence scores on the left side of Figure \ref{fig:task_cooc}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{plots/occupation_group_common_tasks_heatmap.png}
+  \caption{Heatmap showing the number of shared tasks between two-digit SOC occupation groups. Lighter cells indicate fewer shared tasks, while darker cells represent more shared tasks. The number in each cell gives the number of shared tasks between the row and column occupation group.}
+  \label{fig:occ_gp_task_heatmap}
+\end{figure}
+
 
 \section{Discussion}
 Below, we discuss some of the implications and features of the model. 
 %\subsection{The importance of task adjacency means that automation dispersion is likely}
+
+\subsection{How consequential is linear production?}
+If two tasks can proceed in parallel, we can simply model them as having no hand-off costs, of $c_h = 0$.
+It never makes sense to combine two tasks within a single job if with hand-off in between because a less expensive occupation can always be created as $(C_1 + C_2) (t_1 + t_2) > c_1 t_1 + c_2 t_2$.
+
+
+A lot of multi-tasking in jobs is really more like ``async'' in programming: you get blocked on some task, so you switch to some other task in the iterim.
+Despite this, production is still linear---it's just not exactly linear in time.
+There are still a sequence of tasks done in order, it is just that you can pause on one for some period of time.
+
+
 
 \subsection{YADOLM: Yet Another Division of Labor Model}
 We need to get into the micro-details of the production process to understand how AI might be used and how it might change the division of labor. 
@@ -916,10 +1245,279 @@ As AI makes it so that humans no longer have to do every task in a job, AI might
 \bibliographystyle{aer}
 \bibliography{rubin}
 
+\newpage
+\appendix
+\section*{Appendix}
+
+\section{Optimal Paths in the Dynamic Programming Problem}
+\label{app:dp_proof}
+
+In this appendix, we analyze the properties of the optimal paths for the dynamic programming problem specified in \pageref{eq:dp_problem}.
+The solution follows this structure: allocate all resources to the larger of $q_{1}$ and $q_{2}$ until a specific point, then switch to investing all resources in the other task’s capability until parity between $q_{1}$ and $q_{2}$ is achieved. 
+After reaching parity, resources are evenly distributed between both tasks. 
+While we are unable to analytically determine the exact values of $q_{1}$ and $q_{2}$ at the turning point, we provide comparative statics with respect to the initial values and the discount rate.
+
+We reformulate the problem as a maximization problem, and omit time dependencies in all variables for simplicity of notation.
+\begin{align*}
+\max_{q_{1},q_{2}} & \int_{0}^{T}-e^{-\rho t}C(q_{1},q_{2})dt\\
+s.t. & \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}+s(t)=r,\\
+ & q_{1},q_{2}\geq0,\\
+ & q_{1}(0)=q_{1,0},q_{2}(0)=q_{2,0}.
+\end{align*}
+Here, $q_{1},q_{2}$ are the state variables, while $\frac{dq_{1}}{dt}$ and $\frac{dq_{2}}{dt}$ are control variables. 
+We form the Hamiltonian as follows: 
+\[
+H=-e^{-\rho t}C(q_{1},q_{2})+\lambda_{1}\frac{dq_{1}}{dt}+\lambda_{2}\frac{dq_{2}}{dt}+\mu\left(r-\frac{dq_{1}}{dt}-\frac{dq_{2}}{dt}\right),
+\]
+where $\lambda_{1},\lambda_{2}$ are costate variables, and $\mu$ is the Lagrange multiplier associated with the investment constraint.
+The necessary conditions for an interior solution are: %% \underline{interior}
+
+\begin{align*}
+\frac{dq_{i}}{dt} & =\frac{\partial H}{\partial\lambda_{i}},\tag{State Dynamics}\\
+\frac{d\lambda_{i}}{dt} & =-\frac{\partial H}{\partial q_{i}},\tag{Costate Dynamics}\\
+\frac{\partial H}{\partial\left(\frac{dq_{i}}{dt}\right)} & =0,\tag{Stationarity}\\
+\mu\left(r-\frac{dq_{1}}{dt}-\frac{dq_{2}}{dt}-s\right) & =0.\tag{Complementary Slackness}
+\end{align*}
+Expanding the formulas, we obtain:
+\begin{align*}
+\frac{dq_{1}}{dt} & =\frac{dq_{1}}{dt},\\
+\frac{dq_{2}}{dt} & =\frac{dq_{2}}{dt},\\
+\frac{d\lambda_{1}}{dt} & =e^{-\rho t}\frac{\partial C}{\partial q_{1}},\\
+\frac{d\lambda_{2}}{dt} & =e^{-\rho t}\frac{\partial C}{\partial q_{2}},\\
+\lambda_{1}-\mu & =0,\\
+\lambda_{2}-\mu & =0,\\
+\mu>0\ and\ \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}=r, & \ or\ \mu=0\ and\ \frac{dq_{1}}{dt}+\frac{dq_{2}}{dt}<r.
+\end{align*}
+The costate dynamics imply
+\[
+\frac{\frac{d\lambda_{1}}{dt}}{\frac{d\lambda_{2}}{dt}}=\frac{\frac{\partial C}{\partial q_{1}}}{\frac{\partial C}{\partial q_{2}}},
+\]
+and from the stationarity conditions, we have:
+\[
+\lambda_{1}=\lambda_{2}=\mu.
+\]
+
+The $\mu=0$ case can happen only if:
+\[
+\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}=0
+\]
+for all times. 
+In this scenario, any $q_{1}$ and $q_{2}$ would suffice since neither contributes to the objective function. 
+However, this is not applicable in our setup because, as soon as task $i$ becomes automated, the corresponding partial derivative changes from 0 to $-\frac{cm}{q_{i}^{2}}$.\footnote{We assume $c_{m}$ and $c_{h}$ are such that some level of automation is preferred over no automation. 
+Otherwise, the solution would be trivial, and no tasks would be automated.} 
+Therefore, we must have $\mu>0$, and the investment endowment is always fully utilized.
+
+If the solution is interior, then %% \underline{If}
+\[
+\lambda_{1}=\lambda_{2}=\mu>0
+\]
+and the following holds for all $t$:
+\[
+\bar{\lambda}_{1}+\int_{0}^{t}e^{-\rho s}\frac{\partial C}{\partial q_{1}}ds=\bar{\lambda}_{2}+\int_{0}^{t}e^{-\rho s}\frac{\partial C}{\partial q_{2}}ds
+\]
+Assume that at $t=T$ (the horizon), $\lambda_{1}=\lambda_{2}>0$.\footnote{Intuitively, this means that at the horizon, we stop investing in either variable, resulting in a ``steady state.'' 
+This is reasonable because, once $q=1$, no further investments are required.} 
+This implies at the optimum, the marginal cost with respect to task capabilities must be equal. 
+Thus:
+\[
+\forall t:\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}
+\]
+Given the functional form of the cost function, such scenario can occur only when both tasks are automated, \underline{and} $q_{1}=q_{2}$. 
+Specifically:
+\[
+\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}=\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}\Leftrightarrow-\frac{c_{m}}{q_{1}^{2}q_{2}}=-\frac{c_{m}}{q_{1}q_{2}^{2}}\Leftrightarrow q_{1}=q_{2}.
+\]
+Unless this condition is met, we have a corner solution where all the available endowment is allocated to improving only one task’s AI capability. 
+
+We conjecture that at a sufficiently long horizon, $q_{1}=q_{2}$, and proceed to determine the optimal trajectories of $q_{1}$ and $q_{2}$ using backward induction. % \underline{conjecture}
+Now, imagine we are in the $\machine{1|2}$ region. 
+Let $\tilde{T}$ denote the earliest time at which $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$
+holds.\footnote{We assume that the parameters $c_m$ and $c_h$ are such that this equality is guaranteed to occur.  
+Otherwise, the solution would trivially involve investing in only one q, fully maximizing it before switching to the other until it too is maximized.} % \underline{all of second sentence} 
+Formally: 
+\[
+\tilde{T}=inf\{t:\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}\}.
+\]
+For $t<\tilde{T}$, we have a corner solution. 
+Without loss of generality, assume that $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$ when $t<\tilde{T}$. 
+With a slight abuse of notation, consider a time $\delta$ arbitrarily close to and just before $\tilde{T}$. 
+At such times, we can write:
+\[
+\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}\approx-\frac{c_{m}}{q_{1}^{2}q_{2}}>-\frac{c_{m}}{q_{1}q_{2}^{2}}\approx\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}.
+\]
+This simplifies to:
+\[
+-\frac{1}{q_{1}}>-\frac{1}{q_{2}}\Leftrightarrow q_{1}>q_{2}.
+\]
+Therefore, for times $t<\tilde{T}$, we must invest exclusively in $q_{2}$ until parity between $q_{1}$ and $q_{2}$ is achieved. 
+This also implies that we are in the region below the 45-degree line and are moving toward it.
+
+Now, we continue going backward until we reach either the boundary of $\machine{1}\machine{2}$ or $\machine{1}\human{2}$.
+Here we only consider the case where we hit the boundary of $\machine{1}\machine{2}$.\footnote{The dynamics of transitioning directly from $\machine{1|2}$ to $\machine{1}\human{2}$ are less
+complicated than transitioning through $\machine{1}\machine{2}$ first and then to $\machine{1}\human{2}$. 
+For brevity, we do not describe the direct transition separately, as the mechanism is similar and requires one less step of analysis.} 
+Given that we are in the region where $q_{1}>q_{2}$, the following conditions hold:
+\[
+q_{1}>q_{2}\Leftrightarrow-\frac{c_{m}}{q_{1}^{2}}>-\frac{c_{m}}{q_{2}^{2}}\Leftrightarrow\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{1}}>\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{2}}.
+\]
+Thus, in the $\machine{1}\machine{2}$ region, we must continue investing in $q_{2}$.
+This remains true even if we enter $\machine{1}\machine{2}$ from the point of parity in $\machine{1|2}$. 
+In other words, in the moments leading up to $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$, we will allocate all resources to $q_{2}$, regardless of whether
+we will be in $\machine{1|2}$ or $\machine{1}\machine{2}$ at $\tilde{T}$.
+
+Now imagine transitioning from $\machine{1}\machine{2}$ to $\machine{1}\human{2}$. 
+The cost function changes from:
+\[
+C\{\machine{1}\machine{2}\}=\frac{c_{m}}{q_{1}}+\frac{c_{m}}{q_{2}}
+\]
+to 
+\[
+C\{\machine{1}\human{2}\}=\frac{c_{m}}{q_{1}}+c_{h}.
+\]
+Let us maintain the assumption that $q_{1}>q_{2}$ as we cross the horizontal boundary in Figure \ref{fig:two_tasks} and enter the new region.  
+In the $\machine{1}\machine{2}$ region, we have: $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$.
+However, on the $\machine{1}\human{2}$ side, the derivatives change to $\frac{\partial C}{\partial q_{1}}=-\frac{c_{m}}{q_{1}^{2}}<0$ and $\frac{\partial C}{\partial q_{2}}=0$. 
+This implies that the task contributing more to the objective function differs across these regions.
+However, this does not mean the optimal investment path switches instantaneously. 
+While the instantaneous benefits shift at the boundary, the decision maker must account for the continuation value of investments in future periods. 
+This is because, despite the discontinuity in the objective function, the state variables change continuously. % \underline{state variables change continuously}
+
+Thus, when transitioning from $\machine{1}\machine{2}$ to $\machine{1}\human{2}$, we continue investing in $q_{2}$ even though $q_{1}$ provides a higher instantaneous utility. 
+We maintain this allocation until reaching a point where the continuation value of investing in $q_{2}$ equals the benefit of switching to $q_{1}$. 
+This point represents a kink in the optimal trajectory of the state variables. 
+Let $\hat{T}$ denote the time at which we reach this kink. 
+At $\hat{T}$, the following condition must hold:
+\begin{equation}
+\begin{split}
+    & \underbrace{\int_{\hat{T}}^{\tau} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}} + c_{h}\right) ds}_{\text{from \ensuremath{\hat{T}} to automating task 2}} 
+    + \underbrace{\int_{\tau}^{\tilde{T}} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}(q_{2,0} + rs)}\right) ds}_{\text{from automation of task 2 to parity of \ensuremath{q}s}} \\
+    & \quad + \underbrace{\int_{\tilde{T}}^{\bar{T}} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}^{2}}\right) ds}_{\text{after parity}} 
+    = \underbrace{\int_{\hat{T}}^{\bar{T}} e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1} + rs} + c_{h}\right) ds}_{\text{continue investing on \ensuremath{q_{1}}}}.
+\end{split}
+\label{eq:kink_eq}
+\end{equation}
+Here, $\hat{q}_{1}$ denotes the value of $q_{1}$ at the kink, $\tau$ is the time we cross the boundary to automating task 2, and $\tilde{T}$ is the time when parity between $q_{1}$ and $q_{2}$ is achieved.
+For $t<\hat{T}$, the right-hand side (RHS) of the equation is smaller than the left-hand side (LHS). 
+Thus, the agent continues investing in $q_{1}$ until the two sides are equalized. 
+This condition holds regardless of whether we are in the $\machine{1}\human{2}$ region or cross the boundary to (1)(2). 
+Specifically: 
+\[
+\frac{\partial C\{(1)(2)\}}{\partial q_{1}}=\frac{\partial C\{(1)(2)\}}{\partial q_{2}}=0,
+\]
+whereas:
+\[
+\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{1}}=-\frac{c_{m}}{q_{1}^{2}}<0=\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{2}}.
+\]
+This completes the characterization of the optimal trajectory of the state variables, starting from any point on the $q_{1}$-$q_{2}$ grid.
+
+\subsection{Comparative Statics}
+
+The following lemmas provide comparative statics of optimal trajectories with respect to $q_{2,0}$ and $\rho$. 
+We continue to maintain the assumption that we are below the 45 degree line in the $q_{1}-q_{2}$ plane (i.e., $q_{1}>q_{2}$ region).
+\begin{lem}
+$\frac{\partial\hat{T}}{\partial q_{2,0}}<0$.
+\end{lem}
+
+\begin{proof}
+We have:
+\begin{align*}
+\frac{\partial\hat{T}}{\partial q_{2,0}} & =-\int_{\tau}^{\tilde{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)^{2}})ds<0.
+\end{align*}
+
+\noindent Lemma 1 states that if the initial value of $q_{2,0}$ increases, the switch from investing in $q_{1}$ to $q_{2}$ occurs earlier. 
+This explains the shift in kinks of the optimal paths in Figure \ref{fig:optimal_paths}\textendash moving from light blue to green to dark blue\textendash as they shift upward and to the left.
+\end{proof}
+\begin{lem}
+$\frac{\partial\hat{q}_{1}}{\partial q_{2,0}}<0$.
+\end{lem}
+
+\begin{proof}
+Note that $\frac{\partial\hat{q}_{1}}{\partial\hat{T}}=r$, because $\hat{T}$ is defined as the time during which all resources ($r$) are allocated exclusively to $q{1}$ for $t<\hat{T}$. 
+Using this, we can write:
+\begin{align*}
+\frac{\partial\hat{q}_{1}}{\partial q_{2,0}} & =\frac{\partial\hat{q}_{1}}{\partial\hat{T}}\frac{\partial\hat{T}}{\partial q_{2,0}}\\
+ & =r\times\frac{\partial\hat{T}}{\partial q_{2,0}}\\
+ & <0,
+\end{align*}
+where the last line follows from Lemma 1.
+\end{proof}
+
+\begin{lem}
+A sufficient condition for $\frac{\partial\hat{T}}{\partial\rho}<0$
+is $\frac{c_{m}}{c_{h}}>Q(\hat{q}_{1})$, where $Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}$,
+the machine-to-human comparative advantage bound, is increasing in
+$\hat{q}_{1}$. 
+\end{lem}
+
+\begin{proof}
+We take partial derivative of both sides of the \ref{eq:kink_eq} with respect to $\rho$, treating $\hat{T}$ as a variable:
+\[
+\int_{\hat{T}}^{\tau}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds+\int_{\tau}^{\tilde{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds+\int_{\tilde{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds=\int_{\hat{T}}^{\bar{T}}e^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds
+\]
+Differentiating with respect to $\rho$ gives: 
+\begin{align*}
+-\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds 
+-\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds 
+-\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds
+-\left[\frac{\partial\hat{T}}{\partial\rho}e^{-\rho\hat{T}}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})\right] \\ 
+= -\int_{\hat{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds
+-\left[\frac{\partial\hat{T}}{\partial\rho}e^{-\rho\hat{T}}\left(\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h}\right)\right] &
+\end{align*}
+Rearrange terms, we get: 
+\begin{align*}
+\frac{\partial\hat{T}}{\partial\rho} & =\frac{\int_{\hat{T}}^{\tau}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}}+c_{h})ds+\int_{\tau}^{\tilde{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rs)})ds+\int_{\tilde{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}^{2}})ds-\int_{\hat{T}}^{\bar{T}}se^{-\rho s}(\frac{c_{m}}{\hat{q}_{1}+rs}+c_{h})ds}{e^{-\rho\hat{T}}\left(\frac{c_{m}}{\hat{q}_{1}+rt}-\frac{c_{m}}{\hat{q}_{1}}\right)}
+\end{align*}
+Since the denominator is always negative ($\hat{q}_{1}+rt>\hat{q}_{1}$), the sign of $\frac{\partial\hat{T}}{\partial\rho}$ depends on the numerator. Breaking the last integral into three intervals, the numerator becomes:
+\begin{align*}
+ & \underbrace{\int_{\hat{T}}^{\tau} s e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}} - \frac{c_{m}}{\hat{q}_{1} + rs}\right) ds}_{>0} 
++ \int_{\tau}^{\tilde{T}} s e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}(q_{2,0} + rs)} - \frac{c_{m}}{\hat{q}_{1} + rs} - c_{h}\right) ds \\ 
+& + \int_{\tilde{T}}^{\bar{T}} s e^{-\rho s} \left(\frac{c_{m}}{\hat{q}_{1}^{2}} - \frac{c_{m}}{\hat{q}_{1} + rs} - c_{h}\right) ds.
+\end{align*}
+Now we look for sufficient conditions that guarantee the numerator is positive. 
+First, notice that $\left(-\frac{c_{m}}{\hat{q}_{1}+rt}-c_{h}\right)$ appears in both the middle and right terms. 
+To ensure the numerator is positive, we require:
+\[
+\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h}\leq min\{\frac{c_{m}}{\hat{q}_{1}^{2}},\frac{c_{m}}{\hat{q}_{1}(q_{2,0}+rt)}\}
+\]
+In the region where $q_{1}>q_{2}$ and $q_{2}+rt\leq\hat{q}_{1}$ until parity is achieved, the minimum is $\frac{c_{m}}{\hat{q}{1}^{2}}$.
+Therefore, the condition becomes: 
+\begin{align*}
+\frac{c_{m}}{\hat{q}_{1}+rt}+c_{h} & <\frac{c_{m}}{\hat{q}_{1}^{2}}
+\end{align*}
+At $t=0$ (just after the investment switch), this simplifies to:
+\[
+\frac{c_{m}}{\hat{q}_{1}}+c_{h}<\frac{c_{m}}{\hat{q}_{1}^{2}},
+\]
+or equivalently:
+\begin{align*}
+\frac{c_{m}}{c_{h}}\left(\frac{1}{\hat{q}_{1}^{2}}-\frac{1}{\hat{q}_{1}}\right) & >1,\\
+\frac{c_{m}}{c_{h}}\frac{1-\hat{q}_{1}}{\hat{q}_{1}^{2}} & >1,\\
+\frac{c_{m}}{c_{h}} & >\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}},\\
+\frac{c_{m}}{c_{h}} & >Q(\hat{q}_{1}).
+\end{align*}
+Thus, $\frac{c_{m}}{c_{h}}>Q(\hat{q}_{1})$ is a sufficient condition to ensure $\frac{\partial\hat{T}}{\partial\rho}<0$. 
+Intuitively, if machine costs dominate human costs, increasing the discount rate makes the switch occur earlier ($\hat{T}\downarrow$).
+\end{proof}
+
+\begin{cor}
+The machine-to-human comparative advantage bound decreases as the initial AI capability of the disadvantaged task increases.
+\end{cor}
+
+\begin{proof}
+Using Lemma 2, we have:
+\[
+Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}.
+\]
+Taking the derivative with respect to $q_{2,0}$:
+\[
+\frac{\partial Q(\hat{q}_{1})}{\partial q_{2,0}}=\frac{\partial\left(\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}\right)}{\partial\hat{q}_{1}}\frac{\partial\hat{q}_{1}}{\partial q_{2,0}}<0.
+\]
+This implies that as $q_{2,0}$ increases, maintaining $\frac{\partial\hat{T}}{\partial\rho}<0$ requires less comparative machine cost advantage (i.e., lower $\frac{c_{m}}{c_{h}}$).
+\end{proof}
+
 
 \end{document}
 
-\appendix
 
 \section{Extending the Model: Theoretical Propositions and Insights}
 
@@ -993,7 +1591,6 @@ L_j(w) = d_j(p_j) l_j(w; q_1, q_2, \dots, q_n),
 \]
 where \(L_j\) is labor demand and \(d_j(p_j)\) is product demand. If AI improvement \(\Delta q\) reduces the cost of key tasks in \(X\), the labor effect in \(X\) depends on the demand elasticity \(\epsilon_j\), while sector \(Y\) may experience wage effects or reallocation.
 \end{proposition}
-
 
 
 \end{document}
