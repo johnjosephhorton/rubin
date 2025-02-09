@@ -205,7 +205,7 @@ Why are there still so many jobs \citep{autor2015}?
 
 \paragraph{Consumption.}
 
-Consider an economy with $K$ final goods. 
+Consider an economy with $K$ final goods.  
 A representative consumer supplies one unit of labor inelastically and has a CES utility function over the goods:
 \[
 U(x_{1}, \ldots, x_{K}) 
@@ -218,7 +218,7 @@ U(x_{1}, \ldots, x_{K})
 \quad
 \sigma > 0.
 \]
-Goods are substitutes if $\sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ corresponds to the Cobb-Douglas case. 
+Goods are substitutes if $\sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ corresponds to the Cobb-Douglas case.  
 The consumer faces a budget constraint 
 \[
 \sum_{k=1}^K p^k \,x_k = w.
@@ -226,81 +226,104 @@ The consumer faces a budget constraint
 
 \paragraph{Task-Based Production.}
 
-A single (representative) firm produces all $K$ goods under perfect competition, using labor as the only input.
-The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
+A single (representative) firm produces all $K$ goods under perfect competition, using labor as the only input.  
+The product and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.  
 For each good $k \in \{1,\ldots,K\}$, production requires completing an ordered set of tasks, which we denote by
 \[
 \mathcal{T}_k = \{1,2,\ldots,T_k\}.
 \]
-We refer to \(\mathcal{T}_k\) as the production process for good $k$.
-The firm partitions the production process $\mathcal{T}_k$ into $J_k$ consecutive jobs, where each job is a contiguous block of tasks performed by a single worker.
+We refer to $\mathcal{T}_k$ as the production process for good $k$.  
+The firm partitions the production process $\mathcal{T}_k$ into $J_k$ consecutive jobs, where each job is a contiguous block of tasks performed by a single worker.  
 Let indices $1 = i_1^k < i_2^k < \cdots < i_{J_k+1}^k = T_k+1$, so that the $j$th job for good $k$ is given by the collection of tasks
 \[
 \mathcal{J}_j^k = \{i_j^k, i_j^k+1, \ldots, i_{j+1}^k - 1\}.
 \]
-Completing each task $i \in \mathcal{J}_j^k$ requires $\tasktime{ij}^{k}$ units of time and necessitates the acquisition of $\taskhc{ij}^{k}$ units of human capital by the worker.
-The output of each job can be viewed as an intermediate good required for producing good $k$.
-We assume intermediate goods produced by the workers in each job are sold to the firm in a perfectly competitive market. 
-The firm then produces the final good $k$ from all $J_k$ intermediate goods at no additional cost.
+Completing each task $i \in \mathcal{J}_j^k$ requires $\tasktime{ij}^{k}$ units of time and necessitates the acquisition of $\taskhc{ij}^{k}$ units of human capital by the worker.  
+The output of each job can be viewed as an intermediate good required for producing good $k$.  
+We assume that intermediate goods produced by workers in each job are sold to the firm in a perfectly competitive market.  
+The firm then produces the final good $k$ from all $J_k$ intermediate goods at no additional cost.  
 This implies 
 \[
-x_k \quad = \quad x_j^k \quad = \quad \hdots \quad = \quad x_{J_k}^k.
+x_k = x_j^k = \hdots = x_{J_k}^k.
 \]
 
-To minimize total production cost, the firm decides where to draw the boundaries of jobs.
-Without any additional assumptions, total cost is minimized by assigning a single worker to each task.
-However, this is prevented by a hand-off cost --- a cost incurred for a task that, while requiring no extra human capital, does require additional time.
-This cost can be viewed as the cost of context-switching (or hand-off) between workers in the production process.
-Specifically, whenever a job boundary is introduced---i.e., when transitioning from the last task of job $j$ to the first task of job $j+1$---a hand-off cost is incurred by the worker employed in job $j$.
-We denote by $h_j^k \ge 0$ the hand-off time incurred at the end of job $j$ for good $k$, for $j=1,\ldots,J_k-1$; by convention, $h_{J_k}^k = 0$ since no hand-off occurs after the final job.
-The total time required to complete job $j$ is thus
+To minimize total production cost, the firm decides where to draw the boundaries of jobs.  
+Without additional frictions, total cost would be minimized by assigning a single worker to each task.  
+However, this outcome is prevented by a hand-off cost --- a cost incurred for a task that, while requiring no extra human capital, does require additional time.  
+This cost can be interpreted as the cost of context-switching (or hand-off) between workers in the production process.  
+Specifically, whenever a job boundary is introduced --- that is, when transitioning from the last task of job $j$ to the first task of job $j+1$ --- the worker in job $j$ incurs a hand-off cost.
+
+If the worker is to manually hand off the output of job $j$ in the production of good $k$, he must spend time $\tasktime{w_j}^k \geq 0$.  
+Suppose that an AI exists which can perform the same hand-off at a time cost of $\tasktime{m_j}^k \geq 0$ with a success probability of $q_j^k$.  
+The expected cost of using the AI to handle the hand-off is then
 \[
-\tasktime{j}^k = \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k} + h_j^k.
+\tasktime{m_j}^k \sum_{\ell=1}^{\infty} \ell q_j^k (1 - q_j^k)^{\ell - 1} = \frac{\tasktime{m_j}^k}{q_j^k}.
 \]
-We further assume that tasks in $\mathcal{T}_{k}$ are performed in fixed proportions.
-For instance, if task $m \in \mathcal{J}_j^k$ takes 30 minutes and task $n \in \mathcal{J}_j^k$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes of work since both tasks must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.
-Hence, rather than specifying a completion time $\tasktime{}$ for each task separately, it only suffices to determine a single completion time for each job --- $\tasktime{j}^k$.\footnote{In fact, we could determine a single completion time parameter for the entire production process; however, for notational simplicity in characterizing the equilibrium later we choose to do so for each job.} % complete footnore for two jobs
+If a worker deploys the AI instead of handing over the job manually, he incurs a cost equal to $\alpha_j \geq 0$ times the AI’s hand-off cost.  
+This expense represents the cost of AI \emph{management} that the worker must bear, with $\alpha_j$ being the management efficiency parameter. 
+A high value of $\alpha_j$ implies that managing the AI is very costly, whereas a lower value indicates that the AI deployment cost is relatively small (with $\alpha_j = 0$ meaning the hand-off cost is effectively free when using AI).  
+Thus, the decision to deploy AI depends on whether the manual hand-off cost exceeds the additional AI management cost.  
+In particular, the firm will delegate the hand-off to an AI, managed by a worker, if and only if the AI management cost is less than the manual hand-off cost, i.e.,
+\[
+\tasktime{w_j}^k \geq \frac{\alpha_j \tasktime{m_j}^k}{q_j^k}
+\quad \Longleftrightarrow \quad 
+q_j^k \geq \frac{\alpha_j \tasktime{m_j}^k}{\tasktime{w_j}^k}.
+\]
+We denote the optimal hand-off time at the end of each job $j$ for good $k$ (for $j=1,\ldots,J_k-1$) by
+\[
+\tasktime{hj}^k = \min\Bigl\{\frac{\alpha_j \tasktime{m_j}^k}{q_j^k},\, \tasktime{w_j}^k\Bigr\}.
+\]
+By convention, $\tasktime{hJ_k}^k = 0$ since no hand-off occurs after the final job.  
+The total time required to complete job $j$ is thus given by
+\[
+\tasktime{j}^k = \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k} + \tasktime{hj}^k.
+\]
+
+We further assume that tasks in $\mathcal{T}_k$ are performed in fixed proportions.  
+For instance, if task $m \in \mathcal{J}_j^k$ takes 30 minutes and task $n \in \mathcal{J}_j^k$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes of work since both tasks must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.  
+Hence, rather than specifying a completion time $\tasktime{}$ for each task separately, it suffices to determine a single completion time for each job, namely $\tasktime{j}^k$.\footnote{In fact, we could determine a single completion time parameter for the entire production process; however, for notational simplicity in characterizing the equilibrium later we choose to do this for each job.} \\ % complete footnore for two jobs
 % this notation is still a bit funky, and I don't like it. I want to explicitly say t_i^{jk} and t_i^{j'k} are constant and with this hand-off notion comparison of t_j and t_j' doesn't give me that.
 
-[The geometric representation description goes here.]
+[The geometric representation description goes here.] \\
 
 Similarly, the total human capital requirement for job \(j\) is
 \[
 HC_j^k = \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}.
 \]
-Workers value leisure at $v_L$ and have a perfectly inelastic labor supply.
-To ensure that workers recoup their training costs and remain indifferent between working and not working, the wage for each job must account for the cost of acquiring human capital in a competitive market.
-Thus, the wage bill for job $j$ is given by
+Workers value leisure at $v_L$ and have a perfectly inelastic labor supply.  
+To ensure that workers recoup their training costs and remain indifferent between working and not working, the wage for each job must incorporate the cost of acquiring human capital in a competitive market.  
+The wage bill for job $j$ is thus given by
 \[
 W_j^k = \Biggl(v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k} \Biggr) \tasktime{j}^k.
 \]
-The firm minimizes total production cost by optimally partitioning the production process $\mathcal{T}_k$ into smaller jobs.
-Assuming there are $J_k$ jobs in the optimal job design, the overall production cost per unit of good $k$ is
+Assuming there are $J_k$ jobs in the optimal design, the overall production cost per unit of good $k$ is
 \[
 \text{TotalCost}_k = \sum_{j=1}^{J_k} \Biggl( v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr) \tasktime{j}^k.
 \]
 
 \paragraph{Competitive Goods Markets.}
 
-A worker employed in job $j$ in sector $k$ produces an intermediate good $x_j^k$, which is sold in a competitive market to the firm.
+A worker employed in job $j$ in sector $k$ produces an intermediate good $x_j^k$, which is sold in a competitive market to the firm.  
 The price of producing a unit of $x_j^k$ is
 \[
 p_j^k = \Biggl( v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k} \Biggr) \tasktime{j}^k.
 \]
-Since markets are perfectly competitive, $p_j^k$ also equals the marginal cost $w\,\labor{j}^k$, where $\labor{j}^k$ denotes the labor input per unit in job $j$ in sector $k$. Normalizing $w=1$ yields
+Since markets are perfectly competitive, $p_j^k$ also equals the marginal cost $w\,\labor{j}^k$, where $\labor{j}^k$ denotes the labor input per unit in job $j$ in sector $k$.  
+Normalizing $w=1$ yields
 \[
 p_j^k \;=\; \labor{j}^k.
 \]
-With a slight abuse of notation, let us divide both sides of equation above by $\tasktime{j}^k$ and rewrite:
+With a slight abuse of notation, we divide both sides by $\tasktime{j}^k$ and rewrite:
 \[
 p_j^k \;=\; \Biggl( v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k} \Biggr) \;=\; \labor{j}^k,
 \]
-bearing in mind that prices and labor are now expressed in units of time spent on job $j$. This is without loss of generality since $\tasktime{j}^k$ acts only as a scaling factor.
+bearing in mind that prices and labor are now expressed in units of time spent on job $j$.  
+This is without loss of generality since $\tasktime{j}^k$ acts only as a scaling factor.  
 Similarly, perfect competition in the final goods market implies that the price of the final good $p^k$ equals the sum of the prices of its constituent intermediate goods:
 \[
 p^k \;=\; \sum_{j=1}^{J_k} p_j^k \;=\; \sum_{j=1}^{J_k} \Biggl( v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr) \;=\; \sum_{j=1}^{J_k} \labor{j}^k.
 \]
-To make the notation in the final goods market consistent with that in the intermediate goods market, define
+To maintain consistency in notation between the final and intermediate goods markets, define
 \[
 \labor{}^k \equiv \sum_{j=1}^{J_k} \labor{j}^k,
 \]
@@ -308,7 +331,7 @@ so that $p^k = \labor{}^k$.
 
 \paragraph{Labor Market Clearing.}
 
-The consumer inelastically supplies one unit of homogeneous labor.
+The consumer inelastically supplies one unit of homogeneous labor.  
 The labor market clearing condition requires that the total labor used across all jobs in all goods satisfies
 \[
 \sum_{k=1}^K \labor{}^k\, x_k = 1.
@@ -348,7 +371,7 @@ Define
 \[
 R_f = \frac{x_f}{x_1} = \Bigl(\frac{\,\labor{}^1\,}{\,\labor{}^f\,} \cdot \frac{\delta_f}{\delta_1}\Bigr)^{\sigma},
 \]
-with $R_1 = 1$. 
+with $R_1 = 1$.  
 Substitute $x_f = R_f\,x_1$ into the labor market clearing condition $\sum_{k=1}^K \labor{}^k\, x_k = 1$:
 \[
 \sum_{k=1}^K \labor{}^k\,\bigl(R_k\,x_1\bigr)
@@ -359,22 +382,12 @@ x_1\Bigl[\sum_{k=1}^K \labor{}^k\,R_k\Bigr]
 \]
 which yields
 \[
-x_1^*
-=
-\frac{1}{\sum_{k=1}^K \labor{}^k\,R_k},
+x_1^* = \frac{1}{\sum_{k=1}^K \labor{}^k\,R_k},
 \quad
-x_f^*
-=
-R_f\,x_1^*
-=
-\frac{\,R_f\,}{\sum_{k=1}^K \labor{}^k\,R_k}.
-\]
-Notice that for any good $k$, the production (or consumption) of intermediate goods in its sector equals the production (or consumption) of the final good; that is,
-\[
-x_k^* = x_{j}^{k^*} \quad \quad \forall j \in \{1,\hdots, J_k\}, \forall k \in \{1,\hdots,K\}.
+x_f^* = R_f\,x_1^* = \frac{\,R_f\,}{\sum_{k=1}^K \labor{}^k\,R_k}.
 \]
 
-Labor used in sector $k$ is given by $L_k^* = \labor{}^k\,x_k^*$. 
+Labor used in sector $k$ is given by $L_k^* = \labor{}^k\,x_k^*$.  
 Thus, the equilibrium can be summarized as
 \[
 w = 1,
@@ -387,25 +400,24 @@ L_k^* = \labor{}^k\,x_k^* = \sum_{j=1}^{J_k} \labor{j}^k\, x_k^*,
 \]
 where
 \[
-R_k
-=
-\Bigl(\frac{\labor{}^1}{\labor{}^k}\,\cdot\,\frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
+R_k = \Bigl(\frac{\,\labor{}^1\,}{\,\labor{}^k\,} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
 \]
 In this way, the job design of the production process $\mathcal{T}_k$ (and the corresponding $\taskhc{ij}^k$s) determines $p^k$, which then fixes $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$.
 
-\subsection{Comparative Statics with Respect to Task Automation}
 
-In this model, automation corresponds to reducing $\tasktime{ij}^{k}$ and/or $\taskhc{ij}^{k}$ for some tasks (partial automation) or eliminating them entirely (full automation).
-Suppose that a subset $\mathcal{A}_1 \subseteq \mathcal{T}_1$ of tasks is automated in good~1’s production process. 
-This potentially changes the job design and reduces 
+\subsection{Comparative Statics with Respect to Automation}
+
+In this model, automation corresponds to assigning a subset of tasks to be performed by AI.  
+Suppose that a subset $\mathcal{A}_1 \subseteq \mathcal{T}_1$ of tasks is automated in good~1’s production process.  
+This automation reduces the wage bill for good $1$:
 \[
-\sum_{j=1}^{J_1} \biggl( v_L + \sum_{i \in \mathcal{J}_j^1} \taskhc{ij}^{1} \biggr) \tasktime{j}^k,
+\sum_{j=1}^{J_1} \Biggl( v_L + \sum_{i \in \mathcal{J}_j^1} \taskhc{ij}^{1} \Biggr) \tasktime{j}^1,
 \]
-thereby lowering $p^1$ and the labor requirement $\labor{}^1$. 
+which in turn lowers $p^1$ and, consequently, the labor requirement $\labor{}^1$, while potentially also altering the job design.  
 The following comparative statics apply.
 
 \paragraph{Price Effects.}
-Only $p^1 = \labor{}^1$ falls; the prices $p^f$ for $f\neq 1$ remain unaffected (unless tasks in those sectors are also automated).
+Only $p^1 = \labor{}^1$ falls; the prices $p^f$ for $f\neq 1$ remain unchanged (unless tasks in those sectors are also automated).
 
 \paragraph{Effects on Consumption.}
 We find
@@ -438,10 +450,9 @@ x_{1}^*\,(1-\sigma)\bigl(1 - \labor{}^1\,x_{1}^*\bigr),
 \frac{\,\labor{}^f\, R_{f}\,}{\Bigl(\sum_{k} \labor{}^k\, R_{k}\Bigr)^{2}}
 \quad (\text{for } f\neq 1).
 \]
-For $\sigma>1$, since $\frac{\partial L_{f}^*}{\partial \labor{}^1}>0$, a reduction in $\labor{}^1$ leads to a lower $L_f^*$ for $f\neq 1$, thereby shifting labor towards good~1, which is consistent with substitutability. 
-If $0<\sigma<1$, goods behave more like complements, and lowering $\labor{}^1$ increases labor usage in the other sectors.
+For $\sigma>1$, since $\frac{\partial L_{f}^*}{\partial \labor{}^1}>0$, a reduction in $\labor{}^1$ leads to a lower $L_f^*$ for $f\neq 1$, thereby shifting labor towards good~1, which is consistent with substitutability.  
+If $0<\sigma<1$, goods behave more like complements, and lowering $\labor{}^1$ increases labor usage in the other sectors.  
 In all cases, total labor remains equal to $1$.
-
 
 \subsection{Adding AI} \label{sec:model}
 Now consider a worker completing some sequence of tasks as part of their designed job.
