@@ -16,6 +16,7 @@
 \usepackage{tcolorbox}
 
 
+%%%%%%%%%%%%%%%%%%%%
 % For appendix math formulas
 \theoremstyle{plain}
     \ifx\thechapter\undefined
@@ -31,6 +32,7 @@
     \fi
 \providecommand{\corollaryname}{Corollary}
 \providecommand{\lemmaname}{Lemma}
+%%%%%%%%%%%%%%%%%%%%
 
 
 \DeclareMathOperator{\CostBlock}{CostBlock}
@@ -41,15 +43,20 @@
 
 \begin{document}
 %\title{The Economics of Generative and Agentic AI}
+% John's footnote: \footnote{I used AI extensively to write this paper, particularly Claude 3.5 Sonnet and o1 pro from OpenAI. Thanks for complementing my labor, AI agents!}
 \title{Agentic AI, Tasks and Judgement:\\ A Model of Rick Rubin}
-\author{\normalsize John J. Horton\footnote{I used AI extensively to write this paper, particularly Claude 3.5 Sonnet and o1 pro from OpenAI. Thanks for complementing my labor, AI agents!}  \\ \normalsize MIT \& NBER  \and \normalsize Peyman Shahidi \\  \normalsize MIT}
+\author{\normalsize John J. Horton  \\ \normalsize MIT \& NBER  \and \normalsize Peyman Shahidi \\  \normalsize MIT}
 \date{\today{}}
+
+
 
 \newcommand{\machine}[1]{\langle #1 \rangle}
 \newcommand{\human}[1]{( #1 )}
 \newcommand{\cost}[1]{C\{ #1 \}}
 \newcommand{\costdo}[1]{C_H\{ #1 \}}
 \newcommand{\costmanage}[1]{C_M\{ #1 \}}
+\newcommand{\tasktime}[1]{t_{#1}}
+\newcommand{\taskhc}[1]{c_{#1}}
 
 \newcommand{\topic}[1]{\paragraph{#1}}
 %\newcommand{\topic}[1]{#1}
@@ -189,75 +196,14 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 
 
 Why are there still so many jobs \citep{autor2015}?
-\section{A model of production}
-
-The firm's product requires workers to completed a sequence of tasks, $T = \{1, 2, \dots, n\}$.
-Tasks must be completed in order. 
-A task $i$ takes $t_i \ge 0$ time to complete.
-The sum of the task durations is normalized to 1, $\sum_i t_i = 1$.
-
-Learning how to do that task costs a worker $c_i \ge 0$.
-The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
-All workers work $l$ hours over their lifetime, which we normalize to 1.
-Workers value leisure at $1$ and are perfectly inelastic in their labor supply.
-To recoup their training costs and be indifferent between working and not working, $w = 1 + \sum_{i \in J} c_i$.
-The firm faces a perfectly inelastic labor supply at any job it designs.
-
-Firms have to pay workers for their time, regardless of the task, so the wage bill for a job $J$ is 
-\begin{align*}
-   C(J) = 1 + \left(\sum_{j \in J} t_i\right)\left(\sum_{j \in J} c_j\right).
-\end{align*}
-Without any additional assumptions, the firm could minimize the cost of production by assigning a single worker to each task.
-What prevents this is a handoff cost, $H_i \geq 0$, whenever a job boundary is placed after task $i$ and before task $i+1$. 
-This is the cost of context-switching / hand-off between workers. 
-
-The firm's problem has a nice geometric interpretation, as shown in Figure~\ref{fig:job_design}.
-The productive process is a sequence of stacked rectangles of height $c_i$ and width $t_i$.
-A job is a bounding box around a sequence of tasks, with a wage bill equal to the area of the box. 
-But if a bouddary is drawn, the the switching cost rectangle's area gets added to the cost. 
-Note that each rectangle could, in turn be thought of as a sequence of tasks (smaller reactangles filling in the larger rectangle).
-At the limit, we would have a smooth curve of tasks. 
-
-Figure~\ref{fig:job_design} shows a potential job design for a sequence of 6 tasks. 
-Note that for $n$ tasks, there $2^(n-1)$ possible job arrangements. 
-For notation, a job is indicated by enclosing tasks within a rectangle, e.g., $J_1 = [(1),(2), (3)]$.
-Putting tasks in paraenthesis indicates that the task is done by a human---later we will have the notion of tasks done by an AI.
-
-\begin{figure}[htbp]
-  \begin{center}
-  \caption{Example allocations of workers to tasks when $n = 6$} \label{fig:job_design}
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{plots/job_design.png}
-    \caption{Allocation of $n=6$ task production to $m = 3$ workers}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{plots/combined_grid.png}
-    \caption{All possible allocations of $n=6$ task production}
-  \end{subfigure}
-  \end{center}
-  \footnotesize{Notes: This figure shows potential job designs for a sequence of 6 tasks.
-  The total cost of each job is the area of the bounding box, plus the area of the switching cost rectangles.
-  }
-\end{figure}
-
-The firm seeks to minimize the total cost of production by choosing how to partition the sequence of tasks $T$ into $M$ consecutive jobs, $\{J_1, \dots, J_M\}$, where $J_m = \{i_m, i_m+1, \dots, i_{m+1}-1\}$ and $1 = i_1 < i_2 < \cdots < i_{M+1} = n+1$. 
-The total cost of a partition is
-\begin{align*}
-\text{TotalCost} = \sum_{m=1}^M \left(\left(\sum_{i = i_m}^{i_{m+1}-1} t_i\right)\left(\sum_{i = i_m}^{i_{m+1}-1} C_i\right)\right) + \sum_{m=1}^{M-1} H_{i_{m+1}-1}.
-\end{align*}
-
-This is a straightforward optimization problem that can be solved in $O(n^2)$ time using dynamic programming.
-But even without doing it, the firm's incentives are clear. 
-What is \emph{particularly} costly to the firm are ``tall and narrow'' tasks right next to ``short and wide'' task(s) that have high handoff cost boundaries: when the productive process requires lots of work nearly anyone could do next to high-skilled work that only a few can do, but cannot be easily broken up.
-For example, professors at business schools are quite highly paid to teach and do reearch, but are also paid to clean blackboards (the good ones at least). 
-This is very expensive blackboard cleaning services in isolation, but it cannot be helped because handing this off to another worker at that moment is too costly and the duration of the task is so short it does not matter much. 
-But if it were still impossible to split to another worker but took an hour instead of a minute, the university would badly lament the situation.
 
 
-\subsection{General Equilibrium with Task-Based Production}
 
-\subsubsection{Setup}
+\section{A General Equilibrium Model with Task-Based Production}
+
+\subsection{Setup}
+
+\paragraph{Consumption.}
 
 Consider an economy with $K$ final goods. 
 A representative consumer supplies one unit of labor inelastically and has a CES utility function over the goods:
@@ -272,41 +218,96 @@ U(x_{1}, \ldots, x_{K})
 \quad
 \sigma > 0.
 \]
-Here, goods are substitutes if $\sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ gives the Cobb-Douglas case. 
+Goods are substitutes if $\sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ corresponds to the Cobb-Douglas case. 
 The consumer faces a budget constraint 
 \[
 \sum_{k=1}^K p_k \,x_k = w.
 \]
 
-A single (representative) firm produces all $K$ goods under perfect competition, using labor as the only input. 
-Each good $k \in \{1,\ldots,K\}$ is produced by completing a specific set of tasks $\mathcal{T}_k$. 
-A worker employed in task $i \in \mathcal{T}_k$ must acquire human capital $c_i^k > 0$. 
-We assume tasks in $\mathcal{T}_k$ must be done in fixed proportions to yield one unit of good $k$. 
-For instance, if task $i \in \mathcal{T}_k$ takes 30 minutes and task $j \in \mathcal{T}_k$ (where $j \neq i$) takes 45 minutes, then producing 1 unit of good $k$ requires a total of 75 minutes.
-It is not possible to perform task $i$ multiple times while doing $j$ only once: the tasks have a fixed ratio. 
-Hence, rather than specifying labor for each task separately, we let $l_k$ be the total labor required for one unit of good $k$, aggregating over all tasks.
+\paragraph{Task-Based Production.}
 
-We further assume the firm fully compensates workers for the human capital they acquire. 
-Thus, the price of good $k$ in a competitive market is
+A single (representative) firm produces all $K$ goods under perfect competition, using labor as the only input.
+The product market and human capital markets are perfectly competitive and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
+For each good $k \in \{1,\ldots,K\}$, production requires completing an ordered set of tasks, which we denote by
 \[
-p_{k} = 1 + \sum_{i \in \mathcal{T}_k} c_{i}^k.
+\mathcal{T}_k = \{1,2,\ldots,T_k\}.
 \]
-Under perfect competition, $p_k$ also equals the marginal cost $w \,l_k$. 
+We refer to \(\mathcal{T}_k\) as the production process for good $k$.
+The firm partitions the production process $\mathcal{T}_k$ into $J_k$ consecutive jobs, where each job is a contiguous block of tasks performed by a single worker.
+Let indices $1 = i_1^k < i_2^k < \cdots < i_{J_k+1}^k = T_k+1$, so that the $j$th job for good $k$ is given by the collection of tasks
+\[
+\mathcal{J}_j^k = \{i_j^k, i_j^k+1, \ldots, i_{j+1}^k - 1\}.
+\]
+Completing each task $i \in \mathcal{J}_j^k$ requires $\tasktime{ij}^{k}$ units of time and necessitates the acquisition of $\taskhc{ij}^{k}$ units of human capital by the worker.
+The output of each job can be viewed as an intermediate good required for producing good $k$.
+We assume intermediate goods produced by the workers in each job are sold to the firm in a perfectly competitive market. 
+The firm then produces the final good $k$ from all $J_k$ intermediate goods at no additional cost.
+
+To minimize total production cost, the firm decides where to draw the boundaries of jobs.
+Without any additional assumptions, total cost is minimized by assigning a single worker to each task.
+However, what prevents this is a hand-off cost: a task that requires no extra human capital but does take time to complete.
+This cost can be viewed as the cost of context-switching (or hand-off) between workers in the production process.
+Specifically, whenever a job boundary is introduced---i.e., when transitioning from the last task of job $j$ to the first task of job $j+1$---a hand-off cost is incurred by the worker employed to do job $j$.
+We denote by $h_j^k \ge 0$ the hand-off time incurred at the end of job $j$ for good $k$, for $j=1,\ldots,J_k-1$; by convention, $h_{J_k}^k = 0$ since no hand-off occurs after the final job.
+The total time required to complete job $j$ is thus
+\[
+\tasktime{j}^k = \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k} + h_j^k.
+\]
+We further assume that tasks in $\mathcal{T}_{k}$ are done in fixed proportions.
+For instance, if task $m \in \mathcal{J}_j^k$ takes 30 minutes and task $n \in \mathcal{J}_j^k$ (where $m \neq n$) takes 45 minutes, then producing 1 unit of good $k$ requires a total of 75 minutes spent on $m$ \underline{and} $n$: it is not possible to perform task $m$ multiple times while doing $n$ only once.
+Hence, rather than specifying a completion time $\tasktime{}$ for each task separately, it only suffices to determine a single completion time in each job---$\tasktime{j}^k$.\footnote{In fact, we could determine a single completion time parameter for the entire production process; however, for notational simplicity we choose to do so for each job.} % complete footnore for two jobs
+% this notation is still a bit funky, and I don't like it. I want to explicitly say t_i^{jk} and t_i^{j'k} are constant and with this hand-off notion comparison of t_j and t_j' doesn't give me that.
+
+[The geometric representation description goes here.]
+
+Similarly, the total human capital requirement for job \(j\) is
+\[
+HC_j^k = \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}.
+\]
+To ensure that workers recover their training costs and are indifferent between working and not working, the wage for each job must equal the cost associated with the required human capital in a competitive market.
+Thus, the wage bill for job $j$ is given by
+\[
+W_j^k = \Biggl(\sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k} \Biggr) \tasktime{j}^k.
+\]
+The firm minimizes the total production cost by optimally partitioning the production process $\mathcal{T}_k$ into smaller jobs.
+Assuming there are $J_k$ jobs in the optimal job design, the overall production cost per unit of good $k$ is
+\[
+\text{TotalCost}_k = \sum_{j=1}^{J_k} \Biggl(\sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr) \tasktime{j}^k.
+\]
+
+\paragraph{Competitive Goods Markets.}
+
+A worker employed in job $j$ produces an intermediate good $j^k$, which is sold in a competitive market to the firm.
+The price of intermediate good $j$ is thus
+\[
+p_j^k = \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}.
+\]
+Under perfect competition in intermediate goods market, $p_j^k$ also equals the marginal cost $w \tasktime{j}^k$. 
 Normalizing the wage to $w=1$ gives
 \[
-p_{k} \;=\; l_{k} \;=\; 1 \;+\; \sum_{i \in \mathcal{T}_k} c_i^k.
+p_j^k \quad = \quad \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k} \quad = \quad \tasktime{j}^k.
 \]
+Under perfect competition in the final goods market, price of final good $p^k$ equals the sum of price of its constituent intermediate goods:\[
+p^k
+\quad = \quad \sum_{j=1}^{J_k} \Biggl(\sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k} \Biggr) \quad = \quad \sum_{j=1}^{J_k} p_j^k.
+\]
+To make the notation in final good market consistent with those in the intermediate good define
+\[
+\tasktime{}^k \equiv \sum_{j=1}^{J_k} \tasktime{j}^k
+\]
+so, $p^k = \tasktime{}^k$.
 
-\subsubsection{Labor Market Constraint}
+\paragraph{Labor Market Clearing.}
 
 Because the consumer inelastically supplies one unit of labor, the labor-market clearing condition is
 \[
-\sum_{k=1}^K l_k \,x_k \;=\; 1.
+\sum_{k=1}^K \Bigg( \sum_{j=1}^{J_k} \tasktime{j}^k \Bigg) x_k = 1.
 \]
-Since $p_k = l_k$ and $w=1$, this matches the budget constraint 
+Since $p_k = \tasktime{}^k$ and $w=1$, this matches the budget constraint 
 \(\sum_{k=1}^K p_k\,x_k = 1\).
 
-\subsubsection{Solving for $\{x_k\}$}
+
+\subsection{Sectoral Employment and Equilibrium Allocations}
 
 The consumer chooses $\{x_k\}$ to maximize 
 \[
@@ -369,14 +370,12 @@ R_j\,x_1^*
 \frac{\,R_j\,}{\,\sum_{k=1}^K l_k\,R_k\,}.
 \]
 
-\subsubsection{Sectoral Employment and Equilibrium}
-
 Labor used in good $k$ is $L_k^* = l_k\,x_k^*$. 
 Thus the equilibrium can be summarized as
 \[
 w = 1,
 \quad
-p_k = l_k = 1 + \sum_{i\in \mathcal{T}_k}c_i^k,
+p_k = l_k = \sum_{j=1}^{J_k} \bigg( \big( \sum_{i \in \mathcal{J}_{jk}} \taskhc{i}^{jk} \big) \big(1 + h_i \big) \bigg),
 \quad
 x_k^* = \frac{R_k}{\sum_{\ell=1}^K l_\ell\,R_\ell},
 \quad
@@ -392,7 +391,7 @@ In this way, the task composition $\mathcal{T}_k$ (and corresponding $c_i^k$s) f
 
 \subsubsection{Comparative Statics with Respect to Automation}
 
-In this task-based model, automation corresponds to reducing $c_i^k$ for some tasks (partial automation) or removing them entirely (full automation). 
+In this task-based model, automation corresponds to reducing $\taskhc{i}^{jk}$ for some tasks (partial automation) or removing them entirely (full automation). 
 Suppose $\mathcal{A}_1 \subseteq \mathcal{T}_1$ is automated in good~1’s production, reducing $\sum_{i\in\mathcal{T}_1}c_i^1$ and thus lowering $l_1$ and $p_1$. 
 The following comparative statics apply:
 
