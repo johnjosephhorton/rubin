@@ -44,7 +44,7 @@
 \begin{document}
 %\title{The Economics of Generative and Agentic AI}
 % John's footnote: \footnote{I used AI extensively to write this paper, particularly Claude 3.5 Sonnet and o1 pro from OpenAI. Thanks for complementing my labor, AI agents!}
-\title{Agentic AI, Tasks and Judgement:\\ A Model of Rick Rubin}
+\title{AI, Tasks and Judgement}
 \author{\normalsize John J. Horton  \\ \normalsize MIT \& NBER  \and \normalsize Peyman Shahidi \\  \normalsize MIT}
 \date{\today{}}
 
@@ -68,7 +68,7 @@
 \noindent This paper presents a simple task-based model of Agentic AI and human labor.
 The model focuses on the decision to use an AI for a task based on the cost of human prompting and evaluation versus the cost of human performance. 
 Unlike other tasks models, it considers the interdependence of tasks in a sequence. 
-Tasks can be efficiently ``chained'' together in the sense that each task produces someting that feeds into the next without human intervention.
+Tasks can be efficiently ``chained'' together in the sense that each task produces something that feeds into the next without human intervention.
 A task might be added to an automated chain even if the human has an absolute advantage in that task in isolation, reversing the usual comparative advantage calculation.
 Furthermore, where investments should be make in AI that can minimize costs depends on the timeline of the investment and can have surprising dyanmics, such as abruptly stopping work to focus on tasks that are still far away from automation.
 \end{abstract}
@@ -76,59 +76,22 @@ Furthermore, where investments should be make in AI that can minimize costs depe
 \onehalfspacing
   
 \section{Introduction}
-Multiple AIs working in concert, or so-called ``Agentic AI,'' has captured the imagination of researchers and practitioners alike.
-The enthusiasm reflects the usefulness of the economist's task-based view of production: many goods are produced by the completion of identifiable tasks.
-Furthermore,those tasks often have a recursive sub-structure, allowing them to be decomposed into smaller, simpler tasks.
-Those simpler tasks might more plausibly done by AIs, particularly as model capabilities improve and the AI agent is specialized for that task. 
-Adam Smith and Henry Ford would both see the point immediately. 
-
-% But even with powerful AI models, in designing AI agents for work, specialization is not just for humans.
-% The ``agentic'' of agentic AI captures the notion that an AI working on a particular task should be specialized for that task: 
-% The agent should have the resources, knowledge, and capabilities needed for that task and that task alone.
-% It will need inputs from other agents and will pass off completed tasks to other agents.
-% While engineers might cast this as simply reflecting good software engineering principles---separation of concerns, modularity, clean interfaces between sub-components---it also describes an effective production process in general.
-% In short, enthusiasm for Agentic AI is partially enthusiasm for the division of labor---old wine in new bottles.
-
-A natural question, of course, is how far might Agentic AI go?
-This is difficult to answer credibly, as technological progress in AI is happening quickly and the answer depends on entrepreneurial activity we cannot hope to fully anticipate.
-Predictions based on task content seem inherently difficult; as a close analogy, our failure to predict the extent of offshoring---arguably a far simpler forecasting problem---should be humbling \citep{ozimek2019overboard}.
-Even at present, we see AI models that can do super-human work in some domains, but then make childish mistakes in others, with no obvious or unifying point of view that could explain the gaps \citep{vafa2024large}.
-This incoherence makes the standard economist trick with new technology---treat it as a fall in the cost of ``X'' where ``X'' is, say, prediction, rote computation, light, or locomotive force---difficult to apply.
-
-Although we cannot credibly claim to know what AIs can or will do, we can describe in general terms how they are---and likely will be---used in production.
-Stepping back, the distinctive feature of generative AI is in the name: it generates---writing, code, images, music, and videos---in response to human requests, or ``prompts.''
-But these model generations only become (potentially) economically valuable when humans judge these model outputs as suitable for their needs.
-If the model outputs are generally poor or too unreliable for a given application, the human might eschew AI and do the task themselves; if the model outputs are good enough, the human role might simpy be juding the output and giving feedback to the AI as needed (with less capable AIs requiring more human supervision).
-
-The key question---should an AI do a task instead of a human, given the costs and benefits?---is not a technical question, but an economic one.
-It is also both a practical question and a research question: practitioners want to know how to efficiently redesign the productive process; researchers want to know what this transformation implies for the economy and the labor market.
-Policy makers in particular are interested in whether technology can be guided to be more complementary to human labor rather than displacing it \citep{acemoglu2018automation}.
-
-Answering these questions about AI and human labor requires a model of the productive process.
-Although much progress can be made using our standad tools (see \citep{korinek2018artificial}), \cite{acemoglu2024task} argues persuasively that the standard production function approach (i.e., $Y = F(K, L)$) is not adequate for understanding the impact of technology on labor markets, and that instead a task-based approach is needed.
-\cite{aghion2024ai}.
-
-The task-based approach dispenses with a single aggregate production function to instead modeling the productive process in terms of tasks which can be assigned to humans or machines---and perhaps humans of different skill-levels.
-The equilibrium is then some allocation of tasks to different factors of production, based on which factor has the comparative advantage in that task.
-Despite the greater granularity, the task-based approach does not directly consider the interdependence of tasks in the productive process: it does not matter in the model where a task ``sits'' within some occupation or process. 
-This is a useful simplification, but actual production involves the output of a completed task often being used as input to the next task.
-A natural question is whether this interdependence of tasks matters for the factor assignment question in the case of AI? 
-
-We present asimple task-based model of agentic AI and human labor that focuses on the interdependence of tasks in the productive process rather than the content of the tasks.
+We present a simple task-based model of agentic AI and human labor that focuses on the interdependence of tasks in the productive process rather than the content of the tasks.
 We start with a model of production that is a sequence of tasks that must be done in order.
 Those tasks require human capital to perform, but differ in how long they take to complete.
-They also differ in how easily they can be handed-off from one worker to the next.
-This is used to develop a model of the division of labor in production.
+They also differ in how easily they can be ``handed-off'' from one worker to the next.
+This model is used to develop a model of the division of labor in production.
+%To have a theory of what collection of tasks AI will do, we need what humans will do.
 
-There are, of course, numerous economic models of the division of labor\citep{becker1992division, deming2017growing}---why do we need another, especially one that is not as analytically tractable as more stylized models?
-The short answer is that because AI cannot easily be characterized as a fall in the cost of ``X'', we need to get into the micro-details of the production process. 
-More stylized models cannot easily be paired with engineering estimates focusing on the content of the tasks. 
+There are, of course, numerous economic models of the division of labor \citep{becker1992division, deming2017growing}---why do we need another, especially one that is not as analytically tractable as more stylized models?
+The short answer is that because AI cannot easily be characterized as a fall in the cost of ``X'', we need to get into the micro-details of the production process: more stylized models cannot easily be paired with engineering estimates focusing on the content of the tasks. 
 Second, if we hope to do some kind of comparative statics, we need to have a model of production and jobs with and without an AI that reflects the actual change in capabilities.
 Right now, we have AIs now that can do \emph{certain} tasks in minutes (and eventually miliseconds) that a skilled human would have needed a week to perform. 
-These can be done at essentially zero marginal cost (but perhaps hundreds or thousands of dollars in average cost). 
-These are not marginal changes. 
-And yet there are other, seemingly similar tasks an AI cannot do.
-If we want to guide technological development, we need to understand the returns to investing in specific AI capabilities.
+These can be done at essentially zero marginal cost. 
+% (but perhaps hundreds or thousands of dollars in average cost)
+% These are not marginal changes. 
+% And yet there are other, seemingly similar tasks an AI cannot do.
+%If we want to guide technological development, we need to understand the returns to investing in specific AI capabilities.
 
 After developing the model of production, we consider how the development of AI that can do certain tasks changes the division of labor.
 In the model, the decision to use an AI is based on comparing two costs: the cost of having a human direct and evaluate the AI's output (which depends on the capabilities of the AI at that particular task) versus the cost of having the human do the task directly.
@@ -147,7 +110,7 @@ A surprising implication of chaining is that improvements in AI capabilities for
 Because of chaining, it matters what tasks are ``next'' to each other in a productive process.
 In different occupations, different tasks might appear adjacent to each other. 
 Writing might appear next to hundreds of different tasks, from ``send your economics paper to a journal'' at the end of a semester without teaching, to ``drop your maintence report slip into a box'' at the end of a shift driving a bus.
-As such, we can get ``automation dispersion'' where tasks are automated in some production settings but not others because of occupation-specific task adjacency.
+As such, ``automation dispersion'' is a possibility where tasks are automated in some production settings but not others because of occupation-specific task adjacency.
 
 Assigning tasks to factors of production is not a competely trivial computational problem.
 For an occupation with $n$ tasks, we show that there are $F(2n + 1)$ possible production arrangements, where $F(k)$ is the $k$th Fibonacci number.
@@ -171,9 +134,9 @@ Despite the emphasis on task-level substitution between AI and labor in most of 
 One could interpret the model as showing how task-level decisions aggregate into system-level automation through chaining.
 In the model, there is no ship-of-theseus requirement that tasks are automated one by one but rather than entire chains can be automated all at once---consistent with the \cite{bresnahan2002information} perspective.
 
-Although the model is deveoped as a kind of algorithmic cost function, it ultimately produces cost functions that have standard properties and can be nested within a more general model of the economy. 
-The model predicts that improvements in AI will inherently reduce labor use per unit of the good and hence the price.
-Whether this increases or decreases the demand for labor even for that task depends on the elasticity of demand for that good in the product market.
+Although the model is developed as a kind of algorithmic cost function, it ultimately produces cost functions with standard properties, which we embed within a more general model of the economy.  
+The model predicts that improvements in AI will inherently reduce labor use per unit of the good and, consequently, its price.  
+Whether this increases or decreases the demand for labor, even for that task, depends on the elasticity of demand for that good in the product market.  
 Further complicating things, if AI has wide-ranging effects, changing the cost of many goods at once, then a partial equilibrium analysis that ignores income effects or cross-price elasticities would be insufficient, even setting aside the change in task composition from new goods and services.
 This limitation suggests the need for complementary empirical work tracking the evolution of tasks and occupations as AI capabilities advance.
 
@@ -195,122 +158,99 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 % Most empirical work on AI and labor market has implitly adopted this focus, examining the actual content of the tasks and technical capabilities of machines, as determined by engineering or expert estimate \citep{frey2017future, felten2021occupational, eloundou2023gpts}; 
 % This work has also kept with the framing of task-based models as a bundle of tasks, without considering the structural relationship between tasks \citep{autor2003skill, acemoglu2018automation}.
 
-
-Why are there still so many jobs \citep{autor2015}?
+%Why are there still so many jobs \citep{autor2015}?
 
 
 \section{A General Equilibrium Model with Task-Based Production}
+\label{sec:taskbased_GE}
 
-\paragraph{Task-Based Production.}
+\subsection{Task-Based Production}
 Consider an economy with $K$ final goods.
-A single (representative) firm produces all goods under perfect competition.
+A single (representative) firm produces and trades all goods under perfect competition in separate markets.
 For each good $k \in \{1,\ldots,K\}$, production requires completing an ordered set of tasks, denoted by:
 \[
 \mathcal{T}_k = \{1,2,\ldots,\tau_k\}.
 \]
 We refer to $\mathcal{T}_k$ as the production process for good $k$.
-The firm can partition the production process $\mathcal{T}_k$ into a number of jobs, where each job is a contiguous block of tasks performed by a single worker.
-With $|\mathcal{T}_k| = \tau_k$ tasks, there are $2^{(\tau_k - 1)}$ unique ways of designing jobs.
-For example, if $\tau_k = 3$, the production process of good $k$ consists of three tasks, $\{1,2,3\}$, with $2^{(3-1)}=4$ unique job designs.
+For ease of exposition, we focus on a representative sector and omit the subscript $k$ from our notation until subsection~\ref{sec:household_GE}.
+This simplification means that when we refer to variables or production processes, they implicitly pertain to a typical final good.
+
+The firm can partition the production process $\mathcal{T}$ into a number of ``jobs,'' where each job is a contiguous block of tasks performed by a single worker.
+With $|\mathcal{T}| = \tau$ tasks, there are $2^{(\tau - 1)}$ unique ways of designing jobs.
+For example, if $\tau = 3$, the production process of the final good consists of three tasks, $\{1,2,3\}$, with $2^{(3-1)}=4$ unique job designs.
 Let $[.]$ denote the tasks assigned to a worker in a job.
-The four possible designs in this example are: $\{[1][2][3], [1,2][3], [1][2,3], [1,2,3]\}$.
+The four possible designs in this example are: $\{[1][2][3], \, [1,2][3], \, [1][2,3], \, [1,2,3]\}$.
 The second design, for instance, implies that one worker is assigned to do tasks 1 and 2 in a single job, $[1,2]$, whereas task 3 is assigned to a different worker in another job, $[3]$.
 
 Next, we formalize the definition of jobs for an arbitrary number of tasks and an arbitrary number of jobs.
-Suppose the firm breaks down the production process $\mathcal{T}_k$ into $J_k$ jobs.
-Let $i_j^k$ denote the first task in job $j \in \{1,\ldots,J_k\}$ in the production process of good $k$.
-We have:
+Suppose the firm breaks down the production process $\mathcal{T}$ into $J$ jobs.
+Let $i_j$ denote the first task in job $j \in \{1,\ldots,J\}$ in the production process of the final good.
+We can write:
 \[
-1 = i_1^k < i_2^k < \cdots < i_{J_k+1}^k = \tau_k+1.
+1 = i_1 < i_2 < \cdots < i_{J+1} = \tau+1.
 \]
-This implies that the first task, $i_1^k=1$, is the first task of the first job ($j=1$), while the (imaginary) task $\tau_k+1$ is considered the first task of the (imaginary) job $j = J_k+1$.
-With this notation, the $j$th job for good $k$ is a collection of consecutive tasks in the production process $\mathcal{T}_k$ given by:
+This means that the first task is the first task of the first job, $i_1=1$, while the (imaginary) task $\tau+1$ is considered the first task of the (imaginary) job $j = J+1$.
+With this notation, the $j$th job can be characterized as a collection of consecutive tasks in the production process $\mathcal{T}$:
 \[
-\mathcal{J}_j^k = \{i_j^k, i_j^k+1, \cdots, i_{j+1}^k - 1\}.
+\mathcal{J}_j = \{i_j, \, i_j+1, \, \cdots, \, i_{j+1} - 1\}.
 \]
-Going back to the earlier example with $\tau_k=3$, the four potential job designs can formally be expressed using this notation as follows:
+Going back to the earlier example with $\tau=3$, the four potential job designs can formally be expressed as:
 \begin{align*}
-\{[1][2][3]\} \Longleftrightarrow \ J_k = 3:  & \quad \mathcal{J}_1^k = \{1\}, \quad  \mathcal{J}_2^k = \{2\}, \quad \mathcal{J}_3^k = \{3\}, \\
-\{[1,2][3]\} \Longleftrightarrow \ J_k = 2: & \quad \mathcal{J}_1^k = \{1, 2\},  \quad \mathcal{J}_2^k = \{3\}, \\
-\{[1][2,3]\} \Longleftrightarrow \ J_k = 2: & \quad \mathcal{J}_1^k = \{1\}, \quad \mathcal{J}_2^k = \{2, 3\}, \\
-\{[1,2,3]\} \Longleftrightarrow \ J_k = 1: & \quad \mathcal{J}_1^k = \{1,2,3\}.
+\{[1][2][3]\} \Longleftrightarrow \ J = 3:  & \quad \mathcal{J}_1 = \{1\}, \quad  \mathcal{J}_2 = \{2\}, \quad \mathcal{J}_3 = \{3\}, \\
+\{[1,2][3]\} \Longleftrightarrow \ J = 2: & \quad \mathcal{J}_1 = \{1, 2\},  \quad \mathcal{J}_2 = \{3\}, \\
+\{[1][2,3]\} \Longleftrightarrow \ J = 2: & \quad \mathcal{J}_1 = \{1\}, \quad \mathcal{J}_2 = \{2, 3\}, \\
+\{[1,2,3]\} \Longleftrightarrow \ J = 1: & \quad \mathcal{J}_1 = \{1,2,3\}.
 \end{align*}
 
-Assume that the worker employed in job $j$ produces an intermediate good $x_j^k$ and sells it to the firm in a perfectly competitive market.
-The firm buys all intermediate goods $\{x_1^k, \cdots, x_{J_k}^k\}$ from workers and produces the final good $k$ at no additional cost using a Leontief production function:
+Assume that the worker employed in job $j$ produces an intermediate good $x_j$ and sells it to the firm in a perfectly competitive market.
+The firm buys all intermediate goods $\{x_1, \cdots, x_J\}$ from workers and produces the final good at no additional cost using a Leontief production function:
 \[
-x_k(x_1^k, \cdots, x_{J_k}^k) = \min\{x_1^k, \cdots, x_{J_k}^k\}.
+x(x_1, \cdots, x_J) = min\{x_1, \cdots, x_J\}.
 \]
-This assumption implies that, in equilibrium, the amount of good $k$ produced in the economy is the same as the amount of each intermediate good $x_j^k$ used in production of the final good.
-This is merely a technical assumption reflecting the fact that to produce one unit of good $k$, each set of tasks in $\mathcal{T}_k$, across all jobs $j \in \{1,\ldots,J_k\}$, must be performed exactly once.
-We further assume that tasks in $\mathcal{T}_k\!$ are performed in fixed proportions.
-For instance, if task $m \in \mathcal{J}_j^k$ takes 30 minutes and task $n \in \mathcal{J}_j^k$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes spent on both task $m$ \underline{and} task $n$ because both must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.
-We formalize this assumption later after introducing the full production model.
-As we will see, this helps simplify the equilibrium characterizations significantly.
+This implies that, in equilibrium, the amount of final good $x$ produced is the same as the amount of each intermediate good $x_j$ used in production of the final good.
+This is merely a technical assumption reflecting the fact that to produce one unit of the final good, each set of tasks in $\mathcal{T}$, across all jobs $j \in \{1,\ldots,J\}$, must be performed exactly once.
+We also assume that tasks in $\mathcal{T}\!$ are performed in fixed proportions.
+For instance, if task $m \in \mathcal{T}$ takes 30 minutes and task $n \in \mathcal{T}$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes spent on $m$ \underline{and} $n$ as both tasks must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.
+We postpone formalizing this assumption until when we characterize the equilibrium.
 
-In order to produce the intermediate good $x_j^k$, a worker must complete the tasks associated with that job, namely $\mathcal{J}_j^k$.
-Each task $i \in \mathcal{J}_j^k$ necessitates acquiring human capital $\taskhc{ij}^{k} > 0$ and takes time $\tasktime{ij}^{k} > 0$ to complete.
-The worker incurs the human capital cost for task $i$ only once at the beginning of his tenure at job $j$, but spends time $\tasktime{ij}^{k}$ completing task $i$ for producing each unit of good $x_j^k$.
-The total human capital acquired by the worker employed in job $j$ in the production process of good $k$ is:
+In order to produce the intermediate good $x_j$ a worker must complete the tasks associated with that job, namely $\mathcal{J}_j$.
+Each task $i \in \mathcal{J}_j$ necessitates acquiring human capital $\taskhc{ij} > 0$ and takes time $\tasktime{ij} > 0$ to complete.
+The worker incurs the human capital cost for task $i$ only once at the beginning of his tenure at job $j$, but spends time $\tasktime{ij}$ completing task $i$ for producing each unit of intermediate good $x_j$. 
+In other words, having acquired the necessary human capital, the production of each unit of intermediate good uses labor as the only input.
+The total human capital acquired ex ante by the worker employed in job $j$ is:
 \[
-\sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k},
+\sum_{i \in \mathcal{J}_j} \taskhc{ij},
 \]
-while the total time he spends on tasks in $\mathcal{J}_j^k$ to produce one unit of output is:
+while the total time he spends on tasks in $\mathcal{J}_j$ to produce one unit of output is:
 \[
-\sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k}.
+\sum_{i \in \mathcal{J}_j} \tasktime{ij}.
 \]
 
-Having acquired the necessary human capital, the production of each intermediate good uses labor as the only input.
 Both the product and human capital markets are perfectly competitive, and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
 Workers value leisure at $v_L$ and supply one unit of labor inelastically.
-To recoup their training costs and to make them indifferent between working and not working, worker compensation must account for human capital costs, i.e.,
+To remain indifferent between jobs, workers must receive compensation that accounts not only for the value of their time but also for any additional training costs.
+Thus, the wage rate in job $j$ must satisfy\footnote{Notice that while wages may differ across jobs, they are structured to ensure that workers remain indifferent to acquiring different types of human capital for different jobs.}:
 \[
-w_j^k = v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}.
+w_j = v_L + \sum_{i \in \mathcal{J}_j} \taskhc{ij}.
 \]
-The firm must pay workers for their time, regardless of the task; hence, the wage bill paid to worker per unit of good $x_j^k$ is:
+The firm must pay workers for their time, regardless of the task; hence, the wage bill paid to worker per unit of good $x_j$ is:
 \[
-\text{WageBill}_j^k = \Biggl(v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr) \Biggl(\sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k}\Biggr).
+\text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \taskhc{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \tasktime{ij} \Biggr).
 \]
 
 Without additional frictions, the firm could minimize the cost of production by assigning a single worker to each task.
-What prevents this is a hand-off cost---a cost incurred for a task that, while requiring no extra human capital, does require additional time.
-This cost can be interpreted as the cost of context-switching (or hand-off) between workers in the production process.
-Specifically, whenever a job boundary is introduced---that is, when transitioning from the last task of job $j$ to the first task of job $j+1$---the worker in job $j$ incurs a hand-off cost.
-The worker can do the hand-off in one of two ways: manually or using an AI.
-If he does so manually, he must spend extra time $\tasktime{w_j}^k \geq 0$ to hand off the output of job $j$ in the production process of good $k$.
-However, the worker also has access to an AI technology that can perform the same hand-off for a time cost $\tasktime{m_j}^k \geq 0$ with success probability $q_j^k$.
-The expected cost of using the AI to handle the hand-off is:
+What prevents this is a ``hand-off cost''---a cost tied to job transitions that, while not requiring additional human capital, does take time.
+This can be interpreted as the cost of context-switching (or hand-off) between workers in the production process.
+Specifically, whenever a job boundary is introduced---that is, when transitioning from the last task of job $j$ to the first task of job $j+1$---the worker in job $j$ incurs a hand-off time cost $\tasktime{hj} \geq 0$.
+
+The firm seeks to minimize the total cost of producing the final good by optimally designing jobs while taking hand-off costs into account.
+Assuming there are $J$ jobs in the optimal design, the overall production cost per unit of final good is:
 \[
-\tasktime{m_j}^k \sum_{\ell=1}^{\infty} \ell q_j^k (1 - q_j^k)^{\ell - 1} = \frac{\tasktime{m_j}^k}{q_j^k}.
-\]
-If the worker deploys the AI instead of handing off the job manually, he incurs an additional time cost equal to $\alpha_j \geq 0$ times the AI’s hand-off cost.
-This represents the cost of AI \emph{management} that the worker must bear, with $\alpha_j$ reflecting the worker's management efficiency.
-A high value of $\alpha_j$ implies that managing the AI is very costly, whereas a lower value indicates that the AI deployment cost is relatively small (with $\alpha_j = 0$ meaning the hand-off cost is effectively free when using AI).
-The decision of whether to deploy the AI depends on whether the manual hand-off cost exceeds the AI management cost.
-In particular, the worker manages the hand-off using AI if and only if the AI management cost is less than the manual hand-off cost, i.e.,
-\[
-\tasktime{w_j}^k \geq \frac{\alpha_j \tasktime{m_j}^k}{q_j^k},
-\]
-or, equivalently, when the AI is “efficient enough”:
-\[
-q_j^k \geq \frac{\alpha_j \tasktime{m_j}^k}{\tasktime{w_j}^k}.
-\]
-We denote the optimal hand-off time at the end of each job $j$ for good $k$ by:
-\[
-\tasktime{hj}^k = \min\Bigl\{\frac{\alpha_j \tasktime{m_j}^k}{q_j^k},\, \tasktime{w_j}^k\Bigr\}.
-\]
-By convention, $\tasktime{hJ_k}^k = 0$ since no hand-off occurs after the final job.
-Thus, the total time required for job $j$ to produce one unit of $x_j^k$ is:
-\[
-\tasktime{j}^k = \tasktime{hj}^k + \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k},
-\]
-which implies that, after accounting for the hand-off friction, the wage bill for job $j$ per unit of good $x_j^k$ is:
-\[
-\text{WageBill}_j^k = \Biggl(v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr) \Biggl(\tasktime{hj}^k + \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k}\Biggr).
+\text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \taskhc{ij} \Biggr) \Biggl(\tasktime{hj} + \sum_{i \in \mathcal{J}_j} \tasktime{ij} \Biggr)\Biggr].
 \]
 
 The firm's problem has a nice geometric interpretation, as shown in Figure~\ref{fig:job_design}.
-The productive process is a sequence of stacked rectangles of height $\taskhc{ij}^k$ and width $\tasktime{ij}^k$.
+The productive process is a sequence of stacked rectangles of height $\taskhc{ij}$ and width $\tasktime{ij}$.
 A job is a bounding box around a sequence of tasks, with a wage bill equal to the area of the box.
 However, if a boundary is drawn, the area corresponding to the switching cost rectangle is added to the cost.
 Note that each rectangle could, in turn, be thought of as a sequence of tasks (smaller rectangles filling in the larger rectangle).
@@ -334,67 +274,44 @@ Figure~\ref{fig:job_design} shows a potential job design for a sequence of 6 tas
   }
 \end{figure}
 
-The firm seeks to minimize the total cost of producing good $k$ by optimally designing jobs.
-Assuming there are $J_k$ jobs in the optimal design, the overall production cost per unit of good $k$ is:
-\[
-\text{TotalCost}_k = \sum_{j=1}^{J_k} \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr) \Biggl(\tasktime{hj}^k + \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k}\Biggr)\Biggr].
-\]
 
-\paragraph{Goods Prices.}  
-A worker employed in job $j$ in sector $k$ produces an intermediate good $x_j^k$, which is sold back to the firm in a competitive market.  
-Let $\labor{j}^k$ denote the amount of labor per unit of good $x_j^k$ employed in job $j$ in the production process of $k$.  
-That is:  
-\[
-\labor{j}^k = \tasktime{hj}^k + \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k}.
-\]  
-The production cost per unit of $x_j^k$ can thus be written as:  
-\[
-\text{WageBill}_j^k = \Biggl(v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr) \Biggl(\tasktime{hj}^k + \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k}\Biggr) = w_j^k \,\labor{j}^k,
-\]  
-where $w_j^k$ is the wage rate for job $j$ in the production of good $k$.  
-Since markets are perfectly competitive, the price of intermediate good $j$, $p_j^k$, equals the marginal cost $w_j^k\,\labor{j}^k$:  
-\[
-p_j^k = w_j^k \labor{j}^k.
-\]  
-Furthermore, given the Leontief production function, perfect competition in the final goods market implies that the price of the final good $p^k$ equals the sum of the prices of its constituent intermediate goods:  
-\[
-p^k = \sum_{j=1}^{J_k} p_j^k = \sum_{j=1}^{J_k} w_j^k \labor{j}^k.
-\]  
-To ensure consistency in notation between the final and intermediate goods markets, define  
-\[
-w^k \labor{}^k \equiv \sum_{j=1}^{J_k} w_j^k \labor{j}^k,
-\]
-so that $p^k = w^k \labor{}^k$.  
-Let $\labor{}^k$ denote the total amount of time (or labor) spent producing good $k$, that is,  
-\[
-\labor{}^k = \sum_{j=1}^{J_k} \labor{j}^k.
-\]
-Thus, $w^k$ can be interpreted as the time-weighted average wage rate paid to workers in the production process of $k$, namely,  
-\[
-w^k = \frac{\sum_{j=1}^{J_k} w_j^k \labor{j}^k}{\sum_{j=1}^{J_k} \labor{j}^k}.
-\]
-Here we must note that, due to the assumption that tasks are done in fixed proportions, once $\labor{}^k$ is determined all subsequent $\labor{j}^k$ for $j \in \{1,\ldots,J_k\}$ are pinned down.  
-Formally, the fixed proportions assumption implies that for some $\gamma_j > 0$ we have:  
-\[
-\frac{\labor{j}^k}{\labor{1}^k} = \gamma_j,
-\]  
-with $\gamma_1 = 1$.  
-This in turn gives:  
-\[
-\labor{}^k = \sum_{j=1}^{J_k} \labor{1}^k \Bigl(\frac{\labor{j}^k}{\labor{1}^k}\Bigr) = \labor{1}^k \sum_{j=1}^{J_k} \gamma_j 
-\quad 
-\Longrightarrow
-\quad 
-\frac{\labor{}^k}{\labor{1}^k} = \sum_{j=1}^{J_k} \gamma_j,
-\]  
-and thus:  
-\[
-\labor{j}^k = \Bigg( \frac{\gamma_j}{\sum_{j=1}^{J_k} \gamma_j} \Bigg) \labor{}^k.
-\]  
-Therefore, it is without loss of generality to focus our attention on working with $\labor{}^k$, because once that is determined, the labor for each subsequent job is specified.
 
-\paragraph{Consumption.}  
-A representative household supplies one unit of labor inelastically and has a CES utility function over the $K$ final goods:  
+\subsection{AI Facilitates Hand-off}
+Here we discuss what determines the hand-off cost introduced in previous part.
+Again for simplicity, let us suppress the job-specific notation $j$ until the very last part of this subsection.
+All the parameters discussed here implicitly pertain to a typical job.
+
+Suppose the worker can do the hand-off in one of two ways: manually or using an AI.
+If he does so manually, he must spend time $\tasktime{w} \geq 0$ to hand off the output of the job.
+However, the worker also has access to an AI technology that can perform the same hand-off for a time cost $\tasktime{m} \geq 0$ with success probability $q$.
+The expected cost of using the AI to handle the hand-off is:
+\[
+\tasktime{m} \Bigg( \sum_{\ell=1}^{\infty} \ell q (1 - q)^{\ell - 1} \Bigg) = \frac{\tasktime{m}}{q}.
+\]
+If the worker deploys the AI instead of handing off the job manually, he incurs an additional time cost equal to $\alpha \geq 0$ times the AI’s hand-off cost.
+This represents the cost of AI \emph{management} that the worker must bear, with $\alpha$ reflecting the worker's management efficiency.
+A high value of $\alpha$ implies that managing the AI is very costly, whereas a lower value indicates that the AI deployment cost is relatively small (with $\alpha = 0$ meaning the hand-off is effectively free when using AI).
+The decision of whether to deploy the AI depends on whether the manual hand-off cost exceeds the AI management cost.
+In particular, the worker manages the hand-off using AI if and only if the AI management cost is less than the manual hand-off cost, i.e.,
+\[
+\tasktime{w} \geq \frac{\alpha \, \tasktime{m}}{q},
+\]
+or, equivalently, when the AI is “efficient enough”:
+\[
+q \geq \frac{\alpha \, \tasktime{m}}{\tasktime{w}}.
+\]
+The optimal hand-off time at the end of each job is thus:
+\[
+\tasktime{h} = \min\Bigl\{\frac{\alpha \, \tasktime{m}}{q},\, \tasktime{w}\Bigr\}.
+\]
+By convention, the hand-off cost for the last task is zero since no hand-off occurs after the final job.
+The parameter $\tasktime{hj}$ appearing in the firm's job design problem above is the minimum of manual and AI hand-off cost for job $j$.
+
+
+\subsection{Consumption} 
+\label{sec:household_GE}
+A representative household supplies one unit of labor inelastically and has a CES utility function over the $K$ final goods.
+Here we bring back the sector notation $k$ to distinguish between final goods the household consumes. The household's utility is:
 \[
 U(x_{1}, \ldots, x_{K}) = \Bigl(\sum_{k=1}^{K} \delta_k \,x_k^{\tfrac{\sigma - 1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
 \quad
@@ -402,58 +319,48 @@ U(x_{1}, \ldots, x_{K}) = \Bigl(\sum_{k=1}^{K} \delta_k \,x_k^{\tfrac{\sigma - 1
 \quad
 \sum_{k=1}^{K} \delta_k = 1,
 \quad
-\sigma > 0.
+\sigma > 0,
 \]  
+where $x_k$ denotes final good $k$.
 Goods are substitutes if $ \sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ corresponds to the Cobb-Douglas case.  
-The household faces the following budget constraint:  
+The household faces budget constraint:  
 \[
 \sum_{k=1}^K p^k \,x_k = I,
 \]  
-where $I$ is the total labor income earned by supplying labor to different jobs across all sectors.  
-Note that when choosing how much of each good to consume, the household takes income as given while it is in fact determined by earnings from producing intermediate goods:  
-\[
-I = \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} w_j^k \labor{j}^k \Bigg) x_k.
-\]
-
-\paragraph{Labor Market.}  
-Since the household supplies one unit of labor inelastically to all jobs across all sectors, the market clearing condition satisfies:  
-\[
-\sum_{k=1}^K \Biggl( \sum_{j=1}^{J_k} \labor{j}^k\,x_j^k \Biggr) = 1.
-\]  
-Given the Leontief production, this can be expressed as:  
-\[
-\sum_{k=1}^K \Biggl( \sum_{j=1}^{J_k} \labor{j}^k \Biggr) x_k = \sum_{k=1}^K \labor{}^k x_k = 1,
-\]  
-With this, we can rewrite the household's earned income as:  
-\[
-I = \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} w_j^k \labor{j}^k \Bigg) x_k 
-= v_L + \Bigg[ \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} \bigg( \sum_{i \in \mathcal{J}_j} \taskhc{ij}^k \bigg) \labor{j}^k \Bigg) x_k \Bigg],
-\]  
-implying that the household budget consists of two parts: a part that compensates the worker for his foregone leisure and a part that rewards him for the human capital he has acquired.
+where $p^k$ is price of final good $k$ and $I$ is the total income earned from supplying labor to different jobs across all sectors.  
+The income, $I$, is the total sum of earnings from producing intermediate goods, which the household takes as given when choosing how much of each final good to consume.
 
 
-\paragraph{Equilibrium.}
-The equilibrium can be summarized as
+\subsection{Equilibrium}
+Let $k \in \{1, \cdots, K\}$ index sectors (or final goods) and $j \in \{1,\cdots, J_k \}$ index jobs within sectors.
+Denote total labor employed in sector $k$ with $L_k$.
+Equilibrium prices $\big\{ \big\{ w_j^k, p_j^k \big\}_{j=1}^{J_k} \big\}_{k=1}^K$ are: 
 \begin{align*}
-w_j^k = \Biggl(v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}\Biggr), 
+\labor{j}^k =  \tasktime{hj}^k + \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k},
 & \qquad
-\labor{j}^k = \Biggl(\tasktime{hj}^k + \sum_{i \in \mathcal{J}_j^k} \tasktime{ij}^{k}\Biggr), \\
-p_j^k = w_j^k \labor{j}^k,
+w_j^k =  v_L + \sum_{i \in \mathcal{J}_j^k} \taskhc{ij}^{k}, 
 & \qquad
-p^k = w^k \labor{}^k = \sum_{j=1}^{J_k} w_j^k \labor{j}^k, \\
+p_j^k = w_j^k \labor{j}^k, \\
+\labor{}^k = \sum_{j=1}^{J_k} \labor{j}^k,
+& \qquad
+w^k = \frac{\sum_{j=1}^{J_k} w_j^k \labor{j}^k}{\sum_{j=1}^{J_k} \labor{j}^k},
+& \qquad
+p^k = w^k \labor{}^k,
+\end{align*}
+and equilibrium allocations $\big\{ x_k^*, L_k^* \big\}_{k=1}^K$ are:
+\begin{align*}
 x_k^* = \frac{R_k}{\sum_{\ell=1}^K \labor{}^\ell\,R_\ell},
 & \qquad
 L_k^* = \labor{}^k\,x_k^* = \sum_{j=1}^{J_k} \labor{j}^k\,x_k^*,
 \end{align*}
 where
 \[
-R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma},
+R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
 \]
-and $L_k^* = \labor{}^k\,x_k^*$ is the total labor employed in sector $k$.
-In this way, the job design of the production process $\mathcal{T}_k$ (and the corresponding $\taskhc{ij}^k$s and $\tasktime{ij}^k$s) determines $p^k$, which then fixes $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$.
+The model implies that the job design in production process $\mathcal{T}_k$ (and thus human capital and time costs of tasks) determines $p^k$ and $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$ in equilibrium.
+Appendix~\ref{app:GE} gives the full derivation details and further discusses comparative statics with respect to task automation.
 
-Appendix~\ref{app:GE} gives the step by step derivation of equilibrium objects. 
-Furthermore, in Appendix~\ref{app:GE_comp_stats} we show comparative statics with respect to task automation.
+
 
 
 \subsection{Adding AI} \label{sec:model}
@@ -1243,6 +1150,45 @@ Ironically, the harder the task to perform, the more potential for AI to unlock 
 % Suppose there is some AGI singularity, where all goods cost just $c_m$ to produce---the only human labor used is the management of the AI and AI is perfect.
 % The demand for labor is minimal, seemingly implying low wages, but also goods are so cheap that the demand for leisure might be very high, as all product needs can be met with little income.
 
+\subsection{Agentic AI and the Task-Based Production}
+Multiple AIs working in concert, or so-called ``Agentic AI,'' has captured the imagination of researchers and practitioners alike.
+The enthusiasm reflects the usefulness of the economist's task-based view of production: many goods are produced by the completion of identifiable tasks.
+Furthermore, those tasks often have a recursive sub-structure, allowing them to be decomposed into smaller, simpler tasks.
+Those simpler tasks might more plausibly done by AIs, particularly as model capabilities improve and the AI agent is specialized for that task. 
+Adam Smith and Henry Ford would both see the point immediately. 
+
+% But even with powerful AI models, in designing AI agents for work, specialization is not just for humans.
+% The ``agentic'' of agentic AI captures the notion that an AI working on a particular task should be specialized for that task: 
+% The agent should have the resources, knowledge, and capabilities needed for that task and that task alone.
+% It will need inputs from other agents and will pass off completed tasks to other agents.
+% While engineers might cast this as simply reflecting good software engineering principles---separation of concerns, modularity, clean interfaces between sub-components---it also describes an effective production process in general.
+% In short, enthusiasm for Agentic AI is partially enthusiasm for the division of labor---old wine in new bottles.
+
+A natural question, of course, is how far might Agentic AI go?
+This is difficult to answer credibly, as technological progress in AI is happening quickly and the answer depends on entrepreneurial activity we cannot hope to fully anticipate.
+Predictions based on task content seem inherently difficult; as a close analogy, our failure to predict the extent of offshoring---arguably a far simpler forecasting problem---should be humbling \citep{ozimek2019overboard}.
+Even at present, we see AI models that can do super-human work in some domains, but then make childish mistakes in others, with no obvious or unifying point of view that could explain the gaps \citep{vafa2024large}.
+This incoherence makes the standard economist trick with new technology---treat it as a fall in the cost of ``X'' where ``X'' is, say, prediction, rote computation, light, or locomotive force---difficult to apply.
+
+Although we cannot credibly claim to know what AIs can or will do, we can describe in general terms how they are---and likely will be---used in production.
+Stepping back, the distinctive feature of generative AI is in the name: it generates---writing, code, images, music, and videos---in response to human requests, or ``prompts.''
+But these model generations only become (potentially) economically valuable when humans judge these model outputs as suitable for their needs.
+If the model outputs are generally poor or too unreliable for a given application, the human might eschew AI and do the task themselves; if the model outputs are good enough, the human role might simpy be juding the output and giving feedback to the AI as needed (with less capable AIs requiring more human supervision).
+
+The key question---should an AI do a task instead of a human, given the costs and benefits?---is not a technical question, but an economic one.
+It is also both a practical question and a research question: practitioners want to know how to efficiently redesign the productive process; researchers want to know what this transformation implies for the economy and the labor market.
+Policy makers in particular are interested in whether technology can be guided to be more complementary to human labor rather than displacing it \citep{acemoglu2018automation}.
+
+Answering these questions about AI and human labor requires a model of the productive process.
+Although much progress can be made using our standad tools (see \citep{korinek2018artificial}), \cite{acemoglu2024task} argues persuasively that the standard production function approach (i.e., $Y = F(K, L)$) is not adequate for understanding the impact of technology on labor markets, and that instead a task-based approach is needed \citep{aghion2024ai}.
+
+The task-based approach dispenses with a single aggregate production function to instead modeling the productive process in terms of tasks which can be assigned to humans or machines---and perhaps humans of different skill-levels.
+The equilibrium is then some allocation of tasks to different factors of production, based on which factor has the comparative advantage in that task.
+Despite the greater granularity, the task-based approach does not directly consider the interdependence of tasks in the productive process: it does not matter in the model where a task ``sits'' within some occupation or process. 
+This is a useful simplification, but actual production involves the output of a completed task often being used as input to the next task.
+A natural question is whether this interdependence of tasks matters for the factor assignment question in the case of AI? 
+
+
 \section{Conclusion}
 
 For those interested in AI that complements human capabilities---there are some direct ones complemented in this framework: asking and judging.
@@ -1271,9 +1217,86 @@ As AI makes it so that humans no longer have to do every task in a job, AI might
 \section*{Appendix}
 
 
-\section{Sectoral Employment and Equilibrium Allocations}
+\section{Equilibrium in the Task-Based Economy}
 \label{app:GE}
 
+In this appendix, we obtain equilibrium prices and allocations for the model specified in Section~\ref{taskbased_GE}.
+
+
+\paragraph{Goods Prices.}  
+In each sector, a worker employed in job $j$ produces an intermediate good $x_j$, which is sold back to the firm in a competitive market.  
+Let $\labor{j}$ denote the amount of labor per unit of good $x_j$ employed in job $j$.
+That is:  
+\[
+\labor{j} = \tasktime{hj} + \sum_{i \in \mathcal{J}_j} \tasktime{ij}.
+\]  
+The production cost per unit of $x_j$ can thus be written as:  
+\[
+\text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \taskhc{ij} \Biggr) \Biggl(\tasktime{hj} + \sum_{i \in \mathcal{J}_j} \tasktime{ij} \Biggr) = w_j \,\labor{j},
+\]  
+with $w_j$ being the wage rate for job $j$.
+Markets are perfectly competitive, therefore the price of intermediate good $j$, $p_j$, equals the marginal cost of its production $w_j\,\labor{j}$:
+\[
+p_j = w_j \labor{j}.
+\]  
+Furthermore, given the Leontief production function, perfect competition in the final good market implies that the price of final good, $p$, equals the sum of the prices of its constituent intermediate goods:
+\[
+p = \sum_{j=1}^J p_j = \sum_{j=1}^J w_j \labor{j}.
+\]  
+To maintain consistency in notation between the final and intermediate goods markets, define  
+\[
+w \, \labor{} \equiv \sum_{j=1}^J w_j \labor{j},
+\]
+so that $p = w \, \labor{}$.  
+If we let $\labor{}$ be the total amount of time (or labor) spent producing the final good, i.e.,
+\[
+\labor{} = \sum_{j=1}^J \labor{j},
+\]
+then $w$ can be interpreted as the weighted average wage rate of the entire sector:
+\[
+w = \frac{\sum_{j=1}^J w_j \labor{j}}{\sum_{j=1}^J \labor{j}}.
+\]
+
+We must mention that once $\labor{}$ is determined all $\labor{j}$s (for $j \in \{1,\ldots,J\}$) are pinned down.
+This is due to the assumption earlier that tasks are done in fixed proportions.
+Formally, the fixed proportions assumption implies that for some $\gamma_j > 0$ we have:  
+\[
+\frac{\labor{j}}{\labor{1}} = \gamma_j,
+\]  
+with $\gamma_1 = 1$.  
+Using the definition of $\labor{}$ we get: 
+\[
+\labor{} = \sum_{j=1}^J \labor{1} \Bigl(\frac{\labor{j}}{\labor{1}} \Bigr) = \labor{1} \sum_{j=1}^J \gamma_j 
+\quad 
+\Longrightarrow
+\quad 
+\frac{\labor{}}{\labor{1}} = \sum_{j=1}^J \gamma_j,
+\]  
+and thus:  
+\[
+\labor{j} = \Bigg( \frac{\gamma_j}{\sum_{j=1}^J \gamma_j} \Bigg) \labor{}.
+\]  
+Therefore, it is without loss to focus our attention on working with $\labor{}$, because once that is determined, the labor for each subsequent job is specified.
+
+
+\paragraph{Labor Market Clearing.}  
+Since the household supplies one unit of labor inelastically to all jobs across all sectors, the market clearing condition satisfies:  
+\[
+\sum_{k=1}^K \Biggl( \sum_{j=1}^{J_k} \labor{j}^k\,x_j^k \Biggr) = 1.
+\]  
+Given the Leontief production, this can be expressed as:  
+\[
+\sum_{k=1}^K \Biggl( \sum_{j=1}^{J_k} \labor{j}^k \Biggr) x_k = \sum_{k=1}^K \labor{}^k x_k = 1,
+\]  
+With this, we can rewrite the household's earned income as:  
+\[
+I = \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} w_j^k \labor{j}^k \Bigg) x_k 
+= v_L + \Bigg[ \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} \bigg( \sum_{i \in \mathcal{J}_j} \taskhc{ij}^k \bigg) \labor{j}^k \Bigg) x_k \Bigg],
+\]  
+implying that the household budget consists of two parts: a part that compensates the worker for his foregone leisure and a part that rewards him for the human capital he has acquired.
+
+
+\paragraph{Sectoral Employment and Equilibrium Allocations.}
 The consumer chooses $\{x_k\}$ to maximize
 \[
 U(x_1,\dots,x_K) = \Bigl(\sum_{k=1}^K \delta_k \,x_k^{\tfrac{\sigma-1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
@@ -1330,8 +1353,7 @@ R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
 In this way, the job design of the production process $\mathcal{T}_k$ (and thus the corresponding $\taskhc{ij}^k$s and $\tasktime{ij}^k$s) determines $p^k$, which then determines the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$.
 
 
-\section{Comparative Statics with Respect to Automation}
-\label{app:GE_comp_stats}
+\subsection{Comparative Statics with Respect to Automation}
 
 In this model, automation corresponds to assigning a subset of tasks to be performed by AI.  
 Suppose that a subset $\mathcal{A}_1 \subseteq \mathcal{T}_1$ of tasks is automated in good~1’s production process.  
