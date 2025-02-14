@@ -27,7 +27,7 @@ def create_title_with_worker_assignments(W):
     worker_sections = [
         "[" + "".join(f"({task})" for task in group) + "]" for group in groups
     ]
-    return "Job Design  " + "".join(worker_sections)
+    return "Job Design " + "".join(worker_sections)
 
 
 def draw_rect_square_unit(ax, x, y, t, c, h, task_idx):
@@ -228,23 +228,12 @@ def draw_rect_square_sequence(T, C, H, W):
     return fig, ax
 
 
-def generate_worker_assignments(n):
-    def generate_recursive(length, prev_num=1):
-        if length == 0:
-            yield []
-            return
-        for i in range(prev_num, length + 1):
-            for rest in generate_recursive(length - 1, i):
-                yield [i] + rest
-    yield from generate_recursive(n, 1)
-
-
 # Example usage
 handoff_height = 0.15  # Fixed height for attached rectangles
-T = np.array([2, 4, 5, 2, 7, 4])  # Main rectangle lengths
-C = np.array([2, 5, 6, 3, 4, 1])  # Main rectangle heights
-H = np.array([5, 2, 8, 2, 6, 0])  # Attached rectangle widths (height fixed at 0.1)
-W = np.array([1, 1, 2, 2, 3, 3])  # Worker assignments
+T = np.array([2, 4, 5, 2, 7, 2, 4])  # Main rectangle lengths
+C = np.array([2, 5, 6, 3, 4, 2, 1])  # Main rectangle heights
+H = np.array([7, 2, 8, 2, 10, 6, 0])  # Attached rectangle widths (height fixed at 0.15)
+W = np.array([1, 1, 2, 2, 3, 3, 3])  # Worker assignments
 
 fig, ax = draw_rect_square_sequence(T, C, H, W)
 plt.savefig(f"../writeup/plots/job_design.png", dpi=300)
