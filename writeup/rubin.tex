@@ -9,6 +9,7 @@
 \usepackage{natbib}
 \usepackage{setspace}
 \usepackage{tabularx}
+\usepackage{multirow}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -61,6 +62,8 @@
 
 \newcommand{\topic}[1]{\paragraph{#1}}
 %\newcommand{\topic}[1]{#1}
+
+\renewcommand{\arraystretch}{1.75} % Increase row height for visual consistency in job design Table 
 
 \maketitle
 
@@ -166,7 +169,7 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 
 \subsection{Task-Based Production}
 Consider an economy with $K$ final goods.
-A single (representative) firm produces and trades all goods under perfect competition in separate markets.
+A single firm produces and trades all goods under perfect competition in separate markets.
 For each good $k \in \{1,\ldots,K\}$, production requires completing an ordered set of tasks, denoted by:
 \[
 \mathcal{T}_k = \{1,2,\ldots,\tau_k\}.
@@ -182,7 +185,7 @@ Let $[.]$ denote the tasks assigned to a worker in a job.
 The four possible designs in this example are: $\{[1][2][3], \, [1,2][3], \, [1][2,3], \, [1,2,3]\}$.
 The second design, for instance, implies that one worker is assigned to do tasks 1 and 2 in a single job, $[1,2]$, whereas task 3 is assigned to a different worker in another job, $[3]$.
 
-Next, we formalize the definition of jobs for an arbitrary number of tasks and an arbitrary number of jobs.
+Next, we formalize the definition of jobs for an arbitrary number of tasks and arbitrary number of jobs.
 Suppose the firm breaks down the production process $\mathcal{T}$ into $J$ jobs.
 Let $i_j$ denote the first task in job $j \in \{1,\ldots,J\}$ in the production process of the final good.
 We can write:
@@ -190,11 +193,12 @@ We can write:
 1 = i_1 < i_2 < \cdots < i_{J+1} = \tau+1.
 \]
 This means that the first task is the first task of the first job, $i_1=1$, while the (imaginary) task $\tau+1$ is considered the first task of the (imaginary) job $j = J+1$.
-With this notation, the $j$th job can be characterized as a collection of consecutive tasks in the production process $\mathcal{T}$:
+Using this notation, the $j$th job can be specified as a collection of consecutive tasks in the production process $\mathcal{T}$ as follows:
 \[
 \mathcal{J}_j = \{i_j, \, i_j+1, \, \cdots, \, i_{j+1} - 1\}.
 \]
-Going back to the earlier example with $\tau=3$, the four potential job designs can formally be expressed as:
+The characterization for $\mathcal{J}_j$ above means that the first task in job $j$ is task $i_j$ while the last task in job $j$ is the task that comes before the first task in the $j+1$th job, denoted by $i_{j+1}-1$.
+With this notation, the four potential job designs in the earlier example with $\tau=3$ can formally be expressed as:
 \begin{align*}
 \{[1][2][3]\} \Longleftrightarrow \ J = 3:  & \quad \mathcal{J}_1 = \{1\}, \quad  \mathcal{J}_2 = \{2\}, \quad \mathcal{J}_3 = \{3\}, \\
 \{[1,2][3]\} \Longleftrightarrow \ J = 2: & \quad \mathcal{J}_1 = \{1, 2\},  \quad \mathcal{J}_2 = \{3\}, \\
@@ -237,20 +241,132 @@ The firm must pay workers for their time, regardless of the task; hence, the wag
 \[
 \text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \taskhc{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \tasktime{ij} \Biggr).
 \]
+The firm seeks to minimize the total cost of producing the final good by optimally designing jobs.
+Assuming there are $J$ jobs in the optimal design, the overall production cost per unit of final good is:
+\[
+\text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \taskhc{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \tasktime{ij} \Biggr)\Biggr].
+\]
+
+In the earlier example production process with three tasks, suppose workers value leisure at $v_L = 1$ and tasks are characterized by human capital requirements and time costs specified below:
+\[
+\begin{array}{c|ccc}
+\textbf{Task} & \taskhc{i} & \tasktime{i} \\ \hline
+1 & 3  & 1 \\
+2 & 1 & 2  \\
+3 & 2   & 1.5 \\
+\end{array}
+\]
+The wage bill for each individual job as well as total production cost for each job design is given in Panel A of Table~\ref{tab:job_design}.
+
+\begin{table}[htbp]
+\caption{Example job design costs for a production process with $\tau=3$ tasks}
+\resizebox{0.8\textwidth}{!}{%
+\begin{tabular}{c}
+% Panel A: Without Hand-off Costs
+\begin{minipage}{\textwidth}
+\centering
+\hspace*{3,5cm} Panel (A): Without Hand-off Costs \\[1ex]
+\begin{tabular}{|
+  >{\centering\arraybackslash}m{2cm}|
+  >{\centering\arraybackslash}m{1cm}|
+  >{\centering\arraybackslash}m{2cm}|
+  >{\centering\arraybackslash}m{1.8cm}|
+  >{\centering\arraybackslash}m{1.8cm}|
+  >{\centering\arraybackslash}m{1.75cm}|
+  >{\centering\arraybackslash}m{2cm}|
+  }
+\hline
+\textbf{Job Design} & \textbf{Job} & \textbf{Job Tasks} & $v_L+\sum\taskhc{i}$ & $\sum\tasktime{i}$ & \textbf{Job Cost} & \textbf{Total Cost} \\
+\hline
+\multirow{3}{*}{[1][2][3]} 
+  & 1 & $\{1\}$   & 4   & 1    & 4    & \multirow{3}{*}{12.5} \\
+\cline{2-6}
+  & 2 & $\{2\}$   & 2   & 2    & 4    &  \\
+\cline{2-6}
+  & 3 & $\{3\}$   & 3   & 1.5  & 4.5    &  \\
+\hline
+\multirow{2}{*}{[1,2][3]}
+  & 1 & $\{1,2\}$ & 5   & 3    & 15   & \multirow{2}{*}{19.5} \\
+\cline{2-6}
+  & 2 & $\{3\}$   & 3   & 1.5  & 4.5    & \\
+\hline
+\multirow{2}{*}{[1][2,3]}
+  & 1 & $\{1\}$   & 4   & 1    & 4    & \multirow{2}{*}{18} \\
+\cline{2-6}
+  & 2 & $\{2,3\}$ & 4   & 3.5  & 14   & \\
+\hline
+[1,2,3] & 1 & $\{1,2,3\}$ & 7   & 4.5  & 31.5 & 31.5 \\
+\hline
+\end{tabular}
+\end{minipage} \\[25ex]
+% Panel B: Including Hand-off Costs
+\begin{minipage}{\textwidth}
+\centering
+\hspace*{3.5cm} Panel (B): Including Hand-off Costs \\[1ex]
+\begin{tabular}{|
+  >{\centering\arraybackslash}m{2cm}|
+  >{\centering\arraybackslash}m{1cm}|
+  >{\centering\arraybackslash}m{2cm}|
+  >{\centering\arraybackslash}m{1.8cm}|
+  >{\centering\arraybackslash}m{1.8cm}|
+  >{\centering\arraybackslash}m{1.75cm}|
+  >{\centering\arraybackslash}m{2cm}|
+  }
+\hline
+\textbf{Job Design} & \textbf{Job} & \textbf{Job Tasks} & $v_L+\sum\taskhc{i}$ & $t_h+\sum\tasktime{i}$ & \textbf{Job Cost} & \textbf{Total Cost} \\
+\hline
+\multirow{3}{*}{[1][2][3]} 
+  & 1 & $\{1\}$   & 4   & 3.5  & 14   & \multirow{3}{*}{23.5} \\
+\cline{2-6}
+  & 2 & $\{2\}$   & 2   & 2.5  & 5    &  \\
+\cline{2-6}
+  & 3 & $\{3\}$   & 3   & 1.5  & 4.5    &  \\
+\hline
+\multirow{2}{*}{[1,2][3]}
+  & 1 & $\{1,2\}$ & 5   & 3.5  & 17.5   & \multirow{2}{*}{22} \\
+\cline{2-6}
+  & 2 & $\{3\}$   & 3   & 1.5  & 4.5    & \\
+\hline
+\multirow{2}{*}{[1][2,3]}
+  & 1 & $\{1\}$   & 4   & 3.5  & 14   & \multirow{2}{*}{28} \\
+\cline{2-6}
+  & 2 & $\{2,3\}$ & 4   & 3.5  & 14   & \\
+\hline
+[1,2,3] & 1 & $\{1,2,3\}$ & 7   & 4.5  & 31.5 & 31.5 \\
+\hline
+\end{tabular}
+\end{minipage}
+\end{tabular}
+}
+\label{tab:job_design}
+\footnotesize{\\ \\ \\ Notes: This table shows production costs for each job design in a production process with $\tau=3$ tasks. 
+Panel (A) gives the production costs in absence of hand-off costs while Panel (B) includes hand-off costs. While in absence of frictions assigning each task to a single worker is optimal the cost-minimizing way of producing the good changes after introduction of the hand-off friction. The human capital requirements, task times, hand-off times, and value of leisure are specified in text.
+  }
+\end{table}
 
 Without additional frictions, the firm could minimize the cost of production by assigning a single worker to each task.
 What prevents this is a ``hand-off cost''---a cost tied to job transitions that, while not requiring additional human capital, does take time.
 This can be interpreted as the cost of context-switching (or hand-off) between workers in the production process.
 Specifically, whenever a job boundary is introduced---that is, when transitioning from the last task of job $j$ to the first task of job $j+1$---the worker in job $j$ incurs a hand-off time cost $\tasktime{hj} \geq 0$.
 
-The firm seeks to minimize the total cost of producing the final good by optimally designing jobs while taking hand-off costs into account.
-Assuming there are $J$ jobs in the optimal design, the overall production cost per unit of final good is:
+The firm's cost minimization problem remains the same, with the only twist now being an additional hand-off cost that must be incurred after completing the last task in the job. 
+The firm's objective is thus minimizing the following, with the only difference from the previous equation being the extra $\tasktime{hj}$ term in the time cost of each job:
 \[
 \text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \taskhc{ij} \Biggr) \Biggl(\tasktime{hj} + \sum_{i \in \mathcal{J}_j} \tasktime{ij} \Biggr)\Biggr].
 \]
+Panel B of Table~\ref{tab:job_design} shows the job design with hand-off costs specified in the following table:
+\[
+\begin{array}{c|ccc}
+\textbf{Task} & \taskhc{i} & \tasktime{i} & \tasktime{h} \\ \hline
+1 & 3  & 1   & 2.5 \\
+2 & 1 & 2   & 0.5 \\
+3 & 2   & 1.5 & 0 \\
+\end{array}
+\]
+Notice that while the optimal job design earlier was assigning a single worker to each task (i.e., the [1][2][3] design), after the introduction of hand-off friction the minimum cost-way of production becomes the [1,2][3] design.
 
-The firm's problem has a nice geometric interpretation, as shown in Figure~\ref{fig:job_design}.
-The productive process is represented as a sequence of stacked rectangles of height $\taskhc{ij}$ and width $\tasktime{ij}$.
+The firm's problem also has a nice geometric interpretation.
+The productive process can be represented as a sequence of stacked rectangles of height $\taskhc{ij}$ and width $\tasktime{ij}$, as shown in Figure~\ref{fig:job_design}.
 A job corresponds to the bounding box around a sequence of tasks---including the hand-off---with its wage bill given by the area of that box.
 Note that each rectangle can also be thought of as a series of smaller tasks (smaller rectangles filling in the larger rectangle).
 At the limit, this would become a smooth curve of tasks.
@@ -274,9 +390,8 @@ Panel (a) of Figure~\ref{fig:job_design} shows a potential job design for a sequ
 \end{figure}
 
 
-
 \subsection{AI Facilitates Hand-off}
-Here we discuss what determines the hand-off cost introduced in previous part.
+In this subsection we discuss what determines the hand-off cost introduced in previous part.
 Again for simplicity, let us suppress the job-specific notation $j$ until the very last part of this subsection.
 All the parameters discussed here implicitly pertain to a typical job.
 
@@ -301,10 +416,27 @@ q \geq \frac{\alpha \, \tasktime{m}}{\tasktime{w}}.
 \]
 The optimal hand-off time at the end of each job is thus:
 \[
-\tasktime{h} = \min\Bigl\{\frac{\alpha \, \tasktime{m}}{q},\, \tasktime{w}\Bigr\}.
+\tasktime{h} = min \Bigl\{\frac{\alpha \, \tasktime{m}}{q},\, \tasktime{w}\Bigr\}.
 \]
 By convention, the hand-off cost for the last task is zero since no hand-off occurs after the final job.
-The parameter $\tasktime{hj}$ appearing in the firm's job design problem above is the minimum of manual and AI hand-off cost for job $j$.
+To illustrate the connection with our earlier discussion on job design, consider the example with $\tau=3$ tasks.
+For simplicity, we assume $\alpha = 1$ for all tasks.  
+The table below captures our analysis by demonstrating that the effective hand-off time, $\tasktime{h}$, is defined as the minimum between the manual hand-off cost and the expected cost of an AI-facilitated hand-off.
+Thus, by setting $\tasktime{h} = min\{\alpha\, \tasktime{m}/q\}, \, \tasktime{w}$, the model naturally incorporates the cost reduction from AI into the overall job design strategy, thereby altering the optimal allocation of tasks among workers as previously discussed and shown in Table~\ref{tab:job_design}.
+\[
+\begin{array}{c|ccc|ccc}
+\textbf{Task} & \taskhc{i} & \tasktime{i} & \tasktime{h}=min\{\alpha \, \tasktime{m}/q, \, \tasktime{w}\} & \tasktime{w} & \tasktime{m} & q \\ \hline
+1 & 3   & 1 & 2.5   & 2.5 & 1 & 0.25\\
+2 & 1 & 2 & 0.5  & 1 & 0.25 & 0.5\\
+3 & 2  & 1.5  & 0 & 0   & 0  & 1\\
+\end{array}
+\]
+
+Before addressing the household problem and characterizing the equilibrium in this economy, it is worth noting that although the idea of hand-offs between jobs/workers may seem new, it is not really a innovation.
+In the absence of alternative technologies, hand-offs have always been an intrinsic part of a task.
+With the advent of AI technology, however, a portion of a task can now be automated, thereby enabling easier hand-offs between tasks.
+In other words, hand-offs have always been an integral aspect of task production because no technology existed to separate them from the core task.
+Now, AI allows us to distinguish between the core part of a task and the hand-off process, reducing the cost and complexity of task transitions.
 
 
 \subsection{Consumption} 
