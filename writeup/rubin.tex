@@ -395,58 +395,53 @@ Panel (a) of Figure~\ref{fig:job_design} shows a potential job design for a sequ
 
 
 
-\subsection{Adding AI}  
-Having established the structure of task-based production, we now extend our framework by incorporating automation via AI.  
-Consider a worker completing a sequence of tasks as part of their designed job. 
+\subsection{Adding AI}
+Having established the structure of task-based production, we now extend our framework by incorporating automation via AI.
+Consider a worker completing a sequence of tasks as part of their designed job.
 In this subsection we focus on a single task and drop the job ($j$) and task indices ($i \in \mathcal{J}_j$) for notational simplicity.
-In the next section, we will discuss automation of two or more tasks.
+We will discuss automation of two or more tasks in the next section.
 
-The worker can complete a task in one of two ways: manually or using an AI.  
-If performed manually, the worker incurs a time cost of $\tasktime{w} \geq 0$.  
-Alternatively, if the worker chooses to use AI, they issue a ``prompt'' to the AI at a time cost of $\tasktime{p} \geq 0$.  
-The AI then attempts the task and produces an output, which the worker evaluates at an additional time cost of $\tasktime{e} \geq 0$.  
-To capture the overhead associated with supervising and managing the AI’s output, we introduce the management efficiency parameter $\alpha \geq 0$.
-In particular, we define the total management time as:
-$$\tasktime{m} = \tasktime{p} + \tasktime{e},$$  
-so that the effective management cost is given by $\alpha\,\tasktime{m}$.  
-The parameter $\alpha$ can be interpreted as either the worker’s management efficiency in working with AI or as the ``AI-ability'' of the task if we assume all workers are equally sophisticated in AI deployment.
-A high value of $\alpha$ implies that managing the AI is very costly, whereas a lower value indicates that the AI deployment cost is relatively small (with $\alpha = 0$ meaning that finishing the task is effectively free when using AI).
-
-The AI produces the output with probability $q$ (and fails with probability $1-q$).  
-If the AI fails, the worker can provide a new prompt and evaluate a new attempt, incurring the same costs $\tasktime{p}$ and $\tasktime{e}$ again.  
-Figure~\ref{fig:flow} illustrates this iterative process.  
+The worker can complete a task---whether as part of the production process or as a hand-off between jobs---in one of two ways: manually or using an AI.
+We refer to tasks performed by AI as automation.
+If the task is completed manually, the worker incurs a time cost of $\tasktime{w} > 0$.
+Alternatively, if the worker opts to use AI, they issue a ``prompt'' to the AI at a time cost of $\tasktime{p} > 0$.
+The AI successfully produces an output with probability $q$ and fails with probability $1-q$.
+The worker then evaluates the output, incurring an additional time cost of $\tasktime{e} > 0$.
+After the evaluation, the worker learns whether the AI succeeded or failed.
+If the AI fails, the worker can provide a new prompt and evaluate a new attempt, incurring the same costs $\tasktime{p}$ and $\tasktime{e}$ again.
+Let $\tasktime{m} = \tasktime{p} + \tasktime{e}$ denote the total ``management'' time cost associated with using the AI for the task.
+For now, assume the worker can manage all tasks similarly by paying the task-specific management time cost.\footnote{Later in the empirical section, we make a distinction between how AI facilitates production process tasks and hand-offs. For the purpose of the current model, however, AI automates both types of tasks similarly.}
+Figure~\ref{fig:flow} illustrates this process graphically.
 
 \begin{figure}[h]
   \centering
   \caption{Using AI to complete a task} \label{fig:flow}
-  \includegraphics[width = \textwidth]{images/flow.png}
+  \includegraphics[width=\textwidth]{images/flow.png}
   \footnotesize{Notes: This figure illustrates the iterative process of using AI to complete a task. The human provides a prompt, the AI generates output, and the human evaluates whether the output meets their needs. If not, the process repeats with a refined prompt.}
 \end{figure}
 
-
-The decision whether to deploy the AI depends on whether the manual cost exceeds the effective management cost.  
+The decision whether to deploy the AI depends on whether the manual cost exceeds the AI management cost.
 Assuming that each attempt is independent, we obtain the following proposition.
 
-\begin{proposition}[Single Task Automation Criterion] \label{proposition:single}  
-A job with a single task should be automated if and only if AI quality exceeds the threshold  
-$$\underline{q} := \frac{\alpha\,\tasktime{m}}{\tasktime{w}}.$$  
+\begin{proposition}[Single Task Automation Criterion] \label{proposition:single}
+A job with a single task should be automated if and only if AI quality exceeds the threshold
+$$\underline{q} := \frac{\tasktime{m}}{\tasktime{w}}.$$
 \end{proposition}
 
-\begin{proof}  
+\begin{proof}
 By the standard result for the expectation of a geometric distribution, the expected time cost of using the AI is:
-$$\tasktime{m} \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\tasktime{m}}{q}.$$  
+$$\tasktime{m} \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\tasktime{m}}{q}.$$
 Thus, automation is optimal when:
-$$\tasktime{w} \geq \frac{\alpha\,\tasktime{m}}{q} \quad \Longleftrightarrow \quad q \geq \frac{\alpha\,\tasktime{m}}{\tasktime{w}} := \underline{q}.$$  
+$$\tasktime{w} \geq \frac{\tasktime{m}}{q} \quad \Longleftrightarrow \quad q \geq \frac{\tasktime{m}}{\tasktime{w}} := \underline{q}.$$
 \end{proof}
 
-This criterion has intuitive comparative statics: automation becomes more attractive when the manual time cost $\tasktime{w}$ is high, the effective management cost $\alpha\,\tasktime{m}$ is low, and the AI's success probability $q$ is high.  
-One implication is that improvements in prompting and evaluation tools---thereby reducing $\tasktime{p}$ and $\tasktime{e}$---can lower the effective management cost and make automation more appealing, even if $q$ remains unchanged.  
+This criterion has intuitive comparative statics: automation becomes more attractive when the manual time cost $\tasktime{w}$ is high, the management cost $\tasktime{m}$ is low, and the AI's success probability $q$ is high.
+One implication is that improvements in prompting and evaluation tools---thereby reducing $\tasktime{p}$ and $\tasktime{e}$---can lower the management cost and make automation more appealing, even if $q$ remains unchanged.
+Although the assumptions of independent success probabilities and constant management costs might seem strong, they are relatively mild and can be adjusted by redefining parameters if necessary (e.g., if outcomes are positively correlated, the effective success probability can be treated as lower; see Sections~\ref{sec:correlated_successes} and~\ref{sec:constant_management_costs}).
 
-Although the assumptions of independent success probabilities and constant management costs might seem strong, they are relatively mild and can be adjusted by redefining parameters if necessary (e.g., if outcomes are positively correlated, the effective success probability can be treated as lower; see Sections~\ref{sec:correlated_successes} and~\ref{sec:constant_management_costs}).  
-For a given management efficiency $\alpha$ and AI success probability $q$, the effective time cost per task---i.e., the time cost parameter $\tasktime{}$ used earlier---is determined by:
-$$\tasktime{} = min \Bigl\{\frac{\alpha\,\tasktime{m}}{q},\, \tasktime{w}\Bigr\}.$$  
+For a given AI success probability $q$, the effective time cost per task---i.e., the task time cost parameter $\tasktime{i}$ used earlier---is determined by:
+$$\tasktime{i} = \min \Bigl\{\frac{\tasktime{m}}{q},\, \tasktime{w}\Bigr\}.$$
 This expression shows how the overall time cost of a task is set by the trade-off between manual execution and AI-assisted automation.
-
 
 \subsection{Consumption} 
 \label{sec:household_GE}
