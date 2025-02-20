@@ -98,4 +98,5 @@ $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $
 
 toread: $(project_name).pdf
 	## scp $(project_name).pdf bandit-local.local:/home/john/Dropbox/toread/$(project_name)_$(ts).pdf || 
-	cp $(project_name).pdf ~/Dropbox/toread/$(project_name)_$(ts).pdf 
+	##cp $(project_name).pdf ~/Dropbox/toread/$(project_name)_$(ts).pdf 
+	cp $(project_name).pdf /Users/johnhorton/Library/CloudStorage/Dropbox/toread/$(project_name)_$(ts).pdf 
