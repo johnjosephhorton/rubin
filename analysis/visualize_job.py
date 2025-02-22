@@ -1,5 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import random
+
+# Set random seed for reproducibility (optional)
+random.seed(42)
+np.random.seed(42)
+
+# Fixed handoff height for attached rectangles
+handoff_height = 0.1
 
 
 def create_title_with_worker_assignments(W):
@@ -229,11 +237,53 @@ def draw_rect_square_sequence(T, C, H, W):
 
 
 # Example usage
-handoff_height = 0.15  # Fixed height for attached rectangles
-T = np.array([2, 4, 5, 2, 7, 2, 4])  # Main rectangle lengths
-C = np.array([2, 5, 6, 3, 4, 2, 1])  # Main rectangle heights
-H = np.array([7, 2, 8, 2, 10, 6, 0])  # Attached rectangle widths (height fixed at 0.15)
-W = np.array([1, 1, 2, 2, 3, 3, 3])  # Worker assignments
+T = np.array([1, 2, 2, 1.5])  # Main rectangle lengths
+C = np.array([3, 1, 2, 2])  # Main rectangle heights
+H = np.array([2.5, 0.5, 1, 0])  # Attached rectangle widths (height fixed at 0.15)
+W = np.array([1, 1, 2, 2])  # Worker assignments
+
 
 fig, ax = draw_rect_square_sequence(T, C, H, W)
 plt.savefig(f"../writeup/plots/job_design.png", dpi=300)
+
+
+
+# def generate_parameters(num_jobs):
+#     """
+#     Generate a sensible set of parameters (T, C, H, W) for the given number of jobs.
+    
+#     - T: Random main rectangle lengths (0.5 to 3.0)
+#     - C: Random main rectangle heights (1.0 to 3.0)
+#     - H: Random attached rectangle widths (0 to 2.5, with the last value set to 0)
+#     - W: Worker assignments as a weakly increasing sequence starting at 1,
+#          with each value ≤ num_jobs.
+#     """
+#     T = np.round(np.random.uniform(0.25, 5, size=num_jobs), 1)
+#     C = np.round(np.random.uniform(0.25, 5, size=num_jobs), 1)
+#     H = np.round(np.random.uniform(0, 5, size=num_jobs), 1)
+#     H[-1] = 0  # Ensure the last attached rectangle width is 0 (as in your original example)
+    
+#     # Build a weakly increasing worker assignment array with increased variation.
+#     W = [1]
+#     increment_probability = 0.6  # Adjust this value to control variation
+#     for i in range(1, num_jobs):
+#         if W[-1] < num_jobs:
+#             if np.random.rand() < increment_probability:
+#                 W.append(W[-1] + 1)
+#             else:
+#                 W.append(W[-1])
+#         else:
+#             W.append(W[-1])
+#     return T, C, H, np.array(W)
+
+# # Loop over job counts and generate 5 examples for each.
+# job_counts = [5, 6, 7, 8, 9, 10, 11, 12, 13]
+# for num_jobs in job_counts:
+#     for example in range(1, 11):
+#         T, C, H, W = generate_parameters(num_jobs)
+#         fig, ax = draw_rect_square_sequence(T, C, H, W)
+#         # Update the title to include job count and example number
+#         ax.set_title(create_title_with_worker_assignments(W) + f"    (Tasks: {num_jobs}, Example: {example})")
+#         # Save the figure with a unique filename
+#         plt.savefig(f"../writeup/plots/job_design/job_design_{num_jobs}tasks_{example}.png", dpi=300)
+#         plt.close(fig)

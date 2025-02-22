@@ -254,9 +254,9 @@ def generate_worker_assignments(n):
 
 # Example usage
 handoff_height = 0.15  # Fixed height for attached rectangles
-T = np.array([2, 4, 5, 2, 7, 2, 4])  # Main rectangle lengths
-C = np.array([2, 5, 6, 3, 4, 2, 1])  # Main rectangle heights
-H = np.array([7, 2, 8, 2, 10, 6, 0])  # Attached rectangle widths (height fixed at 0.15)
+T = np.array([1, 2, 1.5])  # Main rectangle lengths
+C = np.array([3, 1, 2])  # Main rectangle heights
+H = np.array([2.5, 0.5, 0])  # Attached rectangle widths (height fixed at 0.15)
 
 
 image_files = []
@@ -266,11 +266,11 @@ for index, assignment in enumerate(generate_worker_assignments(len(T))):
         break
 
     W = np.array(assignment)
-    # print(W)
     fig, ax = draw_rect_square_sequence(T, C, H, W)
     filename = f"../writeup/plots/job_design/job_design_{index}.png"
     image_files.append(filename)
     plt.savefig(filename, dpi=100)
+    plt.close()
 
     
 
