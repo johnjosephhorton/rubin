@@ -12,7 +12,6 @@ path.mkdir(parents=True, exist_ok=True)
 def create_title_with_worker_assignments(W):
     """
     Create a title string showing task sequence grouped by workers
-    Example: Job Design [(1)(2)][(3)(4)][(5)(6)] for 6 tasks split between 3 workers
     """
     # Initialize variables
     current_worker = W[0]
@@ -32,7 +31,7 @@ def create_title_with_worker_assignments(W):
 
     # Create the formatted string
     worker_sections = [
-        "[" + "".join(f"({task})" for task in group) + "]" for group in groups
+        "[" + "".join(f"{task}," for task in group)[:-1] + "]" for group in groups
     ]
     return "Job Design " + "".join(worker_sections)
 
@@ -208,16 +207,17 @@ def draw_rect_square_sequence(T, C, H, W):
         ax.add_patch(transition_rect)
 
         # Add hand-off index at center of hand-off rectangle
-        center_x = x + h / 2
-        center_y = y - total_c / 2
-        ax.text(
-            center_x,
-            center_y,
-            f"$h_{{{task_idx}}}$",
-            horizontalalignment="center",
-            verticalalignment="center",
-            fontsize=10
-        )
+        if h > 0:
+            center_x = x + h / 2
+            center_y = y - total_c / 2
+            ax.text(
+                center_x,
+                center_y,
+                f"$h_{{{task_idx}}}$",
+                horizontalalignment="center",
+                verticalalignment="center",
+                fontsize=10
+            )
 
     padding = max(x_max - x_min, y_max - y_min) * 0.1
     ax.set_xlim(x_min - padding, x_max + padding)
@@ -253,39 +253,40 @@ def generate_worker_assignments(n):
 
 
 # Example usage
-handoff_height = 0.15  # Fixed height for attached rectangles
+handoff_height = 0.025  # Fixed height for attached rectangles
 T = np.array([1, 2, 1.5])  # Main rectangle lengths
 C = np.array([3, 1, 2])  # Main rectangle heights
-H = np.array([2.5, 0.5, 0])  # Attached rectangle widths (height fixed at 0.15)
+H_handoff = np.array([2.5, 0.5, 0])  # Attached hand-off lengths
+H_no_handoff = np.array([0, 0, 0])  # No hand-off
 
 
-image_files = []
-for index, assignment in enumerate(generate_worker_assignments(len(T))):
-    
-    if index == 2 ** (len(T) - 1):
-        break
 
-    W = np.array(assignment)
-    fig, ax = draw_rect_square_sequence(T, C, H, W)
-    filename = f"../writeup/plots/job_design/job_design_{index}.png"
-    image_files.append(filename)
-    plt.savefig(filename, dpi=100)
-    plt.close()
+for H, my_str in zip([H_handoff, H_no_handoff], ["with_handoff", "no_handoff"]):
+    image_files = []
+    for index, assignment in enumerate(generate_worker_assignments(len(T))):
+        
+        if index == 2 ** (len(T) - 1):
+            break
 
-    
+        W = np.array(assignment)
+        fig, ax = draw_rect_square_sequence(T, C, H, W)
+        filename = f"../writeup/plots/job_design/job_design_{index}_{my_str}.png"
+        image_files.append(filename)
+        plt.savefig(filename, dpi=100)
+        plt.close()
 
 
-# Combine PNGs into a grid
-grid_size = math.ceil(math.sqrt(len(image_files)))
-images = [Image.open(img) for img in image_files]
-img_width, img_height = images[0].size
-canvas_width = img_width * grid_size
-canvas_height = img_height * grid_size
-grid_image = Image.new("RGB", (canvas_width, canvas_height), "white")
+    # Combine PNGs into a grid
+    grid_size = math.ceil(math.sqrt(len(image_files)))
+    images = [Image.open(img) for img in image_files[::-1]]
+    img_width, img_height = images[0].size
+    canvas_width = img_width * grid_size
+    canvas_height = img_height * grid_size
+    grid_image = Image.new("RGB", (canvas_width, canvas_height), "white")
 
-for index, img in enumerate(images):
-    x = (index % grid_size) * img_width
-    y = (index // grid_size) * img_height
-    grid_image.paste(img, (x, y))
+    for index, img in enumerate(images):
+        x = (index % grid_size) * img_width
+        y = (index // grid_size) * img_height
+        grid_image.paste(img, (x, y))
 
-grid_image.save("../writeup/plots/combined_grid.png")
+    grid_image.save(f"../writeup/plots/combined_grid_{my_str}.png")
