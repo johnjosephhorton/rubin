@@ -3,25 +3,25 @@ import matplotlib.pyplot as plt
 
 
 class CostVisualization:
-    def __init__(self, c_m, c_h):
+    def __init__(self, t_m, t_h):
         """Initialize with cost parameters.
 
         Args:
-            c_m (float): Machine cost (normalized)
-            c_h (float): Human cost (normalized)
+            t_m (float): Machine cost (normalized)
+            t_h (float): Human cost (normalized)
         """
-        self.c_m = c_m
-        self.c_h = c_h
-        self.q_threshold = c_m / c_h
+        self.t_m = t_m
+        self.t_h = t_h
+        self.q_threshold = t_m / t_h
         self.current_fig = None
 
     def _calculate_costs(self, Q1, Q2):
         """Calculate costs for different arrangements."""
-        cost_human = 2 * self.c_h
-        cost_machine = (self.c_m / Q1) + (self.c_m / Q2)
-        cost_m1h2 = (self.c_m / Q1) + self.c_h
-        cost_h1m2 = self.c_h + (self.c_m / Q2)
-        cost_chained = self.c_m / (Q1 * Q2)
+        cost_human = 2 * self.t_h
+        cost_machine = (self.t_m / Q1) + (self.t_m / Q2)
+        cost_m1h2 = (self.t_m / Q1) + self.t_h
+        cost_h1m2 = self.t_h + (self.t_m / Q2)
+        cost_chained = self.t_m / (Q1 * Q2)
 
         return np.stack(
             [
@@ -55,16 +55,16 @@ class CostVisualization:
         for i in range(m + 1):
             for j in range(m + 1):
                 if i == 0 or j == 0:
-                    cost_table[i, j] = 2 * self.c_h
+                    cost_table[i, j] = 2 * self.t_h
                 else:
                     q1 = i / m
                     q2 = j / m
                     # Calculate costs for single point
-                    cost_human = 2 * self.c_h
-                    cost_machine = (self.c_m / q1) + (self.c_m / q2)
-                    cost_m1h2 = (self.c_m / q1) + self.c_h
-                    cost_h1m2 = self.c_h + (self.c_m / q2)
-                    cost_chained = self.c_m / (q1 * q2)
+                    cost_human = 2 * self.t_h
+                    cost_machine = (self.t_m / q1) + (self.t_m / q2)
+                    cost_m1h2 = (self.t_m / q1) + self.t_h
+                    cost_h1m2 = self.t_h + (self.t_m / q2)
+                    cost_chained = self.t_m / (q1 * q2)
 
                     cost_table[i, j] = min(
                         cost_human, cost_machine, cost_m1h2, cost_h1m2, cost_chained
@@ -158,13 +158,13 @@ class CostVisualization:
 
         # M1H2-Chained boundary
         q1_line = np.linspace(1 - start, 1, 200)
-        q2_m1h2_chained = self.c_m / (self.c_m + self.c_h * q1_line)
+        q2_m1h2_chained = self.t_m / (self.t_m + self.t_h * q1_line)
         valid = (q2_m1h2_chained > 0) & (q2_m1h2_chained <= 1)
         plt.plot(q1_line[valid], q2_m1h2_chained[valid], "black", lw=2)
 
         # H1M2-Chained boundary
         q1_line = np.linspace(0.001, start, 200)
-        q2_h1m2_chained = self.c_m * (1 - q1_line) / (self.c_h * q1_line)
+        q2_h1m2_chained = self.t_m * (1 - q1_line) / (self.t_h * q1_line)
         valid = (q2_h1m2_chained > 0) & (q2_h1m2_chained <= 1)
         plt.plot(q1_line[valid], q2_h1m2_chained[valid], "black", lw=2)
 
@@ -190,9 +190,9 @@ class CostVisualization:
 
         # Add threshold labels with larger font
         plt.text(
-            self.q_threshold + 0.01, 0.02, r"$q_1 = c_m/c_h$", rotation=90, fontsize=14
+            self.q_threshold + 0.01, 0.02, r"$q_1 = t_m/t_h$", rotation=90, fontsize=14
         )
-        plt.text(0.01, self.q_threshold + 0.01, r"$q_2 = c_m/c_h$", fontsize=14)
+        plt.text(0.01, self.q_threshold + 0.01, r"$q_2 = t_m/t_h$", fontsize=14)
 
         # Add region labels with larger font
         self._add_label_with_background(
@@ -205,7 +205,7 @@ class CostVisualization:
             (1 + self.q_threshold) / 2, self.q_threshold / 2, "<1>(2)", fontsize=18
         )
 
-        self._add_label_with_background(1, 1, "$c_{p}$ \n \u263A", fontsize=18)
+        self._add_label_with_background(1, 1, "$t_{p}$ \n \u263A", fontsize=18)
         self._add_label_with_background(0.45, 0.45, "<1><2>", fontsize=18)
 
         self._add_label_with_background(1 - start, 1 - start, "<1|2>", fontsize=18)
