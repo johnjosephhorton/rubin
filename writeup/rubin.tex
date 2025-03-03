@@ -184,85 +184,67 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 %Why are there still so many jobs \citep{autor2015}?
 
 
-\section{A General Equilibrium Model with Task-Based Production}
-\label{sec:taskbased_GE}
+\section{A Task-Based Model of Production}
+\label{sec:taskbaed_prod}
 
-\subsection{Task-Based Production}
-Consider an economy with $K$ final goods.
-A single firm produces and trades all goods under perfect competition in separate markets.
-For each good $k \in \{1,\ldots,K\}$, production requires completing an ordered set of tasks, denoted by:
+To model how AI affects occupations---viewed here as collections of tasks---we need some account of why those tasks were put together in an occupation in the first place.
+In this section we develop a framework that treats occupations as a collection tasks, explains how firms design jobs, and shows how AI influences the design choices.
+
+Suppose production of a typical final good requires completing an ordered set of tasks, denoted by:
 \[
-\mathcal{T}_k = \{1,2,\ldots,\tau_k\}.
+\mathcal{T} = \{1,2,\ldots,\tau\}.
 \]
-We refer to $\mathcal{T}_k$ as the production process for good $k$.
-For ease of exposition, we focus on a representative sector and omit the subscript $k$ from our notation until subsection~\ref{sec:household_GE}.
-This simplification means that when we refer to variables or production processes, they implicitly pertain to a typical final good.
+We refer to $\mathcal{T}$ as the production process of the good.
+The firm can partition the production process $\mathcal{T}$ into $J$ distinct ``jobs,'' where each job $j \in \{1, \cdots, J \}$ is a contiguous block of tasks performed by a single worker, denoted by $\mathcal{J}_j$.
+Formally:
+\[
+\bigcup_{j=1}^J \mathcal{J}_j = \mathcal{T}, 
+\]
+and:
+\[
+\mathcal{J}_j \cap \mathcal{J}_{j'} = \emptyset 
+\qquad 
+\forall\, j,j' \in \{1,\dots,J\},\ j \neq j'.
+\]
 
-The firm can partition the production process $\mathcal{T}$ into a number of ``jobs,'' where each job is a contiguous block of tasks performed by a single worker.
 With $|\mathcal{T}| = \tau$ tasks, there are $2^{(\tau - 1)}$ unique ways of designing jobs.
 For example, if $\tau = 3$, the production process of the final good consists of three tasks, $\{1,2,3\}$, with $2^{(3-1)}=4$ unique job designs.
 Let $[.]$ denote the tasks assigned to a worker in a job.
 The four possible designs in this example are: $\{[1][2][3], \, [1,2][3], \, [1][2,3], \, [1,2,3]\}$.
-The second design, for instance, implies that one worker is assigned to do tasks 1 and 2 in a single job, $[1,2]$, whereas task 3 is assigned to a different worker in another job, $[3]$.
+The $[1,2][3]$ design, for example, means that one worker is assigned to do tasks 1 and 2 in a single job, $[1,2]$, whereas task 3 is assigned to a different worker in another job, $[3]$.
+Later, we will discuss what factors guide the firm’s choice among different job designs.
 
-Next, we formalize the definition of jobs for an arbitrary number of tasks and arbitrary number of jobs.
-Suppose the firm breaks down the production process $\mathcal{T}$ into $J$ jobs.
-Let $i_j$ denote the first task in job $j \in \{1,\ldots,J\}$ in the production process of the final good.
-We can write:
-\[
-1 = i_1 < i_2 < \cdots < i_{J+1} = \tau+1.
-\]
-This means that the first task is the first task of the first job, $i_1=1$, while the (imaginary) task $\tau+1$ is considered the first task of the (imaginary) job $j = J+1$.
-Using this notation, the $j$th job can be specified as a collection of consecutive tasks in the production process $\mathcal{T}$ as follows:
-\[
-\mathcal{J}_j = \{i_j, \, i_j+1, \, \cdots, \, i_{j+1} - 1\}.
-\]
-The characterization for $\mathcal{J}_j$ above means that the first task in job $j$ is task $i_j$ while the last task in job $j$ is the task that comes before the first task in the $j+1$th job, denoted by $i_{j+1}-1$.
-With this notation, the four potential job designs in the earlier example with $\tau=3$ can formally be expressed as:
-\begin{align*}
-\{[1][2][3]\} \Longleftrightarrow \ J = 3:  & \quad \mathcal{J}_1 = \{1\}, \quad  \mathcal{J}_2 = \{2\}, \quad \mathcal{J}_3 = \{3\}, \\
-\{[1,2][3]\} \Longleftrightarrow \ J = 2: & \quad \mathcal{J}_1 = \{1, 2\},  \quad \mathcal{J}_2 = \{3\}, \\
-\{[1][2,3]\} \Longleftrightarrow \ J = 2: & \quad \mathcal{J}_1 = \{1\}, \quad \mathcal{J}_2 = \{2, 3\}, \\
-\{[1,2,3]\} \Longleftrightarrow \ J = 1: & \quad \mathcal{J}_1 = \{1,2,3\}.
-\end{align*}
-
-Assume that the worker employed in job $j$ produces an intermediate good $x_j$ and sells it to the firm in a perfectly competitive market.
-The firm buys all intermediate goods $\{x_1, \cdots, x_J\}$ from workers and produces the final good at no additional cost using a Leontief production function:
-\[
-x(x_1, \cdots, x_J) = min\{x_1, \cdots, x_J\}.
-\]
-This implies that, in equilibrium, the amount of final good $x$ produced is the same as the amount of each intermediate good $x_j$ used in production of the final good.
-This is merely a technical assumption reflecting the fact that to produce one unit of the final good, each set of tasks in $\mathcal{T}$, across all jobs $j \in \{1,\ldots,J\}$, must be performed exactly once.
-We also assume that tasks in $\mathcal{T}\!$ are performed in fixed proportions.
-For instance, if task $m \in \mathcal{T}$ takes 30 minutes and task $n \in \mathcal{T}$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes spent on $m$ \underline{and} $n$ as both tasks must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.
-We postpone formalizing this assumption until when we characterize the equilibrium.
-
-In order to produce the intermediate good $x_j$ a worker must complete the tasks associated with that job, namely $\mathcal{J}_j$.
-Each task $i \in \mathcal{J}_j$ necessitates acquiring human capital $\hccost{ij} > 0$ and takes time $\timecost{ij} > 0$ to complete.
-The worker incurs the human capital cost for task $i$ only once at the beginning of his tenure at job $j$, but spends time $\timecost{ij}$ completing task $i$ for producing each unit of intermediate good $x_j$. 
-In other words, having acquired the necessary human capital, the production of each unit of intermediate good uses labor as the only input.
-The total human capital acquired ex ante by the worker employed in job $j$ is:
+The firm hires one worker for each job.  
+The worker then completes all of the constituent tasks of their assigned job. 
+To perform each task $i \in \mathcal{J}_j$, the worker must first acquire the necessary skills to do the task, incurring a one-time human capital cost of $\hccost{ij} > 0$.  
+The task itself takes $\timecost{ij} > 0$ time to perform, and this time cost is incurred for each unit of good produced.  
+Note that the human capital cost is a fixed investment---a stock of knowledge acquired just once---and is entirely independent of the time required to perform the task.
+In other words, once the necessary human capital is acquired, labor (i.e., time) is the only input used in production.
+For example, it might cost \$10 to learn how to file a test procedure specification (TPS) report, and once the worker has acquired this skill, it takes $15$ minutes to produce each report.
+Thus, after paying the \$10 learning cost, the worker can produce one report every $15$ minutes.
+The total human capital acquired ex ante by the worker employed in job $j$ is thus:
 \[
 \sum_{i \in \mathcal{J}_j} \hccost{ij},
 \]
-while the total time he spends on tasks in $\mathcal{J}_j$ to produce one unit of output is:
+while the total time spent on tasks in $\mathcal{J}_j$ to produce a unit of output is:
 \[
 \sum_{i \in \mathcal{J}_j} \timecost{ij}.
 \]
 
 Both the product and human capital markets are perfectly competitive, and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
 Workers value leisure at $v_L$ and supply one unit of labor inelastically.
-To remain indifferent between jobs, workers must receive compensation that accounts not only for the value of their time but also for any additional training costs.
-Thus, the wage rate in job $j$ must satisfy\footnote{Notice that while wages may differ across jobs, they are structured to ensure that workers remain indifferent to acquiring different types of human capital for different jobs.}:
+Hence, if the wage in job $j$ is $w_j$, the worker's income is simply $w_j$.
+To remain indifferent between jobs, workers must receive wages that covers not only the value of their time but also compensates them for the cost of human capital they have acquired.
+Thus, the wage rate in job $j$ must satisfy\footnote{Notice that while wages may differ across jobs, they are structured such that workers remain indifferent between acquiring different types of human capital for different jobs.}:
 \[
 w_j = v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij}.
 \]
-The firm must pay workers for their time, regardless of the task; hence, the wage bill paid to worker per unit of good $x_j$ is:
+The firm must pay workers for their time, regardless of the task; hence, the wage bill paid to worker per unit of output is:
 \[
 \text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr).
 \]
 The firm seeks to minimize the total cost of producing the final good by optimally designing jobs.
-Assuming there are $J$ jobs in the , the overall production cost per unit of final good is:
+Assuming there are $J$ jobs in the optimal allocation of workers to jobs, the overall production cost per unit of the good is:
 \[
 \text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr)\Biggr].
 \]
@@ -366,13 +348,13 @@ Panel (A) gives the production costs in absence of hand-off costs whereas Panel 
 }
 \end{table}
 
-Without additional frictions, the firm could minimize the cost of production by assigning a single worker to each task.
-What prevents this is a ``hand-off cost''---a cost tied to job transitions that, while not requiring additional human capital, does take time.
-This can be interpreted as the cost of context-switching (or hand-off) between workers in the production process.
-Specifically, whenever a job boundary is introduced---that is, when transitioning from the last task of job $j$ to the first task of job $j+1$---the worker in job $j$ incurs a hand-off time cost $\handofftime{j} \geq 0$.
+Without additional frictions, the firm could minimize production costs by assigning a single worker to each task.
+We assume this trivial arrangement is prevented by a ``hand-off cost”---a cost associated with job transitions that, while not requiring additional human capital, does take time.
+This cost can be interpreted as the expense of context switching (or hand-off) between workers in the production process.
+Specifically, whenever a job boundary is introduced---that is, when transitioning from the last task of job $j$ to the first task of job $j+1$, the worker in job $j$ incurs a hand-off time cost of $\handofftime{j} \geq 0$.
 
-The firm's cost minimization problem remains the same, with the only twist now being an additional hand-off cost that must be incurred after completing the last task in the job. 
-The firm's objective is thus minimizing the following, with the only difference from the previous equation being the extra $\handofftime{j}$ term in the time cost of each job:
+While the firm's cost minimization problem remains unchanged, its solution becomes nontrivial due to the additional hand-off cost incurred after completing the final task in each job.  
+Thus, the firm's objective is to minimize the following expression, which differs from the previous formulation only by the extra $\handofftime{j}$ term added to the time cost for each job:
 \[
 \text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\handofftime{j} + \sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr)\Biggr].
 \]
@@ -385,14 +367,18 @@ Panel B of Table~\ref{tab:job_design} shows the job design with hand-off costs s
 3 & 2   & 1.5 & 0 \\
 \end{array}
 \]
-Notice that while the earlier optimal job design assigned a single worker to each task (i.e., the [1][2][3] design), after the introduction of hand-off friction, the cost-minimizing production method becomes the [1,2][3] design.  
-In this new , the firm minimizes its cost by bundling tasks 1 and 2 together, avoiding the substantial hand-off cost incurred between these tasks.
+Notice that while the earlier optimal job design assigned a single worker to each task (i.e., the [1][2][3] design), after introduction of the hand-off friction, the cost-minimizing production method becomes the [1,2][3] design.
+In the new optimal design, the firm minimizes its cost by bundling tasks 1 and 2 together, avoiding the substantial hand-off cost incurred between these tasks.
 
-The firm's problem also has a nice geometric interpretation.
+The firm's problem has a nice geometric interpretation as well.
 The productive process can be represented as a sequence of stacked rectangles of height $\hccost{ij}$ and width $\timecost{ij}$, as shown in Figure~\ref{fig:job_design}.
 A job corresponds to the bounding box around a sequence of tasks---including the hand-off---with its wage bill given by the area of that box.
-Note that each rectangle can also be thought of as a series of smaller tasks (smaller rectangles filling in the larger rectangle).
-At the limit, this would become a smooth curve of tasks.
+Visually, the firm's objective is to strike an optimal balance between two competing costs.  
+On one hand, consolidating tasks into a single job can lead to inefficiencies, illustrated by the cross-diagonal rectangles, that arise from bundling tasks together.  
+On the other hand, breaking production into multiple jobs incurs an additional hand-off cost (shown in pink). 
+Thus, the firm must trade off these factors to determine the most cost-effective job design.
+%Note that each rectangle can also be thought of as a series of smaller tasks (smaller rectangles filling in the larger rectangle).
+%At the limit, this would become a smooth curve of tasks.
 Panel (a) of Figure~\ref{fig:job_design} shows the example job design problem for $\tau=3$ task without hand-off costs.
 Panel (b) shows the same example including hand-off costs.
 As discussed earlier in Table~\ref{tab:job_design}, the cost minimizing plan in absence of hand-off costs is [1][2][3] (panel (a), top left) whereas after inclusion of hand-offs the optimal plan changes to [1,2][3] (panel (b), bottom left).
@@ -522,7 +508,7 @@ $$\underline{q} := \frac{\machinetime}{\humantime}.$$
 By the standard result for the expectation of a geometric distribution, the expected time cost of using the AI is:
 $$\machinetime \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\machinetime}{q}.$$
 Thus, automation is optimal when:
-$$\humantime \geq \frac{\machinetime}{q} \quad \Longleftrightarrow \quad q \geq \frac{\machinetime}{\humantime} := \underline{q}.$$
+$$\humantime \geq \frac{\machinetime}{q} \quad \Longleftrightarrow \quad q \geq \frac{\machinetime}{\humantime} = \underline{q}.$$
 \end{proof}
 
 This criterion has intuitive comparative statics: automation becomes more attractive when the manual time cost $\humantime$ is high, the management cost $\machinetime$ is low, and the AI's success probability $q$ is high.
@@ -533,61 +519,9 @@ For a given AI success probability $q$, the effective time cost per task---i.e.,
 $$\timecost{i} = \min \Bigl\{\frac{\machinetime}{q},\, \humantime\Bigr\}.$$
 This expression shows how the overall time cost of a task is set by the trade-off between manual execution and AI-assisted automation.
 
-\subsection{Consumption} 
-\label{sec:household_GE}
-A representative household supplies one unit of labor inelastically and has a CES utility function over the $K$ final goods.
-Here we bring back the sector notation $k$ to distinguish between final goods the household consumes. The household's utility is:
-\[
-U(x_{1}, \ldots, x_{K}) = \Bigl(\sum_{k=1}^{K} \delta_k \,x_k^{\tfrac{\sigma - 1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
-\quad
-0 < \delta_k < 1,
-\quad
-\sum_{k=1}^{K} \delta_k = 1,
-\quad
-\sigma > 0,
-\]  
-where $x_k$ denotes final good $k$.
-Goods are substitutes if $ \sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ corresponds to the Cobb-Douglas case.  
-The household faces budget constraint:  
-\[
-\sum_{k=1}^K p^k \,x_k = I,
-\]  
-where $p^k$ is price of final good $k$ and $I$ is the total income earned from supplying labor to different jobs across all sectors.  
-The income, $I$, is the total sum of earnings from producing intermediate goods, which the household takes as given when choosing how much of each final good to consume.
 
 
-\subsection{Equilibrium}
-Let $k \in \{1, \cdots, K\}$ index sectors (or final goods) and $j \in \{1,\cdots, J_k \}$ index jobs within sectors.
-Denote total labor employed in sector $k$ with $L_k$.
-Equilibrium prices $\big\{ \big\{ w_j^k, p_j^k \big\}_{j=1}^{J_k} \big\}_{k=1}^K$ are: 
-\begin{align*}
-\labor{j}^k =  \handofftime{j}^k + \sum_{i \in \mathcal{J}_j^k} \timecost{ij}^{k},
-& \qquad
-w_j^k =  v_L + \sum_{i \in \mathcal{J}_j^k} \hccost{ij}^{k}, 
-& \qquad
-p_j^k = w_j^k \labor{j}^k, \\
-\labor{}^k = \sum_{j=1}^{J_k} \labor{j}^k,
-& \qquad
-w^k = \frac{\sum_{j=1}^{J_k} w_j^k \labor{j}^k}{\sum_{j=1}^{J_k} \labor{j}^k},
-& \qquad
-p^k = w^k \labor{}^k,
-\end{align*}
-and equilibrium allocations $\big\{ x_k^*, L_k^* \big\}_{k=1}^K$ are:
-\begin{align*}
-x_k^* = \frac{R_k}{\sum_{\ell=1}^K \labor{}^\ell\,R_\ell},
-& \qquad
-L_k^* = \labor{}^k\,x_k^* = \sum_{j=1}^{J_k} \labor{j}^k\,x_k^*,
-\end{align*}
-where
-\[
-R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
-\]
-The model implies that the job design in production process $\mathcal{T}_k$ (and thus human capital and time costs of tasks) determines $p^k$ and $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$ in equilibrium.
-Appendix~\ref{app:GE} gives the full derivation details and further discusses comparative statics with respect to task automation.
-
-
-
-\section{Two-Task Production with the Possibility of Chaining}
+\subsection{Two-Task Production with the Possibility of Chaining}
 Now we move from a single task to two tasks.  
 Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
 
@@ -671,7 +605,6 @@ However:
 \end{align*}
 Thus, chaining is optimal despite human comparative advantage in task 1.
 \end{proof}
-
 
 
 \subsection{Comparative statics of investment in AI capabilities}
@@ -940,6 +873,112 @@ Of course, we can still look at the wage distribution.
 A highly equal distribution is one in which all workers have rectangles of similar height.
 If we imagine that the next task is a random draw from the set of tasks, then high hand-off costs tend to equalize rectangle heights because it makes more sense to combine tasks. 
 It's just a LLN argument.
+
+
+
+
+
+\section{A General Equilibrium Model with Task-Based Production}
+\label{sec:GE}
+
+\subsection{Task-Based Production}
+\label{sec:prod_GE}
+
+Consider an economy with $K$ final goods.
+A single firm produces and trades all goods under perfect competition in separate markets.
+For each good $k \in \{1,\ldots,K\}$, production requires completing an ordered set of tasks, denoted by:
+\[
+\mathcal{T}_k = \{1,2,\ldots,\tau_k\}.
+\]
+We refer to $\mathcal{T}_k$ as the production process for good $k$.
+For ease of exposition, we focus on a representative sector and omit the subscript $k$ from our notation until Section~\ref{sec:household_GE}, where we introduce the household's problem.\footnote{This simplification means that whenever we refer to variables or production processes, they implicitly pertain to a typical final good.}
+
+Next, we formalize the definition of jobs for an arbitrary number of tasks and arbitrary number of jobs.
+Suppose the firm breaks down the production process $\mathcal{T}$ into $J$ jobs.
+Let $i_j$ denote the first task in job $j \in \{1,\ldots,J\}$ in the production process of the final good.
+We can write:
+\[
+1 = i_1 < i_2 < \cdots < i_{J+1} = \tau+1.
+\]
+This means that the first task is the first task of the first job, $i_1=1$, while the (imaginary) task $\tau+1$ is considered the first task of the (imaginary) job $j = J+1$.
+Using this notation, the $j$th job can be specified as a collection of consecutive tasks in the production process $\mathcal{T}$ as follows:
+\[
+\mathcal{J}_j = \{i_j, \, i_j+1, \, \cdots, \, i_{j+1} - 1\}.
+\]
+The characterization for $\mathcal{J}_j$ above means that the first task in job $j$ is task $i_j$ while the last task in job $j$ is the task that comes before the first task in the $j+1$th job, denoted by $i_{j+1}-1$.
+With this notation, the four potential job designs in the earlier example with $\tau=3$ can formally be expressed as:
+\begin{align*}
+\{[1][2][3]\} \Longleftrightarrow \ J = 3:  & \quad \mathcal{J}_1 = \{1\}, \quad  \mathcal{J}_2 = \{2\}, \quad \mathcal{J}_3 = \{3\}, \\
+\{[1,2][3]\} \Longleftrightarrow \ J = 2: & \quad \mathcal{J}_1 = \{1, 2\},  \quad \mathcal{J}_2 = \{3\}, \\
+\{[1][2,3]\} \Longleftrightarrow \ J = 2: & \quad \mathcal{J}_1 = \{1\}, \quad \mathcal{J}_2 = \{2, 3\}, \\
+\{[1,2,3]\} \Longleftrightarrow \ J = 1: & \quad \mathcal{J}_1 = \{1,2,3\}.
+\end{align*}
+
+Assume that the worker employed in job $j$ produces an intermediate good $x_j$ and sells it to the firm in a perfectly competitive market.
+The firm buys all intermediate goods $\{x_1, \cdots, x_J\}$ from workers and produces the final good at no additional cost using a Leontief production function:
+\[
+x(x_1, \cdots, x_J) = min\{x_1, \cdots, x_J\}.
+\]
+This implies that, in equilibrium, the amount of final good $x$ produced is the same as the amount of each intermediate good $x_j$ used in production of the final good.
+This is merely a technical assumption reflecting the fact that to produce one unit of the final good, each set of tasks in $\mathcal{T}$, across all jobs $j \in \{1,\ldots,J\}$, must be performed exactly once.
+We also assume that tasks in $\mathcal{T}\!$ are performed in fixed proportions.
+For instance, if task $m \in \mathcal{T}$ takes 30 minutes and task $n \in \mathcal{T}$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes spent on $m$ \underline{and} $n$ as both tasks must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.
+We formalize this assumption in Appendix~\ref{app:GE} where we explicitly characterize the equilibrium.
+
+
+\subsection{Consumption} 
+\label{sec:household_GE}
+A representative household supplies one unit of labor inelastically and has a CES utility function over the $K$ final goods.
+Here we bring back the sector notation $k$ to distinguish between final goods the household consumes. The household's utility is:
+\[
+U(x_{1}, \ldots, x_{K}) = \Bigl(\sum_{k=1}^{K} \delta_k \,x_k^{\tfrac{\sigma - 1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
+\quad
+0 < \delta_k < 1,
+\quad
+\sum_{k=1}^{K} \delta_k = 1,
+\quad
+\sigma > 0,
+\]  
+where $x_k$ denotes final good $k$.
+Goods are substitutes if $ \sigma > 1$, complements if $0 < \sigma < 1$, and $\sigma = 1$ corresponds to the Cobb-Douglas case.  
+The household faces budget constraint:  
+\[
+\sum_{k=1}^K p^k \,x_k = I,
+\]  
+where $p^k$ is price of final good $k$ and $I$ is the total income earned from supplying labor to different jobs across all sectors.  
+The income, $I$, is the total sum of earnings from producing intermediate goods, which the household takes as given when choosing how much of each final good to consume.
+
+
+\subsection{Equilibrium}
+\label{sec:eq_GE}
+Let $k \in \{1, \cdots, K\}$ index sectors (or final goods) and $j \in \{1,\cdots, J_k \}$ index jobs within sectors.
+Denote total labor employed in sector $k$ with $L_k$.
+Equilibrium prices $\big\{ \big\{ w_j^k, p_j^k \big\}_{j=1}^{J_k} \big\}_{k=1}^K$ are: 
+\begin{align*}
+\labor{j}^k =  \handofftime{j}^k + \sum_{i \in \mathcal{J}_j^k} \timecost{ij}^{k},
+& \qquad
+w_j^k =  v_L + \sum_{i \in \mathcal{J}_j^k} \hccost{ij}^{k}, 
+& \qquad
+p_j^k = w_j^k \labor{j}^k, \\
+\labor{}^k = \sum_{j=1}^{J_k} \labor{j}^k,
+& \qquad
+w^k = \frac{\sum_{j=1}^{J_k} w_j^k \labor{j}^k}{\sum_{j=1}^{J_k} \labor{j}^k},
+& \qquad
+p^k = w^k \labor{}^k,
+\end{align*}
+and equilibrium allocations $\big\{ x_k^*, L_k^* \big\}_{k=1}^K$ are:
+\begin{align*}
+x_k^* = \frac{R_k}{\sum_{\ell=1}^K \labor{}^\ell\,R_\ell},
+& \qquad
+L_k^* = \labor{}^k\,x_k^* = \sum_{j=1}^{J_k} \labor{j}^k\,x_k^*,
+\end{align*}
+where
+\[
+R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
+\]
+The model implies that the job design in production process $\mathcal{T}_k$ (and thus human capital and time costs of tasks) determines $p^k$ and $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$ in equilibrium.
+Appendix~\ref{app:GE} gives the full derivation details and further discusses comparative statics with respect to task automation.
+
 
 
 
@@ -1420,7 +1459,7 @@ As AI makes it so that humans no longer have to do every task in a job, AI might
 \section{Equilibrium in the Task-Based Economy}
 \label{app:GE}
 
-In this appendix, we obtain equilibrium prices and allocations for the model specified in Section~\ref{taskbased_GE}.
+In this appendix, we obtain equilibrium prices and allocations for the model specified in Section~\ref{GE}.
 
 
 \paragraph{Goods Prices.}  
