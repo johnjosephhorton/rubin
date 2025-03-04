@@ -187,10 +187,14 @@ Given the Rubin example, one might imagine that AI might enable a super-star phe
 \section{A Task-Based Model of Production}
 \label{sec:taskbaed_prod}
 
-To model how AI affects occupations---viewed here as collections of tasks---we need some account of why those tasks were put together in an occupation in the first place.
+To model how AI affects occupations, here viewed as collections of tasks, we need some account of why those tasks were put together in an occupation in the first place.
 In this section we develop a framework that treats occupations as a collection tasks, explains how firms design jobs, and shows how AI influences the design choices.
 
-Suppose production of a typical final good requires completing an ordered set of tasks, denoted by:
+
+\subsection{Task-Based Production and the Optimal Job Design}
+\label{sec:job_design}
+
+Suppose production of a (final) good requires completing an ordered set of tasks, denoted by:
 \[
 \mathcal{T} = \{1,2,\ldots,\tau\}.
 \]
@@ -236,18 +240,21 @@ Workers value leisure at $v_L$ and supply one unit of labor inelastically.
 Hence, if the wage in job $j$ is $w_j$, the worker's income is simply $w_j$.
 To remain indifferent between jobs, workers must receive wages that covers not only the value of their time but also compensates them for the cost of human capital they have acquired.
 Thus, the wage rate in job $j$ must satisfy\footnote{Notice that while wages may differ across jobs, they are structured such that workers remain indifferent between acquiring different types of human capital for different jobs.}:
-\[
+\begin{align}
+\label{eq:wage}
 w_j = v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij}.
-\]
+\end{align}
 The firm must pay workers for their time, regardless of the task; hence, the wage bill paid to worker per unit of output is:
-\[
+\begin{align}
+\label{eq:wagebill}
 \text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr).
-\]
+\end{align}
 The firm seeks to minimize the total cost of producing the final good by optimally designing jobs.
 Assuming there are $J$ jobs in the optimal allocation of workers to jobs, the overall production cost per unit of the good is:
-\[
+\begin{align}
+\label{eq:totalcost_no_handoff}
 \text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr)\Biggr].
-\]
+\end{align}
 
 In the earlier example production process with three tasks, suppose workers value leisure at $v_L = 1$ and tasks are characterized by human capital requirements and time costs specified below:
 \[
@@ -355,9 +362,10 @@ Specifically, whenever a job boundary is introduced---that is, when transitionin
 
 While the firm's cost minimization problem remains unchanged, its solution becomes nontrivial due to the additional hand-off cost incurred after completing the final task in each job.  
 Thus, the firm's objective is to minimize the following expression, which differs from the previous formulation only by the extra $\handofftime{j}$ term added to the time cost for each job:
-\[
+\begin{align}
+\label{eq:totalcost_with_handoff}
 \text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\handofftime{j} + \sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr)\Biggr].
-\]
+\end{align}
 Panel B of Table~\ref{tab:job_design} shows the job design with hand-off costs specified in the following table:
 \[
 \begin{array}{c|ccc}
@@ -439,7 +447,7 @@ After the evaluation, the worker learns whether the AI succeeded or failed.
 If the AI fails, the worker can provide a new prompt and evaluate a new attempt, incurring the same costs $\timecost{p}$ and $\timecost{e}$ again.
 Let $\machinetime = \timecost{p} + \timecost{e}$ denote the total ``management'' time cost associated with using the AI for the task.
 For now, assume the worker can manage all tasks similarly by paying the task-specific management time cost.\footnote{Later in the empirical section, we make a distinction between how AI facilitates production process tasks and hand-offs. For the purpose of the current model, however, AI automates both types of tasks similarly.}
-Figure~\ref{fig:flow} illustrates this process graphically.
+Figure~\ref{fig:flow} below illustrates this process graphically.
 
 \begin{figure}[h]
   \begin{center}
@@ -515,21 +523,25 @@ This criterion has intuitive comparative statics: automation becomes more attrac
 One implication is that improvements in prompting and evaluation tools---thereby reducing $\timecost{p}$ and $\timecost{e}$---can lower the management cost and make automation more appealing, even if $q$ remains unchanged.
 Although the assumptions of independent success probabilities and constant management costs might seem strong, they are relatively mild and can be adjusted by redefining parameters if necessary (e.g., if outcomes are positively correlated, the effective success probability can be treated as lower; see Sections~\ref{sec:correlated_successes} and~\ref{sec:constant_management_costs}).
 
-For a given AI success probability $q$, the effective time cost per task---i.e., the task time cost parameter $\timecost{i}$ used earlier---is determined by:
+For a given AI success probability $q$, the effective time cost per task (the task time cost parameter $\timecost{i}$ used in previous section) is determined by:
 $$\timecost{i} = \min \Bigl\{\frac{\machinetime}{q},\, \humantime\Bigr\}.$$
 This expression shows how the overall time cost of a task is set by the trade-off between manual execution and AI-assisted automation.
 
 
 
 \subsection{Two-Task Production with the Possibility of Chaining}
-Now we move from a single task to two tasks.  
+Now let us move from a single task to two tasks.  
 Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
 
 For notation, when a human performs the task, we denote this as $\human{\cdot}$.
 When an AI attempts the task under human supervision, we denote this as $\machine{\cdot}$.
-For a multiple task example, if the first task was done by AI and the other two by humans, we would write $\machine{1}\human{2}\human{3}$.
+In the three tasks example, if in the [1][2][3] design the first task was done by AI and the other two by humans, we would write $\machine{1}\human{2}\human{3}$.
 
-The AI success probabilities are \(q_1\) and \(q_2\), and $\alpha = 1$ and \(\humantime\) and \(\machinetime\) are the same for both tasks, for simplicity.
+Consider a job consisting of only two tasks, indexed $1$ and $2$ (We continue to suppress the job index $j$).
+Denote the corresponding AI success probabilities with \(q_1\) and \(q_2\). 
+For simplicity, we assume human time \(\humantime\) and machine time \(\machinetime\) are the same for both tasks.
+Furthermore, we suppress the switching cost $\handofftime{}$, which the worker incurs upon completing task $2$, since our focus is solely on tasks performed within a single job (and note that no hand-offs occur between tasks within the same job).
+Let $\cost{.}$ show the time cost incurred when completing an arrangement of tasks.
 With two tasks, there are four possible direct production arrangements:
 \begin{align*}
     \cost{\human{1}\human{2}} &= 2\,\humantime & \text{(fully human)} \\
@@ -546,15 +558,15 @@ The cost of this arrangement is:
 \cost{\machine{1|2}} &= \frac{\machinetime}{q_1 q_2} & \text{(chained automation)}.
 \end{align*}
 This captures the notion of agentic AI that can complete a sequence of tasks autonomously, without human intervention between the two tasks.
-If \(\humantime\) and \(\machinetime\) are common across tasks, the full cost function for this productive arrangement when costs are minimized is thus: 
+Since $\humantime$ and $\machinetime$ are common to all tasks, the complete cost function for this productive arrangement, when minimizing costs, is given by:
 \begin{align}
-  \min \left\{2\,\humantime,\; 2\,\frac{\machinetime}{q_1},\; \frac{\machinetime}{q_1} + \humantime,\; \humantime + \frac{\machinetime}{q_2},\; \frac{\machinetime}{q_1 q_2} \right\}.
+  \min \left\{ 2\,\humantime,\;\; \frac{\machinetime}{q_1} + \humantime,\;\; \humantime + \frac{\machinetime}{q_2},\;\; \frac{\machinetime}{q_1} + \frac{\machinetime}{q_2},\;\; \frac{\machinetime}{q_1 q_2} \right\}.
 \end{align}
-Note that as each term is linear in \(\machinetime\) and \(\humantime\), the cost function itself is convex in labor costs. 
+Note that as each term is linear in $\machinetime$ and $\humantime$, the overall cost function is convex with respect to labor time costs.
 
 Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of \(q_1\) and \(q_2\), with fixed \(\humantime = 3\) and \(\machinetime = 1\).
 It partitions the \(q_1\) and \(q_2\) space into five regions, corresponding to the five production arrangements.
-The ratio 
+According to Proposition~\ref{proposition:single}, the ratio 
 \[
 \underline{q} := \frac{\machinetime}{\humantime}
 \]
@@ -576,35 +588,37 @@ These regions are the \(\machine{1}\human{2}\) and \(\human{1}\machine{2}\) regi
 \end{figure}
 
 The most interesting region is \(\machine{1|2}\).
-Note that its boundaries with the half-automated regions (e.g., \(\machine{1}\human{2}\) and \(\human{1}\machine{2}\)) are sloped, meaning that improvements in one task's AI quality can bring it into the \(\machine{1|2}\) region, without an intervening partial automation step.
+Note that its boundaries with the half-automated regions (i.e., \(\machine{1}\human{2}\) and \(\human{1}\machine{2}\)) are sloped, meaning that improvements in one task's AI quality can bring it into the \(\machine{1|2}\) region, without an intervening partial automation step.
 
-This curved boundary is the reason chaining can be optimal even when humans have a comparative advantage in one of the tasks in isolation, as formalized in Proposition~\ref{proposition:interdependence}.
-It can be shown simply with a numerical example.
+This curved boundary is the reason chaining can be optimal even when humans have a comparative advantage in one of the tasks in isolation.
+Proposition~\ref{proposition:interdependence} formalizes this idea, which can be shown simply with a numerical example.
 
 \begin{proposition}[Task Interdependence] \label{proposition:interdependence}
-A task might be optimally automated as part of a chain even when humans have a comparative advantage in that task in isolation.
-Specifically, 
+Assume that both tasks share the same human completion time, $\humantime$, and the same machine completion time, $\machinetime$.
+A task may be optimally automated as part of a chain even if humans have a comparative advantage when performing that task in isolation.
+In particular,
 \[
 \cost{\human{1}\machine{2}} < \cost{\machine{1}\machine{2}}
 \]
-does not imply 
+does not imply
 \[
 \cost{\human{1}\machine{2}} < \cost{\machine{1|2}}.
 \]
 \end{proposition}
 \begin{proof}
-Consider \(q_1 = \frac{3}{5}\), \(q_2 = \frac{4}{5}\), \(\machinetime = 1\), and \(\humantime = \frac{3}{2}\).
-For task 1 in isolation, human performance is cheaper: 
+A single counterexample suffices to show this.
+Consider the parameter values $q_1 = \frac{3}{5}$, $q_2 = \frac{4}{5}$, $\humantime = \frac{3}{2}$, and $\machinetime = 1$.
+For task 1 in isolation, human performance is more cost-effective:
 \[
 \humantime = \frac{3}{2} < \frac{5}{3} = \frac{\machinetime}{q_1}.
 \]
-However:
+However, the chained tasks arrangement has a lower cost despite the human's comparative advantage in task 1:
 \begin{align*}
-    \cost{\human{1}\machine{2}} &= \humantime + \frac{\machinetime}{q_2} = \frac{3}{2} + \frac{5}{4} = \frac{11}{4}, \\
+    \cost{\human{1}\machine{2}} &= \; \humantime + \frac{\machinetime}{q_2} = \frac{11}{4}, \\
     \cost{\machine{1|2}} &= \frac{\machinetime}{q_1 q_2} = \frac{25}{12} < \frac{11}{4}.
 \end{align*}
-Thus, chaining is optimal despite human comparative advantage in task 1.
 \end{proof}
+
 
 
 \subsection{Comparative statics of investment in AI capabilities}
@@ -646,16 +660,16 @@ These properties are formalized in Proposition~\ref{prop:comparative_statics}.
  
 We will later consider the more general \(n\) task case, but note that immediate adjacency is not required for a task where humans have a comparative advantage to be pulled into a chain.
 Consider a scenario with \(n\) tasks, each with the same success probability \(q\) and the same \(\machinetime\) and \(\humantime\).
-To start, all are done by humans, implying that
+To start, assume all tasks are done by humans and that chaining is more cost-efficient than separate automation, implying that:
 \[
 n\, \humantime < \frac{\machinetime}{q^n}.
 \]
 Now suppose we can increase the \(q\) of the first task by \(\delta q\). 
-If it is possible that  
+All tasks will be done by machine, in one chain, if it is possible to have:
 \begin{align}
-  \delta q > \frac{\machinetime}{n\, q^{n-1}} - q,
+  \delta > \frac{\machinetime}{n\, \humantime{}\, q^{n}} - 1.
 \end{align} 
-then all tasks will be done by machine, in one chain.
+
 
 \subsection{Optimal investment paths in the two-task case}
 A natural question is how firms or a social planner should allocate R\&D effort to improve AI capabilities.
@@ -679,10 +693,10 @@ where \(q_{1,0}\) and \(q_{2,0}\) are the initial AI capabilities in the two tas
 The properties of the optimal paths for this dynamic programming problem are analyzed in detail in Appendix~\ref{app:dp_proof}. 
 There, we outline the structure of the solution, provide comparative statics, and derive the necessary conditions for optimality.
 
-Figure~\ref{fig:optimal_paths} shows numerical optimal investment paths to minimize total costs, using the same parameters as in Figure~\ref{fig:two_tasks}.
-I also set the discount rate \(\rho = 0\) and the total amount of R\&D resources per period to \(r = 1\).
-I discretized the \(q_1\) and \(q_2\) space into a grid (so investments had to be made each period on one task or the other) and then used dynamic programming to find the optimal path.
-Paths for a few select initial conditions are shown.
+Figure~\ref{fig:optimal_paths} shows numerical optimal investment paths to minimize total costs using the same parameters as in Figure~\ref{fig:two_tasks}.
+We also set the discount rate \(\rho = 0\) and the total amount of R\&D resources per period to \(r = 1\).
+We discretized the \(q_1\) and \(q_2\) space into a grid (so investments had to be made each period on one task or the other) and then used dynamic programming to find the optimal path.
+Paths for a few select initial conditions are shown on the graph.
 
 \begin{figure}
   \begin{center}
@@ -694,9 +708,9 @@ Paths for a few select initial conditions are shown.
 \end{footnotesize}
 \end{figure}
 
-We can see that the optimal path has a ``turnpike'' component where we move towards the 45 degree line and then make equal investments in \(q_1\) and \(q_2\).
-However, it does not typically go there directly but, if already in a semi-automated region, it will increase capabilities in that task for some time, taking advantage of the relatively steep slope. 
-In the \(\machine{1|2}\) region, the optimal path is to directly move towards the 45 degree line.
+We can see that the optimal path features a ``turnpike'' component, where we move toward the 45-degree line and then make equal investments in $q_1$ and $q_2$.
+However, it does not typically go there directly; if already in a semi-automated region, it will increase capabilities in that task for some time, taking advantage of the relatively steep slope.
+In the $\machine{1|2}$ region, the optimal path is to move directly toward the 45-degree line, and then continue along it.
 
 \subsection{Investment horizon effects}
 The investment horizon can have important effects on the optimal path.
@@ -1459,7 +1473,7 @@ As AI makes it so that humans no longer have to do every task in a job, AI might
 \section{Equilibrium in the Task-Based Economy}
 \label{app:GE}
 
-In this appendix, we obtain equilibrium prices and allocations for the model specified in Section~\ref{GE}.
+In this appendix, we obtain equilibrium prices and allocations for the model specified in Section~\ref{sec:GE}.
 
 
 \paragraph{Goods Prices.}  
