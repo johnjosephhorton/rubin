@@ -11,6 +11,7 @@
 \usepackage{tabularx}
 \usepackage{multirow}
 \usepackage{comment}
+\usepackage{hyperref}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -62,7 +63,11 @@
 %\title{The Economics of Generative and Agentic AI}
 % John's footnote: \footnote{I used AI extensively to write this paper, particularly Claude 3.5 Sonnet and o1 pro from OpenAI. Thanks for complementing my labor, AI agents!}
 \title{AI, Tasks and Judgement}
-\author{\normalsize John J. Horton  \\ \normalsize MIT \& NBER  \and \normalsize Peyman Shahidi \\  \normalsize MIT}
+\author{
+\normalsize John J. Horton\footnote{MIT Sloan School of Management; \href{mailto:jjhorton@mit.edu}{jjhorton@mit.edu}.}  \\ \normalsize MIT \& NBER  
+\and 
+\normalsize Peyman Shahidi\footnote{MIT Sloan School of Management; \href{mailto:peymansh@mit.edu}{peymansh@mit.edu}.} \\  \normalsize MIT
+}
 \date{\today{}}
 
 
@@ -720,9 +725,9 @@ As in Figure~\ref{fig:optimal_paths}, a dynamic program is used to find the opti
 We can see that time horizons can create fundamental differences in the optimal path.
 With a relatively short horizon, the optimal path is simply to keep investing in the already-automated task.
 The reason is that with this horizon, we never get to the \(\machine{1|2}\) region.
-With a longer horizon, we just keep going farther in \(q_1\), neglecting \(q_2\).
-With a long-enough horizon, we actually stop work on \(q_1\) and begin working on \(q_2\).
-This is despite the fact that \(q_2\) offers no benefit at this region.
+With a slightly longer horizon, we just keep going farther in \(q_1\), neglecting \(q_2\) altogether.
+With a long-enough horizon, however, it is beneficial to actually stop improving \(q_1\) and begin investing in \(q_2\).
+This is despite the fact that improving \(q_2\) offers no direct benefits at the $\machine{1}\human{2}$ region.
 However, it is worth it because it gets us to the \(\machine{1|2}\) region.
 We then make a beeline for the 45 degree line, at which point we then make equal investments in \(q_1\) and \(q_2\).
 
@@ -734,12 +739,12 @@ We then make a beeline for the 45 degree line, at which point we then make equal
 \end{figure}
 
 \subsection{Tasks sequences with \(n > 2\) tasks}
-Now we will consider a job that is a sequence of tasks to be performed \(1, 2, \ldots, n\).
-Table~\ref{tab:tree} illustrates the tree with \(n=3\) tasks.
+Now we will consider a job that is a sequence of \(n\) tasks, indexed as \(\{1, 2, \ldots, n\}\), to be performed.
+Table~\ref{tab:tree} illustrates the possibilities with \(n=3\) tasks in a tree.
 
 \begin{table}
   \centering
-  \caption{The possible production scenarios with an \(n \in \{1,2,3\}\) task job}
+  \caption{The possible production scenarios with an \(n \in \{1,2,3\}\) tasks job}
   \label{tab:tree}
   \begin{tabular}{ccc}
   \hline
@@ -759,16 +764,16 @@ Table~\ref{tab:tree} illustrates the tree with \(n=3\) tasks.
   \end{tabular}
 \end{table}
 
-As we can see, going from \(n=3\) adds substantially more complexity.
-The number of valid ways to arrange \(n\) tasks is given by Proposition~\ref{proposition:num_arrangements}.
-It shows that the number of ways to arrange \(n\) tasks is the Fibonacci number \(F(2n+1)\) where \(F(0) = 1\).
-Note that when \(n=1\), we had either \(\human{1}\) or \(\machine{1}\), so \(F(3) = 2\).
-With two tasks, we have \(F(5) = 5\) possible arrangements, and so on. 
+As we see, increasing the number of tasks to \(n=3\) introduces substantially more complexity.
+The number of valid arrangements for \(n\) tasks is given by Proposition~\ref{proposition:num_arrangements}.
+Specifically, the proposition shows that the number of ways to arrange \(n\) tasks is the Fibonacci number \(F(2n+1)\), where \(F(0) = 1\).
+For example, when \(n=1\), there are two possibilities---either \(\human{1}\) or \(\machine{1}\)---so \(F(3) = 2\).
+With two tasks, we have \(F(5) = 5\) possible arrangements, and so on.
 
 \begin{proposition}[Recurrence for Valid Arrangements] \label{proposition:num_arrangements}
-  Let \(f(n)\) denote the number of valid arrangements of \(n\) tasks, where each task can be either performed by a human (exactly one task per human block) or as part of a machine chain (a consecutive sequence of tasks). Then the following recurrence holds:
+  Let \(f(n)\) denote the number of valid arrangements of \(n\) tasks in a job, where each task can be either performed by a human (exactly one task per human block) or as part of a machine chain (a consecutive sequence of tasks). Then the following recurrence holds:
   \[
-  f(n) = f(n-1) + \sum_{k=1}^{n} f(n-k),
+  f(n) = f(n-1) + \sum_{s=1}^{n} f(n-s),
   \]
   with the base case \(f(0) = 1\).
 \end{proposition}
@@ -777,51 +782,52 @@ With two tasks, we have \(F(5) = 5\) possible arrangements, and so on.
 Consider the first block in the arrangement of \(n\) tasks:
 \begin{itemize}
     \item \textbf{Case 1: Human block.} If the first task is performed by a human, then the remaining \((n-1)\) tasks can be arranged in any valid way. This contributes \(f(n-1)\) arrangements.
-    \item \textbf{Case 2: Machine chain.} If the first block is a machine chain covering \(k\) tasks (\(1 \leq k \leq n\)), then the remaining \((n-k)\) tasks can be arranged in any valid way. Summing over all possible lengths of the first machine chain gives \(\sum_{k=1}^{n} f(n-k)\) arrangements.
+    \item \textbf{Case 2: Machine chain.} If the first block is a machine chain covering \(\ell\) tasks (\(1 \leq \ell \leq n\)), then the remaining \((n-\ell)\) tasks can be arranged in any valid way. Summing over all possible lengths of the first machine chain gives \(\sum_{s=1}^{n} f(n-s)\) arrangements.
 \end{itemize}
 Adding the contributions from both cases, we obtain:
 \[
-f(n) = f(n-1) + \sum_{k=1}^{n} f(n-k).
+f(n) = f(n-1) + \sum_{s=1}^{n} f(n-s).
 \]
 \end{proof}
 
-Finding the minimum cost arrangement is a dynamic programming problem.
+Finding the minimum cost arrangement for any given number of tasks within a job is a dynamic programming problem.
 Consider a sequence of \(n\) tasks that must be completed in order. 
-Each task \(i \in \{0,\ldots,n-1\}\) can be completed either by a human at cost \(\humantime[i] \in \mathbb{R}_+\) or attempted by an AI with success probability \(q[i] \in (0,1]\).
+Each task \(i \in \{1,\ldots,n\}\) can be completed either by a human at cost \(\humantime[i] \in \mathbb{R}_+\) or attempted by an AI with success probability \(q[i] \in (0,1]\).
 Multiple consecutive tasks can be assigned to the AI as a single chain, incurring a fixed management cost \(\machinetime \in \mathbb{R}_+\) per chain. 
-When tasks \(i\) through \(j\) are chained, the expected cost is 
+When tasks \(i\) through \(r\) are chained, the expected cost is:
 \[
-\frac{\machinetime}{\prod_{k=i}^j q[k]},
+\frac{\machinetime}{\prod_{s=i}^r q[s]},
 \]
 reflecting the expected number of attempts needed for success.
 
 \begin{definition}[Minimum Completion Cost]
-Let \(V(i)\) denote the minimum expected cost to complete tasks \(i\) through \(n-1\). Then:
+Let \(V(i)\) denote the minimum expected cost to complete tasks \(i\) through \(n\). Then:
 \begin{equation}
 V(i) = \min\left\{
 \begin{array}{l}
-\humantime[i] + V(i+1), \\[1ex]
-\displaystyle\min_{j \geq i} \left\{\frac{\machinetime}{\prod_{k=i}^j q[k]} + V(j+1)\right\}
+\humantime[i] + V(i+1), 
+\;\;
+\displaystyle\min_{r \geq i} \left\{\frac{\machinetime}{\prod_{s=i}^r q[s]} + V(r+1)\right\}
 \end{array}
 \right\}
 \end{equation}
-with boundary condition \(V(n) = 0\).
+with boundary condition \(V(n+1) = 0\).
 \end{definition}
 
 \begin{theorem}[Optimal Policy]
 The optimal assignment can be found by solving the dynamic program above in \(O(n^2)\) time. At each state \(i\), the optimal action is either:
 \begin{enumerate}
     \item Assign task \(i\) to human (cost \(\humantime[i]\)), or
-    \item Chain tasks \(i\) through \(j^*\) to AI, where:
+    \item Chain tasks \(i\) through \(r^*\) to AI, where:
     \begin{equation}
-        j^*(i) = \arg\min_{j \geq i} \left\{\frac{\machinetime}{\prod_{k=i}^j q[k]} + V(j+1)\right\}.
+        r^*(i) = \arg\min_{r \geq i} \left\{\frac{\machinetime}{\prod_{s=i}^r q[s]} + V(r+1)\right\}.
     \end{equation}
 \end{enumerate}
 The minimum total cost is given by \(V(0)\).
 \end{theorem}
 
 \begin{proof}
-The optimality follows from standard dynamic programming arguments. The boundary condition ensures well-definedness, and the principle of optimality holds as the problem exhibits optimal substructure: the optimal solution to subproblem \(i\) through \(n-1\) depends only on optimal solutions to subproblems \(j+1\) through \(n-1\) for \(j \geq i\). The computational complexity follows from the fact that for each state \(i\), we must evaluate at most \(n-i\) possible chain lengths.
+The optimality follows from standard dynamic programming arguments. The boundary condition ensures well-definedness, and the principle of optimality holds as the problem exhibits optimal substructure: the optimal solution to subproblem \(i\) through \(n-1\) depends only on optimal solutions to subproblems \(r+1\) through \(n\) for \(r \geq i\). The computational complexity follows from the fact that for each state \(i\), we must evaluate at most \(n-i\) possible chain lengths.
 \end{proof}
 
 Proposition~\ref{prop:optimal_chaining} gives the optimal chaining condition for a sequence of \(n\) tasks that would each be individually automated.
@@ -830,18 +836,18 @@ In terms of intuition, it captures the notion that a chain is only as strong as 
 \begin{proposition}[Optimal Chaining for \(n\) Tasks] \label{prop:optimal_chaining}
 Chaining \(n\) automated tasks is optimal if and only if:
 \[
-\sum_{i=1}^n \prod_{j \neq i} q_j > 1.
+\sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q[r] > 1.
 \]
 \end{proposition}
 
 \begin{proof}
 Chaining is optimal if:
 \[
-\frac{\machinetime}{\prod_{i=1}^n q_i} < \sum_{i=1}^n \frac{\machinetime}{q_i}.
+\frac{\machinetime}{\prod_{i=1}^n q[i]} < \sum_{i=1}^n \frac{\machinetime}{q[i]}.
 \]
-Dividing by \(\machinetime > 0\) and multiplying by \(\prod_{i=1}^n q_i\) yields:
+Dividing by \(\machinetime > 0\) and multiplying by \(\prod_{i=1}^n q[i]\) yields:
 \[
-1 < \sum_{i=1}^n \prod_{j \neq i} q_j.
+1 < \sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q[r].
 \]
 Thus, chaining is optimal if and only if the inequality holds.
 \end{proof}
