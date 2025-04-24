@@ -105,8 +105,10 @@ def draw_rect_square_sequence(T, C, H, W):
     """
     if not (len(T) == len(C) == len(H) == len(W)):
         raise ValueError("All input vectors must have the same length")
-
-    fig, ax = plt.subplots(figsize=(10, 8))
+    
+    width = 10 / 4 * len(T)
+    height = 8 / 4 * len(T)
+    fig, ax = plt.subplots(figsize=(width, height))
     current_pos = (0, 0)
     all_coords = [(0, 0)]
 
@@ -250,6 +252,50 @@ def generate_worker_assignments(n):
         yield from generate_recursive(pos + 1, prev_assignment)
 
     yield from generate_recursive(0, [0] * n)
+
+
+T = np.array([1, 2])  # Main rectangle lengths
+C = np.array([3, 1])  # Main rectangle heights
+H = np.array([0, 0])  # Attached rectangle widths (height fixed at 0.15)
+W = np.array([1, 2])  # Worker assignments
+
+
+# Example usage
+handoff_height = 0.025  # Fixed height for attached rectangles
+T = np.array([1, 2])  # Main rectangle lengths
+C = np.array([3, 1])  # Main rectangle heights
+H = np.array([0, 0])  # No hand-off
+
+image_files = []
+for index, assignment in enumerate(generate_worker_assignments(len(T))):
+    
+    if index == 2 ** (len(T) - 1):
+        break
+
+    W = np.array(assignment)
+    fig, ax = draw_rect_square_sequence(T, C, H, W)
+    filename = f"../writeup/plots/job_design/job_design_{index}.png"
+    image_files.append(filename)
+    plt.savefig(filename, dpi=100)
+    plt.close()
+
+
+# Combine PNGs into a grid
+grid_size = math.ceil(math.sqrt(len(image_files)))
+images = [Image.open(img) for img in image_files[::-1]]
+img_width, img_height = 500, 200
+canvas_width = img_width * grid_size
+canvas_height = img_height * grid_size
+grid_image = Image.new("RGB", (canvas_width, canvas_height), "white")
+
+for index, img in enumerate(images):
+    x = (index % grid_size) * img_width
+    y = (index // grid_size) * img_height
+    grid_image.paste(img, (x, y))
+
+grid_image.save(f"../writeup/plots/job_design.png")
+
+
 
 
 # Example usage

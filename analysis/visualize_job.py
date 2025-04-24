@@ -237,10 +237,15 @@ def draw_rect_square_sequence(T, C, H, W):
 
 
 # Example usage
-T = np.array([1, 2, 2, 1.5])  # Main rectangle lengths
-C = np.array([3, 1, 2, 2])  # Main rectangle heights
-H = np.array([2.5, 0.5, 1, 0])  # Attached rectangle widths (height fixed at 0.15)
-W = np.array([1, 1, 2, 2])  # Worker assignments
+# T = np.array([1, 2, 2, 1.5])  # Main rectangle lengths
+# C = np.array([3, 1, 2, 2])  # Main rectangle heights
+# H = np.array([2.5, 0.5, 1, 0])  # Attached rectangle widths (height fixed at 0.15)
+# W = np.array([1, 1, 2, 2])  # Worker assignments
+
+T = np.array([1, 2])  # Main rectangle lengths
+C = np.array([3, 1])  # Main rectangle heights
+H = np.array([0, 0])  # Attached rectangle widths (height fixed at 0.15)
+W = np.array([1, 2])  # Worker assignments
 
 
 fig, ax = draw_rect_square_sequence(T, C, H, W)

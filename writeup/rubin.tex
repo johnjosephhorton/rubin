@@ -97,7 +97,7 @@
 Unlike other tasks models, it considers the interdependence of tasks in a sequence. 
 Tasks can be efficiently ``chained'' together in the sense that each task produces something that feeds into the next without human intervention.
 A task might be added to an automated chain even if the human has an absolute advantage in that task in isolation, reversing the usual comparative advantage calculation.
-% We explore empirically 
+We explore empirically...(TBD)
 \end{abstract}
 
 \onehalfspacing
@@ -117,7 +117,6 @@ We consider how the development of AI that can do certain tasks changes the divi
 In the model, the decision to use an AI is based on comparing two costs: the cost of having a human direct and evaluate the AI's output (which depends on the capabilities of the AI at that particular task) versus the cost of having the human do the task directly.
 This might seem like another way of stating that tasks get assigned to whichever factor has the comparative advantage in that task, but this is not the case: the position of tasks within the productive process profoundly change the optimal allocation of tasks between humans and machines.
 
-%This in turn changes the returns to investing in various AI capabilities both statically and dynamically.
 When a single task is performed by an AI, there is a human asking for the task to be done and evaluating the output.
 But with two or more tasks it is also possible to re-configure production so that an AI completing one task passes the output into the next task, without human intervention.
 This chaining is potentially a source of large productivity gains, \emph{but} it requires AIs that can do each task with a high probability of success. 
@@ -125,12 +124,26 @@ The model's basic setup shares conceptual similarities to the the o-ring model o
 
 A key implication of the model is that the possibility of chaining automated tasks together can reverse comparative advantage assignments for individual tasks. 
 It can be efficient to use an AI for a task even if humans have a comparative advantage in that task in isolation.
-A surprising implication of chaining is that improvements in AI capabilities for a seemingly unrelated task can cause a focal task to go directly from being done by human to being done by machines without the focal task experiencing direct improvements by the AI.
+A surprising implication of chaining is that improvements in AI capabilities for a seemingly unrelated task can shift a focal task directly from being done by human to being done by machines without the focal task itself experiencing direct improvements by the AI.
 
 Because of chaining, it matters what tasks are ``next'' to each other in a productive process.
 In different occupations, different tasks might appear adjacent to each other. 
 Writing might appear next to hundreds of different tasks, from ``send your economics paper to a journal'', to ``drop your maintenance report slip into a box'' at the end of a shift driving a bus.
 As such, ``automation dispersion'' is a possibility where tasks are automated in some production settings but not others because of occupation-specific task adjacency.
+
+%%%%%%%%%%%% Tent Poll Tasks %%%%%%%%%%%%
+Imagine two tasks where one takes a lot of time to complete but requires little human capital appears next to a task that takes little time to complete but requires a lot of human capital. 
+An example of such combination of tasks is ``business school professor teaching on the board.''
+The task of ``teaching'' in this example is one that requires a lot of human capital and requires moderate time to complete.
+The ``cleaning of the board'', on the other hand, takes a lot of time to complete without requiring much, if any, human capital.
+What determines 
+
+An economic force that pushes us towards specialization is ``hand-off'' or ``switching'' costs. 
+This friction leads us to bundle tasks together in a 
+Internalized hand-off costs push us towards minimum costs.
+Chaining is hard for tent poll tasks. 
+%%%%%%%%%%%% Tent Poll Tasks %%%%%%%%%%%%
+
 
 Assigning tasks to factors of production is not a completely trivial computational problem.
 For an occupation with $n$ tasks, we show that there are $F(2n + 1)$ possible production arrangements, where $F(k)$ is the $k$th Fibonacci number.
@@ -185,9 +198,9 @@ In this section we develop a framework that treats occupations as a collection t
 \label{sec:job_design}
 
 Suppose production of a (final) good requires completing an ordered set of tasks, denoted by:
-\[
+\begin{equation}
 \mathcal{T} = \{1,2,\ldots,\tau\}.
-\]
+\end{equation}
 We refer to $\mathcal{T}$ as the production process of the good.
 The firm can partition the production process $\mathcal{T}$ into $J$ distinct ``jobs,'' where each job $j \in \{1, \cdots, J \}$ is a contiguous block of tasks performed by a single worker, denoted by $\mathcal{J}_j$.
 Formally:
@@ -227,6 +240,7 @@ while the total time spent on tasks in $\mathcal{J}_j$ to produce a unit of outp
 \sum_{i \in \mathcal{J}_j} \timecost{ij}.
 \]
 
+
 Both the product and human capital markets are perfectly competitive, and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
 Workers value leisure at $v_L$ and supply one unit of labor inelastically.
 Hence, if the wage in job $j$ is $w_j$, the worker's income is simply $w_j$.
@@ -241,6 +255,28 @@ The firm must pay workers for their time, regardless of the task; hence, the wag
 \label{eq:wagebill}
 \text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr).
 \end{align}
+
+%%%%%%%%%%%%%%%%% Single Graph Representation %%%%%%%%%%%%%%%%%
+Equation \ref{eq:wagebill} has a nice geometric representation.
+The wage bill of each job can be thought of as the area of a rectangle whose height is the required human capital to complete the job and whose width is the time cost of the job.
+Figure~\ref{fig:wage_bill} gives the graphic representation of an occupation with two tasks and thus two potential job designs: [1][2] and [1,2].
+The numbered rectangles bounded by solid lines in each panel represent the two tasks.
+In the [1][2] design (left panel), each task is assigned to a separate worker.
+The wage bill of job 1 in this design is the shaded area bounded by rectangle 1 and the wage bill of job 2 is the shaded area bounded by rectangle 2.
+In the [1,2] job design where both tasks are assigned to the same worker (right panel), the wage bill of the only job in the occupation is the area of the shaded rectangle whose width is the sum of time costs of both tasks and whose height is the sum of human capital of the two tasks.
+
+\begin{figure}
+  \caption{Geometric Representation of the Wage Bill} \label{fig:wage_bill}
+  \begin{center}
+  \includegraphics[width = \textwidth]{plots/job_design.png} \\
+  \end{center}
+\begin{footnotesize}
+  \emph{Note:} This graph shows the geometric representation of the wage bill for an occupation with two tasks. The shaded area in the left panel shows the wage bill of the two jobs in the [1][2] design. The shaded area in the right panel shows the wage bill of the single job comprised by both tasks in the [1,2] design.
+\end{footnotesize}
+\end{figure}
+%%%%%%%%%%%%%%%%% Single Graph Representation %%%%%%%%%%%%%%%%%
+
+
 The firm seeks to minimize the total cost of producing the final good by optimally designing jobs.
 Assuming there are $J$ jobs in the optimal allocation of workers to jobs, the overall production cost per unit of the good is:
 \begin{align}
@@ -258,6 +294,11 @@ In the earlier example production process with three tasks, suppose workers valu
 \end{array}
 \]
 The wage bill for each individual job as well as total production cost for each job design is given in Panel A of Table~\ref{tab:job_design}.
+As it turns out, the minimum cost way of designing jobs is to assign each task to an individual and have each worker specialize in completing a single task. 
+This conclusion is not limited to the current example and these specific values.
+In fact, for any set of human capital and time cost values the same conclusion will hold.
+This is simply because the sum of area of individual rectangles is smaller than the area of any permutation in which one or more rectangles are combined into one job and are assigned to a worker.
+
 
 \begin{table}[htbp]
 \caption{Example job design costs for a production process with $\tau=3$ tasks}
@@ -350,13 +391,17 @@ Panel (A) gives the production costs in absence of hand-off costs whereas Panel 
 
 \subsection{Why Not Full Division of Labor?}
 Without additional frictions, the firm could minimize production costs by assigning a single worker to each task.
-This is evident in Panel A of Table~\ref{tab:job_design}.
-We assume this trivial arrangement is prevented by a ``hand-off cost”---a cost associated with job transitions that, while not requiring additional human capital, does take time.
+This is not a consequence of the chosen parameter values in the specific example of Table~\ref{tab:job_design}, Panel A.
+In fact, the same conclusion holds for any arbitrary set of parameters since $xy+wz \leq (x+w)(y+z)$ for any nonnegative $x,y,w,z$.
+In other words, for any number of tasks the sum of individual rectangle areas as in Figure~\ref{fig:wage_bill} is always strictly smaller than any job design in which two tasks or more are bundled together and assigned to one worker.
+
+To assume away this trivial arrangement we introduce a source of friction: ``hand-off cost”---a cost associated with job transitions that, while not requiring additional human capital, does take time.
 This cost can be interpreted as the expense of context switching between workers in the production process.
-Specifically, whenever a job boundary is introduced---that is, when transitioning from the last task of job $j$ to the first task of job $j+1$, the worker in job $j$ incurs a hand-off time cost of $\handofftime{j} \geq 0$.
+Specifically, this cost is incurred whenever a job boundary is introduced. That is, when transitioning from the last task of job $j$ to the first task of job $j+1$, the worker in job $j$ incurs a hand-off time cost of $\handofftime{j} \geq 0$.
+The hand-off time cost is an intrinsic characteristic of a task which is only realized when a job boundary falls between that task and the task coming after it (and is to be completed by another worker in another job).
 
 While the firm's cost minimization problem remains unchanged, its solution becomes nontrivial due to the additional hand-off cost incurred after completing the final task in each job.  
-The firm's objective is to minimize the following expression, which differs from the previous equation only by the extra $\handofftime{j}$ term added to the time cost for each job:
+The firm's objective is to minimize the following expression, which differs from equation \ref{eq:totalcost_no_handoff} only by the extra $\handofftime{j}$ term added to the time cost term of each job:
 \begin{align}
 \label{eq:totalcost_with_handoff}
 \text{TotalCost} = \sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\handofftime{j} + \sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr)\Biggr].
@@ -370,8 +415,8 @@ Panel B of Table~\ref{tab:job_design} shows the job design with hand-off costs s
 3 & 2   & 1.5 & 0 \\
 \end{array}
 \]
-Notice that while the earlier optimal job design assigned a single worker to each task (i.e., the [1][2][3] design), after introduction of the hand-off friction, the cost-minimizing production method becomes the [1,2][3] design.
-In the new optimal design, the firm minimizes its cost by bundling tasks 1 and 2 together, avoiding the substantial hand-off cost incurred between these tasks.
+Notice that while the earlier optimal job design (i.e., the [1][2][3] design in Panel A) assigned a single worker to each task, in Panel B the cost-minimizing production method becomes the [1,2][3] design after introduction of the hand-off friction.
+In the new optimal design, the firm minimizes its cost by bundling tasks 1 and 2 together in a single job [1,2], avoiding the substantial hand-off cost incurred between these tasks in the previously optimal [1][2][3] design.
 
 
 \subsection{Computational Problem $\rightarrow$ Brendan}
