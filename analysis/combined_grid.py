@@ -262,8 +262,8 @@ W = np.array([1, 2])  # Worker assignments
 
 # Example usage
 handoff_height = 0.025  # Fixed height for attached rectangles
-T = np.array([1, 2])  # Main rectangle lengths
-C = np.array([3, 1])  # Main rectangle heights
+T = np.array([3, 2])  # Main rectangle lengths
+C = np.array([1, 2])  # Main rectangle heights
 H = np.array([0, 0])  # No hand-off
 
 image_files = []
@@ -325,7 +325,7 @@ for H, my_str in zip([H_handoff, H_no_handoff], ["with_handoff", "no_handoff"]):
     # Combine PNGs into a grid
     grid_size = math.ceil(math.sqrt(len(image_files)))
     images = [Image.open(img) for img in image_files[::-1]]
-    img_width, img_height = images[0].size
+    img_width, img_height = images[-1].size
     canvas_width = img_width * grid_size
     canvas_height = img_height * grid_size
     grid_image = Image.new("RGB", (canvas_width, canvas_height), "white")

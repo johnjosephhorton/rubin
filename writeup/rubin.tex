@@ -93,11 +93,14 @@
 \maketitle
 
 \begin{abstract}
-\noindent This paper presents a simple task-based model of Agentic AI and human labor.
-Unlike other tasks models, it considers the interdependence of tasks in a sequence. 
-Tasks can be efficiently ``chained'' together in the sense that each task produces something that feeds into the next without human intervention.
-A task might be added to an automated chain even if the human has an absolute advantage in that task in isolation, reversing the usual comparative advantage calculation.
-We explore empirically...(TBD)
+\noindent
+This paper presents a simple task‐based model of Agentic AI and human labor.  
+Unlike existing task models, it explicitly considers the interdependence of tasks in a sequence.  
+Tasks can be efficiently ``chained'' together, meaning that each task produces something that feeds directly into the next without human intervention.  
+A task may optimally be added to an automated chain even when humans have an absolute advantage at that task in isolation, overturning the usual comparative advantage logic.  
+We introduce ``hand‐off'' costs, a source of friction that determines how tasks are bundled into jobs and which tasks are assigned to AI.
+The model accommodates two distinct modes of AI deployment: (1) automation, where AI completes tasks without human oversight, and (2) augmentation, where AI assists humans in completing tasks.
+%We explore empirically...(TBD)
 \end{abstract}
 
 \onehalfspacing
@@ -127,23 +130,25 @@ It can be efficient to use an AI for a task even if humans have a comparative ad
 A surprising implication of chaining is that improvements in AI capabilities for a seemingly unrelated task can shift a focal task directly from being done by human to being done by machines without the focal task itself experiencing direct improvements by the AI.
 
 Because of chaining, it matters what tasks are ``next'' to each other in a productive process.
-In different occupations, different tasks might appear adjacent to each other. 
-Writing might appear next to hundreds of different tasks, from ``send your economics paper to a journal'', to ``drop your maintenance report slip into a box'' at the end of a shift driving a bus.
-As such, ``automation dispersion'' is a possibility where tasks are automated in some production settings but not others because of occupation-specific task adjacency.
-
-%%%%%%%%%%%% Tent Poll Tasks %%%%%%%%%%%%
-Imagine two tasks where one takes a lot of time to complete but requires little human capital appears next to a task that takes little time to complete but requires a lot of human capital. 
-An example of such combination of tasks is ``business school professor teaching on the board.''
-The task of ``teaching'' in this example is one that requires a lot of human capital and requires moderate time to complete.
-The ``cleaning of the board'', on the other hand, takes a lot of time to complete without requiring much, if any, human capital.
-What determines 
-
-An economic force that pushes us towards specialization is ``hand-off'' or ``switching'' costs. 
-This friction leads us to bundle tasks together in a 
-Internalized hand-off costs push us towards minimum costs.
-Chaining is hard for tent poll tasks. 
-%%%%%%%%%%%% Tent Poll Tasks %%%%%%%%%%%%
-
+In some sequences, adjacent tasks differ sharply in their time and skill profiles---what we refer to as ``tent‐poll tasks.''
+These arise when a time‐consuming, low‐skill task is immediately followed by a short, high‐skill task.
+Task pairs 1--2 and 2--3 in Figure~\ref{fig:tent_poll} illustrate such configurations.
+\begin{figure}[h]
+  \caption{Tent‐Poll Tasks} 
+  \label{fig:tent_poll}
+  \begin{center}
+    \includegraphics[width=\textwidth]{plots/tent_poll.png}
+  \end{center}
+  \begin{footnotesize}
+    \emph{Note:} This figure illustrates tent‐poll tasks.  
+    Task 1 has a high time cost and low human‐capital requirement (wide and short), followed by Task 2 with a low time cost and high human‐capital requirement (narrow and tall).  
+    Tasks 2 and 3 form another tent‐poll pair with a similar mismatch.
+  \end{footnotesize}
+\end{figure}
+The sharp contrast between such tasks creates substantial inefficiencies, discouraging AI chaining and instead pushing firms toward individual task specialization.
+The same economic forces that historically drove the division of labor---namely, minimizing frictions and inefficiencies---now define the boundaries of where AI can be effectively deployed.
+Even when both tasks are individually automatable, chaining them via AI may not be viable.
+Some of the hardest areas to automate are not defined by task difficulty alone, but by the awkwardness of their neighbors.
 
 Assigning tasks to factors of production is not a completely trivial computational problem.
 For an occupation with $n$ tasks, we show that there are $F(2n + 1)$ possible production arrangements, where $F(k)$ is the $k$th Fibonacci number.
@@ -190,7 +195,7 @@ In other words, automation can enable new forms of labor-labor substitution by s
 \section{A Task-Based Model of Production}
 \label{sec:taskbased_prod}
 
-To model how AI affects occupations, here viewed as collections of tasks, we need some account of why those tasks were put together in an occupation in the first place.
+To model how AI affects occupations we need some account of why those tasks were put together in the first place.
 In this section we develop a framework that treats occupations as a collection tasks, explains how firms design jobs, and shows how AI influences the design choices.
 
 
@@ -226,9 +231,9 @@ Later, we will discuss what factors guide the firm’s choice among different jo
 \subsection{Human Capital}
 The firm hires one worker for each job.  
 The worker then completes all of the constituent tasks of their assigned job. 
-To perform each task $i \in \mathcal{J}_j$, the worker must first acquire the necessary skills to do the task, incurring a one-time human capital cost of $\hccost{ij} > 0$.  
-The task itself takes $\timecost{ij} > 0$ time to perform, and this time cost is incurred for each unit of good produced.  
-Note that the human capital cost is a fixed investment---a stock of knowledge acquired just once---and is entirely independent of the time required to perform the task.
+To perform each task $i\in\mathcal{J}_j$, a worker must first acquire the required skills, incurring a one‐time human capital cost $\hccost{ij}>0$. 
+Once trained, each task takes time $\timecost{ij}>0$ to complete. 
+Note that the human capital cost $\hccost{ij}$ is paid only once upon acquisition, whereas the time cost $\timecost{ij}$ applies to every unit of the good produced.
 In other words, once the necessary human capital is acquired, labor (i.e., time) is the only input used in production.
 For example, it might cost \$10 to learn how to file a test procedure specification (TPS) report, and once the worker has acquired this skill, it takes $15$ minutes to produce each report.
 Thus, after paying the \$10 learning cost, the worker can produce one report every $15$ minutes.
@@ -257,31 +262,25 @@ The firm must pay workers for their time, regardless of the task; hence, the wag
 \text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr).
 \end{align}
 
-%%%%%%%%%%%%%%%%% Single Graph Representation %%%%%%%%%%%%%%%%%
-Equation \ref{eq:wagebill} has a nice geometric representation as well.
-The productive process can be represented as a sequence of stacked rectangles of height $\hccost{ij}$ and width $\timecost{ij}$, as shown in Figure~\ref{fig:wage_bill}.
-A job corresponds to the bounding box around a sequence of tasks with its wage bill given by the area of that box.
-The wage bill of each job can be thought of as the area of a rectangle whose height is the required human capital to complete the job and whose width is the time cost of the job.
-Figure~\ref{fig:wage_bill} gives the graphic representation of an occupation with $\tau=2$ tasks and thus two potential job designs: [1][2] and [1,2].
-The numbered rectangles bounded by solid lines in each panel of the figure represent the two tasks.
-In the [1][2] design (left panel), each task is assigned to a separate worker.
-The wage bill of job 1 in the [1][2] design is the shaded area bounded by rectangle 1 and the wage bill of job 2 is the shaded area bounded by rectangle 2.
-In the [1,2] design where both tasks are assigned to the same worker (right panel), the wage bill of the only job in the occupation is the area of the shaded rectangle whose width is the sum of time costs of both tasks and whose height is the sum of human capital of tasks.
+Equation~\ref{eq:wagebill} admits a nice geometric interpretation.  
+We can represent the production process as a sequence of stacked rectangles whose heights are $\hccost{ij}$ and widths are $\timecost{ij}$.  
+Figure~\ref{fig:wage_bill} illustrates a simple occupation with just two tasks and thus two job designs: [1][2] and [1,2].  
+In each panel, the numbered, solid‐lined rectangles denote the individual tasks.  
+Visually, a job corresponds to the bounding box around its tasks, and its wage bill equals the area of that box (shaded in blue).
 
-\begin{figure}
-  \caption{Geometric Representation of the Wage Bill} \label{fig:wage_bill}
+In the [1][2] design (left panel), each task is handled by a different worker: the wage bill for job 1 is the shaded area of rectangle 1, and the wage bill for job 2 is the shaded area of rectangle 2.  
+In the [1,2] design (right panel), both tasks are assigned to the same worker, so the occupation has a single job whose wage bill is the area of the shaded rectangle whose width is the sum of the two tasks’ time costs and whose height is the sum of their human capital costs.  
+\begin{figure}[h]
+  \caption{Geometric Illustration of the Wage Bill} 
+  \label{fig:wage_bill}
   \begin{center}
-  \includegraphics[width = \textwidth]{plots/job_design.png} \\
+    \includegraphics[width=\textwidth]{plots/job_design.png}
   \end{center}
-\begin{footnotesize}
-  \emph{Note:} This graph depicts the geometric representation of the wage bill for an occupation with $\tau=2$ tasks. 
-  The shaded areas are the wage bills of jobs in each panel. 
-  In the left panel, the shaded rectangles give the wage bill for jobs [1] and [2]. 
-  In the right panel, the shaded area is the wage bill of the job comprised of both tasks [1,2].
-\end{footnotesize}
+  \begin{footnotesize}
+    \emph{Note:} Each panel of the graph shows the geometric representation of the wage bill for a job design of an occupation with two tasks.  
+    The shaded areas represent job wage bills: in the left panel, two separate jobs cover tasks [1] and [2]; in the right panel, a single job covers both tasks [1,2].
+  \end{footnotesize}
 \end{figure}
-%%%%%%%%%%%%%%%%% Single Graph Representation %%%%%%%%%%%%%%%%%
-
 
 The firm seeks to minimize the total cost of producing the final good by optimally designing jobs.
 Assuming there are $J$ jobs in the optimal allocation of workers to jobs, the overall production cost per unit of the good is:
@@ -300,9 +299,13 @@ In the earlier example production process with three tasks, suppose workers valu
 \end{array}
 \]
 The wage bill for each individual job as well as total production cost for each job design is given in Panel A of Table~\ref{tab:job_design}.
-The minimum cost way of doing this occupation is to assign each task to a single worker and have each individual specialize in completing one task. 
-In fact, the same conclusion holds for any arbitrary set of parameter values as for any nonnegative $x,y,w,z$ the following holds: $xy+wz \leq (x+w)(y+z)$.
-Another way to put this is to say for any number of tasks the sum of individual rectangle areas in the geometric representation is always strictly smaller than any job design in which two tasks or more are bundled together and are assigned to one worker.
+The lowest‐cost configuration, [1][2][3], assigns each task to a different worker, allowing each individual to specialize in a single task.  
+In fact, this conclusion holds for any arbitrary set of parameter values since, for any nonnegative $x,y,w,z$, we have:
+\[
+  xy + wz \le (x + w)(y + z),
+\]
+which means bundling any two tasks cannot reduce total cost.  
+Geometrically, for any number of tasks, the sum of the areas of individual rectangles never exceeds the area of the single bounding rectangle that covers two or more tasks assigned to one worker.
 
 \begin{table}[htbp]
 \caption{Example job design costs for a production process with $\tau=3$ tasks}
@@ -395,10 +398,12 @@ Panel (A) gives the production costs in absence of hand-off costs whereas Panel 
 
 \subsection{Why Not Full Division of Labor?}
 Without additional frictions, the firm could minimize production costs by assigning one worker to each task.
-To assume away this trivial arrangement we introduce the ``hand-off cost”---a cost associated with job transitions that, while not requiring additional human capital, does take time.
+To assume away this trivial arrangement we introduce the ``hand-off cost” friction---a cost associated with job transitions that, while not requiring additional human capital, does take time.
 This cost can be interpreted as the expense of context switching between workers in the production process.
-Specifically, this cost is incurred whenever a job boundary is introduced. That is, when transitioning from the last task of job $j$ to the first task of job $j+1$, the worker in job $j$ incurs a hand-off time cost of $\handofftime{j} \geq 0$.
-The hand-off time is an intrinsic characteristic of the task and is only realized when the task falls at the boundary of two consecutive jobs.
+The hand-off cost is an inherent characteristic of a task and applies only when that task sits at the boundary between two jobs.  
+Specifically, when transitioning from the last task of job $j$ to the first task of job $j+1$, the worker in job $j$ incurs a hand‐off time cost $\handofftime{j}\ge0$.  
+If the task is not followed by a job boundary, no hand‐off cost applies.  
+This reflects that there are no context‐switching costs within a job, since a single worker performs all its tasks.
 
 While the firm's cost minimization problem remains unchanged now its solution becomes nontrivial due to the additional hand-off cost incurred after completing the final task in each job.  
 The firm's objective is to minimize the following expression, which differs from equation \ref{eq:totalcost_no_handoff} only by the extra $\handofftime{j}$ term added to the time cost component of the job's wage bill:
@@ -420,8 +425,8 @@ In the new optimal design, the firm minimizes its cost by bundling tasks 1 and 2
 
 
 \subsection{Computational Problem $\rightarrow$ Brendan}
-The firm's cost minimization problem can be interpreted geometrically as well.
-In Figure~\ref{fig:job_design} we represent the productive process of the example discussed in Table~\ref{tab:job_design} as a sequence of stacked rectangles of height $\hccost{ij}$ and width $\timecost{ij}$.
+The firm’s cost‐minimization problem also admits a geometric interpretation.  
+Figure~\ref{fig:job_design} represents the production process from Table~\ref{tab:job_design} as stacked rectangles of height $\hccost{ij}$ and width $\timecost{ij}$.
 \begin{figure}[htbp]
   \begin{center}
   \caption{Geometric interpretation of job designs for the \(\tau=3\) tasks example} \label{fig:job_design}
@@ -435,17 +440,15 @@ In Figure~\ref{fig:job_design} we represent the productive process of the exampl
     \caption{Job design with hand-off costs}
   \end{subfigure}
   \end{center}
-  \footnotesize{\emph{Notes:} This figure illustrates the geometric interpretation of firm's job design problem presented in Table~\ref{tab:job_design}. Each panel visualizes the production process as a sequence of stacked rectangles, where the area of each rectangle (the bounding box around a job) represents its wage cost. Panel (a) corresponds to the scenario without hand-off costs, leading to the optimal design of [1][2][3] (top left graph). Panel (b) incorporates hand-off costs, which alters the cost structure and makes the [1,2][3] design cost minimizing (bottom left graph).}
+  \footnotesize{\emph{Notes:} This figure illustrates the geometric interpretation of firm's job design problem presented in Table~\ref{tab:job_design}. Each panel visualizes the production process as a sequence of stacked rectangles, where the area of each rectangle (the bounding box around a job) represents its wage bill. Panel (a) corresponds to the scenario without hand-off costs, leading to the optimal design of [1][2][3] (top left graph). Panel (b) incorporates hand-off costs, which alters the cost structure and makes the [1,2][3] design cost minimizing (bottom left graph).}
 \end{figure}
-Panel (a) of the figure shows the job design problem for the case without hand-off costs (corresponding to Panel A of Table~\ref{tab:job_design}).
-Panel (b) of the figure shows the same example including hand-off costs (corresponding to Panel B of Table~\ref{tab:job_design}).
-Visually, the firm's objective is to strike an optimal balance between two competing costs.
-On one hand, consolidating tasks into a single job can lead to inefficiencies illustrated by the cross-diagonal rectangles, arising from bundling tasks together.
-On the other hand, breaking production into multiple jobs incurs an additional hand-off time cost at the transition boundary between jobs.
-The extent to which the extra hand-off time cost increases total cost depends on the cumulative human capital of the worker who is doing the hand-off.
-That is, the height of the pink hand-off cost rectangle(s) shown in Panel (b) of Figure~\ref{fig:job_design} are determined by the sum of heights of tasks comprising that job.
-The firm trades off these two factors against each other to determine the most cost-effective job design.
-As discussed earlier, the cost minimizing plan in absence of hand-off costs is [1][2][3] (top left graph of Panel (a)) whereas after inclusion of hand-offs the optimal plan changes to [1,2][3] (bottom left graph of Panel (b)).
+Panel (a) depicts the job design without hand‐off costs (corresponding to Panel A of Table~\ref{tab:job_design}); Panel (b) shows the same example with hand‐off costs (corresponding to Panel B).  
+Visually, the firm trades off two opposing forces.
+Consolidating tasks into a single job avoids boundary costs but creates inefficiencies captured by cross‐bundling areas.  
+Splitting tasks into separate jobs eliminates those inefficiencies yet incurs hand‐off time costs at each job boundary.  
+These boundary costs scale with the cumulative human capital of the switching worker, so the height of the pink hand‐off rectangle in Panel (b) equals the sum of human‐capital heights for that job.
+By balancing these effects, the firm selects the most cost‐effective job design.  
+Without hand‐off costs, the optimal arrangement is [1][2][3] (top left of Panel (a)); with hand‐offs, it shifts to [1,2][3] (bottom left of Panel (b)).  
 
 %The geometric representation of jobs provides a very nice intuition of the firm's problem. 
 %In order to minimize area of 
@@ -474,20 +477,22 @@ As discussed earlier, the cost minimizing plan in absence of hand-off costs is [
 \subsection{AI Augmentation of Tasks}
 Having established the structure of task-based production, we now extend our framework by introducing AI into the model.
 Consider a worker completing a sequence of tasks as part of their designed job.
-In this subsection we focus on a single task and drop the job ($j$) and task indices ($i \in \mathcal{J}_j$) for notational simplicity.
+In this section we focus on a single task and drop the job ($j$) and task indices ($i \in \mathcal{J}_j$) for notational simplicity.
 We will discuss automation of two or more tasks in the next section.
+A task can be done in one of three ways: 
+\begin{enumerate}
+\item Manually by a human in its entirety, 
+\item Using an AI with human oversight (referred to as ``augmented''),
+\item Using an AI in its entirety (referred to as ``automated'').
+\end{enumerate}
+We defer discussion of task automation to the next section as it only happens in our model when two or more tasks are present.
+For the remainder of this section, a task is assumed to be completed either fully manually or by AI in an augmented way.
 
-A task can be done in one of three ways: 1) manually by a human in its entirety, 2) using an AI with human oversight, or 3) using an AI in its entirety.
-We refer to the second case as task ``augmentation'' and the third case as task ``automation.''
-We defer discussion of automation to the next section as it only happens when two or more tasks are present.
-
-In the remainder of this section, a task is done either fully manually or by AI in an augmented way.
 If the task is completed manually by human, the worker incurs a time cost of $\humantime > 0$.
 Alternatively, if the worker opts to use AI in an augmented way, they issue a ``prompt'' to the AI at a time cost of $\timecost{p} > 0$.
-
 The AI successfully produces an output with probability $q$ and fails with probability $1-q$. 
 The success probability can be viewed as $q=\alpha^d$ where $d$ is the completion difficulty parameter associated with the task for an AI with quality $\alpha \in [0,1]$: the more difficult a task is the less likely any AI attempt at it will be.
-After prompting the worker evaluates the AI's output, incurring an additional time cost of $\timecost{e} > 0$.
+After prompting the worker evaluates the AI's output, incurring an additional time cost $\timecost{e} > 0$.
 After evaluation, the worker learns whether the AI succeeded or failed.
 If the AI fails, the worker can provide a new prompt and evaluate a new attempt, incurring the same costs $\timecost{p}$ and $\timecost{e}$ again.
 Let $\machinetime = \timecost{p} + \timecost{e}$ denote the total ``management'' time cost associated with using the AI for an augmented task.
@@ -541,7 +546,7 @@ Figure~\ref{fig:flow} below illustrates this process graphically.
 \end{tikzpicture}}
    \end{center}
   \footnotesize{
-  \emph{Notes:} This figure illustrates the iterative process of using AI to complete a task.  
+  \emph{Notes:} This figure illustrates the iterative process of using AI to complete an augmented task.  
   For simplicity, we assume that all tasks have the same human time cost, $\humantime$, and hand-off time requirement, $\handofftime{}$.  
   To complete Task 3, the human can either perform the task manually at a cost of $\humantime$, or provide a prompt at a cost of $\timecost{p}$. 
   The AI then generates an output, and the human evaluates whether it meets their needs at a cost of $\timecost{e}$.  
@@ -553,14 +558,14 @@ The decision whether to deploy the AI depends on whether the manual cost exceeds
 Assuming that each attempt is independent, we obtain the following proposition.
 
 \begin{proposition}[Single Task Automation Criterion] \label{proposition:single}
-A job with a single task should be automated if and only if AI quality exceeds the threshold
+A job with a single task should be augmented if and only if AI quality exceeds the threshold
 $$\underline{q} := \frac{\machinetime}{\humantime}.$$
 \end{proposition}
 
 \begin{proof}
 By the standard result for the expectation of a geometric distribution, the expected time cost of using the AI is:
 $$\machinetime \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\machinetime}{q}.$$
-Thus, automation is optimal when:
+Thus, augmentation is optimal when:
 $$\humantime \geq \frac{\machinetime}{q} \quad \Longleftrightarrow \quad q \geq \frac{\machinetime}{\humantime} = \underline{q}.$$
 \end{proof}
 
@@ -570,7 +575,7 @@ Although the assumptions of independent success probabilities and constant manag
 
 For a given AI success probability $q$, the effective time cost per task (the task time cost parameter $\timecost{i}$ used in previous section) is determined by:
 $$\timecost{i} = \min \Bigl\{\frac{\machinetime}{q},\, \humantime\Bigr\}.$$
-This expression shows how the overall time cost of a task is set by the trade-off between manual execution and AI-assisted completion in an augmented way.
+This expression shows how the overall time cost of a task is set by the trade-off between manual execution and AI-augmentation.
 
 
 
@@ -578,11 +583,11 @@ This expression shows how the overall time cost of a task is set by the trade-of
 Now let us move from a single task to two tasks.
 Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
 
-First, let us formalize the definition of augmented and automated tasks.
-We say that a task is ``augmented'' if it is the last task in a sequence of consecutive tasks that are completed using AI.
-We refer to a task as ``automated'' if it belongs to a sequence of two or more consecutive tasks done by AI and the task is not the last task in the sequence.
-Note that a task facilitated by AI in a sequence of length 1 (i.e., a single task in isolation) is necessarily an augmented task.
-The reason we introduce these definitions is to make a distinction between tasks that are done in their entirety by AI without requiring direct human intervention (automated) and tasks whose outputs are overseen by a human before being passed on (augmented).
+First, we formalize the distinction between ``augmented'' and ``automated'' tasks.  
+A task is \emph{augmented} if it is the final task in a run of consecutive AI-completed tasks.  
+A task is \emph{automated} if it appears in a sequence of two or more AI-completed tasks and is not the last task in that sequence.  
+Consequently, an AI-performed task in isolation (a run of length one) is classified as augmented.  
+These definitions separate tasks fully executed by AI without human intervention (automated) from those whose outputs are reviewed by humans before being passed on (augmented).
 
 For notation, when a human performs the task without AI, we denote it as $\human{\cdot}$.
 When an AI attempts the task, we denote it as $\machine{\cdot}$.
@@ -591,27 +596,26 @@ In the three tasks occupation example, if in the [1][2][3] design the first task
 Consider a job consisting of only two tasks, indexed $1$ and $2$ (continue to suppress the job index $j$).
 Denote the corresponding AI success probabilities with \(q_1\) and \(q_2\). 
 For simplicity, we assume human time \(\humantime\) and machine time \(\machinetime\) are the same for both tasks.
-Furthermore, we suppress the switching cost $\handofftime{}$ which the worker incurs upon completing task $2$, since our focus is solely on tasks performed within a single job (and note that no hand-offs occur between tasks of the same job).
 Let $\cost{.}$ show the time cost incurred when completing an arrangement of tasks.
-With two tasks, there are four possible direct production arrangements:
+With two tasks, there are four possible direct production arrangements:\footnote{We suppress the switching time cost $\handofftime{}$ which the worker incurs upon completing task $2$, since our focus is solely on tasks performed within a single job (and note that no hand-offs occur between tasks of the same job).}
 \begin{align*}
     \cost{\human{1}\human{2}} &= 2\,\humantime & \text{(fully human)}, \\
     \cost{\machine{1}\human{2}} &= \frac{\machinetime}{q_1} + \humantime & \text{(partial augmentation)}, \\
     \cost{\human{1}\machine{2}} &= \humantime + \frac{\machinetime}{q_2} & \text{(partial augmentation)}, \\
     \cost{\machine{1}\machine{2}} &= \frac{\machinetime}{q_1} + \frac{\machinetime}{q_2} & \text{(independent augmentation)}.
 \end{align*}
-The following tasks in above arrangements are augmented: task 1 in $\machine{1}\human{2}$, task 2 in $\human{1}\machine{2}$, and both tasks 1 and 2 in $\machine{1}\machine{2}$.
+In the arrangement $\machine{1}\human{2}$, task 1 is augmented; in $\human{1}\machine{2}$, task 2 is augmented; and in $\machine{1}\machine{2}$, both tasks 1 and 2 are augmented.  
 
 There is also a fifth arrangement where the completed first task is used as input for the second task without human intervention.
-We call this an ``automation chain.''
+We call this an ``automation chain'' or a ``machine chain.''
 When tasks are chained, denoted by $\machine{1|2}$, they are executed by the AI with a single prompt and final evaluation.
-Both tasks must succeed for the chain to be successful in a single step.
+In this arrangement, task 1 is automated and task 2 is augmented.
+The AI must succeed in both tasks for the chain to be successful in a single step.
 The cost of this arrangement is:
 \begin{align*}
 \cost{\machine{1|2}} &= \frac{\machinetime}{q_1 q_2} & \text{(chained automation)}.
 \end{align*}
 This captures the notion of agentic AI that can complete a sequence of tasks autonomously, without human intervention between the two tasks.
-In this arrangement, task 1 is automated and task 2 is augmented.
 Since $\humantime$ and $\machinetime$ are common to all tasks, the complete cost function for this productive arrangement, when minimizing costs, is given by:
 \begin{align}
   \min \left\{ 2\,\humantime,\;\; \frac{\machinetime}{q_1} + \humantime,\;\; \humantime + \frac{\machinetime}{q_2},\;\; \frac{\machinetime}{q_1} + \frac{\machinetime}{q_2},\;\; \frac{\machinetime}{q_1 q_2} \right\}.
@@ -630,7 +634,7 @@ Investing in \(q_1\) and \(q_2\) offers no immediate return in the \(\human{1}\h
 However, once either task switches augmentation, we gain from increasing AI quality further, but at a diminishing rate, so long as the other task is still done by humans.
 These regions are the \(\machine{1}\human{2}\) and \(\human{1}\machine{2}\) regions.
 
-\begin{figure}
+\begin{figure}[h]
   \caption{Cost-minimizing production arrangements with two tasks with levels of AI capabilities} \label{fig:two_tasks}
   \begin{center}
   \includegraphics[width = 0.8 \textwidth]{plots/two_tasks.pdf} \\
@@ -649,7 +653,7 @@ Proposition~\ref{proposition:interdependence} formalizes this idea, which can be
 
 \begin{proposition}[Task Interdependence] \label{proposition:interdependence}
 Assume that both tasks share the same human completion time, $\humantime$, and the same machine completion time, $\machinetime$.
-A task may be optimally automated as part of a chain even if humans have a comparative advantage when performing that task in isolation.
+A task may be optimally executed as part of a chain even if humans have a comparative advantage when performing that task in isolation.
 In particular,
 \[
 \cost{\human{1}\machine{2}} < \cost{\machine{1}\machine{2}}
@@ -793,20 +797,73 @@ Thus, chaining is optimal if and only if the inequality holds.
 
 
 \section{AI Advancements and Job Re-design}
-Once a firm has a job design, if there is an advance in AI capabilities, how does it re-design the job? 
+\label{sec:job_redesign}
 
-There are two ways an AI advance can affect individual tasks.
-It can lower the time it takes to finish the job and/or change the amount of human capital required to complete the task (for now we assume it decreases, i.e., workers need fewer skills to work with the AI.).
-AI advances will not only change the firm's cost minimization problem directly by affecting tasks, but also indirectly enters the problem by changing the effective hand-off cost it incurs for switching between jobs, as hand-offs effectively enter the cost minimization through the human capital amount of the worker employed in that job.
+An exogenous improvement in AI quality—captured by in increase in $\alpha$—affects each task $i$ in two ways:
+\[
+\widetilde{\timecost{ij}}(\alpha)
+\;=\;\min\Bigl\{\timecost{ij},\,\tfrac{\machinetime}{q_i(\alpha)}\Bigr\} \leq \timecost{ij},
+\qquad
+\widetilde{\hccost{ij}}(\alpha)\;\le\;\hccost{ij},
+\]
+where $q_i(\alpha)$ rises in $\alpha$.  
+The AI improvement can potentially also generate entirely new “oversight” tasks (e.g., prompt‐engineering, exception handling) with their own
+$\bigl(\hccost{o}(\alpha),\,\timecost{o}(\alpha)\bigr)$.  
+Together, the firm’s per‐unit cost becomes:
+\begin{equation}
+\label{eq:totalcost_ai}
+\sum_{j=1}^J 
+\Bigl(v_L + \sum_{i\in\mathcal{J}_j}\widetilde{\hccost{ij}}(\alpha)\Bigr)
+\Bigl(\handofftime{j}(\alpha) + \sum_{i\in\mathcal{J}_j}\widetilde{\timecost{ij}}(\alpha)\Bigr),
+\end{equation}
+with $\handofftime{j}(\alpha)$ the (possibly AI‐aided) hand‐off cost.
 
-Depending on the time horizon, the problem can have different answers.
-In the long-run, workers adjust the amount of human capital they acquire for doing each task and everything is re-calibrated.
-The firm faces a similar cost minimization problem as before the shock but with modified parameter values.
+\paragraph{Short‐run:}  
+Job boundaries are fixed at $\{\mathcal{J}_j^{(0)}\}$.  
+The firm trades off
+\[
+\underbrace{\Delta\!\bigl[\text{TotalCost}(\alpha)\bigr]}_{\text{direct wage‐bill savings}}
+\quad\text{vs.}\quad
+\underbrace{\kappa \sum_j \mathbf{1}\{\mathcal{J}_j^{(0)}\neq\mathcal{J}_j\}}_{\text{re‐design cost}},
+\]
+where $\kappa$ is a fixed cost of reorganizing each job.  
+If savings exceed re‐design costs, the firm renegotiates tasks—otherwise it rides out the old partition but only pays for the human capital still put to use.
 
-In the short-run, however, things are a bit different. 
-Following an AI advance a part of worker's human capital is deprecated.
-The firm is only willing to compensate the worker for the portion of human capital they exploit to complete the tasks assigned to them in the optimal job design.
-So the question becomes: how do workers and firms respond?
+\paragraph{Long‐run:}  
+Workers can re‐train (redeploy human capital) and firms freely re‐partition tasks.  
+Everything is re‐solved as:
+\[
+\min_{\{\mathcal{J}_j\}}\;
+\sum_{j=1}^J 
+\Bigl(v_L + \sum_{i\in\mathcal{J}_j}\widetilde{\hccost{ij}}(\alpha)\Bigr)
+\Bigl(\handofftime{j}(\alpha) + \sum_{i\in\mathcal{J}_j}\widetilde{\timecost{ij}}(\alpha)\Bigr),
+\]
+yielding a new optimal design $\{\mathcal{J}_j^*(\alpha)\}$.  
+In particular:
+\begin{itemize}
+  \item As $\alpha$ increases, $\widetilde{\timecost{ij}}(\alpha)$ weakly decreases, and some tasks drop out entirely (full automation).
+  \item The hand‐off component of the wage bill
+  \[
+    \Bigl(v_L + \sum_{i\in\mathcal{J}_j}\widetilde{\hccost{ij}}(\alpha)\Bigr)\,\handofftime{j}(\alpha)
+  \]
+  may shrink because:
+  \begin{itemize}
+    \item the human‐capital term falls; and/or
+    \item $\handofftime{j}(\alpha)$ declines if AI chains tasks across jobs more efficiently or assists with hand‐offs.
+  \end{itemize}
+  \item New oversight tasks $\{o\}$ enter $\mathcal{T}$, redirecting effort toward exception handling and quality control. The new tasks typically require less human capital $\widetilde{\hccost{ij}}(\alpha)$ than those they replace.
+\end{itemize}
+
+\paragraph{Implications for Workers \& Wages:}
+\begin{itemize}
+  \item {\bf Short‐run:}  Firms only compensate for $\widetilde{\hccost{ij}}^{\rm used}$, so workers whose skills partly deprecate face wage cuts or redeployment to oversight roles.
+  \item {\bf Long‐run:}  Workers optimally invest in the (smaller) set of skills $\{\hccost{ij}^*(\alpha)\}$ that survive alongside AI—leading to a new wage schedule via 
+  \[
+    w_j^*(\alpha)
+    = v_L \;+\;\sum_{i\in\mathcal{J}_j^*(\alpha)} \widetilde{\hccost{ij}}(\alpha).
+  \]
+\end{itemize}
+
 
 
 
@@ -826,9 +883,9 @@ For each good $k \in \{1, 2,\ldots,K\}$, production requires completing an order
 We refer to $\mathcal{T}_k$ as the production process for good $k$.
 Notice that the equation above is essentially the same as Equation~\ref{eq:tasks} with the only difference being a subscript $k$ that denotes a typical final good in the $K$-good economy.
 
-Suppose the firm breaks down the production process $\mathcal{T}_k$ into $J^k$ jobs, each of which consist of a number of consecutive tasks.
+Suppose the firm breaks down the production process $\mathcal{T}_k$ into $J^k$ jobs, each of which consist of a contiguous block of tasks.
 Let $\mathcal{J}_j^k$ denote the collection of tasks in job $j \in \{1, 2, \ldots, J^k\}$ in the production process of final good $k$.
-With this notation, the four potential job designs in the earlier example with $\tau_k=3$ tasks can formally be expressed as:
+With this notation, the four potential job designs in the earlier example with $\tau_k=3$ tasks can be expressed as:
 \begin{align*}
 \{[1][2][3]\}_k \Longleftrightarrow \ J^k = 3:  & \quad \mathcal{J}^k_1 = \{1\}, \quad \ \ \ \mathcal{J}^k_2 = \{2\}, \quad \ \ \mathcal{J}^k_3 = \{3\}, \\
 \{[1,2][3]\}_k \Longleftrightarrow \ J^k = 2: & \quad \mathcal{J}^k_1 = \{1, 2\}, \ \ \ \mathcal{J}^k_2 = \{3\}, \\
@@ -842,7 +899,7 @@ The firm buys all intermediate goods $\{x_1^k, \ldots, x_{J^k}^k\}$ from workers
 x_k(x_1^k, \ldots, x_{J^k}^k) = min\{x_1^k, \ldots, x_{J^k}^k\}.
 \]
 This implies that, in equilibrium, the amount of final good $x_k$ produced is the same as the amount of each intermediate good $x_j^k$ used in production of that final good.
-This is merely a technical assumption reflecting the fact that to produce one unit of the final good each set of tasks in $\mathcal{T}_k$, across all $J^k$ jobs in that sector, must be performed exactly once.
+This is merely a technical assumption reflecting the fact that to produce one unit of the final good each set of tasks in $\mathcal{T}_k$, across all $J^k$ jobs in sector $k$, must be performed exactly once.
 For example, in the case with $\tau_k=3$ in equilibrium we have:
 \[
 x_k = x_1^k = x_2^k = x_3^k

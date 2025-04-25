@@ -35,7 +35,7 @@ def create_title_with_worker_assignments(W):
     worker_sections = [
         "[" + "".join(f"({task})" for task in group) + "]" for group in groups
     ]
-    return "Job Design " + "".join(worker_sections)
+    return ""#"Job Design " + "".join(worker_sections)
 
 
 def draw_rect_square_unit(ax, x, y, t, c, h, task_idx):
@@ -214,7 +214,8 @@ def draw_rect_square_sequence(T, C, H, W):
         ax.text(
             center_x,
             center_y,
-            f"$h_{{{task_idx}}}$",
+            #f"$h_{{{task_idx}}}$", # commented out for tent-poll task
+            "",
             horizontalalignment="center",
             verticalalignment="center",
             fontsize=10
@@ -242,14 +243,14 @@ def draw_rect_square_sequence(T, C, H, W):
 # H = np.array([2.5, 0.5, 1, 0])  # Attached rectangle widths (height fixed at 0.15)
 # W = np.array([1, 1, 2, 2])  # Worker assignments
 
-T = np.array([1, 2])  # Main rectangle lengths
-C = np.array([3, 1])  # Main rectangle heights
-H = np.array([0, 0])  # Attached rectangle widths (height fixed at 0.15)
-W = np.array([1, 2])  # Worker assignments
+T = np.array([4, 1, 4])  # Main rectangle lengths
+C = np.array([1, 8, 1])  # Main rectangle heights
+H = np.array([0, 0, 0])  # Attached rectangle widths (height fixed at 0.15)
+W = np.array([1, 2, 3])  # Worker assignments
 
 
 fig, ax = draw_rect_square_sequence(T, C, H, W)
-plt.savefig(f"../writeup/plots/job_design.png", dpi=300)
+plt.savefig(f"../writeup/plots/tent_poll.png", dpi=300)
 
 
 
