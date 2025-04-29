@@ -132,7 +132,7 @@ def draw_rect_square_unit(ax, x, y, t, c, h, task_idx, rectanlge_annotation=True
     return next_pos, coords
 
 
-def draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True):
+def draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_title_string=True):
     """
     Draw a sequence of rectangle units where each task is represented as:
       - A main rectangle (dimensions from T and C)
@@ -266,7 +266,8 @@ def draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True):
     ax.set_aspect("equal")
 
     # Set the title using the worker assignment function.
-    ax.set_title(create_title_with_worker_assignments(W))
+    if design_title_string == True:
+        ax.set_title(create_title_with_worker_assignments(W))
 
     # Remove grid and ticks.
     ax.grid(False)
@@ -300,7 +301,7 @@ C = np.array([1, 8, 1])  # Main rectangle heights
 H = np.array([0, 0, 0])  # Attached rectangle widths (height fixed at 0.15)
 W = np.array([1, 2, 3])  # Worker assignments
 
-fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True)
+fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_title_string=False)
 plt.savefig(f"../writeup/plots/tent_poll.png", dpi=300)
 plt.close()
 
@@ -318,7 +319,7 @@ for index, assignment in enumerate(generate_worker_assignments(len(T))):
         break
 
     W = np.array(assignment)
-    fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True)
+    fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_title_string=True)
     filename = f"../writeup/plots/job_design/job_design_{index}.png"
     image_files.append(filename)
     plt.savefig(filename, dpi=100)
@@ -360,7 +361,7 @@ for H, my_str in zip([H_handoff, H_no_handoff], ["with_handoff", "no_handoff"]):
             break
 
         W = np.array(assignment)
-        fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=False)
+        fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=False, design_title_string=True)
         filename = f"../writeup/plots/job_design/job_design_{index}_{my_str}.png"
         image_files.append(filename)
         plt.savefig(filename, dpi=100)
