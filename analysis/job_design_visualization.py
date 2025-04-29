@@ -2,11 +2,38 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 import math
-from pathlib import Path
+from pathlib import Path as PPath
+from matplotlib.path import Path
+from matplotlib.patches import PathPatch
 
 # Create output path if doesn't exist
-path = Path("../writeup/plots/job_design")
+path = PPath("../writeup/plots/job_design")
 path.mkdir(parents=True, exist_ok=True)
+
+
+def draw_brace(ax, xy1, xy2, width, orientation='left', color='red', lw=1):
+    """
+    Draw a simple curly brace (quadratic) from xy1 to xy2, with the 'curl' (control point)
+    halfway between them, offset outward by `width`. For a vertical left‐brace, orientation='left';
+    for a horizontal bottom‐brace, orientation='down'.
+    """
+    x1, y1 = xy1
+    x2, y2 = xy2
+
+    if orientation == 'left':
+        # vertical brace along left edge: control point to the left
+        ctrl = (x1 - width, (y1 + y2) / 2)
+    elif orientation == 'down':
+        # horizontal brace along bottom edge: control point below
+        ctrl = ((x1 + x2) / 2, y1 - width)
+    else:
+        return
+
+    verts = [xy1, ctrl, xy2]
+    codes = [Path.MOVETO, Path.CURVE3, Path.CURVE3]
+    path = Path(verts, codes)
+    patch = PathPatch(path, fill=False, color=color, lw=lw)
+    ax.add_patch(patch)
 
 
 def create_title_with_worker_assignments(W):
@@ -36,7 +63,7 @@ def create_title_with_worker_assignments(W):
     return "Job Design " + "".join(worker_sections)
 
 
-def draw_rect_square_unit(ax, x, y, t, c, h, task_idx):
+def draw_rect_square_unit(ax, x, y, t, c, h, task_idx, rectanlge_annotation=True):
     """
     Draw a single rectangle unit with an attached rectangle (formerly a square)
     at position (x,y). The main rectangle has width t and height c. The attached
@@ -91,10 +118,21 @@ def draw_rect_square_unit(ax, x, y, t, c, h, task_idx):
         (attached_x, attached_top_y),             # junction of main and attached rect.
         (attached_x + h, attached_top_y - handoff_height),       # lower right of attached rect.
     ]
+
+    # Add annotations for human capital and time if rectanlge_annotation is True
+    if rectanlge_annotation == True:
+        # ——— add left curly brace + c_i label in Teal ———
+        draw_brace(ax, xy1=(x, y + c), xy2=(x, y), width=0.25, orientation='left', color='#1b9e77', lw=1)
+        ax.text(x - 0.3, y + c / 2, rf'$c_{{{task_idx}}}$', ha='right', va='center', fontsize=10, color='#1b9e77')
+
+        # ——— add bottom curly brace + t_i label in Red ———
+        draw_brace(ax, xy1=(x, y), xy2=(x + t, y), width=0.25, orientation='down', color='red', lw=1)
+        ax.text(x + t / 2, y - 0.3, rf'$t_{{{task_idx}}}$', ha='center', va='top', fontsize=10, color='red')
+
     return next_pos, coords
 
 
-def draw_rect_square_sequence(T, C, H, W):
+def draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True):
     """
     Draw a sequence of rectangle units where each task is represented as:
       - A main rectangle (dimensions from T and C)
@@ -132,6 +170,7 @@ def draw_rect_square_sequence(T, C, H, W):
             c,
             h,
             i + 1,  # Pass task index (1-based)
+            rectanlge_annotation,
         )
 
         # If the worker doesn't change, shift next_pos to the left by h.
@@ -254,16 +293,22 @@ def generate_worker_assignments(n):
     yield from generate_recursive(0, [0] * n)
 
 
-T = np.array([1, 2])  # Main rectangle lengths
-C = np.array([3, 1])  # Main rectangle heights
-H = np.array([0, 0])  # Attached rectangle widths (height fixed at 0.15)
-W = np.array([1, 2])  # Worker assignments
+# Tent-poll tasks
+handoff_height = 0
+T = np.array([4, 1, 4])  # Main rectangle lengths
+C = np.array([1, 8, 1])  # Main rectangle heights
+H = np.array([0, 0, 0])  # Attached rectangle widths (height fixed at 0.15)
+W = np.array([1, 2, 3])  # Worker assignments
+
+fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True)
+plt.savefig(f"../writeup/plots/tent_poll.png", dpi=300)
+plt.close()
 
 
-# Example usage
-handoff_height = 0.025  # Fixed height for attached rectangles
-T = np.array([3, 2])  # Main rectangle lengths
-C = np.array([1, 2])  # Main rectangle heights
+# Job Design with two tasks
+handoff_height = 0  # Fixed height for attached rectangles
+T = np.array([4, 3])  # Main rectangle lengths
+C = np.array([2, 3])  # Main rectangle heights
 H = np.array([0, 0])  # No hand-off
 
 image_files = []
@@ -273,7 +318,7 @@ for index, assignment in enumerate(generate_worker_assignments(len(T))):
         break
 
     W = np.array(assignment)
-    fig, ax = draw_rect_square_sequence(T, C, H, W)
+    fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True)
     filename = f"../writeup/plots/job_design/job_design_{index}.png"
     image_files.append(filename)
     plt.savefig(filename, dpi=100)
@@ -298,7 +343,7 @@ grid_image.save(f"../writeup/plots/job_design.png")
 
 
 
-# Example usage
+# Job Design with three tasks
 handoff_height = 0.025  # Fixed height for attached rectangles
 T = np.array([1, 2, 1.5])  # Main rectangle lengths
 C = np.array([3, 1, 2])  # Main rectangle heights
@@ -315,7 +360,7 @@ for H, my_str in zip([H_handoff, H_no_handoff], ["with_handoff", "no_handoff"]):
             break
 
         W = np.array(assignment)
-        fig, ax = draw_rect_square_sequence(T, C, H, W)
+        fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=False)
         filename = f"../writeup/plots/job_design/job_design_{index}_{my_str}.png"
         image_files.append(filename)
         plt.savefig(filename, dpi=100)
