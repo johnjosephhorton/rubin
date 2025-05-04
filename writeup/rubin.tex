@@ -40,7 +40,7 @@
 
 %%%%%%%%%%%%%%%%%%%%
 % For illustration of AI task automation flow
-\usetikzlibrary{shapes.geometric, arrows, positioning}
+\usetikzlibrary{shapes.geometric, arrows, positioning, arrows.meta, fit, decorations.pathreplacing, calc}
 
 % Define styles
 \tikzstyle{task} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=gray!20, rounded corners, text width=2.2cm, align=center]
@@ -126,34 +126,84 @@ So, task adjacency must matter, as we show it does.
 
 
 
-We consider how the development of AI that can do certain tasks changes the division of labor.
-%%%%%%%%%%% 				it's basically three costs, not two
-In the model, the decision to use an AI is based on comparing two costs: the cost of having a human direct and evaluate the AI's output (which depends on the capabilities of the AI at that particular task) versus the cost of having the human do the task directly.
-The AI deployment can happen in one of two ways: augmentation versus automation.
-Augmentation includes a human supervision cost that depends on both the AI's competence at the task and the need for human judgement whereas augmentation is where the AI completes the task without direct human oversight in a chain of tasks whose final outcome is validated by a human as an augmented task.
-%%%%%%%%%%%
-Figure~\ref{fig:aug_vs_aut} illustrates this idea for a sequence of four tasks.
-Tasks 1 and 4 are manually done by a human.
-Tasks 2 and 3 are completed using AI.
-Task 2 is automated because its output is passed on to Task 3, another task that is done by the AI. 
+We consider how the development of AI that can do certain tasks changes the division of labor.  
+In the model, three modes of task completion are recognized: manual, augmented, and automated.  
+In manual tasks, a human performs the entire task without AI assistance.  
+In augmented tasks, an AI executes the task but requires human oversight and evaluation.  
+In automated tasks, an AI performs the task fully without direct human supervision.  
+Although augmented and automated modes are conceptually distinct labels, their cost calculations follow the same structure.
+What makes the two different is involvement of a human in assessment of their output: while augmented tasks require human oversight for completion automated tasks are done without direct human oversight.  
+Figure~\ref{fig:task_division} illustrates this idea for a sequence of four tasks.  
+Tasks 1 and 4 are done manually by a human.
+Tasks 2 and 3 are completed using AI.  
+Task 2 is automated because its output is passed on to Task 3, another task that is done by the AI.  
 Task 3 is augmented because its output is the input of a task that is done manually and thus must be validated by a human.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-At first glance, this might seem like another way of stating that tasks get assigned to whichever factor has the comparative advantage in that task, but this is not the case: the position of tasks within the productive process profoundly change the optimal allocation of tasks between humans and machines. When a single task is performed by an AI, there is a human asking for the task to be done and evaluating the output.
-But with two or more tasks it is also possible to re-configure production so that an AI completing one task passes the output into the next task, without human intervention.
-This chaining is potentially a source of large productivity gains, \emph{but} it requires AIs that can do each task with a high probability of success. 
-The model's basic setup shares conceptual similarities to the the o-ring model of production \citep{kremer1993}; the role humans play in the model as offering judgment is consistent with the emphasis in \cite{agrawal2019exploring}.
+\begin{figure}[ht]
+  \begin{center}
+  \caption{Illustrative Example for Division of Labor}
+  \label{fig:task_division}
+  \begin{tikzpicture}[scale=0.9, transform shape,
+    node distance=0.25cm and 0.6cm,
+    every node/.style={rectangle, rounded corners, draw, align=center, minimum width=2cm, minimum height=1cm},
+    manual/.style={fill=gray!10},
+    automated/.style={fill=green!30},
+    augmented/.style={fill=orange!30},
+    labelbox/.style={draw, rectangle, rounded corners, fill=blue!20, font=\bfseries, minimum width=2cm, minimum height=1cm},
+    >=latex
+  ]
+    % Task nodes
+    \node[manual]    (T1) {Task 1\\(Manual)};
+    \node[automated, right=of T1] (T2) {Task 2\\(Automated)};
+    \node[automated, right=of T2] (T3) {Task 3\\(Automated)};
+    \node[augmented, right=of T3] (T4) {Task 4\\(Augmented)};
+    \node[manual,    right=of T4] (T5) {Task 5\\(Manual)};
 
-A key implication of the model is that the possibility of chaining automated tasks together can reverse comparative advantage assignments for individual tasks. 
-It can be efficient to use an AI for a task even if humans have a comparative advantage in that task in isolation.
-A surprising implication of chaining is that improvements in AI capabilities for a seemingly unrelated task can shift a focal task directly from being done by human to being done by machines without the focal task itself experiencing direct improvements by the AI.
+    % Arrows between tasks (keep these bold)
+    \draw[->, thick] (T1) -- (T2);
+    \draw[->, thick] (T2) -- (T3);
+    \draw[->, thick] (T3) -- (T4);
+    \draw[->, thick] (T4) -- (T5);
+
+    % AI brace and label over tasks 2–4 (lighter)
+    \draw[decorate, decoration={brace, amplitude=6pt}, thin]
+      ($(T2.north west)+(0,0.2)$) -- ($(T4.north east)+(0,0.2)$)
+      node[midway, above=8pt, labelbox] (AI) {AI};
+
+    % Human label below, aligned with AI
+    \node[labelbox, below=2.5cm of AI] (Human) {Human};
+
+    % Lines from T1, T4, and T5 down to Human (lighter)
+    \draw[thin] (T1.south) -- (Human.north);
+    \draw[thin] (T4.south) -- (Human.north);
+    \draw[thin] (T5.south) -- (Human.north);
+  \end{tikzpicture}
+  \end{center}
+  \footnotesize{
+  \emph{Notes:} This figure illustrates labor division across five tasks: Tasks 1 and 5 are done manually by human; Tasks 2--3 are AI‐automated; Task 4 is AI‐augmented. The brace above tasks 2--4 indicates AI involvement in completing those tasks; downward lines show which tasks require human execution or oversight. 
+  }
+\end{figure}
+
+The decision to deploy AI on a given task compares the cost of pure manual execution to the unified AI-based execution cost.  
+At first glance, this might seem like another way of stating that tasks get assigned to whichever factor has the comparative advantage in that task, but this is not the case: the position of tasks within the productive process profoundly changes the optimal allocation of tasks between humans and machines.
+When a single task is performed by an AI, there is always a human requesting the task and evaluating its output.  
+But with two or more tasks it is possible to re-configure production so that an AI completing one task passes its output directly into the next task without human intervention.  
+Tasks 2--4 in Figure~\ref{fig:task_division} form such an AI chain: tasks 2 and 3 are fully automated (their outputs flow from one AI task to the next) while task 4, at the end of the chain, is AI-augmented with human oversight.
+This chaining is potentially a source of large productivity gains, \emph{but} it requires AIs that can perform each task with a high probability of success.  
+The model’s basic setup shares conceptual similarities with the O-ring model of production \citep{kremer1993}, and the role humans  play in the model as offering judgment on AI outputs is consistent with the emphasis in \cite{agrawal2019exploring}.
+
+A key implication of the model is that chaining tasks together can reverse comparative advantage assignments for individual tasks.
+It can be efficient to deploy an AI on a task even when humans hold a comparative advantage in that task in isolation.
+A surprising implication of chaining is that improvements in AI performance on one task can shift another, focal task from human to machine execution through chaining, without any direct improvement in the AI’s capability on that focal task.
+Although not shown explicitly, Task 3 in Figure~\ref{fig:task_division} provides an illustration: a task that would be most efficient when performed manually in isolation becomes more cost-effective when bundled with Tasks 2 and 4 in an AI-driven chain.
 
 Because of chaining, it matters what tasks are ``next'' to each other in a productive process.
-In some sequences, adjacent tasks differ sharply in their time and skill profiles---what we refer to as ``tent‐poll tasks.''
+In some sequences, adjacent tasks differ sharply in their time and skill profiles---the two dimensions that are focal in our model.
+We refer to such cases as ``tent‐poll tasks.''
 These arise when a time‐consuming, low‐skill task is immediately followed by a short, high‐skill task.
-Figure~\ref{fig:tent_poll} illustrate one such configuration.
+Figure~\ref{fig:tent_poll} illustrates one such configuration.
 Each task in the graph is represented by a rectangle of width $\timecost{}$ (time requirement) and height $\hccost{}$ (human capital requirement).
 \begin{figure}[h]
-  \caption{Tent‐Poll Tasks} 
+  \caption{Illustration of Tent‐Poll Tasks} 
   \label{fig:tent_poll}
   \begin{center}
     \includegraphics[width=\textwidth]{plots/tent_poll.png}
@@ -166,7 +216,7 @@ Each task in the graph is represented by a rectangle of width $\timecost{}$ (tim
 The sharp contrast between the $(\hccost{}, \timecost{})$ requirements of tent-poll tasks creates substantial inefficiencies, discouraging AI chaining and instead pushing firms toward individual task specialization.
 The same economic forces that historically drove the division of labor---namely, minimizing frictions and inefficiencies---now define the boundaries of where AI can be effectively deployed.
 Even when both tasks are individually automatable, chaining them via AI may not be viable.
-Thus, the automation decision is not defined by task difficulty alone, but by the characteristics of their neighbors.
+Thus, the automation decision is not determined by task difficulty alone, but by the characteristics of the neighbors.
 
 Assigning tasks to factors of production is not a completely trivial computational problem.
 For an occupation with $n$ tasks, we show that there are $F(2n + 1)$ possible production arrangements, where $F(k)$ is the $k$th Fibonacci number.
@@ -183,7 +233,6 @@ In the $n = 2$ task case, with a high discount rate, it can be optimal to invest
 With a low discount rate, the optimal path can change dramatically. 
 As with other growth models, there is a ``get on the turnpike'' effect: the optimal path is to invest heavily in AI for the lagging task until it reaches parity with the more advanced task, with both of them chained, after which we have balanced investment across AI tasks.
 Depending on the starting point, before getting on the turnpike, it is sometimes optimal to continue to invest in the leading task for some amount of time, in order to enjoy lower costs while getting the lagging task up to parity.
-
 
 The chaining feature of the model connects to---and potentially reconciles---competing views about automation in production. 
 Despite the emphasis on task-level substitution between AI and labor in most of the AI and labor literature \citep{autor2003skill, acemoglu2018automation}, \cite{bresnahan2002information} argues that that meaningful substitution happens primarily at the system level. 
@@ -207,6 +256,14 @@ Consider the famed music producer Rick Rubin, who is not poor, discussing his ma
 We might be paid for being hepful to AIs.
 And this help might be valuable, even if we have no ability to do the tasks ourselves.
 In other words, automation can enable new forms of labor-labor substitution by separating task execution from task evaluation, allowing workers to leverage judgment skills even in domains where they lack execution abilities, potentially upending the allocation of workers to occupations in hard-to-forsee ways (see \cite{autor2013putting} on this human capital-task-wage relationship).
+
+Finally, improvements in AI quality generate nonlinear effects on labor demand and wages.
+In the short run, higher AI performance disproportionately reduces task time costs under existing job designs, potentially lowering labor demand and putting downward pressure on wages.  
+If one‐off gains from job redesign outweigh pure time savings, firms will reconfigure tasks immediately in the short, and potentially boost demand and wages for some roles despite overall AI efficiency gains.  
+In the long run, worker retraining and unrestricted task reallocation yield new wage schedules that reflect updated human capital and AI cost parameters.  
+These threshold effects imply that marginal AI advances may have little impact until they cross a short‐run redesign or long‐run restructuring tipping point after which labor demand and job structures shift abruptly.  
+Our framework thus offers clear, testable predictions on when and how AI-driven productivity gains trigger structural reorganization in labor markets.  
+
 
 
 
@@ -474,14 +531,15 @@ Without hand‐off costs, the optimal arrangement is [1][2][3] (top left of Pane
 
 
 
-%\subsection{AI Augmentation of Tasks}
-\subsection{Introduction of AI}
+
+\subsection{Introduction of AI: Task Augmentation}
+
 Having established the structure of task-based production, we now extend our framework by introducing AI into the model.
 In this section we focus on a single task with fixed human capital requirement, and drop the job ($j$) and task indices ($i \in \mathcal{J}_j$) for notational simplicity.
 We will discuss automation of two or more tasks in the next section.
 A task can be done in one of three ways:
 \begin{enumerate}
-\item Manually by a human in its entirety, 
+\item Manually by a human in its entirety (referred to as ``manual''), 
 \item Using an AI with human oversight (referred to as ``augmented''),
 \item Using an AI in its entirety (referred to as ``automated'').
 \end{enumerate}
@@ -581,7 +639,7 @@ Adding back the task index $i$, the above provides a microfoundation for the tim
 
 
 
-\subsection{Two-Task Production with the Possibility of Chaining}
+\subsection{Two-Task Production with the Possibility of Chaining: Task Automation}
 Now let us move from a single task to two tasks.
 Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
 
@@ -801,7 +859,7 @@ Thus, chaining is optimal if and only if the inequality holds.
 \section{AI Advancements and Job Redesign}
 \label{sec:job_redesign}
 
-So far we have discussed how the firm decides to design jobs in a static environment taking $\timecost{}$s and $\hccost{}$s as given.
+So far, we have discussed how the firm decides to design jobs in a static environment taking $\timecost{}$s and $\hccost{}$s as given.
 In this section we discuss how the two cost components are affected following an AI shock.
 An exogenous improvement in AI quality---captured by an increase in $\alpha$---potentially lowers the cost of completing task $i$ in job $j$ in both dimensions:
 \[
@@ -809,7 +867,9 @@ An exogenous improvement in AI quality---captured by an increase in $\alpha$---p
 \qquad
 \widetilde{\hccost{ij}} \le \hccost{ij},
 \]
-where $\widetilde{q_{ij}} \geq q_{ij}$ is the improved AI quality.
+where $\widetilde{q_{ij}} \geq q_{ij}$ is the improved AI quality. 
+Note that AI improvements can be disproportionate across tasks.  
+Some tasks may see large reductions in time or human capital costs, while others may experience minimal (or no) cost declines.  
 %The AI improvement can also generate entirely new “oversight” tasks (e.g., prompt‐engineering, exception handling) with their own \(\bigl(\hccost{o},\,\timecost{o}\bigr)\).
 
 We investigate AI’s impact over two horizons: the short run and the long run.
@@ -817,7 +877,7 @@ In the short run, due to frictions, AI advances drive down only the time costs o
 Faced with faster completion times, the firm can either plug the higher quality AI into its existing job structure to pocket the immediate time cost savings, or pay a one‐off redesign fee to reorganize tasks and fully capitalize on the new AI capabilities.
 
 In the long run, costs in both time and human capital dimensions can flexibly adjust.
-The firm essentially re-solves its job design problem given the new set of \(\timecost{}\)s and \(\hccost{}\)s as previously discussed.
+The firm essentially re-solves its job design problem specified in Equation~\ref{eq:totalcost_with_handoff} given the new set of \(\timecost{}\)s and \(\hccost{}\)s.
 
 
 \subsection{Short Run}
@@ -827,7 +887,7 @@ The firm can either stick with its pre-AI job design, \(\{\mathcal{J}_j^{(0)}\}\
 We consider each scenario separately.
 
 
-\paragraph{Deploying More Advanced AI with Pre-AI Job Design:}
+\paragraph{Scenario 1: Deploying More Advanced AI with Pre-AI Job Design.}
 If the firm chooses to preserve the pre-AI job design its gain from AI advances will be:
 \begin{equation}
 \label{eq:no_redesign_gain}
@@ -844,7 +904,7 @@ If the firm chooses to preserve the pre-AI job design its gain from AI advances 
 This is the net gain from time cost savings only without job redesign.
 Note that by definition, the time cost savings is (weakly) greater than zero.
 
-\paragraph{Deploying More Advanced AI with Job Redesign:}
+\paragraph{Scenario 2: Deploying More Advanced AI with Job Redesign.}
 If the firm chooses to reassign tasks to a new optimal design \(\{\mathcal{J}_j^*\}\) its cost savings will be:
 \begin{align}
 \label{eq:job_redesign_saving}
@@ -860,11 +920,11 @@ If the firm chooses to reassign tasks to a new optimal design \(\{\mathcal{J}_j^
 \Bigl(v_L + \sum_{i\in\mathcal{J}_j^*}\hccost{ij}\Bigr)
 \Bigl(\widetilde{\handofftime{j}} + \sum_{i\in\mathcal{J}_j^*}\widetilde{\timecost{ij}}\Bigr) \nonumber
 \end{align}
-This is the net gain from time cost savings \emph{and} job redesign.
-Job redesign in the short run, however, is costly.
+This is the gains from time cost savings \emph{and} job redesign.
+Job redesign, however, is costly in the short run.
 If the firm reassigns its tasks it must incur two one-off costs:
 \begin{enumerate}
-\item A fixed cost per job definition change: each time the firm redesigns a job it must incur a fixed redesign cost $\kappa$.
+\item A fixed cost per job definition change: each time the firm redesigns a job it must incur a fixed redesign cost $\kappa$ for that job change.
 This can be interpreted as the administrative costs associated with reorganizing that job.
 \item A training cost for the \emph{new} set of skills workers need in their new jobs: the firm must compensate workers for acquiring new human capital.\footnote{If a task is removed from worker's job, no transfer is made between the worker and the firm, and the worker's human capital for doing that task immediately deprecates to 0.}
 \end{enumerate}
@@ -889,11 +949,13 @@ Total gains from job redesign will thus be:
 \end{equation}
 
 \paragraph{Optimal Short Run Strategy:}
-The firm will redesign jobs to \(\{\mathcal{J}_j^*\}\) in the short run only if:
-\[
-\text{RedesignGain} > \text{NoRedesignGain}.
-\]
+The proposition below specifies when firm decides to redesign jobs in the short run.
+\begin{proposition}[Short Run Job Redesign Decision] \label{prop:shortrun_redesign}
+The firm will redesign jobs from \(\{\mathcal{J}_j^{(0)}\}\) to \(\{\mathcal{J}_j^*\}\) in the short run only if net gains from the switch exceed the immediate cost-savings enabled by AI advances.
 Otherwise, jobs stay at \(\{\mathcal{J}_j^{(0)}\}\) and the firm only benefits from the AI‐driven time cost reductions.
+\end{proposition}
+The proof is straightforward. 
+The firm prefers to redesign jobs if the redesign gain in (\ref{eq:job_redesign_gain}) is greater than the immediate AI cost savings in (\ref{eq:no_redesign_gain}).
 
 
 
@@ -928,18 +990,24 @@ One can imagine that the firm incurs a cost similar to Equation~\ref{eq:job_rede
 
 \subsection{Implications for Workers \& Wages}
 
-So far, we only focused on what happens to firms after advances in AI. 
-Now we briefly discuss the implications of AI quality improvement for the workers.
+Here we briefly discuss the implications of AI quality improvement for workers.
+For simplicity, assume there is only one final good.
+In the next section we introduce a general equilibrium model with many goods and provide a concrete framework to study implications of AI advances on workers.
 
 \begin{itemize}
-  \item {\bf Short run:}  If the firm does not redesign its job, only the employment duration falls. Demand (and thus wages) for human labor falls in jobs whose time cost has gone down. If the firm redesigns the job, some may experience higher wages (those for whom the new job's time cost has gone up) while wages of some other may fall (those for whom the new job's time cost has shrunk).
-  \item {\bf Long run:}  Workers optimally invest in the new set of skills \(\{\widetilde{\hccost{ij}}\}\) that survive alongside AI---leading to a new wage schedule via:
-  \[
-    \widetilde{w_j}
-    = v_L \;+\;\sum_{i\in\mathcal{J}_j^*} \widetilde{\hccost{ij}}.
-  \]
+  \item \textbf{Short run:}  
+    If the firm does not redesign its jobs, only employment durations fall, reducing labor demand and wages in roles where task time costs decline.  
+    If the firm does redesign its jobs, some workers may see higher wages (for whom the new job’s time cost has increased) while others see lower wages (for whom it has decreased).
+
+  \item \textbf{Long run:}  
+    Workers optimally invest in the updated skill set $\{\widetilde{\hccost{ij}}\}$, yielding a new wage schedule
+    \[
+      \widetilde{w}_j = v_L + \sum_{i\in\mathcal{J}_j^*} \widetilde{\hccost{ij}}.
+    \]
+    Depending on the new 
+    $\bigl(\widetilde{\hccost{ij}},\,\widetilde{\timecost{ij}}\bigr)$
+    pairs, worker wages may rise, fall, or remain unchanged.
 \end{itemize}
-The next section introduces a general equilibrium framework and provides a concrete framework to study implications of AI advances on workers.
 
 
 
