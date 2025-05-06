@@ -286,7 +286,7 @@ and for all $j,j' \in \{1,\dots,J\}$ where $j \neq j'$:
 \[
 \mathcal{J}_j \cap \mathcal{J}_{j'} = \emptyset.
 \]
-We refer to any collection of jobs satisfying the above conditions as a ``job design'' for the occupation, and denote it with $\mathcal{J}=\{\mathcal{J}_j\}_{j=1}^{J}$.
+We refer to any collection of jobs satisfying the above conditions as a ``job design'' for the occupation, and denote it with $\{\mathcal{J}_j\}_{j=1}^{J}$.
 
 With $|\mathcal{T}| = \tau$ tasks, there are $2^{(\tau - 1)}$ unique ways of designing jobs.
 For example, if $\tau = 3$, the production process of the final good consists of three tasks, $\{1,2,3\}$, with $2^{(3-1)}=4$ unique job designs.
@@ -641,10 +641,11 @@ Adding back the task index $i$, the above provides a microfoundation for the tim
 \subsection{Two-Task Production with the Possibility of Chaining: Task Automation}
 Now let us move from a single task to two tasks.
 Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
-
-First, we formalize the distinction between ``augmented'' and ``automated'' tasks.  
-A task is \emph{augmented} if it is the final task in a run of consecutive AI-completed tasks.  
-A task is \emph{automated} if it appears in a sequence of two or more AI-completed tasks and is not the last task in the sequence.
+First, let us formalize the distinction between augmented and automated tasks:
+\begin{itemize}
+\item A task is \emph{augmented} if it is the final task in a run of consecutive AI-completed tasks.  
+\item A task is \emph{automated} if it appears in a sequence of two or more AI-completed tasks and is not the last task in the sequence.
+\end{itemize}
 With this characterization, an AI-performed task in isolation (i.e., a run of length one) is classified as an augmented task.
 These definitions separate tasks fully executed by AI without human intervention (automated) from those whose outputs are reviewed by humans before being passed on (augmented).
 
@@ -792,11 +793,11 @@ f(n) = f(n-1) + \sum_{s=1}^{n} f(n-s).
 
 Finding the minimum cost arrangement for any given number of tasks within a job is a dynamic programming problem.
 Consider a sequence of \(n\) tasks that must be completed in order. 
-Each task \(i \in \{1,\ldots,n\}\) can be completed either by a human at cost \(\humantime[i] \in \mathbb{R}_+\) or attempted by an AI with success probability \(q[i] \in (0,1]\).
+Each task \(i \in \{1,\ldots,n\}\) can be completed either by a human at time cost \(\humantime[i] \in \mathbb{R}_+\) or attempted by an AI with success probability \(q_{i} \in (0,1]\).
 Multiple consecutive tasks can be assigned to the AI as a single chain, incurring a fixed management cost \(\machinetime \in \mathbb{R}_+\) per chain. 
-When tasks \(i\) through \(r\) are chained, the expected cost is:
+When tasks \(i\) through \(r\) are chained, the expected time cost is:
 \[
-\frac{\machinetime}{\prod_{s=i}^r q[s]},
+\frac{\machinetime}{\prod_{s=i}^r q_{s}},
 \]
 reflecting the expected number of attempts needed for success.
 
@@ -805,9 +806,10 @@ Let \(V(i)\) denote the minimum expected cost to complete tasks \(i\) through \(
 \begin{equation}
 V(i) = \min\left\{
 \begin{array}{l}
-\humantime[i] + V(i+1), 
+\bigl(v_L + \hccost{i}\bigr) \humantime[i] + V(i+1), 
 \;\;
-\displaystyle\min_{r \geq i} \left\{\frac{\machinetime}{\prod_{s=i}^r q[s]} + V(r+1)\right\}
+\displaystyle
+\min_{r \geq i} \left\{\bigl(v_L + \sum_{s=i}^r \hccost{s}\bigr) \frac{\machinetime}{\prod_{s=i}^r q_{s}} + V(r+1)\right\}
 \end{array}
 \right\}
 \end{equation}
@@ -817,10 +819,10 @@ with boundary condition \(V(n+1) = 0\).
 \begin{theorem}[Optimal Policy]
 The optimal assignment can be found by solving the dynamic program above in \(O(n^2)\) time. At each state \(i\), the optimal action is either:
 \begin{enumerate}
-    \item Assign task \(i\) to human (cost \(\humantime[i]\)), or
+    \item Assign task \(i\) to human (cost \(\bigl(v_L + \hccost{i}\bigr)\humantime[i]\)), or
     \item Chain tasks \(i\) through \(r^*\) to AI, where:
     \begin{equation}
-        r^*(i) = \arg\min_{r \geq i} \left\{\frac{\machinetime}{\prod_{s=i}^r q[s]} + V(r+1)\right\}.
+        r^*(i) = \arg\min_{r \geq i} \left\{\bigl(v_L + \sum_{s=i}^r \hccost{s}\bigr) \frac{\machinetime}{\prod_{s=i}^r q_{s}} + V(r+1)\right\}.
     \end{equation}
 \end{enumerate}
 The minimum total cost is given by \(V(0)\).
@@ -830,24 +832,24 @@ The minimum total cost is given by \(V(0)\).
 The optimality follows from standard dynamic programming arguments. The boundary condition ensures well-definedness, and the principle of optimality holds as the problem exhibits optimal substructure: the optimal solution to subproblem \(i\) through \(n-1\) depends only on optimal solutions to subproblems \(r+1\) through \(n\) for \(r \geq i\). The computational complexity follows from the fact that for each state \(i\), we must evaluate at most \(n-i\) possible chain lengths.
 \end{proof}
 
-Proposition~\ref{prop:optimal_chaining} gives the optimal chaining condition for a sequence of \(n\) tasks that would each be individually automated.
+Proposition~\ref{prop:optimal_chaining} gives the optimal chaining condition for a sequence of \(n\) tasks that would each be individually augmented (i.e., each completed by the AI, but requiring human oversight for validation of their outputs).
 In terms of intuition, it captures the notion that a chain is only as strong as its weakest link, so one “bad” \(q\) in the collection will lower each of the product sums, but for the one it is in. 
 
-\begin{proposition}[Optimal Chaining for \(n\) Tasks] \label{prop:optimal_chaining}
-Chaining \(n\) automated tasks is optimal if and only if:
+\begin{proposition}[Optimal Chaining for \(n\) Augmented Tasks] \label{prop:optimal_chaining}
+Chaining \(n\) augmented tasks is optimal if and only if:
 \[
-\sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q[r] > 1.
+\sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q_{r} > 1.
 \]
 \end{proposition}
 
 \begin{proof}
 Chaining is optimal if:
 \[
-\frac{\machinetime}{\prod_{i=1}^n q[i]} < \sum_{i=1}^n \frac{\machinetime}{q[i]}.
+\frac{\machinetime}{\prod_{i=1}^n q_{i}} < \sum_{i=1}^n \frac{\machinetime}{q_{i}}.
 \]
-Dividing by \(\machinetime > 0\) and multiplying by \(\prod_{i=1}^n q[i]\) yields:
+Dividing by \(\machinetime > 0\) and multiplying by \(\prod_{i=1}^n q_{i}\) yields:
 \[
-1 < \sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q[r].
+1 < \sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q_{r}.
 \]
 Thus, chaining is optimal if and only if the inequality holds.
 \end{proof}
@@ -858,18 +860,18 @@ Thus, chaining is optimal if and only if the inequality holds.
 \section{AI Advancements and Job Redesign}
 \label{sec:job_redesign}
 
-So far, we have discussed how the firm decides to design jobs in a static environment taking $\timecost{}$s and $\hccost{}$s as given.
+So far, we have discussed how the firm decides to design jobs in a static environment taking task costs ($\hccost{}, \timecost{}$) as given.
 In this section we discuss how the two cost components are affected following an AI shock.
-An exogenous improvement in AI quality---captured by an increase in $\alpha$---potentially lowers the cost of completing task $i$ in job $j$ in both dimensions:\footnote{For simplicity, we abstract away from specifying how the human capital cost changes as AI improves. In our analysis the exact form of cost reductions in the human capital dimension is not important.}
+An exogenous improvement in AI quality---captured by an increase in $\alpha$---potentially lowers the cost of completing task $i$ in both dimensions:\footnote{For simplicity, we abstract away from specifying how the human capital cost changes as AI improves. In our analysis the exact form of cost reductions in the human capital dimension is not important.}
 \[
-\widetilde{\timecost{ij}} = min\{\humantime{}, \frac{\machinetime{}}{\widetilde{q_{ij}}}\} \le min\{\humantime{}, \frac{\machinetime{}}{q_{ij}}\} = \timecost{ij},
+\widetilde{\timecost{i}}(\alpha) = min\{\humantime{}[i], \frac{\machinetime{}}{\widetilde{q_{i}}}\} \le min\{\humantime{}[i], \frac{\machinetime{}}{q_{i}}\} = \timecost{i},
 \qquad
-\widetilde{\hccost{ij}} \le \hccost{ij},
+\widetilde{\hccost{i}}(\alpha) \le \hccost{i},
 \]
-where $\widetilde{q_{ij}} \geq q_{ij}$ is the improved AI quality.
-Note that AI improvements can be disproportionate across tasks (hence, the $ij$ subscript) and thus time and human capital cost savings may vary across occupation tasks.
+where $\widetilde{q_{i}} := \widetilde{q_{i}}(\alpha) \geq q_{i}$ is the improved AI quality. 
+We suppress the dependencies of both cost parameters on $\alpha$ for simplicity of notation but maintain the assumption that both time and human capital costs implicitly depend on the AI quality parameter.
+Note that AI improvements can be disproportionate across tasks (hence, the $i$ subscript) and thus time and human capital cost savings may vary across occupation tasks.
 In other words, some tasks may see large declines in time or human capital costs, while others may experience minimal (or no) cost reductions.  
-
 %The AI improvement can also generate entirely new “oversight” tasks (e.g., prompt‐engineering, exception handling) with their own \(\bigl(\hccost{o},\,\timecost{o}\bigr)\).
 
 We investigate AI’s impact over two horizons.
@@ -880,33 +882,39 @@ In the long run, costs in both time and human capital dimensions can flexibly ad
 The firm essentially re-solves its job design problem specified in Equation~\ref{eq:totalcost_with_handoff} given the new cost parameters \((\widetilde{\hccost{}}, \widetilde{\timecost{}})\).
 
 
-\subsection{Short Run}
+\subsection{Short Run AI Improvements}
 
-In the short run, we treat each task’s human‐capital requirement \(c_{ij}\) as fixed at its pre‐AI level, while AI improvements lower the time costs from \(t_{ij}\) to \(\widetilde t_{ij}\).  
-The firm can either stick with its pre-AI job design \(\{\mathcal{J}_j^{(0)}\}\) and enjoy cost reductions enabled by the AI, or pay a redesign fee to reassign tasks optimally given the new cost structure and reconfigure its jobs to \(\{\mathcal{J}_j^*\}\).
-We consider each scenario separately.
+In the short run, each task’s human‐capital requirement \(c_{i}\) is fixed at its previous level, while AI advances lower time costs from \(t_{i}\) to \(\widetilde t_{i}\).  
+These lower time costs can render the existing job design \(\{\mathcal{J}^{(0)}\}\) suboptimal, but reorganizing tasks requires a one‐off redesign expense.  
+The firm must choose between:  
+\begin{enumerate}
+  \item Keeping the current job design \(\{\mathcal{J}^{(0)}\}\) and capturing only the direct time‐cost savings, or  
+  \item Paying the redesign fee to shift to the new optimal job structure \(\{\mathcal{J}^*\}\) and fully exploit the improved AI.
+\end{enumerate}
+We look at each scenario separately.
 
-\paragraph{Scenario 1: No Job Redesign.}
-If the firm preserves its pre-AI job design its gains from AI improvements will be:
+\paragraph{Scenario (1): No Job Redesign.}
+Firm's gains from AI improvements at its previous job design will be:
 \begin{equation}
 \label{eq:no_redesign_gains}
-\text{NoRedesignGains}(\alpha)
+\text{NoRedesignGains}(\mathcal{J}^{(0)}, \alpha)
 :=
 \text{TotalCost}(\mathcal{J}^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\mathcal{J}^{(0)}; \widetilde{\hccost{}}, \widetilde{\timecost{}}).
 \end{equation}
-This is the net gains from time cost savings with the pre-AI job structure, and depends on the improved quality level of the AI ($\alpha$).
-Note that by definition, the time cost savings is weakly greater than zero, so the firm always deploys the new technology.\footnote{None of the implications of the model will change if we assume adoption of the new technology comes at a nonzero, fixed cost. Thus, we assume acquiring the advanced AI is costless for the firm for simplicity.}
+This is the net gains \emph{only} from immediate time cost savings in the old job structure.
+Note that by definition, the time cost savings is weakly greater than zero, so the firm always deploys the new technology.\footnote{None of the implications of the model will change if we assume adoption of the new technology comes at a nonzero, fixed cost.}
+%Also, assuming reductions in costs in both dimensions are smooth the function above is a continuous function of $\alpha$.
 
-\paragraph{Scenario 2: Redesigning Jobs.}
-If the firm chooses to restructure jobs to the new optimal design \(\{\mathcal{J}_j^*\}\) its cost savings from this change will be:
+\paragraph{Scenario (2): Redesigning Jobs.}
+If the firm chooses to restructure jobs to the new optimal design \(\{\mathcal{J}^*\}\) its cost savings from this change will be:
 \begin{equation}
-\label{eq:job_redesign_saving_alpha}
-\text{RedesignSavings}(\alpha)
+\label{eq:job_redesign_direct_savings}
+\text{DirectRedesignGains}(\mathcal{J}^{(0)}, \alpha)
 :=
 \text{TotalCost}(\mathcal{J}^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\mathcal{J}^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}}).
 \end{equation}
 This is the savings from \emph{both} exploiting the reduced time costs \emph{and} job redesign.
-Reallocating tasks to new jobs, however, is costly for the firm.
+Reallocating tasks to new jobs is costly though.
 The firm must incur two one-off costs for redesigning jobs:
 \begin{enumerate}
 \item A fixed cost per job definition change: each time the firm redesigns a job it must incur a fixed redesign cost $\kappa$ for that job change.
@@ -916,7 +924,7 @@ This can be interpreted as the administrative costs associated with reorganizing
 The one-time cost of redesigning jobs from $\mathcal{J}^{(0)}$ to $\mathcal{J}^{*}$ is:
 \begin{equation}
 \label{eq:job_redesign_cost}
-\text{RedesignCosts}(\mathcal{J}^{(0)}, \mathcal{J}^{*})
+\text{RedesignCosts}(\mathcal{J}^{(0)}, \alpha)
 :=
 \sum_{j=1}^{J}
 \Bigl[
@@ -928,23 +936,22 @@ The one-time cost of redesigning jobs from $\mathcal{J}^{(0)}$ to $\mathcal{J}^{
 }
 \Bigr].
 \end{equation}
+Notice that the redesign costs also depends on the AI quality parameter $\alpha$ since that determines the optimal job design $\mathcal{J}^{*}$.
 Total gains from job redesign will thus be:
 \begin{equation}
 \label{eq:job_redesign_gain}
-\text{RedesignGains}(\alpha)
+\text{TotalRedesignGains}(\mathcal{J}^{(0)}, \alpha)
 :=
-\text{RedesignSavings}(\alpha)\;-\;\text{RedesignCosts}(\mathcal{J}^{(0)}, \mathcal{J}^{*}).
+\text{DirectRedesignGains}(\mathcal{J}^{(0)}, \alpha)
+\;-\;
+\text{RedesignCosts}(\mathcal{J}^{(0)}, \alpha).
 \end{equation}
-
-
-In the short run, the firm evaluates whether the incremental gains from reorganizing tasks exceed the time‐savings achieved by plugging improved AI into its existing job structure.  
-Proposition~\ref{prop:shortrun_redesign} makes this tradeoff precise and provides the condition determining the job redesign decision.  
 
 Proposition~\ref{prop:shortrun_redesign} characterizes the firm’s short-run redesign decision.
 \begin{proposition}[Short-Run Job Redesign Decision] 
 \label{prop:shortrun_redesign}
-Let $\mathcal{J}^{(0)}$ be the pre–AI optimal partition and $\mathcal{J}^*$ its reoptimized counterpart under improved AI quality.
-The firm will switch from $\mathcal{J}^{(0)}$ to $\mathcal{J}^*$ in the short run if and only if
+Let $\mathcal{J}^{(0)}$ be the current optimal partition and $\mathcal{J}^*$ its reoptimized counterpart under the improved AI quality.
+The firm will switch from $\mathcal{J}^{(0)}$ to $\mathcal{J}^*$ in the short run if and only if the pure efficiency gains from job redesign exceeds the redesign costs:
 \[
 \mathrm{TotalCost}\bigl(\mathcal{J}^{(0)};\,\widetilde{\hccost{}},\,\widetilde{\timecost{}}\bigr)
 \;-\;
@@ -952,63 +959,34 @@ The firm will switch from $\mathcal{J}^{(0)}$ to $\mathcal{J}^*$ in the short ru
 \;\ge\;
 \mathrm{RedesignCost}\bigl(\mathcal{J}^{(0)},\,\mathcal{J}^*\bigr).
 \]
-Moreover, there exists a unique threshold $\tilde\alpha$ such that for all $\alpha>\tilde\alpha$ the inequality holds and the firm strictly prefers the redesigned partition.
+Moreover, there exists a unique threshold $\tilde{\alpha}$ such that for all $\alpha>{\tilde\alpha}$ the inequality strictly holds and the firm strictly prefers to redesign jobs.
 \end{proposition}
 See Appendix~\ref{app:shortrun_redesign_proof} for the proof.
-Intuitively, Proposition~\ref{prop:shortrun_redesign} states that the short‐run redesign decision balances the efficiency gains stemming from a more optimal task allocation against the one‐off costs of reorganizing jobs.
-Moreover, the existence of a unique AI‐quality threshold creates a tipping‐point effect: although AI improvements yield cost savings for modest increases in the AI quality, it is not worthwhile to redesign jobs in the short run until quality exceeds a certain threshold, at which point restructuring becomes optimal.  
+Proposition~\ref{prop:shortrun_redesign} states that so long as gains from redesigning jobs is larger than its costs the firm will reallocate tasks to workers even in the short run.
+Moreover, the existence of a unique AI‐quality threshold implies a tipping‐point effect: although AI improvements yield cost savings for increases in the AI quality, it is not worthwhile to redesign jobs in the short run until quality exceeds a certain threshold, at which point restructuring becomes optimal. 
 
 
-\subsection{Long Run}  
+\subsection{Long Run AI Improvements}  
 
-Workers can retrain (redeploy human capital) and firms freely re‐partition tasks.  
-The firm re-solves its problem as:
-\begin{align}
-\underset{\{\mathcal{J}_j\}_{j=1}^J}{min} \ 
-\text{TotalCost}(\mathcal{J}; \widetilde{\hccost{}}, \widetilde{\timecost{}})
-= 
-\sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \widetilde{\hccost{ij}} \Biggr) \Biggl(\widetilde{\handofftime{j}} + \sum_{i \in \mathcal{J}_j} \widetilde{\timecost{ij}} \Biggr)\Biggr].
-\end{align}
-yielding a new optimal design \(\{\mathcal{J}_j^*\}\).  
-In particular:
+Workers can retrain (redeploy human capital) and firms freely re‐partition tasks.
+The firm essentially re-solves its problem using the new time cost parameters \((\widetilde{\hccost{}}, \widetilde{\timecost{}})\), yielding a new, long-run optimal design \(\{\widetilde{\mathcal{J}_j}\}\).  
+In the new design:
 \begin{itemize}
-  \item The adjusted time costs \(\widetilde{\timecost{ij}}\) weakly decrease, and some tasks may drop out entirely (full automation, where either the time cost component or the human capital component of the task shrinks to 0).
+  \item The adjusted time costs \(\widetilde{\timecost{ij}}\) weakly decrease, and some tasks may drop out entirely if $\alpha$ is high enough (full automation, where either the time cost component or the human capital component of the task shrinks to 0).
   \item The hand‐off component of the wage bill,
   \[
-    \Bigl(v_L + \sum_{i\in\mathcal{J}_j}\widetilde{\hccost{ij}}\Bigr)\,\widetilde{\handofftime{j}},
+    \sum_{j=1}^J \Bigl(v_L + \sum_{i\in\mathcal{J}_j}\widetilde{\hccost{ij}}\Bigr)\,\widetilde{\handofftime{j}},
   \]
-  may fall because:
+  potentially falls because:
   \begin{itemize}
-    \item the human‐capital term decreases; and/or
-    \item \(\widetilde{\handofftime{j}}\) declines if AI chains tasks across jobs more efficiently or assists with hand‐offs.
+    \item the human‐capital terms decrease; and/or
+    \item \(\widetilde{\handofftime{j}}\)s decline if AI chains tasks across jobs more efficiently, or assists with hand‐offs.
   \end{itemize}
   \item New oversight tasks \(\{o\}\) enter \(\mathcal{T}\), redirecting effort toward exception handling and quality control. These tasks typically require less human capital \(\widetilde{\hccost{o}}\) than those they replace, lowering overall human capital requirements across the occupation.
 \end{itemize}
-One can imagine that the firm incurs a cost similar to Equation~\ref{eq:job_redesign_cost} for the long-run job redesign as well.
+One can imagine that the firm incurs a redesign cost similar to Equation~\ref{eq:job_redesign_cost} for the long-run redesign problem as well.
 
-
-
-\subsection{Implications for Workers \& Wages}
-
-Here we briefly discuss the implications of AI quality improvement for workers.
-For simplicity, assume there is only one final good.
-In the next section we introduce a general equilibrium model with many goods and provide a concrete framework to study implications of AI advances on workers.
-
-\begin{itemize}
-  \item \textbf{Short run:}  
-    If the firm does not redesign its jobs, only employment durations fall, reducing labor demand and wages in roles where task time costs decline.  
-    If the firm does redesign its jobs, some workers may see higher wages (for whom the new job’s time cost has increased) while others see lower wages (for whom it has decreased).
-
-  \item \textbf{Long run:}  
-    Workers optimally invest in the updated skill set $\{\widetilde{\hccost{ij}}\}$, yielding a new wage schedule
-    \[
-      \widetilde{w}_j = v_L + \sum_{i\in\mathcal{J}_j^*} \widetilde{\hccost{ij}}.
-    \]
-    Depending on the new 
-    $\bigl(\widetilde{\hccost{ij}},\,\widetilde{\timecost{ij}}\bigr)$
-    pairs, worker wages may rise, fall, or remain unchanged.
-\end{itemize}
-
+The next section introduces a general equilibrium model with many goods and provides a concrete framework to study implications of AI advances on workers.
 
 
 %%%%%%%%%%%%%%%% General Equilibrium %%%%%%%%%%%%%%%%
@@ -1107,7 +1085,33 @@ where
 R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
 \]
 The model implies that the job design in production process $\mathcal{T}_k$ (and thus human capital and time costs of tasks) determines $p^k$ and $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$ in equilibrium.
-Appendix~\ref{app:GE} gives the full derivation details and further discusses comparative statics with respect to task automation.
+Appendix~\ref{app:GE} gives the full derivation details and further discusses comparative statics with respect to deploying AI for completing tasks (either in an augmented manner or automated manner).
+
+
+
+\subsection{Implications of AI Advancements for Wages and Employment}
+
+Here we briefly discuss the implications of an AI advancement on workers wages.
+
+\subsubsection{Short Run}
+[TODO: Double Check. These are the results for comparative statics, meaning that only cost changes at a time. Maybe changing multiple things at once would have different implications.]
+
+Only task time durations fall in the short run.
+If the firm does not redesign jobs wages remain unchanged as only human capital requirements of a job determines its wage.
+Employment, however, will decline for some workers---those whose tasks are now completed faster than before by the help of AI.
+
+If the firm redesigns jobs, wages and/or employment can potentially increase for some while decreasing for others.
+Assuming no new tasks are created, redesigning jobs will move at least one task from one job to another.
+Since wages are only determined by human capital requirements the wage of worker(s) being assigned new task(s) will increase whereas the wage of worker(s) whose task(s) are removed will fall.
+While wages for some workers increases after a redesign, employment may not necessarily follow the same trend.
+In particular, one can imagine a case where even despite a worker is assigned a new task in the redesigned job, the total time requirements of all their tasks still goes down.
+Generally, if total time requirements of tasks within a job goes up, employment for that job will rise; otherwise, employment will fall.
+
+If new tasks are introduced in the short run, depending on how they are allocated to jobs, wages could go up (if total human capital requirements increase) or down (if total human capital requirements decrease).
+Similarly, employment could rise (if total time requirements increase) or fall (if total time requirements decrease).
+
+\subsubsection{Long Run}  
+Workers optimally invest in the updated skill set $\{\widetilde{\hccost{i}}\}$, yielding a new wage schedule. Depending on the new cost pairs $\bigl(\widetilde{\hccost{i}},\,\widetilde{\timecost{i}}\bigr)$, worker wages may rise, fall, or remain unchanged.
 
 
 
@@ -1749,14 +1753,15 @@ In this Appendix we provide the proof of Proposition~\ref{prop:shortrun_redesign
 \begin{proof}
 Define
 \[
-\Delta\mathrm{Gain}(\alpha)
+\Delta\mathrm{Gain}(\mathcal{J}^{(0)}, \alpha)
 :=
-\mathrm{RedesignGains}(\alpha)\;-\;\mathrm{NoRedesignGains}(\alpha),
+\mathrm{TotalRedesignGains}(\mathcal{J}^{(0)}, \alpha)\;-\;\text{NoRedesignGains}(\mathcal{J}^{(0)}, \alpha),
 \]
-the extra payoff from redesign versus pure time‐savings.  By construction the firm redesigns exactly when $\Delta\mathrm{Gain}(\alpha)\ge0$.  
-Using the definition of each term, the firm redesigns jobs when:
+the extra payoff from redesign versus pure time‐savings under the advanced AI.  
+By construction the firm redesigns exactly when $\Delta\mathrm{Gain}(\alpha)\ge0$.  
+Using the definition of each term from Equation~\ref{eq:job_redesign_direct_savings} and~\ref{eq:job_redesign_gain}, the firm redesigns jobs when:
 \begin{align*}
-\Delta\text{Gain}(\alpha) 
+\Delta\text{Gain}(\mathcal{J}^{(0)}, \alpha)
 & =
 \text{TotalCost}(\mathcal{J}^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\mathcal{J}^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}})
 -
@@ -1778,7 +1783,7 @@ For any partition $\mathcal{J}$ define
 \[
 C_{\mathcal{J}}(\alpha)
 :=
-\mathrm{TotalCost}\bigl(\widetilde t(\alpha),\,\widetilde c(\alpha),\,\mathcal{J}\bigr).
+\mathrm{TotalCost}\bigl(\mathcal{J}; \widetilde{\hccost{}}(\alpha), \widetilde{\timecost{}}(\alpha)\bigr).
 \]
 Since $\widetilde t_{ij}(\alpha)$ and $\widetilde c_{ij}(\alpha)$ are weakly decreasing and continuous in~$\alpha$, each $C_{\mathcal{J}}(\alpha)$ is also weakly decreasing and continuous.
 Let
@@ -1792,16 +1797,7 @@ D(\alpha)
 Because $\mathcal{J}^{(0)}$ is optimal at $\alpha_0$, $D(\alpha_0)\le0$.  
 By assumption there exists $\alpha_1>\alpha_0$ for which $D(\alpha_1)>0$ and the firm redesigns jobs to some $\mathcal{J}^{*} \neq \mathcal{J}^{(0)}$.  
 Continuity of $D$ on $[\alpha_0,\alpha_1]$ implies, via the Intermediate Value Theorem, a unique $\tilde\alpha\in(\alpha_0,\alpha_1)$ with $D(\tilde\alpha)=0$.  
-Moreover, since $D(\alpha)$ is strictly increasing whenever $C_{\mathcal{J}^{(0)}}-C_{\mathcal{J}^*}$ strictly increases, we have
-\[
-D(\alpha)
-\begin{cases}
-<0, & \alpha<\tilde\alpha,\\
-=0, & \alpha=\tilde\alpha,\\
->0, & \alpha>\tilde\alpha.
-\end{cases}
-\]
-Thus $\tilde\alpha$ is the unique AI‐quality threshold above which the firm strictly prefers redesign.
+Moreover, since $D(\alpha)$ is strictly increasing whenever $C_{\mathcal{J}^{(0)}}-C_{\mathcal{J}^*}$ strictly increases, $\tilde\alpha$ is the unique AI‐quality threshold above which the firm strictly prefers redesign.
 \end{proof}
 
 
@@ -1944,11 +1940,10 @@ R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
 In this way, the job design of the production process $\mathcal{T}_k$ (and thus the corresponding $\hccost{ij}^k$s and $\timecost{ij}^k$s) determines $p^k$, which then determines the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$.
 
 
-\subsection{Comparative Statics with Respect to Automation}
+\subsection{Comparative Statics with Respect to Improved AI Quality}
 
-In this model, automation corresponds to assigning a subset of tasks to be performed by AI.  
-Suppose that a subset $\mathcal{A}_1 \subseteq \mathcal{T}_1$ of tasks is automated in good~1’s production process.  
-This automation reduces the wage bill for good $1$:
+Suppose AI affects a subset $\mathcal{A}_1 \subseteq \mathcal{T}_1$ of tasks in good~1’s production process.  
+This reduces the wage bill for good $1$:
 \[
 \sum_{j=1}^{J_1} \Biggl( v_L + \sum_{i \in \mathcal{J}_j^1} \hccost{ij}^{1} \Biggr) \labor{j}^1,
 \]
