@@ -101,6 +101,7 @@ A task may optimally be added to an automated chain even when humans have an abs
 The workers in the model face a ``hand-off'' cost for switching between jobs.
 This source of friction determines how tasks are bundled into jobs and which tasks are assigned to AI.
 The model accommodates two distinct modes of AI deployment: (1) automation, where AI completes tasks without human oversight, and (2) augmentation, where AI assists humans in completing tasks.
+We embed the model of production into a general equilibrium framework to study how an AI quality shock affects worker wages and employment. 
 %The model predicts that firms will reconfigure job structures following improvements beyond a certain level in AI quality, leading to wage cuts for some workers and (potential) wage gains for others.
 \end{abstract}
 
@@ -950,8 +951,8 @@ Total gains from job redesign will thus be:
 Proposition~\ref{prop:shortrun_redesign} characterizes the firm’s short-run redesign decision.
 \begin{proposition}[Short-Run Job Redesign Decision] 
 \label{prop:shortrun_redesign}
-Let $\mathcal{J}^{(0)}$ be the current optimal partition and $\mathcal{J}^*$ its reoptimized counterpart under the improved AI quality.
-The firm will switch from $\mathcal{J}^{(0)}$ to $\mathcal{J}^*$ in the short run if and only if the pure efficiency gains from job redesign exceeds the redesign costs:
+Let $\mathcal{J}^{(0)}$ be the current optimal partition (which by assumption is not the plan that fully automates every task in one long chain) and let $\mathcal{J}^*$ be the re-optimized partition under some improved AI quality.
+The firm switches from $\mathcal{J}^{(0)}$ to $\mathcal{J}^*$ in the short run if and only if:
 \[
 \mathrm{TotalCost}\bigl(\mathcal{J}^{(0)};\,\widetilde{\hccost{}},\,\widetilde{\timecost{}}\bigr)
 \;-\;
@@ -959,11 +960,11 @@ The firm will switch from $\mathcal{J}^{(0)}$ to $\mathcal{J}^*$ in the short ru
 \;\ge\;
 \mathrm{RedesignCost}\bigl(\mathcal{J}^{(0)},\,\mathcal{J}^*\bigr).
 \]
-Moreover, there exists a unique threshold $\tilde{\alpha}$ such that for all $\alpha>{\tilde\alpha}$ the inequality strictly holds and the firm strictly prefers to redesign jobs.
+Furthermore, for any pre-shock design $\mathcal{J}^{(0)}$ (other than full automation) there exists a unique threshold $\tilde{\alpha}$ such that for all $\alpha>\tilde{\alpha}$ the above inequality holds strictly and the firm strictly prefers to redesign jobs.
 \end{proposition}
 See Appendix~\ref{app:shortrun_redesign_proof} for the proof.
-Proposition~\ref{prop:shortrun_redesign} states that so long as gains from redesigning jobs is larger than its costs the firm will reallocate tasks to workers even in the short run.
-Moreover, the existence of a unique AI‐quality threshold implies a tipping‐point effect: although AI improvements yield cost savings for increases in the AI quality, it is not worthwhile to redesign jobs in the short run until quality exceeds a certain threshold, at which point restructuring becomes optimal. 
+In words, Proposition~\ref{prop:shortrun_redesign} states that so long as pure gains from redesigning jobs is larger than its costs the firm will reallocate tasks even in the short run.
+Moreover, the existence of a unique AI‐quality threshold implies a tipping‐point effect: although any AI improvements will reduce production costs, it is not worthwhile to redesign jobs in the short run until AI quality exceeds a certain threshold, at which point restructuring becomes optimal. 
 
 
 \subsection{Long Run AI Improvements}  
@@ -1778,7 +1779,7 @@ Using the definition of each term from Equation~\ref{eq:job_redesign_direct_savi
 \end{align*}
 which establishes the first claim.
 
-For the threshold argument, fix $\alpha_0$ such that $\mathcal{J}^{(0)}$ is optimal at $\alpha_0$.  
+For the threshold argument, fix $\alpha_0$ such that $\mathcal{J}^{(0)}$ is optimal at $\alpha_0$.
 For any partition $\mathcal{J}$ define
 \[
 C_{\mathcal{J}}(\alpha)
@@ -1796,6 +1797,8 @@ D(\alpha)
 \]
 Because $\mathcal{J}^{(0)}$ is optimal at $\alpha_0$, $D(\alpha_0)\le0$.  
 By assumption there exists $\alpha_1>\alpha_0$ for which $D(\alpha_1)>0$ and the firm redesigns jobs to some $\mathcal{J}^{*} \neq \mathcal{J}^{(0)}$.  
+\footnote{This argument requires that as $\alpha$ increases some optimal $\mathcal{J}^{*} \neq \mathcal{J}^{(0)}$ exists.
+This requirement rules out the fully-automated plan in which an exceptionally efficient AI does all the tasks in one long automated chain: if we start with the fully-automated plan no matter how much we improve the AI quality, no other job structure will become optimal.}
 Continuity of $D$ on $[\alpha_0,\alpha_1]$ implies, via the Intermediate Value Theorem, a unique $\tilde\alpha\in(\alpha_0,\alpha_1)$ with $D(\tilde\alpha)=0$.  
 Moreover, since $D(\alpha)$ is strictly increasing whenever $C_{\mathcal{J}^{(0)}}-C_{\mathcal{J}^*}$ strictly increases, $\tilde\alpha$ is the unique AI‐quality threshold above which the firm strictly prefers redesign.
 \end{proof}
