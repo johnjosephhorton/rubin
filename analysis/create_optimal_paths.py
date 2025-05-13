@@ -3,7 +3,7 @@ from CostVisualization import CostVisualization
 m = 300
 
 # Create visualization instance
-viz = CostVisualization(c_m=1.0, c_h=3)
+viz = CostVisualization(t_m=1.0, t_h=3)
 
 starting_points = [
     (0.1, 0.9),

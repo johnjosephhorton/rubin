@@ -43,13 +43,17 @@ plots += plots/horizon_effects.pdf
 plots/horizon_effects.pdf: ../analysis/create_horizon_effects.py ../analysis/CostVisualization.py
 	 cd ../analysis && python create_horizon_effects.py
 
-plots += plots/job_design.png
-plots/job_design.png: ../analysis/visualize_job.py
-	cd ../analysis && python visualize_job.py
+plots += plots/tent_poll.png
+plots/tent_poll.png: ../analysis/job_design_visualization.py
+	cd ../analysis && python job_design_visualization.py
 
-plots += plots/combined_grid.png
-plots/combined_grid.png: ../analysis/combined_grid.py
-	cd ../analysis && python combined_grid.py
+plots += plots/job_design.png
+plots/job_design.png: ../analysis/job_design_visualization.py
+	cd ../analysis && python job_design_visualization.py
+
+plots += plots/job_design_visualization.png
+plots/job_design_visualization.png: ../analysis/job_design_visualization.py
+	cd ../analysis && python job_design_visualization.py
 
 ## New Agentic AI stuff 
 
@@ -98,4 +102,5 @@ $(project_name).pdf : $(project_name).tex $(project_name).bib ./parameters.tex $
 
 toread: $(project_name).pdf
 	## scp $(project_name).pdf bandit-local.local:/home/john/Dropbox/toread/$(project_name)_$(ts).pdf || 
-	cp $(project_name).pdf ~/Dropbox/toread/$(project_name)_$(ts).pdf 
+	##cp $(project_name).pdf ~/Dropbox/toread/$(project_name)_$(ts).pdf 
+	cp $(project_name).pdf /Users/johnhorton/Library/CloudStorage/Dropbox/toread/$(project_name)_$(ts).pdf 
