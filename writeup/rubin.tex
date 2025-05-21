@@ -70,15 +70,18 @@
 
 \newcommand{\machine}[1]{\langle #1 \rangle}
 \newcommand{\human}[1]{( #1 )}
-\newcommand{\cost}[1]{T\{ #1 \}}
+\newcommand{\cost}[1]{C\{ #1 \}}
 \newcommand{\costdo}[1]{T_H\{ #1 \}}
 \newcommand{\costmanage}[1]{T_M\{ #1 \}}
 \newcommand{\timecost}[1]{t_{#1}}
 \newcommand{\hccost}[1]{c_{#1}}
 \newcommand{\labor}[1]{l_{#1}}
 \newcommand{\handofftime}[1]{t_{s#1}}
-\newcommand{\humantime}[0]{t_{h}}
-\newcommand{\machinetime}[0]{t_{m}}
+\newcommand{\humantime}[1]{t^{h}_{#1}}
+\newcommand{\machinetime}[1]{t^{m}_{#1}}
+\newcommand{\humanhc}[1]{c^{h}_{#1}}
+\newcommand{\machinehc}[1]{c^{m}_{#1}}
+
 
 
 \newcommand{\topic}[1]{\paragraph{#1}}
@@ -235,7 +238,7 @@ The model predicts that improvements in AI will inherently reduce labor use per 
 Whether this increases or decreases the demand for labor, even for that task, depends on the elasticity of demand for that good in the product market.  
 
 In the model, with highly capable AIs, the human role shrinks to asking and judging. 
-This perhaps sounds like an uninspiring role---and perhaps less enjoyable role \citep{toner2024artificial}---but it is not necessarily a low-paid one. 
+This perhaps sounds like an uninspiring role but it is not necessarily a low-paid one. 
 Consider the famed music producer Rick Rubin, who is not poor, discussing his market value in an interview with Anderson Cooper:
 \begin{dialogue}
     \speak{Rick Rubin} I've no technical ability. And I know nothing about music.
@@ -499,8 +502,8 @@ Notice that while the earlier optimal job design (i.e., the [1][2][3] design in 
 In the new optimal design, the firm minimizes its cost by bundling tasks 1 and 2 together in a single job to avoid the substantial hand-off cost between these tasks in the previously optimal [1][2][3] design.
 
 
-\subsection{Computational Problem $\rightarrow$ Brendan}
-The firm’s cost‐minimization problem also admits a geometric interpretation.  
+\subsection{Geometric Representation of Cost Minimization}
+The firm’s cost‐minimization problem admits a nice geometric interpretation.  
 Figure~\ref{fig:job_design} represents the production process from Table~\ref{tab:job_design} as stacked rectangles of height $\hccost{ij}$ and width $\timecost{ij}$.
 \begin{figure}[htbp]
   \begin{center}
@@ -530,8 +533,36 @@ Without hand‐off costs, the optimal arrangement is [1][2][3] (top left of Pane
 
 \subsection{Introduction of AI: Task Augmentation}
 
+Having established the structure of task-based production, we now formally extend our framework by introducing AI into the model.
+In this section, we restrict our analysis to a single task and omit the job index $j$ and the task index $i$ for simplicity of notation.
+We defer the analysis of task automation and AI chains, which require at least two tasks, to the subsequent section.
+
+A single task can be completed through two distinct modes of production:
+\begin{enumerate}
+\item Manually, where the task is executed by a human worker without AI assistance (``manual'').
+\item Augmented, where the task is executed by AI, and its output is subsequently reviewed by a human (``augmented'').
+\end{enumerate}
+
+Definitions~\ref{def:manual_task} and~\ref{def:augmented_task} formalize these modes explicitly.
+
+\begin{definition}[Manual Task]
+\label{def:manual_task}
+A task is said to be manual if it is executed entirely by a human worker without AI assistance.
+The associated skill and time costs for a manual task are denoted by $(\humanhc{}, \humantime{})$.
+\end{definition}
+
+\begin{definition}[Augmented Task]
+\label{def:augmented_task}
+A task is said to be augmented if it is initially executed by AI, after which its output is reviewed and approved by a human worker.
+The associated skill and time costs of managing an augmented task are denoted by $(\machinehc{}, \frac{\machinetime{}}{q})$, where $q \in (0,1]$ is the AI's probability of successfully completing the task.
+\end{definition}
+
+
+
+
+\begin{comment}
 Having established the structure of task-based production, we now extend our framework by introducing AI into the model.
-In this section we focus on a single task with fixed human capital requirement, and drop the job ($j$) and task indices ($i \in \mathcal{J}_j$) for notational simplicity.
+In this section we focus on a single task and drop the job ($j$) and task indices ($i \in \mathcal{J}_j$) for notational simplicity.
 We will discuss automation of two or more tasks in the next section.
 A task can be done in one of three ways:
 \begin{enumerate}
@@ -541,15 +572,46 @@ A task can be done in one of three ways:
 \end{enumerate}
 We defer discussion of task automation to the next section as it only happens when two or more tasks are present.
 For the remainder of this section, a task is assumed to be completed either fully manually or by AI in an augmented way.
+A task can be completed either manually or augmented by the AI in isolation. 
 
-If the task is completed manually by human, the worker incurs a time cost $\humantime > 0$.
+Definitions~\ref{def:manual_task} to \ref{def:ai_chain} formalize these ideas.
+\begin{definition}[Manual Task]
+\label{def:manual_task}
+A task is said to be done manually if it is executed by a human in its entirety without the help of AI. 
+The skill and time costs of operating manual task `i' for a human is $(\humanhc{i}, \humantime{i})$.
+\end{definition}
+\begin{definition}[Augmented Task]
+\label{def:augmented_task}
+A task is said to be augmented (by the AI) if it is executed by the AI and its output is reviewed by human before being pass on. 
+The skill and time costs of operating augmented task `i' for a human is $(\machinehc{i}, \frac{\machinetime{i}{q_i}})$.
+\end{definition}
+\begin{definition}[Automated Task]
+\label{def:automated_task}
+A task is said to be automated (by the AI) if it is executed by the AI in its entirety without direct human intervention.
+The direct time and skill costs of overseeing automated task `i' for a human is zero: $(0,0)$.
+\end{definition}
+\begin{definition}[AI Chain]
+\label{def:ai_chain}
+An AI chain is a sequence of tasks $(r, r+1, \dots, r+n)$ such that tasks $(r, r+1, \dots, r+n-1)$ are automated, and task $r+n$ is augmented.
+The time and skill costs of an AI chain are given by $(\machinehc{r+n}, \frac{\machinetime{r+n}}{\prod_{s=r}^{r+n} q_s})$, where $q_s$ denotes the AI success probability of task $s$.
+\end{definition}
+Intuitively, this says that in a chain of AI-completed tasks, all but the last task can be completed without direct human intervention, but before passed on, the output of the chain must be reviewed by a human worker who incurred a time management cost $\machinetime{}$ and management skill cost $\machinehc{}$.
+Note, however, that producing a successful output depends on the success probability of each of the interim automated tasks within the chain and it is in this way that the AI will affect the overall outcome of the chain.
+
+\end{comment}
+
+
+
+
+
+If the task is completed manually by human, the worker incurs a time cost $\humantime{} > 0$ and .
 Alternatively, if the worker opts to use AI in an augmented way, they issue a ``prompt'' to the AI at a time cost $\timecost{p} > 0$ and evaluate it at additional time cost $\timecost{e} > 0$.
 The AI successfully produces an output with probability $q$ and fails with probability $1-q$. 
 The success probability can be viewed as $q=\alpha^d$ where $d$ is the completion difficulty parameter associated with the task for an AI with quality $\alpha \in [0,1]$: the more difficult a task is the less likely any AI attempt at it will be.
 
 The worker learns whether the AI succeeded or failed only after evaluation of the output.
 If the AI fails, the worker can provide a new prompt and evaluate its output, incurring the same costs $\timecost{p}$ and $\timecost{e}$ again.
-Let $\machinetime = \timecost{p} + \timecost{e}$ denote the total ``management'' time cost associated with using the AI for an augmented task.
+Let $\machinetime{} = \timecost{p} + \timecost{e}$ denote the total ``management'' time cost associated with using the AI for an augmented task.
 For now, assume the worker can manage all tasks similarly by paying the task-specific management time cost.
 Figure~\ref{fig:flow} illustrates this process graphically.
 
@@ -579,10 +641,10 @@ Figure~\ref{fig:flow} illustrates this process graphically.
     \node (no) [smallbox, right=1cm of extendEval, yshift=-1cm] {No};
 
     % Arrows
-    \draw [arrow] (task1.east) -- node[midway, above] {$\humantime + \handofftime{}$} (task2.west);
-    \draw [arrow] (task2.east) -- node[midway, above] {$\humantime + \handofftime{}$} (task3.west);
-    \draw [arrow] (task3.east) -- node[midway, above] {$\humantime + \handofftime{}$} (task4.west);
-    \draw [arrow] (task4.east) -- node[midway, above] {$\humantime + \handofftime{}$} (task5.west);
+    \draw [arrow] (task1.east) -- node[midway, above] {$\humantime{} + \handofftime{}$} (task2.west);
+    \draw [arrow] (task2.east) -- node[midway, above] {$\humantime{} + \handofftime{}$} (task3.west);
+    \draw [arrow] (task3.east) -- node[midway, above] {$\humantime{} + \handofftime{}$} (task4.west);
+    \draw [arrow] (task4.east) -- node[midway, above] {$\humantime{} + \handofftime{}$} (task5.west);
     \draw [arrow] (task3.south) to[out=-125,in=45] node[midway, above] {$\timecost{p}$} (prompt.north);
     \draw [arrow] (prompt.east) -- (attempt.west);
     \draw [arrow] (attempt.east) -- (evaluate.west);
@@ -601,11 +663,11 @@ Figure~\ref{fig:flow} illustrates this process graphically.
    \end{center}
   \footnotesize{
   \emph{Notes:} This figure illustrates the iterative process of using AI to complete an augmented task.  
-  For simplicity, we assume that all tasks have the same human time cost, $\humantime$, and hand-off time requirement, $\handofftime{}$.  
-  To complete Task 3, the human can either perform the task manually at a cost of $\humantime$, or provide a prompt at a cost of $\timecost{p}$. 
+  For simplicity, we assume that all tasks have the same human time cost, $\humantime{}$, and hand-off time requirement, $\handofftime{}$.  
+  To complete Task 3, the human can either perform the task manually at a cost of $\humantime{}$, or provide a prompt at a cost of $\timecost{p}$. 
   The AI then generates an output, and the human evaluates whether it meets their needs at a cost of $\timecost{e}$.  
   If it does not, the process repeats with a refined prompt.  
-  Each iteration of prompting requires a total machine time of $\machinetime = \timecost{p} + \timecost{e}$.}
+  Each iteration of prompting requires a total machine time of $\machinetime{} = \timecost{p} + \timecost{e}$.}
 \end{figure}
 
 The decision whether to deploy the AI depends on whether the manual cost exceeds the AI management cost.
@@ -614,76 +676,95 @@ Assuming that each attempt is independent, we obtain the following proposition.
 \begin{proposition}[Single Task Automation Criterion] 
 \label{proposition:single}
 A job with a single task should be augmented if and only if AI quality exceeds the threshold
-$$\underline{q} := \frac{\machinetime}{\humantime}.$$
+$$\underline{q} := \frac{\machinehc{} \machinetime{}}{\machinehc{} \humantime{}}.$$
 \end{proposition}
 
 \begin{proof}
 By the standard result for the expectation of a geometric distribution, the expected time cost of using the AI is:
-$$\machinetime \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\machinetime}{q}.$$
+$$\machinetime{} \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\machinetime{}}{q}.$$
 Thus, augmentation is optimal when:
-$$\humantime \geq \frac{\machinetime}{q} \quad \Longleftrightarrow \quad q \geq \frac{\machinetime}{\humantime} = \underline{q}.$$
+$$\humanhc{} \humantime{} \geq \frac{\machinehc{} \machinetime{}}{q} \quad \Longleftrightarrow \quad q \geq \frac{\machinehc{} \machinetime{}}{\machinetime{} \humantime{}} = \underline{q}.$$
 \end{proof}
 
-This criterion has intuitive comparative statics: automation becomes more attractive when the manual time cost $\humantime$ is high, the management cost $\machinetime$ is low, or the AI's success probability $q$ is high (or equivalently, the task's completion difficulty $d$ is low).
+This criterion has intuitive comparative statics: automation becomes more attractive when the manual execution cost is high, the management cost is low, or the AI's success probability $q$ is high (or equivalently, the task's completion difficulty $d$ is low).
 One implication is that improvements in prompting and evaluation tools---thereby reducing $\timecost{p}$ and $\timecost{e}$---can lower the management cost and make automation more appealing, even if task difficulty remains unchanged.
 Although the assumptions of independent success probabilities and constant management costs might seem strong, they are relatively mild and can be adjusted by redefining parameters if necessary (e.g., if outcomes are positively correlated, the effective success probability can be treated as lower; see Sections~\ref{sec:correlated_successes} and~\ref{sec:constant_management_costs}).
 
-For a given AI success probability $q$, the effective time cost for task $i$ is determined by:
-$$\timecost{} = \min \Bigl\{\frac{\machinetime}{q},\, \humantime\Bigr\}.$$
-This expression shows how the overall time cost of a task is set by the trade-off between its manual execution and AI-augmentation.
-Adding back the task index $i$, the above provides a microfoundation for the time cost parameter $\timecost{i}$ used in the previous section.
+For a given AI success probability $q$, the expression below shows how the overall cost parameters of a task are set by the trade-off between its manual execution and AI-augmentation costs.
+$$(\hccost{}, \timecost{}) = argmin \Bigl\{\frac{\machinehc{} \machinetime{}}{q},\, \humanhc{} \humantime{}\Bigr\}.$$
+Geometrically, this says that each task can be represented by two distinct rectangles: one with height $\machinehc{}$ and width $\frac{\machinetime{}}{q}$ and another with height  $\humanhc{}$ and width $\humantime{}$.
+Whichever one of the two admits a smaller area will determine the cost characteristics of a task (in isolation) in the production process.
 
 
 
 \subsection{Two-Task Production with the Possibility of Chaining: Task Automation}
-Now let us move from a single task to two tasks.
+Consider now a job consisting of two sequential tasks, indexed as $1$ and $2$ (continue to suppress the job index $j$).
 Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
-First, let us formalize the distinction between augmented and automated tasks:
-\begin{itemize}
-\item A task is \emph{augmented} if it is the final task in a run of consecutive AI-completed tasks.  
-\item A task is \emph{automated} if it appears in a sequence of two or more AI-completed tasks and is not the last task in the sequence.
-\end{itemize}
-With this characterization, an AI-performed task in isolation (i.e., a run of length one) is classified as an augmented task.
-These definitions separate tasks fully executed by AI without human intervention (automated) from those whose outputs are reviewed by humans before being passed on (augmented).
+We start by introducing task automation and AI chains explicitly.
+\begin{definition}[Automated Task]
+\label{def:automated_task}
+A task is said to be automated if it is executed entirely by AI without direct human intervention, and its output is passed directly to a subsequent AI-executed task.
+The direct human costs associated with an automated task are $(0,0)$.
+\end{definition}
+
+\begin{definition}[AI Chain]
+\label{def:ai_chain}
+An AI (or machine) chain is a contiguous block of two or more sequential tasks executed by AI, in which all tasks but the final one are automated, and the final task is augmented.
+An AI chain spanning tasks $(1,\dots,n)$ has tasks $(1,\dots,n-1)$ automated and task $n$ augmented.
+The skill and time costs of an AI chain are given by:
+\[
+\left(\machinehc{n}, \frac{\machinetime{n}}{\prod_{s=1}^{n} q_s}\right),
+\]
+where $q_s$ denotes the AI success probability for task $s$.
+\end{definition}
+Automation is only feasible if the automated task is directly followed by at least one additional AI-executed task (either another automated task or an augmented task, which terminates the chain).
+
+In the two-task setting, each task can be executed according to the following constraints:
+\begin{enumerate}
+\item Task $1$ can be executed manually, augmented by AI, or automated by AI.
+\item Task $2$, being the last task, can only be executed manually or augmented by AI, since automation requires a subsequent AI-executed task.
+\end{enumerate}
 
 For notation, when a human performs the task without AI, we denote it as $\human{\cdot}$.
 When an AI attempts the task, we denote it as $\machine{\cdot}$.
 In the three tasks occupation example, if in the [1][2][3] design the first task was done by AI and the other two by humans without AI, we would write $\machine{1}\human{2}\human{3}$.
 
-Consider a job consisting of only two tasks, indexed $1$ and $2$ (continue to suppress the job index $j$).
-Denote the corresponding AI success probabilities with \(q_1\) and \(q_2\). 
-For simplicity, we assume human time \(\humantime\) and machine time \(\machinetime\) are the same for both tasks.
-Let $\cost{.}$ show the time cost incurred when completing an arrangement of tasks.
-With two tasks, there are four possible direct production arrangements:\footnote{We suppress the switching time cost $\handofftime{}$ which the worker incurs upon completing task $2$, since our focus is solely on tasks performed within a single job (and note that no hand-offs occur between tasks of the same job).}
+Denote the corresponding AI success probabilities of Task 1 and 2 with \(q_1\) and \(q_2\). 
+Let $\cost{.}$ show the total cost of completing an arrangement of tasks.
+With two tasks, there are four possible ``direct'' production arrangements:
 \begin{align*}
-    \cost{\human{1}\human{2}} &= 2\,\humantime & \text{(fully human)}, \\
-    \cost{\machine{1}\human{2}} &= \frac{\machinetime}{q_1} + \humantime & \text{(partial augmentation)}, \\
-    \cost{\human{1}\machine{2}} &= \humantime + \frac{\machinetime}{q_2} & \text{(partial augmentation)}, \\
-    \cost{\machine{1}\machine{2}} &= \frac{\machinetime}{q_1} + \frac{\machinetime}{q_2} & \text{(independent augmentation)}.
+    \cost{\human{1}\human{2}} &= \humanhc{1} \humantime{1} + \humanhc{2} \humantime{2} & \text{(fully human)}, \\
+    \cost{\machine{1}\human{2}} &= \machinehc{1} \frac{\machinetime{1}}{q_1} + \humanhc{2} \humantime{2} & \text{(partial augmentation)}, \\
+    \cost{\human{1}\machine{2}} &= \humanhc{1} \humantime{1} + \machinehc{2} \frac{\machinetime{2}}{q_2} & \text{(partial augmentation)}, \\
+    \cost{\machine{1}\machine{2}} &= \machinehc{1} \frac{\machinetime{1}}{q_1} + \machinehc{2} \frac{\machinetime{2}}{q_2} & \text{(independent augmentation)}.
 \end{align*}
 In the arrangement $\machine{1}\human{2}$, task 1 is augmented; in $\human{1}\machine{2}$, task 2 is augmented; and in $\machine{1}\machine{2}$, both tasks 1 and 2 are augmented.  
 
-There is also a fifth arrangement where the completed first task is used as input for the second task without human intervention.
-We call this an ``automation chain'' or a ``machine chain.''
+There is also a fifth arrangement where the tasks are chained, and the (automated) first task is used as input for the (augmented) second task without human intervention.
 When tasks are chained, denoted by $\machine{1|2}$, they are executed by the AI with a single prompt and final evaluation.
-In this arrangement, task 1 is automated and task 2 is augmented.
-The AI must succeed in both tasks for the chain to be successful in a single step.
+The AI must succeed in \emph{both} tasks for the chain to be successful in a single attempt.
 The cost of this arrangement is:
 \begin{align*}
-\cost{\machine{1|2}} &= \frac{\machinetime}{q_1 q_2} & \text{(chained automation)}.
+\cost{\machine{1|2}} &= \machinehc{2} \frac{\machinetime{2}}{q_1 q_2} & \text{(chained automation)}.
 \end{align*}
 This captures the notion of agentic AI that can complete a sequence of tasks autonomously, without human intervention between the two tasks.
-Since $\humantime$ and $\machinetime$ are common to all tasks, the complete time cost function for this productive arrangement, when minimizing costs, is given by:
+The complete cost function for this production is given by:
 \begin{align}
-  \min \left\{ 2\,\humantime,\;\; \frac{\machinetime}{q_1} + \humantime,\;\; \humantime + \frac{\machinetime}{q_2},\;\; \frac{\machinetime}{q_1} + \frac{\machinetime}{q_2},\;\; \frac{\machinetime}{q_1 q_2} \right\}.
+  \min \left\{ 
+  \humanhc{1} \humantime{1} + \humanhc{2} \humantime{2}, \;\; 
+  \machinehc{1} \frac{\machinetime{1}}{q_1} + \humanhc{2} \humantime{2}, \;\; 
+  \humanhc{1} \humantime{1} + \machinehc{2} \frac{\machinetime{2}}{q_2}, \;\; 
+  \machinehc{1} \frac{\machinetime{1}}{q_1} + \machinehc{2} \frac{\machinetime{2}}{q_2}, \;\; 
+  \machinehc{2} \frac{\machinetime{2}}{q_1 q_2}
+  \right\}.
 \end{align}
-Note that as each term is linear in $\machinetime$ and $\humantime$, the overall cost function is convex with respect to labor time costs.
+Note that as each term is linear in the cost parameters, the overall cost function is convex.
 
-Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of \(q_1\) and \(q_2\), with fixed \(\humantime = 3\) and \(\machinetime = 1\).
+Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of \(q_1\) and \(q_2\), with fixed \(\humantime{1} = \humantime{2} = 3\) and equal skill costs normalized to 1: \(\machinetime{1} = \machinetime{2} = 1\) and \(\humanhc{1} = \humanhc{2} = \machinehc{1} = \machinehc{2} = 1\).
 It partitions the \(q_1\) and \(q_2\) space into five regions, corresponding to the five production arrangements.
 According to Proposition~\ref{proposition:single}, the ratio 
 \[
-\underline{q} := \frac{\machinetime}{\humantime}
+\underline{q} := \frac{\machinehc{} \machinetime{}}{\machinehc{} \humantime{}}
 \]
 is the threshold for augmenting a task.
 Interior to this \(\underline{q}\)-box, we strictly have human production for both tasks, or \(\human{1}\human{2}\).
@@ -709,7 +790,7 @@ This curved boundary is the reason chaining can be optimal even when humans have
 Proposition~\ref{proposition:interdependence} formalizes this idea, which can be shown simply with a numerical example.
 
 \begin{proposition}[Task Interdependence] \label{proposition:interdependence}
-Assume that both tasks share the same human completion time, $\humantime$, and the same machine completion time, $\machinetime$.
+Assume that both tasks share the same human cost parameters $(\humanhc{}, \humantime{})$, and the same machine cost parameters, $(\machinehc{}, \machinetime{})$.
 A task may be optimally executed as part of a chain even if humans have a comparative advantage when performing that task in isolation.
 In particular,
 \[
@@ -722,22 +803,23 @@ does not imply
 \end{proposition}
 \begin{proof}
 A single counterexample suffices to show this.
-Consider the parameter values $q_1 = \frac{3}{5}$, $q_2 = \frac{4}{5}$, $\humantime = \frac{3}{2}$, and $\machinetime = 1$.
+Take both human and machine human capital requirements to be the same and normalized to one: \(\humanhc{} = \machinehc{} = 1\).
+Consider the parameter values $q_1 = \frac{3}{5}$, $q_2 = \frac{4}{5}$, $\humantime{} = \frac{3}{2}$, and $\machinetime{} = 1$.
 For task 1 in isolation, human performance is more cost-effective:
 \[
-\humantime = \frac{3}{2} < \frac{5}{3} = \frac{\machinetime}{q_1}.
+\humantime{} = \frac{3}{2} < \frac{5}{3} = \frac{\machinetime{}}{q_1}.
 \]
 However, the chained tasks arrangement has a lower cost despite the human's comparative advantage in task 1:
 \begin{align*}
-    \cost{\human{1}\machine{2}} &= \; \humantime + \frac{\machinetime}{q_2} = \frac{11}{4}, \\
-    \cost{\machine{1|2}} &= \frac{\machinetime}{q_1 q_2} = \frac{25}{12} < \frac{11}{4}.
+    \cost{\human{1}\machine{2}} &= \; \humantime{} + \frac{\machinetime{}}{q_2} = \frac{11}{4}, \\
+    \cost{\machine{1|2}} &= \frac{\machinetime{}}{q_1 q_2} = \frac{25}{12} < \frac{11}{4}.
 \end{align*}
 \end{proof}
-In Appendix~\ref{app:AI_capability_inv_comp_stat} we discuss the comparative statics of investment in AI capabilities.
+%In Appendix~\ref{app:AI_capability_inv_comp_stat} we discuss the comparative statics of investment in AI capabilities.
 
 
 \subsection{Tasks sequences with \(n > 2\) tasks}
-Now we will consider a job that is a sequence of \(n\) tasks, indexed as \(\{1, 2, \ldots, n\}\), to be performed.
+Now we consider a job that is a sequence of \(n\) tasks, indexed as \(\{1, 2, \ldots, n\}\), to be performed.
 Table~\ref{tab:tree} illustrates the possibilities with \(n=3\) tasks in a tree.
 
 \begin{table}
@@ -788,68 +870,91 @@ f(n) = f(n-1) + \sum_{s=1}^{n} f(n-s).
 \]
 \end{proof}
 
-Finding the minimum cost arrangement for any given number of tasks within a job is a dynamic programming problem.
-Consider a sequence of \(n\) tasks that must be completed in order. 
-Each task \(i \in \{1,\ldots,n\}\) can be completed either by a human at time cost \(\humantime[i] \in \mathbb{R}_+\) or attempted by an AI with success probability \(q_{i} \in (0,1]\).
-Multiple consecutive tasks can be assigned to the AI as a single chain, incurring a fixed management cost \(\machinetime \in \mathbb{R}_+\) per chain. 
-When tasks \(i\) through \(r\) are chained, the expected time cost is:
+In the next section, we express the firm's cost minimization problem as a dynamic programming problem.
+
+
+
+
+%%%%%%%%%%%%%%%% Dynamic Programming %%%%%%%%%%%%%%%%
+\section{Dynamic Programming}
+\subsection{Recursive Formulation}
+\label{sec:recursive_formulation}
+Finding the minimum cost arrangement of tasks in an occupation with any given number of tasks can be formulated as a dynamic programming problem.
+Consider an occupation consisting of $\tau=n$ tasks, indexed by $i = 1,\dots,n$.
+Define $V(i)$ as the minimum cost required to complete tasks $1$ through $i$, including any potential handoff cost incurred while switching jobs at task $i < n$.
+
+To fully characterize the dynamic programming solution, we introduce an auxiliary function $W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j})$.
+This function denotes the minimum cost of completing tasks $1$ through $i$ plus an additional set of tasks $\mathcal{J}_j$ assigned to a single worker $j$ (referred to as ``active worker'').
+The active worker $j$'s assigned set $\mathcal{J}_j$ may contain zero or more tasks, with cumulative skill and time costs given by:
 \[
-\frac{\machinetime}{\prod_{s=i}^r q_{s}},
+\hccost{\mathcal{J}_j} = v_L + \sum_{k \in \mathcal{J}_j} \hccost{k}, 
+\quad
+\timecost{\mathcal{J}_j} = \sum_{k \in \mathcal{J}_j} \timecost{k}.
 \]
-reflecting the expected number of attempts needed for success.
 
-\begin{definition}[Minimum Completion Cost]
-Let \(V(i)\) denote the minimum expected cost to complete tasks \(i\) through \(n\). Then:
-\begin{equation}
-V(i) = \min\left\{
-\begin{array}{l}
-\bigl(v_L + \hccost{i}\bigr) \humantime[i] + V(i+1), 
-\;\;
-\displaystyle
-\min_{r \geq i} \left\{\bigl(v_L + \sum_{s=i}^r \hccost{s}\bigr) \frac{\machinetime}{\prod_{s=i}^r q_{s}} + V(r+1)\right\}
-\end{array}
-\right\}
-\end{equation}
-with boundary condition \(V(n+1) = 0\).
-\end{definition}
+Note that the set $\mathcal{J}_j$ assigned to worker $j$ is not necessarily final, as additional tasks beyond task $i$ could still be assigned to worker $j$ in subsequent steps.
+In this sense, the function $W(\cdot)$ captures the minimum cost across all feasible execution plans that may potentially expand active worker $j$'s task assignment.
+The subscript $\mathcal{J}_j$ should not be confused with a predetermined job assignment used in earlier parts of the paper.
+Rather, $\mathcal{J}_j$ represents the set of tasks currently assigned to active worker $j$ during the recursive calculation.
+Once the recursion concludes and the optimal execution plan is determined, the set $\mathcal{J}_j$ will correspond precisely to the optimal job assignment of each worker.
 
-\begin{theorem}[Optimal Policy]
-The optimal assignment can be found by solving the dynamic program above in \(O(n^2)\) time. At each state \(i\), the optimal action is either:
-\begin{enumerate}
-    \item Assign task \(i\) to human (cost \(\bigl(v_L + \hccost{i}\bigr)\humantime[i]\)), or
-    \item Chain tasks \(i\) through \(r^*\) to AI, where:
-    \begin{equation}
-        r^*(i) = \arg\min_{r \geq i} \left\{\bigl(v_L + \sum_{s=i}^r \hccost{s}\bigr) \frac{\machinetime}{\prod_{s=i}^r q_{s}} + V(r+1)\right\}.
-    \end{equation}
-\end{enumerate}
-The minimum total cost is given by \(V(0)\).
-\end{theorem}
+Define $V(n) = W(n, 0, 0)$ and $V(i) = W(i, 0, \handofftime{i})$ for all $i < n$.
+Intuitively, this captures the notion that evaluating the cost of completing tasks $1$ through $i$ involves adding an extra ``imaginary'' task with zero skill cost and a time cost equal to the hand-off time $\handofftime{i}$ at the end of task $i$. 
+This holds for all tasks at the job boundaries except the last task, $n$, in the production sequence.
+The solution to the firm's overall cost minimization problem is then given by $V(n)$.
 
-\begin{proof}
-The optimality follows from standard dynamic programming arguments. The boundary condition ensures well-definedness, and the principle of optimality holds as the problem exhibits optimal substructure: the optimal solution to subproblem \(i\) through \(n-1\) depends only on optimal solutions to subproblems \(r+1\) through \(n\) for \(r \geq i\). The computational complexity follows from the fact that for each state \(i\), we must evaluate at most \(n-i\) possible chain lengths.
-\end{proof}
-
-Proposition~\ref{prop:optimal_chaining} gives the optimal chaining condition for a sequence of \(n\) tasks that would each be individually augmented (i.e., each completed by the AI, but requiring human oversight for validation of their outputs).
-In terms of intuition, it captures the notion that a chain is only as strong as its weakest link, so one “bad” \(q\) in the collection will lower each of the product sums, but for the one it is in. 
-
-\begin{proposition}[Optimal Chaining for \(n\) Augmented Tasks] \label{prop:optimal_chaining}
-Chaining \(n\) augmented tasks is optimal if and only if:
+The optimal solution can be characterized using the following recursive formulation:
+\begin{proposition}[Recursive Optimality]
+\label{prop:recursive_optimality}
+Define the base case for $i=0$ as:
 \[
-\sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q_{r} > 1.
+W(0, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j}) 
+= \Bigl(v_L + \hccost{\mathcal{J}_j} \Bigr) \; \timecost{\mathcal{J}_j}, 
+\quad\text{for all $\hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j}$}.
 \]
+Then, for each $i \geq 1$, the minimum cost $W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j})$ satisfies the recursive relation:
+\begin{align*}
+W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j}) 
+= \min\Biggl\{ 
+& \Bigl(v_L + \hccost{\mathcal{J}_j} \Bigr) \; \timecost{\mathcal{J}_j} + V(i), \\
+& \ W(i-1,\; \hccost{\mathcal{J}_j} + \humanhc{i},\; \timecost{\mathcal{J}_j} + \humantime{i}), \\
+& \ \min_{r \geq 1} W\left(i - r,\; \hccost{\mathcal{J}_j} + \machinehc{i},\; \timecost{\mathcal{J}_j} + \frac{\machinetime{i}}{\prod_{s=i-r+1}^{i} q_s}\right)
+\Biggr\}.
+\end{align*}
 \end{proposition}
+In words:
+\begin{itemize}
+    \item Option (1) corresponds to ending active worker $j-1$'s job assignment at task $i$, incurring the hand-off cost $\handofftime{i}$ (through definition of $V(i)$), and then proceeding forward with the new (active) worker $j$ to decide for subsequent tasks.
+    \item Option (2) corresponds to continuing active worker $j$'s job by assigning task $i$ to be performed manually, adding manual execution costs $(\humanhc{i}, \humantime{i})$ to the cost of current collection of tasks $\mathcal{J}_j$ without incurring any hand-off cost at this stage.
+    \item Option (3) corresponds to completing task $i$ in an AI-augmented manner, possibly chained with preceding automated tasks, thus adding the corresponding AI management costs to the current collection of tasks $\mathcal{J}_j$.
+\end{itemize}
 
-\begin{proof}
-Chaining is optimal if:
+Note that in the recursive step for $W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j})$, if task $i$ is completed by the AI it can only be augmented (not automated) as it is the final task under consideration for the active worker at this point. 
+Task $i$ can be considered for automation only when calculating $W(.)$ for subsequent tasks $i+1, \dots, n$.
+
+
+\subsection{Approximation of the Dynamic Programming Problem Solution}
+We can solve for the optimal cost in the dynamic programming problem, filling in the values of $W(i, \hccost{}, \timecost{})$ for all $i$, $\hccost{}$, and $\timecost{}$.  
+To make this a finite table, we will discretize all skill costs $\hccost{}$ and time costs $\timecost{}$ to powers of $(1+\epsilon)$, where $\epsilon > 0$ is an arbitrarily small error term.
+As time and skill costs are multiplied together to generate total costs, this discretization introduces a multiplicative error of at most $(1+\epsilon)^2$ into our cost calculations.
+
+Moreover, note that we also accumulate time and skill costs additively when chaining tasks together for a single worker.  
+But this results in a total multiplicative error of at most $(1+\epsilon)$ on the total time and skill costs, given that each individual time and skill cost is subject to a multiplicative rounding error up to $(1+\epsilon)$.
+
+Thus, if we fill in our table for all $W(i, \hccost{}, \timecost{})$ where $i \leq n$ and $\hccost{}$ and $\timecost{}$ are discretized into powers of $(1+\epsilon)$, ranging from the smallest individual task's time and skill costs up to the sum of the time and skill costs over all $n$ tasks (representing the worst-case accumulated cost), we obtain a $(1 + O(\epsilon))$ approximation to the optimal solution.
+This computation runs in time polynomial in $n$, $\frac{1}{\epsilon}$. % and the ratio between the minimum and maximum individual task costs?
+In particular, the algorithm computes solutions for:
+\begin{itemize}
+\item $n$ task indices (from $1$ to $n$),
+\item $O(\frac{n}{\epsilon})$ discretized time buckets,
+\item $O(\frac{n}{\epsilon})$ discretized skill buckets.
+\end{itemize}
+Multiplying these yields a total time complexity of:
 \[
-\frac{\machinetime}{\prod_{i=1}^n q_{i}} < \sum_{i=1}^n \frac{\machinetime}{q_{i}}.
+O\left(n \times \frac{n}{\epsilon} \times \frac{n}{\epsilon}\right) = O\left(\frac{n^3}{\epsilon^2}\right).
 \]
-Dividing by \(\machinetime > 0\) and multiplying by \(\prod_{i=1}^n q_{i}\) yields:
-\[
-1 < \sum_{i=1}^n \prod_{\substack{r=1 \\ r \neq i}}^n q_{r}.
-\]
-Thus, chaining is optimal if and only if the inequality holds.
-\end{proof}
+
+
 
 
 
@@ -861,7 +966,7 @@ So far, we have discussed how the firm decides to design jobs in a static enviro
 In this section we discuss how the two cost components are affected following an AI shock.
 An exogenous improvement in AI quality---captured by an increase in $\alpha$---potentially lowers the cost of completing task $i$ in both dimensions:\footnote{For simplicity, we abstract away from specifying how the human capital cost changes as AI improves. In our analysis the exact form of cost reductions in the human capital dimension is not important.}
 \[
-\widetilde{\timecost{i}}(\alpha) = min\{\humantime{}[i], \frac{\machinetime{}}{\widetilde{q_{i}}}\} \le min\{\humantime{}[i], \frac{\machinetime{}}{q_{i}}\} = \timecost{i},
+\widetilde{\timecost{i}}(\alpha) = min\{\humantime{}{}[i], \frac{\machinetime{}{}}{\widetilde{q_{i}}}\} \le min\{\humantime{}{}[i], \frac{\machinetime{}{}}{q_{i}}\} = \timecost{i},
 \qquad
 \widetilde{\hccost{i}}(\alpha) \le \hccost{i},
 \]
@@ -1355,8 +1460,8 @@ This would, of course, change the realized sequences of tasks, but as we are tak
 
 \subsection{Constant management costs do not change the model much} \label{sec:constant_management_costs}
 In terms of the constant management cost assumption, we might expect that subsequent attempts are easier fix and less costly, perhaps requiring less work. 
-However, this does not change the basic structure of the problem much---if we imagine that, say, costs are declining linearly in the number of tasks, say by $\gamma$ each subsequent task, then we would simply have $\machinetime (1-\gamma) / q$ costs instead, with the costs still proportional to $1/q$. 
-But in this case, we could just treat $\machinetime$ as being $\machinetime (1-\gamma)$. 
+However, this does not change the basic structure of the problem much---if we imagine that, say, costs are declining linearly in the number of tasks, say by $\gamma$ each subsequent task, then we would simply have $\machinetime{} (1-\gamma) / q$ costs instead, with the costs still proportional to $1/q$. 
+But in this case, we could just treat $\machinetime{}$ as being $\machinetime{} (1-\gamma)$. 
   
 \subsection{Are management costs low skill?}
 Prompting and evaluation are human skills.
@@ -1437,11 +1542,11 @@ But is could also remain a highly skilled task on both ends.
 One concern in Acemoglu model is what he calls ``so-so'' technologies that automate but show little net productivity benefit, merely displacing labor: ```Examples of so-so technologies include automated customer service, which has displaced human service representatives but is generally deemed to be low quality and thus unlikely to have generated large productivity gains.''
 How likely is it that a ``so-so'' technology will emerge?
 If we think of technological improvements as being endogenous, not that it only makes sense to invest in some AI technology if the firm can overshoot the break-even condition. 
-Recall that the firm is indifferent to using AI when $\machinetime / \bar{q} = \humantime$. 
+Recall that the firm is indifferent to using AI when $\machinetime{} / \bar{q} = \humantime{}$. 
 Let us suppose the current state of the art is such that $q_0 < \bar{q}$.
 Small improvements from $q_0$ provide no value until they exceed $\bar{q}$. 
 If the firm can get the AI technology up to $q^*$, and let us suppose you will sell $x$ units at the ``old'' price, 
-the firm's cost-savings will $(\humantime - \machinetime / q^*) x = C_{q_0}(q^*)$, where $C$ is the one-time cost of improving the technology.
+the firm's cost-savings will $(\humantime{} - \machinetime{} / q^*) x = C_{q_0}(q^*)$, where $C$ is the one-time cost of improving the technology.
 
 The optimal investment is thus $q^* = \sqrt{\frac{x}{|C'(q^*)|}}$.
 It will only be made, however, if profitable to do so, considering the full costs of $C_{q_0}(q^*)$.
@@ -1477,7 +1582,7 @@ But if task 1 and task 2 rarely occur together, chaining them together is not li
 \subsection{Generative AI might allow for a kind of pseudo-human capital acquistiion.}
 Substitution to another human might require a hand-off if all the rest of the tasks still need to be done by the ``original'' human. 
 But AI augmentation might allow for job re-design. 
-Consider that for some occupations, there are necessary tasks such that $\humantime$ is essentially infinite, or so high that it would be uneconomic for that person to pursue that job because their effective efficiency wage would be lower than their next best alternative.  
+Consider that for some occupations, there are necessary tasks such that $\humantime{}$ is essentially infinite, or so high that it would be uneconomic for that person to pursue that job because their effective efficiency wage would be lower than their next best alternative.  
 
 Take, for example, a master carpenter versus a handyman.
 There are many tasks in common between the two: driving to the job site, carrying tools, buying supplies, swinging a hammer, etc.
@@ -1519,7 +1624,7 @@ Ironically, the harder the task to perform, the more potential for AI to unlock 
 % A decline in wages would in-turn would in turn limit the incentives to invest AI improvements, at least at the firm level.
 % However, if the instead the increase in $q_i$ allows new services to be provided, this might have an offsetting effect on wages. 
 
-% Suppose there is some AGI singularity, where all goods cost just $\machinetime$ to produce---the only human labor used is the management of the AI and AI is perfect.
+% Suppose there is some AGI singularity, where all goods cost just $\machinetime{}$ to produce---the only human labor used is the management of the AI and AI is perfect.
 % The demand for labor is minimal, seemingly implying low wages, but also goods are so cheap that the demand for leisure might be very high, as all product needs can be met with little income.
 
 \subsection{Agentic AI and the Task-Based Production}
@@ -1569,8 +1674,6 @@ For those interested in AI that complements human capabilities---there are some 
 But it also suggests asking and judging has particularly high value when it bookends long sequences of AI-chained tasks.
 Asking a model to proofread a memo for typos is not particularly high value;
 asking a model to do foundational and autonomous research on drug discovery by pointing it in a promising direction could be enormously valuable on the margin if that skill itself is rare.
-Indeed, \cite{toner2024artificial} provides a remarkable example of this kind of change in the value of asking and judging:
-research productivity is dramatically increased using an AI tool by allowing highly skilled researchers to focus on evaluating the output of the AI tool.
 In other domains, this same phenomenon might benefit less-skilled workers where actually doing the task is the bottleneck.
 This seems to be the case in \cite{brynjolfsson2023generative}, for example.
   
@@ -1610,36 +1713,36 @@ These properties are formalized in Proposition~\ref{prop:comparative_statics}.
   \]
   \item In independent AI production, improvements reduce costs independently:
   \[
-  \frac{\partial \cost{\machine{1}\machine{2}}}{\partial q_i} = -\frac{\machinetime}{q_i^2}, \quad \frac{\partial^2 \cost{\machine{1}\machine{2}}}{\partial q_1 \partial q_2} = 0.
+  \frac{\partial \cost{\machine{1}\machine{2}}}{\partial q_i} = -\frac{\machinetime{}}{q_i^2}, \quad \frac{\partial^2 \cost{\machine{1}\machine{2}}}{\partial q_1 \partial q_2} = 0.
   \]
   \item In mixed production, only improvements in the specific task matter:
   \[
-  \frac{\partial \cost{\machine{1}\human{2}}}{\partial q_1} = -\frac{\machinetime}{q_1^2}, \quad \frac{\partial \cost{\machine{1}\human{2}}}{\partial q_2} = 0.
+  \frac{\partial \cost{\machine{1}\human{2}}}{\partial q_1} = -\frac{\machinetime{}}{q_1^2}, \quad \frac{\partial \cost{\machine{1}\human{2}}}{\partial q_2} = 0.
   \]
   \item In chained production, improvements are complementary:
   \[
-  \frac{\partial \cost{\machine{1|2}}}{\partial q_i} = -\frac{\machinetime}{q_i^2 q_j}, \quad \frac{\partial^2 \cost{\machine{1|2}}}{\partial q_1 \partial q_2} = \frac{\machinetime}{q_1^2 q_2^2} > 0,
+  \frac{\partial \cost{\machine{1|2}}}{\partial q_i} = -\frac{\machinetime{}}{q_i^2 q_j}, \quad \frac{\partial^2 \cost{\machine{1|2}}}{\partial q_1 \partial q_2} = \frac{\machinetime{}}{q_1^2 q_2^2} > 0,
   \]
   where \(j \neq i\).
   \end{enumerate}
 
   In chained production, improvements in AI capabilities eventually flatten out, as the second derivative of the cost function with respect to \(q_i\) is positive.
   \begin{equation}
-      \frac{\partial^2}{\partial q_1 \partial q_2} \cost{\machine{1|2}} = \frac{\machinetime}{q_1^2 q_2^2} > 0.
+      \frac{\partial^2}{\partial q_1 \partial q_2} \cost{\machine{1|2}} = \frac{\machinetime{}}{q_1^2 q_2^2} > 0.
   \end{equation}
 
 \end{proposition}
  
 We will later consider the more general \(n\) task case, but note that immediate adjacency is not required for a task where humans have a comparative advantage to be pulled into a chain.
-Consider a scenario with \(n\) tasks, each with the same success probability \(q\) and the same \(\machinetime\) and \(\humantime\).
+Consider a scenario with \(n\) tasks, each with the same success probability \(q\) and the same \(\machinetime{}\) and \(\humantime{}\).
 To start, assume all tasks are done by humans and that chaining is more cost-efficient than separate automation, implying that:
 \[
-n\, \humantime < \frac{\machinetime}{q^n}.
+n\, \humantime{} < \frac{\machinetime{}}{q^n}.
 \]
 Now suppose we can increase the \(q\) of the first task by \(\delta q\). 
 All tasks will be done by machine, in one chain, if it is possible to have:
 \begin{align}
-  \delta > \frac{\machinetime}{n\, \humantime{}\, q^{n}} - 1.
+  \delta > \frac{\machinetime{}}{n\, \humantime{}{}\, q^{n}} - 1.
 \end{align} 
 
 
@@ -2043,7 +2146,7 @@ The $\mu=0$ case can happen only if:
 \]
 for all times.  
 In this scenario, any $q_{1}$ and $q_{2}$ would suffice since neither contributes to the objective function.  
-However, this is not applicable in our setup because, as soon as task $i$ becomes automated, the corresponding partial derivative changes from 0 to $-\frac{\machinetime}{q_{i}^{2}}$.\footnote{We assume $\machinetime$ and $\handofftime{}$ are such that some level of automation is preferred over no automation.  
+However, this is not applicable in our setup because, as soon as task $i$ becomes automated, the corresponding partial derivative changes from 0 to $-\frac{\machinetime{}}{q_{i}^{2}}$.\footnote{We assume $\machinetime{}$ and $\handofftime{}$ are such that some level of automation is preferred over no automation.  
 Otherwise, the solution would be trivial, and no tasks would be automated.}  
 Therefore, we must have $\mu>0$, and the investment endowment is always fully utilized.
 
@@ -2065,20 +2168,20 @@ Thus:
 Given the functional form of the cost function, such scenario can occur only when both tasks are automated, \underline{and} $q_{1}=q_{2}$.  
 Specifically:
 \[
-\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}=\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}\Leftrightarrow-\frac{\machinetime}{q_{1}^{2}q_{2}}=-\frac{\machinetime}{q_{1}q_{2}^{2}}\Leftrightarrow q_{1}=q_{2}.
+\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}=\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}\Leftrightarrow-\frac{\machinetime{}}{q_{1}^{2}q_{2}}=-\frac{\machinetime{}}{q_{1}q_{2}^{2}}\Leftrightarrow q_{1}=q_{2}.
 \]
 Unless this condition is met, we have a corner solution where all the available endowment is allocated to improving only one task’s AI capability.
 
 We conjecture that at a sufficiently long horizon, $q_{1}=q_{2}$, and proceed to determine the optimal trajectories of $q_{1}$ and $q_{2}$ using backward induction.  
 Now, imagine we are in the $\machine{1|2}$ region.  
-Let $\tilde{T}$ denote the earliest time at which $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$ holds.\footnote{We assume that the parameters $\machinetime$ and $\handofftime{}$ are such that this equality is guaranteed to occur.  
+Let $\tilde{T}$ denote the earliest time at which $\frac{\partial C}{\partial q_{1}}=\frac{\partial C}{\partial q_{2}}$ holds.\footnote{We assume that the parameters $\machinetime{}$ and $\handofftime{}$ are such that this equality is guaranteed to occur.  
 Otherwise, the solution would trivially involve investing in only one $q$, fully maximizing it before switching to the other until it too is maximized.}  
 For $t<\tilde{T}$, we have a corner solution.  
 Without loss of generality, assume that $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$ when $t<\tilde{T}$.  
 With a slight abuse of notation, consider a time $\delta$ arbitrarily close to and just before $\tilde{T}$.  
 At such times, we can write:
 \[
-\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}\approx-\frac{\machinetime}{q_{1}^{2}q_{2}}>-\frac{\machinetime}{q_{1}q_{2}^{2}}\approx\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}.
+\frac{\partial C\{\machine{1|2}\}}{\partial q_{1}}\approx-\frac{\machinetime{}}{q_{1}^{2}q_{2}}>-\frac{\machinetime{}}{q_{1}q_{2}^{2}}\approx\frac{\partial C\{\machine{1|2}\}}{\partial q_{2}}.
 \]
 This simplifies to:
 \[
@@ -2092,7 +2195,7 @@ Here we only consider the case where we hit the boundary of $\machine{1}\machine
 For brevity, we do not describe the direct transition separately, as the mechanism is similar and requires one less step of analysis.}  
 Given that we are in the region where $q_{1}>q_{2}$, the following conditions hold:
 \[
-q_{1}>q_{2}\Leftrightarrow-\frac{\machinetime}{q_{1}^{2}}>-\frac{\machinetime}{q_{2}^{2}}\Leftrightarrow\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{1}}>\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{2}}.
+q_{1}>q_{2}\Leftrightarrow-\frac{\machinetime{}}{q_{1}^{2}}>-\frac{\machinetime{}}{q_{2}^{2}}\Leftrightarrow\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{1}}>\frac{\partial C\{\machine{1}\machine{2}\}}{\partial q_{2}}.
 \]
 Thus, in the $\machine{1}\machine{2}$ region, we must continue investing in $q_{2}$.  
 This remains true even if we enter $\machine{1}\machine{2}$ from the point of parity in $\machine{1|2}$.  
@@ -2101,15 +2204,15 @@ In other words, in the moments leading up to $\frac{\partial C}{\partial q_{1}}=
 Now imagine transitioning from $\machine{1}\machine{2}$ to $\machine{1}\human{2}$.  
 The cost function changes from:
 \[
-C\{\machine{1}\machine{2}\}=\frac{\machinetime}{q_{1}}+\frac{\machinetime}{q_{2}}
+C\{\machine{1}\machine{2}\}=\frac{\machinetime{}}{q_{1}}+\frac{\machinetime{}}{q_{2}}
 \]
 to 
 \[
-C\{\machine{1}\human{2}\}=\frac{\machinetime}{q_{1}}+\handofftime{}.
+C\{\machine{1}\human{2}\}=\frac{\machinetime{}}{q_{1}}+\handofftime{}.
 \]
 Let us maintain the assumption that $q_{1}>q_{2}$ as we cross the horizontal boundary in Figure \ref{fig:two_tasks} and enter the new region.  
 In the $\machine{1}\machine{2}$ region, we have: $\frac{\partial C}{\partial q_{1}}>\frac{\partial C}{\partial q_{2}}$.  
-However, on the $\machine{1}\human{2}$ side, the derivatives change to $\frac{\partial C}{\partial q_{1}}=-\frac{\machinetime}{q_{1}^{2}}<0$ and $\frac{\partial C}{\partial q_{2}}=0$.  
+However, on the $\machine{1}\human{2}$ side, the derivatives change to $\frac{\partial C}{\partial q_{1}}=-\frac{\machinetime{}}{q_{1}^{2}}<0$ and $\frac{\partial C}{\partial q_{2}}=0$.  
 This implies that the task contributing more to the objective function differs across these regions.  
 However, this does not mean the optimal investment path switches instantaneously.  
 While the instantaneous benefits shift at the boundary, the decision maker must account for the continuation value of investments in future periods.  
@@ -2122,10 +2225,10 @@ Let $\hat{T}$ denote the time at which we reach this kink.
 At $\hat{T}$, the following condition must hold:
 \begin{equation}
 \begin{split}
-    & \underbrace{\int_{\hat{T}}^{\tau} e^{-\rho s} \left(\frac{\machinetime}{\hat{q}_{1}} + \handofftime{}\right) ds}_{\text{from $\hat{T}$ to automating task 2}} 
-    + \underbrace{\int_{\tau}^{\tilde{T}} e^{-\rho s} \left(\frac{\machinetime}{\hat{q}_{1}(q_{2,0} + rs)}\right) ds}_{\text{from automation of task 2 to parity of $q$s}} \\
-    & \quad + \underbrace{\int_{\tilde{T}}^{\bar{T}} e^{-\rho s} \left(\frac{\machinetime}{\hat{q}_{1}^{2}}\right) ds}_{\text{after parity}} 
-    = \underbrace{\int_{\hat{T}}^{\bar{T}} e^{-\rho s} \left(\frac{\machinetime}{\hat{q}_{1} + rs} + \handofftime{}\right) ds}_{\text{continue investing on $q_{1}$}}.
+    & \underbrace{\int_{\hat{T}}^{\tau} e^{-\rho s} \left(\frac{\machinetime{}}{\hat{q}_{1}} + \handofftime{}\right) ds}_{\text{from $\hat{T}$ to automating task 2}} 
+    + \underbrace{\int_{\tau}^{\tilde{T}} e^{-\rho s} \left(\frac{\machinetime{}}{\hat{q}_{1}(q_{2,0} + rs)}\right) ds}_{\text{from automation of task 2 to parity of $q$s}} \\
+    & \quad + \underbrace{\int_{\tilde{T}}^{\bar{T}} e^{-\rho s} \left(\frac{\machinetime{}}{\hat{q}_{1}^{2}}\right) ds}_{\text{after parity}} 
+    = \underbrace{\int_{\hat{T}}^{\bar{T}} e^{-\rho s} \left(\frac{\machinetime{}}{\hat{q}_{1} + rs} + \handofftime{}\right) ds}_{\text{continue investing on $q_{1}$}}.
 \end{split}
 \label{eq:kink_eq}
 \end{equation}
@@ -2139,7 +2242,7 @@ Specifically:
 \]
 whereas:
 \[
-\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{1}}=-\frac{\machinetime}{q_{1}^{2}}<0=\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{2}}.
+\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{1}}=-\frac{\machinetime{}}{q_{1}^{2}}<0=\frac{\partial C\{\machine{1}\human{2}\}}{\partial q_{2}}.
 \]
 This completes the characterization of the optimal trajectory of the state variables, starting from any point on the $q_{1}$-$q_{2}$ grid.
 
@@ -2154,7 +2257,7 @@ $\frac{\partial\hat{T}}{\partial q_{2,0}}<0$.
 \begin{proof}
 We have:
 \begin{align*}
-\frac{\partial\hat{T}}{\partial q_{2,0}} & = -\int_{\tau}^{\tilde{T}} e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}(q_{2,0}+rs)^{2}}\right)ds < 0.
+\frac{\partial\hat{T}}{\partial q_{2,0}} & = -\int_{\tau}^{\tilde{T}} e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}(q_{2,0}+rs)^{2}}\right)ds < 0.
 \end{align*}
 
 \noindent Lemma 1 states that if the initial value of $q_{2,0}$ increases, the switch from investing in $q_{1}$ to $q_{2}$ occurs earlier.  
@@ -2177,57 +2280,57 @@ where the last line follows from Lemma 1.
 \end{proof}
 
 \begin{lem}
-A sufficient condition for $\frac{\partial\hat{T}}{\partial\rho}<0$ is $\frac{\machinetime}{\handofftime{}}>Q(\hat{q}_{1})$, where $Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}$, the machine-to-human comparative advantage bound, is increasing in $\hat{q}_{1}$.
+A sufficient condition for $\frac{\partial\hat{T}}{\partial\rho}<0$ is $\frac{\machinetime{}}{\handofftime{}}>Q(\hat{q}_{1})$, where $Q(\hat{q}_{1})=\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}$, the machine-to-human comparative advantage bound, is increasing in $\hat{q}_{1}$.
 \end{lem}
 
 \begin{proof}
 We take partial derivative of both sides of \eqref{eq:kink_eq} with respect to $\rho$, treating $\hat{T}$ as a variable:
 \[
-\int_{\hat{T}}^{\tau}e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}}+\handofftime{}\right)ds+\int_{\tau}^{\tilde{T}}e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}(q_{2,0}+rs)}\right)ds+\int_{\tilde{T}}^{\bar{T}}e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}^{2}}\right)ds=\int_{\hat{T}}^{\bar{T}}e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}+rs}+\handofftime{}\right)ds.
+\int_{\hat{T}}^{\tau}e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}}+\handofftime{}\right)ds+\int_{\tau}^{\tilde{T}}e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}(q_{2,0}+rs)}\right)ds+\int_{\tilde{T}}^{\bar{T}}e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}^{2}}\right)ds=\int_{\hat{T}}^{\bar{T}}e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}+rs}+\handofftime{}\right)ds.
 \]
 Differentiating with respect to $\rho$ gives: 
 \begin{align*}
--\int_{\hat{T}}^{\tau} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}}+\handofftime{}\right)ds 
--\int_{\tau}^{\tilde{T}} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}(q_{2,0}+rs)}\right)ds 
--\int_{\tilde{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}^{2}}\right)ds
--\left[\frac{\partial\hat{T}}{\partial\rho}\,e^{-\rho\hat{T}}\left(\frac{\machinetime}{\hat{q}_{1}}+\handofftime{}\right)\right] \\[1ex]
-= -\int_{\hat{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}+rs}+\handofftime{}\right)ds
--\left[\frac{\partial\hat{T}}{\partial\rho}\,e^{-\rho\hat{T}}\left(\frac{\machinetime}{\hat{q}_{1}+rs}+ \handofftime{}\right)\right].
+-\int_{\hat{T}}^{\tau} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}}+\handofftime{}\right)ds 
+-\int_{\tau}^{\tilde{T}} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}(q_{2,0}+rs)}\right)ds 
+-\int_{\tilde{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}^{2}}\right)ds
+-\left[\frac{\partial\hat{T}}{\partial\rho}\,e^{-\rho\hat{T}}\left(\frac{\machinetime{}}{\hat{q}_{1}}+\handofftime{}\right)\right] \\[1ex]
+= -\int_{\hat{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}+rs}+\handofftime{}\right)ds
+-\left[\frac{\partial\hat{T}}{\partial\rho}\,e^{-\rho\hat{T}}\left(\frac{\machinetime{}}{\hat{q}_{1}+rs}+ \handofftime{}\right)\right].
 \end{align*}
 Rearranging terms, we get: 
 \begin{align*}
-\frac{\partial\hat{T}}{\partial\rho} & =\frac{\int_{\hat{T}}^{\tau} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}}+\handofftime{}\right)ds+\int_{\tau}^{\tilde{T}} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}(q_{2,0}+rs)}\right)ds+\int_{\tilde{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}^{2}}\right)ds-\int_{\hat{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime}{\hat{q}_{1}+rs}+\handofftime{}\right)ds}{e^{-\rho\hat{T}}\left(\frac{\machinetime}{\hat{q}_{1}+rs}-\frac{\machinetime}{\hat{q}_{1}}\right)}
+\frac{\partial\hat{T}}{\partial\rho} & =\frac{\int_{\hat{T}}^{\tau} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}}+\handofftime{}\right)ds+\int_{\tau}^{\tilde{T}} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}(q_{2,0}+rs)}\right)ds+\int_{\tilde{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}^{2}}\right)ds-\int_{\hat{T}}^{\bar{T}} s\,e^{-\rho s}\left(\frac{\machinetime{}}{\hat{q}_{1}+rs}+\handofftime{}\right)ds}{e^{-\rho\hat{T}}\left(\frac{\machinetime{}}{\hat{q}_{1}+rs}-\frac{\machinetime{}}{\hat{q}_{1}}\right)}
 \end{align*}
 Since the denominator is always negative (because $\hat{q}_{1}+rs>\hat{q}_{1}$), the sign of $\frac{\partial\hat{T}}{\partial\rho}$ depends on the numerator.  
 Breaking the last integral into three intervals, the numerator becomes:
 \begin{align*}
- & \underbrace{\int_{\hat{T}}^{\tau} s\,e^{-\rho s} \left(\frac{\machinetime}{\hat{q}_{1}} - \frac{\machinetime}{\hat{q}_{1} + rs}\right) ds}_{>0} 
-+ \int_{\tau}^{\tilde{T}} s\,e^{-\rho s} \left(\frac{\machinetime}{\hat{q}_{1}(q_{2,0} + rs)} - \frac{\machinetime}{\hat{q}_{1} + rs} - \handofftime{}\right) ds \\[1ex]
-& + \int_{\tilde{T}}^{\bar{T}} s\,e^{-\rho s} \left(\frac{\machinetime}{\hat{q}_{1}^{2}} - \frac{\machinetime}{\hat{q}_{1} + rs} - \handofftime{}\right) ds.
+ & \underbrace{\int_{\hat{T}}^{\tau} s\,e^{-\rho s} \left(\frac{\machinetime{}}{\hat{q}_{1}} - \frac{\machinetime{}}{\hat{q}_{1} + rs}\right) ds}_{>0} 
++ \int_{\tau}^{\tilde{T}} s\,e^{-\rho s} \left(\frac{\machinetime{}}{\hat{q}_{1}(q_{2,0} + rs)} - \frac{\machinetime{}}{\hat{q}_{1} + rs} - \handofftime{}\right) ds \\[1ex]
+& + \int_{\tilde{T}}^{\bar{T}} s\,e^{-\rho s} \left(\frac{\machinetime{}}{\hat{q}_{1}^{2}} - \frac{\machinetime{}}{\hat{q}_{1} + rs} - \handofftime{}\right) ds.
 \end{align*}
 Now we look for sufficient conditions that guarantee the numerator is positive.  
-First, notice that $\left(-\frac{\machinetime}{\hat{q}_{1}+rs}-\handofftime{}\right)$ appears in both the middle and right terms.  
+First, notice that $\left(-\frac{\machinetime{}}{\hat{q}_{1}+rs}-\handofftime{}\right)$ appears in both the middle and right terms.  
 To ensure the numerator is positive, we require:
 \[
-\frac{\machinetime}{\hat{q}_{1}+rs}+\handofftime{}\leq \min\left\{\frac{\machinetime}{\hat{q}_{1}^{2}},\frac{\machinetime}{\hat{q}_{1}(q_{2,0}+rs)}\right\}.
+\frac{\machinetime{}}{\hat{q}_{1}+rs}+\handofftime{}\leq \min\left\{\frac{\machinetime{}}{\hat{q}_{1}^{2}},\frac{\machinetime{}}{\hat{q}_{1}(q_{2,0}+rs)}\right\}.
 \]
-In the region where $q_{1}>q_{2}$ and $q_{2}+rs\leq\hat{q}_{1}$ until parity is achieved, the minimum is $\frac{\machinetime}{\hat{q}_{1}^{2}}$.  
+In the region where $q_{1}>q_{2}$ and $q_{2}+rs\leq\hat{q}_{1}$ until parity is achieved, the minimum is $\frac{\machinetime{}}{\hat{q}_{1}^{2}}$.  
 Therefore, the condition becomes: 
 \begin{align*}
-\frac{\machinetime}{\hat{q}_{1}+rs}+\handofftime{} & <\frac{\machinetime}{\hat{q}_{1}^{2}}.
+\frac{\machinetime{}}{\hat{q}_{1}+rs}+\handofftime{} & <\frac{\machinetime{}}{\hat{q}_{1}^{2}}.
 \end{align*}
 At $t=0$ (just after the investment switch), this simplifies to:
 \[
-\frac{\machinetime}{\hat{q}_{1}}+\handofftime{}<\frac{\machinetime}{\hat{q}_{1}^{2}},
+\frac{\machinetime{}}{\hat{q}_{1}}+\handofftime{}<\frac{\machinetime{}}{\hat{q}_{1}^{2}},
 \]
 or equivalently:
 \begin{align*}
-\frac{\machinetime}{\handofftime{}}\left(\frac{1}{\hat{q}_{1}^{2}}-\frac{1}{\hat{q}_{1}}\right) & >1,\\[1ex]
-\frac{\machinetime}{\handofftime{}}\frac{1-\hat{q}_{1}}{\hat{q}_{1}^{2}} & >1,\\[1ex]
-\frac{\machinetime}{\handofftime{}} & >\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}},\\[1ex]
-\frac{\machinetime}{\handofftime{}} & >Q(\hat{q}_{1}).
+\frac{\machinetime{}}{\handofftime{}}\left(\frac{1}{\hat{q}_{1}^{2}}-\frac{1}{\hat{q}_{1}}\right) & >1,\\[1ex]
+\frac{\machinetime{}}{\handofftime{}}\frac{1-\hat{q}_{1}}{\hat{q}_{1}^{2}} & >1,\\[1ex]
+\frac{\machinetime{}}{\handofftime{}} & >\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}},\\[1ex]
+\frac{\machinetime{}}{\handofftime{}} & >Q(\hat{q}_{1}).
 \end{align*}
-Thus, $\frac{\machinetime}{\handofftime{}}>Q(\hat{q}_{1})$ is a sufficient condition to ensure $\frac{\partial\hat{T}}{\partial\rho}<0$.  
+Thus, $\frac{\machinetime{}}{\handofftime{}}>Q(\hat{q}_{1})$ is a sufficient condition to ensure $\frac{\partial\hat{T}}{\partial\rho}<0$.  
 Intuitively, if machine costs dominate human costs, increasing the discount rate makes the switch occur earlier ($\hat{T}\downarrow$).
 \end{proof}
 
@@ -2244,7 +2347,7 @@ Taking the derivative with respect to $q_{2,0}$:
 \[
 \frac{\partial Q(\hat{q}_{1})}{\partial q_{2,0}}=\frac{\partial\left(\frac{\hat{q}_{1}^{2}}{1-\hat{q}_{1}}\right)}{\partial\hat{q}_{1}}\frac{\partial\hat{q}_{1}}{\partial q_{2,0}}<0.
 \]
-This implies that as $q_{2,0}$ increases, maintaining $\frac{\partial\hat{T}}{\partial\rho}<0$ requires less comparative machine cost advantage (i.e., lower $\frac{\machinetime}{\handofftime{}}$).
+This implies that as $q_{2,0}$ increases, maintaining $\frac{\partial\hat{T}}{\partial\rho}<0$ requires less comparative machine cost advantage (i.e., lower $\frac{\machinetime{}}{\handofftime{}}$).
 \end{proof}
 
 
@@ -2261,7 +2364,7 @@ Suppose the probability of success on each task is marginally $q_i$, but the suc
 Let $\text{CostBlock}(i\text{ through }j)$ denote the expected cost of chaining tasks $i$ through $j$.  
 Then:
 \[
-\text{CostBlock}(i\text{ through }j) = \frac{\machinetime}{\mathbb{P}(\text{all succeed})},
+\text{CostBlock}(i\text{ through }j) = \frac{\machinetime{}}{\mathbb{P}(\text{all succeed})},
 \]
 where $\mathbb{P}(\text{all succeed}) = \mathbb{P}\left(\bigcap_{k=i}^j S_k\right)$ depends on $\rho$.  
 If $\rho > 0$, the threshold for cost-effective chaining is strictly higher than in the $\rho = 0$ (independent) case.  
@@ -2271,7 +2374,7 @@ Conversely, if $\rho < 0$, chaining becomes more attractive.
 \subsection{Chaining in Non-Linear or Tree-Structured Production}
 
 \begin{theorem}[Cost-Minimizing Chaining in a Directed Acyclic Graph]
-Let the production process be represented by a DAG $G = (V, E)$, where each node $i \in V$ is a task requiring cost $\handofftime{}[i] \in \mathbb{R}_+$ by humans or $\frac{\machinetime}{\prod_{k \in \text{chain}} q[k]}$ if executed in a chained block of tasks.  
+Let the production process be represented by a DAG $G = (V, E)$, where each node $i \in V$ is a task requiring cost $\handofftime{}[i] \in \mathbb{R}_+$ by humans or $\frac{\machinetime{}}{\prod_{k \in \text{chain}} q[k]}$ if executed in a chained block of tasks.  
 The cost-minimization problem:
 \[
 \min_{\text{valid assignments respecting DAG dependencies}} \sum_{b \in B} \text{CostBlock}(b),
@@ -2283,12 +2386,12 @@ The solution involves sub-DAGs where each is either a single-human-task node or 
 \subsection{Endogenizing Prompting and Evaluation Costs}
 
 \begin{proposition}[Joint Investment in Capability and Prompt Tuning]
-Let a firm allocate resources to improve AI success probabilities $q_i$ and reduce management costs $\machinetime$ over time, facing cost functions $R(q_i)$ and $S(\machinetime)$.  
+Let a firm allocate resources to improve AI success probabilities $q_i$ and reduce management costs $\machinetime{}$ over time, facing cost functions $R(q_i)$ and $S(\machinetime{})$.  
 The total cost per period is:
 \[
-C(\mathbf{q}, \machinetime) = \min\left\{\text{production costs with } q_i \text{ and } \machinetime\right\}.
+C(\mathbf{q}, \machinetime{}) = \min\left\{\text{production costs with } q_i \text{ and } \machinetime{}\right\}.
 \]
-If improvements in $q_i$ and $\machinetime$ are complementary (i.e., $\frac{\partial^2 C}{\partial q_i \partial \machinetime} < 0$), the firm will invest in both dimensions simultaneously, rather than prioritizing one exclusively.
+If improvements in $q_i$ and $\machinetime{}$ are complementary (i.e., $\frac{\partial^2 C}{\partial q_i \partial \machinetime{}} < 0$), the firm will invest in both dimensions simultaneously, rather than prioritizing one exclusively.
 \end{proposition}
 
 \subsection{Multiple Humans with Heterogeneous Skills}
@@ -2311,7 +2414,7 @@ Suppose a block of $k$ tasks has success probabilities $q_i$.
 The tasks can be chained in one go or partitioned into smaller subchains.  
 The cost of $m$ subchains is:
 \[
-\sum_{\ell=1}^m \frac{\machinetime}{\prod_{i \in \ell\text{-th subchain}} q[i]}.
+\sum_{\ell=1}^m \frac{\machinetime{}}{\prod_{i \in \ell\text{-th subchain}} q[i]}.
 \]
 An optimal partition $\Pi^*$ minimizes this sum and can be found via a dynamic program in $O(k^2)$.  
 If $\prod_{i=1}^k q[i]$ is sufficiently high, the entire block is assigned to a single chain.
