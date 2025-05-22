@@ -68,6 +68,8 @@
 
 
 
+\newcommand{\T}[0]{\mathcal{T}}
+\newcommand{\J}[0]{\mathcal{J}}
 \newcommand{\machine}[1]{\langle #1 \rangle}
 \newcommand{\human}[1]{( #1 )}
 \newcommand{\cost}[1]{C\{ #1 \}}
@@ -76,7 +78,7 @@
 \newcommand{\timecost}[1]{t_{#1}}
 \newcommand{\hccost}[1]{c_{#1}}
 \newcommand{\labor}[1]{l_{#1}}
-\newcommand{\handofftime}[1]{t_{s#1}}
+\newcommand{\handofftime}[1]{t^{s}_{#1}}
 \newcommand{\humantime}[1]{t^{h}_{#1}}
 \newcommand{\machinetime}[1]{t^{m}_{#1}}
 \newcommand{\humanhc}[1]{c^{h}_{#1}}
@@ -214,7 +216,7 @@ Consequently, the decision to assign a task to AI depends not only on the task's
 
 Assigning tasks to factors of production is not a completely trivial computational problem.
 For an occupation with $n$ tasks, we show that there are $F(2n + 1)$ possible production arrangements, where $F(k)$ is the $k$th Fibonacci number.
-However, we also show how the allocation problem can be solved numerically in $O(n^2)$ time using dynamic programming.
+However, we also show how the allocation problem can be solved numerically in $O(n^2)$ time using dynamic programming (DP).
 Although we do not do it in this paper, this algorithmic approach could be combined with micro-details of task content and composition (as in \cite{frey2017future, felten2021occupational, eloundou2023gpts}) to create rich estimates of how technological change in various tasks would impact workers.
 
 It might be hard for firms or even for it to be obvious beyond just the allocation of tasks to factors of production, the model provides a way to calculate the return to investing in AI capabilities in specific tasks.
@@ -274,22 +276,22 @@ In this section we develop a framework that treats occupations as a collection t
 Suppose production of a (final) good requires completing an ordered set of tasks, denoted by:
 \begin{equation}
 \label{eq:tasks}
-\mathcal{T} = \{1,2,\ldots,\tau\}.
+\T = \{1,2,\ldots,n\}.
 \end{equation}
-We refer to $\mathcal{T}$ as the production process of the good.
-The firm can partition the production process $\mathcal{T}$ into $J$ distinct ``jobs,'' where each job $j \in \{1, \cdots, J \}$ is a contiguous block of tasks performed by a single worker, denoted by $\mathcal{J}_j$.
+We refer to $\T$ as the production process of the good.
+The firm can partition the production process $\T$ into $J$ distinct ``jobs,'' where each job $j \in \{1, \cdots, J \}$ is a contiguous block of tasks, denoted by $\J_j$, performed by a single worker.
 Formally:
 \[
-\bigcup_{j=1}^J \mathcal{J}_j = \mathcal{T}, 
+\bigcup_{j=1}^J \J_j = \T, 
 \]
 and for all $j,j' \in \{1,\dots,J\}$ where $j \neq j'$:
 \[
-\mathcal{J}_j \cap \mathcal{J}_{j'} = \emptyset.
+\J_j \cap \J_{j'} = \emptyset.
 \]
-We refer to any collection of jobs satisfying the above conditions as a ``job design'' for the occupation, and denote it with $\{\mathcal{J}_j\}_{j=1}^{J}$.
+We refer to any collection of jobs satisfying the above conditions as a ``job design'' for the occupation, and denote it with $\{\J_j\}_{j=1}^{J}$.
 
-With $|\mathcal{T}| = \tau$ tasks, there are $2^{(\tau - 1)}$ unique ways of designing jobs.
-For example, if $\tau = 3$, the production process of the final good consists of three tasks, $\{1,2,3\}$, with $2^{(3-1)}=4$ unique job designs.
+With $|\T| = n$ tasks, there are $2^{(n - 1)}$ unique ways of designing jobs.
+For example, if $n = 3$, the production process of the final good consists of three tasks, $\{1,2,3\}$, with $2^{(3-1)}=4$ unique job designs.
 Let $[.]$ denote the tasks assigned to a worker in a job.
 The four possible designs in this example are: $\{[1][2][3], \, [1,2][3], \, [1][2,3], \, [1,2,3]\}$.
 The $[1,2][3]$ design, for example, means that one worker is assigned to do tasks 1 and 2 in a single job, $[1,2]$, whereas task 3 is assigned to a different worker in another job, $[3]$.
@@ -298,20 +300,20 @@ Later, we will discuss what factors guide the firm’s choice among different jo
 
 \subsection{Human Capital}
 The firm hires one worker for each job $j \in \{1, \cdots, J\}$.  
-The worker completes all tasks $i \in \mathcal{J}_j$ associated with their job. 
-Performing a task requires the worker to first acquire the necessary skills, incurring a one-time human capital investment cost \( \hccost{ij} > 0 \).
-Once trained, the task takes time $\timecost{ij}>0$ to complete. 
-Note that the human capital cost $\hccost{ij}$ is paid only once upon acquisition, whereas the time cost $\timecost{ij}$ applies to every unit of the good produced.
-In other words, once the necessary human capital is acquired, labor (i.e., time) is the only input used in production.
+The worker completes all tasks $i \in \J_j$ associated with their job. 
+Performing any task $i$ requires the worker to first acquire the necessary skills, incurring a one-time human capital investment cost \( \hccost{i} > 0 \).
+Once trained, the task takes time $\timecost{i}>0$ to complete. 
+Note that the human capital cost $\hccost{i}$ is paid only once upon acquisition, whereas the time cost $\timecost{i}$ applies to every unit of the good produced.
+In other words, once the necessary skill (i.e., human capital) is acquired, labor (i.e., time) is the only input used in production.
 For example, it might cost \$10 to learn how to file a test procedure specification (TPS) report, and once the worker has acquired this skill, it takes $15$ minutes to produce each report.
 Thus, after paying the \$10 learning cost, the worker can produce one report every $15$ minutes.
 The total human capital acquired ex ante by the worker employed in job $j$ is thus:
 \[
-\sum_{i \in \mathcal{J}_j} \hccost{ij},
+\sum_{i \in \J_j} \hccost{i},
 \]
 while the total time spent on tasks to produce a unit of output is:
 \[
-\sum_{i \in \mathcal{J}_j} \timecost{ij}.
+\sum_{i \in \J_j} \timecost{i}.
 \]
 
 
@@ -322,16 +324,16 @@ To remain indifferent between jobs, workers must receive wages that covers not o
 Thus, the wage rate in job $j$ must satisfy\footnote{Notice that while wages may differ across jobs, they are structured such that workers remain indifferent between acquiring different types of human capital for different jobs.}:
 \begin{align}
 \label{eq:wage}
-w_j = v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij}.
+w_j = v_L + \sum_{i \in \J_j} \hccost{i}.
 \end{align}
 The firm must pay workers for their time, regardless of which tasks they are employed to complete; hence, the wage bill paid to worker per unit of output is:
 \begin{align}
 \label{eq:wagebill}
-\text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr).
+\text{WageBill}_j = \Biggl(v_L + \sum_{i \in \J_j} \hccost{i} \Biggr) \Biggl(\sum_{i \in \J_j} \timecost{i} \Biggr).
 \end{align}
 
 Equation~\ref{eq:wagebill} admits a nice geometric interpretation.  
-We can represent the production process as a sequence of stacked rectangles whose heights are $\hccost{ij}$ and widths are $\timecost{ij}$.  
+We can represent the production process as a sequence of stacked rectangles whose heights are $\hccost{i}$ and widths are $\timecost{i}$.  
 Figure~\ref{fig:wage_bill} illustrates an occupation with just two tasks and thus two job designs: [1][2] and [1,2].
 For simplicity we assume $v_L=0$ in the graph.
 In both panels, the numbered, solid‐lined rectangles denote the two tasks.
@@ -358,13 +360,14 @@ The firm seeks to minimize the total cost of producing the final good by optimal
 The overall production cost per unit of the good is the solution to:
 \begin{align}
 \label{eq:totalcost_no_handoff}
-\underset{\{\mathcal{J}_j\}_{j=1}^J}{min} \ 
-\text{TotalCost}(\mathcal{J}; \hccost{}, \timecost{})
+\underset{\{\J_j\}_{j=1}^J}{min} \ 
+\text{TotalCost}(\J; \hccost{}, \timecost{})
 = 
-\sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr)\Biggr].
+\sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \J_j} \hccost{i} \Biggr) \Biggl(\sum_{i \in \J_j} \timecost{i} \Biggr)\Biggr],
 \end{align}
+where $\hccost{}$ and $\timecost{}$ are vectors of task skill and time requirements. 
 
-In the earlier  production process example with three tasks, suppose workers value leisure at $v_L = 1$ and tasks are characterized by human capital requirements and time costs specified below:
+In the earlier  production example with three tasks, suppose workers value leisure at $v_L = 1$ and tasks are characterized by human capital requirements and time costs specified below:
 \[
 \begin{array}{c|ccc}
 \textbf{Task} & \hccost{i} & \timecost{i} \\ \hline
@@ -379,11 +382,11 @@ In fact, this conclusion holds for any arbitrary set of parameter values since, 
 \[
   xy + wz \le (x + w)(y + z),
 \]
-which means bundling any two tasks cannot reduce the total cost.  
+meaning that bundling any two tasks cannot reduce the total cost.  
 Geometrically, for any number of tasks, the sum of areas of individual rectangles never exceeds the area of the single bounding rectangle that covers two or more tasks assigned to one worker.
 
 \begin{table}[htbp]
-\caption{Example job design costs for a production process with $\tau=3$ tasks}
+\caption{Example job design costs for a production process with $n=3$ tasks}
 \resizebox{0.75\textwidth}{!}{%
 \begin{tabular}{c}
 % Panel A: Without Hand-off Costs
@@ -465,29 +468,33 @@ Geometrically, for any number of tasks, the sum of areas of individual rectangle
 \end{tabular}
 }
 \label{tab:job_design}
-\footnotesize{\\ \\ \\ \emph{Notes:} This table shows production costs for each job design in a production process with $\tau=3$ tasks. 
+\footnotesize{\\ \\ \\ \emph{Notes:} This table shows production costs for each job design in a production process with $n=3$ tasks. 
 Panel (A) gives the production costs in absence of hand-off costs whereas Panel (B) includes hand-off costs. While in absence of hand-off friction assigning each task to a single worker is optimal, the cost-minimizing way of producing the good changes after the introduction of hand-off costs. The human capital requirements, task times, hand-off times, and value of leisure are specified in text.
 }
 \end{table}
 
 
 \subsection{Frictional Limits to Full Division of Labor}
+\label{sec:handoff_intro}
 Without additional frictions, the firm could minimize production costs by assigning one worker to each task.
 To assume away this trivial arrangement we introduce the ``hand-off cost” friction: a cost associated with job transitions that, while not requiring additional human capital, does take time.
 This cost reflects the expense of context switching between workers in the production process, and applies only when a task sits at a job boundary.  
 Within a job, all tasks are performed by the same worker, so no hand-off occurs and no such cost is incurred.
 The hand-off cost is an intrinsic property of a task---not the job---and arises specifically when transitioning from the final task of job $j$ to the first task of job $j+1$.  
-In that case, the worker in job~$j$ incurs a hand-off time cost $\handofftime{j} \ge 0$.
-Although we use the subscript $j$ for notational convenience, the hand-off cost should be understood as originating from the task itself.
+In such a case, the worker assigned to job $j$ incurs an additional hand-off time cost $\handofftime{j} \ge 0$.
+For simplicity, rather than explicitly indexing the final task of each job, we denote the hand-off cost between jobs $j$ and $j+1$ as $\handofftime{j}$.\footnote{
+Suppose task $x$ is the final task in job $j$.
+For convenience, we define $\handofftime{j} := \handofftime{x}$.}
+Thus, although we use the subscript $j$ to indicate the hand-off between jobs, this cost fundamentally originates from the task itself.
 
-While the firm's cost minimization problem remains unchanged, now its solution becomes nontrivial due to the additional hand-off cost incurred after completing the final task in each job.  
+While the firm's cost minimization problem remains unchanged, now the solution becomes nontrivial due to the additional hand-off cost incurred after completing the final task in each job.  
 The firm's objective is to minimize the following expression, which differs from equation \ref{eq:totalcost_no_handoff} only by the extra $\handofftime{j}$ term added to the time cost component of the job's wage bill:
 \begin{align}
 \label{eq:totalcost_with_handoff}
-\underset{\{\mathcal{J}_j\}_{j=1}^J}{min} \ 
-\text{TotalCost}(\mathcal{J}; \hccost{}, \timecost{}) 
+\underset{\{\J_j\}_{j=1}^J}{min} \ 
+\text{TotalCost}(\J; \hccost{}, \timecost{}) 
 = 
-\sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\handofftime{j} + \sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr)\Biggr].
+\sum_{j=1}^J \Biggl[\Biggl(v_L + \sum_{i \in \J_j} \hccost{i} \Biggr) \Biggl(\handofftime{j} + \sum_{i \in \J_j} \timecost{i} \Biggr)\Biggr].
 \end{align}
 Panel B of Table~\ref{tab:job_design} shows the potential job designs of the previous example with hand-off costs specified in this table:
 \[
@@ -503,11 +510,11 @@ In the new optimal design, the firm minimizes its cost by bundling tasks 1 and 2
 
 
 \subsection{Geometric Representation of Cost Minimization}
-The firm’s cost‐minimization problem admits a nice geometric interpretation.  
-Figure~\ref{fig:job_design} represents the production process from Table~\ref{tab:job_design} as stacked rectangles of height $\hccost{ij}$ and width $\timecost{ij}$.
+The firm’s cost‐minimization problem admits a geometric interpretation as well.  
+Figure~\ref{fig:job_design} represents the production process from Table~\ref{tab:job_design} as stacked rectangles of height $\hccost{i}$ and width $\timecost{i}$.
 \begin{figure}[htbp]
   \begin{center}
-  \caption{Geometric interpretation of job designs for the \(\tau=3\) tasks example} \label{fig:job_design}
+  \caption{Geometric interpretation of job designs for the \(n=3\) tasks example} \label{fig:job_design}
   \begin{subfigure}[b]{0.93\textwidth}
     \includegraphics[width=\textwidth]{plots/combined_grid_no_handoff.png}
     \caption{Job design without hand-off costs}
@@ -534,85 +541,25 @@ Without hand‐off costs, the optimal arrangement is [1][2][3] (top left of Pane
 \subsection{Introduction of AI: Task Augmentation}
 
 Having established the structure of task-based production, we now formally extend our framework by introducing AI into the model.
-In this section, we restrict our analysis to a single task and omit the job index $j$ and the task index $i$ for simplicity of notation.
+In this section, we restrict our analysis to a single task and omit the task index $i$ for simplicity of notation.
 We defer the analysis of task automation and AI chains, which require at least two tasks, to the subsequent section.
 
-A single task can be completed through two distinct modes of production:
+A single task can be completed in two distinct modes of production:
 \begin{enumerate}
-\item Manually, where the task is executed by a human worker without AI assistance (``manual'').
-\item Augmented, where the task is executed by AI, and its output is subsequently reviewed by a human (``augmented'').
+\item Manually, where the task is executed by a human worker without AI assistance.
+\item Augmented, where the task is executed by AI, and its output is subsequently reviewed by a human.
 \end{enumerate}
+The manual execution of a task requires skill cost $\humanhc{} > 0$ and time cost $\humantime{} > 0$.
+Alternatively, if the worker opts to use AI in an augmented way. they issue a ``prompt'' to the AI at a time cost $\timecost{p} > 0$ and evaluate it at additional time cost $\timecost{e} > 0$.
+Operating the AI also requires incurring one-time skill cost $\machinehc{} > 0$.
 
-Definitions~\ref{def:manual_task} and~\ref{def:augmented_task} formalize these modes explicitly.
-
-\begin{definition}[Manual Task]
-\label{def:manual_task}
-A task is said to be manual if it is executed entirely by a human worker without AI assistance.
-The associated skill and time costs for a manual task are denoted by $(\humanhc{}, \humantime{})$.
-\end{definition}
-
-\begin{definition}[Augmented Task]
-\label{def:augmented_task}
-A task is said to be augmented if it is initially executed by AI, after which its output is reviewed and approved by a human worker.
-The associated skill and time costs of managing an augmented task are denoted by $(\machinehc{}, \frac{\machinetime{}}{q})$, where $q \in (0,1]$ is the AI's probability of successfully completing the task.
-\end{definition}
-
-
-
-
-\begin{comment}
-Having established the structure of task-based production, we now extend our framework by introducing AI into the model.
-In this section we focus on a single task and drop the job ($j$) and task indices ($i \in \mathcal{J}_j$) for notational simplicity.
-We will discuss automation of two or more tasks in the next section.
-A task can be done in one of three ways:
-\begin{enumerate}
-\item Manually by a human in its entirety (referred to as ``manual''), 
-\item Using an AI with human oversight (referred to as ``augmented''),
-\item Using an AI in its entirety (referred to as ``automated'').
-\end{enumerate}
-We defer discussion of task automation to the next section as it only happens when two or more tasks are present.
-For the remainder of this section, a task is assumed to be completed either fully manually or by AI in an augmented way.
-A task can be completed either manually or augmented by the AI in isolation. 
-
-Definitions~\ref{def:manual_task} to \ref{def:ai_chain} formalize these ideas.
-\begin{definition}[Manual Task]
-\label{def:manual_task}
-A task is said to be done manually if it is executed by a human in its entirety without the help of AI. 
-The skill and time costs of operating manual task `i' for a human is $(\humanhc{i}, \humantime{i})$.
-\end{definition}
-\begin{definition}[Augmented Task]
-\label{def:augmented_task}
-A task is said to be augmented (by the AI) if it is executed by the AI and its output is reviewed by human before being pass on. 
-The skill and time costs of operating augmented task `i' for a human is $(\machinehc{i}, \frac{\machinetime{i}{q_i}})$.
-\end{definition}
-\begin{definition}[Automated Task]
-\label{def:automated_task}
-A task is said to be automated (by the AI) if it is executed by the AI in its entirety without direct human intervention.
-The direct time and skill costs of overseeing automated task `i' for a human is zero: $(0,0)$.
-\end{definition}
-\begin{definition}[AI Chain]
-\label{def:ai_chain}
-An AI chain is a sequence of tasks $(r, r+1, \dots, r+n)$ such that tasks $(r, r+1, \dots, r+n-1)$ are automated, and task $r+n$ is augmented.
-The time and skill costs of an AI chain are given by $(\machinehc{r+n}, \frac{\machinetime{r+n}}{\prod_{s=r}^{r+n} q_s})$, where $q_s$ denotes the AI success probability of task $s$.
-\end{definition}
-Intuitively, this says that in a chain of AI-completed tasks, all but the last task can be completed without direct human intervention, but before passed on, the output of the chain must be reviewed by a human worker who incurred a time management cost $\machinetime{}$ and management skill cost $\machinehc{}$.
-Note, however, that producing a successful output depends on the success probability of each of the interim automated tasks within the chain and it is in this way that the AI will affect the overall outcome of the chain.
-
-\end{comment}
-
-
-
-
-
-If the task is completed manually by human, the worker incurs a time cost $\humantime{} > 0$ and .
-Alternatively, if the worker opts to use AI in an augmented way, they issue a ``prompt'' to the AI at a time cost $\timecost{p} > 0$ and evaluate it at additional time cost $\timecost{e} > 0$.
 The AI successfully produces an output with probability $q$ and fails with probability $1-q$. 
-The success probability can be viewed as $q=\alpha^d$ where $d$ is the completion difficulty parameter associated with the task for an AI with quality $\alpha \in [0,1]$: the more difficult a task is the less likely any AI attempt at it will be.
+The success probability can be viewed as $q=\alpha^d$ where $d$ is the task's completion difficulty for an AI with quality $\alpha \in [0,1]$: the more difficult a task is the less likely any AI attempt at it will be.
 
 The worker learns whether the AI succeeded or failed only after evaluation of the output.
 If the AI fails, the worker can provide a new prompt and evaluate its output, incurring the same costs $\timecost{p}$ and $\timecost{e}$ again.
 Let $\machinetime{} = \timecost{p} + \timecost{e}$ denote the total ``management'' time cost associated with using the AI for an augmented task.
-For now, assume the worker can manage all tasks similarly by paying the task-specific management time cost.
+%For now, assume the worker can manage all tasks similarly by paying the task-specific management time cost.
 Figure~\ref{fig:flow} illustrates this process graphically.
 
 \begin{figure}[h!]
@@ -669,21 +616,35 @@ Figure~\ref{fig:flow} illustrates this process graphically.
   If it does not, the process repeats with a refined prompt.  
   Each iteration of prompting requires a total machine time of $\machinetime{} = \timecost{p} + \timecost{e}$.}
 \end{figure}
+Assuming that each AI attempt is independent, the expected time worker spends performing the task in AI-augmented manner is
+$$\machinetime{} \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\machinetime{}}{q}.$$
+
+Definitions~\ref{def:manual_task} and~\ref{def:augmented_task} formalize the two modes of performing a single task explicitly.
+
+\begin{definition}[Manual Task]
+\label{def:manual_task}
+A task is said to be manual if it is executed entirely by a human worker without AI assistance.
+The associated skill and time costs for a manual task are denoted by $(\humanhc{}, \humantime{})$.
+\end{definition}
+
+\begin{definition}[Augmented Task]
+\label{def:augmented_task}
+A task is said to be augmented if it is executed by the AI, after which its output is reviewed and approved by a human worker.
+The associated skill and (expected) time costs of managing an augmented task are denoted by $(\machinehc{}, \frac{\machinetime{}}{q})$, where $q \in (0,1]$ is the AI's probability of successfully completing the task.
+\end{definition}
 
 The decision whether to deploy the AI depends on whether the manual cost exceeds the AI management cost.
-Assuming that each attempt is independent, we obtain the following proposition.
+Proposition~\ref{prop:single} provides the single task augmentation criterion in terms of AI's success probability.
 
-\begin{proposition}[Single Task Automation Criterion] 
-\label{proposition:single}
+\begin{proposition}[Single Task Augmentation Criterion] 
+\label{prop:single}
 A job with a single task should be augmented if and only if AI quality exceeds the threshold
-$$\underline{q} := \frac{\machinehc{} \machinetime{}}{\machinehc{} \humantime{}}.$$
+$$\underline{q} := \frac{\machinehc{} \; \machinetime{}}{\humanhc{} \; \humantime{}}.$$
 \end{proposition}
 
 \begin{proof}
-By the standard result for the expectation of a geometric distribution, the expected time cost of using the AI is:
-$$\machinetime{} \Biggl( \sum_{\ell=1}^{\infty} \ell\,q\,(1 - q)^{\ell - 1} \Biggr) = \frac{\machinetime{}}{q}.$$
-Thus, augmentation is optimal when:
-$$\humanhc{} \humantime{} \geq \frac{\machinehc{} \machinetime{}}{q} \quad \Longleftrightarrow \quad q \geq \frac{\machinehc{} \machinetime{}}{\machinetime{} \humantime{}} = \underline{q}.$$
+Augmentation is optimal when:
+$$\frac{\machinehc{} \; \machinetime{}}{q} \leq \humanhc{} \; \humantime{} \quad \Longleftrightarrow \quad q \geq \frac{\machinehc{} \; \machinetime{}}{\humanhc{} \; \humantime{}} = \underline{q}.$$
 \end{proof}
 
 This criterion has intuitive comparative statics: automation becomes more attractive when the manual execution cost is high, the management cost is low, or the AI's success probability $q$ is high (or equivalently, the task's completion difficulty $d$ is low).
@@ -691,52 +652,51 @@ One implication is that improvements in prompting and evaluation tools---thereby
 Although the assumptions of independent success probabilities and constant management costs might seem strong, they are relatively mild and can be adjusted by redefining parameters if necessary (e.g., if outcomes are positively correlated, the effective success probability can be treated as lower; see Sections~\ref{sec:correlated_successes} and~\ref{sec:constant_management_costs}).
 
 For a given AI success probability $q$, the expression below shows how the overall cost parameters of a task are set by the trade-off between its manual execution and AI-augmentation costs.
-$$(\hccost{}, \timecost{}) = argmin \Bigl\{\frac{\machinehc{} \machinetime{}}{q},\, \humanhc{} \humantime{}\Bigr\}.$$
-Geometrically, this says that each task can be represented by two distinct rectangles: one with height $\machinehc{}$ and width $\frac{\machinetime{}}{q}$ and another with height  $\humanhc{}$ and width $\humantime{}$.
-Whichever one of the two admits a smaller area will determine the cost characteristics of a task (in isolation) in the production process.
+$$(\hccost{}, \timecost{}) = argmin \Bigl\{\frac{\machinehc{} \; \machinetime{}}{q},\, \humanhc{} \; \humantime{}\Bigr\}.$$
+Geometrically, this says that each task can be represented by two distinct rectangles: one with height $\humanhc{}$ and width $\humantime{}$ and another with height $\machinehc{}$ and width $\frac{\machinetime{}}{q}$.
+Whichever one of the two admits a smaller area will determine the cost characteristics of the task (in isolation) in the production process.
 
 
 
 \subsection{Two-Task Production with the Possibility of Chaining: Task Automation}
-Consider now a job consisting of two sequential tasks, indexed as $1$ and $2$ (continue to suppress the job index $j$).
 Although we will eventually consider longer sequences of tasks, most of the important points of the model can be illustrated with just two tasks.
-We start by introducing task automation and AI chains explicitly.
+Consider a job consisting of two sequential tasks, indexed as $1$ and $2$.
+We start by formally introducing task automation and AI chains.
 \begin{definition}[Automated Task]
 \label{def:automated_task}
 A task is said to be automated if it is executed entirely by AI without direct human intervention, and its output is passed directly to a subsequent AI-executed task.
-The direct human costs associated with an automated task are $(0,0)$.
+The direct human costs (in both skill and time dimension) associated with an automated task are zero.
 \end{definition}
 
 \begin{definition}[AI Chain]
 \label{def:ai_chain}
 An AI (or machine) chain is a contiguous block of two or more sequential tasks executed by AI, in which all tasks but the final one are automated, and the final task is augmented.
-An AI chain spanning tasks $(1,\dots,n)$ has tasks $(1,\dots,n-1)$ automated and task $n$ augmented.
+An AI chain spanning tasks $(1,\dots,r)$ has tasks $(1,\dots,r-1)$ automated and task $r$ augmented.
 The skill and time costs of an AI chain are given by:
 \[
-\left(\machinehc{n}, \frac{\machinetime{n}}{\prod_{s=1}^{n} q_s}\right),
+\left(\machinehc{r}, \frac{\machinetime{r}}{\prod_{s=1}^{r} q_s}\right),
 \]
 where $q_s$ denotes the AI success probability for task $s$.
 \end{definition}
-Automation is only feasible if the automated task is directly followed by at least one additional AI-executed task (either another automated task or an augmented task, which terminates the chain).
 
-In the two-task setting, each task can be executed according to the following constraints:
+In the two-tasks setting, each task can be executed according to the following constraints:
 \begin{enumerate}
 \item Task $1$ can be executed manually, augmented by AI, or automated by AI.
-\item Task $2$, being the last task, can only be executed manually or augmented by AI, since automation requires a subsequent AI-executed task.
+\item Task $2$, being the last task, can only be executed manually or augmented by AI, since automation requires a subsequent AI-executed task which cannot apply to Task 2.
 \end{enumerate}
 
 For notation, when a human performs the task without AI, we denote it as $\human{\cdot}$.
 When an AI attempts the task, we denote it as $\machine{\cdot}$.
-In the three tasks occupation example, if in the [1][2][3] design the first task was done by AI and the other two by humans without AI, we would write $\machine{1}\human{2}\human{3}$.
+In the three tasks occupation example from earlier, if in the [1][2][3] design the first task is done by AI and the other two by humans without AI, we would write $\machine{1}\human{2}\human{3}$.
 
 Denote the corresponding AI success probabilities of Task 1 and 2 with \(q_1\) and \(q_2\). 
 Let $\cost{.}$ show the total cost of completing an arrangement of tasks.
 With two tasks, there are four possible ``direct'' production arrangements:
 \begin{align*}
-    \cost{\human{1}\human{2}} &= \humanhc{1} \humantime{1} + \humanhc{2} \humantime{2} & \text{(fully human)}, \\
-    \cost{\machine{1}\human{2}} &= \machinehc{1} \frac{\machinetime{1}}{q_1} + \humanhc{2} \humantime{2} & \text{(partial augmentation)}, \\
-    \cost{\human{1}\machine{2}} &= \humanhc{1} \humantime{1} + \machinehc{2} \frac{\machinetime{2}}{q_2} & \text{(partial augmentation)}, \\
-    \cost{\machine{1}\machine{2}} &= \machinehc{1} \frac{\machinetime{1}}{q_1} + \machinehc{2} \frac{\machinetime{2}}{q_2} & \text{(independent augmentation)}.
+    \cost{\human{1}\human{2}} &= \humanhc{1} \; \humantime{1} + \humanhc{2} \; \humantime{2} & \text{(fully human)}, \\
+    \cost{\machine{1}\human{2}} &= \machinehc{1} \; \frac{\machinetime{1}}{q_1} + \humanhc{2} \; \humantime{2} & \text{(partial augmentation)}, \\
+    \cost{\human{1}\machine{2}} &= \humanhc{1} \; \humantime{1} + \machinehc{2} \; \frac{\machinetime{2}}{q_2} & \text{(partial augmentation)}, \\
+    \cost{\machine{1}\machine{2}} &= \machinehc{1} \; \frac{\machinetime{1}}{q_1} + \machinehc{2} \; \frac{\machinetime{2}}{q_2} & \text{(independent augmentation)}.
 \end{align*}
 In the arrangement $\machine{1}\human{2}$, task 1 is augmented; in $\human{1}\machine{2}$, task 2 is augmented; and in $\machine{1}\machine{2}$, both tasks 1 and 2 are augmented.  
 
@@ -745,26 +705,26 @@ When tasks are chained, denoted by $\machine{1|2}$, they are executed by the AI 
 The AI must succeed in \emph{both} tasks for the chain to be successful in a single attempt.
 The cost of this arrangement is:
 \begin{align*}
-\cost{\machine{1|2}} &= \machinehc{2} \frac{\machinetime{2}}{q_1 q_2} & \text{(chained automation)}.
+\cost{\machine{1|2}} &= \machinehc{2} \; \frac{\machinetime{2}}{q_1 q_2} & \text{(chained automation)}.
 \end{align*}
 This captures the notion of agentic AI that can complete a sequence of tasks autonomously, without human intervention between the two tasks.
 The complete cost function for this production is given by:
 \begin{align}
   \min \left\{ 
-  \humanhc{1} \humantime{1} + \humanhc{2} \humantime{2}, \;\; 
-  \machinehc{1} \frac{\machinetime{1}}{q_1} + \humanhc{2} \humantime{2}, \;\; 
-  \humanhc{1} \humantime{1} + \machinehc{2} \frac{\machinetime{2}}{q_2}, \;\; 
-  \machinehc{1} \frac{\machinetime{1}}{q_1} + \machinehc{2} \frac{\machinetime{2}}{q_2}, \;\; 
-  \machinehc{2} \frac{\machinetime{2}}{q_1 q_2}
+  \humanhc{1} \; \humantime{1} + \humanhc{2} \; \humantime{2}, \;\; 
+  \machinehc{1} \; \frac{\machinetime{1}}{q_1} + \humanhc{2} \; \humantime{2}, \;\; 
+  \humanhc{1} \; \humantime{1} + \machinehc{2} \; \frac{\machinetime{2}}{q_2}, \;\; 
+  \machinehc{1} \; \frac{\machinetime{1}}{q_1} + \machinehc{2} \; \frac{\machinetime{2}}{q_2}, \;\; 
+  \machinehc{2} \; \frac{\machinetime{2}}{q_1 q_2}
   \right\}.
 \end{align}
 Note that as each term is linear in the cost parameters, the overall cost function is convex.
 
-Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of \(q_1\) and \(q_2\), with fixed \(\humantime{1} = \humantime{2} = 3\) and equal skill costs normalized to 1: \(\machinetime{1} = \machinetime{2} = 1\) and \(\humanhc{1} = \humanhc{2} = \machinehc{1} = \machinehc{2} = 1\).
-It partitions the \(q_1\) and \(q_2\) space into five regions, corresponding to the five production arrangements.
-According to Proposition~\ref{proposition:single}, the ratio 
+Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of \(q_1\) and \(q_2\), with time costs \(\humantime{1} = \humantime{2} = 3\) and skill costs as well as management time costs all set to 1: \(\machinetime{1} = \machinetime{2} = 1\) and \(\humanhc{1} = \humanhc{2} = \machinehc{1} = \machinehc{2} = 1\).
+The figure partitions the \(q_1\) and \(q_2\) space into five regions, corresponding to the five production arrangements.
+According to Proposition~\ref{prop:single}, the ratio 
 \[
-\underline{q} := \frac{\machinehc{} \machinetime{}}{\machinehc{} \humantime{}}
+\underline{q} := \frac{\machinehc{} \; \machinetime{}}{\humanhc{} \; \humantime{}}
 \]
 is the threshold for augmenting a task.
 Interior to this \(\underline{q}\)-box, we strictly have human production for both tasks, or \(\human{1}\human{2}\).
@@ -773,7 +733,7 @@ However, once either task switches augmentation, we gain from increasing AI qual
 These regions are the \(\machine{1}\human{2}\) and \(\human{1}\machine{2}\) regions.
 
 \begin{figure}[h!]
-  \caption{Cost-minimizing production arrangements with two tasks with levels of AI capabilities} \label{fig:two_tasks}
+  \caption{Cost-minimizing production arrangements with two tasks with different AI success probabilities} \label{fig:two_tasks}
   \begin{center}
   \includegraphics[width = 0.8 \textwidth]{plots/two_tasks.pdf} \\
   \end{center}
@@ -803,7 +763,7 @@ does not imply
 \end{proposition}
 \begin{proof}
 A single counterexample suffices to show this.
-Take both human and machine human capital requirements to be the same and normalized to one: \(\humanhc{} = \machinehc{} = 1\).
+Take both human and AI skill requirements to be the same and normalized to one: \(\humanhc{} = \machinehc{} = 1\).
 Consider the parameter values $q_1 = \frac{3}{5}$, $q_2 = \frac{4}{5}$, $\humantime{} = \frac{3}{2}$, and $\machinetime{} = 1$.
 For task 1 in isolation, human performance is more cost-effective:
 \[
@@ -818,39 +778,39 @@ However, the chained tasks arrangement has a lower cost despite the human's comp
 %In Appendix~\ref{app:AI_capability_inv_comp_stat} we discuss the comparative statics of investment in AI capabilities.
 
 
-\subsection{Tasks sequences with \(n > 2\) tasks}
-Now we consider a job that is a sequence of \(n\) tasks, indexed as \(\{1, 2, \ldots, n\}\), to be performed.
-Table~\ref{tab:tree} illustrates the possibilities with \(n=3\) tasks in a tree.
-
+\subsection{Production with \(n > 2\) Tasks: Dynamic Programming}
+Now consider a production process consisting of a sequence of \(n\) tasks, indexed as \(\{1, 2, \ldots, n\}\).
+First, Table~\ref{tab:tree} illustrates that increasing the number of tasks from $n=2$ to $n=3$ introduces substantially more complexity in number of possible production arrangements (form 5 for $n=2$ to 13 for $n=3$).
 \begin{table}
   \centering
-  \caption{The possible production scenarios with an \(n \in \{1,2,3\}\) tasks job}
+  \caption{The possible scenarios with \(n \in \{1,2,3\}\) tasks production}
   \label{tab:tree}
   \begin{tabular}{ccc}
   \hline
   1 Task & 2 Tasks & 3 Tasks \\
   \hline
-  $\langle 1 \rangle$ & $\langle 1 \rangle \langle 2 \rangle$ & $\langle 1 \rangle \langle 2 \rangle \langle 3 \rangle$ \\
-  $(1)$ & $\langle 1|2 \rangle$ & $\langle 1 \rangle \langle 2|3 \rangle$ \\
-  & $\langle 1 \rangle (2)$ & $\langle 1|2 \rangle \langle 3 \rangle$ \\
-  & $(1) \langle 2 \rangle$ & $\langle 1|2|3 \rangle$ \\
-  & $(1) (2)$ & $\langle 1 \rangle (2) \langle 3 \rangle$ \\
-  & & $\langle 1 \rangle (2) (3)$ \\
-  & & $(1) \langle 2 \rangle \langle 3 \rangle$ \\
-  & & $(1) \langle 2 \rangle (3)$ \\
-  & & $(1) (2) \langle 3 \rangle$ \\
-  & & $(1) (2) (3)$ \\
+  $(1)$ & $(1)(2)$ & $(1)(2)(3)$ \\
+  $\langle 1 \rangle$ & $(1)\langle 2 \rangle$ & $(1)\langle 2\rangle(3)$ \\
+   & $\langle 1 \rangle(2)$ & $(1)(2)\langle 3\rangle$ \\
+   & $\langle 1 \rangle\langle 2 \rangle$ & $(1)\langle 2\rangle\langle 3\rangle$ \\
+   & $\langle 1|2 \rangle$ & $(1)\langle 2|3\rangle$ \\
+   & & $\langle 1\rangle(2)(3)$ \\
+   & & $\langle 1\rangle\langle 2\rangle(3)$ \\
+   & & $\langle 1|2\rangle(3)$ \\
+   & & $\langle 1\rangle(2)\langle 3\rangle$ \\
+   & & $\langle 1\rangle\langle 2\rangle\langle 3\rangle$ \\
+   & & $\langle 1|2\rangle\langle 3\rangle$ \\
+   & & $\langle 1\rangle\langle 2|3\rangle$ \\
+   & & $\langle 1|2|3\rangle$ \\
   \hline
   \end{tabular}
 \end{table}
-
-As we see, increasing the number of tasks to \(n=3\) introduces substantially more complexity.
-The number of valid arrangements for \(n\) tasks is given by Proposition~\ref{proposition:num_arrangements}.
+The number of valid arrangements in the general case with $n$ tasks is given by Proposition~\ref{proposition:num_arrangements}.
 Specifically, the proposition shows that the number of ways to arrange \(n\) tasks is the Fibonacci number \(F(2n+1)\), where \(F(0) = 1\).
 For example, when \(n=1\), there are two possibilities---either \(\human{1}\) or \(\machine{1}\)---so \(F(3) = 2\).
-With two tasks, we have \(F(5) = 5\) possible arrangements, and so on.
+With two tasks, we have \(F(5) = 5\) possible arrangements; with three tasks, we have $F(7)=13$ arrangements, and so on.
 
-\begin{proposition}[Recurrence for Valid Arrangements] \label{proposition:num_arrangements}
+\begin{proposition}[Recursion for Valid Arrangements] \label{proposition:num_arrangements}
   Let \(f(n)\) denote the number of valid arrangements of \(n\) tasks in a job, where each task can be either performed fully by a human (exactly one task per human block) or as part of a machine chain (a consecutive sequence of automated and augmented tasks). Then the following recurrence holds:
   \[
   f(n) = f(n-1) + \sum_{s=1}^{n} f(n-s),
@@ -862,7 +822,7 @@ With two tasks, we have \(F(5) = 5\) possible arrangements, and so on.
 Consider the first block in the arrangement of \(n\) tasks:
 \begin{itemize}
     \item \textbf{Case 1: Human block.} If the first task is performed fully by a human, then the remaining \((n-1)\) tasks can be arranged in any valid way. This contributes \(f(n-1)\) arrangements.
-    \item \textbf{Case 2: Machine chain.} If the first block is a machine chain covering \(\ell\) tasks (\(1 \leq \ell \leq n\)), then the remaining \((n-\ell)\) tasks can be arranged in any valid way. Summing over all possible lengths of the first machine chain gives \(\sum_{s=1}^{n} f(n-s)\) arrangements.
+    \item \textbf{Case 2: AI chain.} If the first block is a machine chain covering \(\ell\) tasks (\(1 \leq \ell \leq n\)), then the remaining \((n-\ell)\) tasks can be arranged in any valid way. Summing over all possible lengths of the first machine chain gives \(\sum_{s=1}^{n} f(n-s)\) arrangements.
 \end{itemize}
 Adding the contributions from both cases, we obtain:
 \[
@@ -870,78 +830,91 @@ f(n) = f(n-1) + \sum_{s=1}^{n} f(n-s).
 \]
 \end{proof}
 
-In the next section, we express the firm's cost minimization problem as a dynamic programming problem.
 
-
-
-
-%%%%%%%%%%%%%%%% Dynamic Programming %%%%%%%%%%%%%%%%
-\section{Dynamic Programming}
-\subsection{Recursive Formulation}
+\subsubsection{Recursive Cost Formulation of DP Problem}
 \label{sec:recursive_formulation}
-Finding the minimum cost arrangement of tasks in an occupation with any given number of tasks can be formulated as a dynamic programming problem.
-Consider an occupation consisting of $\tau=n$ tasks, indexed by $i = 1,\dots,n$.
-Define $V(i)$ as the minimum cost required to complete tasks $1$ through $i$, including any potential handoff cost incurred while switching jobs at task $i < n$.
+Finding the minimum cost arrangement of tasks and the optimal job design can be formulated as a dynamic programming problem.
+Here we present a recursive formulation of the firm's cost minimization problem and in section \ref{sec:DP_approximation} propose an approach to calculate an approximation of the DP problem's solution.
 
-To fully characterize the dynamic programming solution, we introduce an auxiliary function $W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j})$.
-This function denotes the minimum cost of completing tasks $1$ through $i$ plus an additional set of tasks $\mathcal{J}_j$ assigned to a single worker $j$ (referred to as ``active worker'').
-The active worker $j$'s assigned set $\mathcal{J}_j$ may contain zero or more tasks, with cumulative skill and time costs given by:
+Consider an occupation with $n$ tasks, indexed by \(i = 1, 2, \ldots, n\).
+Define $V(i,j)$ as the minimum cost required to complete tasks $1$ through $i$, given exactly $j$ distinct jobs have been created so far.
+The function $V(i,j)$ includes all job hand-off costs incurred between previous jobs \emph{and} the current job $j$, which, by construction, ends precisely with task $i$.
+
+To fully characterize the DP solution, we introduce an auxiliary function $W(i,\; j,\; \hccost{\J},\; \timecost{\J})$.
+This function denotes the minimum cost of completing tasks $1$ through $i$, as well as an additional set of tasks $\J$ assigned to worker $j$ (referred to as ``active worker''). 
+This function $W(i,\; j,\; \hccost{\J},\; \timecost{\J})$ includes hand-off costs between previous jobs but, unlike $V(i,j)$, excludes any hand-off cost associated with the current active job.
+The active worker $j$'s assigned set $\J$ may contain zero or more tasks, with cumulative skill and time costs given by:
 \[
-\hccost{\mathcal{J}_j} = v_L + \sum_{k \in \mathcal{J}_j} \hccost{k}, 
+\hccost{\J} = \sum_{k \in \J} \hccost{k}, 
 \quad
-\timecost{\mathcal{J}_j} = \sum_{k \in \mathcal{J}_j} \timecost{k}.
+\timecost{\J} = \sum_{k \in \J} \timecost{k}.
 \]
+Note that the set $\J$ assigned to active worker $j$ is not necessarily final, as additional tasks beyond task $i$ could still be assigned to the worker in subsequent steps.
+In this sense, $W(i,\; j,\; \hccost{\J},\; \timecost{\J})$ captures the minimum cost across all feasible execution plans that may potentially expand active worker $j$'s task assignment.
 
-Note that the set $\mathcal{J}_j$ assigned to worker $j$ is not necessarily final, as additional tasks beyond task $i$ could still be assigned to worker $j$ in subsequent steps.
-In this sense, the function $W(\cdot)$ captures the minimum cost across all feasible execution plans that may potentially expand active worker $j$'s task assignment.
-The subscript $\mathcal{J}_j$ should not be confused with a predetermined job assignment used in earlier parts of the paper.
-Rather, $\mathcal{J}_j$ represents the set of tasks currently assigned to active worker $j$ during the recursive calculation.
-Once the recursion concludes and the optimal execution plan is determined, the set $\mathcal{J}_j$ will correspond precisely to the optimal job assignment of each worker.
+Below definition links the two cost functions $V(\cdot)$ and $W(\cdot)$.
+\begin{definition}
+\label{def:V_W}
+For all $i \leq n$, we have $V(i,j) = W(i,\; j,\; 0,\; \handofftime{i})$.
+\end{definition}
+Definition~\ref{def:V_W} reflects the idea that, in $V(i,j)$, job $j$ ends precisely with task $i$, as no further tasks are considered at this stage.
+Consequently, the hand-off cost associated with task $i$ must be incurred immediately by worker $j$.
+Equivalently, this can be thought of as assigning worker $j$ an additional task with zero skill requirement but a time cost equal to the hand-off cost of task $i$ right after task $i$ itself.
+This scenario is represented explicitly by $W(i,\; j,\; 0,\; \handofftime{i})$.
 
-Define $V(n) = W(n, 0, 0)$ and $V(i) = W(i, 0, \handofftime{i})$ for all $i < n$.
-Intuitively, this captures the notion that evaluating the cost of completing tasks $1$ through $i$ involves adding an extra ``imaginary'' task with zero skill cost and a time cost equal to the hand-off time $\handofftime{i}$ at the end of task $i$. 
-This holds for all tasks at the job boundaries except the last task, $n$, in the production sequence.
-The solution to the firm's overall cost minimization problem is then given by $V(n)$.
+The solution to the firm's overall cost minimization problem is given by $V(n,\; J)$, where $J$ denotes the optimal number of jobs.
+Note that, by the definition given in \ref{sec:handoff_intro}, the last task in the production process has no hand-off costs associated with it (i.e., $\handofftime{n} = 0$).
+Thus, for the last task we trivially have $V(n, J) = W(n,\; J,\; 0,\; 0)$.
+The optimal solution of the dynamic programming problem is characterized by the recursive formulation provided in Proposition~\ref{prop:recursive_optimality}.
 
-The optimal solution can be characterized using the following recursive formulation:
-\begin{proposition}[Recursive Optimality]
+\begin{proposition}[Recursive Formulation of Job Design Problem]
 \label{prop:recursive_optimality}
 Define the base case for $i=0$ as:
 \[
-W(0, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j}) 
-= \Bigl(v_L + \hccost{\mathcal{J}_j} \Bigr) \; \timecost{\mathcal{J}_j}, 
-\quad\text{for all $\hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j}$}.
+W(0,\; 0,\; \hccost{\J},\; \timecost{\J}) 
+= 
+\left(v_L + \hccost{\J}\right) \timecost{\J}, 
+\quad
+\text{for all $\hccost{\J}, \timecost{\J}$}.
 \]
-Then, for each $i \geq 1$, the minimum cost $W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j})$ satisfies the recursive relation:
+Then, for each $i \geq 1$, the minimum cost function $W(i,\; j,\; \hccost{\J},\; \timecost{\J})$ satisfies the following recursive relation:
 \begin{align*}
-W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j}) 
+W(i,\; j,\; \hccost{\J},\; \timecost{\J})
 = \min\Biggl\{ 
-& \Bigl(v_L + \hccost{\mathcal{J}_j} \Bigr) \; \timecost{\mathcal{J}_j} + V(i), \\
-& \ W(i-1,\; \hccost{\mathcal{J}_j} + \humanhc{i},\; \timecost{\mathcal{J}_j} + \humantime{i}), \\
-& \ \min_{r \geq 1} W\left(i - r,\; \hccost{\mathcal{J}_j} + \machinehc{i},\; \timecost{\mathcal{J}_j} + \frac{\machinetime{i}}{\prod_{s=i-r+1}^{i} q_s}\right)
+& \left(v_L + \hccost{\J}\right) \timecost{\J} \; + \; V(i,j), \\
+& \ W(i-1,\; j,\; \hccost{\J} + \humanhc{i},\; \timecost{\J} + \humantime{i}), \\
+& \ \min_{r \geq 1} \ W\left(i - r,\; j,\; \hccost{\J} + \machinehc{i},\; \timecost{\J} + \frac{\machinetime{i}}{\prod_{s=i-r+1}^{i} q_s}\right)
 \Biggr\}.
 \end{align*}
+The cost of the optimal job design for a sequence of $n$ tasks is $V(n,\; J) = W(n,\; J,\; 0,\; 0)$, where $J$ is the optimally determined number of jobs.
 \end{proposition}
-In words:
+
+The recursive formulation in Proposition~\ref{prop:recursive_optimality} evaluates the minimum cost among three distinct alternatives at each step:
 \begin{itemize}
-    \item Option (1) corresponds to ending active worker $j-1$'s job assignment at task $i$, incurring the hand-off cost $\handofftime{i}$ (through definition of $V(i)$), and then proceeding forward with the new (active) worker $j$ to decide for subsequent tasks.
-    \item Option (2) corresponds to continuing active worker $j$'s job by assigning task $i$ to be performed manually, adding manual execution costs $(\humanhc{i}, \humantime{i})$ to the cost of current collection of tasks $\mathcal{J}_j$ without incurring any hand-off cost at this stage.
-    \item Option (3) corresponds to completing task $i$ in an AI-augmented manner, possibly chained with preceding automated tasks, thus adding the corresponding AI management costs to the current collection of tasks $\mathcal{J}_j$.
+    \item \textbf{Option (1):} The term $\left(v_L + \hccost{\J}\right) \timecost{\J} \; + \; V(i,j)$ corresponds to terminating active worker $j$'s job at task $i$, and assigning the tasks in set $\J$ to worker $j+1$. 
+    This requires worker $j$ to incur the hand-off cost of task $i$, which is captured through $V(i,j)$.
+
+    \item \textbf{Option (2):} The term $W(i-1,\; j,\; \hccost{\J} + \humanhc{i},\; \timecost{\J} + \humantime{i})$ corresponds to assigning task $i$ to the current active worker $j$ for manual completion. 
+    In this case, the manual execution costs $(\humanhc{i}, \humantime{i})$ of task $i$ are added to the accumulated costs of tasks already assigned to worker $j$, extending their job (from task $i-1$) to include task $i$ as well.
+
+    \item \textbf{Option (3):} The term $\min_{r \geq 1} \ W\left(i - r,\; j,\; \hccost{\J} + \machinehc{i},\; \timecost{\J} + \frac{\machinetime{i}}{\prod_{s=i-r+1}^{i} q_s}\right)$ also corresponds to extending active worker $j$'s job from $i-1$ to $i$, but by having them perform task $i$ in an AI-augmented manner. 
+    This way task $i$ is chained with zero or more preceding (automated) tasks, adding the associated optimal AI management costs to the active worker $j$'s task set at task $i-1$.
 \end{itemize}
+Note that in evaluating option (3) of the recursive step for $W(i,\; j,\; \hccost{\J},\; \timecost{\J})$, task $i$ can only be augmented (rather than automated) as there are no subsequent tasks in the sequence at that stage.
+Automation of task $i$ is permissible only in cost calculations for subsequent tasks $i+1, \dots, n$.
 
-Note that in the recursive step for $W(i, \hccost{\mathcal{J}_j}, \timecost{\mathcal{J}_j})$, if task $i$ is completed by the AI it can only be augmented (not automated) as it is the final task under consideration for the active worker at this point. 
-Task $i$ can be considered for automation only when calculating $W(.)$ for subsequent tasks $i+1, \dots, n$.
 
 
-\subsection{Approximation of the Dynamic Programming Problem Solution}
-We can solve for the optimal cost in the dynamic programming problem, filling in the values of $W(i, \hccost{}, \timecost{})$ for all $i$, $\hccost{}$, and $\timecost{}$.  
+\subsection{Approximation of the DP Problem's Solution}
+\label{sec:DP_approximation}
+We can solve for the optimal cost in the dynamic programming problem, filling in the values of $W(i,\; j,\; \hccost{},\; \timecost{})$ for all $i$, $\hccost{}$, and $\timecost{}$.  
 To make this a finite table, we will discretize all skill costs $\hccost{}$ and time costs $\timecost{}$ to powers of $(1+\epsilon)$, where $\epsilon > 0$ is an arbitrarily small error term.
 As time and skill costs are multiplied together to generate total costs, this discretization introduces a multiplicative error of at most $(1+\epsilon)^2$ into our cost calculations.
 
 Moreover, note that we also accumulate time and skill costs additively when chaining tasks together for a single worker.  
 But this results in a total multiplicative error of at most $(1+\epsilon)$ on the total time and skill costs, given that each individual time and skill cost is subject to a multiplicative rounding error up to $(1+\epsilon)$.
 
-Thus, if we fill in our table for all $W(i, \hccost{}, \timecost{})$ where $i \leq n$ and $\hccost{}$ and $\timecost{}$ are discretized into powers of $(1+\epsilon)$, ranging from the smallest individual task's time and skill costs up to the sum of the time and skill costs over all $n$ tasks (representing the worst-case accumulated cost), we obtain a $(1 + O(\epsilon))$ approximation to the optimal solution.
+Thus, if we fill in our table for all $W(i,\; j,\; \hccost{},\; \timecost{})$ where $i \leq n$ and $\hccost{}$ and $\timecost{}$ are discretized into powers of $(1+\epsilon)$, ranging from the smallest individual task's time and skill costs up to the sum of the time and skill costs over all $n$ tasks (representing the worst-case accumulated cost), we obtain a $(1 + O(\epsilon))$ approximation to the optimal solution.
 This computation runs in time polynomial in $n$, $\frac{1}{\epsilon}$. % and the ratio between the minimum and maximum individual task costs?
 In particular, the algorithm computes solutions for:
 \begin{itemize}
@@ -987,11 +960,11 @@ The firm essentially re-solves its job design problem specified in Equation~\ref
 \subsection{Short Run AI Improvements}
 
 In the short run, each task’s human‐capital requirement \(c_{i}\) is fixed at its previous level, while AI advances lower time costs from \(t_{i}\) to \(\widetilde t_{i}\).  
-These lower time costs can render the existing job design \(\{\mathcal{J}^{(0)}\}\) suboptimal, but reorganizing tasks requires a one‐off redesign expense.  
+These lower time costs can render the existing job design \(\{\J^{(0)}\}\) suboptimal, but reorganizing tasks requires a one‐off redesign expense.  
 The firm must choose between:  
 \begin{enumerate}
-  \item Keeping the current job design \(\{\mathcal{J}^{(0)}\}\) and capturing only the direct time‐cost savings, or  
-  \item Paying the redesign fee to shift to the new optimal job structure \(\{\mathcal{J}^*\}\) and fully exploit the improved AI.
+  \item Keeping the current job design \(\{\J^{(0)}\}\) and capturing only the direct time‐cost savings, or  
+  \item Paying the redesign fee to shift to the new optimal job structure \(\{\J^*\}\) and fully exploit the improved AI.
 \end{enumerate}
 We look at each scenario separately.
 
@@ -999,21 +972,21 @@ We look at each scenario separately.
 Firm's gains from AI improvements at its previous job design will be:
 \begin{equation}
 \label{eq:no_redesign_gains}
-\text{NoRedesignGains}(\mathcal{J}^{(0)}, \alpha)
+\text{NoRedesignGains}(\J^{(0)}, \alpha)
 :=
-\text{TotalCost}(\mathcal{J}^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\mathcal{J}^{(0)}; \widetilde{\hccost{}}, \widetilde{\timecost{}}).
+\text{TotalCost}(\J^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\J^{(0)}; \widetilde{\hccost{}}, \widetilde{\timecost{}}).
 \end{equation}
 This is the net gains \emph{only} from immediate time cost savings in the old job structure.
 Note that by definition, the time cost savings is weakly greater than zero, so the firm always deploys the new technology.\footnote{None of the implications of the model will change if we assume adoption of the new technology comes at a nonzero, fixed cost.}
 %Also, assuming reductions in costs in both dimensions are smooth the function above is a continuous function of $\alpha$.
 
 \paragraph{Scenario (2): Redesigning Jobs.}
-If the firm chooses to restructure jobs to the new optimal design \(\{\mathcal{J}^*\}\) its cost savings from this change will be:
+If the firm chooses to restructure jobs to the new optimal design \(\{\J^*\}\) its cost savings from this change will be:
 \begin{equation}
 \label{eq:job_redesign_direct_savings}
-\text{DirectRedesignGains}(\mathcal{J}^{(0)}, \alpha)
+\text{DirectRedesignGains}(\J^{(0)}, \alpha)
 :=
-\text{TotalCost}(\mathcal{J}^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\mathcal{J}^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}}).
+\text{TotalCost}(\J^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\J^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}}).
 \end{equation}
 This is the savings from \emph{both} exploiting the reduced time costs \emph{and} job redesign.
 Reallocating tasks to new jobs is costly though.
@@ -1023,45 +996,45 @@ The firm must incur two one-off costs for redesigning jobs:
 This can be interpreted as the administrative costs associated with reorganizing that job.
 \item A training cost for the \emph{new} set of skills workers need in their new jobs: the firm must compensate workers for acquiring new human capital.\footnote{If a task is removed from worker's job, no transfer is made between the worker and the firm, and the worker's human capital for doing that task immediately deprecates to 0.}
 \end{enumerate}
-The one-time cost of redesigning jobs from $\mathcal{J}^{(0)}$ to $\mathcal{J}^{*}$ is:
+The one-time cost of redesigning jobs from $\J^{(0)}$ to $\J^{*}$ is:
 \begin{equation}
 \label{eq:job_redesign_cost}
-\text{RedesignCosts}(\mathcal{J}^{(0)}, \alpha)
+\text{RedesignCosts}(\J^{(0)}, \alpha)
 :=
 \sum_{j=1}^{J}
 \Bigl[
-\underbrace{\kappa\,\mathbf1\{\mathcal{J}_j^*\neq\mathcal{J}_j^{(0)}\}}_{\text{Administrative redesign cost}}
+\underbrace{\kappa\,\mathbf1\{\J_j^*\neq\J_j^{(0)}\}}_{\text{Administrative redesign cost}}
 \;+\;
-\underbrace{\sum_{i\in\mathcal{J}_j^*\setminus\mathcal{J}_j^{(0)}}\hccost{ij}}_{\substack{
+\underbrace{\sum_{i\in\J_j^*\setminus\J_j^{(0)}}\hccost{i}}_{\substack{
 \text{Training cost of new tasks}\\ 
 \text{in the new design of job $j$}}
 }
 \Bigr].
 \end{equation}
-Notice that the redesign costs also depends on the AI quality parameter $\alpha$ since that determines the optimal job design $\mathcal{J}^{*}$.
+Notice that the redesign costs also depends on the AI quality parameter $\alpha$ since that determines the optimal job design $\J^{*}$.
 Total gains from job redesign will thus be:
 \begin{equation}
 \label{eq:job_redesign_gain}
-\text{TotalRedesignGains}(\mathcal{J}^{(0)}, \alpha)
+\text{TotalRedesignGains}(\J^{(0)}, \alpha)
 :=
-\text{DirectRedesignGains}(\mathcal{J}^{(0)}, \alpha)
+\text{DirectRedesignGains}(\J^{(0)}, \alpha)
 \;-\;
-\text{RedesignCosts}(\mathcal{J}^{(0)}, \alpha).
+\text{RedesignCosts}(\J^{(0)}, \alpha).
 \end{equation}
 
 Proposition~\ref{prop:shortrun_redesign} characterizes the firm’s short-run redesign decision.
 \begin{proposition}[Short-Run Job Redesign Decision] 
 \label{prop:shortrun_redesign}
-Let $\mathcal{J}^{(0)}$ be the current optimal partition (which by assumption is not the plan that fully automates every task in one long chain) and let $\mathcal{J}^*$ be the re-optimized partition under some improved AI quality.
-The firm switches from $\mathcal{J}^{(0)}$ to $\mathcal{J}^*$ in the short run if and only if:
+Let $\J^{(0)}$ be the current optimal partition (which by assumption is not the plan that fully automates every task in one long chain) and let $\J^*$ be the re-optimized partition under some improved AI quality.
+The firm switches from $\J^{(0)}$ to $\J^*$ in the short run if and only if:
 \[
-\mathrm{TotalCost}\bigl(\mathcal{J}^{(0)};\,\widetilde{\hccost{}},\,\widetilde{\timecost{}}\bigr)
+\mathrm{TotalCost}\bigl(\J^{(0)};\,\widetilde{\hccost{}},\,\widetilde{\timecost{}}\bigr)
 \;-\;
-\mathrm{TotalCost}\bigl(\mathcal{J}^*;\,\widetilde{\hccost{}},\,\widetilde{\timecost{}}\bigr)
+\mathrm{TotalCost}\bigl(\J^*;\,\widetilde{\hccost{}},\,\widetilde{\timecost{}}\bigr)
 \;\ge\;
-\mathrm{RedesignCost}\bigl(\mathcal{J}^{(0)},\,\mathcal{J}^*\bigr).
+\mathrm{RedesignCost}\bigl(\J^{(0)},\,\J^*\bigr).
 \]
-Furthermore, for any pre-shock design $\mathcal{J}^{(0)}$ (other than full automation) there exists a unique threshold $\tilde{\alpha}$ such that for all $\alpha>\tilde{\alpha}$ the above inequality holds strictly and the firm strictly prefers to redesign jobs.
+Furthermore, for any pre-shock design $\J^{(0)}$ (other than full automation) there exists a unique threshold $\tilde{\alpha}$ such that for all $\alpha>\tilde{\alpha}$ the above inequality holds strictly and the firm strictly prefers to redesign jobs.
 \end{proposition}
 See Appendix~\ref{app:shortrun_redesign_proof} for the proof.
 In words, Proposition~\ref{prop:shortrun_redesign} states that so long as pure gains from redesigning jobs is larger than its costs the firm will reallocate tasks even in the short run.
@@ -1071,20 +1044,20 @@ Moreover, the existence of a unique AI‐quality threshold implies a tipping‐p
 \subsection{Long Run AI Improvements}  
 
 Workers can retrain (redeploy human capital) and firms freely re‐partition tasks.
-The firm essentially re-solves its problem using the new time cost parameters \((\widetilde{\hccost{}}, \widetilde{\timecost{}})\), yielding a new, long-run optimal design \(\{\widetilde{\mathcal{J}_j}\}\).  
+The firm essentially re-solves its problem using the new time cost parameters \((\widetilde{\hccost{}}, \widetilde{\timecost{}})\), yielding a new, long-run optimal design \(\{\widetilde{\J_j}\}\).  
 In the new design:
 \begin{itemize}
-  \item The adjusted time costs \(\widetilde{\timecost{ij}}\) weakly decrease, and some tasks may drop out entirely if $\alpha$ is high enough (full automation, where either the time cost component or the human capital component of the task shrinks to 0).
+  \item The adjusted time costs \(\widetilde{\timecost{i}}\) weakly decrease, and some tasks may drop out entirely if $\alpha$ is high enough (full automation, where either the time cost component or the human capital component of the task shrinks to 0).
   \item The hand‐off component of the wage bill,
   \[
-    \sum_{j=1}^J \Bigl(v_L + \sum_{i\in\mathcal{J}_j}\widetilde{\hccost{ij}}\Bigr)\,\widetilde{\handofftime{j}},
+    \sum_{j=1}^J \Bigl(v_L + \sum_{i\in\J_j}\widetilde{\hccost{i}}\Bigr)\,\widetilde{\handofftime{j}},
   \]
   potentially falls because:
   \begin{itemize}
     \item the human‐capital terms decrease; and/or
     \item \(\widetilde{\handofftime{j}}\)s decline if AI chains tasks across jobs more efficiently, or assists with hand‐offs.
   \end{itemize}
-  \item New oversight tasks \(\{o\}\) enter \(\mathcal{T}\), redirecting effort toward exception handling and quality control. These tasks typically require less human capital \(\widetilde{\hccost{o}}\) than those they replace, lowering overall human capital requirements across the occupation.
+  \item New oversight tasks \(\{o\}\) enter \(\T\), redirecting effort toward exception handling and quality control. These tasks typically require less human capital \(\widetilde{\hccost{o}}\) than those they replace, lowering overall human capital requirements across the occupation.
 \end{itemize}
 One can imagine that the firm incurs a redesign cost similar to Equation~\ref{eq:job_redesign_cost} for the long-run redesign problem as well.
 
@@ -1092,6 +1065,7 @@ The next section introduces a general equilibrium model with many goods and prov
 
 
 %%%%%%%%%%%%%%%% General Equilibrium %%%%%%%%%%%%%%%%
+\begin{comment}
 \section{General Equilibrium}
 \label{sec:GE}
 
@@ -1103,19 +1077,19 @@ Consider an economy with $K$ final goods and the same production function as dis
 A single firm produces and trades all goods under perfect competition in separate markets.
 For each good $k \in \{1, 2,\ldots,K\}$, production requires completing an ordered set of tasks, denoted by:
 \[
-\mathcal{T}_k = \{1,2,\ldots,\tau_k\}.
+\T_k = \{1,2,\ldots,n_k\}.
 \]
-We refer to $\mathcal{T}_k$ as the production process for good $k$.
+We refer to $\T_k$ as the production process for good $k$.
 Notice that the equation above is essentially the same as Equation~\ref{eq:tasks} with the only difference being a subscript $k$ that denotes a typical final good in the $K$-good economy.
 
-Suppose the firm breaks down the production process $\mathcal{T}_k$ into $J^k$ jobs, each of which consist of a contiguous block of tasks.
-Let $\mathcal{J}_j^k$ denote the collection of tasks in job $j \in \{1, 2, \ldots, J^k\}$ in the production process of final good $k$.
-With this notation, the four potential job designs in the earlier example with $\tau_k=3$ tasks can be expressed as:
+Suppose the firm breaks down the production process $\T_k$ into $J^k$ jobs, each of which consist of a contiguous block of tasks.
+Let $\J_j^k$ denote the collection of tasks in job $j \in \{1, 2, \ldots, J^k\}$ in the production process of final good $k$.
+With this notation, the four potential job designs in the earlier example with $n_k=3$ tasks can be expressed as:
 \begin{align*}
-\{[1][2][3]\}_k \Longleftrightarrow \ J^k = 3:  & \quad \mathcal{J}^k_1 = \{1\}, \quad \ \ \ \mathcal{J}^k_2 = \{2\}, \quad \ \ \mathcal{J}^k_3 = \{3\}, \\
-\{[1,2][3]\}_k \Longleftrightarrow \ J^k = 2: & \quad \mathcal{J}^k_1 = \{1, 2\}, \ \ \ \mathcal{J}^k_2 = \{3\}, \\
-\{[1][2,3]\}_k \Longleftrightarrow \ J^k = 2: & \quad \mathcal{J}^k_1 = \{1\}, \quad \ \ \ \mathcal{J}^k_2 = \{2, 3\}, \\
-\{[1,2,3]\}_k \Longleftrightarrow \ J^k = 1: & \quad \mathcal{J}^k_1 = \{1,2,3\}.
+\{[1][2][3]\}_k \Longleftrightarrow \ J^k = 3:  & \quad \J^k_1 = \{1\}, \quad \ \ \ \J^k_2 = \{2\}, \quad \ \ \J^k_3 = \{3\}, \\
+\{[1,2][3]\}_k \Longleftrightarrow \ J^k = 2: & \quad \J^k_1 = \{1, 2\}, \ \ \ \J^k_2 = \{3\}, \\
+\{[1][2,3]\}_k \Longleftrightarrow \ J^k = 2: & \quad \J^k_1 = \{1\}, \quad \ \ \ \J^k_2 = \{2, 3\}, \\
+\{[1,2,3]\}_k \Longleftrightarrow \ J^k = 1: & \quad \J^k_1 = \{1,2,3\}.
 \end{align*}
 
 Assume that the worker employed in job $j$ produces an intermediate good $x_j^k$ and sells it to the firm in a perfectly competitive market.
@@ -1124,15 +1098,15 @@ The firm buys all intermediate goods $\{x_1^k, \ldots, x_{J^k}^k\}$ from workers
 x_k(x_1^k, \ldots, x_{J^k}^k) = min\{x_1^k, \ldots, x_{J^k}^k\}.
 \]
 This implies that, in equilibrium, the amount of final good $x_k$ produced is the same as the amount of each intermediate good $x_j^k$ used in production of that final good.
-This is merely a technical assumption reflecting the fact that to produce one unit of the final good each set of tasks in $\mathcal{T}_k$, across all $J^k$ jobs in sector $k$, must be performed exactly once.
-For example, in the case with $\tau_k=3$ in equilibrium we have:
+This is merely a technical assumption reflecting the fact that to produce one unit of the final good each set of tasks in $\T_k$, across all $J^k$ jobs in sector $k$, must be performed exactly once.
+For example, in the case with $n_k=3$ in equilibrium we have:
 \[
 x_k = x_1^k = x_2^k = x_3^k
 \]
 regardless of how the jobs are designed.
 
-We also assume that tasks in $\mathcal{T}_k\!$ are performed in fixed proportions.
-For instance, if task $m \in \mathcal{T}_k$ takes 30 minutes and task $n \in \mathcal{T}_k$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes spent on $m$ \underline{and} $n$ as both tasks must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.
+We also assume that tasks in $\T_k\!$ are performed in fixed proportions.
+For instance, if task $m \in \T_k$ takes 30 minutes and task $n \in \T_k$ (with $m \neq n$) takes 45 minutes, then producing one unit of good $k$ requires a total of 75 minutes spent on $m$ \underline{and} $n$ as both tasks must be performed exactly once; it is not possible to perform task $m$ multiple times while performing task $n$ only once.
 We formalize this assumption in Appendix~\ref{app:GE} where we explicitly characterize the equilibrium.
 
 
@@ -1165,9 +1139,9 @@ Let $k \in \{1, \cdots, K\}$ index sectors (or final goods) and $j \in \{1,\cdot
 Denote total labor employed in sector $k$ with $L_k$.
 Equilibrium prices $\big\{ \big\{ w_j^k, p_j^k \big\}_{j=1}^{J^k} \big\}_{k=1}^K$ are: 
 \begin{align*}
-\labor{j}^k =  \handofftime{j}^k + \sum_{i \in \mathcal{J}_j^k} \timecost{ij}^{k},
+\labor{j}^k =  \handofftime{j}^k + \sum_{i \in \J_j^k} \timecost{ij}^{k},
 & \qquad
-w_j^k =  v_L + \sum_{i \in \mathcal{J}_j^k} \hccost{ij}^{k}, 
+w_j^k =  v_L + \sum_{i \in \J_j^k} \hccost{ij}^{k}, 
 & \qquad
 p_j^k = w_j^k \labor{j}^k, \\
 \labor{}^k = \sum_{j=1}^{J^k} \labor{j}^k,
@@ -1186,7 +1160,7 @@ where
 \[
 R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
 \]
-The model implies that the job design in production process $\mathcal{T}_k$ (and thus human capital and time costs of tasks) determines $p^k$ and $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$ in equilibrium.
+The model implies that the job design in production process $\T_k$ (and thus human capital and time costs of tasks) determines $p^k$ and $\labor{}^k$, thereby fully determining the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$ in equilibrium.
 Appendix~\ref{app:GE} gives the full derivation details and further discusses comparative statics with respect to deploying AI for completing tasks (either in an augmented manner or automated manner).
 
 
@@ -1214,6 +1188,7 @@ Similarly, employment could rise (if total time requirements increase) or fall (
 
 \subsubsection{Long Run}  
 Workers optimally invest in the updated skill set $\{\widetilde{\hccost{i}}\}$, yielding a new wage schedule. Depending on the new cost pairs $\bigl(\widetilde{\hccost{i}},\,\widetilde{\timecost{i}}\bigr)$, worker wages may rise, fall, or remain unchanged.
+\end{comment}
 
 
 
@@ -1271,8 +1246,8 @@ This is counterbalanced by the higher mass on the left tail, indicating that som
 Next, we examine how co-occurring tasks are distributed across occupations. 
 Figure \ref{fig:occ_cooc} displays the distribution of occupation co-occurrence scores, defined as the average pairwise co-occurrence score of the tasks that comprise each occupation.
 Formally, for occupation $o$, the co-occurrence score is given by:
-$$C^o=\frac{1}{|\mathcal{T}_o| ( |\mathcal{T}_o|-1)} \sum_{i\in\mathcal{T}_o} \sum_{j\in\mathcal{T}_o,j\neq i} C_{ij},$$
-where $\mathcal{T}_o$ denotes the set of tasks in $o$. 
+$$C^o=\frac{1}{|\T_o| ( |\T_o|-1)} \sum_{i\in\T_o} \sum_{j\in\T_o,j\neq i} C_{ij},$$
+where $\T_o$ denotes the set of tasks in $o$. 
 A higher occupation co-occurrence score suggests that the tasks within the occupation are more likely to appear in pairs with other tasks, indicating a greater likelihood of completing the occupation in “blocks” or “pairs” of tasks. 
 We observe in the graph that the majority of occupations exhibit a substantial degree of co-occurrence, which is clearly not random.
 
@@ -1853,58 +1828,58 @@ In this Appendix we provide the proof of Proposition~\ref{prop:shortrun_redesign
 \begin{proof}
 Define
 \[
-\Delta\mathrm{Gain}(\mathcal{J}^{(0)}, \alpha)
+\Delta\mathrm{Gain}(\J^{(0)}, \alpha)
 :=
-\mathrm{TotalRedesignGains}(\mathcal{J}^{(0)}, \alpha)\;-\;\text{NoRedesignGains}(\mathcal{J}^{(0)}, \alpha),
+\mathrm{TotalRedesignGains}(\J^{(0)}, \alpha)\;-\;\text{NoRedesignGains}(\J^{(0)}, \alpha),
 \]
 the extra payoff from redesign versus pure time‐savings under the advanced AI.  
 By construction the firm redesigns exactly when $\Delta\mathrm{Gain}(\alpha)\ge0$.  
 Using the definition of each term from Equation~\ref{eq:job_redesign_direct_savings} and~\ref{eq:job_redesign_gain}, the firm redesigns jobs when:
 \begin{align*}
-\Delta\text{Gain}(\mathcal{J}^{(0)}, \alpha)
+\Delta\text{Gain}(\J^{(0)}, \alpha)
 & =
-\text{TotalCost}(\mathcal{J}^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\mathcal{J}^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}})
+\text{TotalCost}(\J^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\J^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}})
 -
-\text{RedesignCosts}(\mathcal{J}^{(0)}, \mathcal{J}^{*}) \nonumber \\
+\text{RedesignCosts}(\J^{(0)}, \J^{*}) \nonumber \\
 & \quad -
-\Bigl[\text{TotalCost}(\mathcal{J}^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\mathcal{J}^{(0)}; \widetilde{\hccost{}}, \widetilde{\timecost{}})\Bigr] \nonumber \\
+\Bigl[\text{TotalCost}(\J^{(0)}; \hccost{}, \timecost{}) - \text{TotalCost}(\J^{(0)}; \widetilde{\hccost{}}, \widetilde{\timecost{}})\Bigr] \nonumber \\
 & =
-\text{TotalCost}(\mathcal{J}^{(0)}; \widetilde{\hccost{}}, \widetilde{\timecost{}})
+\text{TotalCost}(\J^{(0)}; \widetilde{\hccost{}}, \widetilde{\timecost{}})
 - 
-\text{TotalCost}(\mathcal{J}^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}})
+\text{TotalCost}(\J^{*}, \widetilde{\hccost{}}, \widetilde{\timecost{}})
 -
-\text{RedesignCosts}(\mathcal{J}^{(0)}, \mathcal{J}^{*}) \nonumber \\
+\text{RedesignCosts}(\J^{(0)}, \J^{*}) \nonumber \\
 & \geq 0, \nonumber
 \end{align*}
 which establishes the first claim.
 
-For the threshold argument, fix $\alpha_0$ such that $\mathcal{J}^{(0)}$ is optimal at $\alpha_0$.
-For any partition $\mathcal{J}$ define
+For the threshold argument, fix $\alpha_0$ such that $\J^{(0)}$ is optimal at $\alpha_0$.
+For any partition $\J$ define
 \[
-C_{\mathcal{J}}(\alpha)
+C_{\J}(\alpha)
 :=
-\mathrm{TotalCost}\bigl(\mathcal{J}; \widetilde{\hccost{}}(\alpha), \widetilde{\timecost{}}(\alpha)\bigr).
+\mathrm{TotalCost}\bigl(\J; \widetilde{\hccost{}}(\alpha), \widetilde{\timecost{}}(\alpha)\bigr).
 \]
-Since $\widetilde t_{ij}(\alpha)$ and $\widetilde c_{ij}(\alpha)$ are weakly decreasing and continuous in~$\alpha$, each $C_{\mathcal{J}}(\alpha)$ is also weakly decreasing and continuous.
+Since $\widetilde t_{ij}(\alpha)$ and $\widetilde c_{ij}(\alpha)$ are weakly decreasing and continuous in~$\alpha$, each $C_{\J}(\alpha)$ is also weakly decreasing and continuous.
 Let
 \[
 D(\alpha)
 :=
-\bigl[C_{\mathcal{J}^{(0)}}(\alpha)-C_{\mathcal{J}^*}(\alpha)\bigr]
+\bigl[C_{\J^{(0)}}(\alpha)-C_{\J^*}(\alpha)\bigr]
 \;-\;
 \mathrm{RedesignCost}.
 \]
-Because $\mathcal{J}^{(0)}$ is optimal at $\alpha_0$, $D(\alpha_0)\le0$.  
-By assumption there exists $\alpha_1>\alpha_0$ for which $D(\alpha_1)>0$ and the firm redesigns jobs to some $\mathcal{J}^{*} \neq \mathcal{J}^{(0)}$.  
-\footnote{This argument requires that as $\alpha$ increases some optimal $\mathcal{J}^{*} \neq \mathcal{J}^{(0)}$ exists.
+Because $\J^{(0)}$ is optimal at $\alpha_0$, $D(\alpha_0)\le0$.  
+By assumption there exists $\alpha_1>\alpha_0$ for which $D(\alpha_1)>0$ and the firm redesigns jobs to some $\J^{*} \neq \J^{(0)}$.  
+\footnote{This argument requires that as $\alpha$ increases some optimal $\J^{*} \neq \J^{(0)}$ exists.
 This requirement rules out the fully-automated plan in which an exceptionally efficient AI does all the tasks in one long automated chain: if we start with the fully-automated plan no matter how much we improve the AI quality, no other job structure will become optimal.}
 Continuity of $D$ on $[\alpha_0,\alpha_1]$ implies, via the Intermediate Value Theorem, a unique $\tilde\alpha\in(\alpha_0,\alpha_1)$ with $D(\tilde\alpha)=0$.  
-Moreover, since $D(\alpha)$ is strictly increasing whenever $C_{\mathcal{J}^{(0)}}-C_{\mathcal{J}^*}$ strictly increases, $\tilde\alpha$ is the unique AI‐quality threshold above which the firm strictly prefers redesign.
+Moreover, since $D(\alpha)$ is strictly increasing whenever $C_{\J^{(0)}}-C_{\J^*}$ strictly increases, $\tilde\alpha$ is the unique AI‐quality threshold above which the firm strictly prefers redesign.
 \end{proof}
 
 
 
-
+\begin{comment}
 %%%%%%%%%%%%%%%% Equilibrium in the Task-Based Economy %%%%%%%%%%%%%%%%
 \section{Equilibrium in the Task-Based Economy}
 \label{app:GE}
@@ -1917,11 +1892,11 @@ In each sector, a worker employed in job $j$ produces an intermediate good $x_j$
 Let $\labor{j}$ denote the amount of labor per unit of good $x_j$ employed in job $j$.
 That is:  
 \[
-\labor{j} = \handofftime{j} + \sum_{i \in \mathcal{J}_j} \timecost{ij}.
+\labor{j} = \handofftime{j} + \sum_{i \in \J_j} \timecost{ij}.
 \]  
 The production cost per unit of $x_j$ can thus be written as:  
 \[
-\text{WageBill}_j = \Biggl(v_L + \sum_{i \in \mathcal{J}_j} \hccost{ij} \Biggr) \Biggl(\handofftime{j} + \sum_{i \in \mathcal{J}_j} \timecost{ij} \Biggr) = w_j \,\labor{j},
+\text{WageBill}_j = \Biggl(v_L + \sum_{i \in \J_j} \hccost{ij} \Biggr) \Biggl(\handofftime{j} + \sum_{i \in \J_j} \timecost{ij} \Biggr) = w_j \,\labor{j},
 \]  
 with $w_j$ being the wage rate for job $j$.
 Markets are perfectly competitive, therefore the price of intermediate good $j$, $p_j$, equals the marginal cost of its production $w_j\,\labor{j}$:
@@ -1980,7 +1955,7 @@ Given the Leontief production, this can be expressed as:
 With this, we can rewrite the household's earned income as:  
 \[
 I = \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} w_j^k \labor{j}^k \Bigg) x_k 
-= v_L + \Bigg[ \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} \bigg( \sum_{i \in \mathcal{J}_j} \hccost{ij}^k \bigg) \labor{j}^k \Bigg) x_k \Bigg],
+= v_L + \Bigg[ \sum_{k=1}^{K} \Bigg( \sum_{j=1}^{J_k} \bigg( \sum_{i \in \J_j} \hccost{ij}^k \bigg) \labor{j}^k \Bigg) x_k \Bigg],
 \]  
 implying that the household budget consists of two parts: a part that compensates the worker for his foregone leisure and a part that rewards him for the human capital he has acquired.
 
@@ -2025,9 +2000,9 @@ x_f^* = R_f\,x_1^* = \frac{R_f}{\sum_{k=1}^K \labor{}^k\,R_k}.
 Labor used in sector $k$ is given by $L_k^* = \labor{}^k\,x_k^*$.
 Thus, the equilibrium can be summarized as
 \begin{align*}
-w_j^k = \Biggl(v_L + \sum_{i \in \mathcal{J}_j^k} \hccost{ij}^{k}\Biggr), 
+w_j^k = \Biggl(v_L + \sum_{i \in \J_j^k} \hccost{ij}^{k}\Biggr), 
 & \qquad
-\labor{j}^k = \Biggl(\handofftime{j}^k + \sum_{i \in \mathcal{J}_j^k} \timecost{ij}^{k}\Biggr), \\
+\labor{j}^k = \Biggl(\handofftime{j}^k + \sum_{i \in \J_j^k} \timecost{ij}^{k}\Biggr), \\
 p_j^k = w_j^k \labor{j}^k,
 & \qquad
 p^k = w^k \labor{}^k = \sum_{j=1}^{J_k} w_j^k \labor{j}^k, \\
@@ -2039,15 +2014,15 @@ where
 \[
 R_k = \Bigl(\frac{p^1}{p^k} \cdot \frac{\delta_k}{\delta_1}\Bigr)^{\sigma}.
 \]
-In this way, the job design of the production process $\mathcal{T}_k$ (and thus the corresponding $\hccost{ij}^k$s and $\timecost{ij}^k$s) determines $p^k$, which then determines the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$.
+In this way, the job design of the production process $\T_k$ (and thus the corresponding $\hccost{ij}^k$s and $\timecost{ij}^k$s) determines $p^k$, which then determines the consumption bundle $\{x_k^*\}$ and the labor allocations $\{L_k^*\}$.
 
 
 \subsection{Comparative Statics with Respect to Improved AI Quality}
 
-Suppose AI affects a subset $\mathcal{A}_1 \subseteq \mathcal{T}_1$ of tasks in good~1’s production process.  
+Suppose AI affects a subset $\mathcal{A}_1 \subseteq \T_1$ of tasks in good~1’s production process.  
 This reduces the wage bill for good $1$:
 \[
-\sum_{j=1}^{J_1} \Biggl( v_L + \sum_{i \in \mathcal{J}_j^1} \hccost{ij}^{1} \Biggr) \labor{j}^1,
+\sum_{j=1}^{J_1} \Biggl( v_L + \sum_{i \in \J_j^1} \hccost{ij}^{1} \Biggr) \labor{j}^1,
 \]
 which in turn lowers $p^1$, while potentially also altering the job design.  
 The following comparative statics apply.
@@ -2444,5 +2419,6 @@ If AI improvement $\Delta q$ reduces the cost of key tasks in $X$, the labor eff
 \end{proposition}
 
 
+\end{comment}
 \end{document}
 
