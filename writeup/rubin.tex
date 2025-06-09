@@ -23,6 +23,7 @@
 \usepackage{color-edits}
 
 \addauthor[BL]{bl}{blue}
+\addauthor[PS]{ps}{red}
 
 %%%%%%%%%%%%%%%%%%%%
 % For appendix math formulas
@@ -345,6 +346,8 @@ Thus, although we use the subscript $j$ to indicate the hand-off between jobs, t
 \[ \handofftime{j} + \sum_{i \in J_j} \timecost{i}. \]
 %For simplicity, rather than explicitly indexing the final task of each job, we denote the hand-off cost between jobs $j$ and $j+1$ as $\handofftime{j}$.
 
+\pscomment{JJH's recommendation on immediately bringing the example table and graphs here?}
+
 \subsection{Total Cost of a Job Design}
 
 Given the cost model faced by a worker, we can now solve for wage rates that determine labor costs faced by the firm. Both the product and human capital markets are perfectly competitive, and workers are \emph{ex ante} identical, as in \cite{becker1992division}.
@@ -389,6 +392,13 @@ While there are exponentially many possible job designs, a simple dynamic progra
     In other words, we optimize over the choice of the final job $\{s+1, \dotsc, m\}$, accounting recursively for the optimal job design for remaining jobs.  Using this formulation, we can calculate each $C[m]$ in time $O(m)$ by considering each potential choice of $s$.  Doing so for each $m = 1, 2, \dotsc, n$ yields the value of $C[n]$ (and corresponding job design) in total time $O(n^2)$.
 \end{proof}
 
+\pscomment{Is it worthwhile to expand briefly on how heuristics could improve upon the $O(n^2)$ complexity bound? Consider a task that has a significantly large hand-off cost, yet moderate skill and time costs relative to its neighboring tasks. If clear cost inequalities hold---for example, if automating this task in a chain with its immediate successor is consistently cheaper than performing it manually or through augmentation---then this task can be directly automated without explicitly evaluating all alternatives.
+
+Or, if manual execution of a certain task consistently proves cheaper than any alternative, the original optimization problem could effectively split into smaller subproblems around that particular task (Of course, we should still carefully account for job boundaries and associated hand-off costs in such cases.).
+
+Exploiting insights like these might substantially improve the computation beyond the stated bound. But, I can't think of a structured way of incorporating these into the dynamic programming solution, aside from possibly brute-force evaluating different cost inequalities for each task before executing the DP algorithm.
+}
+
 \subsection{A Geometric Interpretation}
 
 Equation~\ref{eq:wagebill} admits a nice geometric interpretation.  
@@ -414,6 +424,7 @@ In the [1,2] design (right panel), both tasks are assigned to the same worker, s
     The wage bill of this job is the area of the rectangle with width $\timecost{1}+\timecost{2}$ and height $\hccost{1}+\hccost{2}$.
   \end{footnotesize}
 \end{figure}
+
 
 If we re-introduce non-zero switching costs, the firm’s cost‐minimization problem still admits a geometric interpretation.  
 Figure~\ref{fig:job_design} represents 
@@ -839,6 +850,7 @@ The complete cost function for this production is given by:
 \end{align}
 Note that as each term is linear in the cost parameters, the overall cost function is convex.
 
+\pscomment{The following lines implicitly refer to and use the the equalities about derivatives of costs w.r.t. success probabilities (and/or AI quality). Revise a bit or bring the formula here?}
 Figure~\ref{fig:two_tasks} shows the cost-minimizing production arrangement for different levels of \(q_1\) and \(q_2\), with time costs \(\humantime{1} = \humantime{2} = 3\) and skill costs as well as management time costs all set to 1: \(\machinetime{1} = \machinetime{2} = 1\) and \(\humanhc{1} = \humanhc{2} = \machinehc{1} = \machinehc{2} = 1\).
 The figure partitions the \(q_1\) and \(q_2\) space into five regions, corresponding to the five production arrangements.
 According to Observation~\ref{obs:single}, the ratio 
@@ -940,6 +952,8 @@ Intuitively, we expect the fragmentation index to be lower when highly automatab
 
 We will show that the fragmentation index is within a constant factor of the cost of the optimal automation strategy for a given job's task sequence.
 
+\pscomment{To Do: fix the language of job vs. occupation in the proposition (and another proposition earlier?).}
+
 \begin{proposition}
 \label{prop:fragmentation}
     Fix a single job with a sequence of $n$ tasks $\T = \{1, \dotsc, n\}$, each with $\machinetime{i} = 1$.  Let $FI$ denote its fragmentation index and let $OPT$ denote the minimum time cost over all automation strategies.  Then $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$.
@@ -990,6 +1004,12 @@ This scenario is represented explicitly by $W(i,\; 0,\; \handofftime{i})$.
 %The solution to the firm's overall cost minimization problem is given by $V(n,\; J)$, where $J$ denotes the optimal number of jobs.
 %Note that, by the definition given in \ref{sec:handoff_intro}, the last task in the production process has no hand-off costs associated with it (i.e., $\handofftime{n} = 0$).
 %Thus, for the last task we trivially have $V(n, J) = W(n,\; J,\; 0,\; 0)$.
+
+
+\pscomment{I think it's worthwhile to explicitly distinguish between different workers in the notation here. Doing so clarifies that the dynamic programming (DP) approach not only calculates the optimal cost but also determines the job boundaries. If maintaining an additional worker argument $j$ in the $W(.)$ notation complicates things, we should at least clearly mention this distinction in the text---once here and again when explaining Option 1 below.
+
+PS to do: also, remove legacy text that mentions active worker (or just worker) $j$.}
+
 Proposition~\ref{prop:recursive_optimality} describes a recursive formulation of the function $W(i,\; \hccost{},\; \timecost{})$.
 
 \begin{proposition}[Recursive Formulation of Job Design Problem]
@@ -1022,7 +1042,7 @@ The recursive formulation in Proposition~\ref{prop:recursive_optimality} evaluat
     \item \textbf{Option (2):} The term $W(i-1,\; \hccost{} + \humanhc{i},\; \timecost{} + \humantime{i})$ corresponds to adding task $i$ to the job of the active worker $j$ for manual completion.
     In this case, the manual execution costs $(\humanhc{i}, \humantime{i})$ of task $i$ are added to the accumulated costs of tasks already assigned to the active worker, extending their job to include task $i$ as well.
 
-    \item \textbf{Option (3):} The term $\min_{r < i} \ W\left(r,\; \hccost{} + \machinehc{i},\; \timecost{\J} + \frac{\machinetime{i}}{\prod_{s=r+1}^{i} q_s}\right)$ also corresponds to adding tasks to the active worker's job, but by having them perform task $i$ in an AI-augmented manner. 
+    \item \textbf{Option (3):} The term $\min_{r < i} \ W\left(r,\; \hccost{} + \machinehc{i},\; \timecost{} + \frac{\machinetime{i}}{\prod_{s=r+1}^{i} q_s}\right)$ also corresponds to adding tasks to the active worker's job, but by having them perform task $i$ in an AI-augmented manner. 
     This way task $i$ is chained with zero or more preceding (automated) tasks, adding the associated AI management costs to the active worker's skill and time costs.  The index $r$ corresponds to the highest-index task that is not added to this AI chain, which can be any value between $0$ and $i-1$.
 \end{itemize}
 Note that in evaluating option (3) of the recursive step for $W(i,\; \hccost{},\; \timecost{})$, task $i$ can only be augmented (rather than automated) as each step of the recursion adds a full AI chain to an active worker's job.
@@ -1037,6 +1057,16 @@ Let us first determine the range of powers of $(1+\epsilon)$ that we must consid
 Suppose that all manual and augmented skill and time costs, as well as all hand-off costs, lie in $[1/M, M]$ for some $M > 0$.  That is, these parameters require $O(\log M)$ bits to represent.  In this case, note that any subsequence of tasks could be completed at a total cost of at most $2nM^2$ by performing them all manually.  We therefore need not consider any solution containing a job with total cost greater than $2nM^2$.  In particular, since any non-zero skill cost for any job is at least $1/M$, we need not consider any joint plan in which a job has total time cost greater than $2nM^3$.  Furthermore, each job has total skill cost lying between $1/M$ and $nM$ (as skill costs combined additively) and time cost at least $1/M$ (as each AI chain's time cost is at least the management cost of its final task).
 
 We conclude that when filling table $W(i, \hccost{}, \timecost{})$, it suffices to consider skill costs $\hccost{}$ lying in $[1/M, nM]$ and time costs $\timecost{}$ lying in $[1/M, 2nM^3]$.  There are $O(\epsilon \log(nM))$ powers of $(1+\epsilon)$ in each of these ranges, so our table will have $O(n \epsilon^2 \log^2(nM))$ total entries.  Each entry can be filled in time $O(n)$ by considering the recursive formulation in Proposition~\ref{prop:recursive_optimality}, for a total runtime of $O(n^2 \epsilon^2 \log^2(nM))$.
+
+\pscomment{Two comments re. the calculations above: 
+
+1) Shouldn't the number of powers of $(1+\epsilon)$ in the ranges be inversely proportional to $\epsilon$ (for smaller $\epsilon$s more bits and thus a larger table is required)? The number of powers of $(1+\epsilon)$ in $[a,b]$ can be found via:
+\[
+a \times (1+\epsilon)^x = b \Longrightarrow x = \frac{\log(\frac{b}{a})}{\log(1 + \epsilon)} \approx \frac{\log(\frac{b}{a})}{\epsilon}.
+\]
+So, for skill costs in range $[1/M, nM]$ we get $O(\epsilon^{-1} \log(nM^2))$ and for time costs in range $[1/M, 2nM^3]$ we get $O(\epsilon^{-1} \log(nM^4))$.
+
+2) Since $M$ is potentially much larger than $n$ shouldn't we keep its exponents in the $O(.)$ notation? That is, we should \underline{not} simplify $O(\epsilon^{-1} \log(nM^2))$ and $O(\epsilon^{-1} \log(nM^4))$ to $O(\epsilon^{-1} \log(nM))$. So, the overall time complexity of the table will be $O(n \epsilon^{-2} \log^2(nM^4))$ and thus total runtime will be $O(n^2 \epsilon^{-2} \log^2(nM^4))$}
 
 To bound the error introduced by this discretization, consider the recursive formulation in Proposition~\ref{prop:recursive_optimality} and suppose that $\hccost{}$ and $\timecost{}$ are rounded down to the nearest power of $(1+\epsilon)$.  Since time and skill costs are multiplied together to calculate the total cost of a proposed job, this discretization introduces a multiplicative error of at most $(1+\epsilon)^2$ into our cost calculation for the first option when minimizing in the recursive definition of $W(i, \hccost{}, \timecost{})$. For the other two options, note that we accumulate time and skill costs additively when chaining tasks together for a single worker.  As $\hccost{}$ and $\timecost{}$ are rounded to a power of $(1+\epsilon)$, adding additional (accurate) skill and time costs and subsequently rounding maintains a multiplicative error of at most $(1+\epsilon)$ on the total time and skill costs.  
 
