@@ -204,6 +204,12 @@ production process
 \end_layout
 
 \begin_layout Itemize
+Each task can be completed either manually or using an AI.
+ If done by an AI,
+ the task is part of an 
+\end_layout
+
+\begin_layout Itemize
 Each task 
 \begin_inset Formula $i\in\mathcal{T}$
 \end_inset
@@ -601,34 +607,221 @@ Production
 \end_layout
 
 \begin_layout Standard
-A single firm produces 
-\begin_inset Formula $K$
-\end_inset
-
- consumption goods 
-\begin_inset Formula $X_{1},...,X_{K}$
+The AI's success probability in completing task 
+\begin_inset Formula $i$
 \end_inset
 
 ,
- which are sold in a perfectly competitive market to the consumer at prices 
-\begin_inset Formula $p^{1},...,p^{k}$
+ denoted by 
+\begin_inset Formula $q_{i}$
+\end_inset
+
+,
+ in every attempt is
+\begin_inset Formula 
+\[
+q_{i}=\alpha^{d_{i}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\alpha\in(0,1)$
+\end_inset
+
+ is the (general) AI quality and 
+\begin_inset Formula $d_{i}>0$
+\end_inset
+
+ is the task's completion difficulty.
+ The AI's (expected) time cost to complete task 
+\begin_inset Formula $i$
+\end_inset
+
+ is:
+\begin_inset Formula 
+\[
+\frac{t_{i}^{m}}{q_{i}}=\frac{t_{i}^{m}}{\alpha^{d_{i}}}=t_{i}^{m}\alpha^{-d_{i}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $t_{i}^{m}$
+\end_inset
+
+ is the management cost of task 
+\begin_inset Formula $i$
 \end_inset
 
 .
- We call each 
-\begin_inset Formula $k\in\{1,...,K\}$
+ In contrast,
+ the time cost of completing task 
+\begin_inset Formula $i$
 \end_inset
 
- a sector.
- To produce consumption good 
-\begin_inset Formula $X_{k}$
+ manually by human is 
+\begin_inset Formula $t_{i}^{h}$
 \end_inset
 
- the firm buys all necessary intermediate goods 
-\begin_inset Formula $\{x_{j}^{k}\}_{j=1}^{J_{k}}$
+.
+\end_layout
+
+\begin_layout Standard
+Each task is either done manually by a human or is a part of an AI-completed chain.
+ If the task 
+\begin_inset Formula $i$
 \end_inset
 
- from the workers employed in that sector in a perfectly competitive market.
+ is done manually,
+ its time cost is simply just 
+\begin_inset Formula $t_{i}^{h}$
+\end_inset
+
+.
+ If task 
+\begin_inset Formula $i$
+\end_inset
+
+ is a part of an AI chain 
+\begin_inset Formula $c$
+\end_inset
+
+ it is either augmented or automated.
+ As discussed earlier in the paper,
+ the success probability of task 
+\begin_inset Formula $i$
+\end_inset
+
+ appears as a multiplicative term in the success probability of the chain 
+\begin_inset Formula $q_{c}$
+\end_inset
+
+.
+ If task 
+\begin_inset Formula $i$
+\end_inset
+
+ is augmented,
+ it also determines the management time of the chain via 
+\begin_inset Formula $t_{i}^{m}$
+\end_inset
+
+ whereas in the case of automation its contribution to the chain cost remains at the success probability alone.
+\end_layout
+
+\begin_layout Standard
+In any job design,
+ each job is (potentially) comprised by tasks that are done by humans manually and/or AI chains.
+ Fix some job design 
+\begin_inset Formula $\mathcal{J}^{k}=\{\mathcal{J}_{j}\}_{j=1}^{J_{k}}$
+\end_inset
+
+.
+ Let us show the set of tasks in job 
+\begin_inset Formula $j$
+\end_inset
+
+ that are done by human with 
+\begin_inset Formula $\mathcal{H}_{j}^{k}(\mathcal{J}^{k})$
+\end_inset
+
+ and the set of AI chains in job 
+\begin_inset Formula $j$
+\end_inset
+
+ that are done by the AI with 
+\begin_inset Formula $\mathcal{C}_{j}^{k}(\mathcal{J}^{k})$
+\end_inset
+
+.
+ Let us show the cost of a chain 
+\begin_inset Formula $c\in\mathcal{C}_{j}$
+\end_inset
+
+ with 
+\begin_inset Formula $\frac{t_{c}}{q_{c}}$
+\end_inset
+
+.
+ In this notation,
+ 
+\begin_inset Formula $t_{c}$
+\end_inset
+
+ is the management time of the augmented task in the chain (for example,
+ if task 
+\begin_inset Formula $i\in c$
+\end_inset
+
+ is the augmented task,
+ then 
+\begin_inset Formula $t_{c}=t_{i}^{m}$
+\end_inset
+
+) and 
+\begin_inset Formula $q_{c}$
+\end_inset
+
+ is the composite success probability which is defined as 
+\begin_inset Formula $q_{c}=\prod_{i\in c}q_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The production function at the level of jobs,
+ which produces intermediate good 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+ can be characterized as:
+\begin_inset Formula 
+\[
+x_{j}^{k}=f(l^{hk},l^{mk};\alpha)=\min\left(\min_{i\in\mathcal{H}_{j}^{k}}\frac{l_{i}^{h}}{t_{i}^{h}},\min_{c\in\mathcal{C}_{j}^{k}}\frac{l_{c}^{m}}{t_{c}^{m}\alpha^{-d_{c}}}\right),
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $l_{i}^{h}$
+\end_inset
+
+ is the labor dedicated to manual task 
+\begin_inset Formula $i$
+\end_inset
+
+,
+ 
+\begin_inset Formula $l_{c}^{m}$
+\end_inset
+
+ is the labor allocated to augment the last task in AI chain 
+\begin_inset Formula $c$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The production function of consumption good 
+\begin_inset Formula $k$
+\end_inset
+
+ takes the following form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+X_{k}=F(l_{1}^{hk},\cdots,l_{J_{k}}^{hk},l_{1}^{mk},\cdots,l_{J_{k}}^{mk})=min(x_{1}^{k},\cdots,x_{J_{k}}^{k}),\label{eq:cons_prodfun}
+\end{equation}
+
+\end_inset
+
+reflecting that one unit of each intermediate good is required to produce one unit of the consumption good.
 \end_layout
 
 \begin_layout Subsection
@@ -699,32 +892,62 @@ Intermediate Goods Prices
 \end_layout
 
 \begin_layout Standard
-The firm employs 
-\begin_inset Formula $l_{j}^{k}$
+Per unit of intermediate good 
+\begin_inset Formula $x_{j}^{k}$
 \end_inset
 
- amount of labor per unit of producing intermediate good 
-\begin_inset Formula $x_{j}^{k}$
+,
+ the firm employs 
+\begin_inset Formula $l_{i}^{h}$
+\end_inset
+
+ amount of labor on manual tasks 
+\begin_inset Formula $i\in\mathcal{H}_{j}^{k}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{c}^{m}$
+\end_inset
+
+ amount of labor on each AI-completed chain 
+\begin_inset Formula $c\in\mathcal{C}_{j}^{k}$
 \end_inset
 
 .
  That is:
 \begin_inset Formula 
-\[
-l_{j}^{k}=t_{j}^{k}.
-\]
+\begin{align*}
+\forall i\in\mathcal{H}_{j}^{k} & :l_{i}^{h}=t_{i}^{h},\\
+\forall c\in\mathcal{C}_{j}^{k} & :l_{c}^{m}=t_{c}^{m}\alpha^{-d_{c}}.
+\end{align*}
 
 \end_inset
 
-The per unit production cost of good 
+Moreover,
+ define the total amount of labor spent on production of intermediate good 
 \begin_inset Formula $x_{j}^{k}$
 \end_inset
 
- can thus be rewritten as:
+ as:
 \begin_inset Formula 
-\[
-WageBill_{j}=w_{j}^{k}l_{j}^{k}.
-\]
+\begin{align*}
+l_{j}^{k} & :=t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}l_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}l_{c}^{m}\\
+ & =t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}
+\end{align*}
+
+\end_inset
+
+The per unit production cost (i.e.,
+ the wage bill) of good 
+\begin_inset Formula $x_{j}^{k}$
+\end_inset
+
+ can be rewritten as:
+\begin_inset Formula 
+\begin{align*}
+WageBill_{j} & =w_{j}^{k}l_{j}^{k}\\
+ & =w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
+\end{align*}
 
 \end_inset
 
@@ -761,9 +984,10 @@ Markets are perfectly competitive,
 ,
  equals the marginal cost of its production:
 \begin_inset Formula 
-\begin{equation}
-p_{j}^{k}=w_{j}^{k}l_{j}^{k}.\label{eq:intermediate_good_price}
-\end{equation}
+\begin{align}
+p_{j}^{k} & =w_{j}^{k}l_{j}^{k}\label{eq:intermediate_good_price}\\
+ & =w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
+\end{align}
 
 \end_inset
 
@@ -775,7 +999,7 @@ Consumption Goods Prices
 \end_layout
 
 \begin_layout Standard
-Given the Leontief nature of production at the task level,
+Given the Leontief nature of production at the job level,
  perfect competition in the consumption goods market implies that price of 
 \begin_inset Formula $X_{K}$
 \end_inset
@@ -788,18 +1012,21 @@ Given the Leontief nature of production at the task level,
 ,
  equals the sum of the prices of its constituent intermediate goods:
 \begin_inset Formula 
-\[
-p^{k}=\sum_{j=1}^{J_{k}}p_{j}=\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}.
-\]
+\begin{align*}
+p^{k} & =\sum_{j=1}^{J_{k}}p_{j}\\
+ & =\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\\
+ & =\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
+\end{align*}
 
 \end_inset
 
 To maintain consistency in notation between the final and intermediate goods markets,
  define
 \begin_inset Formula 
-\begin{equation}
-w^{k}l^{k}\equiv\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k},\label{eq:aggregate_price}
-\end{equation}
+\begin{align}
+w^{k}l^{k} & \equiv\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\label{eq:aggregate_price}\\
+ & =\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),
+\end{align}
 
 \end_inset
 
@@ -850,21 +1077,23 @@ nolink "false"
 ,
  i.e.,
 \begin_inset Formula 
-\[
-l^{k}=\sum_{j=1}^{J_{k}}l_{j}^{k},
-\]
+\begin{align*}
+l^{k} & =\sum_{j=1}^{J_{k}}l_{j}^{k}\\
+ & =\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),
+\end{align*}
 
 \end_inset
 
- then 
+then 
 \begin_inset Formula $w^{k}$
 \end_inset
 
  can be interpreted as the weighted average wage rate of the entire sector:
 \begin_inset Formula 
-\[
-w^{k}=\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}}{\sum_{j=1}^{J_{k}}l_{j}^{k}}.
-\]
+\begin{align*}
+w^{k} & =\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}}{\sum_{j=1}^{J_{k}}l_{j}^{k}}\\
+ & =\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)}{\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)}.
+\end{align*}
 
 \end_inset
 
@@ -902,7 +1131,11 @@ Labor Market Clearing
 
 \begin_layout Standard
 The (representative) household supplies one unit of labor inelastically to all jobs across all sectors.
- The labor market clearing condition satisfies:
+ Since 
+\begin_inset Formula $l$
+\end_inset
+
+ is the per unit of good labor employed the labor market clearing condition satisfies:
 \begin_inset Formula 
 \begin{equation}
 \sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}x_{j}^{k}\right)=1.\label{eq:labor_market_clearing}
@@ -924,9 +1157,11 @@ nolink "false"
 
  can be expressed as:
 \begin_inset Formula 
-\begin{equation}
-\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}X_{k}\right)=\sum_{k=1}^{K}l^{k}X_{k}=1.\label{eq:labor_market_clearing_simplified}
-\end{equation}
+\begin{align}
+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}x_{j}^{k}\right) & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}X_{k}\right)\label{eq:labor_market_clearing_simplified}\\
+ & =\sum_{k=1}^{K}l^{k}X_{k}\\
+ & =1
+\end{align}
 
 \end_inset
 
@@ -935,7 +1170,7 @@ With this,
 \begin_inset Formula $I$
 \end_inset
 
- in 
+ mentioned in 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:budget_constraint"
@@ -946,12 +1181,15 @@ nolink "false"
 
 \end_inset
 
- as follows:
+ in term of the primitives of the problem:
 \begin_inset Formula 
 \begin{align*}
 I & =\sum_{k=1}^{K}p^{k}X_{k}\\
+ & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}p_{j}^{k}\right)X_{k}\\
  & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\right)X_{k}\\
- & =v_{L}+\sum_{k=1}^{K}X_{k}\left(\sum_{j=1}^{J_{k}}\left(\sum_{i\in\mathcal{J}_{j}}c_{i}^{k}\right)l_{j}^{k}\right),
+ & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)l_{j}^{k}\right)X_{k}\\
+ & =v_{L}\underbrace{\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}\right)X_{k}}_{=1}+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)l_{j}^{k}\right)X_{k}\\
+ & =v_{L}+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)\right)X_{k},
 \end{align*}
 
 \end_inset
@@ -1101,6 +1339,17 @@ R_{k}=\Bigl(\frac{p^{1}}{p^{k}}\cdot\frac{\delta_{k}}{\delta_{1}}\Bigr)^{\sigma}
 
 \end_inset
 
+Rewriting these as a function of primitives we have:
+ 
+\begin_inset Formula 
+\begin{align*}
+w_{j}^{k}=\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right), & \qquad l_{j}^{k}=\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),\\
+p_{j}^{k}=w_{j}^{k}l_{j}^{k}=\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right), & \qquad p^{k}=w^{k}l{}^{k}=\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k},\\
+X_{k}^{*}=\frac{R_{k}}{\sum_{\ell=1}^{K}\left[\sum_{j=1}^{J_{\ell}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{\ell}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{\ell}}t_{c}^{m}\alpha^{-d_{c}}\right)\right]R_{\ell}}, & \qquad L_{k}^{*}=l^{k}\,X_{k}^{*}=\left[\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)\right]X_{k}^{*},
+\end{align*}
+
+\end_inset
+
 In this way,
  the job design of the production process 
 \begin_inset Formula $\mathcal{T}_{k}$
@@ -1130,13 +1379,6 @@ In this way,
 
 s.
  
-\end_layout
-
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section

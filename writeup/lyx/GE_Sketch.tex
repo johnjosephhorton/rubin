@@ -1,0 +1,441 @@
+%% LyX 2.4.2.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{babel}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm,footskip=0.75cm}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage[]
+ {hyperref}
+\begin{document}
+\setcounter{page}{0}
+\title{General Equilibrium Sketch}
+
+\maketitle
+
+\pagenumbering{arabic}
+
+I provide a sketch of the version we had in the previous draft with
+some modifications. At the end, I give one or two ideas about other
+ways we can think about modifying and extending the model. We can
+discuss further on Monday.
+
+\section{Task-based Production Environment}
+
+We have a task-based model of production, with the following characteristics:
+\begin{itemize}
+\item Production of a consumption good $X$ requires completing an ordered
+set of tasks, denoted by:
+\[
+\mathcal{T}=\{1,2,...,n\}.
+\]
+We refer to $\mathcal{T}$ as the ``production process'' of the
+good. Later in the GE section where we have more than a single good
+we use subscript $k$ for all variables introduced in this section,
+but for now we are focusing on only a single good--so no subscripts.
+\item Each task can be completed either manually or using an AI. If done
+by an AI, the task is part of an 
+\item Each task $i\in\mathcal{T}$ has three cost parameters: skill (i.e.,
+human capital), time (i.e., labor), and hand-off (or context-switching)
+cost. Denote the (skill, time, hand-off time) costs of task $i$ with
+$(c_{i},t_{i},t_{i}^{s})$. The skill cost $c_{i}$ is a one-off cost
+that is paid by the firm to train the worker to do task $i$. Once
+trained, the firm employs the worker for the duration of task's time
+cost $t_{i}$ to produce of one unit of the good.\\
+\\
+Hand-off cost $t_{i}^{s}$ is a frictional cost that a worker must
+pay to hand-off output of his/her task to the next worker. Hand-off
+can be viewed as an additional task at the end of task $i$ that takes
+time $t_{i}^{s}$ to complete but requires no additional skills. We
+discuss hand-off costs a bit more after introducing jobs next.
+\item Firms assign tasks to workers in ``jobs.'' A job is a contiguous
+set of tasks in the production process $\mathcal{T}$. Jobs are mutually
+exclusive and collectively cover all tasks in $\mathcal{T}$. Let
+$\mathcal{J}_{j}$ denote the set of tasks associated with job $j$
+assigned to worker $j$ (each worker is assigned to one job, so we
+can use the same index for the worker and their job). Formally, assuming
+the firm splits the production process into $J$ distinct jobs we
+have:
+\begin{align*}
+\forall j\neq j^{'},\quad j,j^{'}\in\{1,2,...,J\}: & \qquad\mathcal{J}_{j}\cap\mathcal{J}_{j^{'}}=\emptyset,\\
+\end{align*}
+and
+\[
+\bigcup_{j=1}^{J}\mathcal{J}_{j}=\mathcal{T}.
+\]
+\item Hand-off cost of a task is only realized when the task falls at the
+boundary of two consecutive jobs $j$ and $j+1$. That is, if task
+$i$ is the last task in job $j$, work $j$ incurs an additional
+time cost $t_{i}^{s}$ to hand-off the output to the next worker.
+Every task other than $i$ in job $j$ has zero realized hand-off
+time cost. With a slight abuse of notation, we show hand-off cost
+of job $j$ with $t_{j}^{s}:=t_{i}^{s}$. \\
+\\
+Remember that even though we are using notation $t_{j}^{s}$ to show
+the hand-off time cost of job $j$ it is an inherent property of the
+\uline{last task of the job}, not the job itself. So, $t_{j}^{s}$
+is actually determined by the task at the boundary of job $j$, and
+may differ from one job structure to another.
+\item Continuing on the previous point, hand-off costs and thus production
+costs depend on structure of jobs or ``job design.'' But how are
+costs determined?\\
+Consider some collection of jobs $\mathcal{J}=\{\mathcal{J}_{j}\}_{j=1}^{J}$
+containing $J$ distinct jobs. The wage that has to be paid to worker
+employed in job $j$ is given by
+\begin{equation}
+w_{j}:=v_{L}+\sum_{i\in\mathcal{J}_{j}}c_{i},\label{eq:wage}
+\end{equation}
+where $v_{L}$ is worker's value of leisure.\footnote{To make workers indifferent between working at different jobs the
+firm compensates them for the job's required skill costs. Moreover,
+the firm pays workers the value of their leisure to make them indifferent
+between working and not working.} The time (or labor) cost of job $j$ is:
+\begin{equation}
+t_{j}:=t_{j}^{s}+\sum_{i\in\mathcal{J}_{j}}t_{i}.\label{eq:time}
+\end{equation}
+\item The wage bill for job $j$ is the product of $w_{j}$ and $t_{j}$:
+\begin{equation}
+WageBill_{j}=w_{j}t_{j},\label{eq:wage_bill}
+\end{equation}
+which represents workers being compensated proportionally to their
+skill level and the time required to complete the job. Producing one
+unit of the consumption good $X$ only involves paying the labor time
+cost of workers performing tasks directly associated with that unit,
+as the one-time human capital training costs have already been incurred.
+\item With this production function, optimal allocation of tasks to jobs
+(and thus job boundaries) are determined by solving firm's cost minimization
+problem:
+\[
+\min_{J,\mathcal{J}=\{\mathcal{J}_{j}\}_{j=1}^{J}}\ \ \sum_{j=1}^{J}c_{j}t_{j}=\sum_{j=1}^{J}\left[\left(v_{L}+\sum_{i\in\mathcal{J}_{j}}c_{i}\right)\left(t_{j}^{s}+\sum_{i\in\mathcal{J}_{j}}t_{i}\right)\right].
+\]
+(We have a section dedicated to solving this problem via dynamic programming.)
+\item To produce one unit of the consumption good $X$, each task in the
+production process must be performed exactly once: it cannot be the
+case that, for example, task 1 is done twice while task 2 is done
+once because task 1 is cheaper. All tasks must be done in fixed proportions.
+Thus, at the level of tasks, production function takes a Leontief
+form.
+\item Completion of a task creates an ``intermediate good,'' which is
+used as input in the production of the final good. Each worker produces
+intermediate goods by performing tasks assigned to them in their job.
+The firm buys the intermediate goods (i.e., output of tasks) from
+workers in a perfectly competitive market, and produces the good at
+no additional cost. \\
+\\
+Without loss, we can imagine each worker produces only a single intermediate
+good--the output of the last task assigned to them in their job (think
+of it as output of each task being the input of the next task; The
+worker produces intermediate task outputs and uses them as inputs
+to ultimately produce the output of the last task assigned to them).
+Let $x_{j}$ show the intermediate good produced in job $j$. The
+production function of the consumption good $X$ can be written as:
+\[
+X(x_{1},...,x_{J})=min(x_{1},...,x_{J}).
+\]
+\end{itemize}
+
+\section{General Equilibrium}
+
+This section is structured as follows: I introduce the $K$-goods
+production economy first. Then describe household's preferences and
+market clearing conditions to ultimately get the equilibrium allocations
+and prices. Before introducing market clearing, I discuss how prices
+are determined as a function of model primitives as it helps the discussion
+in that subsection.
+
+\subsection{Production}
+
+The AI's success probability in completing task $i$, denoted by $q_{i}$,
+in every attempt is
+\[
+q_{i}=\alpha^{d_{i}},
+\]
+where $\alpha\in(0,1)$ is the (general) AI quality and $d_{i}>0$
+is the task's completion difficulty. The AI's (expected) time cost
+to complete task $i$ is:
+\[
+\frac{t_{i}^{m}}{q_{i}}=\frac{t_{i}^{m}}{\alpha^{d_{i}}}=t_{i}^{m}\alpha^{-d_{i}},
+\]
+where $t_{i}^{m}$ is the management cost of task $i$. In contrast,
+the time cost of completing task $i$ manually by human is $t_{i}^{h}$.
+
+Each task is either done manually by a human or is a part of an AI-completed
+chain. If the task $i$ is done manually, its time cost is simply
+just $t_{i}^{h}$. If task $i$ is a part of an AI chain $c$ it is
+either augmented or automated. As discussed earlier in the paper,
+the success probability of task $i$ appears as a multiplicative term
+in the success probability of the chain $q_{c}$. If task $i$ is
+augmented, it also determines the management time of the chain via
+$t_{i}^{m}$ whereas in the case of automation its contribution to
+the chain cost remains at the success probability alone.
+
+In any job design, each job is (potentially) comprised by tasks that
+are done by humans manually and/or AI chains. Fix some job design
+$\mathcal{J}^{k}=\{\mathcal{J}_{j}\}_{j=1}^{J_{k}}$. Let us show
+the set of tasks in job $j$ that are done by human with $\mathcal{H}_{j}^{k}(\mathcal{J}^{k})$
+and the set of AI chains in job $j$ that are done by the AI with
+$\mathcal{C}_{j}^{k}(\mathcal{J}^{k})$. Let us show the cost of a
+chain $c\in\mathcal{C}_{j}$ with $\frac{t_{c}}{q_{c}}$. In this
+notation, $t_{c}$ is the management time of the augmented task in
+the chain (for example, if task $i\in c$ is the augmented task, then
+$t_{c}=t_{i}^{m}$) and $q_{c}$ is the composite success probability
+which is defined as $q_{c}=\prod_{i\in c}q_{i}$.
+
+The production function at the level of jobs, which produces intermediate
+good $x_{j}$ can be characterized as:
+\[
+x_{j}^{k}=f(l^{hk},l^{mk};\alpha)=\min\left(\min_{i\in\mathcal{H}_{j}^{k}}\frac{l_{i}^{h}}{t_{i}^{h}},\min_{c\in\mathcal{C}_{j}^{k}}\frac{l_{c}^{m}}{t_{c}^{m}\alpha^{-d_{c}}}\right),
+\]
+where $l_{i}^{h}$ is the labor dedicated to manual task $i$, $l_{c}^{m}$
+is the labor allocated to augment the last task in AI chain $c$. 
+
+The production function of consumption good $k$ takes the following
+form:
+
+\begin{equation}
+X_{k}=F(l_{1}^{hk},\cdots,l_{J_{k}}^{hk},l_{1}^{mk},\cdots,l_{J_{k}}^{mk})=min(x_{1}^{k},\cdots,x_{J_{k}}^{k}),\label{eq:cons_prodfun}
+\end{equation}
+reflecting that one unit of each intermediate good is required to
+produce one unit of the consumption good.
+
+\subsection{Households}
+
+A representative household supplies one unit of labor inelastically
+and has a CES utility function over the $K$ goods:
+\[
+U(X_{1},...,X_{K})=\left(\sum_{k=1}^{K}\delta_{k}X_{k}^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}},\qquad0<\delta_{k}<1,\qquad\sum_{k=1}^{K}\delta_{k}=1,\qquad\sigma>0.
+\]
+Goods are substitutes if $\sigma>1$, complements if $\sigma<1$,
+and $\sigma=1$ corresponds to the Cobb--Douglas case. The household
+faces the budget constraint
+\begin{equation}
+\sum_{k=1}^{K}p^{k}X_{k}=I,\label{eq:budget_constraint}
+\end{equation}
+where $I$ is the total income earned from supplying labor to jobs
+across all sectors. The income $I$ is the total sum of earnings from
+producing intermediate goods, which the household takes as given when
+choosing how much of each good to consume.
+
+\subsection{Goods Prices}
+
+\subsubsection{Intermediate Goods Prices}
+
+Per unit of intermediate good $x_{j}^{k}$, the firm employs $l_{i}^{h}$
+amount of labor on manual tasks $i\in\mathcal{H}_{j}^{k}$ and $l_{c}^{m}$
+amount of labor on each AI-completed chain $c\in\mathcal{C}_{j}^{k}$.
+That is:
+\begin{align*}
+\forall i\in\mathcal{H}_{j}^{k} & :l_{i}^{h}=t_{i}^{h},\\
+\forall c\in\mathcal{C}_{j}^{k} & :l_{c}^{m}=t_{c}^{m}\alpha^{-d_{c}}.
+\end{align*}
+Moreover, define the total amount of labor spent on production of
+intermediate good $x_{j}^{k}$ as:
+\begin{align*}
+l_{j}^{k} & :=t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}l_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}l_{c}^{m}\\
+ & =t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}
+\end{align*}
+The per unit production cost (i.e., the wage bill) of good $x_{j}^{k}$
+can be rewritten as:
+\begin{align*}
+WageBill_{j} & =w_{j}^{k}l_{j}^{k}\\
+ & =w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
+\end{align*}
+This just a rephrasing of equation (\ref{eq:wage_bill}). \\
+\\
+Markets are perfectly competitive, therefore the price of intermediate
+good $x_{j}^{k}$, denoted by $p_{j}^{k}$, equals the marginal cost
+of its production:
+\begin{align}
+p_{j}^{k} & =w_{j}^{k}l_{j}^{k}\label{eq:intermediate_good_price}\\
+ & =w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
+\end{align}
+
+
+\subsubsection{Consumption Goods Prices}
+
+Given the Leontief nature of production at the job level, perfect
+competition in the consumption goods market implies that price of
+$X_{K}$, $p^{k}$, equals the sum of the prices of its constituent
+intermediate goods:
+\begin{align*}
+p^{k} & =\sum_{j=1}^{J_{k}}p_{j}\\
+ & =\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\\
+ & =\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
+\end{align*}
+To maintain consistency in notation between the final and intermediate
+goods markets, define
+\begin{align}
+w^{k}l^{k} & \equiv\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\label{eq:aggregate_price}\\
+ & =\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),
+\end{align}
+so that $p^{k}=w^{k}l^{k}$. \\
+\\
+Equation (\ref{eq:aggregate_price}) seems quite similar to equation
+(\ref{eq:intermediate_good_price}). If we let $l^{k}$ be the total
+amount of time (or labor) spent on producing good $X_{k}$, i.e.,
+\begin{align*}
+l^{k} & =\sum_{j=1}^{J_{k}}l_{j}^{k}\\
+ & =\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),
+\end{align*}
+then $w^{k}$ can be interpreted as the weighted average wage rate
+of the entire sector:
+\begin{align*}
+w^{k} & =\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}}{\sum_{j=1}^{J_{k}}l_{j}^{k}}\\
+ & =\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)}{\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)}.
+\end{align*}
+
+Finally, note that once $l^{k}$ is determined, all $l_{j}^{k}$s
+are automatically pinned down. This is due to the assumption made
+in the second to last bullet point of Section 1 that tasks are done
+in fixed proportions. So, it is without loss to only focus on working
+with $l^{k}$ and ignore $l_{j}^{k}$s for the rest of the analysis.
+
+\subsection{Labor Market Clearing}
+
+The (representative) household supplies one unit of labor inelastically
+to all jobs across all sectors. Since $l$ is the per unit of good
+labor employed the labor market clearing condition satisfies:
+\begin{equation}
+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}x_{j}^{k}\right)=1.\label{eq:labor_market_clearing}
+\end{equation}
+Given the Leontief production at task level, (\ref{eq:labor_market_clearing})
+can be expressed as:
+\begin{align}
+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}x_{j}^{k}\right) & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}X_{k}\right)\label{eq:labor_market_clearing_simplified}\\
+ & =\sum_{k=1}^{K}l^{k}X_{k}\\
+ & =1
+\end{align}
+With this, we can now derive household's earned labor income $I$
+mentioned in (\ref{eq:budget_constraint}) in term of the primitives
+of the problem:
+\begin{align*}
+I & =\sum_{k=1}^{K}p^{k}X_{k}\\
+ & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}p_{j}^{k}\right)X_{k}\\
+ & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\right)X_{k}\\
+ & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)l_{j}^{k}\right)X_{k}\\
+ & =v_{L}\underbrace{\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}\right)X_{k}}_{=1}+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)l_{j}^{k}\right)X_{k}\\
+ & =v_{L}+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)\right)X_{k},
+\end{align*}
+where we used (\ref{eq:wage}) to arrive at the last line. The household's
+budget thus consists of two parts: a part that compensates the worker
+for their forgone leisure and a part that rewards them proportional
+to how much they produce consumption goods.
+
+\subsection{Equilibrium}
+
+Here we solve for the equilibrium allocations and sectoral employment.
+The consumer chooses $X_{k}$ to maximize
+\[
+U(x_{1},\dots,x_{K})=\Bigl(\sum_{k=1}^{K}\delta_{k}\,x_{k}^{\tfrac{\sigma-1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
+\]
+subject to
+\[
+\sum_{k=1}^{K}p^{k}X_{k}=I.
+\]
+By the standard first-order conditions, the ratio of marginal utilities
+equals the ratio of prices for any two goods $f$ and $g$:
+\[
+\frac{\partial U/\partial X_{f}}{\partial U/\partial X_{g}}=\frac{p^{f}}{p^{g}}.
+\]
+From CES properties, we obtain:
+\[
+\left(\frac{X_{f}}{X_{g}}\right)^{-\tfrac{1}{\sigma}}=\frac{p^{f}}{p^{g}}\,\cdot\,\frac{\delta_{g}}{\delta_{f}},\quad\Longrightarrow\quad\frac{X_{f}}{X_{g}}=\left(\frac{p^{g}}{p^{f}}\,\cdot\,\frac{\delta_{f}}{\delta_{g}}\right)^{\sigma}.
+\]
+Define 
+\[
+R_{f}=\frac{X_{f}}{X_{1}}=\Bigl(\frac{p^{1}}{p^{f}}\cdot\frac{\delta_{f}}{\delta_{1}}\Bigr)^{\sigma},
+\]
+with $R_{1}=1$. Substitute $X_{f}=R_{f}\,X_{1}$ into the simplified
+labor market clearing condition (\ref{eq:labor_market_clearing_simplified}):
+\[
+\sum_{k=1}^{K}l^{k}\,(R_{k}\,X_{1})=x_{1}\Bigl[\sum_{k=1}^{K}l^{k}\,R_{k}\Bigr]=1,
+\]
+which yields 
+\[
+X_{1}^{*}=\frac{1}{\sum_{k=1}^{K}l^{k}\,R_{k}},\quad X_{f}^{*}=R_{f}\,X_{1}^{*}=\frac{R_{f}}{\sum_{k=1}^{K}l^{k}\,R_{k}}.
+\]
+
+Amount of labor employed in sector $k$ is given by $L_{k}^{*}=l^{k}\,X_{k}^{*}$.
+Thus, the equilibrium can be summarized as:
+\begin{align*}
+w_{j}^{k}=\Biggl(v_{L}+\sum_{i\in\mathcal{J}_{j}^{k}}c_{i}^{k}\Biggr), & \qquad l_{j}^{k}=\Biggl(t_{j}^{sk}+\sum_{i\in\mathcal{J}_{j}^{k}}t_{i}^{k}\Biggr),\\
+p_{j}^{k}=w_{j}^{k}l_{j}^{k}, & \qquad p^{k}=w^{k}l{}^{k}=\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k},\\
+X_{k}^{*}=\frac{R_{k}}{\sum_{\ell=1}^{K}l^{\ell}\,R_{\ell}}, & \qquad L_{k}^{*}=l^{k}\,X_{k}^{*}=\sum_{j=1}^{J_{k}}l_{j}^{k}\,X_{k}^{*},
+\end{align*}
+where
+\[
+R_{k}=\Bigl(\frac{p^{1}}{p^{k}}\cdot\frac{\delta_{k}}{\delta_{1}}\Bigr)^{\sigma}.
+\]
+Rewriting these as a function of primitives we have: 
+\begin{align*}
+w_{j}^{k}=\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right), & \qquad l_{j}^{k}=\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),\\
+p_{j}^{k}=w_{j}^{k}l_{j}^{k}=\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right), & \qquad p^{k}=w^{k}l{}^{k}=\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k},\\
+X_{k}^{*}=\frac{R_{k}}{\sum_{\ell=1}^{K}\left[\sum_{j=1}^{J_{\ell}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{\ell}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{\ell}}t_{c}^{m}\alpha^{-d_{c}}\right)\right]R_{\ell}}, & \qquad L_{k}^{*}=l^{k}\,X_{k}^{*}=\left[\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)\right]X_{k}^{*},
+\end{align*}
+In this way, the job design of the production process $\mathcal{T}_{k}$
+(and thus the corresponding skill and time costs of tasks) determines
+goods prices $p^{k}$, which then determine the consumption bundle
+$\{X_{k}^{*}\}_{k=1}^{K}$ and the sectoral labor allocations $\{L_{k}^{*}\}_{k=1}^{K}$.
+Notice that the equilibrium outcome also depends implicitly on job
+designs through $J_{k}s$ and $t_{j}^{sk}$s. 
+
+\section{Thoughts, Comments, Ideas}
+
+Below I give some thoughts on the model. The points are structured
+into three items: a reframing proposal, an observation about current
+modeling assumptions, and a concern regarding integration with existing
+literature.
+\begin{enumerate}
+\item \textbf{Reframing how consumers enter the model}: This first point
+suggests a minor restructuring of how consumers enter the market.
+This proposal is essentially a reframing of the earlier version and
+does not significantly alter the core outcomes, but I would still
+appreciate discussing it further in person. Currently, consumption
+goods are produced directly through a labor-only production function,
+placing household preferences as the primary source of economic variation.
+I'm unsure if this framing is standard in the literature. Alternatively,
+we might reframe these consumption goods as intermediate inputs used
+in a subsequent CES production function, which produces a single final
+good directly sold to households. Although the mathematical implications
+would remain identical, the conceptual shift could better align our
+model with standard practices.
+\item \textbf{Observation on job design integration into GE}: Currently,
+I implicitly treat job designs as exogenously given, a condition that
+doesn't naturally emerge endogenously from the GE setup. While firm's
+cost-minimization problem could be interpreted as an endogenous decision
+itself, I remain somewhat unhappy with the existing separation of
+these two aspects. I would appreciate feedback or ideas on how we
+might integrate the cost-minimization decision more naturally within
+the GE framework.
+\item \textbf{Concern about connection to literature}: Our current model
+notably diverges from common task-based models in the literature.
+Ideally, we would want to link our framework somehow to the task model
+of \href{https://economics.mit.edu/sites/default/files/publications/Skills\%2C\%20Tasks\%20and\%20Technologies\%20-\%20Implications\%20for\%20.pdf}{Acemoglu and Autor (2011)},
+which is pretty well-known and accepted. However, I don't quite know
+how we can get this connection, primarily because of our unique concept
+of ``chaining,'' where an individual task might be more cost-efficient
+when performed by humans but more efficient overall when automated
+as part of a sequence of tasks (we currently have a proposition on
+this in the paper).\\
+\\
+Directly adopting AA's approach into our current framework would entail
+representing task-level choices between human and machine labor for
+instance like: (see p. 1121 of handbook chapter for reference)
+\[
+x(i)=A_{human}\alpha_{human}(i)h(i)+A_{machine}\alpha_{machine}(i)m(i).
+\]
+Here, the $\alpha$s represent productivity parameters for each task
+$i$, and $h(i)$ and $m(i)$ denote the two types of workers (human
+or machine). Initially, I avoided this formulation because explicitly
+incorporating our ``chaining'' concept seemed challenging at first
+glance (if not impossible). Incorporating the chaining nuances explicitly
+into this more generalized task-based framework would likely require
+substantial restructuring, and I remain skeptical about its feasibility
+without heavy modifications.
+\end{enumerate}
+
+\end{document}
