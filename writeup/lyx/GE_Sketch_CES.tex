@@ -1,0 +1,397 @@
+%% LyX 2.4.2.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[a4paper]{geometry}
+\geometry{verbose,tmargin=2cm,bmargin=2cm,lmargin=2cm,rmargin=2cm,footskip=0.75cm}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{babel}
+\begin{document}
+\setcounter{page}{0}
+\title{General Equilibrium Sketch (CES)}
+
+\maketitle
+
+\pagenumbering{arabic}
+
+I provide a sketch of the version we had in the previous draft with
+some modifications. At the end, I give one or two ideas about other
+ways we can think about modifying and extending the model. We can
+discuss further on Monday.
+
+\section{High-Level Discussion}
+
+There are two ways one can think of writing a production function
+in our setup. Below I introduce both options and discuss the pros
+and cons of each. For this discussion suppose each occupation is comprised
+by a set of tasks $\mathcal{H}$ that are done manually and a set
+of AI chained tasks $\mathcal{A}$ done by the help of AI. At this
+point we don't care how tasks have been allocated to human or machine.
+\begin{enumerate}
+\item Leontief production function of manual as well as AI-performed tasks
+(a la Peyman model). This version treats each task as a separate input
+for production. Suppose tasks indexed $1,\cdots,m$ are done by human
+(i.e., they belong to set $\mathcal{H}$) and tasks indexed $m+1,\cdots,n$
+are done via AI (i.e., belong to the set $\mathcal{A}$). We have:
+\[
+X=\min(t_{1}^{H},\cdots,t_{m}^{H},t_{m+1}^{AI},\cdots,t_{n}^{AI}).
+\]
+
+\begin{itemize}
+\item Pros: 
+\begin{itemize}
+\item Implicitly assumes task durations are fixed (i.e., takes task parameters
+as given). This is necessary assumption for the DP algorithm to solve
+the job design problem. To produce one unit of good $X$ each task
+$1,\cdots,n$ (whether manual or AI-performed) must be done exactly
+once. This is closer to the current notion of task-based production
+we currently have in the draft.
+\item Accommodates the hand-off costs friction as a source of determining
+job boundaries (as hand-offs are assumed to be a fixed time duration
+property of tasks).
+\end{itemize}
+\item Cons: 
+\begin{itemize}
+\item Production (and GE) becomes too stylistic. Production function really
+has only one input: labor. 
+\item The equilibrium allocations and prices are solely determined by intrinsic
+task parameters, not relative prices of inputs.
+\item Use of AI is not endogenized based on equilibrium prices. Rather it's
+determined based on intrinsic task parameter, and perhaps outside
+of the model (say, for example, through some investment decision in
+the ``first stage'' of a two-stage game where the level of $\alpha$
+is decided in the first stage and the job design problem is solved
++ production takes place in the second stage). 
+\item The GE doesn't have meaningful economics given how it's structured.
+Hard to sell as a real production model as it doesn't fit to into
+the literature.
+\end{itemize}
+\end{itemize}
+\item Have a CES production function with AI and human as separate inputs
+(a la Mert model).  Every AI chain and manual task enters the CES
+aggregator separately: 
+\[
+X=\left(\sum_{a\in\mathcal{A}}\eta_{a}\left(t_{a}^{AI}\alpha^{-d_{a}}\right)^{\rho}+\sum_{h\in\mathcal{H}}\eta_{h}\left(t_{h}^{H}\right)^{\rho}\right)^{\frac{1}{\rho}}.
+\]
+Notice that if we fix the difficulty $d_{a}$ across all AI chains,
+the this formulation implicitly assumes a Leontief production between
+the AI input $\alpha$ and the human labor input $t_{a}^{AI}$ for
+every AI chain.
+\begin{itemize}
+\item Pros: 
+\begin{itemize}
+\item Similar to conventional production functions. 
+\item Three components 1) human labor for manual tasks, 2) human labor for
+managed AI chains, 3) AI itself nested into two separable inputs:
+1) human labor, 2) AI labor. 
+\end{itemize}
+\item Cons: 
+\begin{itemize}
+\item Assumes task durations are flexible. This is at odds with the assumptions
+we are using for the job design problem where we treat task durations
+as fixed. With this production function in one scenario we can employ
+2 units of task A and 0.5 unit of task B whereas in another execution
+plan we can employ 1 unit of each task. This is inconsistent with
+the cost minimization characterization we had earlier.
+\item This will make integration of firm's cost minimization problem and
+GE model hard (if not impossible). One idea is to look at firm's profit
+maximization as a two stage problem: one discrete and one continuous.
+In the outer loop (discrete) we choose the allocation of tasks to
+jobs. In the inner loop (continuous) we solve for the optimal level
+of each input taking job assignments as given.
+\end{itemize}
+\end{itemize}
+\end{enumerate}
+
+\section{Task-based Production Environment}
+
+We have a task-based model of production, with the following characteristics:
+\begin{itemize}
+\item Production of a consumption good $X$ requires completing an ordered
+set of tasks, denoted by:
+\[
+\mathcal{T}=\{1,2,...,n\}.
+\]
+We refer to $\mathcal{T}$ as the ``production process'' of the
+good. Later in the GE section where we have more than a single good
+we use subscript $k$ for all variables introduced in this section,
+but for now we are focusing on only a single good--so no subscripts.
+\item Each task can be completed either manually or using an AI. If done
+by AI, the task is a part of a chain of one or more tasks called an
+``AI Chain.'' Denote the set of manual tasks done by human with
+$\mathcal{H}$ and AI chains with $\mathcal{A}$. A task $i$ is either
+in $\mathcal{H}$ or $\mathcal{A}$. We refer to members of these
+sets as a ``module'': a manual tasks is one module; an entire AI
+chain is also a module.
+\item Each task $i\in\mathcal{T}$ has five cost parameters: human and AI
+skill (i.e., human capital), human and AI time (i.e., labor), and
+hand-off (or context-switching) cost. Denote the (human skill, machine
+skill, human time, machine time, hand-off time) costs of task $i$
+with $(c_{i}^{H},c_{i}^{AI},t_{i}^{H},t_{i}^{AI},t_{i}^{s})$. The
+skill costs $c_{i}^{x}$ ($x\in\{H,AI\}$) are a one-off cost that
+paid by the firm to train the worker to do task $i$. Once trained,
+the firm employs the worker for the duration of task's time cost $t_{i}^{x}$
+to produce of one unit of the good.\\
+\\
+Hand-off cost $t_{i}^{s}$ is a frictional cost that a worker must
+pay to hand-off output of his/her task to the next worker. Hand-off
+can be viewed as an additional task at the end of task $i$ that takes
+time $t_{i}^{s}$ to complete but requires no additional skills. We
+discuss hand-off costs a bit more after introducing jobs next.
+\item Firms assign tasks to workers in ``jobs.'' A job is a contiguous
+set of tasks in the production process $\mathcal{T}$. Jobs are mutually
+exclusive and collectively cover all tasks in $\mathcal{T}$. Let
+$\mathcal{J}_{j}=\{\mathcal{H}_{j},\mathcal{A}_{j}\}$ denote the
+set of manual tasks and AI chains associated with job $j$ assigned
+to worker $j$ (each worker is assigned to one job, so we can use
+the same index for the worker and their job). Formally, assuming the
+firm splits the production process into $J$ distinct jobs we have:
+\begin{align*}
+\forall j\neq j^{'},\quad j,j^{'}\in\{1,2,...,J\}: & \qquad\mathcal{J}_{j}\cap\mathcal{J}_{j^{'}}=\emptyset,\\
+\end{align*}
+and
+\[
+\bigcup_{j=1}^{J}\mathcal{J}_{j}=\mathcal{T}.
+\]
+\item Hand-off cost of a task is only realized when the task falls at the
+boundary of two consecutive jobs $j$ and $j+1$. That is, if task
+$i$ is the last task in job $j$, work $j$ incurs an additional
+time cost $t_{i}^{s}$ to hand-off the output to the next worker.
+Every task other than $i$ in job $j$ has zero realized hand-off
+time cost. With a slight abuse of notation, we show hand-off cost
+of job $j$ with $t_{j}^{s}:=t_{i}^{s}$. \\
+\\
+Remember that even though we are using notation $t_{j}^{s}$ to show
+the hand-off time cost of job $j$ it is an inherent property of the
+\uline{last task of the job}, not the job itself. So, $t_{j}^{s}$
+is actually determined by the task at the boundary of job $j$, and
+may differ from one job structure to another.
+\item Continuing on the previous point, hand-off costs and thus production
+costs depend on structure of jobs or ``job design.'' But how are
+costs determined?\\
+Consider some collection of jobs $\mathcal{J}=\{\mathcal{J}_{j}\}_{j=1}^{J}=\{\mathcal{H}_{j},\mathcal{A}_{j}\}_{j=1}^{J}$
+containing $J$ distinct jobs. The wage that has to be paid to worker
+employed in job $j$ is given by
+\begin{equation}
+w_{j}:=v_{L}+\sum_{a\in\mathcal{A}_{j}}c_{a}^{AI}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{H},\label{eq:wage}
+\end{equation}
+where $v_{L}$ is worker's value of leisure.\footnote{To make workers indifferent between working at different jobs the
+firm compensates them for the job's required skill costs. Moreover,
+the firm pays workers the value of their leisure to make them indifferent
+between working and not working.} The two other terms are the sum of skill costs of job $j$'s constituent
+modules (AI chains and manual tasks). Similarly, the time (or labor)
+cost of job $j$ is:
+\begin{equation}
+t_{j}:=t_{j}^{s}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{H}.\label{eq:time}
+\end{equation}
+\item The wage bill for job $j$ is the product of $w_{j}$ and $t_{j}$:
+\begin{equation}
+WageBill_{j}=w_{j}t_{j},\label{eq:wage_bill}
+\end{equation}
+which represents workers being compensated proportionally to their
+skill level and the time required to complete the job. Producing one
+unit of the consumption good $X$ only involves paying the labor time
+cost of workers performing tasks directly associated with that unit,
+as the one-time human capital training costs have already been incurred.
+\item With this production function, optimal allocation of tasks to jobs
+(and thus job boundaries) are determined by solving firm's cost minimization
+problem:
+\[
+\min_{J,\mathcal{J}=\{\mathcal{H}_{j},\mathcal{A}_{j}\}_{j=1}^{J}}\ \ \sum_{j=1}^{J}w_{j}t_{j}=\sum_{j=1}^{J}\left[\left(v_{L}+\sum_{a\in\mathcal{A}_{j}}c_{a}^{AI}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{H}\right)\left(t_{j}^{s}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{H}\right)\right].
+\]
+(We have a section dedicated to solving this problem via dynamic programming.)
+\end{itemize}
+
+\section{General Equilibrium}
+
+The AI's success probability in completing AI module $a\in\mathcal{A}$,
+denoted by $q_{a}$, in every attempt is
+\[
+q_{a}=\alpha^{d_{a}},
+\]
+where $\alpha\in(0,1)$ is the (general) AI quality and $d_{a}>0$
+is the module's completion difficulty. The AI's (expected) time cost
+to complete module $a$ is:
+\[
+\frac{t_{a}^{AI}}{q_{a}}=\frac{t_{a}^{AI}}{\alpha^{d_{a}}}=t_{a}^{AI}\alpha^{-d_{a}},
+\]
+where $t_{a}^{AI}$ is the management cost of AI module $a$.
+
+Each task is either done manually by a human or is a part of an AI-completed
+chain. If the task $i$ is done manually, its time cost is simply
+just $t_{i}^{H}$. If task $i$ is a part of an AI chain $a$ it is
+either augmented or automated. The success probability of any task
+of an AI module $a$ appears as a multiplicative term in the success
+probability of the chain $q_{a}$. If task $i$ is augmented, it management
+time $t_{i}^{AI}$ also determines AI chain's management time whereas
+if automated task's contribution to the AI chain cost is limited to
+its success probability alone.
+
+
+\subsection{Production}
+
+There are $K$ consumption goods $X_{1},\cdots,X_{K}$ in the economy.
+We call each $k\in\{1,\cdots,K\}$ a sector. A single firm produces
+all goods and sells them to the consumers in a perfectly competitive
+market. 
+
+The production function for consumption good $X_{k}$ is CES with
+three components (human labor, AI labor, AI quality) modeled as two
+separate inputs (human and machine):
+\begin{equation}
+X_{k}=\left(\sum_{j=1}^{J_{k}}\left[\sum_{a_{j}\in\mathcal{A}_{j}^{k}}\eta_{a_{j}}^{k}\left(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right)^{\rho}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}\eta_{h_{j}}\left(t_{h_{j}}^{H,k}\right)^{\rho}\right]\right)^{\frac{1}{\rho}}\label{eq:prod_fun}
+\end{equation}
+Here, $t_{a_{j}}^{AI,k}$ is the AI management time cost for composite
+AI chain $a_{j}$ and $t_{h_{j}}^{H,k}$ is the human execution time
+cost for composite manual task $h_{j}$. Note that the production
+function exhibits constant elasticity of substitution $\sigma=\frac{1}{1-\rho}$
+between all modules (AI chains and manual tasks).
+
+For some fixed job design $\mathcal{J}^{k}=\{\mathcal{J}_{j}^{k}\}_{j=1}^{J_{k}}=\{\mathcal{H}_{j}^{k},\mathcal{A}_{j}^{k}\}_{j=1}^{J_{k}}$,
+The cost of producing $X$ units is:
+\begin{equation}
+C_{k}=\sum_{j=1}^{J_{k}}w_{j}^{k}t_{j}^{k}=\sum_{j=1}^{J_{k}}\left[\underbrace{\left(v_{L}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}c_{a_{j}}^{AI,k}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}c_{h_{j}}^{AI,k}\right)}_{\text{wage of job \ensuremath{j}: }w_{j}^{k}}\underbrace{\left(t_{j}^{s}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}t_{a_{j}}^{AI,k}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}t_{h_{j}}^{AI,k}\right)}_{\text{amount of labor employed for job \ensuremath{j}}}\right].\label{eq:firm_cost}
+\end{equation}
+The wage of AI chain input and human input in manual task is the same
+and equal to $w_{j}=\left(v_{L}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}c_{a_{j}}^{AI,k}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}c_{h_{j}}^{AI,k}\right)$
+of job $j$ containing those inputs. 
+
+The firm's profit maximization problem in any sector $k$ is:
+\[
+\max_{\{t_{h_{j}}^{H,k}\},\{t_{a_{j}}^{AI,k}\},\{\mathcal{H}_{j}^{k},\mathcal{A}_{j}^{k}\}_{j=1}^{J_{k}},J_{k}}\ \ p^{k}X_{k}-C_{k},
+\]
+which in expanded form becomes:
+\begin{align}
+\max_{\{t_{h_{j}}^{H,k}\},\{t_{a_{j}}^{AI,k}\},\{\mathcal{H}_{j}^{k},\mathcal{A}_{j}^{k}\}_{j=1}^{J_{k}},J_{k}}\ \  & p^{k}\left(\sum_{j=1}^{J_{k}}\left[\sum_{a_{j}\in\mathcal{A}_{j}^{k}}\eta_{a_{j}}^{k}\left(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right)^{\rho}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}\eta_{h_{j}}\left(t_{h_{j}}^{H,k}\right)^{\rho}\right]\right)^{\frac{1}{\rho}}\label{eq:firm_problem}\\
+ & \ \ \ \ -\sum_{j=1}^{J_{k}}\left[w_{j}^{k}\left(t_{j}^{s}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}t_{a_{j}}^{AI,k}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}t_{h_{j}}^{AI,k}\right)\right]
+\end{align}
+The firm chooses which tasks to do manually and which ones via AI,
+the amount of labor employed for manual tasks $t_{h_{j}}^{H,k}$,
+amount of labor employed for managing AI chains $t_{a_{j}}^{AI,k}$,
+and the job assignments $\mathcal{J}^{k}=\{\mathcal{H}_{j}^{k},\mathcal{C}_{j}^{k}\}_{j=1}^{J_{k}}$
+while taking the AI quality $\alpha$ as given. 
+
+(?)This problem can be solved in two steps. In the (discrete) outer
+loop we fix some job assignment and in the (continuous) inner loop
+we solve for optimal labor allocations given a job design. The solution
+will be the job design maximizing profits.
+
+Equivalently, we can consider the dual problem:
+\begin{align}
+\min_{\{t_{h}^{H}\},\{t_{a}^{AI}\},\{\mathcal{H}_{j},\mathcal{A}_{j}\}_{j=1}^{J},J}\  & C_{k}=\sum_{j=1}^{J}\left[w_{j}\left(t_{j}^{s}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{H}\right)\right]\label{eq:dual}\\
+s.t.\  & X_{k}=\left(\sum_{j=1}^{J}\left[\sum_{a\in\mathcal{A}_{j}^{k}}\eta_{a}\left(t_{a}^{AI}\alpha^{-d_{a}}\right)^{\rho}+\sum_{h\in\mathcal{H}_{j}}\eta_{h}\left(t_{h}^{H}\right)^{\rho}\right]\right)^{\frac{1}{\rho}}\nonumber 
+\end{align}
+
+
+\subsection{Consumption}
+
+A representative household supplies one unit of labor inelastically
+and has a CES utility function over the $K$ goods:
+\[
+U(X_{1},...,X_{K})=\left(\sum_{k=1}^{K}\delta_{k}X_{k}^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}},\qquad0<\delta_{k}<1,\qquad\sum_{k=1}^{K}\delta_{k}=1,\qquad\sigma>0.
+\]
+Goods are substitutes if $\sigma>1$, complements if $\sigma<1$,
+and $\sigma=1$ corresponds to the Cobb--Douglas case. The household
+faces the budget constraint
+\begin{equation}
+\sum_{k=1}^{K}p^{k}X_{k}=\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}w_{j}^{k}t_{j}^{k}\right),\label{eq:budget_constraint}
+\end{equation}
+where $I$ is the total income earned from supplying labor to jobs
+across all sectors.
+
+\subsection{Labor Market Clearing}
+
+The (representative) household supplies one unit of labor inelastically
+to all modules across all sectors. The labor market clearing condition
+satisfies:
+\begin{equation}
+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left[\sum_{a\in\mathcal{A}_{j}^{k}}t_{a}^{AI,k}+\sum_{h\in\mathcal{H}_{j}^{k}}t_{h}^{H,k}\right]\right)=1.\label{eq:labor_market_clearing}
+\end{equation}
+
+
+\subsection{Some Math}
+
+\subsubsection{Production Side Equations}
+
+First, notice that since markets are competitive price of good $k$,
+$p^{k}$, is given by:
+\begin{equation}
+p^{k}=\frac{C_{k}}{X_{k}}\label{eq:price}
+\end{equation}
+Suppose the job design is fixed. In the inner loop firm solves (\ref{eq:firm_problem})
+via FOCs:
+\begin{align*}
+[t_{a}^{AI}] & :p^{k}X^{1-\rho}\eta_{a}\rho(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}})^{\rho-1}\alpha^{-d_{a_{j}}}=w_{j}\alpha^{-d_{a}}\quad\Rightarrow\quad t_{a_{j}}^{AI,k}=\alpha^{d_{a_{j}}}\left(\frac{w_{j}}{p^{k}\rho\eta_{a}X^{1-\rho}}\right)^{\frac{1}{\rho-1}}\\{}
+[t_{h}^{H}] & :p^{k}X^{1-\rho}\eta_{h}\rho(t_{h_{j}}^{H,k})^{\rho-1}=w_{j}\quad\Rightarrow\quad t_{h_{j}}^{H,k}=\left(\frac{w_{j}}{p^{k}\rho\eta_{h}X^{1-\rho}}\right)^{\frac{1}{\rho-1}}
+\end{align*}
+And thus the ratio of AI and human labor in a job is:
+\begin{equation}
+\frac{t_{a}^{AI,k}}{t_{h}^{H,k}}=\alpha^{d_{a}}\left(\frac{\eta_{h}}{\eta_{a}}\right)^{\frac{1}{\rho-1}},\label{eq:input_ratio}
+\end{equation}
+while the ratio of AI labor between two jobs is:
+\begin{equation}
+\frac{t_{a_{j}}^{AI,k}}{t_{a_{j^{'}}}^{AI,k}}=\alpha^{d_{a_{j}}-d_{a_{j^{'}}}}\left(\frac{w_{j}}{w_{j^{'}}}\right)^{\frac{1}{\rho-1}}.\label{eq:cross_job_AI_ratio}
+\end{equation}
+Equation (\ref{eq:cross_job_AI_ratio}) implies that job $j$ will
+have more AI labor in equilibrium if: 1) it is more ``AI-able'',
+meaning that AI is on average more successful in executing AI chains
+in job $j$, and 2) job $j$ is cheaper than job $j^{'}$.  
+
+Substituting (\ref{eq:input_ratio}) into the labor market clearing
+(\ref{eq:labor_market_clearing}) determines the level of human labor
+demanded:
+\[
+\sum_{k=1}^{K}\sum_{j=1}^{J_{k}}\left[\sum_{h\in\mathcal{H}_{j}^{k}}t_{h}^{H,k}+\sum_{a\in\mathcal{A}_{j}^{k}}t_{h}^{H,k}\,\alpha^{d_{a}}\left(\frac{\eta_{h}}{\eta_{a}}\right)^{\frac{1}{\rho-1}}\right]=1.
+\]
+Finally, using (\ref{eq:price}) and (\ref{eq:input_ratio}) the price
+of good $k$ can be written as a function of human labor demanded
+in each job:
+\[
+p^{k}=\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}\left[t_{j}^{s}+\sum_{h_{j}\in\mathcal{H}j^{k}}t{}_{h_{j}}^{H,k}\left(1+\alpha^{d_{a_{j}}}\left(\frac{\eta_{h_{j}}}{\eta_{a_{j}}}\right)^{\frac{1}{\rho-1}}\alpha^{-d_{a_{j}}}\right)\right]}{\left(\sum_{j=1}^{J_{k}}\sum_{h_{j}\in\mathcal{H}j^{k}}\eta_{h_{j}}(t_{h_{j}}^{H,k})^{\rho}\left[1+\left(\frac{\eta_{a_{j}}}{\eta_{h_{j}}}\right)^{\frac{-1}{\rho-1}}\right]\right)^{\frac{1}{\rho}}}.
+\]
+
+
+\subsubsection{Supply Side Equations}
+
+From the household's problem we obtain the demand for consumption
+good $X_{k}$ as:
+\begin{equation}
+X_{k}(p^{1},\ldots,p^{K},I)=\frac{\delta_{k}^{\sigma}(p^{k})^{-\sigma}}{\sum_{l=1}^{K}\delta_{l}^{\sigma}(p^{l})^{1-\sigma}}\left(\sum_{k\text{\textquoteright}=1}^{K}\sum_{j=1}^{J_{k\text{\textquoteright}}}w_{j}^{k\text{\textquoteright}}\left(t_{j}^{s,k\text{\textquoteright}}+\sum_{a_{j}\in\mathcal{A}_{j}^{k\text{\textquoteright}}}t_{a_{j}}^{AI,k\text{\textquoteright}}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k\text{\textquoteright}}}t_{h_{j}}^{AI,k\text{\textquoteright}}\right)\right).\label{eq:good_demand}
+\end{equation}
+
+
+\subsection{Equilibrium}
+
+Equilibrium is characterized by the following 6 equations that must
+be solved simultaneously. The unknowns are $\{\{t_{h_{j}}^{H,k}\}_{j=1}^{J_{k}}\}_{k=1}^{K}$,
+$\{\{t_{a_{j}}^{AI,k}\}_{j=1}^{J_{k}}\}_{k=1}^{K}$, $\{X_{k}\}_{k=1}^{K}$,
+and $\{p^{k}\}_{k=1}^{K}$:
+\begin{enumerate}
+\item Optimal labor allocation:
+\[
+t_{h_{j}}^{H,k}=\left(\frac{w_{j}}{p^{k}\rho\eta_{h}X^{1-\rho}}\right)^{\frac{1}{\rho-1}},\qquad t_{a_{j}}^{AI,k}=\alpha^{d_{a_{j}}}\left(\frac{w_{j}}{p^{k}\rho\eta_{a}X^{1-\rho}}\right)^{\frac{1}{\rho-1}}.
+\]
+\item Supply and demand of goods:
+\begin{align*}
+X_{k}^{S} & =\left(\sum_{j=1}^{J_{k}}\left[\sum_{a_{j}\in\mathcal{A}_{j}^{k}}\eta_{a_{j}}^{k}\left(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right)^{\rho}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}\eta_{h_{j}}\left(t_{h_{j}}^{H,k}\right)^{\rho}\right]\right)^{\frac{1}{\rho}},\\
+X_{k}^{D} & =\frac{\delta_{k}^{\sigma}(p^{k})^{-\sigma}}{\sum_{l=1}^{K}\delta_{l}^{\sigma}(p^{l})^{1-\sigma}}\left(\sum_{k\text{\textquoteright}=1}^{K}\sum_{j=1}^{J_{k\text{\textquoteright}}}w_{j}^{k\text{\textquoteright}}\left(t_{j}^{s,k\text{\textquoteright}}+\sum_{a_{j}\in\mathcal{A}_{j}^{k\text{\textquoteright}}}t_{a_{j}}^{AI,k\text{\textquoteright}}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k\text{\textquoteright}}}t_{h_{j}}^{AI,k\text{\textquoteright}}\right)\right),\\
+X_{k}^{D} & =X_{k}^{S}.
+\end{align*}
+\item Prices of goods follow:
+\[
+p^{k}=\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}\left[t_{j}^{s}+\sum_{h_{j}\in\mathcal{H}j^{k}}t_{h_{j}}^{H,k}+\sum_{a_{j}\in\mathcal{A}j^{k}}t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right]}{X_{k}}.
+\]
+\item Labor market clears:
+\[
+\sum_{k=1}^{K}\sum_{j=1}^{J_{k}}\left[\sum_{h\in\mathcal{H}j^{k}}t_{h_{j}}^{H,k}+\sum_{a\in\mathcal{A}j^{k}}t_{a_{j}}^{AI,k}\right]=1.
+\]
+\end{enumerate}
+Overall, we have one more equation than we have unknowns. So, we can
+solve for the equilibrium allocations and prices numerically. Note
+that these solutions take the job design as fixed. In the next step
+we should choose the optimal job design in the outer loop.
+\end{document}
