@@ -154,15 +154,134 @@ pagenumbering{arabic}
 
 \begin_layout Standard
 Here I discuss how we can build from a Leontief model at the task and job level to a CES production at the industry level.
- The key things that allows us to do this is introducing heterogeneity at the task 
+ The key idea that allows us to do this aggregation is having heterogeneity at the task 
 \bar under
 or
 \bar default
- job level (or maybe even both,
- but dealing with two types of heterogeneity just makes our lives harder w/o buying us anything further.
+ job level (or even both – but dealing with two types of heterogeneity just makes our lives harder w/o giving any additional insights.
  Thus,
- we focus on a single kind of heterogeneity).
+ I focus on only a single kind of heterogeneity).
  
+\end_layout
+
+\begin_layout Standard
+Ultimately I obtain a function of the form 
+\begin_inset Formula 
+\begin{equation}
+X=A\left(\sum_{j=1}^{J}\theta_{j}\ \left(w_{j}t_{j}\right)^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}},\label{eq:CES}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $w_{j}$
+\end_inset
+
+ is the job-level wage and 
+\begin_inset Formula $t_{j}$
+\end_inset
+
+ is the job-level amount of labor (i.e.,
+ human and AI labor combined).
+ Therefore,
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+inputs
+\begin_inset Quotes erd
+\end_inset
+
+ of the aggregate CES function are the job-level wage bills.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+I should mention that under the assumption that both AI and human tasks share the same wage within a job,
+ it is not possible to obtain a CES function of the following form
+\begin_inset Formula 
+\begin{equation}
+X=A\left(\theta_{H}L_{H}^{\frac{\sigma-1}{\sigma}}+\theta_{AI}L_{AL}^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}\label{eq:CES_desired}
+\end{equation}
+
+\end_inset
+
+with any kind of heterogeneity.
+
+\series default
+ In general,
+ obtaining a formula like in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CES_desired"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ doesn't make that much sense if both AI and human labor share the same wage within jobs,
+ because it is the relative wages of inputs that determines how much of each we should employ.
+ Even if we impose a single wage per job for all tasks to respect our existing framework another issue arises,
+ which is our inability to identify task durations (and thus hand-off costs) from task productivities.
+ We discuss the mathematics briefly in Section 6 but to preview,
+ to obtain a structure like 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CES_desired"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ we should have heterogenous productivity for firms at task level.
+ That is,
+ we should work with 
+\begin_inset Formula $z_{i}t_{i}$
+\end_inset
+
+ rather than 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ as cost of completing task 
+\begin_inset Formula $i$
+\end_inset
+
+ where 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+ is some productivity parameter that induces heterogeneity across firms in terms of how much of each task they use to produce a unit of output.
+ The structure with productivities,
+ however,
+ makes it impossible to isolate 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ from 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+ in estimation without imposing further assumptions on how 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ are related,
+ or using an additional data source to estimate 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+s separately.
 \end_layout
 
 \begin_layout Section
@@ -186,31 +305,32 @@ Tasks
 
 \begin_layout Standard
 In this writeup,
- I use 
-\begin_inset Quotes eld
-\end_inset
+ I use “modules” and “tasks” interchangeably.
+ I introduce this notion to simplify notation—
+specifically,
+ to represent tasks that form AI chains collectively as blocks with one cost parameter,
+ similar to human tasks.
+ This helps avoid the complexity arising from tracking which task(s) within the AI chain are automated and which are augmented.
+\end_layout
 
-modules” instead of “tasks” and treat the two terms interchangeably.
- Formally,
+\begin_layout Standard
+Formally,
  a module is a set of tasks that shares a unique time cost structure.
  A module is either a manual task (i.e.,
  each singleton set of manual tasks is a module) or an AI chain (i.e.,
- a set of tasks grouped together and represented by a composite time cost parameter).
- I introduce this notion to simplify notation—
-specifically,
- to represent an AI chain using its cost parameters and avoid the complexity that arises from tracking whether each task within the chain is automated or augmented.
+ a set of tasks grouped together and represented by a composite cost parameter).
  
 \end_layout
 
 \begin_layout Standard
-This split calls for a distinction between manual tasks and AI chains in notation as well.
- A manual module belongs either to 
+This distinction calls for separating manual tasks and AI chains in the notation as well.
+ Any module belongs either to 
 \begin_inset Formula $\mathcal{H}$
 \end_inset
 
 ,
  the set of tasks that are performed manually,
- or 
+ or to 
 \begin_inset Formula $\mathcal{A}$
 \end_inset
 
@@ -319,11 +439,19 @@ Here
 \end_inset
 
 .
- We can this the 
+ We refer to 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+ as 
 \begin_inset Quotes eld
 \end_inset
 
-intermediate good.
+intermediate good 
+\begin_inset Formula $j$
+\end_inset
+
+.
 \begin_inset Quotes erd
 \end_inset
 
@@ -406,7 +534,7 @@ where
 \begin_inset Formula $X$
 \end_inset
 
- due to the Leontief production structure given by:
+ due to the Leontief production structure is given by:
 \begin_inset Formula 
 \begin{equation}
 C=\sum_{j=1}^{J}b_{j}w_{j}t_{j}=\sum_{j=1}^{J}\left[\underbrace{\left(v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI}\right)}_{\text{wage of job \ensuremath{j}: }w_{j}}\underbrace{\left(t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}},\right)}_{\text{amount of labor employed for job \ensuremath{j}}}\right].\label{eq:ind_cost}
@@ -417,8 +545,8 @@ C=\sum_{j=1}^{J}b_{j}w_{j}t_{j}=\sum_{j=1}^{J}\left[\underbrace{\left(v_{L}+\sum
 
 \end_layout
 
-\begin_layout Subsection
-Heterogeneity
+\begin_layout Section
+Two Potential Types of Heterogeneity
 \end_layout
 
 \begin_layout Standard
@@ -536,6 +664,20 @@ to industry-level production.
  for the same output.
 \end_layout
 
+\begin_layout Standard
+The only difference that the choice of heterogeneity type makes is the form of input that goes into the final CES function:
+ while the second type of heterogeneity yields a CES function in terms of job wage bills 
+\begin_inset Formula $w_{j}t_{j}$
+\end_inset
+
+,
+ the first kind of heterogeneity results in a CES function with 
+\begin_inset Formula $\frac{w_{j}}{b_{j}}$
+\end_inset
+
+ as input.
+\end_layout
+
 \begin_layout Section
 Aggregation to CES with Job-Level Heterogeneity
 \end_layout
@@ -552,11 +694,33 @@ fixed
 \begin_inset Formula $t_{i}^{AI}$
 \end_inset
 
- values but varying 
+ values in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:task_job"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ but varying 
 \begin_inset Formula $b_{j}$
 \end_inset
 
-s
+s in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:job_ind"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+
 \bar default
 .
  Later I argue that working with the other type of heterogeneity is conceptually similar.
@@ -670,9 +834,9 @@ We assume this condition holds so we have an equality.
 
  as:
 \begin_inset Formula 
-\[
-w_{j}t_{j}=\kappa\left(\phi_{j}^{\frac{2-\mu}{1-\mu}}\ b_{j}^{\mu}\right)^{\frac{1-\mu}{\mu}}=\kappa\ \phi_{j}^{\frac{2}{\mu}-1}\ b_{j}^{1-\mu}.
-\]
+\begin{equation}
+w_{j}t_{j}=\kappa\left(\phi_{j}^{\frac{2-\mu}{1-\mu}}\ b_{j}^{\mu}\right)^{\frac{1-\mu}{\mu}}=\kappa\ \phi_{j}^{\frac{2}{\mu}-1}\ b_{j}^{1-\mu}.\label{eq:rest1}
+\end{equation}
 
 \end_inset
 
@@ -780,7 +944,18 @@ X & =\int_{0}^{\left(\frac{p}{\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \
 \begin_layout Enumerate
 Now we transform the expression into a CES looking formula by applying some math tricks.
  Ultimately,
- we want to have a function that looks like:
+ we want to have a function that looks like equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CES"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+:
 \begin_inset Formula 
 \[
 X=A\left(\sum_{j=1}^{J}\theta_{j}\ \left(w_{j}t_{j}\right)^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}.
@@ -795,31 +970,31 @@ First,
 
  must be the following:
 \begin_inset Formula 
-\[
-A\equiv\frac{c\ p^{J-\mu\nu}}{\left(\frac{J}{\mu}-\nu\right)\ \prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}},
-\]
+\begin{equation}
+A\equiv\frac{c\ p^{J-\mu\nu}}{\left(\frac{J}{\mu}-\nu\right)\ \prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}},\label{eq:TFP}
+\end{equation}
 
 \end_inset
 
 and
 \begin_inset Formula 
-\[
-\theta_{j}=\phi_{j}^{\frac{-1}{1-\mu}}.
-\]
+\begin{equation}
+\theta_{j}=\phi_{j}^{\frac{-1}{1-\mu}}.\label{eq:CES_weights}
+\end{equation}
 
 \end_inset
 
 Next,
  the two equations for the inner and outer exponents of the CES function must hold
 \begin_inset Formula 
-\begin{align*}
-\frac{\sigma}{\sigma-1} & =\frac{1-\mu}{\mu}\left(\mu\nu-J\right),\\
-\frac{\sigma-1}{\sigma} & =\frac{\mu}{1-\mu}.
-\end{align*}
+\begin{align}
+\frac{\sigma}{\sigma-1} & =\frac{1-\mu}{\mu}\left(\mu\nu-J\right),\label{eq:cond1}\\
+\frac{\sigma-1}{\sigma} & =\frac{\mu}{1-\mu}.\label{eq:cond2}
+\end{align}
 
 \end_inset
 
-From the second equation we derive a relation between 
+From the second identity we derive a relation between 
 \begin_inset Formula $\sigma$
 \end_inset
 
@@ -839,9 +1014,9 @@ Also,
  comparing the first and second equations,
  we conclude that the following restriction must hold:
 \begin_inset Formula 
-\[
-\mu\nu-J=1.
-\]
+\begin{equation}
+\mu\nu-J=1.\label{eq:rest2}
+\end{equation}
 
 \end_inset
 
@@ -876,7 +1051,29 @@ Implications
 \end_layout
 
 \begin_layout Standard
-Notice that we obtained two restrictions while deriving the final CES form:
+Notice that we obtained two restrictions (equations 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rest1"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:rest2"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) while deriving the final CES form:
 \end_layout
 
 \begin_layout Enumerate
@@ -902,7 +1099,158 @@ w_{j}t_{j}=\kappa\ \phi_{j}^{\frac{2}{\mu}-1}\ b_{j}^{1-\mu},
 \end_layout
 
 \begin_layout Standard
-But what do these mean?
+But what do these mean,
+ and how restrictive are they?
+ The first equation implies that the distribution 
+\begin_inset Formula $g(b_{1},\cdots,b_{J})$
+\end_inset
+
+ depends crucially on the job design:
+ if the job design changes then 
+\begin_inset Formula $w_{j}t_{j}$
+\end_inset
+
+ changes and a different set of 
+\begin_inset Formula $\phi_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $b_{j}$
+\end_inset
+
+ are needed to make the functional forms consistent.
+ The second equation is also restrictive:
+ it implies that the dispersion of 
+\begin_inset Formula $b_{j}$
+\end_inset
+
+s in 
+\begin_inset Formula $g(b_{1},\cdots,b_{J})$
+\end_inset
+
+ also depends on the job design (in particular,
+ the number of jobs).
+ Both these restrictions seem to cause issues in empirical work.
+\end_layout
+
+\begin_layout Section
+Heterogeneity giving 
+\begin_inset Formula $L_{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{AI}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To obtain a function like 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CES_desired"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ we must have the following Leontief structure:
+\end_layout
+
+\begin_layout Enumerate
+Tasks to Jobs:
+\begin_inset Formula 
+\[
+x_{j}=\min\left(\min_{h\in\mathcal{H}_{j}}z_{h}\ \frac{l_{h}^{H}}{t_{h}^{H}},\ \min_{a\in\mathcal{A}_{j}}z_{a}\ \frac{l_{a}^{AI}}{t_{a}^{AI}\alpha^{-d_{a}}}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Jobs to Industry:
+\begin_inset Formula 
+\[
+X=X=min(\frac{x_{1}}{b_{1}},\cdots,\frac{x_{J_{}}}{b_{J}}).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With the heterogeneity in form of productivity shocks to tasks durations we are unable to distinguish between 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+s and 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+s empirically.
+ When job productivity 
+\begin_inset Formula $z_{j}$
+\end_inset
+
+ (which is a weighted measure of human and AI modules' productivities in job 
+\begin_inset Formula $j$
+\end_inset
+
+) and intrinsic task durations 
+\begin_inset Formula $t_{j}$
+\end_inset
+
+ both vary across firms,
+ the observed data—
+consisting only of labor input 
+\begin_inset Formula $l_{j}$
+\end_inset
+
+ and output 
+\begin_inset Formula $x_{j}$
+\end_inset
+
+—
+provides only a combined measure of productivity-adjusted duration:
+\begin_inset Formula 
+\[
+\frac{l_{j}}{x_{j}}=\frac{t_{j}}{z_{j}}.
+\]
+
+\end_inset
+
+This implies perfect collinearity between t_i and z_i.
+ Without additional structure or data,
+ we cannot distinguish whether a given observed labor-output ratio arises due to high productivity and long intrinsic task duration,
+ or low productivity and short duration.
+ 
+\end_layout
+
+\begin_layout Standard
+To separately identify 
+\begin_inset Formula $t_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{j}$
+\end_inset
+
+,
+ we must explicitly impose additional parametric assumptions on relationship of 
+\begin_inset Formula $z_{j}$
+\end_inset
+
+s and 
+\begin_inset Formula $t_{j}$
+\end_inset
+
+s or use additional data on task-specific productivities.
 \end_layout
 
 \end_body
