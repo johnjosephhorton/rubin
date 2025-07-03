@@ -199,20 +199,17 @@ inputs
 \begin_layout Standard
 
 \series bold
-I should mention that under the assumption that both AI and human tasks share the same wage within a job,
- it is not possible to obtain a CES function of the following form
+This is different from our desired CES function form given below:
 \begin_inset Formula 
 \begin{equation}
-X=A\left(\theta_{H}L_{H}^{\frac{\sigma-1}{\sigma}}+\theta_{AI}L_{AL}^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}\label{eq:CES_desired}
+X=A\left(\theta_{H}L_{H}^{\frac{\sigma-1}{\sigma}}+\theta_{AI}L_{AL}^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}.\label{eq:CES_desired}
 \end{equation}
 
 \end_inset
 
-with any kind of heterogeneity.
-
+To obtain a CES function like 
 \series default
- In general,
- obtaining a formula like in 
+
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:CES_desired"
@@ -223,10 +220,31 @@ nolink "false"
 
 \end_inset
 
- doesn't make that much sense if both AI and human labor share the same wage within jobs,
- because it is the relative wages of inputs that determines how much of each we should employ.
- Even if we impose a single wage per job for all tasks to respect our existing framework another issue arises,
- which is our inability to identify task durations (and thus hand-off costs) from task productivities.
+
+\series bold
+ we need a type of heterogeneity that implies firms use different combinations manual tasks and AI-performed tasks for a given job.
+ 
+\series default
+For example,
+ if firm 1 deploys the manual section of job 1 twice and the AI tasks once whereas firm 2 deploys the same manual tasks once and the same AI tasks twice.
+ 
+\end_layout
+
+\begin_layout Standard
+In general,
+ obtaining a formula like 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CES_desired"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ doesn't make much sense in our context.
+ Because it doesn't allow identification of task durations (and thus hand-off costs).
  We discuss the mathematics briefly in Section 6 but to preview,
  to obtain a structure like 
 \begin_inset CommandInset ref
@@ -239,7 +257,11 @@ nolink "false"
 
 \end_inset
 
- we should have heterogenous productivity for firms at task level.
+ we should have some kind of productivity term applied to 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+s at task level that differs across firms.
  That is,
  we should work with 
 \begin_inset Formula $z_{i}t_{i}$
@@ -257,7 +279,7 @@ nolink "false"
 \begin_inset Formula $z_{i}$
 \end_inset
 
- is some productivity parameter that induces heterogeneity across firms in terms of how much of each task they use to produce a unit of output.
+ is some firm-specific productivity parameter inducing heterogeneity across firms in terms of how much of each task they use to produce a unit of output.
  The structure with productivities,
  however,
  makes it impossible to isolate 
@@ -268,7 +290,11 @@ nolink "false"
 \begin_inset Formula $z_{i}$
 \end_inset
 
- in estimation without imposing further assumptions on how 
+ while estimating 
+\begin_inset Formula $z_{i}t_{i}$
+\end_inset
+
+ in data without imposing further assumptions on how 
 \begin_inset Formula $z_{i}$
 \end_inset
 
@@ -277,7 +303,7 @@ nolink "false"
 \end_inset
 
  are related,
- or using an additional data source to estimate 
+ or using additional data to estimate 
 \begin_inset Formula $z_{i}$
 \end_inset
 
@@ -305,8 +331,41 @@ Tasks
 
 \begin_layout Standard
 In this writeup,
- I use “modules” and “tasks” interchangeably.
- I introduce this notion to simplify notation—
+ I work with 
+\begin_inset Quotes eld
+\end_inset
+
+modules
+\begin_inset Quotes erd
+\end_inset
+
+ instead of 
+\begin_inset Quotes eld
+\end_inset
+
+tasks,
+\begin_inset Quotes erd
+\end_inset
+
+ and use the terms interchangeably.
+ Specifically,
+ I call manual tasks 
+\begin_inset Quotes eld
+\end_inset
+
+tasks
+\begin_inset Quotes erd
+\end_inset
+
+ and AI chains as 
+\begin_inset Quotes eld
+\end_inset
+
+modules.
+\begin_inset Quotes erd
+\end_inset
+
+ I introduce this notion to simplify the notation—
 specifically,
  to represent tasks that form AI chains collectively as blocks with one cost parameter,
  similar to human tasks.
@@ -1225,7 +1284,15 @@ provides only a combined measure of productivity-adjusted duration:
 
 \end_inset
 
-This implies perfect collinearity between t_i and z_i.
+This implies perfect collinearity between 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+.
  Without additional structure or data,
  we cannot distinguish whether a given observed labor-output ratio arises due to high productivity and long intrinsic task duration,
  or low productivity and short duration.
@@ -1251,6 +1318,192 @@ s and
 \end_inset
 
 s or use additional data on task-specific productivities.
+\end_layout
+
+\begin_layout Section
+The Acemoglu Model
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "Acemoglu (2024)"
+target "https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf"
+literal "false"
+
+\end_inset
+
+ builds a model based on 
+\begin_inset CommandInset href
+LatexCommand href
+name "Acemoglu and Autor (2011)"
+target "https://economics.mit.edu/sites/default/files/publications/Skills%2C%20Tasks%20and%20Technologies%20-%20Implications%20for%20.pdf"
+literal "false"
+
+\end_inset
+
+.
+ I briefly review the model and highlight its differences with our approach.
+ The production function he uses is:
+\begin_inset Formula 
+\[
+X=\left(\int_{0}^{N}x(i)^{\frac{\sigma-1}{\sigma}}di\right)^{\frac{\sigma}{\sigma-1}},
+\]
+
+\end_inset
+
+where each task is done either using capital or labor:
+\begin_inset Formula 
+\[
+x(i)=A_{L}\gamma_{L}(i)\ l(i)+A_{K}\gamma_{K}(i)\ k(i).
+\]
+
+\end_inset
+
+Here 
+\begin_inset Formula $A_{L},A_{K}$
+\end_inset
+
+ are labor and capital augmenting (general) productivity terms shared across all tasks while 
+\begin_inset Formula $\gamma_{L}(i),\gamma_{K}(i)$
+\end_inset
+
+ are task-specific productivity terms.
+ The terms 
+\begin_inset Formula $l(i)$
+\end_inset
+
+ and 
+\begin_inset Formula $k(i)$
+\end_inset
+
+ denote how much labor and capital is dedicated to produce task 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ Notice that 
+\bar under
+with this formulation labor and capital are perfect substitutes at the task level
+\bar default
+.
+ Because of this perfect substitutability,
+ task 
+\begin_inset Formula $i$
+\end_inset
+
+ is performed by whichever type of input that is cheaper in that task.
+ He assumes 
+\begin_inset Formula $\frac{\gamma_{L}(i)}{\gamma_{K}(i)}$
+\end_inset
+
+ is increasing in task index 
+\begin_inset Formula $i$
+\end_inset
+
+ and thus there's a threshold 
+\begin_inset Formula $I$
+\end_inset
+
+ above (below) which all tasks are done by labor (capital).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+OUR APPROACH:
+ Taking the job design as given,
+ we could think of our manual vs.
+ AI performed tasks as perfect substitutes at the job level.
+ That is,
+ we can have something like:
+\begin_inset Formula 
+\[
+x_{j}=A_{H}\gamma_{H}(j)\ t^{H}(j)+A_{AI}\gamma_{AI}(j)\ t^{AI}(j)\alpha^{-d(j)}
+\]
+
+\end_inset
+
+It would be superfluous to do this though because in Acemoglu this characterization enables him to argue a task is done by the type of input that is cheaper.
+ In our model,
+ whether each task is done via human or AI is determined in the job design problem by solving for the global cost minimizing execution plan.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Also,
+ if we don't take the job design as given we should technically take a minimum over all possible sets of AI chains that contain task 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+All of this goes back to the core idea that 
+\begin_inset Quotes eld
+\end_inset
+
+chaining
+\begin_inset Quotes erd
+\end_inset
+
+ in our model may cause tasks that are more cost effective to be done via human labor in isolation may become a part of an AI chain in the globally optimum solution.
+ This formulation cannot capture the 
+\begin_inset Quotes eld
+\end_inset
+
+chaining
+\begin_inset Quotes erd
+\end_inset
+
+ idea and determines how a task is done by only locally considering its costs.
+\end_layout
+
+\begin_layout Standard
+Next,
+ in Acemoglu (2024) there is a single wage for all types of labor,
+ and this wage is an equilibrium object.
+ In contrast,
+ in our model workers earn different wages based on total required human capital of each job despite being ex-ante identical.
+ In Acemoglu (2024) because wages are fixed,
+ the decision to employ how much labor for each task is determined by the relative productivity of tasks.
+ That is,
+ for labor tasks 
+\begin_inset Formula $\gamma_{L}(i)$
+\end_inset
+
+ and for capital tasks 
+\begin_inset Formula $\gamma_{L}(i)$
+\end_inset
+
+ determine the share of labor and capital employed for producing 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ The choice of labor is explicitly given in equation (6) of Acemoglu's paper and is restated below while the capital choice equation is something I derived myself in a similar manner:
+\begin_inset Formula 
+\begin{align*}
+l(i) & =\frac{\gamma_{L}(i)^{\sigma-1}}{\int_{I}^{N}\gamma_{L}(i)^{\sigma-1}\ di}L,\\
+k(i) & =\frac{\gamma_{K}(i)^{\sigma-1}\rho(i)^{\sigma}}{\int_{I}^{N}\gamma_{L}(i)^{\sigma-1}\rho(i)^{\sigma}\ di}K.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again,
+ notice that amount of labor is determined by relative productivity of labor at different tasks whereas we take these values as fixed given the Leontief structure that we have in our model.
+ 
 \end_layout
 
 \end_body
