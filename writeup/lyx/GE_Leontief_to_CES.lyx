@@ -1343,8 +1343,8 @@ literal "false"
 
 \end_inset
 
-.
- I briefly review the model and highlight its differences with our approach.
+ and the Acemoglu-Restrepo series of papers.
+ I briefly review his model and highlight its differences with our approach.
  The production function he uses is:
 \begin_inset Formula 
 \[
@@ -1365,7 +1365,7 @@ Here
 \begin_inset Formula $A_{L},A_{K}$
 \end_inset
 
- are labor and capital augmenting (general) productivity terms shared across all tasks while 
+ are (general) labor and capital augmenting productivity terms shared across all tasks while 
 \begin_inset Formula $\gamma_{L}(i),\gamma_{K}(i)$
 \end_inset
 
@@ -1410,85 +1410,107 @@ with this formulation labor and capital are perfect substitutes at the task leve
 \end_layout
 
 \begin_layout Standard
+In our framework,
+ 
+\bar under
+if we treat the job design as given
+\bar default
+,
+ manual and AI-performed tasks can be considered perfect substitutes at the task level.
+ Specifically,
+ for the optimal AI chain 
+\begin_inset Formula $a$
+\end_inset
 
-\series bold
-OUR APPROACH:
- Taking the job design as given,
- we could think of our manual vs.
- AI performed tasks as perfect substitutes at the job level.
- That is,
- we can have something like:
+ containing task 
+\begin_inset Formula $i$
+\end_inset
+
+,
+ we have:
 \begin_inset Formula 
 \[
-x_{j}=A_{H}\gamma_{H}(j)\ t^{H}(j)+A_{AI}\gamma_{AI}(j)\ t^{AI}(j)\alpha^{-d(j)}
+x(i)=A_{H}\gamma_{H}(i)\ t^{H}(i)+A_{AI}\gamma_{AI}(a)\ t^{AI}(a)\alpha^{-d(a)}
 \]
 
 \end_inset
 
-It would be superfluous to do this though because in Acemoglu this characterization enables him to argue a task is done by the type of input that is cheaper.
- In our model,
- whether each task is done via human or AI is determined in the job design problem by solving for the global cost minimizing execution plan.
- 
+
 \end_layout
 
 \begin_layout Standard
-
-\series bold
-Also,
- if we don't take the job design as given we should technically take a minimum over all possible sets of AI chains that contain task 
+Note that writing the second term explicitly in this manner requires that the job design is fixed in advance.
+ If we were not to take the job design as given,
+ the second term would instead have to be expressed as the minimum over all possible AI chains that include task 
 \begin_inset Formula $i$
 \end_inset
 
 .
- 
 \end_layout
 
 \begin_layout Standard
+However,
+ adopting this formulation would be superfluous in our context.
+ In the Acemoglu model,
+ expressing the task-level trade-off explicitly makes it straightforward to determine which input—
+manual labor or AI—
+is cheaper on a task-by-task basis.
+ By contrast,
+ our model implicitly fixes the input choice once the job design is specified.
+ Without a given job design,
+ expressing the second term as a minimum across all AI chains would eliminate any simple analytical characterization of optimal task allocation.
+\end_layout
 
-\series bold
-All of this goes back to the core idea that 
-\begin_inset Quotes eld
+\begin_layout Standard
+Furthermore,
+ such a formulation would obscure our central idea of task “chaining.” Specifically,
+ it would fail to capture scenarios where a single task is cheaper if assigned individually to human labor,
+ but becomes more cost-effective overall when bundled with other tasks into an AI chain.
+ Properly representing this chaining phenomenon would require solving a system of 
+\begin_inset Formula $N$
 \end_inset
 
-chaining
-\begin_inset Quotes erd
+ simultaneous equations across 
+\begin_inset Formula $N$
 \end_inset
 
- in our model may cause tasks that are more cost effective to be done via human labor in isolation may become a part of an AI chain in the globally optimum solution.
- This formulation cannot capture the 
-\begin_inset Quotes eld
-\end_inset
-
-chaining
-\begin_inset Quotes erd
-\end_inset
-
- idea and determines how a task is done by only locally considering its costs.
+ tasks,
+ subject to a global cost-minimization constraint.
+ Thus,
+ Acemoglu’s characterization is not the best fit for our problem as it's useful when analyzing tasks in isolation,
+ but model emphasizes interdependencies between tasks and the overall cost advantages arising from task bundling.
 \end_layout
 
 \begin_layout Standard
 Next,
- in Acemoglu (2024) there is a single wage for all types of labor,
- and this wage is an equilibrium object.
+ in Acemoglu (2024),
+ there is a single equilibrium wage applicable to all types of labor.
  In contrast,
- in our model workers earn different wages based on total required human capital of each job despite being ex-ante identical.
- In Acemoglu (2024) because wages are fixed,
- the decision to employ how much labor for each task is determined by the relative productivity of tasks.
- That is,
- for labor tasks 
+ our model assigns different,
+ fixed wages to workers based on the total human capital required by each job,
+ despite workers being ex-ante identical.
+ Because wages are uniform and equilibrium-determined in Acemoglu’s setting,
+ the allocation of labor across tasks depends directly on the relative productivity parameters associated with each task.
+ Specifically,
+ the productivity parameters 
 \begin_inset Formula $\gamma_{L}(i)$
 \end_inset
 
- and for capital tasks 
-\begin_inset Formula $\gamma_{L}(i)$
+ for labor tasks and 
+\begin_inset Formula $\gamma_{K}(i)$
 \end_inset
 
- determine the share of labor and capital employed for producing 
+ for capital tasks determine the respective shares of labor and capital used in producing task 
 \begin_inset Formula $i$
 \end_inset
 
 .
- The choice of labor is explicitly given in equation (6) of Acemoglu's paper and is restated below while the capital choice equation is something I derived myself in a similar manner:
+\end_layout
+
+\begin_layout Standard
+The optimal labor choice in Acemoglu’s model is explicitly given by equation (6) in his paper,
+ restated here for clarity,
+ along with the analogous equation for capital (which I derive similarly):
 \begin_inset Formula 
 \begin{align*}
 l(i) & =\frac{\gamma_{L}(i)^{\sigma-1}}{\int_{I}^{N}\gamma_{L}(i)^{\sigma-1}\ di}L,\\
@@ -1501,9 +1523,68 @@ k(i) & =\frac{\gamma_{K}(i)^{\sigma-1}\rho(i)^{\sigma}}{\int_{I}^{N}\gamma_{L}(i
 \end_layout
 
 \begin_layout Standard
-Again,
- notice that amount of labor is determined by relative productivity of labor at different tasks whereas we take these values as fixed given the Leontief structure that we have in our model.
- 
+Note again that in Acemoglu’s framework,
+ the distribution of labor across tasks is explicitly driven by relative productivity differences.
+ By contrast,
+ our model takes these labor and capital allocations as predetermined due to the underlying Leontief structure.
+\end_layout
+
+\begin_layout Subsection
+Back to Productivity Heterogeneity at Task Level
+\end_layout
+
+\begin_layout Standard
+One approach to allowing labor allocations for the same task to vary across firms is to introduce the type of heterogeneity described earlier—
+specifically,
+ assuming firm-level differences in productivity for human labor and AI inputs at the task level.
+ In this setup,
+ instead of using a uniform parameter 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ for task durations,
+ we define the effective input as 
+\begin_inset Formula $z_{i}t_{i}$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+ captures productivity differences across firms.
+ Specifically,
+ if task i is performed manually,
+ its effective productivity is 
+\begin_inset Formula $z_{i}^{H}$
+\end_inset
+
+;
+ if performed using AI,
+ the corresponding productivity is 
+\begin_inset Formula $z_{i}^{AI}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+However,
+ this formulation faces the same challenges noted previously:
+ 1) it is empirically difficult to separately identify the parameters 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+,
+ and 2) introducing heterogeneity in this manner complicates the modeling of hand-off costs.
+ In particular,
+ it is unclear how productivity parameters should apply to these hand-offs:
+ how should we define productivity associated with transition costs between tasks,
+ and what theoretical justification would support such a definition?
 \end_layout
 
 \end_body
