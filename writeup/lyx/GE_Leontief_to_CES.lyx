@@ -160,26 +160,30 @@ QUESTION:
  HOW TO RELAX the fixed job design problem?
 \end_layout
 
+\begin_layout Section
+Overview
+\end_layout
+
 \begin_layout Standard
-Here I discuss how we can build an aggregate CES production function from Leontief model at the task and job level.
- The key idea that allows us to do this aggregation is introducing some type of heterogeneity among firms at the task 
+This write-up demonstrates how we can derive an aggregate CES production function from micro-level Leontief structures by introducing firm-level heterogeneity.
+ The key idea is to introduce some type of heterogeneity among firms at the task 
 \bar under
 or
 \bar default
  job level (or even both – but dealing with two types of heterogeneity makes our lives harder w/o giving much—
 if any—
 additional insights.
- Thus,
+ So,
  I focus on only a single kind of heterogeneity).
- Thus,
- there are two types of heterogeneity,
- each of which yield a different kind of aggregate CES function.
- Neither version is better than the other and we have to make compromises which one's a better fit for our setup after understanding their pros and cons.
  
 \end_layout
 
 \begin_layout Standard
-
+Thus,
+ there are two types of heterogeneity,
+ each of which yield a different kind of aggregate CES function.
+ Neither version is better than the other and we have to make compromises which one's a better fit for our setup after understanding their pros and cons.
+ 
 \bar under
 For a fixed job design
 \bar default
@@ -190,19 +194,19 @@ For a fixed job design
 \begin_layout Enumerate
 
 \series bold
-Firm heterogeneity at the job level:
+Job-level heterogeneity:
  
 \series default
 All firms face similar,
  fixed task durations,
- but need to employ different levels of the same job to produce one unit of the good.
+ but need to employ different levels of the same job's output to produce one unit of the good.
  
 \end_layout
 
 \begin_deeper
 \begin_layout Enumerate
 Pro:
- The assumptions underlying this version are the least restrictive and can be justified within the hand-off framework easily.
+ The underlying assumptions are the least restrictive and the model can support presence of hand-off costs as a distinct friction.
 \end_layout
 
 \begin_layout Enumerate
@@ -244,11 +248,11 @@ inputs
 \begin_layout Enumerate
 
 \series bold
-Firm heterogeneity at the task level:
+Task-level heterogeneity:
 
 \series default
- Each firm faces a different time duration parameter for each task,
- but once job boundaries are fixed all firms require the same number of each job outcome to produce one unit of the final good.
+ Each firm faces a different duration for each task,
+ but for fixed job boundaries all firms require the same number of job outputs to produce one unit of the final good.
  
 \end_layout
 
@@ -256,21 +260,19 @@ Firm heterogeneity at the task level:
 \begin_layout Enumerate
 Pro:
  It results in an aggregate production function that looks nice and is easy to work with:
-\series bold
-
 \begin_inset Formula 
 \begin{equation}
-X=A\left(\theta_{H}\left(\sum_{h\in\mathcal{H}}t_{h}^{H}\right)^{\frac{\sigma-1}{\sigma}}+\theta_{AI}\left(\sum_{a\in\mathcal{A}}t_{a}^{AI}\alpha^{-d(a)}\right)^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}.\label{eq:CES_desired}
+X=A\left(\theta_{H}\left(\sum_{h\in\mathcal{H}}t_{h}^{H}\right)^{\frac{\sigma-1}{\sigma}}+\theta_{AI}\left(\sum_{a\in\mathcal{A}}t_{a}^{AI}\alpha^{-d(a)}\right)^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}},\label{eq:CES_desired}
 \end{equation}
 
 \end_inset
 
-
+where inputs are aggregate human labor and aggregate AI labor.
 \end_layout
 
 \begin_layout Enumerate
 Con:
- The underlying assumptions of this version are at odds with our hand-off framework (and maybe even impossible to justify).
+ The underlying assumptions are at odds with our hand-off framework (and maybe even impossible to justify).
  In particular,
  this type of heterogeneity suffers from two flaws:
  (1) We have to combine the switching costs into either AI labor input or human labor input and act as if it's inherently the same kind of one of the two types of inputs (notice that 
@@ -404,57 +406,30 @@ Tasks
 
 \begin_layout Standard
 In this writeup,
- I work with 
-\begin_inset Quotes eld
-\end_inset
-
+ I work with a new notion:
+ 
+\shape italic
 modules
-\begin_inset Quotes erd
-\end_inset
+\shape default
+.
+ Formally,
+ a module is a set of tasks that represented by the same time cost parameters.
+\begin_inset Foot
+status collapsed
 
- instead of 
-\begin_inset Quotes eld
-\end_inset
-
-tasks.
-\begin_inset Quotes erd
-\end_inset
-
- Specifically,
- I call manual tasks 
-\begin_inset Quotes eld
-\end_inset
-
-tasks
-\begin_inset Quotes erd
-\end_inset
-
- and AI chains as 
-\begin_inset Quotes eld
-\end_inset
-
-modules.
-\begin_inset Quotes erd
-\end_inset
-
- This is to simplify the notation—
+\begin_layout Plain Layout
+This is to simplify the notation—
 specifically,
- to represent tasks that form AI chains collectively as blocks with one cost parameter,
+ to represent tasks that form AI chains collectively as blocks with one set of cost parameter,
  similar to human tasks.
  It helps avoid tracking which task(s) within the AI chain are automated and which are augmented.
 \end_layout
 
-\begin_layout Standard
-Formally,
- a module is a set of tasks that can be represented by the same time cost parameters.
+\end_inset
+
  A module is either a manual task (i.e.,
  each singleton set of manual tasks is a module) or an AI chain (i.e.,
  a set of tasks grouped together and represented by a composite cost parameter).
- 
-\end_layout
-
-\begin_layout Standard
-This distinction calls for separating manual tasks and AI chains in the notation as well.
  Any module belongs either to 
 \begin_inset Formula $\mathcal{H}$
 \end_inset
@@ -469,13 +444,34 @@ This distinction calls for separating manual tasks and AI chains in the notation
  the set of AI chains.
 \end_layout
 
+\begin_layout Standard
+In the rest of the document I refer to manual tasks as 
+\begin_inset Quotes eld
+\end_inset
+
+tasks
+\begin_inset Quotes erd
+\end_inset
+
+ and AI chains as 
+\begin_inset Quotes eld
+\end_inset
+
+modules,
+\begin_inset Quotes erd
+\end_inset
+
+ but I might also use the two terms interchangeably wherever the context is clear.
+ 
+\end_layout
+
 \begin_layout Section
 Hierarchical Production Model
 \end_layout
 
 \begin_layout Standard
 Consider the following hierarchical model of production.
- The smallest building block in the economy is a task denoted by 
+ The smallest building block in the economy is a task/module denoted by 
 \begin_inset Formula $i$
 \end_inset
 
@@ -508,7 +504,7 @@ Here we ignore how goods from different sectors
 \begin_inset Formula $k$
 \end_inset
 
- for the ease of notation in the remainder of this writeup.
+ for the ease of notation in the remainder of the writeup.
  
 \end_layout
 
@@ -539,7 +535,7 @@ Tasks to Jobs:
 \begin_inset Formula $t_{i}^{H}$
 \end_inset
 
- and if done with the help of AI,
+ and if done with AI,
  module 
 \begin_inset Formula $i$
 \end_inset
@@ -619,7 +615,7 @@ Here
 \begin_inset Formula $x_{j}$
 \end_inset
 
- needed for production of one unit of 
+ needed for producing one unit of 
 \begin_inset Formula $X$
 \end_inset
 
@@ -627,17 +623,17 @@ Here
 \end_layout
 
 \begin_layout Standard
-We modify these two equations later depending on the type of heterogeneity we are working with.
- It is important to note that wages within each job is the same for the human and AI inputs.
+We modify these two equations later depending on the type of heterogeneity we introduce.
+ Note that wages within each job are the same for the human and AI inputs.
  Namely,
  the wage rate at job 
 \begin_inset Formula $j$
 \end_inset
 
- is:
+ is fixed and equals:
 \begin_inset Formula 
 \begin{equation}
-w_{j}=v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI}.\label{eq:job_wage}
+w_{j}=v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a}^{AI}.\label{eq:job_wage}
 \end{equation}
 
 \end_inset
@@ -663,7 +659,7 @@ or
 \begin_layout Enumerate
 
 \series bold
-Heterogeneity at the job level:
+Job-level heterogeneity:
 
 \series default
  Here,
@@ -693,7 +689,7 @@ Writing a Report
 
  takes the same amount of time for all firms,
  regardless of the context or environment.
- What differs is the contribution of jobs—
+ What differs among firms is the contribution of jobs—
 specifically,
  the 
 \begin_inset Formula $b_{j}$
@@ -744,7 +740,7 @@ to industry-level production.
 \begin_layout Enumerate
 
 \series bold
-Heterogeneity at the task level:
+Task-level heterogeneity:
 
 \series default
  In this case,
@@ -779,12 +775,12 @@ Writing a Report
 \begin_inset Formula $t_{i}$
 \end_inset
 
- values vary across firms,
+s vary across firms,
  the 
 \begin_inset Formula $b_{j}$
 \end_inset
 
- parameters (which determine the contribution of a job to production) remain the same for a given job design.
+s (which determine the contribution of jobs to industry good production) remain the same for a given job design.
  For simplicity,
  we can normalize 
 \begin_inset Formula $b_{j}$
@@ -795,7 +791,7 @@ s to be 1 across all jobs.
 
 \begin_layout Standard
 The difference that the choice of heterogeneity type makes is the form of input that goes into the aggregated CES function:
- while the first type of heterogeneity yields a CES function in terms of job wage bills 
+ while the job-level heterogeneity yields a CES function in terms of job wage bills 
 \begin_inset Formula $w_{j}t_{j}$
 \end_inset
 
@@ -812,7 +808,7 @@ nolink "false"
 \end_inset
 
 ),
- the second kind results in a CES function with aggregate human labor and aggregate AI labor as input (i.e.,
+ the task-level heterogeneity results in a CES function with aggregate human labor and aggregate AI labor as input (i.e.,
  Equation 
 \begin_inset CommandInset ref
 LatexCommand eqref
@@ -844,7 +840,7 @@ fixed
 \begin_inset Formula $t_{i}^{AI}$
 \end_inset
 
- values in 
+ in 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:task_job"
@@ -1011,7 +1007,16 @@ The Holder inequality holds with equality when the two sequences inside the pare
 \end_inset
 
 We assume this condition holds so we have an equality.
- The condition can be rewritten in terms of wage bill of job 
+ This guarantees that there is no 
+\begin_inset Quotes eld
+\end_inset
+
+missing mass
+\begin_inset Quotes erd
+\end_inset
+
+ in the profitable region.
+ The above condition can be rewritten in terms of wage bill of job 
 \begin_inset Formula $j$
 \end_inset
 
@@ -1024,7 +1029,7 @@ w_{j}t_{j}=\kappa\left(\phi_{j}^{\frac{2-\mu}{1-\mu}}\ b_{j}^{\mu}\right)^{\frac
 \end_inset
 
 If this condition holds,
- we the profitability condition becomes:
+ the profitability condition becomes:
 \begin_inset Formula 
 \[
 C=\left(\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}\right)^{\frac{1}{\mu}}\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}\leq p
@@ -1207,26 +1212,21 @@ Also,
 \end_layout
 
 \begin_layout Standard
-The steps for working with the other type of heterogeneity—
-namely fixing 
-\begin_inset Formula $b_{j}$
+Notice that we could have have the same type of heterogeneity at the task-level (i.e.,
+ have task durations be 
+\begin_inset Formula $\frac{t_{i}}{b_{i}}$
 \end_inset
 
-s and allowing 
-\begin_inset Formula $t_{i}$
+ where 
+\begin_inset Formula $b_{i}$
 \end_inset
 
-s to vary—
-is conceptually similar.
- The only difference is that ultimately we would obtain a CES function whose constituent block is 
+ is distributed according to some power law distribution).
+ This would be conceptually similar to what we did here at the job level with the only difference that the input of the aggregate CES function would be 
 \begin_inset Formula $\frac{w_{j}}{b_{j}}$
 \end_inset
 
- rather than 
-\begin_inset Formula $w_{j}t_{j}$
-\end_inset
-
-.
+ instead.
 \end_layout
 
 \begin_layout Subsection
@@ -1322,7 +1322,7 @@ Aggregation to CES with Task-Level Heterogeneity (Gorman,
 \end_layout
 
 \begin_layout Standard
-Here I use the Gorman's result that requires different units of production be homothetic (and marginal rates of substitution between any two inputs be fixed across different firms).
+Here I use the Gorman (1959)'s result that requires different units of production be homothetic (and marginal rates of substitution between any two inputs be fixed across different firms).
  These conditions holds in our setup with the Leontief production and fixed AI and human tasks within firms.
  Appealing to the Gorman result we can represent the human labor and AI labor across different tasks with two (job-level) aggregate values 
 \begin_inset Formula $t_{j}^{H}$
@@ -1637,7 +1637,7 @@ Moreover,
 \end_layout
 
 \begin_layout Section
-Comparison to the Literature (The Acemoglu Model)
+Comparison to the Acemoglu Model
 \end_layout
 
 \begin_layout Standard
@@ -1729,7 +1729,7 @@ with this formulation labor and capital are perfect substitutes at the task leve
 In our framework,
  
 \bar under
-if we treat the job design as given
+if take the job design as given
 \bar default
 ,
  manual and AI-performed tasks can be considered perfect substitutes at the task level.
@@ -1755,12 +1755,12 @@ x(i)=A_{H}\gamma_{H}(i)\ t^{H}(i)+A_{AI}\gamma_{AI}(a)\ t^{AI}(a)\alpha^{-d(a)}
 \end_layout
 
 \begin_layout Standard
-Note that 
+But note that 
 \bar under
 writing the second term explicitly in this manner requires that the job design is fixed in advance
 \bar default
 .
- If we were not to take the job design as given,
+ If we were not to take the job design as fixed,
  the second term would instead have to be expressed as the minimum over all possible AI chains that include task 
 \begin_inset Formula $i$
 \end_inset
@@ -1772,8 +1772,7 @@ writing the second term explicitly in this manner requires that the job design i
 \end_layout
 
 \begin_layout Standard
-However,
- adopting this formulation would be superfluous in our context.
+Adopting this formulation would be superfluous in our context.
  In the Acemoglu model,
  expressing the task-level trade-off explicitly makes it straightforward to determine which input—
 manual labor or AI—
@@ -1805,13 +1804,29 @@ Furthermore,
 \end_layout
 
 \begin_layout Standard
+\begin_inset VSpace medskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Next,
  in Acemoglu (2024),
- there is a single equilibrium wage applicable to all types of labor.
+ labor is homogenous and there is a single equilibrium wage applicable to all types of workers.
  In contrast,
  our model assigns different,
- fixed wages to workers based on the total human capital required by each job,
- despite workers being ex-ante identical.
+ fixed wages to workers based on the total human capital required by each job despite workers being ex-ante identical.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Although,
+ if we are to use the aggregated production function we can implicitly assume all human labor is homogenous.
+\end_layout
+
+\end_inset
+
  Because wages are uniform and equilibrium-determined in Acemoglu’s setting,
  the allocation of labor across tasks depends directly on the relative productivity parameters associated with each task.
  Specifically,
@@ -1847,67 +1862,10 @@ k(i) & =\frac{\gamma_{K}(i)^{\sigma-1}\rho(i)^{\sigma}}{\int_{I}^{N}\gamma_{L}(i
 
 \begin_layout Standard
 Note again that in Acemoglu’s framework,
- the distribution of labor across tasks is explicitly driven by relative productivity differences.
+ the distribution of labor across tasks is explicitly driven by relative productivity differences and is an endogenous object.
  By contrast,
- our model takes these labor and capital allocations as predetermined due to the underlying Leontief structure.
-\end_layout
-
-\begin_layout Subsection
-Back to Productivity Heterogeneity at Task Level
-\end_layout
-
-\begin_layout Standard
-One approach to allowing labor allocations for the same task to vary across firms is to introduce the type of heterogeneity described earlier—
-specifically,
- assuming firm-level differences in productivity for human labor and AI inputs at the task level.
- In this setup,
- instead of using a uniform parameter 
-\begin_inset Formula $t_{i}$
-\end_inset
-
- for task durations,
- we define the effective input as 
-\begin_inset Formula $z_{i}t_{i}$
-\end_inset
-
-,
- where 
-\begin_inset Formula $z_{i}$
-\end_inset
-
- captures productivity differences across firms.
- Specifically,
- if task i is performed manually,
- its effective productivity is 
-\begin_inset Formula $z_{i}^{H}$
-\end_inset
-
-;
- if performed using AI,
- the corresponding productivity is 
-\begin_inset Formula $z_{i}^{AI}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-However,
- this formulation faces the same challenges noted previously:
- 1) it is empirically difficult to separately identify the parameters 
-\begin_inset Formula $t_{i}$
-\end_inset
-
- and 
-\begin_inset Formula $z_{i}$
-\end_inset
-
-,
- and 2) introducing heterogeneity in this manner complicates the modeling of hand-off costs.
- In particular,
- it is unclear how productivity parameters should apply to these hand-offs:
- how should we define productivity associated with transition costs between tasks,
- and what theoretical justification would support such a definition?
+ our model takes these labor and capital allocations as predetermined and fixed due to the underlying Leontief structure (although,
+ if we focus on the aggregated values we might be able to get away with this because the wages will depend on the optimal job design and are not fixed).
 \end_layout
 
 \end_body
