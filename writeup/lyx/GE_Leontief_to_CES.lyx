@@ -153,19 +153,63 @@ pagenumbering{arabic}
 \end_layout
 
 \begin_layout Standard
-Here I discuss how we can build from a Leontief model at the task and job level to a CES production at the industry level.
- The key idea that allows us to do this aggregation is having heterogeneity at the task 
+
+\series bold
+\bar under
+QUESTION:
+ HOW TO RELAX the fixed job design problem?
+\end_layout
+
+\begin_layout Standard
+Here I discuss how we can build an aggregate CES production function from Leontief model at the task and job level.
+ The key idea that allows us to do this aggregation is introducing some type of heterogeneity among firms at the task 
 \bar under
 or
 \bar default
- job level (or even both – but dealing with two types of heterogeneity just makes our lives harder w/o giving any additional insights.
+ job level (or even both – but dealing with two types of heterogeneity makes our lives harder w/o giving much—
+if any—
+additional insights.
  Thus,
  I focus on only a single kind of heterogeneity).
+ Thus,
+ there are two types of heterogeneity,
+ each of which yield a different kind of aggregate CES function.
+ Neither version is better than the other and we have to make compromises which one's a better fit for our setup after understanding their pros and cons.
  
 \end_layout
 
 \begin_layout Standard
-Ultimately I obtain a function of the form 
+
+\bar under
+For a fixed job design
+\bar default
+,
+ the two types of heterogeneity and the corresponding CES functions we yield are:
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Firm heterogeneity at the job level:
+ 
+\series default
+All firms face similar,
+ fixed task durations,
+ but need to employ different levels of the same job to produce one unit of the good.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Pro:
+ The assumptions underlying this version are the least restrictive and can be justified within the hand-off framework easily.
+\end_layout
+
+\begin_layout Enumerate
+Con:
+ The resulting CES function is not super interesting.
+ We obtain a CES aggregate production function of the following form:
+ 
 \begin_inset Formula 
 \begin{equation}
 X=A\left(\sum_{j=1}^{J}\theta_{j}\ \left(w_{j}t_{j}\right)^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}},\label{eq:CES}
@@ -196,20 +240,44 @@ inputs
  
 \end_layout
 
-\begin_layout Standard
+\end_deeper
+\begin_layout Enumerate
 
 \series bold
-This is different from our desired CES function form given below:
+Firm heterogeneity at the task level:
+
+\series default
+ Each firm faces a different time duration parameter for each task,
+ but once job boundaries are fixed all firms require the same number of each job outcome to produce one unit of the final good.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Pro:
+ It results in an aggregate production function that looks nice and is easy to work with:
+\series bold
+
 \begin_inset Formula 
 \begin{equation}
-X=A\left(\theta_{H}L_{H}^{\frac{\sigma-1}{\sigma}}+\theta_{AI}L_{AL}^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}.\label{eq:CES_desired}
+X=A\left(\theta_{H}\left(\sum_{h\in\mathcal{H}}t_{h}^{H}\right)^{\frac{\sigma-1}{\sigma}}+\theta_{AI}\left(\sum_{a\in\mathcal{A}}t_{a}^{AI}\alpha^{-d(a)}\right)^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}.\label{eq:CES_desired}
 \end{equation}
 
 \end_inset
 
-To obtain a CES function like 
-\series default
 
+\end_layout
+
+\begin_layout Enumerate
+Con:
+ The underlying assumptions of this version are at odds with our hand-off framework (and maybe even impossible to justify).
+ In particular,
+ this type of heterogeneity suffers from two flaws:
+ (1) We have to combine the switching costs into either AI labor input or human labor input and act as if it's inherently the same kind of one of the two types of inputs (notice that 
+\begin_inset Formula $t^{s}$
+\end_inset
+
+s do not directly appear in 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:CES_desired"
@@ -220,17 +288,17 @@ nolink "false"
 
 \end_inset
 
-
-\series bold
- we need a type of heterogeneity that implies firms use different combinations manual tasks and AI-performed tasks for a given job.
- 
-\series default
-For example,
- if firm 1 deploys the manual section of job 1 twice and the AI tasks once whereas firm 2 deploys the same manual tasks once and the same AI tasks twice.
+ and hand-off costs are subsumed by one of the inputs).
+ (2) Firms facing different task durations makes it impossible to identify task durations (actual task durations as well as hand-off costs) from the input productivity parameters.
  
 \end_layout
 
+\end_deeper
 \begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
 In general,
  obtaining a formula like 
 \begin_inset CommandInset ref
@@ -310,6 +378,11 @@ s at task level that differs across firms.
 s separately.
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 \begin_inset Quotes eld
 \end_inset
@@ -343,11 +416,10 @@ modules
 \begin_inset Quotes eld
 \end_inset
 
-tasks,
+tasks.
 \begin_inset Quotes erd
 \end_inset
 
- and use the terms interchangeably.
  Specifically,
  I call manual tasks 
 \begin_inset Quotes eld
@@ -365,16 +437,16 @@ modules.
 \begin_inset Quotes erd
 \end_inset
 
- I introduce this notion to simplify the notation—
+ This is to simplify the notation—
 specifically,
  to represent tasks that form AI chains collectively as blocks with one cost parameter,
  similar to human tasks.
- This helps avoid the complexity arising from tracking which task(s) within the AI chain are automated and which are augmented.
+ It helps avoid tracking which task(s) within the AI chain are automated and which are augmented.
 \end_layout
 
 \begin_layout Standard
 Formally,
- a module is a set of tasks that shares a unique time cost structure.
+ a module is a set of tasks that can be represented by the same time cost parameters.
  A module is either a manual task (i.e.,
  each singleton set of manual tasks is a module) or an AI chain (i.e.,
  a set of tasks grouped together and represented by a composite cost parameter).
@@ -388,7 +460,7 @@ This distinction calls for separating manual tasks and AI chains in the notation
 \end_inset
 
 ,
- the set of tasks that are performed manually,
+ the set of tasks that are performed manually by human,
  or to 
 \begin_inset Formula $\mathcal{A}$
 \end_inset
@@ -423,7 +495,6 @@ Consider the following hierarchical model of production.
  is formed by combining a bundle of jobs as the next production block in the hierarchy.
  Finally,
  goods from different sectors are combined together to produce a single final good in the economy.
- 
 \end_layout
 
 \begin_layout Standard
@@ -431,7 +502,7 @@ Here we ignore how goods from different sectors
 \begin_inset Formula $k\in\{1,\cdots,K\}$
 \end_inset
 
- are combined to create the final good.
+ are combined to create the unique final good.
  Also,
  we focus on a single sector and drop the industry index 
 \begin_inset Formula $k$
@@ -556,47 +627,17 @@ Here
 \end_layout
 
 \begin_layout Standard
-The cost of performing one unit of job 
+We modify these two equations later depending on the type of heterogeneity we are working with.
+ It is important to note that wages within each job is the same for the human and AI inputs.
+ Namely,
+ the wage rate at job 
 \begin_inset Formula $j$
 \end_inset
 
  is:
 \begin_inset Formula 
 \begin{equation}
-w_{j}=v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI},\label{eq:job_wage}
-\end{equation}
-
-\end_inset
-
-and total labor required for one unit of job 
-\begin_inset Formula $j$
-\end_inset
-
- is:
-\begin_inset Formula 
-\begin{equation}
-t_{j}=t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}},\label{eq:job_labor}
-\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula $t_{j}^{s}$
-\end_inset
-
- is the switching or hand-off cost of job 
-\begin_inset Formula $j$
-\end_inset
-
-.
- The cost of producing one unit of industry good 
-\begin_inset Formula $X$
-\end_inset
-
- due to the Leontief production structure is given by:
-\begin_inset Formula 
-\begin{equation}
-C=\sum_{j=1}^{J}b_{j}w_{j}t_{j}=\sum_{j=1}^{J}\left[\underbrace{\left(v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI}\right)}_{\text{wage of job \ensuremath{j}: }w_{j}}\underbrace{\left(t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}},\right)}_{\text{amount of labor employed for job \ensuremath{j}}}\right].\label{eq:ind_cost}
+w_{j}=v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI}.\label{eq:job_wage}
 \end{equation}
 
 \end_inset
@@ -605,12 +646,16 @@ C=\sum_{j=1}^{J}b_{j}w_{j}t_{j}=\sum_{j=1}^{J}\left[\underbrace{\left(v_{L}+\sum
 \end_layout
 
 \begin_layout Section
-Two Potential Types of Heterogeneity
+Two Types of Heterogeneity
 \end_layout
 
 \begin_layout Standard
 There are two ways to incorporate heterogeneity into the model:
- at the task level or the job level.
+ at the task level 
+\bar under
+or
+\bar default
+ the job level.
  Below,
  I briefly discuss the implications of each approach.
 \end_layout
@@ -618,53 +663,7 @@ There are two ways to incorporate heterogeneity into the model:
 \begin_layout Enumerate
 
 \series bold
-Heterogeneity at the task level but not the job level:
-
-\series default
- In this case,
- tasks do not have fixed durations—
-i.e.,
- different firms have different values of 
-\begin_inset Formula $t_{i}^{H}$
-\end_inset
-
- and 
-\begin_inset Formula $t_{i}^{AI}$
-\end_inset
-
- for the same task/module 
-\begin_inset Formula $i$
-\end_inset
-
-.
- For example,
- the task of 
-\begin_inset Quotes eld
-\end_inset
-
-Writing a Report
-\begin_inset Quotes erd
-\end_inset
-
- might take longer for firm 1 than for firm 2.
- Despite this variation in task durations,
- a job composed of the same set of tasks contributes equally to the production of the industry good across firms.
- This means that while the 
-\begin_inset Formula $t_{i}$
-\end_inset
-
- values vary across firms,
- the 
-\begin_inset Formula $b_{j}$
-\end_inset
-
- parameters (which determine the contribution of a job to production) remain the same for a given job design.
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Heterogeneity at the job level but not the task level:
+Heterogeneity at the job level:
 
 \series default
  Here,
@@ -700,7 +699,18 @@ specifically,
 \begin_inset Formula $b_{j}$
 \end_inset
 
- parameter—
+ parameter in Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:job_ind"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+—
 to industry-level production.
  For instance,
  firm 1 might use 2 units of intermediate good 
@@ -711,7 +721,11 @@ to industry-level production.
 \begin_inset Formula $x_{j_{2}}$
 \end_inset
 
- to produce one unit of the industry good,
+ (thus 
+\begin_inset Formula $b_{1}=2,b_{2}=1$
+\end_inset
+
+) to produce one unit of the industry good,
  whereas firm 2 might require 5 units of 
 \begin_inset Formula $x_{j_{1}}$
 \end_inset
@@ -720,29 +734,106 @@ to industry-level production.
 \begin_inset Formula $x_{j_{2}}$
 \end_inset
 
- for the same output.
+ for the same output (thus 
+\begin_inset Formula $b_{1}=5,b_{2}=1$
+\end_inset
+
+) .
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Heterogeneity at the task level:
+
+\series default
+ In this case,
+ tasks do not have fixed durations—
+i.e.,
+ different firms have different values of 
+\begin_inset Formula $t_{i}^{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{i}^{AI}$
+\end_inset
+
+ for the same task/module 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ For example,
+ the task of 
+\begin_inset Quotes eld
+\end_inset
+
+Writing a Report
+\begin_inset Quotes erd
+\end_inset
+
+ might take longer for firm 1 than for firm 2 in the same context (some firms are just better at writing reports).
+ Despite this variation in task durations,
+ a job composed of the same set of tasks contributes equally to the production of the industry good across firms.
+ This means that while the 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ values vary across firms,
+ the 
+\begin_inset Formula $b_{j}$
+\end_inset
+
+ parameters (which determine the contribution of a job to production) remain the same for a given job design.
+ For simplicity,
+ we can normalize 
+\begin_inset Formula $b_{j}$
+\end_inset
+
+s to be 1 across all jobs.
 \end_layout
 
 \begin_layout Standard
-The only difference that the choice of heterogeneity type makes is the form of input that goes into the final CES function:
- while the second type of heterogeneity yields a CES function in terms of job wage bills 
+The difference that the choice of heterogeneity type makes is the form of input that goes into the aggregated CES function:
+ while the first type of heterogeneity yields a CES function in terms of job wage bills 
 \begin_inset Formula $w_{j}t_{j}$
 \end_inset
 
-,
- the first kind of heterogeneity results in a CES function with 
-\begin_inset Formula $\frac{w_{j}}{b_{j}}$
+ (i.e.,
+ Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CES"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
 \end_inset
 
- as input.
+),
+ the second kind results in a CES function with aggregate human labor and aggregate AI labor as input (i.e.,
+ Equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:CES_desired"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Section
-Aggregation to CES with Job-Level Heterogeneity
+Aggregation to CES with Job-Level Heterogeneity (Houthakker,
+ 1955)
 \end_layout
 
 \begin_layout Standard
-I start with the second type of heterogeneity:
+I start with the first kind of heterogeneity:
  
 \bar under
 fixed 
@@ -782,7 +873,6 @@ nolink "false"
 
 \bar default
 .
- Later I argue that working with the other type of heterogeneity is conceptually similar.
  To formally derive the CES function,
  we assume the firm-specific productivity parameters 
 \begin_inset Formula $b_{j}$
@@ -793,6 +883,39 @@ nolink "false"
 \[
 g(b_{1},\cdots,b_{J})\propto\left(\sum_{j=1}^{J}\phi_{j}b_{j}^{\mu}\right)^{-\nu},\qquad\phi_{j}>0,\mu>0,\nu>1.
 \]
+
+\end_inset
+
+Total labor employed for producing one unit of job 
+\begin_inset Formula $j$
+\end_inset
+
+ is:
+\begin_inset Formula 
+\begin{equation}
+t_{j}=t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}},\label{eq:job_labor}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $t_{j}^{s}$
+\end_inset
+
+ is the switching or hand-off cost of job 
+\begin_inset Formula $j$
+\end_inset
+
+.
+ The cost of producing one unit of industry good 
+\begin_inset Formula $X$
+\end_inset
+
+ due to the Leontief production structure is given by:
+\begin_inset Formula 
+\begin{equation}
+C=\sum_{j=1}^{J}b_{j}w_{j}t_{j}=\sum_{j=1}^{J}\left[\underbrace{\left(v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI}\right)}_{\text{wage of job \ensuremath{j}: }w_{j}}\underbrace{\left(t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}},\right)}_{\text{amount of labor employed for job \ensuremath{j}}}\right].\label{eq:ind_cost}
+\end{equation}
 
 \end_inset
 
@@ -808,6 +931,7 @@ While at job and task levels production is strictly Leontief (no direct substitu
 \end_inset
 
  across firms cause changes in relative job-level wages to alter the set of profitable firms.
+ This is the Houthakker (1955) approach.
 \end_layout
 
 \begin_layout Paragraph
@@ -1105,8 +1229,8 @@ is conceptually similar.
 .
 \end_layout
 
-\begin_layout Section
-Implications
+\begin_layout Subsection
+Implications of Job-Level Heterogeneity
 \end_layout
 
 \begin_layout Standard
@@ -1193,19 +1317,198 @@ s in
 \end_layout
 
 \begin_layout Section
-Heterogeneity giving 
-\begin_inset Formula $L_{H}$
+Aggregation to CES with Task-Level Heterogeneity (Gorman,
+ 1959)
+\end_layout
+
+\begin_layout Standard
+Here I use the Gorman's result that requires different units of production be homothetic (and marginal rates of substitution between any two inputs be fixed across different firms).
+ These conditions holds in our setup with the Leontief production and fixed AI and human tasks within firms.
+ Appealing to the Gorman result we can represent the human labor and AI labor across different tasks with two (job-level) aggregate values 
+\begin_inset Formula $t_{j}^{H}$
 \end_inset
 
- and 
-\begin_inset Formula $L_{AI}$
+ (for human labor) and 
+\begin_inset Formula $t_{j}^{AI}\alpha^{-d_{j}}$
+\end_inset
+
+ (for AI labor).
+ Here,
+ the difficulty of the composite AI labor,
+ 
+\begin_inset Formula $d_{j}$
+\end_inset
+
+,
+ is defined such that the following holds:
+\begin_inset Formula 
+\[
+t_{j}^{AI}\ \alpha^{-d_{j}}=\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\ \alpha^{-d_{a}}\Longleftrightarrow\alpha^{-d_{j}}=\frac{\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\ \alpha^{-d_{a}}}{t_{j}^{AI}}=\frac{\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\ \alpha^{-d_{a}}}{\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}}.
+\]
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-To obtain a function like 
+In the task-level type of heterogeneity I assume different firms face different task durations.
+ The economic justification for this assumption is that firm customizes tasks in their own way (e.g.,
+ Google and local restaurant workers both write reports,
+ but what goes into the report and how much time workers spend on writing a report differs between the two cases).
+ 
+\end_layout
+
+\begin_layout Standard
+Notice that at the industry-level,
+ jobs are perfect complements and thus the marginal rate of substitution between any two inputs of different are fixed (i.e.,
+ human labor 
+\end_layout
+
+\begin_layout Standard
+The issue with this way of modeling the problem is that task durations (and in particular the hand-off costs) cannot be identified from aggregate estimates.
+ That is,
+ there is no mapping from which we can back out micro-level parameters from the macro-level values.
+ 
+\end_layout
+
+\begin_layout Standard
+To model the heterogeneity in task durations we assume each firm has its own 
+\begin_inset Quotes eld
+\end_inset
+
+productivity
+\begin_inset Quotes erd
+\end_inset
+
+ parameter for each task that changes the effective duration of that task for the firm.
+ That is,
+ instead of 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ firms face effective task duration 
+\begin_inset Formula $z_{i}t_{i}$
+\end_inset
+
+ for some productivity parameter 
+\begin_inset Formula $z_{i}$
+\end_inset
+
+.
+ To simplify the math,
+ we fix the productivity parameter for one input and assume the relative human to AI input is heterogenously distributed across firms.
+ In particular,
+ we assume:
+\begin_inset Formula 
+\[
+r_{fj}=\frac{t_{fj}^{H}}{t_{fj}^{AI}\alpha^{-d_{j}}}
+\]
+
+\end_inset
+
+that Pareto distributed as follows:
+\begin_inset Formula 
+\[
+G(r)=1-\left(\frac{r_{j,min}}{r}\right)^{\gamma_{j}}
+\]
+
+\end_inset
+
+Remember that wage rates at job job 
+\begin_inset Formula $j$
+\end_inset
+
+ is fixed:
+\begin_inset Formula 
+\[
+w_{j}=v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI}.
+\]
+
+\end_inset
+
+The human and AI labor input at job 
+\begin_inset Formula $j$
+\end_inset
+
+ is defined as:
+\begin_inset Formula 
+\begin{align*}
+t_{j}^{H} & =t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI},\\
+t_{j}^{AI} & =\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}}.
+\end{align*}
+
+\end_inset
+
+Here we assume 
+\begin_inset Formula $t_{j}^{s}$
+\end_inset
+
+ is a part of the human portion of the job and is handled fully manually by the human.
+ The aggregate input at job 
+\begin_inset Formula $j$
+\end_inset
+
+ across all firms is:
+\begin_inset Formula 
+\begin{align*}
+T_{j}^{H} & =\sum_{f}\frac{r_{fj}}{1+r_{fj}}t_{fj}=\sum_{f}s_{fj}^{H}t_{fj},\\
+T_{j}^{AI} & =\sum_{f}\frac{1}{1+r_{fj}}t_{fj}=\sum_{f}s_{fj}^{AI}t_{fj}.
+\end{align*}
+
+\end_inset
+
+Here,
+ 
+\begin_inset Formula $s_{fj}^{x}$
+\end_inset
+
+ is the average share of input 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ The average human-AI intensity ratio is thus:
+\begin_inset Formula 
+\[
+\bar{r}_{j}=\frac{T_{j}^{H}}{T_{j}^{AI}}.
+\]
+
+\end_inset
+
+Since all tasks within the job earn the same wage 
+\begin_inset Formula $w_{j}$
+\end_inset
+
+ aggregate input cost becomes
+\begin_inset Formula 
+\[
+C_{j}^{H}=w_{j}T_{j}^{H},\qquad C_{j}^{AI}=w_{j}T_{j}^{AI},
+\]
+
+\end_inset
+
+which aggregated across jobs yields:
+\begin_inset Formula 
+\[
+C^{H}=\sum_{j}w_{j}T_{j}^{H},\qquad C^{AI}=\sum_{j}w_{j}T_{j}^{AI}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The aggregate wages for human and AI at the industry-level are thus:
+\begin_inset Formula 
+\[
+W^{H}=\frac{C^{H}}{\sum T_{j}^{H}}=\frac{\sum_{j}w_{j}T_{j}^{H}}{\sum T_{j}^{H}},\qquad W^{AI}=\frac{C^{AI}}{\sum T_{j}^{AI}}=\frac{\sum_{j}w_{j}T_{j}^{AI}}{\sum T_{j}^{AI}}.
+\]
+
+\end_inset
+
+Since in 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:CES_desired"
@@ -1216,14 +1519,15 @@ nolink "false"
 
 \end_inset
 
- we must have the following Leontief structure:
-\end_layout
+ the 
+\begin_inset Formula $\theta$
+\end_inset
 
-\begin_layout Enumerate
-Tasks to Jobs:
+ parameters correspond the equilibrium factor share of expenditures,
+ we have:
 \begin_inset Formula 
 \[
-x_{j}=\min\left(\min_{h\in\mathcal{H}_{j}}z_{h}\ \frac{l_{h}^{H}}{t_{h}^{H}},\ \min_{a\in\mathcal{A}_{j}}z_{a}\ \frac{l_{a}^{AI}}{t_{a}^{AI}\alpha^{-d_{a}}}\right)
+\theta_{H}=\frac{C^{H}}{C^{H}+C^{AI}}=\frac{\sum_{j}w_{j}T_{j}^{H}}{\sum_{j}w_{j}\left(T_{j}^{H}+T_{j}^{AI}\right)},\qquad\theta_{AI}=\frac{C^{AI}}{C^{H}+C^{AI}}=\frac{\sum_{j}w_{j}T_{j}^{AI}}{\sum_{j}w_{j}\left(T_{j}^{H}+T_{j}^{AI}\right)}.
 \]
 
 \end_inset
@@ -1231,16 +1535,26 @@ x_{j}=\min\left(\min_{h\in\mathcal{H}_{j}}z_{h}\ \frac{l_{h}^{H}}{t_{h}^{H}},\ \
 
 \end_layout
 
-\begin_layout Enumerate
-Jobs to Industry:
+\begin_layout Standard
+This only leaves us with finding the aggregate elasticity parameter 
+\begin_inset Formula $\sigma$
+\end_inset
+
+.
+ By definition:
 \begin_inset Formula 
 \[
-X=X=min(\frac{x_{1}}{b_{1}},\cdots,\frac{x_{J_{}}}{b_{J}}).
+\sigma\equiv\frac{dln\left(\frac{T^{H}}{T^{AI}}\right)}{dln\left(\frac{W^{AI}}{W^{H}}\right)},
 \]
 
 \end_inset
 
+which should be calculable given the Pareto distribution assumption,
+ albeit with same painful steps.
+\end_layout
 
+\begin_layout Subsection
+Implications of Task-Level Heterogeneity
 \end_layout
 
 \begin_layout Standard
@@ -1296,11 +1610,7 @@ This implies perfect collinearity between
  Without additional structure or data,
  we cannot distinguish whether a given observed labor-output ratio arises due to high productivity and long intrinsic task duration,
  or low productivity and short duration.
- 
-\end_layout
-
-\begin_layout Standard
-To separately identify 
+ To separately identify 
 \begin_inset Formula $t_{j}$
 \end_inset
 
@@ -1320,8 +1630,14 @@ s and
 s or use additional data on task-specific productivities.
 \end_layout
 
+\begin_layout Standard
+Moreover,
+ with this characterization,
+ we are unable to identify and measure the hand-off component of the input.
+\end_layout
+
 \begin_layout Section
-The Acemoglu Model
+Comparison to the Literature (The Acemoglu Model)
 \end_layout
 
 \begin_layout Standard
@@ -1439,13 +1755,20 @@ x(i)=A_{H}\gamma_{H}(i)\ t^{H}(i)+A_{AI}\gamma_{AI}(a)\ t^{AI}(a)\alpha^{-d(a)}
 \end_layout
 
 \begin_layout Standard
-Note that writing the second term explicitly in this manner requires that the job design is fixed in advance.
+Note that 
+\bar under
+writing the second term explicitly in this manner requires that the job design is fixed in advance
+\bar default
+.
  If we were not to take the job design as given,
  the second term would instead have to be expressed as the minimum over all possible AI chains that include task 
 \begin_inset Formula $i$
 \end_inset
 
 .
+ In other words,
+ for a fixed job design,
+ any two modules are effectively independent whereas from one job design to the next this independence is violated.
 \end_layout
 
 \begin_layout Standard
