@@ -229,7 +229,9 @@ specifically,
 \end_layout
 
 \begin_layout Standard
-In the rest of the document I refer to manual tasks as 
+The idea behind introducing modules is to treat AI chains similar to tasks,
+ with their own cost parameters and bypass the notational complexity arising from tracking which task(s) in the chain are automated and which task is augmented.
+ In the rest of the document I refer to manual tasks as 
 \begin_inset Quotes eld
 \end_inset
 
@@ -335,7 +337,7 @@ Tasks to Jobs:
  is the difficulty parameter of the AI chain.
 \begin_inset Formula 
 \begin{equation}
-x_{j}=\min\left(\min_{h\in\mathcal{H}_{j}}\ \frac{l_{h}^{H}}{t_{h}^{H}},\ \min_{a\in\mathcal{A}_{j}}\ \frac{l_{a}^{AI}}{t_{a}^{AI}\ \alpha^{-d_{a}}}\right)\label{eq:task_job}
+x_{j}=\min\left(\min_{h\in\mathcal{H}_{j}}\ \frac{l_{h}^{H}}{z_{h}\ t_{h}^{H}},\ \min_{a\in\mathcal{A}_{j}}\ \frac{l_{a}^{AI}}{z_{a}\ t_{a}^{AI}}\right)\label{eq:task_job}
 \end{equation}
 
 \end_inset
@@ -1144,17 +1146,205 @@ nolink "false"
 \end_layout
 
 \begin_layout Section
-Aggregation to CES with Task-Level Heterogeneity (Gorman,
- 1953,
- Levhari,
- 1968,
- Sato,
- 1975)
+Within-Firm Aggregation:
+ Leontief with Many Inputs to Leontief with Firm-Level Aggregate AI and Human Labor 
 \end_layout
 
 \begin_layout Standard
-Here I first show that the Gorman (1953) conditions hold so we can represent the Leontief production function as a function of aggregate human and aggregate AI labor.
- Then I appeal to Levhari (1968) and Sato (1975) to derive the proper form of heterogeneity between firm-level AI and human labor in order to have an industry with aggregate CES production with industry-level aggregate AI and aggregate labor input.
+I begin with a within-firm aggregation that converts firm's production function from a Leontief function with many human labor and AI labor inputs—
+one input for each module as in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:task_job"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+—
+to a (firm-aggregated) Leontief function with two inputs:
+ firm-aggregate human labor and firm-aggregate AI labor.
+\end_layout
+
+\begin_layout Standard
+Fix a job design.
+ That is,
+ take the job boundaries and the kind of input that produces human tasks and AI modules as given.
+ The required amount of time to spend on each task/module is thus fixed for the firm.
+ Given the Leontief nature of production,
+ the relative amount of time spent between any two modules is independent of units produced and wage rates:
+\begin_inset Formula 
+\[
+\frac{l^{i}\left(w,x\right)}{l^{j}\left(w,x\right)}=\frac{z_{i}\ t_{i}}{z_{j}\ t_{j}}=const^{ij}.
+\]
+
+\end_inset
+
+This implies that the rate of substitution between any two modules 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+ is independent of other production modules:
+\begin_inset Formula 
+\begin{equation}
+\frac{\Delta}{\Delta l_{k}}\left(\frac{\frac{\Delta x}{\Delta l_{i}}}{\frac{\Delta x}{\Delta l_{j}}}\right)=0\qquad\qquad\forall k\neq i,j.\label{eq:task_subst_rate_indep}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A necessary and sufficient condition for representing the firm's production as a Leontief function in terms of (firm-level) aggregate human labor and aggregate AI labor is that the rate of substitution between any two modules of the same input type is independent of any module of in the other aggregate input type (Leontief,
+ 1947,
+ Fisher 1965,
+ Felipe and Fisher 2003).
+ That is,
+ the relative hired amount for any two modules of the same aggregated input type is only determined by modules in that aggregation group.
+ The condition in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:task_subst_rate_indep"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ is in fact stricter than necessary for obtaining the firm-level aggregation result.
+ It not only satisfies the needed condition but also provides a stronger requirement:
+ that the rate of substitution between modules within the same (firm-level) aggregated input type is also independent of other modules within that same aggregated input type.
+\end_layout
+
+\begin_layout Standard
+Therefore,
+ we can represent the production function given in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:task_job"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ as:
+\begin_inset Formula 
+\[
+x=\min\ \{\frac{H}{\sum_{j=1}^{J}t_{j}^{s}+\sum_{h\in\mathcal{H}}z_{h}\ t_{h}^{H}},\ \frac{AI}{\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}}\},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $AI$
+\end_inset
+
+ are respectively the total amount of human labor and total amount of AI labor to produce one unit of the industry good 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Notice that in we are assuming hand-offs are standalone tasks that are done fully manually by human.
+ From here onwards,
+ we only work with 
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $AI$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For the sake of the main aggregation argument presented in the next section,
+ assume firms face an firm-level aggregate productivity measure for each type of input:
+\begin_inset Formula 
+\begin{equation}
+x=\min\ \{\frac{H}{\beta\ t_{H}},\ \frac{AI}{\alpha\ t_{AI}}\},\label{eq:micro_agg_leontief}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+where
+\begin_inset Formula 
+\begin{align*}
+t_{H} & =\sum_{j=1}^{J}t_{j}^{s}+\sum_{h\in\mathcal{H}}z_{h}\ t_{h}^{H},\\
+t_{AI} & =\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Across Firm Aggregation:
+ Leontief with Firm-level Aggregate Inputs to Industry-Level CES
+\end_layout
+
+\begin_layout Standard
+Here I show that with the proper type of heterogeneity across firms at the task-level we can aggregate Leontief production function with firm-level human and AI aggregate inputs to a CES industry production function whose inputs are industry-level aggregate human labor and industry-level aggregate AI labor.
+\end_layout
+
+\begin_layout Standard
+The firm-level aggregate Leontief function specified in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:micro_agg_leontief"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ implies that in equilibrium:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H=\sum_{j=1}^{J}t_{j}^{s}+\sum_{h\in\mathcal{H}}z_{h}\ t_{h}^{H},\qquad\qquad AI=\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}\label{eq:firm_labor}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+—
+–
+\end_layout
+
+\begin_layout Standard
+I appeal to Levhari (1968) and Sato (1975) to derive the proper form of heterogeneity between firm-level AI and human labor in order to have an industry with aggregate CES production with industry-level aggregate AI and aggregate labor input.
 \end_layout
 
 \begin_layout Standard
@@ -1168,15 +1358,7 @@ The Gorman (1953) result requires different units of production be homothetic (m
 \begin_inset Formula $t^{AI}$
 \end_inset
 
- (for AI labor):
-\begin_inset Formula 
-\begin{equation}
-t^{H}=\sum_{j=1}^{J}t_{j}^{H}=\sum_{j=1}^{J}\left[t_{j}^{s}+\sum_{h_{j}\in\mathcal{H}_{j}}t_{h_{j}}^{H}\right],\qquad\qquad t^{AI}\alpha=\sum_{j=1}^{J}t_{j}^{AI}\alpha^{-d_{j}}=\sum_{j=1}^{J}\left[\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{i}}\right]\label{eq:firm_labor}
-\end{equation}
-
-\end_inset
-
-Here we assume hand-off costs 
+ (for AI labor):Here we assume hand-off costs 
 \begin_inset Formula $t_{j}^{s}$
 \end_inset
 
