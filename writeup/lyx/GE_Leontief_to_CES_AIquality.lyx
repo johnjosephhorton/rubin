@@ -1146,6 +1146,10 @@ nolink "false"
 \end_layout
 
 \begin_layout Section
+Aggregation to CES
+\end_layout
+
+\begin_layout Subsection
 Within-Firm Aggregation:
  Leontief with Many Inputs to Leontief with Firm-Level Aggregate AI and Human Labor 
 \end_layout
@@ -1193,7 +1197,7 @@ This implies that the rate of substitution between any two modules
  is independent of other production modules:
 \begin_inset Formula 
 \begin{equation}
-\frac{\Delta}{\Delta l_{k}}\left(\frac{\frac{\Delta x}{\Delta l_{i}}}{\frac{\Delta x}{\Delta l_{j}}}\right)=0\qquad\qquad\forall k\neq i,j.\label{eq:task_subst_rate_indep}
+\frac{∂}{∂l_{k}}\left(\frac{\frac{\Delta x}{\Delta l_{i}}}{\frac{\Delta x}{\Delta l_{j}}}\right)=0\qquad\qquad\forall k\neq i,j.\label{eq:task_subst_rate_indep}
 \end{equation}
 
 \end_inset
@@ -1281,7 +1285,9 @@ x=\min\ \{\frac{H}{\beta\ t_{H}},\ \frac{AI}{\alpha\ t_{AI}}\},\label{eq:micro_a
 
 \end_inset
 
-
+Furthermore,
+ notice that the firm-level production function is homogenous of degree one.
+ 
 \begin_inset Note Note
 status collapsed
 
@@ -1303,7 +1309,7 @@ t_{AI} & =\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}.
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Across Firm Aggregation:
  Leontief with Firm-level Aggregate Inputs to Industry-Level CES
 \end_layout
@@ -1313,6 +1319,10 @@ Here I show that with the proper type of heterogeneity across firms at the task-
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
 The firm-level aggregate Leontief function specified in 
 \begin_inset CommandInset ref
 LatexCommand eqref
@@ -1324,18 +1334,186 @@ nolink "false"
 
 \end_inset
 
- implies that in equilibrium:
+ implies that in equilibrium
+\begin_inset Formula 
+\[
+x=\beta\ t_{H}=\alpha\ t_{AI},
+\]
+
+\end_inset
+
+and
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \begin{equation}
-H=\sum_{j=1}^{J}t_{j}^{s}+\sum_{h\in\mathcal{H}}z_{h}\ t_{h}^{H},\qquad\qquad AI=\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}\label{eq:firm_labor}
+H=\beta\ t_{H},\qquad\qquad AI=\alpha\ t_{AI}.\label{eq:firm_labor}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
+Define effective AI for a particular value of human labor efficiency 
+\begin_inset Formula $\beta$
+\end_inset
+
+ as:
+\begin_inset Formula 
+\begin{equation}
+\phi(\beta)=\int_{\alpha\in A}\alpha\ t^{AI}(\alpha,\beta)\ d\alpha.\label{eq:effective_AI_labor}
+\end{equation}
+
+\end_inset
+
+We call 
+\begin_inset Formula $\phi(\alpha)$
+\end_inset
+
+ the AI capacity density function as well.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Imagine the final production function takes the following form:
+\begin_inset Formula 
+\[
+X=\left(\alpha A^{\rho}+\beta B^{\rho}\right)^{\frac{1}{\rho}}.
+\]
+
+\end_inset
+
+Apply the following change of variables:
+\begin_inset Formula 
+\[
+x=\frac{1}{p_{A}},\qquad y=\frac{1}{p_{B}}
+\]
+
+\end_inset
+
+so that the integral bounds become:
+\begin_inset Formula 
+\[
+a\leq x,\qquad b\leq y-\frac{ay}{x}.
+\]
+
+\end_inset
+
+Define
+\begin_inset Formula 
+\begin{align*}
+\phi(x,y) & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}g(a,b)\ db\ da,\\
+\psi_{A}(x,y) & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}a\ g(a,b)\ db\ da,\\
+\psi_{B}(x,y) & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}b\ g(a,b)\ db\ da.
+\end{align*}
+
+\end_inset
+
+And the CES equation above (—
+—
+—
+—
+—
+) becomes:
+\begin_inset Formula 
+\[
+\phi^{\rho}=\alpha\psi_{A}^{\rho}+\beta\psi_{B}^{\rho}.
+\]
+
+\end_inset
+
+Now calculate the derivate of equation above w.r.t.
+ 
+\begin_inset Formula $x$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\phi(x,y)}{∂x} & =\frac{∂}{∂x}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\ da\right)\\
+ & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\right)\right]\\
+ & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da
+\end{align*}
+
+\end_inset
+
+and now deriver w.r.t.
+ 
+\begin_inset Formula $y$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\phi(x,y)}{∂x∂y} & =\frac{∂}{∂y}\left(\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da\right)\\
+ & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\times\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da\right)\right]\\
+ & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\ \int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\ da\right].
+\end{align*}
+
+\end_inset
+
+Now we do the same for 
+\begin_inset Formula $\psi_{A}$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi_{B}$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\psi_{A}(x,y)}{∂x} & =\frac{∂}{∂x}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\ da\right)\\
+ & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ a\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\right)\right]\\
+ & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da
+\end{align*}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\psi_{A}(x,y)}{∂x∂y} & =\frac{∂}{∂y}\left(\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da\right)\\
+ & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\times\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da\right)\right]\\
+ & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\ \int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\ da\right].
+\end{align*}
+
+\end_inset
+
+Similarly,
+ we have:
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\psi_{B}(x,y)}{∂x} & =\frac{x}{y^{2}}\int_{\beta^{-\frac{1}{\rho}}}^{y}\ b^{2}\ g(x-\frac{bx}{y},b)\ db,\\
+\frac{∂\psi_{B}(x,y)}{∂x∂y} & =\left[\frac{1}{y^{2}}\int_{\beta^{-\frac{1}{\rho}}}^{y}\ b^{2}\ g(x-\frac{bx}{y},b)\ db+\frac{x}{y^{2}}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y}\ b^{2}\left(1-\frac{b}{y}\right)\ g_{a}(x-\frac{bx}{y},b)\ db\right)\right].
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Micro Equilibrium in Short Run
+\end_layout
+
+\begin_layout Standard
+We assume that human labor is homogenous,
+ and thus all workers receive the same wage rate regardless of where they work.
+ Let 
+\begin_inset Formula $w$
+\end_inset
+
+ be the real wage rate of human labor (i.e.,
+ the nominal wage rate deflated by output price).
+ In the short-run equilibrium the marginal product of labor equates the wage rate.
 \end_layout
 
 \begin_layout Standard
@@ -1447,7 +1625,7 @@ x=\alpha\ t^{AI}=\beta\ t^{H}.\label{eq:micro_production}
 Let 
 \begin_inset Formula 
 \begin{equation}
-\phi(\beta)=\int_{\alpha\in A}\alpha\ t^{AI}(\alpha,\beta)\ d\alpha\label{eq:effective_AI_labor}
+\phi(\beta)=\int_{\alpha\in A}\alpha\ t^{AI}(\alpha,\beta)\ d\alpha\label{eq:effective_AI_labor121211}
 \end{equation}
 
 \end_inset
