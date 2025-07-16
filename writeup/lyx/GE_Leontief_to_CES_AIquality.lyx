@@ -1099,25 +1099,67 @@ nolink "false"
 
 \end_inset
 
+Finally,
+ the coefficients 
+\begin_inset Formula $\theta_{H}$
+\end_inset
 
+ and 
+\begin_inset Formula $\theta_{AI}$
+\end_inset
+
+ are the expenditure share of respective aggregate inputs:
+\begin_inset Formula 
+\[
+\theta_{H}=1-\theta_{AI}=\frac{w_{H}H}{w_{H}H+w_{AI}AI}=\frac{w_{H}}{w}.
+\]
+
+\end_inset
+
+This concludes the aggregation procedure.
+ We have obtained a relationship between industry-level aggregate CES production function parameters and the micro level production functions through the shape of the heterogeneity distribution across firms.
+ The exact amount of 
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $AI$
+\end_inset
+
+ will be determined based on the supply of different kinds of input in equilibrium.
+\end_layout
+
+\begin_layout Subsection
+Industry-Level Aggregates with Same-Kind Human and AI Labor
 \end_layout
 
 \begin_layout Standard
-Assume human and AI labor are of the same kind with a total fixed supply of 
+Assume human and AI labor are of the same kind of labor.
+ I.e.,
+ spending time completing tasks manually is the same as spending time managing the AI.
+ Suppose the homogenous labor has a total fixed supply of 
 \begin_inset Formula $L$
 \end_inset
 
- and wage rate of 
+ split between 
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $AI$
+\end_inset
+
+ and wage rate is 
 \begin_inset Formula $w$
 \end_inset
 
  (i.e.,
- in this case we have 
+ in this case 
 \begin_inset Formula $w_{H}=w_{AI}=w$
 \end_inset
 
 ).
- That is
+ Labor market clearing implies:
 \begin_inset Formula 
 \begin{equation}
 L=H+AI.\label{eq:total_labor_supply}
@@ -1125,7 +1167,7 @@ L=H+AI.\label{eq:total_labor_supply}
 
 \end_inset
 
-Substitute for 
+Substituting for 
 \begin_inset Formula $H$
 \end_inset
 
@@ -1151,18 +1193,18 @@ nolink "false"
 
 \end_inset
 
- to get the industry-level aggregate AI labor
+ gives total labor allocated to AI across the industry
 \begin_inset Formula 
 \begin{equation}
-AI=\frac{L}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx},\label{eq:AI_labor}
+AI=\frac{L}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}.\label{eq:AI_labor}
 \end{equation}
 
 \end_inset
 
-which consequently implies industry-level aggregate human labor will be
+And the share of human labor in the industry will be
 \begin_inset Formula 
 \begin{equation}
-H=\frac{L\ \int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}\label{eq:human_labor}
+H=\frac{L\ \int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}.\label{eq:human_labor}
 \end{equation}
 
 \end_inset
@@ -1171,15 +1213,64 @@ H=\frac{L\ \int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}{1+\in
 \end_layout
 
 \begin_layout Subsection
-Implications
+From Relative Task/Module Duration to AI Quality
 \end_layout
 
 \begin_layout Standard
-These results have two interesting implications:
+Here we extend the analysis further to make the notion of aggregation consistent with the job design dynamic programming framework from the 
+\begin_inset Quotes eld
+\end_inset
+
+rubin
+\begin_inset Quotes erd
+\end_inset
+
+ draft.
+ First,
+ note that we have ignored the AI quality parameter in the 
+\begin_inset Formula $t_{AI}$
+\end_inset
+
+s altogether.
+ Suppose at the firm level,
+ the (firm-)aggregate AI input takes the following form:
+\begin_inset Formula 
+\[
+T_{AI}=\sum_{a\in\mathcal{A}}\ t_{a}^{AI}
+\]
+
+\end_inset
+
+but at the micro-level firms design jobs facing AI costs 
+\begin_inset Formula $\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d(a)}$
+\end_inset
+
+.
+ We can transform the problem into a version containing AI quality parameter 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ with some minor tweaks.
+ First,
+ imagine instead of 
+\begin_inset Formula 
+\[
+T_{AI}\ \bar{\alpha}=\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d(a)},\qquad\qquad\bar{\alpha}=\frac{\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d(a)}}{T_{AI}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Two Comparative Statics:
+ Wages and 
 \end_layout
 
 \begin_layout Enumerate
-The aggregate level of 
+An immediate comparative static is that industry-aggregate AI employment goes down following an increase in wages.
+ The industry level of 
 \begin_inset Formula $AI$
 \end_inset
 
@@ -1194,7 +1285,7 @@ nolink "false"
 
 \end_inset
 
- explicitly depends on supply of labor (
+ depends on supply of labor (
 \begin_inset Formula $L$
 \end_inset
 
@@ -1203,432 +1294,49 @@ nolink "false"
 \begin_inset Formula $\rho$
 \end_inset
 
- entering the lower bound of the integral) and also implicitly on the wage rate (in the integral's upper bound).
- 
-\end_layout
-
-\begin_layout Standard
-An immediate comparative static is that as wage rate goes up industry-level amount of employed AI labor will go down.
- This is because the upper bound of integral shrinks and so the expectation of the density function 
+ entering the lower bound of the integral) and the wage rate (in the integral's upper bound).
+ Because the upper bound of integral falls after a wage increase the expectation of the density function 
 \begin_inset Formula $g(.)$
 \end_inset
 
- unambiguously decreases over the given bound.
- The intuition behind this is the follows:
- with a higher wage rate fewer firms will become profitable for a given task/module time requirements.
+ unambiguously decreases.
+ The intuition for this is as follows:
+ with a higher wage rate fewer firms will become profitable for a given task/module time cost requirement.
  However,
  in order to sustain the CES industry-level production function,
- the distribution of relative human to AI requirements also shifts in favor of the 
+ the distribution of relative human to AI time requirements endogenously shifts so that for every human efficiency level 
+\begin_inset Formula $t_{H}$
+\end_inset
+
+ AI tasks become more cost-efficient so that the industry elasticity of substitution (which we treat as fixed) remains unchanged.
 \end_layout
 
-\begin_layout Standard
-that 
-\end_layout
-
-\begin_layout Standard
-with higher wage rates the cost of production for individual firms goes up,
- so there will be fewer firms willing to produce given the profitability condition.
- However,
- because we're fixing the total industry-level human labor at 
-\begin_inset Formula $L$
+\begin_layout Enumerate
+The other comparative static is increasing AI quality.
+ In our model,
+ this translates into AI taking relatively less time than before.
+ This can be viewed as moving from 
+\begin_inset Formula $g(x)$
 \end_inset
 
- this changes the shape of the heterogeneity distribution such that,
- on average,
- each firm requires less AI labor for production.
- Instead,
- we could have fixed the distribution 
-\begin_inset Formula $g(.)$
+ to 
+\begin_inset Formula $f(x)$
 \end_inset
 
- and obtained the ratio of industry-level aggregate human labor to aggregate AI labor (which in my opinion makes more sense).
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Imagine the final production function takes the following form:
-\begin_inset Formula 
-\[
-X=\left(\alpha A^{\rho}+\beta B^{\rho}\right)^{\frac{1}{\rho}}.
-\]
-
+ where 
+\begin_inset Formula $F(x)$
 \end_inset
 
-Apply the following change of variables:
-\begin_inset Formula 
-\[
-x=\frac{1}{p_{A}},\qquad y=\frac{1}{p_{B}}
-\]
-
+ first-order stochastically dominates 
+\begin_inset Formula $G(x)$
 \end_inset
 
-so that the integral bounds become:
-\begin_inset Formula 
-\[
-a\leq x,\qquad b\leq y-\frac{ay}{x}.
-\]
-
-\end_inset
-
-Define
-\begin_inset Formula 
-\begin{align*}
-\phi(x,y) & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}g(a,b)\ db\ da,\\
-\psi_{A}(x,y) & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}a\ g(a,b)\ db\ da,\\
-\psi_{B}(x,y) & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}b\ g(a,b)\ db\ da.
-\end{align*}
-
-\end_inset
-
-And the CES equation above (—
-—
-—
-—
-—
-) becomes:
-\begin_inset Formula 
-\begin{equation}
-\phi^{\rho}=\alpha\psi_{A}^{\rho}+\beta\psi_{B}^{\rho}.\label{eq:simplified_eq}
-\end{equation}
-
-\end_inset
-
-
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Now let's derive 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:simplified_eq"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- w.r.t.
- 
+ because now at any point on the 
 \begin_inset Formula $x$
 \end_inset
 
- and 
-\begin_inset Formula $y$
-\end_inset
-
-:
-\begin_inset Formula 
-\[
-\phi^{\rho-1}\phi_{x}=\alpha\psi_{A}^{\rho-1}\left(\psi_{A}\right)_{x}+\beta\psi_{B}^{\rho-1}\left(\psi_{B}\right)_{x}
-\]
-
-\end_inset
-
-and
-\begin_inset Formula 
-\[
-\left(\rho-1\right)\phi^{\rho-2}\phi_{x}\phi_{y}+\phi^{\rho-1}\phi_{xy}=\left(\rho-1\right)\alpha\psi_{A}^{\rho-2}\left(\psi_{A}\right)_{x}\left(\psi_{A}\right)_{y}+\alpha\psi_{A}^{\rho-1}\left(\psi_{A}\right)_{xy}+\left(\rho-1\right)\beta\psi_{B}^{\rho-2}\left(\psi_{B}\right)_{x}\left(\psi_{B}\right)_{y}+\beta\psi_{B}^{\rho-1}\left(\psi_{B}\right)_{xy}.
-\]
-
-\end_inset
-
-Dividing by 
-\begin_inset Formula $\phi^{\rho}$
-\end_inset
-
- and factoring 
-\begin_inset Formula $\psi_{A}^{\rho}$
-\end_inset
-
- and 
-\begin_inset Formula $\psi_{B}^{\rho}$
-\end_inset
-
- in the right hand side the above can be simplified to:
-\begin_inset Formula 
-\[
-\frac{\left(\rho-1\right)}{\phi^{2}}\phi_{x}\phi_{y}+\frac{1}{\phi}\phi_{xy}=\underbrace{\frac{\alpha\psi_{A}^{\rho}}{\phi^{\rho}}}_{s_{A}}\left[\frac{\left(\rho-1\right)}{\psi_{A}^{2}}\left(\psi_{A}\right)_{x}\left(\psi_{A}\right)_{y}+\frac{1}{\psi_{A}}\left(\psi_{A}\right)_{xy}\right]+\underbrace{\frac{\beta\psi_{B}^{\rho}}{\phi^{\rho}}}_{s_{B}}\left[\frac{\left(\rho-1\right)}{\psi_{B}^{2}}\left(\psi_{B}\right)_{x}\left(\psi_{B}\right)_{y}+\frac{1}{\psi_{B}}\left(\psi_{B}\right)_{xy}\right].
-\]
-
-\end_inset
-
-Note that 
-\begin_inset Formula $s_{A}+s_{B}=1$
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
-Let's convert 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:simplified_eq"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- into log form:
-\begin_inset Formula 
-\[
-ln\phi=\frac{ln\alpha+ln\beta}{\rho}+ln\psi_{A}+ln\psi_{B}
-\]
-
-\end_inset
-
-Now let's derive both sides w.r.t.
- 
-\begin_inset Formula $x$
-\end_inset
-
- and then 
-\begin_inset Formula $y$
-\end_inset
-
-:
-\begin_inset Formula 
-\begin{align*}
-\frac{\phi_{x}}{\phi} & =\frac{\left(\psi_{A}\right)_{x}}{\psi_{A}}+\frac{\left(\psi_{B}\right)_{x}}{\psi_{B}}\\
-\frac{\phi\phi_{xy}-\phi_{x}\phi_{y}}{\phi^{2}} & =\frac{\psi_{A}\left(\psi_{A}\right)_{xy}-\left(\psi_{A}\right)_{x}\left(\psi_{A}\right)_{y}}{\psi_{A}^{2}}+\frac{\psi_{B}\left(\psi_{B}\right)_{xy}-\left(\psi_{B}\right)_{x}\left(\psi_{B}\right)_{y}}{\psi_{B}^{2}}
-\end{align*}
-
-\end_inset
-
-Calculate the derivates of the terms:
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\phi(x,y)}{∂x} & =\frac{∂}{∂x}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\ da\right)\\
- & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\right)\ da\right]\\
- & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\phi(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\ da\right)\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\right)\ da\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\phi(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y}\ \int_{\alpha^{-\frac{1}{\rho}}}^{x-\frac{bx}{y}}\ g(a,b)\ da\ db\right)\\
- & =\int_{\beta^{-\frac{1}{\rho}}}^{y}\ \frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x-\frac{bx}{y}}\ g(a,b)\ da\right)\ db\\
- & =\frac{x}{y^{2}}\int_{\beta^{-\frac{1}{\rho}}}^{y}b\ g(x-\frac{bx}{y},b)\ db
-\end{align*}
-
-\end_inset
-
-and:
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\phi(x,y)}{∂x∂y} & =\frac{∂}{∂y}\left(\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da\right)\\
- & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\times\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da\right)\right]\\
- & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\ \int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\ da\right],\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da
-\end{align*}
-
-\end_inset
-
-Now we do the same for 
-\begin_inset Formula $\psi_{A}$
-\end_inset
-
- and 
-\begin_inset Formula $\psi_{B}$
-\end_inset
-
-:
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\psi_{A}(x,y)}{∂x} & =\frac{∂}{∂x}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\ da\right)\\
- & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ a\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\right)\right]\\
- & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\psi_{A}(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\ da\right)\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\right)\ da\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a(1-\frac{a}{x})\ g(a,y-\frac{ay}{x})\ da
-\end{align*}
-
-\end_inset
-
-and
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\psi_{A}(x,y)}{∂x∂y} & =\frac{∂}{∂y}\left(\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da\right)\\
- & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\times\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da\right)\right]\\
- & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\ \int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\ da\right],\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a^{2}\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da
-\end{align*}
-
-\end_inset
-
-Due to symmetry we have:
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\psi_{B}(x,y)}{∂x} & =\frac{x}{y^{2}}\int_{\beta^{-\frac{1}{\rho}}}^{y}\ b^{2}\ g(x-\frac{bx}{y},b)\ db,\\
-\frac{∂\psi_{B}(x,y)}{∂x∂y} & =\left[\frac{1}{y^{2}}\int_{\beta^{-\frac{1}{\rho}}}^{y}\ b^{2}\ g(x-\frac{bx}{y},b)\ db+\frac{x}{y^{2}}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y}\ b^{2}\left(1-\frac{b}{y}\right)\ g_{a}(x-\frac{bx}{y},b)\ db\right)\right].
-\end{align*}
-
-\end_inset
-
-But if we want to obtain 
-\begin_inset Formula $\psi_{B}$
-\end_inset
-
- derivatives where integrals over 
-\begin_inset Formula $a$
-\end_inset
-
- appear we have:
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\psi_{B}(x,y)}{∂x} & =\frac{∂}{∂x}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ b\ g(a,b)\ db\ da\right)\\
- & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ b\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ b\ g(a,b)\ db\right)\right]\\
- & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(y-\frac{ay}{x}\right)\ g(a,y-\frac{ay}{x})\ da
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\psi_{B}(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ b\ g(a,b)\ db\ da\right)\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ b\ g(a,b)\ db\right)\ da\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ b\left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da
-\end{align*}
-
-\end_inset
-
-and
-\begin_inset Formula 
-\begin{align*}
-\frac{∂\psi_{B}(x,y)}{∂x∂y} & =\frac{∂}{∂y}\left(\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(y-\frac{ay}{x}\right)\ g(a,y-\frac{ay}{x})\ da\right)\\
- & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(y-\frac{ay}{x}\right)\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\times\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(y-\frac{ay}{x}\right)\ g(a,y-\frac{ay}{x})\ da\right)\right]\\
- & =\left[\frac{1}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da+\frac{y}{x^{2}}\ \int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[a\left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})+a\left(y-\frac{ay}{x}\right)\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da\right],\\
- & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}+ya\left(1-\frac{a}{x}\right)}{x^{2}}\ g(a,y-\frac{ay}{x})+a\left(y-\frac{ay}{x}\right)\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da.
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-All next to each other:
-\begin_inset Formula 
-\begin{align*}
-\phi_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da,\\
-\phi_{y} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da,\\
-\phi_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da,\\
-\left(\phi_{A}\right)_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da,\\
-\left(\phi_{A}\right)_{y} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a(1-\frac{a}{x})\ g(a,y-\frac{ay}{x})\ da,\\
-\left(\phi_{A}\right)_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a^{2}\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da,\\
-\left(\phi_{B}\right)_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(y-\frac{ay}{x}\right)\ g(a,y-\frac{ay}{x})\ da,\\
-\left(\phi_{B}\right)_{y} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ b\left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da,\\
-\left(\phi_{B}\right)_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}+ya\left(1-\frac{a}{x}\right)}{x^{2}}\ g(a,y-\frac{ay}{x})+a\left(y-\frac{ay}{x}\right)\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da.
-\end{align*}
-
-\end_inset
-
-Due to the symmetry of the problem around 
-\begin_inset Formula $a$
-\end_inset
-
- and 
-\begin_inset Formula $b$
-\end_inset
-
- assume 
-\begin_inset Formula $g(a,b)$
-\end_inset
-
- takes the following form:
-\begin_inset Formula 
-\[
-g(a,b)=C\ a^{m}b^{m}=C\left(ab\right)^{m}.
-\]
-
-\end_inset
-
-With this functional form we get:
-\begin_inset Formula 
-\[
-g_{a}(a,b)=bmC\left(ab\right)^{m-1},\qquad g_{b}(a,b)=amC\left(ab\right)^{m-1}.
-\]
-
-\end_inset
-
-Plugging into the six equations above,
- we get some functions in terms of the complete and incomplete beta functions 
-\begin_inset Formula $B(m+1,m+1),B_{z}(m+1,m+1)$
-\end_inset
-
- with 
-\begin_inset Formula $z=\frac{\alpha^{-\frac{1}{\rho}}}{x}$
-\end_inset
-
-:
-\begin_inset Formula 
-\begin{align*}
-\phi_{x} & =C(xy)^{m+1}\left[\frac{1}{2}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right]\\
-\phi_{y} & =Cx^{m+1}y^{m}\left[\frac{1}{2}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m}(1-z)^{m+2}}{m+1}\right]\\
-\phi_{xy} & =C(m+1)(xy)^{m}\left[\frac{1}{2}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right]\\
-(\phi_{A})_{x} & =Cx^{m+2}y^{m+1}\left[\frac{m+2}{2(2m+3)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right]\\
-(\phi_{A})_{y} & =Cx^{m+2}y^{m}\left[\frac{m+1}{2(2m+1)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right]\\
-(\phi_{A})_{xy} & =C(m+1)x^{m+2}y^{m}\left[\frac{m+2}{2(2m+3)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right]\\
-(\phi_{B})_{x} & =Cx^{m+1}y^{m+2}\left[\frac{m+1}{2(2m+1)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right]\\
-(\phi_{B})_{y} & =Cx^{m+1}y^{m+1}\left[\frac{m+2}{2(2m+3)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m}(1-z)^{m+2}}{m+1}+\frac{z^{m}(1-z)^{m+3}}{m+2}\right]\\
-(\phi_{B})_{xy} & =Cx^{m+1}y^{m+2}\left[\frac{(m+2)}{2}B(m+1,m+1)-\frac{(m+2)(m+1)}{2(2m+3)}B(m+1,m+1)-(m+2)B_{z}(m+1,m+1)+(m+1)B_{z}(m+1,m+1)\right.\left.+(m+2)\frac{z^{m+1}(1-z)^{m+1}}{m+1}+(m+1)\frac{z^{m+1}(1-z)^{m+1}}{m+1}+(m+1)\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right]
-\end{align*}
-
-\end_inset
-
-Substituting these into the two PDEs:
-\begin_inset Formula 
-\begin{align*}
-\frac{1}{2}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1} & =\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}+\frac{m+1}{2(2m+1)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\\
-(m+1)(B-B_{z})\left(Q+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right)-\left(Q+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right)\left(Q+\frac{z^{m}(1-z)^{m+2}}{m+1}\right) & =(m+1)(B-B_{z})\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right)-\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right)\left(\frac{m+1}{2(2m+1)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right)\\
- & \ \ \ \ +(m+1)(B-B_{z})\left[(m+2)\left(\frac{1}{2}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right)-(m+1)\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right)\right]-\left(\frac{m+1}{2(2m+1)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right)\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m}(1-z)^{m+2}}{m+1}+\frac{z^{m}(1-z)^{m+3}}{m+2}\right)
-\end{align*}
-
-\end_inset
-
-where
-\begin_inset Formula 
-\[
-Q\equiv\frac{1}{2}B-B_{z}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+-axis human time requirements relatively increase compared to AI time requirements.
+ This shifts the initial distribution to the left.
 \end_layout
 
 \end_body
