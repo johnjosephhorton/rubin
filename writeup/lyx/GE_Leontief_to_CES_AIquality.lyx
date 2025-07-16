@@ -197,20 +197,7 @@ modules
 \shape default
 .
  Formally,
- a module is a set of tasks that represented by the same time cost parameters.
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-This is to simplify the notation—
-specifically,
- to represent tasks that form AI chains collectively as blocks with one set of cost parameter,
- similar to human tasks.
- It helps avoid tracking which task(s) within the AI chain are automated and which are augmented.
-\end_layout
-
-\end_inset
-
+ a module is a set of tasks represented by the same time cost parameters.
  A module is either a manual task (i.e.,
  each singleton set of manual tasks is a module) or an AI chain (i.e.,
  a set of tasks grouped together and represented by a composite cost parameter).
@@ -247,942 +234,114 @@ modules,
 \begin_inset Quotes erd
 \end_inset
 
- but I might also use the two terms interchangeably wherever the context is clear.
+ though I might use the two terms interchangeably wherever the context is clear.
  
 \end_layout
 
 \begin_layout Section
-Hierarchical Production Model
+Aggregation from Micro Leontief to Macro CES
 \end_layout
 
 \begin_layout Standard
-Consider the following hierarchical model of production.
- The smallest building block in the economy is a task/module denoted by 
-\begin_inset Formula $i$
-\end_inset
-
-.
- One or more tasks are combined into a job,
- a bigger building block of production denoted by 
-\begin_inset Formula $j$
-\end_inset
-
-.
- An industry (or sector),
- denoted by 
-\begin_inset Formula $k$
-\end_inset
-
-,
- is formed by combining a bundle of jobs as the next production block in the hierarchy.
- Finally,
- goods from different sectors are combined together to produce a single final good in the economy.
-\end_layout
-
-\begin_layout Standard
-Here we ignore how goods from different sectors 
-\begin_inset Formula $k\in\{1,\cdots,K\}$
-\end_inset
-
- are combined to create the unique final good.
- Also,
- we focus on a single sector and drop the industry index 
-\begin_inset Formula $k$
-\end_inset
-
- for the ease of notation in the remainder of the writeup.
- 
-\end_layout
-
-\begin_layout Standard
-There are only two levels of production in the economy:
- 1) tasks to jobs,
- 2) jobs to sector.
- We assume production at each level is Leontief:
-\end_layout
-
-\begin_layout Enumerate
-Tasks to Jobs:
- Leontief with module 
-\begin_inset Formula $i$
-\end_inset
-
- taking 
-\begin_inset Formula $t_{i}$
-\end_inset
-
- time to complete.
- If done manually,
- task 
-\begin_inset Formula $i$
-\end_inset
-
- takes time 
-\begin_inset Formula $t_{i}^{H}$
-\end_inset
-
- and if done with AI,
- module 
-\begin_inset Formula $i$
-\end_inset
-
- takes (expected) time 
-\begin_inset Formula $t_{i}^{AI}\alpha^{-d_{i}}$
-\end_inset
-
- where 
-\begin_inset Formula $d_{i}$
-\end_inset
-
- is the difficulty parameter of the AI chain.
-\begin_inset Formula 
-\begin{equation}
-x_{j}=\min\left(\min_{h\in\mathcal{H}_{j}}\ \frac{l_{h}^{H}}{z_{h}\ t_{h}^{H}},\ \min_{a\in\mathcal{A}_{j}}\ \frac{l_{a}^{AI}}{z_{a}\ t_{a}^{AI}}\right)\label{eq:task_job}
-\end{equation}
-
-\end_inset
-
-Here 
-\begin_inset Formula $x_{j}$
-\end_inset
-
- is the output produced by job 
-\begin_inset Formula $j$
-\end_inset
-
-.
- We refer to 
-\begin_inset Formula $x_{j}$
-\end_inset
-
- as 
-\begin_inset Quotes eld
-\end_inset
-
-intermediate good 
-\begin_inset Formula $j$
-\end_inset
-
-.
-\begin_inset Quotes erd
-\end_inset
-
+We do the aggregation in two stages:
  
 \end_layout
 
 \begin_layout Enumerate
-Jobs to Industry:
- Leontief with all jobs contributing equally to production of industry good:
-\begin_inset Formula 
-\begin{equation}
-x=min(x_{1},\cdots,x_{J}).\label{eq:job_ind}
-\end{equation}
-
-\end_inset
-
-Here 
-\begin_inset Formula $x$
-\end_inset
-
- is the industry good,
- and the second level of aggregation (from jobs to industry) is merely a technical assumption imposed to show that all jobs must be done once in order to produce the industry good.
-\end_layout
-
-\begin_layout Standard
-Have in mind that the wage rate at job 
-\begin_inset Formula $j$
-\end_inset
-
- is fixed and equals:
-\begin_inset Formula 
-\begin{equation}
-w_{j}=v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{H}+\sum_{a\in\mathcal{A}_{j}}c_{a}^{AI}.\label{eq:job_wage}
-\end{equation}
-
-\end_inset
-
-
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Two Types of Heterogeneity
-\end_layout
-
-\begin_layout Plain Layout
-There are two ways to incorporate heterogeneity into the model:
- at the task level 
-\bar under
-or
-\bar default
- the job level.
- Below,
- I briefly discuss the implications of each approach.
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Job-level heterogeneity:
-
-\series default
- Here,
- tasks have fixed durations across firms—
-i.e.,
- all firms share the same 
-\begin_inset Formula $t_{i}^{H}$
-\end_inset
-
- and 
-\begin_inset Formula $t_{i}^{AI}$
-\end_inset
-
- for a given task/module 
-\begin_inset Formula $i$
-\end_inset
-
-.
- For example,
- the task of 
-\begin_inset Quotes eld
-\end_inset
-
-Writing a Report
-\begin_inset Quotes erd
-\end_inset
-
- takes the same amount of time for all firms,
- regardless of the context or environment.
- What differs among firms is the contribution of jobs—
-specifically,
- the 
-\begin_inset Formula $b_{j}$
-\end_inset
-
- parameter in Equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:job_ind"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-—
-to industry-level production.
- For instance,
- firm 1 might use 2 units of intermediate good 
-\begin_inset Formula $x_{j_{1}}$
-\end_inset
-
- and 1 unit of 
-\begin_inset Formula $x_{j_{2}}$
-\end_inset
-
- (thus 
-\begin_inset Formula $b_{1}=2,b_{2}=1$
-\end_inset
-
-) to produce one unit of the industry good,
- whereas firm 2 might require 5 units of 
-\begin_inset Formula $x_{j_{1}}$
-\end_inset
-
- and 1 unit of 
-\begin_inset Formula $x_{j_{2}}$
-\end_inset
-
- for the same output (thus 
-\begin_inset Formula $b_{1}=5,b_{2}=1$
-\end_inset
-
-) .
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Task-level heterogeneity:
-
-\series default
- In this case,
- tasks do not have fixed durations—
-i.e.,
- different firms have different values of 
-\begin_inset Formula $t_{i}^{H}$
-\end_inset
-
- and 
-\begin_inset Formula $t_{i}^{AI}$
-\end_inset
-
- for the same task/module 
-\begin_inset Formula $i$
-\end_inset
-
-.
- For example,
- the task of 
-\begin_inset Quotes eld
-\end_inset
-
-Writing a Report
-\begin_inset Quotes erd
-\end_inset
-
- might take longer for firm 1 than for firm 2 in the same context (some firms are just better at writing reports).
- Despite this variation in task durations,
- a job composed of the same set of tasks contributes equally to the production of the industry good across firms.
- This means that while the 
-\begin_inset Formula $t_{i}$
-\end_inset
-
-s vary across firms,
- the 
-\begin_inset Formula $b_{j}$
-\end_inset
-
-s (which determine the contribution of jobs to industry good production) remain the same for a given job design.
- For simplicity,
- we can normalize 
-\begin_inset Formula $b_{j}$
-\end_inset
-
-s to be 1 across all jobs.
-\end_layout
-
-\begin_layout Plain Layout
-The difference that the choice of heterogeneity type makes is the form of input that goes into the aggregated CES function:
- while the job-level heterogeneity yields a CES function in terms of job wage bills 
-\begin_inset Formula $w_{j}t_{j}$
-\end_inset
-
- (i.e.,
- Equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:CES"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-),
- the task-level heterogeneity results in a CES function with aggregate human labor and aggregate AI labor as input (i.e.,
- Equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:CES_desired"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-).
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Aggregation to CES with Job-Level Heterogeneity (Houthakker,
- 1955)
-\end_layout
-
-\begin_layout Plain Layout
-I start with the first kind of heterogeneity:
+Within each firm,
+ we convert the Leontief production function—
+originally defined over many inputs (one per task/module)—
+into a Leontief function with only two inputs:
+ firm-level aggregate human labor and firm-level aggregate AI labor.
  
-\bar under
-fixed 
-\begin_inset Formula $t_{i}^{H}$
-\end_inset
-
- and 
-\begin_inset Formula $t_{i}^{AI}$
-\end_inset
-
- in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:task_job"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- but varying 
-\begin_inset Formula $b_{j}$
-\end_inset
-
-s in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:job_ind"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-
-\bar default
-.
- To formally derive the CES function,
- we assume the firm-specific productivity parameters 
-\begin_inset Formula $b_{j}$
-\end_inset
-
- within industry are continuously distributed according to the following generalized power law:
-\begin_inset Formula 
-\[
-g(b_{1},\cdots,b_{J})\propto\left(\sum_{j=1}^{J}\phi_{j}b_{j}^{\mu}\right)^{-\nu},\qquad\phi_{j}>0,\mu>0,\nu>1.
-\]
-
-\end_inset
-
-Total labor employed for producing one unit of job 
-\begin_inset Formula $j$
-\end_inset
-
- is:
-\begin_inset Formula 
-\begin{equation}
-t_{j}=t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}},\label{eq:job_labor}
-\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula $t_{j}^{s}$
-\end_inset
-
- is the switching or hand-off cost of job 
-\begin_inset Formula $j$
-\end_inset
-
-.
- The cost of producing one unit of industry good 
-\begin_inset Formula $X$
-\end_inset
-
- due to the Leontief production structure is given by:
-\begin_inset Formula 
-\begin{equation}
-C=\sum_{j=1}^{J}b_{j}w_{j}t_{j}=\sum_{j=1}^{J}\left[\underbrace{\left(v_{L}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}c_{a_{j}}^{AI}\right)}_{\text{wage of job \ensuremath{j}: }w_{j}}\underbrace{\left(t_{j}^{s}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{AI}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}},\right)}_{\text{amount of labor employed for job \ensuremath{j}}}\right].\label{eq:ind_cost}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-While at job and task levels production is strictly Leontief (no direct substitution possible),
- heterogeneity at the job level implicitly creates substitutability at the sector level.
- Specifically,
- differences in 
-\begin_inset Formula $b_{j}$
-\end_inset
-
- across firms cause changes in relative job-level wages to alter the set of profitable firms.
- This is the Houthakker (1955) approach.
-\end_layout
-
-\begin_layout Paragraph
-Profitability Condition and Sector Price:
-\end_layout
-
-\begin_layout Plain Layout
-The sector price 
-\begin_inset Formula $p$
-\end_inset
-
- is defined as the maximum cost that firms can sustain and still produce profitably.
- Given job-level wages 
-\begin_inset Formula $w_{j}$
-\end_inset
-
- and labor inputs 
-\begin_inset Formula $t_{j}$
-\end_inset
-
- from task to job aggregation,
- a firm is profitable if its total cost is less than or equal to the sector price:
-\begin_inset Formula 
-\[
-C=\sum_{j=1}^{J}b_{j}\left(w_{j}t_{j}\right)\leq p
-\]
-
-\end_inset
-
-We treat 
-\begin_inset Formula $p$
-\end_inset
-
- as given and assume it is determined in a perfectly competitive product market at the sector level.
-\end_layout
-
-\begin_layout Paragraph
-Deriving the CES form:
-\end_layout
-
-\begin_layout Plain Layout
-To transition from the power-law distribution and profitability condition to the CES production form,
- we take the following steps:
 \end_layout
 
 \begin_layout Enumerate
-Use 
-\begin_inset CommandInset href
-LatexCommand href
-name "Holder's inequality"
-target "https://en.wikipedia.org/wiki/Hölder%27s_inequality"
-literal "false"
-
-\end_inset
-
- to split the cost function into two terms:
-\begin_inset Formula 
-\begin{align*}
-\sum_{j=1}^{J}b_{j}w_{j}t_{j} & =\sum_{j=1}^{J}\left(\phi_{j}^{\frac{1}{\mu}}\ b_{j}\right)\left(\phi_{j}^{-\frac{1}{\mu}}\ w_{j}t_{j}\right)\\
- & \leq\left(\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}\right)^{\frac{1}{\mu}}\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}.
-\end{align*}
-
-\end_inset
-
-The Holder inequality holds with equality when the two sequences inside the parentheses are proportional to each other.
- That is,
- for some 
-\begin_inset Formula $\kappa>0$
-\end_inset
-
-:
-\begin_inset Formula 
-\[
-\frac{\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}}{\phi_{j}\ b_{j}^{\mu}}=\kappa\qquad\forall j.
-\]
-
-\end_inset
-
-We assume this condition holds so we have an equality.
- This guarantees that there is no 
-\begin_inset Quotes eld
-\end_inset
-
-missing mass
-\begin_inset Quotes erd
-\end_inset
-
- in the profitable region.
- The above condition can be rewritten in terms of wage bill of job 
-\begin_inset Formula $j$
-\end_inset
-
- as:
-\begin_inset Formula 
-\begin{equation}
-w_{j}t_{j}=\kappa\left(\phi_{j}^{\frac{2-\mu}{1-\mu}}\ b_{j}^{\mu}\right)^{\frac{1-\mu}{\mu}}=\kappa\ \phi_{j}^{\frac{2}{\mu}-1}\ b_{j}^{1-\mu}.\label{eq:rest1}
-\end{equation}
-
-\end_inset
-
-If this condition holds,
- the profitability condition becomes:
-\begin_inset Formula 
-\[
-C=\left(\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}\right)^{\frac{1}{\mu}}\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}\leq p
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Rewrite the profitability condition by isolating the first term:
-\begin_inset Formula 
-\begin{align*}
-\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu} & \leq\frac{p^{\mu}}{\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{1-\mu}}\\
- & =\left(\frac{p}{\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}}\right)^{\mu}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Aggregate the sector output by integrating the distribution function 
-\begin_inset Formula $g(b_{1},\dots,b_{J})$
-\end_inset
-
- over the set of all profitable firms.
- This integral represents the total measure of profitable firms given wages and sector price:
-\begin_inset Formula 
-\begin{align*}
-X & =\int_{C\leq p}\left(\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}\right)^{-\nu}db_{1}\cdots db_{J}\\
- & =\int_{\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}\leq\left(\frac{p}{\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}}\right)^{\mu}}\left(\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}\right)^{-\nu}db_{1}\cdots db_{J}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Evaluating this integral explicitly yields a sector-level production function as a CES form.
- Let 
-\begin_inset Formula $B=\sum_{j=1}^{J}\phi_{j}b_{j}^{\mu}$
-\end_inset
-
-.
- The integral becomes:
-\begin_inset Formula 
-\[
-X=\int_{0}^{\left(\frac{p}{\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}}\right)^{\mu}}\ B^{-\nu}\ \underbrace{\left(\int_{\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}=B}\ db_{1}\cdots db_{J}\right)}_{Surface\ Integral}\ dB
-\]
-
-\end_inset
-
-Define 
-\begin_inset Formula $u_{j}=\phi_{j}^{\frac{1}{\mu}}\ b_{j}$
-\end_inset
-
- so that 
-\begin_inset Formula $b_{j}=\frac{u_{j}}{\phi_{j}^{\frac{1}{\mu}}}.$
-\end_inset
-
- Therefore:
- 
-\begin_inset Formula 
-\[
-db_{j}=\frac{du_{j}}{\phi_{j}^{\frac{1}{\mu}}}\Longrightarrow db_{1}\cdots db_{J}=\frac{du_{1}\cdots du_{J}}{\prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}}
-\]
-
-\end_inset
-
-For some constant 
-\begin_inset Formula $c$
-\end_inset
-
- the surface integral can be evaluated as follows:
-\begin_inset Formula 
-\begin{align*}
-\int_{\sum_{j=1}^{J}\phi_{j}\ b_{j}^{\mu}=B}\ db_{1}\cdots db_{J} & =\int_{\sum_{j=1}^{J}u_{j}=B}\ \frac{du_{1}\cdots du_{J}}{\prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}}\\
- & =\frac{c}{\prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}}\ B^{\frac{J}{\mu}-1}
-\end{align*}
-
-\end_inset
-
-So,
- the overall integral becomes:
-\begin_inset Formula 
-\begin{align*}
-X & =\int_{0}^{\left(\frac{p}{\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}}\right)^{\mu}}\frac{c}{\prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}}\ B^{\frac{J}{\mu}-1-\nu}\ dB\\
- & =\frac{c}{\left(\frac{J}{\mu}-\nu\right)\ \prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}}\ \left(\frac{p}{\left(\sum_{j=1}^{J}\phi_{j}^{\frac{-1}{1-\mu}}\ \left(w_{j}t_{j}\right)^{\frac{\mu}{1-\mu}}\right)^{\frac{1-\mu}{\mu}}}\right)^{J-\mu\nu}.
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Now we transform the expression into a CES looking formula by applying some math tricks.
- Ultimately,
- we want to have a function that looks like equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:CES"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-:
-\begin_inset Formula 
-\[
-X=A\left(\sum_{j=1}^{J}\theta_{j}\ \left(w_{j}t_{j}\right)^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}}.
-\]
-
-\end_inset
-
-First,
- notice that 
-\begin_inset Formula $A$
-\end_inset
-
- must be the following:
-\begin_inset Formula 
-\begin{equation}
-A\equiv\frac{c\ p^{J-\mu\nu}}{\left(\frac{J}{\mu}-\nu\right)\ \prod_{j=1}^{J}\phi_{j}^{\frac{1}{\mu}}},\label{eq:TFP}
-\end{equation}
-
-\end_inset
-
-and
-\begin_inset Formula 
-\begin{equation}
-\theta_{j}=\phi_{j}^{\frac{-1}{1-\mu}}.\label{eq:CES_weights}
-\end{equation}
-
-\end_inset
-
-Next,
- the two equations for the inner and outer exponents of the CES function must hold
-\begin_inset Formula 
-\begin{align}
-\frac{\sigma}{\sigma-1} & =\frac{1-\mu}{\mu}\left(\mu\nu-J\right),\label{eq:cond1}\\
-\frac{\sigma-1}{\sigma} & =\frac{\mu}{1-\mu}.\label{eq:cond2}
-\end{align}
-
-\end_inset
-
-From the second identity we derive a relation between 
-\begin_inset Formula $\sigma$
-\end_inset
-
- and 
-\begin_inset Formula $\mu$
-\end_inset
-
-:
-\begin_inset Formula 
-\[
-\left(\sigma-1\right)\left(1-\mu\right)=\mu\sigma\Rightarrow\sigma+\mu-1=2\mu\sigma\Rightarrow\sigma=\frac{1-\mu}{1-2\mu}.
-\]
-
-\end_inset
-
-Also,
- comparing the first and second equations,
- we conclude that the following restriction must hold:
-\begin_inset Formula 
-\begin{equation}
-\mu\nu-J=1.\label{eq:rest2}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-Notice that we could have have the same type of heterogeneity at the task-level (i.e.,
- have task durations be 
-\begin_inset Formula $\frac{t_{i}}{b_{i}}$
-\end_inset
-
- where 
-\begin_inset Formula $b_{i}$
-\end_inset
-
- is distributed according to some power law distribution).
- This would be conceptually similar to what we did here at the job level with the only difference that the input of the aggregate CES function would be 
-\begin_inset Formula $\frac{w_{j}}{b_{j}}$
-\end_inset
-
- instead.
-\end_layout
-
-\begin_layout Subsection
-Implications of Job-Level Heterogeneity
-\end_layout
-
-\begin_layout Plain Layout
-Notice that we obtained two restrictions (equations 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:rest1"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- and 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:rest2"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-) while deriving the final CES form:
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula 
-\[
-w_{j}t_{j}=\kappa\ \phi_{j}^{\frac{2}{\mu}-1}\ b_{j}^{1-\mu},
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula 
-\[
-\mu\nu-J=1.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-But what do these mean,
- and how restrictive are they?
- The first equation implies that the distribution 
-\begin_inset Formula $g(b_{1},\cdots,b_{J})$
-\end_inset
-
- depends crucially on the job design:
- if the job design changes then 
-\begin_inset Formula $w_{j}t_{j}$
-\end_inset
-
- changes and a different set of 
-\begin_inset Formula $\phi_{j}$
-\end_inset
-
- and 
-\begin_inset Formula $b_{j}$
-\end_inset
-
- are needed to make the functional forms consistent.
- The second equation is also restrictive:
- it implies that the dispersion of 
-\begin_inset Formula $b_{j}$
-\end_inset
-
-s in 
-\begin_inset Formula $g(b_{1},\cdots,b_{J})$
-\end_inset
-
- also depends on the job design (in particular,
- the number of jobs).
- Both these restrictions seem to cause issues in empirical work.
-\end_layout
-
-\begin_layout Subsection
-Question
-\end_layout
-
-\begin_layout Plain Layout
-Are there math tricks that I can use to convert 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:CES"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- into something like:
-\begin_inset Formula 
-\[
-X=f(g_{1}(t_{1}^{H},\ t_{1}^{AI}\alpha^{-d_{1}}),\ g_{2}(t_{2}^{H},\ t_{2}^{AI}\alpha^{-d_{2}}),\cdots,g_{2}(t_{J}^{H},\ t_{J}^{AI}\alpha^{-d_{J}}))
-\]
-
-\end_inset
-
-or
-\begin_inset Formula 
-\[
-X=\tilde{f}\left(\sum_{a\in\mathcal{A}}t_{a}^{AI}\alpha^{-d_{a}},\ \sum_{h\in\mathcal{H}}t_{h}^{H}\right),
-\]
-
-\end_inset
-
-or maybe even the Cobb-Douglas form:
-\begin_inset Formula 
-\[
-X=\left(\sum_{a\in\mathcal{A}}t_{a}^{AI}\alpha^{-d_{a}}\right)^{\theta_{AI}}\left(\sum_{h\in\mathcal{H}}t_{h}^{H}\right)^{\theta_{H}}.
-\]
-
-\end_inset
-
-The idea is to convert 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:CES"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- to an aggregate CES function with inputs being aggregate times rather than job wage bills.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Aggregation to CES
+We aggregate across firms within an industry,
+ each with its own Leontief function in (firm-level) aggregate inputs,
+ into an industry-level CES production function with industry-level aggregate human and aggregate AI labor.
 \end_layout
 
 \begin_layout Subsection
 Within-Firm Aggregation:
- Leontief with Many Inputs to Leontief with Firm-Level Aggregate AI and Human Labor 
+ Leontief to (Aggregate) Leontief
 \end_layout
 
 \begin_layout Standard
-I begin with a within-firm aggregation that converts firm's production function from a Leontief function with many human labor and AI labor inputs—
-one input for each module as in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:task_job"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
+I begin with the within-firm aggregation:
+ converting a single firm's production function from a Leontief with many human labor and AI labor inputs—
+one input for each module—
+to a (firm-level) aggregate Leontief function with two inputs:
+ firm-aggregate human labor and firm-aggregate AI labor.
+ Suppose the original task-level production function for firm 
+\begin_inset Formula $f$
+\end_inset
+
+ takes the following Leontief form:
+\begin_inset Formula 
+\begin{equation}
+x^{f}=\min\ \{\frac{l_{1}^{f}}{t_{1}^{f}}\ ,\ \cdots\ ,\ \frac{l_{n}^{f}}{t_{n}^{f}}\}.\label{eq:task_level_prod}
+\end{equation}
 
 \end_inset
 
-—
-to a (firm-aggregated) Leontief function with two inputs:
- firm-aggregate human labor and firm-aggregate AI labor.
+Here,
+ 
+\begin_inset Formula $x^{f}$
+\end_inset
+
+ is the firm's output (i.e.,
+ the industry good),
+ 
+\begin_inset Formula $t_{i}^{f}$
+\end_inset
+
+ is the amount of time required to perform task/module 
+\begin_inset Formula $i$
+\end_inset
+
+,
+ 
+\begin_inset Formula $l_{i}^{f}$
+\end_inset
+
+ is the amount of labor assigned to task/module 
+\begin_inset Formula $i$
+\end_inset
+
+,
+ and there are 
+\begin_inset Formula $n$
+\end_inset
+
+ tasks/modules in total in this industry.
+ In order to write this we have implicitly fixed the firm's job design.
+ That is,
+ we are taking the job boundaries and the kind of input that produces human tasks and AI modules as given (i.e.,
+ the assignment of human or AI to perform tasks is given).
+ The required amount of time to spend on each task/module is thus fixed for the firm and the firm treats parameters 
+\begin_inset Formula $t_{x}^{f}$
+\end_inset
+
+ as given.
+ 
 \end_layout
 
 \begin_layout Standard
-Fix a job design.
- That is,
- take the job boundaries and the kind of input that produces human tasks and AI modules as given.
- The required amount of time to spend on each task/module is thus fixed for the firm.
- Given the Leontief nature of production,
- the relative amount of time spent between any two modules is independent of units produced and wage rates:
+Given the Leontief nature of production,
+ the ratio of amount of labor assigned to any two modules 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+ is independent of units produced and wage rates:
 \begin_inset Formula 
-\[
-\frac{l^{i}\left(w,x\right)}{l^{j}\left(w,x\right)}=\frac{z_{i}\ t_{i}}{z_{j}\ t_{j}}=const^{ij}.
-\]
+\begin{equation}
+\frac{l_{i}^{f}}{l_{j}^{f}}=\frac{t_{i}^{f}}{t_{j}^{f}}=const_{ij}^{f}.\label{eq:fixed_labor_ratio}
+\end{equation}
 
 \end_inset
 
@@ -1194,10 +353,10 @@ This implies that the rate of substitution between any two modules
 \begin_inset Formula $j$
 \end_inset
 
- is independent of other production modules:
+ is independent of amount dedicated to other production modules:
 \begin_inset Formula 
 \begin{equation}
-\frac{∂}{∂l_{k}}\left(\frac{\frac{\Delta x}{\Delta l_{i}}}{\frac{\Delta x}{\Delta l_{j}}}\right)=0\qquad\qquad\forall k\neq i,j.\label{eq:task_subst_rate_indep}
+\frac{∂}{∂l_{k}^{f}}\left(\frac{\frac{\Delta x^{f}}{\Delta l_{i}^{f}}}{\frac{\Delta x^{f}}{\Delta l_{j}^{f}}}\right)=0\qquad\qquad\forall k\neq i,j.\label{eq:task_subst_rate_indep}
 \end{equation}
 
 \end_inset
@@ -1206,7 +365,7 @@ This implies that the rate of substitution between any two modules
 \end_layout
 
 \begin_layout Standard
-A necessary and sufficient condition for representing the firm's production as a Leontief function in terms of (firm-level) aggregate human labor and aggregate AI labor is that the rate of substitution between any two modules of the same input type is independent of any module of in the other aggregate input type (Leontief,
+A necessary and sufficient condition for representing the firm's production as a Leontief function with (firm-level) aggregate human labor and aggregate AI labor is that the rate of substitution between any two modules of the same input type is independent of any module in the other aggregated input type (Leontief,
  1947,
  Fisher 1965,
  Felipe and Fisher 2003).
@@ -1224,16 +383,17 @@ nolink "false"
 \end_inset
 
  is in fact stricter than necessary for obtaining the firm-level aggregation result.
- It not only satisfies the needed condition but also provides a stronger requirement:
- that the rate of substitution between modules within the same (firm-level) aggregated input type is also independent of other modules within that same aggregated input type.
+ It not only satisfies our desired condition but also provides a stronger requirement:
+ that the rate of substitution between modules within the same (firm-level) aggregate input type is also independent of other modules within that same aggregated input type.
 \end_layout
 
 \begin_layout Standard
-Therefore,
- we can represent the production function given in 
+Thus,
+ dropping the firm superscript,
+ we can represent the production function of the firm in 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:task_job"
+reference "eq:task_level_prod"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1241,68 +401,146 @@ nolink "false"
 
 \end_inset
 
- as:
-\begin_inset Formula 
-\[
-x=\min\ \{\frac{H}{\sum_{j=1}^{J}t_{j}^{s}+\sum_{h\in\mathcal{H}}z_{h}\ t_{h}^{H}},\ \frac{AI}{\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}}\},
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $H$
-\end_inset
-
- and 
-\begin_inset Formula $AI$
-\end_inset
-
- are respectively the total amount of human labor and total amount of AI labor to produce one unit of the industry good 
-\begin_inset Formula $x$
-\end_inset
-
-.
- Notice that in we are assuming hand-offs are standalone tasks that are done fully manually by human.
- From here onwards,
- we only work with 
-\begin_inset Formula $H$
-\end_inset
-
- and 
-\begin_inset Formula $AI$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-For the sake of the main aggregation argument presented in the next section,
- assume firms face an firm-level aggregate productivity measure for each type of input:
+ as
 \begin_inset Formula 
 \begin{equation}
-x=\min\ \{\frac{H}{\beta\ t_{H}},\ \frac{AI}{\alpha\ t_{AI}}\},\label{eq:micro_agg_leontief}
+x=\min\ \{\frac{l_{H}}{\sum_{j=1}^{J}\ t_{j}^{s}+\sum_{h\in\mathcal{H}}\ t_{h}^{H}},\ \frac{l_{AI}}{\sum_{a\in\mathcal{A}}\ t_{a}^{AI}}\}.\label{eq:task_level_agg_prod}
 \end{equation}
 
 \end_inset
 
-Furthermore,
- notice that the firm-level production function is homogenous of degree one.
- 
-\begin_inset Note Note
-status collapsed
+Here:
+\end_layout
 
-\begin_layout Plain Layout
-where
-\begin_inset Formula 
-\begin{align*}
-t_{H} & =\sum_{j=1}^{J}t_{j}^{s}+\sum_{h\in\mathcal{H}}z_{h}\ t_{h}^{H},\\
-t_{AI} & =\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}.
-\end{align*}
+\begin_layout Itemize
+\begin_inset Formula $l_{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{AI}$
+\end_inset
+
+ are the firm-aggregate human labor and firm-aggregate amount of AI labor used to produce the industry good 
+\begin_inset Formula $x$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathcal{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{A}$
+\end_inset
+
+ are the set of manual tasks and AI modules for this particular firm,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $t_{h}^{H}$
+\end_inset
+
+ is required time for a human to perform manual task 
+\begin_inset Formula $h\in\mathcal{H}$
+\end_inset
+
+ and produce 
+\begin_inset Formula $x$
+\end_inset
+
+ units of output,
+ and 
+\begin_inset Formula $t_{a}^{AI}$
+\end_inset
+
+ is the required time for a human to manage AI module 
+\begin_inset Formula $a\in\mathcal{A}$
+\end_inset
+
+ producing 
+\begin_inset Formula $x$
+\end_inset
+
+ units of output,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $t_{j}^{s}$
+\end_inset
+
+ is the hand-off (or switching) cost at the boundary of jobs.
+ Notice that we are assuming hand-offs are standalone tasks that are done fully manually by human and are thus added to the human portion of the labor requirement.
+\end_layout
+
+\begin_layout Standard
+For ease of notation in the industry-wide aggregation presented next,
+ let us rewrite 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:task_level_agg_prod"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
 
 \end_inset
 
+ in a slightly different form:
+\begin_inset Formula 
+\begin{equation}
+x=\min\ \{\frac{H}{t_{H}},\ \frac{AI}{t_{AI}}\},\label{eq:micro_agg_prod}
+\end{equation}
 
-\end_layout
+\end_inset
+
+The variables 
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $AI$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:micro_agg_prod"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ are exactly the same as 
+\begin_inset Formula $l_{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $l_{AI}$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:task_level_agg_prod"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ and the human and AI time costs are:
+ 
+\begin_inset Formula 
+\begin{align*}
+t_{H} & =\sum_{j=1}^{J}\ t_{j}^{s}+\sum_{h\in\mathcal{H}}\ t_{h}^{H},\\
+t_{AI} & =\sum_{a\in\mathcal{A}}\ t_{a}^{AI}.
+\end{align*}
 
 \end_inset
 
@@ -1311,22 +549,31 @@ t_{AI} & =\sum_{a\in\mathcal{A}}z_{a}\ t_{a}^{AI}.
 
 \begin_layout Subsection
 Across Firm Aggregation:
- Leontief with Firm-level Aggregate Inputs to Industry-Level CES
+ (Aggregate) Leontief to CES
 \end_layout
 
 \begin_layout Standard
-Here I show that with the proper type of heterogeneity across firms at the task-level we can aggregate Leontief production function with firm-level human and AI aggregate inputs to a CES industry production function whose inputs are industry-level aggregate human labor and industry-level aggregate AI labor.
+Here I show that with the proper firm-level task/module completion time heterogeneity we can convert the firms' Leontief production function with firm-aggregate human and AI inputs to a CES industry production function whose inputs are industry-level aggregate human labor and industry-level aggregate AI labor.
+ In what follows,
+ I borrow heavily from and follow the steps expressed in Levhari (1968).
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status collapsed
+Without loss,
+ let's assume that 
+\begin_inset Formula $t_{H}$
+\end_inset
 
-\begin_layout Plain Layout
-The firm-level aggregate Leontief function specified in 
+ and 
+\begin_inset Formula $t_{AI}$
+\end_inset
+
+ are normalized so that each firm produces one unit of output.
+ That is,
+ the firm-level aggregate Leontief function specified in 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:micro_agg_leontief"
+reference "eq:micro_agg_prod"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1336,45 +583,290 @@ nolink "false"
 
  implies that in equilibrium
 \begin_inset Formula 
+\begin{equation}
+1=\frac{H}{t_{H}}=\frac{AI}{t_{AI}},\label{eq:fixed_proportions}
+\end{equation}
+
+\end_inset
+
+and thus the per unit of output human labor and AI labor for the firm is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+H=t_{H},\qquad\qquad AI=t_{AI}.\label{eq:firm_labor}
+\end{equation}
+
+\end_inset
+
+Due to the fixed-proportions nature of production at the micro level in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:fixed_proportions"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ once the level of one input is specified the value of other input is pinned down by the ratio 
+\begin_inset Formula $\frac{t_{H}}{t_{AI}}$
+\end_inset
+
+.
+ Thus,
+ each firm only has one degree of freedom in choosing its inputs.
+ Because of this property we take just one of the inputs—
+in particular human labor 
+\begin_inset Formula $H$
+\end_inset
+
+—
+as the variable factor and treat the other—
+AI labor 
+\begin_inset Formula $AI$
+\end_inset
+
+—
+as a fixed proportion of the variable input.
+\end_layout
+
+\begin_layout Paragraph
+Micro Profitability Condition.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $w_{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{AI}$
+\end_inset
+
+ be the output price-deflated wage rates for homogenous human an AI labor,
+ respectively.
+ The firm-level profitability condition is
+\begin_inset Formula 
 \[
-x=\beta\ t_{H}=\alpha\ t_{AI},
+1\geq w_{H}H+w_{AI}AI.
 \]
 
 \end_inset
 
-and
+Given the fixed ratio property,
+ the profitability condition can be written as:
+\begin_inset Formula 
+\begin{align*}
+1 & \geq w_{H}H+w_{AI}\left(\frac{t_{AI}}{t_{H}}H\right)\\
+ & =\left(w_{H}+w_{AI}\frac{t_{AI}}{t_{H}}\right)H\\
+ & =wH,
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $w$
+\end_inset
+
+ is the time requirement-weighted human wage rate for when we only consider human labor as the input:
+\begin_inset Formula 
+\[
+w=\frac{w_{H}t_{H}+w_{AI}t_{AI}}{t_{H}}.
+\]
+
+\end_inset
+
+Given the profitability condition expressed above,
+ only firms whose variable factor 
+\begin_inset Formula $H$
+\end_inset
+
+ is below 
+\begin_inset Formula $\frac{1}{w}$
+\end_inset
+
+ will produce in equilibrium.
+ Let 
+\begin_inset Formula $g(t)$
+\end_inset
+
+ denote the density function of various firms in terms of their variable factor requirements.
+ Specifically,
+ 
+\begin_inset Formula $g(t)$
+\end_inset
+
+ is the probability density of firms whose variable factor is 
+\begin_inset Formula $H=t$
+\end_inset
+
+.
+ With this definition,
+ total industry-level output will be 
+\begin_inset Formula $1=\int_{0}^{\frac{1}{w}}\ g(t)\ dt$
+\end_inset
+
+ and the industry-aggregate human labor input will be 
+\begin_inset Formula $\int_{0}^{\frac{1}{w}}\ t\ g(t)\ dt$
+\end_inset
+
+.
+ 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
+Our goal is to obtain a relationship between 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $L$
+\end_inset
+
+ by eliminating 
+\begin_inset Formula $\frac{1}{w}$
+\end_inset
+
+ in the two equations above.
+ Assume the industry-level aggregate production function takes the following CES form:
 \begin_inset Formula 
 \begin{equation}
-H=\beta\ t_{H},\qquad\qquad AI=\alpha\ t_{AI}.\label{eq:firm_labor}
+X=\left(\theta_{H}\ H^{\rho}\ +\ \theta_{AI}\ AI^{\rho}\right)^{\frac{1}{\rho}},\qquad\qquad\sigma=\frac{1}{1-\rho}.\label{eq:macro_agg_prod_both_factors}
 \end{equation}
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
-Define effective AI for a particular value of human labor efficiency 
-\begin_inset Formula $\beta$
+We assume that 
+\begin_inset Formula $\rho<0$
 \end_inset
 
- as:
+ (and thus 
+\begin_inset Formula $\sigma<1$
+\end_inset
+
+) so that the industry-level aggregate production exhibits some degree of complementarity.
+ With a slight abuse of notation,
+ redefine 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+ as total industry output and total human labor in units of total AI labor to write 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_agg_prod_both_factors"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ as
 \begin_inset Formula 
 \begin{equation}
-\phi(\beta)=\int_{\alpha\in A}\alpha\ t^{AI}(\alpha,\beta)\ d\alpha.\label{eq:effective_AI_labor}
+X=\left(\theta_{H}\ H^{\rho}\ +\ \theta_{AI}\right)^{\frac{1}{\rho}}.\label{eq:macro_agg_prod}
 \end{equation}
 
 \end_inset
 
-We call 
-\begin_inset Formula $\phi(\alpha)$
+The variables in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_agg_prod"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
 \end_inset
 
- the AI capacity density function as well.
+ are basically the same variables in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_agg_prod_both_factors"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ but divided by second industry-aggregate input 
+\begin_inset Formula $AI$
+\end_inset
+
+.
+ 
 \end_layout
+
+\begin_layout Standard
+If we look at output per unit of variable factor 
+\begin_inset Formula $\frac{X}{H}=\left(\theta_{H}+\frac{\theta_{AI}}{H^{\rho}}\right)^{\frac{1}{\rho}}$
+\end_inset
+
+ we observe that as 
+\begin_inset Formula $H\rightarrow0$
+\end_inset
+
+,
+ we have 
+\begin_inset Formula $\frac{X}{H}\rightarrow\theta_{H}^{\ \frac{1}{\rho}}$
+\end_inset
+
+.
+ This implies that the variable factor per unit of output,
+ 
+\begin_inset Formula $\frac{H}{X}$
+\end_inset
+
+ reaches its minimum at 
+\begin_inset Formula $\theta_{H}^{\ -\frac{1}{\rho}}$
+\end_inset
+
+,
+ or that 
+\begin_inset Formula $\frac{H}{X}>\theta_{H}^{\ -\frac{1}{\rho}}$
+\end_inset
+
+.
+ This gives a lower bound on the density function 
+\begin_inset Formula $g(t)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Using the definition of 
+\begin_inset Formula $g(t)$
+\end_inset
+
+ we have:
+\begin_inset Formula 
+\[
+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ g(t)\ dt\ =\ \left(\theta_{H}\left(\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ t\ g(t)\ dt\right)^{\rho}\ +\ \theta_{AI}\right)^{\frac{1}{\rho}}.
+\]
+
+\end_inset
+
+Let 
+\begin_inset Formula $x=\frac{1}{w}$
+\end_inset
+
+,
+ and rewrite the above as
+\begin_inset Formula 
+\begin{equation}
+\left(\int_{\theta_{H}^{-\frac{1}{\rho}}}^{x}\ g(t)\ dt\right)^{\rho}\ =\ \theta_{H}\left(\int_{\theta_{H}^{-\frac{1}{\rho}}}^{x}\ t\ g(t)\ dt\right)^{\rho}\ +\ \theta_{AI}.\label{eq:macro_prod_with_g}
+\end{equation}
 
 \end_inset
 
@@ -1382,6 +874,382 @@ We call
 \end_layout
 
 \begin_layout Standard
+Define
+\begin_inset Formula 
+\begin{equation}
+\phi(x)=\int_{\theta_{H}^{-\frac{1}{\rho}}}^{x}\ g(t)\ dt,\label{eq:phi}
+\end{equation}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\begin{equation}
+\psi(x)=\int_{\theta_{H}^{-\frac{1}{\rho}}}^{x}\ t\ g(t)\ dt.\label{eq:psi}
+\end{equation}
+
+\end_inset
+
+Thus,
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_prod_with_g"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ turns into
+\begin_inset Formula 
+\begin{equation}
+\phi^{\rho}=\theta_{H}\ \psi^{\rho}\ +\ \theta_{AI}.\label{eq:macro_prod_phi_psi}
+\end{equation}
+
+\end_inset
+
+Notice that 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:phi"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:psi"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ imply:
+\begin_inset Formula 
+\begin{align*}
+\phi^{'} & =g(x),\\
+\psi^{'} & =x\ g(x).
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next,
+ differentiate both sides of 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_prod_phi_psi"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ w.r.t.
+ 
+\begin_inset Formula $x$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+\phi^{\rho-1}=\theta_{H}\ \psi^{\rho-1}\ x.
+\]
+
+\end_inset
+
+Rearrange terms to get 
+\begin_inset Formula $\psi(x)$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $\phi(x)$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+\psi(x)=\frac{\phi(x)}{\left(\theta_{H}\ x\right)^{\frac{1}{\rho-1}}}.\label{eq:psi_interm_phi}
+\end{equation}
+
+\end_inset
+
+Substitute 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:psi_interm_phi"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ into 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_prod_phi_psi"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ to get:
+\begin_inset Formula 
+\[
+\phi^{\rho}=\theta_{H}\ \frac{\phi^{\rho}}{\left(\theta_{H}\ x\right)^{\frac{\rho}{\rho-1}}}+\theta_{AI}
+\]
+
+\end_inset
+
+or
+\begin_inset Formula 
+\begin{equation}
+\phi(x)=\left(\frac{\theta_{AI}\ \left(\theta_{H}\ x\right)^{\frac{\rho}{\rho-1}}}{\left(\theta_{H}\ x\right)^{\frac{\rho}{\rho-1}}\ -\ \theta_{H}}\right)^{\frac{1}{\rho}}.\label{eq:phi_solved}
+\end{equation}
+
+\end_inset
+
+Derive 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:phi_solved"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ to obtain the density function 
+\begin_inset Formula $g(x)$
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{equation}
+g(x)=\phi^{'}(x)=\frac{\theta_{H}^{\ \ -\frac{1}{\rho(\alpha(1-\rho))}}}{(1-\rho)\ \theta_{AI}^{\ \ 1/\rho}}\ x^{-\frac{(2-\rho)}{\rho(1-\rho)}}\ \left[x^{\rho/(\rho-1)}\ \left(\frac{\theta_{AI}}{\theta_{H}^{\ \ 1/(1-\rho)}}-1\right)\right]^{-(1+\rho)/\rho}.\label{eq:het_dist}
+\end{equation}
+
+\end_inset
+
+This is the distribution of human labor to AI labor time requirement ratio at the firm level needed for producing an industry-wide CES production function with industry-wide aggregate human labor and AI labor inputs.
+ 
+\end_layout
+
+\begin_layout Standard
+Due to the normalization we started with in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:fixed_proportions"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ industry-aggregate output equals 1 (by definition),
+ whereas ratio of industry-aggregate inputs 
+\begin_inset Formula $\frac{H}{AI}$
+\end_inset
+
+ (remember the normalization from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_agg_prod_both_factors"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ to 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_agg_prod"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+) is given by:
+\begin_inset Formula 
+\begin{equation}
+\frac{H}{AI}=\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx.\label{eq:macro_inputs_ratio}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assume human and AI labor are of the same kind with a total fixed supply of 
+\begin_inset Formula $L$
+\end_inset
+
+ and wage rate of 
+\begin_inset Formula $w$
+\end_inset
+
+ (i.e.,
+ in this case we have 
+\begin_inset Formula $w_{H}=w_{AI}=w$
+\end_inset
+
+).
+ That is
+\begin_inset Formula 
+\begin{equation}
+L=H+AI.\label{eq:total_labor_supply}
+\end{equation}
+
+\end_inset
+
+Substitute for 
+\begin_inset Formula $H$
+\end_inset
+
+ from 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:macro_inputs_ratio"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ to 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:total_labor_supply"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ to get the industry-level aggregate AI labor
+\begin_inset Formula 
+\begin{equation}
+AI=\frac{L}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx},\label{eq:AI_labor}
+\end{equation}
+
+\end_inset
+
+which consequently implies industry-level aggregate human labor will be
+\begin_inset Formula 
+\begin{equation}
+H=\frac{L\ \int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}\label{eq:human_labor}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Implications
+\end_layout
+
+\begin_layout Standard
+These results have two interesting implications:
+\end_layout
+
+\begin_layout Enumerate
+The aggregate level of 
+\begin_inset Formula $AI$
+\end_inset
+
+ in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:AI_labor"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ explicitly depends on supply of labor (
+\begin_inset Formula $L$
+\end_inset
+
+),
+ industry-level elasticity of substitution (through 
+\begin_inset Formula $\rho$
+\end_inset
+
+ entering the lower bound of the integral) and also implicitly on the wage rate (in the integral's upper bound).
+ 
+\end_layout
+
+\begin_layout Standard
+An immediate comparative static is that as wage rate goes up industry-level amount of employed AI labor will go down.
+ This is because the upper bound of integral shrinks and so the expectation of the density function 
+\begin_inset Formula $g(.)$
+\end_inset
+
+ unambiguously decreases over the given bound.
+ The intuition behind this is the follows:
+ with a higher wage rate fewer firms will become profitable for a given task/module time requirements.
+ However,
+ in order to sustain the CES industry-level production function,
+ the distribution of relative human to AI requirements also shifts in favor of the 
+\end_layout
+
+\begin_layout Standard
+that 
+\end_layout
+
+\begin_layout Standard
+with higher wage rates the cost of production for individual firms goes up,
+ so there will be fewer firms willing to produce given the profitability condition.
+ However,
+ because we're fixing the total industry-level human labor at 
+\begin_inset Formula $L$
+\end_inset
+
+ this changes the shape of the heterogeneity distribution such that,
+ on average,
+ each firm requires less AI labor for production.
+ Instead,
+ we could have fixed the distribution 
+\begin_inset Formula $g(.)$
+\end_inset
+
+ and obtained the ratio of industry-level aggregate human labor to aggregate AI labor (which in my opinion makes more sense).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
 Imagine the final production function takes the following form:
 \begin_inset Formula 
 \[
@@ -1540,8 +1408,28 @@ Calculate the derivates of the terms:
 \begin_inset Formula 
 \begin{align*}
 \frac{∂\phi(x,y)}{∂x} & =\frac{∂}{∂x}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\ da\right)\\
- & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\right)\right]\\
+ & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\right)\ da\right]\\
  & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\phi(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\ da\right)\\
+ & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ g(a,b)\ db\right)\ da\\
+ & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\phi(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y}\ \int_{\alpha^{-\frac{1}{\rho}}}^{x-\frac{bx}{y}}\ g(a,b)\ da\ db\right)\\
+ & =\int_{\beta^{-\frac{1}{\rho}}}^{y}\ \frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x-\frac{bx}{y}}\ g(a,b)\ da\right)\ db\\
+ & =\frac{x}{y^{2}}\int_{\beta^{-\frac{1}{\rho}}}^{y}b\ g(x-\frac{bx}{y},b)\ db
 \end{align*}
 
 \end_inset
@@ -1571,6 +1459,16 @@ Now we do the same for
 \frac{∂\psi_{A}(x,y)}{∂x} & =\frac{∂}{∂x}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\ da\right)\\
  & =\left[\underbrace{\int_{\beta^{-\frac{1}{\rho}}}^{y-y}\ a\ g(x,b)\ db}_{=0}+\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂x}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\right)\right]\\
  & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\psi_{A}(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\ da\right)\\
+ & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ a\ g(a,b)\ db\right)\ da\\
+ & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a(1-\frac{a}{x})\ g(a,y-\frac{ay}{x})\ da
 \end{align*}
 
 \end_inset
@@ -1613,6 +1511,16 @@ But if we want to obtain
 
 \end_inset
 
+
+\begin_inset Formula 
+\begin{align*}
+\frac{∂\psi_{B}(x,y)}{∂y} & =\frac{∂}{∂y}\left(\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ b\ g(a,b)\ db\ da\right)\\
+ & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \frac{∂}{∂y}\left(\int_{\beta^{-\frac{1}{\rho}}}^{y-\frac{ay}{x}}\ b\ g(a,b)\ db\right)\ da\\
+ & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ b\left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da
+\end{align*}
+
+\end_inset
+
 and
 \begin_inset Formula 
 \begin{align*}
@@ -1627,15 +1535,18 @@ and
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 All next to each other:
 \begin_inset Formula 
 \begin{align*}
 \phi_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da,\\
+\phi_{y} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da,\\
 \phi_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da,\\
 \left(\phi_{A}\right)_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da,\\
+\left(\phi_{A}\right)_{y} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a(1-\frac{a}{x})\ g(a,y-\frac{ay}{x})\ da,\\
 \left(\phi_{A}\right)_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a^{2}\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da,\\
 \left(\phi_{B}\right)_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(y-\frac{ay}{x}\right)\ g(a,y-\frac{ay}{x})\ da,\\
+\left(\phi_{B}\right)_{y} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ b\left(1-\frac{a}{x}\right)\ g(a,y-\frac{ay}{x})\ da,\\
 \left(\phi_{B}\right)_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}+ya\left(1-\frac{a}{x}\right)}{x^{2}}\ g(a,y-\frac{ay}{x})+a\left(y-\frac{ay}{x}\right)\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da.
 \end{align*}
 
@@ -1670,727 +1581,44 @@ g_{a}(a,b)=bmC\left(ab\right)^{m-1},\qquad g_{b}(a,b)=amC\left(ab\right)^{m-1}.
 \end_inset
 
 Plugging into the six equations above,
- we get:
-\begin_inset Formula 
-\begin{align*}
-\phi_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\ g(a,y-\frac{ay}{x})\ da,\\
-\phi_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da,\\
-\left(\phi_{A}\right)_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a^{2}\ g(a,y-\frac{ay}{x})\ da,\\
-\left(\phi_{A}\right)_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}}{x^{2}}\ g(a,y-\frac{ay}{x})+\frac{y}{x^{2}}a^{2}\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da,\\
-\left(\phi_{B}\right)_{x} & =\frac{y}{x^{2}}\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ a\left(y-\frac{ay}{x}\right)\ g(a,y-\frac{ay}{x})\ da,\\
-\left(\phi_{B}\right)_{xy} & =\int_{\alpha^{-\frac{1}{\rho}}}^{x}\ \left[\frac{a^{2}+ya\left(1-\frac{a}{x}\right)}{x^{2}}\ g(a,y-\frac{ay}{x})+a\left(y-\frac{ay}{x}\right)\left(1-\frac{a}{x}\right)\ g_{b}(a,y-\frac{ay}{x})\right]\ da.
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Micro Equilibrium in Short Run
-\end_layout
-
-\begin_layout Standard
-We assume that human labor is homogenous,
- and thus all workers receive the same wage rate regardless of where they work.
- Let 
-\begin_inset Formula $w$
-\end_inset
-
- be the real wage rate of human labor (i.e.,
- the nominal wage rate deflated by output price).
- In the short-run equilibrium the marginal product of labor equates the wage rate.
-\end_layout
-
-\begin_layout Standard
-—
-–
-\end_layout
-
-\begin_layout Standard
-I appeal to Levhari (1968) and Sato (1975) to derive the proper form of heterogeneity between firm-level AI and human labor in order to have an industry with aggregate CES production with industry-level aggregate AI and aggregate labor input.
-\end_layout
-
-\begin_layout Standard
-The Gorman (1953) result requires different units of production be homothetic (marginal rates of substitution between any two inputs be fixed across different firms and independent of output level).
- These conditions hold in our setup with the Leontief production and fixed level of AI and human tasks within firms.
- Appealing to the his result we represent the human labor and AI labor across different tasks with two (firm-level) aggregates 
-\begin_inset Formula $t^{H}$
-\end_inset
-
- (for human labor) and 
-\begin_inset Formula $t^{AI}$
-\end_inset
-
- (for AI labor):Here we assume hand-off costs 
-\begin_inset Formula $t_{j}^{s}$
-\end_inset
-
- are a part of the human labor portion of the job and is hand-off is executed fully manually by the human.
- 
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Also,
- the difficulty of the composite AI labor,
- 
-\begin_inset Formula $d_{j}$
-\end_inset
-
-,
- is defined such that the following holds:
-\begin_inset Formula 
-\[
-T_{j}^{AI}\alpha^{-d_{j}}=\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\ \alpha^{-d_{a}}\Longleftrightarrow\alpha^{-d_{j}}=\frac{\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\ \alpha^{-d_{a}}}{T_{j}^{AI}}.
-\]
-
-\end_inset
-
-This simply means that 
-\begin_inset Formula $\alpha^{-d_{j}}$
-\end_inset
-
- is a weighted average of individual AI modules where weights are the module's management time costs.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In the task-level heterogeneity I assume firms face the same task durations (so 
-\begin_inset Formula $t^{H}$
-\end_inset
-
- and 
-\begin_inset Formula $t^{AI}$
-\end_inset
-
- are the fixed and the same across firms),
- but different firms have different productivity levels for each input.
- In particular I assume the the industry good 
-\begin_inset Formula $x$
-\end_inset
-
- is produced according to:
-\begin_inset Formula 
-\[
-x_{f}=\alpha_{f}\ t_{f}^{AI}=\beta_{f}\ t_{f}^{H},
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $\alpha_{f}\in A$
-\end_inset
-
- and 
-\begin_inset Formula $\beta_{f}\in B$
-\end_inset
-
- are the heterogenous productivity parameters.
- Dropping the firm index 
-\begin_inset Formula $f$
-\end_inset
-
- for simplicity,
- the production is:
-\begin_inset Formula 
-\begin{equation}
-x=\alpha\ t^{AI}=\beta\ t^{H}.\label{eq:micro_production}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Let 
-\begin_inset Formula 
-\begin{equation}
-\phi(\beta)=\int_{\alpha\in A}\alpha\ t^{AI}(\alpha,\beta)\ d\alpha\label{eq:effective_AI_labor121211}
-\end{equation}
-
-\end_inset
-
-be the effective AI labor for some particular level of 
-\begin_inset Formula $\beta$
-\end_inset
-
-.
- We call 
-\begin_inset Formula $\phi(\beta)$
-\end_inset
-
- the AI capacity distribution function.
- 
-\end_layout
-
-\begin_layout Subsection
-Micro-level Profitability Condition
-\end_layout
-
-\begin_layout Standard
-Only firms with nonnegative profits will produce.
- In perfectly competitive markets,
- the price 
-\begin_inset Formula $p$
-\end_inset
-
- of industry good 
-\begin_inset Formula $x$
-\end_inset
-
- is a weighted measure of job wages 
-\begin_inset Formula $w_{j}$
-\end_inset
-
-:
-\begin_inset Formula 
-\[
-p=\sum_{j=1}^{J}w_{j}\left(t_{j}^{H}+t_{j}^{AI}\right).
-\]
-
-\end_inset
-
-For convenience,
- let 
-\begin_inset Formula $w^{H}$
-\end_inset
-
- and 
-\begin_inset Formula $w^{AI}$
-\end_inset
-
- be the output-price denominated human labor wage and AI labor wage when aggregate human and AI labors are treated homogenous as an aggregate variable as defined in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:firm_labor"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-.
- That is:
-\begin_inset Formula 
-\begin{align*}
-w^{H}t^{H} & =\frac{\sum_{j=1}^{J}w_{j}\ t_{j}^{H}}{p}\Longleftrightarrow w^{H}=\frac{\sum_{j=1}^{J}w_{j}\ t_{j}^{H}}{p\ \sum_{j=1}^{J}t_{j}^{H}},\\
-w^{AI}t^{AI} & =\frac{\sum_{j=1}^{J}w_{j}\ t_{j}^{AI}}{p}\Longleftrightarrow w^{AI}=\frac{\sum_{j=1}^{J}w_{j}\ t_{j}^{AI}}{p\ \sum_{j=1}^{J}t_{j}^{AI}}.
-\end{align*}
-
-\end_inset
-
-The 
-\bar under
-short-run
-\bar default
- profitability condition requires that for a fixed 
-\begin_inset Formula $w^{AI}$
-\end_inset
-
- and 
-\begin_inset Formula $t^{AI}$
-\end_inset
-
-:
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-In the long-run with both inputs varying profitability condition turns into:
-\begin_inset Formula 
-\[
-px-\left(w^{H}t^{H}+w^{AI}t^{AI}\right)\geq0,
-\]
-
-\end_inset
-
-which I don't know how to deal with at the moment.
-\end_layout
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{equation}
-x-w^{H}\ t^{H}=\beta\ t^{H}-w^{H}\ t^{H}\geq0\label{eq:shortrun_profitability}
-\end{equation}
-
-\end_inset
-
-This specifies the lower bound of integration for 
-\begin_inset Formula $\beta$
-\end_inset
-
-:
- 
-\begin_inset Formula $w^{H}\leq\beta$
-\end_inset
-
-.
- In particular,
- aggregate human labor 
-\begin_inset Formula $T^{H}$
-\end_inset
-
- will be
-\begin_inset Formula 
-\begin{equation}
-T^{H}(w^{H})=\int_{w^{H}}^{\beta_{0}}\frac{\phi(\beta)}{\beta}\ d\beta,\label{eq:micro_agg_human_labor}
-\end{equation}
-
-\end_inset
-
-and aggregate industry production 
-\begin_inset Formula $X$
-\end_inset
-
- will be:
-\begin_inset Formula 
-\begin{equation}
-X(w^{H})=\int_{w^{H}}^{\beta_{0}}\phi(\beta)\ d\beta.\label{eq:micro_agg_output}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Aggregate Production Function
-\end_layout
-
-\begin_layout Standard
-Imagine,
- given constant returns to scale property of our micro production functions,
- an aggregate production function exists in the form of:
-\begin_inset Formula 
-\[
-X=F(T^{AI},\ \bar{\beta}\ T^{H})=G(\frac{\bar{\beta}\ T^{H}}{T^{AI}})T^{AI}.
-\]
-
-\end_inset
-
-The form and shape of the function 
-\begin_inset Formula $G$
-\end_inset
-
- is derived from the desired shape of 
-\begin_inset Formula $F$
-\end_inset
-
-—
-in our case,
- a CES.
- The short-run equilibrium condition requires that marginal product of aggregate labor equals its real wage rate:
-\begin_inset Formula 
-\begin{equation}
-w^{H}=\bar{\beta}\ G^{'}\left(\frac{\bar{\beta}\ T^{H}}{T^{AI}}\right).\label{eq:macro_mp_mc}
-\end{equation}
-
-\end_inset
-
-Notice that:
-\begin_inset Formula 
-\[
-G(0)=0\qquad G(\infty)=1,\qquad G^{'}(0)=1,\qquad G^{'}(\infty)=0.
-\]
-
-\end_inset
-
-Let 
-\begin_inset Formula $H$
-\end_inset
-
- be the inverse of 
-\begin_inset Formula $G^{'}$
-\end_inset
-
-.
- Then:
-\begin_inset Formula 
-\[
-G^{'}(z)=y\longleftrightarrow H(z)=y;\qquad G^{'}\left[H(z)\right]=z,\qquad H\left[G^{'}(y)\right]=y,
-\]
-
-\end_inset
-
-and
-\begin_inset Formula 
-\[
-H(1)=0\qquad H(0)=\infty,\qquad H^{'}(z)<0,\quad\forall\ 0<z<1.
-\]
-
-\end_inset
-
-The industry human labor is:
-\begin_inset Formula 
-\begin{equation}
-T^{H}(w^{H})=\frac{1}{\bar{\beta}}\ H(\frac{w^{H}}{\bar{\beta}})\ T^{AI},\label{eq:macro_agg_human_labor}
-\end{equation}
-
-\end_inset
-
-and the aggregate industry output is:
-\begin_inset Formula 
-\begin{equation}
-X(w^{H})=G\left(H\left(\frac{w^{H}}{\bar{\beta}}\right)\right)\ T^{AI}.\label{eq:macro_agg_output}
-\end{equation}
-
-\end_inset
-
-Combine 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:micro_agg_human_labor"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
+ we get some functions in terms of the complete and incomplete beta functions 
+\begin_inset Formula $B(m+1,m+1),B_{z}(m+1,m+1)$
 \end_inset
 
  with 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:macro_agg_human_labor"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
+\begin_inset Formula $z=\frac{\alpha^{-\frac{1}{\rho}}}{x}$
 \end_inset
 
- and 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:micro_agg_output"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- with 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:macro_agg_output"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- to get:
-\begin_inset Formula 
-\begin{equation}
-T^{H}(w^{H})=\int_{w^{H}}^{\beta_{0}}\frac{\phi(\beta)}{\beta}\ d\beta=\frac{1}{\beta_{0}}\ H\left(\frac{w^{H}}{\beta_{0}}\right)\ T^{AI}\label{eq:TH_eq}
-\end{equation}
-
-\end_inset
-
-and
-\begin_inset Formula 
-\begin{equation}
-X(w^{H})=\int_{w^{H}}^{\beta_{0}}\phi(\beta)\ d\beta=G\left(H\left(\frac{w^{H}}{\beta_{0}}\right)\right)\ T^{AI},\label{eq:X_eq}
-\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula 
-\begin{equation}
-T^{AI}=\int_{0}^{\beta_{0}}\phi(\beta)\ d\beta.\label{eq:TAI_eq}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Solving for CES Aggregate Function 
-\begin_inset Formula $F$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-If 
-\begin_inset Formula $F$
-\end_inset
-
- is CES with elasticity of substitution 
-\begin_inset Formula $\sigma$
-\end_inset
-
-,
- Sato (1975,
- p.
- 40) tells us that the distribution function should be:
-\begin_inset Formula 
-\begin{equation}
-\phi(\beta)=\left(\frac{\sigma}{\beta_{0}}\right)\ \left(\frac{\beta}{\beta_{0}}\right)^{-\sigma}\ \left[1-\left(\frac{\beta}{\beta_{0}}\right)^{1-\sigma}\right]^{\frac{2\sigma-1}{1-\sigma}}\ T^{AI}.\label{eq:CES_dist}
-\end{equation}
-
-\end_inset
-
-This is a fixed-point equation where 
-\begin_inset Formula $T^{AI}$
-\end_inset
-
- is defined as a function of 
-\begin_inset Formula $\phi(\beta)$
-\end_inset
-
- as in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:TAI_eq"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- and 
-\begin_inset Formula $\phi(\beta)$
-\end_inset
-
- is defined as a function of 
-\begin_inset Formula $T^{AI}$
-\end_inset
-
- in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:CES_dist"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Subsection
-Relation to AI Quality Parameter
-\end_layout
-
-\begin_layout Standard
-Notice that 
-\begin_inset Formula $\phi(\beta)$
-\end_inset
-
- is the effective 
-\begin_inset Formula $AI$
-\end_inset
-
- labor.
- In the micro-level,
- Leontief production function 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:micro_production"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- we have:
+:
 \begin_inset Formula 
 \begin{align*}
-\alpha_{f} & =\frac{t_{f}^{H}}{t_{F}^{AI}}\ \beta_{f}\\
- & =\gamma_{f}\ \beta_{f}.
+\phi_{x} & =C(xy)^{m+1}\left[\frac{1}{2}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right]\\
+\phi_{y} & =Cx^{m+1}y^{m}\left[\frac{1}{2}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m}(1-z)^{m+2}}{m+1}\right]\\
+\phi_{xy} & =C(m+1)(xy)^{m}\left[\frac{1}{2}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right]\\
+(\phi_{A})_{x} & =Cx^{m+2}y^{m+1}\left[\frac{m+2}{2(2m+3)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right]\\
+(\phi_{A})_{y} & =Cx^{m+2}y^{m}\left[\frac{m+1}{2(2m+1)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right]\\
+(\phi_{A})_{xy} & =C(m+1)x^{m+2}y^{m}\left[\frac{m+2}{2(2m+3)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right]\\
+(\phi_{B})_{x} & =Cx^{m+1}y^{m+2}\left[\frac{m+1}{2(2m+1)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right]\\
+(\phi_{B})_{y} & =Cx^{m+1}y^{m+1}\left[\frac{m+2}{2(2m+3)}B(m+1,m+1)-B_{z}(m+1,m+1)+\frac{z^{m}(1-z)^{m+2}}{m+1}+\frac{z^{m}(1-z)^{m+3}}{m+2}\right]\\
+(\phi_{B})_{xy} & =Cx^{m+1}y^{m+2}\left[\frac{(m+2)}{2}B(m+1,m+1)-\frac{(m+2)(m+1)}{2(2m+3)}B(m+1,m+1)-(m+2)B_{z}(m+1,m+1)+(m+1)B_{z}(m+1,m+1)\right.\left.+(m+2)\frac{z^{m+1}(1-z)^{m+1}}{m+1}+(m+1)\frac{z^{m+1}(1-z)^{m+1}}{m+1}+(m+1)\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right]
 \end{align*}
 
 \end_inset
 
-Equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:CES_dist"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- gives us the distribution of 
-\begin_inset Formula $\beta$
-\end_inset
-
-.
- If we assume some distribution for 
-\begin_inset Formula $\gamma_{f}$
-\end_inset
-
- across firms we can specify a distribution for 
-\begin_inset Formula $\alpha$
-\end_inset
-
- as well:
-\begin_inset Formula 
-\[
-\psi(\alpha)=\int\frac{1}{\gamma}\ \phi_{\beta|\gamma}(\frac{\alpha}{\gamma})\ f_{\gamma}(\gamma)\ d\gamma.
-\]
-
-\end_inset
-
-In the simple case where 
-\begin_inset Formula $\gamma$
-\end_inset
-
- is constant across all firms we get:
+Substituting these into the two PDEs:
 \begin_inset Formula 
 \begin{align*}
-\psi(\alpha) & =\frac{1}{\gamma}\ \phi(\frac{\alpha}{\gamma})\\
- & =\frac{\sigma}{\gamma\beta_{0}}\ \left(\frac{\alpha}{\gamma\beta_{0}}\right)^{-\sigma}\ \left[1-\left(\frac{\alpha}{\gamma\beta_{0}}\right)^{1-\sigma}\right]^{\frac{2\sigma-1}{1-\sigma}}\ T^{AI}.
+\frac{1}{2}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1} & =\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}+\frac{m+1}{2(2m+1)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\\
+(m+1)(B-B_{z})\left(Q+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right)-\left(Q+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right)\left(Q+\frac{z^{m}(1-z)^{m+2}}{m+1}\right) & =(m+1)(B-B_{z})\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right)-\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right)\left(\frac{m+1}{2(2m+1)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right)\\
+ & \ \ \ \ +(m+1)(B-B_{z})\left[(m+2)\left(\frac{1}{2}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}\right)-(m+1)\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}+\frac{z^{m+2}(1-z)^{m+1}}{m+2}\right)\right]-\left(\frac{m+1}{2(2m+1)}B-B_{z}+\frac{z^{m+1}(1-z)^{m+1}}{m+1}-\frac{z^{m+1}(1-z)^{m+2}}{m+1}\right)\left(\frac{m+2}{2(2m+3)}B-B_{z}+\frac{z^{m}(1-z)^{m+2}}{m+1}+\frac{z^{m}(1-z)^{m+3}}{m+2}\right)
 \end{align*}
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset VSpace bigskip
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Comparison to the Acemoglu Model
-\end_layout
-
-\begin_layout Subsection
-Independence of Tasks in Acemoglu
-\end_layout
-
-\begin_layout Standard
-The 
-\begin_inset CommandInset href
-LatexCommand href
-name "Acemoglu (2024)"
-target "https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf"
-literal "false"
-
-\end_inset
-
- builds a model based on 
-\begin_inset CommandInset href
-LatexCommand href
-name "Acemoglu and Autor (2011)"
-target "https://economics.mit.edu/sites/default/files/publications/Skills%2C%20Tasks%20and%20Technologies%20-%20Implications%20for%20.pdf"
-literal "false"
-
-\end_inset
-
- and the Acemoglu-Restrepo series of papers.
- I briefly review his model and highlight its differences with our approach.
- The production function he uses is:
+where
 \begin_inset Formula 
 \[
-X=\left(\int_{0}^{N}x(i)^{\frac{\sigma-1}{\sigma}}di\right)^{\frac{\sigma}{\sigma-1}},
-\]
-
-\end_inset
-
-where each task is done either using capital or labor:
-\begin_inset Formula 
-\[
-x(i)=A_{L}\gamma_{L}(i)\ l(i)+A_{K}\gamma_{K}(i)\ k(i).
-\]
-
-\end_inset
-
-Here 
-\begin_inset Formula $A_{L},A_{K}$
-\end_inset
-
- are (general) labor and capital augmenting productivity terms shared across all tasks while 
-\begin_inset Formula $\gamma_{L}(i),\gamma_{K}(i)$
-\end_inset
-
- are task-specific productivity terms.
- The terms 
-\begin_inset Formula $l(i)$
-\end_inset
-
- and 
-\begin_inset Formula $k(i)$
-\end_inset
-
- denote how much labor and capital is dedicated to produce task 
-\begin_inset Formula $i$
-\end_inset
-
-.
- Notice that 
-\bar under
-with this formulation labor and capital are perfect substitutes at the task level
-\bar default
-.
- Because of this perfect substitutability,
- task 
-\begin_inset Formula $i$
-\end_inset
-
- is performed by whichever type of input that is cheaper in that task.
- He assumes 
-\begin_inset Formula $\frac{\gamma_{L}(i)}{\gamma_{K}(i)}$
-\end_inset
-
- is increasing in task index 
-\begin_inset Formula $i$
-\end_inset
-
- and thus there's a threshold 
-\begin_inset Formula $I$
-\end_inset
-
- above (below) which all tasks are done by labor (capital).
-\end_layout
-
-\begin_layout Standard
-In our framework,
- 
-\bar under
-if take the job design as given
-\bar default
-,
- manual and AI-performed tasks can be considered perfect substitutes at the task level.
- Specifically,
- for the optimal AI chain 
-\begin_inset Formula $a$
-\end_inset
-
- containing task 
-\begin_inset Formula $i$
-\end_inset
-
-,
- we have:
-\begin_inset Formula 
-\[
-x(i)=A_{H}\gamma_{H}(i)\ t^{H}(i)+A_{AI}\gamma_{AI}(a)\ t^{AI}(a)\alpha^{-d(a)}
+Q\equiv\frac{1}{2}B-B_{z}
 \]
 
 \end_inset
@@ -2398,122 +1626,9 @@ x(i)=A_{H}\gamma_{H}(i)\ t^{H}(i)+A_{AI}\gamma_{AI}(a)\ t^{AI}(a)\alpha^{-d(a)}
 
 \end_layout
 
-\begin_layout Standard
-But note that 
-\bar under
-writing the second term explicitly in this manner requires that the job design is fixed in advance
-\bar default
-.
- If we were not to take the job design as fixed,
- the second term would instead have to be expressed as the minimum over all possible AI chains that include task 
-\begin_inset Formula $i$
-\end_inset
-
-.
- In other words,
- for a fixed job design,
- any two modules are effectively independent whereas from one job design to the next this independence is violated.
-\end_layout
-
-\begin_layout Standard
-Adopting this formulation would be superfluous in our context.
- In the Acemoglu model,
- expressing the task-level trade-off explicitly makes it straightforward to determine which input—
-manual labor or AI—
-is cheaper on a task-by-task basis.
- By contrast,
- our model implicitly fixes the input choice once the job design is specified.
- Without a given job design,
- expressing the second term as a minimum across all AI chains would eliminate any simple analytical characterization of optimal task allocation.
-\end_layout
-
-\begin_layout Standard
-Furthermore,
- such a formulation would obscure our central idea of task “chaining.” Specifically,
- it would fail to capture scenarios where a single task is cheaper if assigned individually to human labor,
- but becomes more cost-effective overall when bundled with other tasks into an AI chain.
- Properly representing this chaining phenomenon would require solving a system of 
-\begin_inset Formula $N$
-\end_inset
-
- simultaneous equations across 
-\begin_inset Formula $N$
-\end_inset
-
- tasks,
- subject to a global cost-minimization constraint.
- Thus,
- Acemoglu’s characterization is not the best fit for our problem as it's useful when analyzing tasks in isolation,
- but model emphasizes interdependencies between tasks and the overall cost advantages arising from task bundling.
-\end_layout
-
-\begin_layout Standard
-\begin_inset VSpace medskip
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Endogenous Wage in Acemoglu
-\end_layout
-
-\begin_layout Standard
-Next,
- in Acemoglu (2024),
- labor is homogenous and there is a single equilibrium wage applicable to all types of workers.
- In contrast,
- our model assigns different,
- fixed wages to workers based on the total human capital required by each job despite workers being ex-ante identical.
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Although,
- if we are to use the aggregated production function we can implicitly assume all human labor is homogenous.
-\end_layout
-
-\end_inset
-
- Because wages are uniform and equilibrium-determined in Acemoglu’s setting,
- the allocation of labor across tasks depends directly on the relative productivity parameters associated with each task.
- Specifically,
- the productivity parameters 
-\begin_inset Formula $\gamma_{L}(i)$
-\end_inset
-
- for labor tasks and 
-\begin_inset Formula $\gamma_{K}(i)$
-\end_inset
-
- for capital tasks determine the respective shares of labor and capital used in producing task 
-\begin_inset Formula $i$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-The optimal labor choice in Acemoglu’s model is explicitly given by equation (6) in his paper,
- restated here for clarity,
- along with the analogous equation for capital (which I derive similarly):
-\begin_inset Formula 
-\begin{align*}
-l(i) & =\frac{\gamma_{L}(i)^{\sigma-1}}{\int_{I}^{N}\gamma_{L}(i)^{\sigma-1}\ di}L,\\
-k(i) & =\frac{\gamma_{K}(i)^{\sigma-1}\rho(i)^{\sigma}}{\int_{I}^{N}\gamma_{L}(i)^{\sigma-1}\rho(i)^{\sigma}\ di}K.
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note again that in Acemoglu’s framework,
- the distribution of labor across tasks is explicitly driven by relative productivity differences and is an endogenous object.
- By contrast,
- our model takes these labor and capital allocations as predetermined and fixed due to the underlying Leontief structure (although,
- if we focus on the aggregated values we might be able to get away with this because the wages will depend on the optimal job design and are not fixed).
 \end_layout
 
 \end_body
