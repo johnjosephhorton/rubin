@@ -109,7 +109,7 @@ setcounter{page}{0}
 \end_layout
 
 \begin_layout Title
-Leontief to CES Production Function Aggregation 
+Micro Leontief to Macro CES Production Function Aggregation 
 \begin_inset ERT
 status open
 
@@ -126,7 +126,7 @@ vspace{0.25cm}
 
 \end_inset
 
- Firm-Level AI Quality Heterogeneity
+ with Firm-Level Heterogeneity in Task Difficulty
 \end_layout
 
 \begin_layout Standard
@@ -273,14 +273,41 @@ I begin with the within-firm aggregation:
 one input for each module—
 to a (firm-level) aggregate Leontief function with two inputs:
  firm-aggregate human labor and firm-aggregate AI labor.
- Suppose the original task-level production function for firm 
+ Suppose tasks 
+\begin_inset Formula $1$
+\end_inset
+
+ to 
+\begin_inset Formula $n$
+\end_inset
+
+ are completed manually and tasks 
+\begin_inset Formula $n+1$
+\end_inset
+
+ to 
+\begin_inset Formula $m$
+\end_inset
+
+ are completed using AI.
+ That is,
+ 
+\begin_inset Formula $\mathcal{H}=\{1,\cdots,n\}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{A}=\{n+1,\cdots,m\}$
+\end_inset
+
+.
+ The original task-level production function for firm 
 \begin_inset Formula $f$
 \end_inset
 
  takes the following Leontief form:
 \begin_inset Formula 
 \begin{equation}
-x^{f}=\min\ \{\frac{l_{1}^{f}}{t_{1}^{f}}\ ,\ \cdots\ ,\ \frac{l_{n}^{f}}{t_{n}^{f}}\}.\label{eq:task_level_prod}
+x^{f}=\min\ \{\frac{l_{1}^{f}}{t_{1}^{f}}\ ,\ \cdots\ ,\ \frac{l_{n}^{f}}{t_{n}^{f}}\ ,\ \frac{l_{n+1}^{f}}{t_{n+1}^{f}\ \alpha^{-d_{n+1}}}\ ,\ \cdots\ ,\ \frac{l_{m}^{f}}{t_{m}^{f}\ \alpha^{-d_{m}}}\}.\label{eq:task_level_prod}
 \end{equation}
 
 \end_inset
@@ -310,26 +337,55 @@ Here,
 \end_inset
 
 ,
- and there are 
-\begin_inset Formula $n$
+ parameter 
+\begin_inset Formula $\alpha$
 \end_inset
 
- tasks/modules in total in this industry.
- In order to write this we have implicitly fixed the firm's job design.
+ is the shared AI quality,
+ and 
+\begin_inset Formula $d_{i}$
+\end_inset
+
+ is module 
+\begin_inset Formula $i$
+\end_inset
+
+'s AI completion difficulty.
+ 
+\end_layout
+
+\begin_layout Standard
+In order to write 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:task_level_prod"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ we have implicitly fixed the firm's job design.
  That is,
- we are taking the job boundaries and the kind of input that produces human tasks and AI modules as given (i.e.,
+ we have taken the job boundaries and the kind of input that produces human tasks and AI modules as given (i.e.,
  the assignment of human or AI to perform tasks is given).
- The required amount of time to spend on each task/module is thus fixed for the firm and the firm treats parameters 
-\begin_inset Formula $t_{x}^{f}$
-\end_inset
-
- as given.
+ The required amount of time to spend on each task/module is thus fixed for the firm and the firm treats the denominator parameters as given.
  
 \end_layout
 
 \begin_layout Standard
 Given the Leontief nature of production,
- the ratio of amount of labor assigned to any two modules 
+ equilibrium allocation of inputs to tasks is fixed at
+\begin_inset Formula 
+\[
+x^{f}=\frac{l_{1}^{f}}{t_{1}^{f}}=\cdots=\frac{l_{n}^{f}}{t_{n}^{f}}=\frac{l_{n+1}^{f}}{t_{n+1}^{f}\ \alpha^{-d_{n+1}}}=\frac{l_{m}^{f}}{t_{m}^{f}\ \alpha^{-d_{m}}}.
+\]
+
+\end_inset
+
+Thus,
+ the ratio of amount of input assigned to any two modules 
 \begin_inset Formula $i$
 \end_inset
 
@@ -337,10 +393,10 @@ Given the Leontief nature of production,
 \begin_inset Formula $j$
 \end_inset
 
- is independent of units produced and wage rates:
+ is independent of units produced and wage rates and depends only on the relative time requirements of modules:
 \begin_inset Formula 
 \begin{equation}
-\frac{l_{i}^{f}}{l_{j}^{f}}=\frac{t_{i}^{f}}{t_{j}^{f}}=const_{ij}^{f}.\label{eq:fixed_labor_ratio}
+\frac{l_{i}^{f}}{l_{j}^{f}}=const_{ij}^{f}.\label{eq:fixed_labor_ratio}
 \end{equation}
 
 \end_inset
@@ -353,7 +409,7 @@ This implies that the rate of substitution between any two modules
 \begin_inset Formula $j$
 \end_inset
 
- is independent of amount dedicated to other production modules:
+ is independent of amount dedicated to production of other modules:
 \begin_inset Formula 
 \begin{equation}
 \frac{∂}{∂l_{k}^{f}}\left(\frac{\frac{\Delta x^{f}}{\Delta l_{i}^{f}}}{\frac{\Delta x^{f}}{\Delta l_{j}^{f}}}\right)=0\qquad\qquad\forall k\neq i,j.\label{eq:task_subst_rate_indep}
@@ -365,10 +421,36 @@ This implies that the rate of substitution between any two modules
 \end_layout
 
 \begin_layout Standard
-A necessary and sufficient condition for representing the firm's production as a Leontief function with (firm-level) aggregate human labor and aggregate AI labor is that the rate of substitution between any two modules of the same input type is independent of any module in the other aggregated input type (Leontief,
- 1947,
- Fisher 1965,
- Felipe and Fisher 2003).
+A necessary and sufficient condition for representing the firm's production function as a Leontief with (firm-level) aggregate human labor and AI labor inputs is that the rate of substitution between any two modules of the same input type is independent of any module in the other aggregated input type (
+\begin_inset CommandInset href
+LatexCommand href
+name "Leontief, 1947"
+target "https://www.jstor.org/stable/1905335?seq=1"
+literal "false"
+
+\end_inset
+
+,
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Fisher, 1965"
+target "https://academic.oup.com/restud/article-abstract/32/4/263/1545778"
+literal "false"
+
+\end_inset
+
+,
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Felipe and Fisher, 2003"
+target "https://onlinelibrary.wiley.com/doi/abs/10.1111/1467-999X.00166"
+literal "false"
+
+\end_inset
+
+).
  That is,
  the relative hired amount for any two modules of the same aggregated input type is only determined by modules in that aggregation group.
  The condition in 
@@ -404,7 +486,7 @@ nolink "false"
  as
 \begin_inset Formula 
 \begin{equation}
-x=\min\ \{\frac{l_{H}}{\sum_{j=1}^{J}\ t_{j}^{s}+\sum_{h\in\mathcal{H}}\ t_{h}^{H}},\ \frac{l_{AI}}{\sum_{a\in\mathcal{A}}\ t_{a}^{AI}}\}.\label{eq:task_level_agg_prod}
+x=\min\ \{\frac{l_{H}}{\sum_{j=1}^{J}\ t_{j}^{s}+\sum_{h\in\mathcal{H}}\ t_{h}^{H}},\ \frac{l_{AI}}{\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d_{a}}}\}.\label{eq:task_level_agg_prod}
 \end{equation}
 
 \end_inset
@@ -467,6 +549,21 @@ Here:
 \end_layout
 
 \begin_layout Itemize
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is the common AI quality shared across all tasks within the industry and 
+\begin_inset Formula $d_{a}$
+\end_inset
+
+ is the difficulty of completing module 
+\begin_inset Formula $a\in\mathcal{A}$
+\end_inset
+
+ by the AI,
+\end_layout
+
+\begin_layout Itemize
 \begin_inset Formula $t_{j}^{s}$
 \end_inset
 
@@ -490,7 +587,7 @@ nolink "false"
  in a slightly different form:
 \begin_inset Formula 
 \begin{equation}
-x=\min\ \{\frac{H}{t_{H}},\ \frac{AI}{t_{AI}}\},\label{eq:micro_agg_prod}
+x=\min\ \{\frac{H}{t_{H}},\ \frac{AI}{t_{AI}\ \bar{\alpha}}\},\label{eq:micro_agg_prod}
 \end{equation}
 
 \end_inset
@@ -539,8 +636,33 @@ nolink "false"
 \begin_inset Formula 
 \begin{align*}
 t_{H} & =\sum_{j=1}^{J}\ t_{j}^{s}+\sum_{h\in\mathcal{H}}\ t_{h}^{H},\\
-t_{AI} & =\sum_{a\in\mathcal{A}}\ t_{a}^{AI}.
+t_{AI}\ \bar{\alpha} & =\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d_{a}},
 \end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $t_{AI}$
+\end_inset
+
+ is the total management cost spent on operating the AI
+\begin_inset Formula 
+\[
+t_{AI}=\sum_{a\in\mathcal{A}}\ t_{a}^{AI},
+\]
+
+\end_inset
+
+and 
+\begin_inset Formula $\bar{\alpha}$
+\end_inset
+
+ is the industry-average level of AI quality:
+ 
+\begin_inset Formula 
+\[
+\bar{\alpha}=\frac{\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d_{a}}}{\sum_{a\in\mathcal{A}}\ t_{a}^{AI}}.
+\]
 
 \end_inset
 
@@ -555,7 +677,25 @@ Across Firm Aggregation:
 \begin_layout Standard
 Here I show that with the proper firm-level task/module completion time heterogeneity we can convert the firms' Leontief production function with firm-aggregate human and AI inputs to a CES industry production function whose inputs are industry-level aggregate human labor and industry-level aggregate AI labor.
  In what follows,
- I borrow heavily from and follow the steps expressed in Levhari (1968).
+ I borrow heavily from and follow the steps expressed in 
+\begin_inset CommandInset href
+LatexCommand href
+name "Levhari (1968)"
+target "https://www.jstor.org/stable/1909609"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Baqaee and Farhi (2019, p. 45-47)"
+target "https://academic.oup.com/jeea/article/17/5/1337/5585840"
+literal "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -584,7 +724,7 @@ nolink "false"
  implies that in equilibrium
 \begin_inset Formula 
 \begin{equation}
-1=\frac{H}{t_{H}}=\frac{AI}{t_{AI}},\label{eq:fixed_proportions}
+1=\frac{H}{t_{H}}=\frac{AI}{t_{AI}\ \bar{\alpha}},\label{eq:fixed_proportions}
 \end{equation}
 
 \end_inset
@@ -595,7 +735,7 @@ and thus the per unit of output human labor and AI labor for the firm is given b
 \begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
-H=t_{H},\qquad\qquad AI=t_{AI}.\label{eq:firm_labor}
+H=t_{H},\qquad\qquad AI=t_{AI}\ \bar{\alpha}.\label{eq:firm_labor}
 \end{equation}
 
 \end_inset
@@ -661,8 +801,8 @@ Given the fixed ratio property,
  the profitability condition can be written as:
 \begin_inset Formula 
 \begin{align*}
-1 & \geq w_{H}H+w_{AI}\left(\frac{t_{AI}}{t_{H}}H\right)\\
- & =\left(w_{H}+w_{AI}\frac{t_{AI}}{t_{H}}\right)H\\
+1 & \geq w_{H}H\ +\ w_{AI}\left(\frac{t_{AI}\ \bar{\alpha}}{t_{H}}H\right)\\
+ & =\left(w_{H}\ +\ w_{AI}\frac{t_{AI}\ \bar{\alpha}}{t_{H}}\right)H\\
  & =wH,
 \end{align*}
 
@@ -675,11 +815,15 @@ where
  is the time requirement-weighted human wage rate for when we only consider human labor as the input:
 \begin_inset Formula 
 \[
-w=\frac{w_{H}t_{H}+w_{AI}t_{AI}}{t_{H}}.
+w=\frac{w_{H}t_{H}\ +\ w_{AI}t_{AI}\ \bar{\alpha}}{t_{H}}.
 \]
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 Given the profitability condition expressed above,
  only firms whose variable factor 
 \begin_inset Formula $H$
@@ -1048,7 +1192,36 @@ g(x)=\phi^{'}(x)=\frac{\theta_{H}^{\ \ -\frac{1}{\rho(\alpha(1-\rho))}}}{(1-\rho
 \end_inset
 
 This is the distribution of human labor to AI labor time requirement ratio at the firm level needed for producing an industry-wide CES production function with industry-wide aggregate human labor and AI labor inputs.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+It would be nice to see how 
+\begin_inset Formula $g(x)$
+\end_inset
+
+ changes as we vary 
+\begin_inset Formula $\rho$
+\end_inset
+
+.
+ I tried to do it,
+ but depending on the value of 
+\begin_inset Formula $\rho$
+\end_inset
+
+ the value of 
+\begin_inset Formula $\frac{dg}{d\rho}$
+\end_inset
+
+ can be positive or negative.
+ So,
  
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1213,63 +1386,108 @@ H=\frac{L\ \int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}{1+\in
 \end_layout
 
 \begin_layout Subsection
-From Relative Task/Module Duration to AI Quality
+From Relative Task/Module Durations to Heterogenous AI Quality
 \end_layout
 
 \begin_layout Standard
-Here we extend the analysis further to make the notion of aggregation consistent with the job design dynamic programming framework from the 
-\begin_inset Quotes eld
+Notice that the density function 
+\begin_inset Formula $g(x)$
 \end_inset
 
-rubin
-\begin_inset Quotes erd
+ describes the distribution of the variable
+\begin_inset Formula 
+\[
+x=\frac{t_{H}}{t_{AI}\ \bar{\alpha}}.
+\]
+
 \end_inset
 
- draft.
- First,
- note that we have ignored the AI quality parameter in the 
+To isolate heterogeneity solely at the AI-quality level,
+ we fix the human and management time costs across all tasks,
+ so that 
+\begin_inset Formula $t_{H}$
+\end_inset
+
+ and 
 \begin_inset Formula $t_{AI}$
 \end_inset
 
-s altogether.
- Suppose at the firm level,
- the (firm-)aggregate AI input takes the following form:
+ are fixed for a given job design.
+ Under this assumption,
+ the variability captured by 
+\begin_inset Formula $g(x)$
+\end_inset
+
+ directly translates into variation in AI's capability to perform the same tasks across firms.
+\end_layout
+
+\begin_layout Standard
+Denoting the density of firm-level aggregate AI quality by 
+\begin_inset Formula $h(\bar{\alpha})$
+\end_inset
+
+,
+ we obtain it through a standard change-of-variable approach:
 \begin_inset Formula 
-\[
-T_{AI}=\sum_{a\in\mathcal{A}}\ t_{a}^{AI}
-\]
+\begin{equation}
+h(\bar{\alpha})=g(\frac{t_{H}}{t_{AI}\ \bar{\alpha}})|\frac{dx}{d\bar{\alpha}}|=\frac{t_{H}}{t_{AI}\ \bar{\alpha}^{2}}\ g(\frac{t_{H}}{t_{AI}\ \bar{\alpha}}).\label{eq:AI_quality_dist}
+\end{equation}
 
 \end_inset
 
-but at the micro-level firms design jobs facing AI costs 
-\begin_inset Formula $\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d(a)}$
+Intuitively,
+ this formulation implies that heterogeneity across firms arises from differing task-level AI difficulties,
+ which combine at the firm level into the aggregate AI-quality measure 
+\begin_inset Formula $\bar{\alpha}$
 \end_inset
 
 .
- We can transform the problem into a version containing AI quality parameter 
-\begin_inset Formula $\alpha$
-\end_inset
-
- with some minor tweaks.
- First,
- imagine instead of 
-\begin_inset Formula 
-\[
-T_{AI}\ \bar{\alpha}=\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d(a)},\qquad\qquad\bar{\alpha}=\frac{\sum_{a\in\mathcal{A}}\ t_{a}^{AI}\ \alpha^{-d(a)}}{T_{AI}}
-\]
-
-\end_inset
-
-
+ Although this relationship isn’t immediately evident from the functional form,
+ it underlies the derived distribution.
 \end_layout
 
 \begin_layout Subsection
-Two Comparative Statics:
- Wages and 
+Comparative Statics w.r.t.
+ AI Quality
 \end_layout
 
-\begin_layout Enumerate
-An immediate comparative static is that industry-aggregate AI employment goes down following an increase in wages.
+\begin_layout Standard
+We provide an informal argument for comparative statics with respect to AI quality:
+ Industry-level AI employment goes up following an increase in AI quality 
+\begin_inset Formula $\alpha$
+\end_inset
+
+.
+ In our model,
+ an increase in AI quality translates into the distribution of 
+\begin_inset Formula $g(x)$
+\end_inset
+
+ shifting to the left in the first-order stochastic dominance sense.
+ This in turn implies that the denominator in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:AI_labor"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ decreases and thus AI deployment goes up.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Industry-level AI employment goes down following an increase in wages 
+\begin_inset Formula $w$
+\end_inset
+
+.
  The industry level of 
 \begin_inset Formula $AI$
 \end_inset
@@ -1311,32 +1529,9 @@ nolink "false"
  AI tasks become more cost-efficient so that the industry elasticity of substitution (which we treat as fixed) remains unchanged.
 \end_layout
 
-\begin_layout Enumerate
-The other comparative static is increasing AI quality.
- In our model,
- this translates into AI taking relatively less time than before.
- This can be viewed as moving from 
-\begin_inset Formula $g(x)$
 \end_inset
 
- to 
-\begin_inset Formula $f(x)$
-\end_inset
 
- where 
-\begin_inset Formula $F(x)$
-\end_inset
-
- first-order stochastically dominates 
-\begin_inset Formula $G(x)$
-\end_inset
-
- because now at any point on the 
-\begin_inset Formula $x$
-\end_inset
-
--axis human time requirements relatively increase compared to AI time requirements.
- This shifts the initial distribution to the left.
 \end_layout
 
 \end_body
