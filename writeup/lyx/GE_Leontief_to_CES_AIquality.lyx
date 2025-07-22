@@ -174,13 +174,19 @@ Overview
 \end_layout
 
 \begin_layout Standard
-This document derives conditions under which firm-level Leontief production functions aggregate into an industry-level CES production function.
- Production takes place in two stages.
- Uncertain about their productivities,
- firms commit to a job design in the first stage.
- Once their productivity is realized in the second stage they choose whether to produce according to a Leontief production function within a previously-committed job design or leave the market.
- I show that a specific distribution of firm-level AI productivity heterogeneity enables this micro-to-macro aggregation,
- providing a theoretical foundation for CES production functions in economies with AI adoption.
+This document derives the conditions under which firm-level Leontief production functions can be aggregated into an industry-level CES production function.
+ In our model production occurs in two stages.
+ In the first stage,
+ uncertain about their AI productivity,
+ firms commit to a job design by minimizing expected costs.
+ In the second stage,
+ productivity is realized,
+ and firms either produce according to a Leontief production function within the chosen job design or exit the market.
+\end_layout
+
+\begin_layout Standard
+I show that a particular distribution of firm-level AI productivity heterogeneity enables this micro-to-macro aggregation,
+ providing a theoretical foundation for CES production functions in economies adopting AI.
 \end_layout
 
 \begin_layout Section
@@ -303,63 +309,94 @@ An industry consists of
 \end_layout
 
 \begin_layout Standard
-All firms are ex-ante identical and share a common belief over their AI productivity,
- as a random variable 
-\begin_inset Formula $x$
+All firms are ex-ante identical and share a common belief about their AI productivity,
+ modeled as a random variable 
+\begin_inset Formula $\bar{\alpha}$
 \end_inset
 
  drawn from a distribution 
-\begin_inset Formula $g(x)$
+\begin_inset Formula $h(\bar{\alpha})$
 \end_inset
 
 .
- For technical reasons,
- we model differences in AI productivities relative to human labor requirements.
- In particular,
- 
-\begin_inset Formula $x$
-\end_inset
-
- is defined as
-\begin_inset Formula 
-\begin{equation}
-x=\frac{\text{human labor time requirements for production for the firm}}{\text{(effective) AI labor time requirements for production for the firm}}\label{eq:x}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Our goal is to derive a closed-form expression for 
-\begin_inset Formula $g(x)$
-\end_inset
-
- such that aggregate human labor and aggregate AI labor at the industry level are sufficient statistics for describing the economy.
- That is,
- we seek the proper type of heterogeneity in relative efficiency of human to AI labor under which the micro-level Leontief production functions of individual firms can be aggregated into a CES industry-level production function.
-\end_layout
-
-\begin_layout Standard
-Production unfolds in two stages.
+ Production unfolds in two stages.
  In the first stage,
- firms choose a job design by solving a cost minimization problem under uncertainty—
-taking expectations over possible realizations of their AI productivity level according to distribution 
-\begin_inset Formula $g(x)$
+ firms solve a cost minimization problem under uncertainty—
+choosing a job design based on expected AI productivity drawn from 
+\begin_inset Formula $h(\bar{\alpha})$
 \end_inset
 
 .
  In the second stage,
  each firm’s AI productivity is realized,
- and it produces the industry good by executing tasks according to the Leontief production function and the manual vs.
- AI allocation of tasks specified by the job design chosen in the first stage.
+ and it produces the industry good using a Leontief production function,
+ following the manual vs.
+ AI task allocation committed to in the first stage.
+ 
 \end_layout
 
 \begin_layout Standard
-In equilibrium,
- only firms whose realized productivity yields nonnegative profits for the committed job design will remain in the market and produce.
- All other firms shut down and leave the market.
+This two-stage structure captures the idea that firms speculate about their costs and commit to a job design before knowing how productive the AI and human workers they will end up “hiring” turn out to be.
+\end_layout
+
+\begin_layout Standard
+For technical reasons,
+ instead of AI productivity 
+\begin_inset Formula $\bar{\alpha}$
+\end_inset
+
+ we work with another variable 
+\begin_inset Formula $x$
+\end_inset
+
+ with p.d.f.
+ 
+\begin_inset Formula $g(x)$
+\end_inset
+
+ as defined below:
+\begin_inset Formula 
+\begin{equation}
+x=\frac{\text{human labor time requirements for production for the firm}}{\text{(effective) AI labor time requirements for production for the firm}}.\label{eq:x}
+\end{equation}
+
+\end_inset
+
+Even though eventually we provide a mapping from 
+\begin_inset Formula $g(x)$
+\end_inset
+
+ to 
+\begin_inset Formula $h(\bar{\alpha})$
+\end_inset
+
+ in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:x_to_alpha"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+,
+ we do the majority of our calculations using 
+\begin_inset Formula $x$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The goal is to derive a closed-form expression for 
+\begin_inset Formula $g(x)$
+\end_inset
+
+ such that aggregate human labor and aggregate AI labor at the industry level are sufficient statistics for describing the macroeconomy.
+ That is,
+ we seek the proper type of heterogeneity in relative efficiency of human to AI labor under which the micro-level Leontief production functions of individual firms can be aggregated into a CES industry-level production function.
 \end_layout
 
 \begin_layout Section
@@ -370,9 +407,9 @@ First Stage:
 \begin_layout Standard
 In this document I focus on a single industry,
  and assume firms have already solved the job design problem in the first stage.
- The solution to the firm's cost-minimization has determined and fixed which tasks are performed manually and which tasks are performed via AI.
+ The solution to the firms' cost-minimization has determined and fixed which tasks are performed manually and which tasks are performed via AI.
  That is,
- the sets 
+ we treat the sets 
 \begin_inset Formula $\mathcal{H}$
 \end_inset
 
@@ -380,10 +417,12 @@ In this document I focus on a single industry,
 \begin_inset Formula $\mathcal{A}$
 \end_inset
 
- are determined,
- and fixed.
- In what follows,
- I focus on the second stage of production and show how micro Leontief production functions can be aggregated into a macro CES production function with the proper type of heterogeneity across firms.
+ defined in Section 2 as given and fixed throughout our analysis.
+ 
+\end_layout
+
+\begin_layout Standard
+In the remainder of the document I focus on the second stage of production.
 \end_layout
 
 \begin_layout Section
@@ -408,10 +447,10 @@ we now turn to the second stage where AI productivity levels are realized and pr
 \end_layout
 
 \begin_layout Standard
-The key insight is that even though individual firms face uncertainty about their AI productivity when choosing job designs,
- the realized heterogeneity in AI productivity across firms can be structured to enable a remarkable aggregation result.
+The key insight is that even though individual firms face different AI productivity levels,
+ the difference can be structured to enable a remarkable aggregation result.
  Specifically,
- we show that with the proper distribution of this heterogeneity,
+ I show that with the proper distribution of heterogeneity,
  the collection of firm-level Leontief functions aggregates into an industry-level CES production function.
 \end_layout
 
@@ -420,14 +459,22 @@ We accomplish this aggregation in two stages:
 \end_layout
 
 \begin_layout Enumerate
-Within-firm:
+
+\bar under
+Within-firm
+\bar default
+ aggregation:
  convert the firm's original Leontief production function defined over many inputs (i.e.,
  one per task/module) into a Leontief function with just two inputs:
  firm-level aggregate human labor and firm-level aggregate AI labor.
 \end_layout
 
 \begin_layout Enumerate
-Across-firm:
+
+\bar under
+Across-firm
+\bar default
+ aggregation:
  aggregate out the firm-level heterogeneity across all firms in the industry to derive an industry-level CES production function with industry-aggregate human and AI labor inputs from Leontief production functions with firm-aggregate inputs.
 \end_layout
 
@@ -972,7 +1019,7 @@ as a fixed proportion of the variable input.
 \end_layout
 
 \begin_layout Subsubsection
-Micro Profitability Condition
+Firm-level Profitability Condition
 \end_layout
 
 \begin_layout Standard
@@ -1102,8 +1149,9 @@ nolink "false"
  
 \end_layout
 
-\begin_layout Standard
-\begin_inset VSpace medskip
+\begin_layout Subsubsection
+Obtaining Functional Form of 
+\begin_inset Formula $g(.)$
 \end_inset
 
 
@@ -1331,6 +1379,13 @@ nolink "false"
 
 \begin_layout Subsection
 From Relative Durations Heterogeneity to AI Quality Heterogeneity
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:x_to_alpha"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1429,7 +1484,7 @@ nolink "false"
 \end_layout
 
 \begin_layout Subsection
-Equilibrium Industry-Level Allocations when Human and AI Labor are of the Same Kind
+Equilibrium Allocations when Human and AI Labor are of the Same Kind
 \end_layout
 
 \begin_layout Standard
@@ -1484,10 +1539,6 @@ nolink "false"
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
 The equilibrium amount of industry-level 
 \begin_inset Formula $H$
 \end_inset
@@ -1508,7 +1559,11 @@ nolink "false"
 \end_inset
 
 .
- Assume human and AI labor are of the same kind of labor (i.e.,
+ 
+\end_layout
+
+\begin_layout Standard
+Assume human and AI labor are of the same kind (i.e.,
  time spent completing tasks manually is inherently the same kind of time spent managing the AI).
  Suppose the homogenous labor has a total fixed supply of 
 \begin_inset Formula $L$
@@ -1574,7 +1629,8 @@ AI=\frac{L}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}.\l
 
 \end_inset
 
-And the share of human labor in the industry will be
+Similarly,
+ the share of human labor in the industry will be
 \begin_inset Formula 
 \begin{equation}
 H=\frac{L\ \int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}{1+\int_{\theta_{H}^{-\frac{1}{\rho}}}^{\frac{1}{w}}\ x\ g(x)\ dx}.\label{eq:human_labor}
@@ -1596,13 +1652,17 @@ Industry-level AI employment goes up following an increase in AI quality
 
 .
  Here's an informal argument:
- In our model,
+ For a fixed 
+\begin_inset Formula $t_{H}/t_{AI}$
+\end_inset
+
+ ratio,
  an increase in AI quality translates into the distribution of 
 \begin_inset Formula $g(x)$
 \end_inset
 
  shifting to the left in the first-order stochastic dominance sense.
- This implies that the denominator in 
+ This shift reduces the denominator in 
 \begin_inset CommandInset ref
 LatexCommand eqref
 reference "eq:AI_labor"
@@ -1613,7 +1673,7 @@ nolink "false"
 
 \end_inset
 
- decreases and thus industry-level AI deployment goes up.
+ and thus industry-level AI deployment increases.
 \end_layout
 
 \begin_layout Standard
