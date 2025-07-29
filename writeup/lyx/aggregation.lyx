@@ -696,11 +696,15 @@ Next,
  
 \end_layout
 
+\begin_layout Paragraph
+Macro Production Function:
+\end_layout
+
 \begin_layout Standard
 Assume the industry-level production function is represented by the following CES form:
 \begin_inset Formula 
 \[
-1=\left(\theta_{H}\ H^{\rho}\ +\ \theta_{M}\ M^{\rho}\right)^{\frac{1}{\rho}},\qquad\qquad\sigma=\frac{1}{1-\rho}.
+1=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}\right)^{\frac{1}{\rho}},\qquad\qquad\sigma=\frac{1}{1-\rho}.
 \]
 
 \end_inset
@@ -732,12 +736,16 @@ Since the measure of firms is 1,
  be the total human labor in units of total AI labor and rewrite the above as
 \begin_inset Formula 
 \begin{equation}
-1=\left(\theta_{H}\ \tilde{H}^{\rho}\ +\ \theta_{M}\right)^{\frac{1}{\rho}}.\label{eq:macro_agg_prod}
+1=\left(\theta_{M}+\theta_{H}\,\tilde{H}^{\rho}\right)^{\frac{1}{\rho}}.\label{eq:macro_agg_prod}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Paragraph
+Micro Production Function:
 \end_layout
 
 \begin_layout Standard
@@ -844,7 +852,7 @@ nolink "false"
  the profitability condition above can be written as:
 \begin_inset Formula 
 \begin{equation}
-w_{H}\,l_{H}+w_{M}\left(\frac{t_{M}\ \bar{\alpha}}{t_{H}}l_{H}\right)=\left(w_{H}+w_{M}\frac{t_{M}\ \bar{\alpha}}{t_{H}}\right)l_{H}=w\,l_{H}\leq1.\label{eq:profitability_H}
+w_{M}\left(\frac{t_{M}\ \bar{\alpha}}{t_{H}}l_{H}\right)+w_{H}\,l_{H}=\underbrace{\left(w_{M}\frac{t_{M}\ \bar{\alpha}}{t_{H}}+w_{H}\right)}_{\equiv w}l_{H}=w\,l_{H}\leq1.\label{eq:profitability_H}
 \end{equation}
 
 \end_inset
@@ -900,22 +908,15 @@ This definition implies that total industry-level output is
  
 \end_layout
 
-\begin_layout Standard
-\begin_inset VSpace medskip
-\end_inset
-
-
+\begin_layout Paragraph
+Micro-to-Macro Aggregation:
 \end_layout
 
 \begin_layout Standard
-To connect the industry-level aggregate CES production function and the micro level Leontief production functions we must link 
-\begin_inset Formula $\theta_{H},\theta_{AI},\rho$
-\end_inset
-
- in 
+To connect the industry-level aggregate CES production function and the micro level Leontief production functions we must link some aggregate notion of individual firms variables in 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:macro_agg_prod"
+reference "eq:micro_agg_prod"
 plural "false"
 caps "false"
 noprefix "false"
@@ -923,10 +924,14 @@ nolink "false"
 
 \end_inset
 
- to some aggregate notion of individual firms variables in 
+ to Macro production parameters 
+\begin_inset Formula $\theta_{H},\theta_{AI},\rho$
+\end_inset
+
+ in 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:micro_agg_prod"
+reference "eq:macro_agg_prod"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1000,7 +1005,18 @@ g(t;\,\rho,\,\theta_{H},\,\theta_{M})=\frac{\theta_{H}^{\ \ -\frac{1}{\rho(\alph
 
 \end_inset
 
-See the Appendix for derivation details.
+See the 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:appendix"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ for derivation details.
  Moreover,
  from standard CES results we know that 
 \begin_inset Formula $\theta_{H}$
@@ -1018,7 +1034,7 @@ See the Appendix for derivation details.
 
 \end_inset
 
-This completed the across-firm aggregation step.
+This completes the across-firm aggregation step.
 \end_layout
 
 \begin_layout Paragraph
@@ -1033,7 +1049,7 @@ name "subsec:x_to_alpha"
 \end_layout
 
 \begin_layout Standard
-Now,
+Next,
  we discuss how the heterogeneity in the ratio of human to AI time requirements can be mapped into differences in the AI quality level.
  Recall from 
 \begin_inset CommandInset ref
@@ -1141,7 +1157,7 @@ nolink "false"
 \begin_inset Formula $d_{i}$
 \end_inset
 
- will give a one to one mapping between 
+ will result in a one to one mapping between 
 \begin_inset Formula $\bar{\alpha}$
 \end_inset
 
@@ -1227,7 +1243,7 @@ Assume other than required trainings (captured through
 
  (i.e.,
  we have 
-\begin_inset Formula $w_{H}=w_{M}=w=v_{L}+\sum c_{i}$
+\begin_inset Formula $w_{H}=w_{M}=w(=v_{L}+\sum c_{i}?)$
 \end_inset
 
 ).
