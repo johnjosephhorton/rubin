@@ -690,58 +690,14 @@ Across Firm Aggregation:
 \end_layout
 
 \begin_layout Standard
+[Fill this out later]
+\end_layout
+
+\begin_layout Standard
 Next,
  we show that with the proper firm-level heterogeneity we can aggregate the firms' (aggregate) Leontief production functions into a CES industry production function with two inputs:
  industry-level aggregate human labor and industry-level aggregate AI labor.
  
-\end_layout
-
-\begin_layout Paragraph
-Macro Production Function:
-\end_layout
-
-\begin_layout Standard
-Assume the industry-level production function is represented by the following CES form:
-\begin_inset Formula 
-\[
-1=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}\right)^{\frac{1}{\rho}},\qquad\qquad\sigma=\frac{1}{1-\rho}.
-\]
-
-\end_inset
-
-Here,
- 
-\begin_inset Formula $H$
-\end_inset
-
- represents the aggregate human labor and 
-\begin_inset Formula $M$
-\end_inset
-
- represents the aggregate AI labor at the industry level while 1 on the left-hand-side is the aggregate industry output.
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Since the measure of firms is 1,
- production at the industry level also aggregates up to 1.
-\end_layout
-
-\end_inset
-
- Let 
-\begin_inset Formula $\tilde{H}=\frac{H}{M}$
-\end_inset
-
- be the total human labor in units of total AI labor and rewrite the above as
-\begin_inset Formula 
-\begin{equation}
-1=\left(\theta_{M}+\theta_{H}\,\tilde{H}^{\rho}\right)^{\frac{1}{\rho}}.\label{eq:macro_agg_prod}
-\end{equation}
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Paragraph
@@ -762,51 +718,8 @@ nolink "false"
 
  implies that in equilibrium
 \begin_inset Formula 
-\[
-1=\frac{l_{M}}{t_{M}\ \bar{\alpha}}=\frac{l_{H}}{t_{H}},
-\]
-
-\end_inset
-
-and thus per unit of output human labor and AI labor for the firm is given by:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
 \begin{equation}
-l_{M}=t_{M}\ \bar{\alpha},\qquad\qquad l_{H}=t_{H}.\label{eq:firm_labor}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Due to the fixed-proportions nature of production at the micro level,
- once the level of one input is specified the level of other input is pinned down by the ratio 
-\begin_inset Formula $t_{H}/t_{M}\,\bar{\alpha}$
-\end_inset
-
-.
- Thus,
- each firm only has one degree of freedom in choosing its inputs.
- Because of this property we take just one of the inputs—
-human labor 
-\begin_inset Formula $l_{H}$
-\end_inset
-
-—
-as the variable factor and treat the other—
-AI labor 
-\begin_inset Formula $l_{M}$
-\end_inset
-
-—
-as a fixed proportion of the variable input:
-\begin_inset Formula 
-\begin{equation}
-l_{M}=\frac{t_{M}\,\bar{\alpha}}{t_{H}}\,l_{H}\label{eq:fixed_proportions}
+x=\frac{l_{M}}{\tau_{M}\,\bar{\alpha}}=\frac{l_{H}}{\tau_{H}},\label{eq:fixed_proportions}
 \end{equation}
 
 \end_inset
@@ -827,19 +740,19 @@ Let
 \begin_inset Formula $w_{M}$
 \end_inset
 
- be the output price-deflated wage rates for (homogenous) human and AI labor,
+ be the output price-deflated wage rates for human labor and AI management labor,
  respectively.
  A firm produces only if it gains nonnegative profits:
 \begin_inset Formula 
 \[
-w_{H}\,l_{H}+w_{M}\,l_{M}\leq1.
+w_{H}\,l_{H}+w_{M}\,l_{M}\leq x.
 \]
 
 \end_inset
 
-Given the fixed ratio property in 
+From 
 \begin_inset CommandInset ref
-LatexCommand eqref
+LatexCommand ref
 reference "eq:fixed_proportions"
 plural "false"
 caps "false"
@@ -848,33 +761,65 @@ nolink "false"
 
 \end_inset
 
-,
- the profitability condition above can be written as:
-\begin_inset Formula 
-\begin{equation}
-w_{M}\left(\frac{t_{M}\ \bar{\alpha}}{t_{H}}l_{H}\right)+w_{H}\,l_{H}=\underbrace{\left(w_{M}\frac{t_{M}\ \bar{\alpha}}{t_{H}}+w_{H}\right)}_{\equiv w}l_{H}=w\,l_{H}\leq1.\label{eq:profitability_H}
-\end{equation}
-
+ we know that 
+\begin_inset Formula $l_{H}=\tau_{H}\,l_{H}$
 \end_inset
 
-
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Here 
-\begin_inset Formula $w$
-\end_inset
-
- is the time requirement-weighted human wage rate for when we only consider human labor as the input:
+.
+ So the above becomes:
 \begin_inset Formula 
 \[
-w=\frac{w_{H}t_{H}\ +\ w_{AI}t_{AI}\ \bar{\alpha}}{t_{H}}.
+w_{H}\,\tau_{H}\,x+w_{M}\,l_{M}\leq x.
 \]
 
 \end_inset
 
+Moreover,
+ substitute 
+\begin_inset Formula $x=l_{M}/\tau_{M}\,\bar{\alpha}$
+\end_inset
 
+ and cancelling the 
+\begin_inset Formula $l_{M}$
+\end_inset
+
+ terms gives:
+\begin_inset Formula 
+\[
+\bar{\alpha}\leq\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}\equiv\tilde{\alpha}.
+\]
+
+\end_inset
+
+This implies that only firms with firm-level aggregate AI quality below 
+\begin_inset Formula $\tilde{\alpha}$
+\end_inset
+
+ will produce in the economy.
+ Assume that the lowest firm-level aggregate AI quality a firm exhibits in the economy is 
+\begin_inset Formula $\alpha_{0}$
+\end_inset
+
+.
+ That is,
+ 
+\begin_inset Formula $\bar{\alpha}\geq\alpha_{0}$
+\end_inset
+
+.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Later we can let 
+\begin_inset Formula $\alpha_{0}\rightarrow0$
+\end_inset
+
+ but for now suppose 
+\begin_inset Formula $\alpha_{0}>0$
+\end_inset
+
+.
 \end_layout
 
 \end_inset
@@ -884,28 +829,246 @@ w=\frac{w_{H}t_{H}\ +\ w_{AI}t_{AI}\ \bar{\alpha}}{t_{H}}.
 
 \begin_layout Standard
 Let 
-\begin_inset Formula $g(t)$
+\begin_inset Formula $\phi(\bar{\alpha})$
 \end_inset
 
- denote the distribution of relative (firm-)aggregate human and (firm-)aggregate AI time requirements.
- That is:
+ denote the distribution of output produced in terms of the AI quality level for a single firm.
+ That is,
+ a firm with firm-level aggregate AI quality level 
+\begin_inset Formula $\bar{\alpha}$
+\end_inset
+
+ produces output 
+\begin_inset Formula $x=\phi(\bar{\alpha})$
+\end_inset
+
+.
+ It is straightforward to observe from 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:fixed_proportions"
+plural "false"
+caps "false"
+noprefix "false"
+nolink "false"
+
+\end_inset
+
+ that the amount of AI management and human labor used by this firm will be:
+ 
+\begin_inset Formula $l_{M}=\tau_{M}\,\bar{\alpha}\,\phi(\bar{\alpha}),\ l_{H}=\tau_{H}\,\phi(\bar{\alpha}).$
+\end_inset
+
+ Given this definition,
+ aggregate AI management labor,
+ aggregate human labor,
+ and aggregate output will be:
+\begin_inset Formula 
+\begin{align*}
+M(w_{M},w_{H}) & =\tau_{M}\int_{\alpha_{0}}^{\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}}\bar{\alpha}\,\phi(\bar{\alpha})\,d\bar{\alpha},\\
+H(w_{M},w_{H}) & =\tau_{H}\int_{\alpha_{0}}^{\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}}\phi(\bar{\alpha})\,d\bar{\alpha},\\
+X(w_{M},w_{H}) & =\int_{\alpha_{0}}^{\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}}\phi(\bar{\alpha})\,d\bar{\alpha}.
+\end{align*}
+
+\end_inset
+
+It should not be surprising that 
+\begin_inset Formula $H=\tau_{H}\,X$
+\end_inset
+
+.
+ All firms share the same human labor requirement for production and human labor for every individual firm is proportional to its output by a factor of 
+\begin_inset Formula $\tau_{H}$
+\end_inset
+
+.
+ Therefore,
+ total human labor should also be proportional to total output by the same factor.
+ Notice that 
+\begin_inset Formula $M$
+\end_inset
+
+ is also proportional to 
+\begin_inset Formula $X$
+\end_inset
+
+ by the factor 
+\begin_inset Formula $\tau_{M}$
+\end_inset
+
+,
+ but adjusted by the expected firm-level aggregate AI quality 
+\begin_inset Formula $\bar{\alpha}$
+\end_inset
+
+ across the economy.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Macro Production Function:
+\end_layout
+
+\begin_layout Standard
+Suppose the macro-level production function takes the following CES form:
 \begin_inset Formula 
 \begin{equation}
-t\sim g(t),\quad\text{where }\ t=\frac{t_{H}}{t_{M}\ \bar{\alpha}}\label{eq:g_definition}
+X=\left(\theta\,M+(1-\theta)\,H^{\rho}\right)^{\frac{1}{\rho}}.\label{eq:macro_agg_prod}
 \end{equation}
 
 \end_inset
 
-This definition implies that total industry-level output is 
-\begin_inset Formula $1=\int_{0}^{\frac{1}{w}}\ g(t)\ dt$
-\end_inset
-
- while the industry-aggregate variable input is 
-\begin_inset Formula $\tilde{H}=\int_{0}^{\frac{1}{w}}\ t\ g(t)\ dt$
-\end_inset
-
-.
+Here,
  
+\begin_inset Formula $H$
+\end_inset
+
+ represents the aggregate human labor and 
+\begin_inset Formula $M$
+\end_inset
+
+ represents the aggregate AI labor at the macro-level while 
+\begin_inset Formula $X$
+\end_inset
+
+ on the left-hand-side is the aggregate output.
+ Let us represent the aggregate production function above as:
+\begin_inset Formula 
+\[
+X=\left(\theta\,(\frac{M}{H})^{\rho}+(1-\theta)\right)^{\frac{1}{\rho}}\,H=G(\frac{M}{H})\,H.
+\]
+
+\end_inset
+
+In a perfectly competitive output market,
+ the aggregate production function satisfies the marginal value of production equates marginal value of input.
+ In particular,
+\begin_inset Formula 
+\[
+w_{M}=G^{'}(\frac{M}{H})
+\]
+
+\end_inset
+
+must hold.
+ This relationship is nothing other than marginal cost of AI management labor equates its marginal value of production.
+ Let 
+\begin_inset Formula $R$
+\end_inset
+
+ be the inverse function of 
+\begin_inset Formula $G^{'}.$
+\end_inset
+
+ That is:
+\begin_inset Formula 
+\[
+G^{'}(y)=z\leftrightarrow R(z)=y.
+\]
+
+\end_inset
+
+We can obtain the functional form of 
+\begin_inset Formula $R$
+\end_inset
+
+ as follows:
+\begin_inset Formula 
+\[
+G^{'}(y)=\left(\theta+(1-\theta)y^{-\rho}\right)^{\frac{1-\rho}{\rho}}=z\Rightarrow y^{-\rho}=\frac{z^{\frac{\rho}{1-\rho}}-\theta}{1-\theta}\Rightarrow y=\left(\frac{z^{\frac{\rho}{1-\rho}}-\theta}{1-\theta}\right)^{-\frac{1}{\rho}}=R(z).
+\]
+
+\end_inset
+
+Using the definition of 
+\begin_inset Formula $R$
+\end_inset
+
+ and equation —
+ we have:
+\begin_inset Formula 
+\[
+M=R(w_{M})H=\left(\frac{w_{M}^{\,\frac{\rho}{1-\rho}}-\theta}{1-\theta}\right)^{-\frac{1}{\rho}}H.
+\]
+
+\end_inset
+
+Similarly,
+ we can express total output 
+\begin_inset Formula $X$
+\end_inset
+
+ as:
+\begin_inset Formula 
+\[
+X=G(R(w_{M}))H=\left(\theta\,\left(\left(\frac{w_{M}^{\,\frac{\rho}{1-\rho}}-\theta}{1-\theta}\right)^{-\frac{1}{\rho}}\right)^{\rho}+(1-\theta)\right)^{\frac{1}{\rho}}H=\left(\frac{\theta(1-\theta)}{w_{M}^{\,\frac{\rho}{1-\rho}}-\theta}+(1-\theta)\right)^{\frac{1}{\rho}}H.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Combine —
+ and —
+ to get:
+\begin_inset Formula 
+\begin{align*}
+G(R(w_{M}))H & =\int_{\alpha_{0}}^{\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}}\phi(\bar{\alpha})\,d\bar{\alpha},\\
+R(w_{M})H & =\int_{\alpha_{0}}^{\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}}\tau_{M}\,\bar{\alpha}\,\phi(\bar{\alpha})\,d\bar{\alpha}.
+\end{align*}
+
+\end_inset
+
+Derive both sides of equation —
+ above with respect to 
+\begin_inset Formula $w_{M}$
+\end_inset
+
+:
+\begin_inset Formula 
+\[
+G^{'}(R(w_{M}))R^{'}(w_{M})H+G(R(w_{M}))\tau_{H}\left(-\frac{1-w_{H}\,\tau_{H}}{w_{M}^{2}\,\tau_{M}}\,\phi(\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}})\right)=-\frac{1-w_{H}\,\tau_{H}}{w_{M}^{2}\,\tau_{M}}\,\phi(\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}).
+\]
+
+\end_inset
+
+Now rearrange the terms to obtain 
+\begin_inset Formula $\phi(.)$
+\end_inset
+
+ in terms of known variables and functions:
+\begin_inset Formula 
+\begin{align*}
+\phi(\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}) & =-\frac{w_{M}R^{'}(w_{M})}{\frac{1-w_{H}\,\tau_{H}}{w_{M}^{2}\,\tau_{M}}\left(1-G(R(w_{M}))\tau_{H}\right)}H\\
+ & =-\frac{w_{M}^{2}\,\tau_{M}\,R^{'}(w_{M})}{\left(1-w_{H}\,\tau_{H}\right)\left(1-G(R(w_{M}))\tau_{H}\right)}H\\
+ & =-\frac{w_{M}^{2}\,\tau_{M}\,R^{'}(w_{M})}{\left(1-w_{H}\,\tau_{H}\right)\left(1-G(R(w_{M}))\tau_{H}\right)}H
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With a change of variable 
+\begin_inset Formula $\bar{\alpha}=\frac{1-w_{H}\,\tau_{H}}{w_{M}\,\tau_{M}}$
+\end_inset
+
+ and thus 
+\begin_inset Formula $w_{M}=\frac{1-w_{H}\,\tau_{H}}{\bar{\alpha}\,\tau_{M}}$
+\end_inset
+
+ we get:
+\begin_inset Formula 
+\[
+\phi(\bar{\alpha})=-\frac{w_{M}^{3}\,\tau_{M}\,\left[-\frac{1}{(1-\rho)(1-\theta)}w_{M}^{\,\frac{2\rho-1}{1-\rho}}\left(\frac{w_{M}^{\,\frac{\rho}{1-\rho}}-\theta}{1-\theta}\right)^{-\frac{1-\rho}{\rho}}\right]}{\left(1-w_{H}\,\tau_{H}\right)\left(1-\left[\frac{\theta(1-\theta)}{w_{M}^{\,\frac{\rho}{1-\rho}}-\theta}+(1-\theta)\right]^{\frac{1}{\rho}}\tau_{H}\right)}H
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
