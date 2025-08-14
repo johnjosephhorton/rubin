@@ -31,6 +31,7 @@
 \bibtex_command default
 \index_command default
 \float_placement H
+\float_alignment class
 \paperfontsize default
 \spacing single
 \use_hyperref false
@@ -109,7 +110,7 @@ setcounter{page}{0}
 \end_layout
 
 \begin_layout Title
-General Equilibrium Sketch (CES)
+General Equilibrium Sketch
 \end_layout
 
 \begin_layout Standard
@@ -153,2100 +154,624 @@ pagenumbering{arabic}
 \end_layout
 
 \begin_layout Standard
-I provide a sketch of the version we had in the previous draft with some modifications.
- At the end,
- I give one or two ideas about other ways we can think about modifying and extending the model.
- We can discuss further on Monday.
-\end_layout
+Having done the micro Leontief to macro CES aggregation we study how changes in the effective AI quality level 
+\begin_inset Formula $\bar{\alpha}$
+\end_inset
 
-\begin_layout Section
-High-Level Discussion
+ will change the distribution of heterogeneity 
+\begin_inset Formula $\phi(\bar{\alpha})$
+\end_inset
+
+ and thus the aggregate variables 
+\begin_inset Formula $X$
+\end_inset
+
+,
+ 
+\begin_inset Formula $M$
+\end_inset
+
+,
+ 
+\begin_inset Formula $H$
+\end_inset
+
+ as well as macro CES production function parameters 
+\begin_inset Formula $\theta_{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{M}$
+\end_inset
+
+.
+ Throughout we assume that 
+\begin_inset Formula $\rho$
+\end_inset
+
+ is fixed.
+ 
 \end_layout
 
 \begin_layout Standard
-There are two ways one can think of writing a production function in our setup.
- Below I introduce both options and discuss the pros and cons of each.
- For this discussion suppose each occupation is comprised by a set of tasks 
-\begin_inset Formula $\mathcal{H}$
-\end_inset
-
- that are done manually and a set of AI chained tasks 
-\begin_inset Formula $\mathcal{A}$
-\end_inset
-
- done by the help of AI.
- At this point we don't care how tasks have been allocated to human or machine.
+Let:
 \end_layout
 
-\begin_layout Enumerate
-Leontief production function of manual as well as AI-performed tasks (a la Peyman model).
- This version treats each task as a separate input for production.
- Suppose tasks indexed 
-\begin_inset Formula $1,\cdots,m$
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{0}=\int_{u}^{1}\phi_{s}(\bar{\alpha})\,d\bar{\alpha},\qquad A_{1}=\int_{u}^{1}\frac{\phi_{s}(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha},
+\]
+
 \end_inset
 
- are done by human (i.e.,
- they belong to set 
-\begin_inset Formula $\mathcal{H}$
+so 
+\begin_inset Formula $X=A_{0},\;H=\tau_{H}A_{0},\;M=\tau_{M}A_{1}$
 \end_inset
 
-) and tasks indexed 
-\begin_inset Formula $m+1,\cdots,n$
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+(eqs.(15)–(17))
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+.
+\end_layout
+
+\begin_layout Standard
+Cutoff:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+u=\frac{w_{M}\tau_{M}}{1-w_{H}\tau_{H}},\quad0<u<1.\qquad\Big[\text{eq. (14)}\Big]
+\]
+
 \end_inset
 
- are done via AI (i.e.,
- belong to the set 
-\begin_inset Formula $\mathcal{A}$
+With CES macro (eq.
+ (13)) and 
+\begin_inset Formula $K=1$
+\end_inset
+
+,
+ write the power form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{0}^{\rho}=\theta_{M}(\tau_{M}A_{1})^{\rho}+\theta_{H}(\tau_{H}A_{0})^{\rho}+(1-\theta_{M}-\theta_{H}).\quad\Big[\text{eq. (18)}\Big]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From CES FOCs (using 
+\begin_inset Formula $X=A_{0}$
+\end_inset
+
+) you have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+w_{M} & =\theta_{M}\,\tau_{M}^{\rho-1}A_{1}^{\rho-1}A_{0}^{\,1-\rho},\\
+w_{H} & =\theta_{H}\,\tau_{H}^{\rho-1}A_{0}^{\,\rho-1}A_{0}^{\,1-\rho}=\theta_{H}\,\tau_{H}^{\rho-1}.
+\end{align*}
+
+\end_inset
+
+So when 
+\begin_inset Formula $\theta_{H}$
+\end_inset
+
+ moves,
+ 
+\begin_inset Formula $w_{H}$
+\end_inset
+
+ moves one-for-one:
+ 
+\begin_inset Formula $dw_{H}=\tau_{H}^{\rho-1}d\theta_{H}$
+\end_inset
+
+.
+ (Prices from CES + 
+\begin_inset Formula $X=A_{0}$
 \end_inset
 
 ).
- We have:
-\begin_inset Formula 
-\[
-X=\min(t_{1}^{H},\cdots,t_{m}^{H},t_{m+1}^{AI},\cdots,t_{n}^{AI}).
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Pros:
- 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Implicitly assumes task durations are fixed (i.e.,
- takes task parameters as given).
- This is necessary assumption for the DP algorithm to solve the job design problem.
- To produce one unit of good 
-\begin_inset Formula $X$
-\end_inset
-
- each task 
-\begin_inset Formula $1,\cdots,n$
-\end_inset
-
- (whether manual or AI-performed) must be done exactly once.
- This is closer to the current notion of task-based production we currently have in the draft.
-\end_layout
-
-\begin_layout Itemize
-Accommodates the hand-off costs friction as a source of determining job boundaries (as hand-offs are assumed to be a fixed time duration property of tasks).
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Cons:
- 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Production (and GE) becomes too stylistic.
- Production function really has only one input:
- labor.
- 
-\end_layout
-
-\begin_layout Itemize
-The equilibrium allocations and prices are solely determined by intrinsic task parameters,
- not relative prices of inputs.
-\end_layout
-
-\begin_layout Itemize
-Use of AI is not endogenized based on equilibrium prices.
- Rather it's determined based on intrinsic task parameter,
- and perhaps outside of the model (say,
- for example,
- through some investment decision in the 
-\begin_inset Quotes eld
-\end_inset
-
-first stage
-\begin_inset Quotes erd
-\end_inset
-
- of a two-stage game where the level of 
-\begin_inset Formula $\alpha$
-\end_inset
-
- is decided in the first stage and the job design problem is solved + production takes place in the second stage).
- 
-\end_layout
-
-\begin_layout Itemize
-The GE doesn't have meaningful economics given how it's structured.
- Hard to sell as a real production model as it doesn't fit to into the literature.
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Enumerate
-Have a CES production function with AI and human as separate inputs (a la Mert model).
- 
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Either with every AI chain and manual task entering the CES aggregator separately 
-\begin_inset Formula 
-\[
-X=\left(\sum_{a\in\mathcal{A}}\delta_{a}\left(t_{a}^{AI}\alpha^{-d_{a}}\right)^{\rho}+\sum_{h\in\mathcal{H}}\delta_{h}\left(t_{h}^{H}\right)^{\rho}\right)^{\frac{1}{\rho}},
-\]
-
-\end_inset
-
-or AI chains having a Leontief relationship between themselves producing one single composite AI input while manual tasks having a Leontief relationship between themselves producing a single composite human input as follows:
- 
-\begin_inset Formula 
-\[
-X=\left(\delta_{a}\left(\min_{a\in\mathcal{A}}\ t_{a}^{AI}\alpha^{-d_{a}}\right)^{\rho}+\delta_{h}\left(\min_{h\in\mathcal{H}}\ t_{h}^{H}\right)^{\rho}\right)^{\frac{1}{\rho}}.
-\]
-
-\end_inset
-
-Notice that if we fix 
-\begin_inset Formula $d_{a}$
-\end_inset
-
- to be the same for all AI chains,
- the first formulation is implicitly assuming a Leontief production between the AI input 
-\begin_inset Formula $\alpha$
-\end_inset
-
- and the human labor inputs 
-\begin_inset Formula $t_{a}^{AI}$
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
- Every AI chain and manual task enters the CES aggregator separately:
- 
-\begin_inset Formula 
-\[
-X=\left(\sum_{a\in\mathcal{A}}\eta_{a}\left(t_{a}^{AI}\alpha^{-d_{a}}\right)^{\rho}+\sum_{h\in\mathcal{H}}\eta_{h}\left(t_{h}^{H}\right)^{\rho}\right)^{\frac{1}{\rho}}.
-\]
-
-\end_inset
-
-Notice that if we fix the difficulty 
-\begin_inset Formula $d_{a}$
-\end_inset
-
- across all AI chains,
- the this formulation implicitly assumes a Leontief production between the AI input 
-\begin_inset Formula $\alpha$
-\end_inset
-
- and the human labor input 
-\begin_inset Formula $t_{a}^{AI}$
-\end_inset
-
- for every AI chain.
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Pros:
- 
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Similar to conventional production functions.
- 
-\end_layout
-
-\begin_layout Itemize
-Three components 1) human labor for manual tasks,
- 2) human labor for managed AI chains,
- 3) AI itself nested into two separable inputs:
- 1) human labor,
- 2) AI labor.
- 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Cons:
- 
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Same tasks are treated differently depending on type of execution (manual or with AI):
- AI chains have a Leontief relationship between themselves;
- manual tasks have a Leontief relationship between themselves;
- but manual tasks and AI chains are substitutable.
- This is a weird assumption that is hard to defend.
- Suppose in job assignment 1 task A is manual and task 2 is part of an AI chain whereas in job assignment 2 both tasks are executed manually.
- In assignment 1 tasks A and B are substitutable but in assignment 2 tasks are not substitutable.
- This feels weird.
-\end_layout
-
-\begin_layout Itemize
-The implication of this is to say that 
-\begin_inset Quotes eld
-\end_inset
-
-writing a report
-\begin_inset Quotes erd
-\end_inset
-
- takes the same amount of time across different occupations;
- whether a restaurant branch manager is writing to inform the upper hand management that they're low on olive oil or a Google manager is writing to the CEO to ask for an increase in amount of compute dedicated to training Gemini.
- Both take the same amount of time to finish regardless of the context.
- It does make sense in some contexts,
- but it's not the assumption we're currently working with.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Assumes task durations are flexible.
- This is at odds with the assumptions we are using for the job design problem where we treat task durations as fixed.
- With this production function in one scenario we can employ 2 units of task A and 0.5 unit of task B whereas in another execution plan we can employ 1 unit of each task.
- This is inconsistent with the cost minimization characterization we had earlier.
-\end_layout
-
-\begin_layout Itemize
-This will make integration of firm's cost minimization problem and GE model hard (if not impossible).
- One idea is to look at firm's profit maximization as a two stage problem:
- one discrete and one continuous.
- In the outer loop (discrete) we choose the allocation of tasks to jobs.
- In the inner loop (continuous) we solve for the optimal level of each input taking job assignments as given.
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Section
-Task-based Production Environment
 \end_layout
 
 \begin_layout Standard
-We have a task-based model of production,
- with the following characteristics:
-\end_layout
-
-\begin_layout Itemize
-Production of a consumption good 
-\begin_inset Formula $X$
+And the cutoff in terms of observables (combine the two FOCs inside 
+\begin_inset Formula $u$
 \end_inset
 
- requires completing an ordered set of tasks,
- denoted by:
+):
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
-\mathcal{T}=\{1,2,...,n\}.
+\boxed{u=C\,A_{1}^{\rho-1}A_{0}^{\,1-\rho},\quad C:=\frac{\theta_{M}\tau_{M}^{\rho}}{1-\theta_{H}\tau_{H}^{\rho}}}
 \]
 
 \end_inset
 
-We refer to 
-\begin_inset Formula $\mathcal{T}$
-\end_inset
-
- as the 
-\begin_inset Quotes eld
-\end_inset
-
-production process
-\begin_inset Quotes erd
-\end_inset
-
- of the good.
- Later in the GE section where we have more than a single good we use subscript 
-\begin_inset Formula $k$
-\end_inset
-
- for all variables introduced in this section,
- but for now we are focusing on only a single good–so no subscripts.
+(This is eq.
+ (14) plus the CES FOCs.)
 \end_layout
 
-\begin_layout Itemize
-Each task can be completed either manually or using an AI.
- If done by AI,
- the task is a part of a chain of one or more tasks called an 
-\begin_inset Quotes eld
-\end_inset
+\begin_layout Section*
+Step 1:
+ Differentiate the integrals and define shift terms
+\end_layout
 
-AI Chain.
-\begin_inset Quotes erd
-\end_inset
-
- Denote the set of manual tasks done by human with 
-\begin_inset Formula $\mathcal{H}$
-\end_inset
-
- and AI chains with 
-\begin_inset Formula $\mathcal{A}$
+\begin_layout Standard
+Let 
+\begin_inset Formula $\phi_{u}:=\phi_{s}(u)$
 \end_inset
 
 .
- A task 
-\begin_inset Formula $i$
+ For any shift 
+\begin_inset Formula $s$
 \end_inset
 
- is either in 
-\begin_inset Formula $\mathcal{H}$
+ of 
+\begin_inset Formula $\phi$
 \end_inset
 
- or 
-\begin_inset Formula $\mathcal{A}$
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+dA_{0} & =-\phi_{u}\,du+\Lambda_{0}\,ds,\\
+dA_{1} & =-\frac{\phi_{u}}{u}\,du+\Lambda_{1}\,ds,
+\end{align*}
+
+\end_inset
+
+with 
+\begin_inset Formula 
+\begin{align*}
+\Lambda_{0} & =\int_{u}^{1}\partial_{s}\phi_{s}(\bar{\alpha})\,d\bar{\alpha},\\
+\Lambda_{1} & =\int_{u}^{1}\frac{1}{\bar{\alpha}}\partial_{s}\phi_{s}(\bar{\alpha})\,d\bar{\alpha}.
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Step 2:
+ Two aggregation identities that pin down 
+\begin_inset Formula $\theta$
+\end_inset
+
+-movement
+\end_layout
+
+\begin_layout Standard
+In the aggregation appendix we have two key relations between (
+\begin_inset Formula $A_{0},A_{1},u$
+\end_inset
+
+) and (
+\begin_inset Formula $\theta_{M},\theta_{H}$
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+(i) the CES identity above,
+ and
+\end_layout
+
+\begin_layout Standard
+(ii) its “first\SpecialChar nobreakdash
+order” version
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{1}(u)=\Big(\frac{1-\theta_{H}\tau_{H}^{\rho}}{\theta_{M}\tau_{M}^{\rho}}\Big)^{\!\frac{1}{\rho-1}}\,u^{\frac{1}{\rho-1}}A_{0}(u).\quad\Big[\text{eq. (24)}\Big]
+\]
+
+\end_inset
+
+These two equations jointly identify 
+\begin_inset Formula $(\theta_{M},\theta_{H})$
+\end_inset
+
+ from 
+\begin_inset Formula $(A_{0},A_{1},u)$
 \end_inset
 
 .
- We refer to members of these sets as a 
-\begin_inset Quotes eld
+ We’ll just total\SpecialChar nobreakdash
+differentiate both.
+ 
+\end_layout
+
+\begin_layout Paragraph
+(a) Differentiate the CES identity (power form):
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $F\equiv A_{0}^{\rho}-\theta_{M}(\tau_{M}A_{1})^{\rho}-\theta_{H}(\tau_{H}A_{0})^{\rho}-(1-\theta_{M}-\theta_{H})=0$
 \end_inset
 
-module
-\begin_inset Quotes erd
+.
+ Then
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\rho A_{0}^{\rho-1}dA_{0}-(\tau_{M}A_{1})^{\rho}\,d\theta_{M}-\theta_{M}\rho(\tau_{M}A_{1})^{\rho}\Big(\frac{dA_{1}}{A_{1}}\Big)-(\tau_{H}A_{0})^{\rho}\,d\theta_{H}-\theta_{H}\rho(\tau_{H}A_{0})^{\rho}\Big(\frac{dA_{0}}{A_{0}}\Big)+d\theta_{M}+d\theta_{H}=0.\tag{I}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+(b) Differentiate the 
+\begin_inset Formula $A_{1}–A_{0}$
+\end_inset
+
+ relation (eq.
+ (24)):
+\end_layout
+
+\begin_layout Standard
+Write 
+\begin_inset Formula $A_{1}=K\,u^{\frac{1}{\rho-1}}A_{0}$
+\end_inset
+
+,
+ where
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+K=\Big(\frac{1-\theta_{H}\tau_{H}^{\rho}}{\theta_{M}\tau_{M}^{\rho}}\Big)^{\!\frac{1}{\rho-1}}.
+\]
+
+\end_inset
+
+Then
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{dA_{1}}{A_{1}}=\frac{dK}{K}+\frac{1}{\rho-1}\frac{du}{u}+\frac{dA_{0}}{A_{0}},\qquad\frac{dK}{K}=\frac{1}{\rho-1}\Big(-\frac{\tau_{H}^{\rho}\,d\theta_{H}}{1-\theta_{H}\tau_{H}^{\rho}}-\frac{d\theta_{M}}{\theta_{M}}\Big).\tag{II}
+\]
+
+\end_inset
+
+These two linear equations ((I),(II)) pin down 
+\begin_inset Formula $(d\theta_{M},d\theta_{H})$
+\end_inset
+
+ once you express 
+\begin_inset Formula $\frac{du}{u},dA_{0},dA_{1}$
+\end_inset
+
+ in terms of primitives.
+\end_layout
+
+\begin_layout Section*
+Step 3:
+ Differentiate the cutoff with moving 
+\begin_inset Formula $\theta$
+\end_inset
+
+’s
+\end_layout
+
+\begin_layout Standard
+From 
+\begin_inset Formula $\ln u=\ln C+(\rho-1)\ln A_{1}+(1-\rho)\ln A_{0}$
+\end_inset
+
+ and 
+\begin_inset Formula $C=\frac{\theta_{M}\tau_{M}^{\rho}}{1-\theta_{H}\tau_{H}^{\rho}}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{du}{u}=\underbrace{\frac{d\theta_{M}}{\theta_{M}}+\frac{\tau_{H}^{\rho}\,d\theta_{H}}{1-\theta_{H}\tau_{H}^{\rho}}}_{\text{via }d\ln C}+(\rho-1)\frac{dA_{1}}{A_{1}}+(1-\rho)\frac{dA_{0}}{A_{0}}.\tag{III}
+\]
+
+\end_inset
+
+Plug 
+\begin_inset Formula $dA_{0},dA_{1}$
+\end_inset
+
+ from Step 1 (they themselves depend on 
+\begin_inset Formula $du$
+\end_inset
+
+ and the 
+\begin_inset Formula $\Lambda$
+\end_inset
+
+’s).
+ This yields 
+\begin_inset Formula $\frac{du}{ds}$
+\end_inset
+
+ as a function of 
+\begin_inset Formula $(d\theta_{M},d\theta_{H})$
+\end_inset
+
+ and 
+\begin_inset Formula $(A_{0},A_{1},u,\phi_{u},\Lambda_{0},\Lambda_{1})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+It’s handy to define
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+k_{1}:=\frac{\phi_{u}}{uA_{1}},\quad k_{0}:=\frac{\phi_{u}}{A_{0}}.
+\]
+
+\end_inset
+
+Then substituting 
+\begin_inset Formula $dA_{0},dA_{1}$
+\end_inset
+
+ into (III) and collecting terms on 
+\begin_inset Formula $\frac{du}{ds}$
+\end_inset
+
+ gives
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{du}{ds}=\frac{B_{0}\,\frac{d\theta_{M}}{ds}+B_{1}\,\frac{d\theta_{H}}{ds}+(\rho-1)\frac{\Lambda_{1}}{A_{1}}+(1-\rho)\frac{\Lambda_{0}}{A_{0}}}{\frac{1}{u}+(\rho-1)k_{1}+(1-\rho)k_{0}},\tag{★}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $B_{0}=\frac{1}{\theta_{M}}$
+\end_inset
+
+ and 
+\begin_inset Formula $B_{1}=\frac{\tau_{H}^{\rho}}{1-\theta_{H}\tau_{H}^{\rho}}$
+\end_inset
+
+ come from 
+\begin_inset Formula $d\ln C$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section*
+Step 4:
+ Solve the linear system for 
+\begin_inset Formula $(d\theta_{M},d\theta_{H})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You now have three relations:
+\end_layout
+
+\begin_layout Standard
+• (I):
+ linear in 
+\begin_inset Formula $(d\theta_{M},d\theta_{H},dA_{0},dA_{1})$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Standard
+• (II):
+ linear relation among 
+\begin_inset Formula $(d\theta_{M},d\theta_{H},du,dA_{0},dA_{1})$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Standard
+• (★):
+ 
+\begin_inset Formula $\frac{du}{ds}$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $(d\theta_{M},d\theta_{H})$
+\end_inset
+
+ and 
+\begin_inset Formula $\Lambda’s$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Replace 
+\begin_inset Formula $dA_{0},dA_{1}$
+\end_inset
+
+ by Step\SpecialChar nobreakdash
+1 expressions;
+ replace 
+\begin_inset Formula $\frac{du}{u}$
+\end_inset
+
+ in (II) by (★).
+ You get a 2×2 linear system:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\underbrace{\begin{bmatrix}\;a_{MM} & a_{MH}\;\\[2pt]
+\;a_{HM} & a_{HH}\;
+\end{bmatrix}}_{\mathcal{J}(A_{0},A_{1},u;\rho,\tau,\theta,\phi_{u})}\begin{bmatrix}d\theta_{M}\\
+d\theta_{H}
+\end{bmatrix}=\underbrace{\begin{bmatrix}b_{M}\\
+b_{H}
+\end{bmatrix}}_{\text{functions of }(\Lambda_{0},\Lambda_{1},\phi_{u})}\,ds,
+\]
+
+\end_inset
+
+with closed\SpecialChar nobreakdash
+form entries (mechanical but tidy once you substitute).
+ Solve for 
+\begin_inset Formula $d\theta_{M}/ds,d\theta_{H}/ds$
+\end_inset
+
+ by Cramer’s rule.
+ (All ingredients come from eqs.
+ (18),
+ (24) and the lower\SpecialChar nobreakdash
+bound structure in Appendix B.) 
+\end_layout
+
+\begin_layout Section*
+Step 5:
+ The equilibrium objects' comparative statics
+\end_layout
+
+\begin_layout Standard
+Use 
+\begin_inset Formula $M=\tau_{M}A_{1},\;H=\tau_{H}A_{0}$
 \end_inset
 
 :
- a manual tasks is one module;
- an entire AI chain is also a module.
-\end_layout
-
-\begin_layout Itemize
-Each task 
-\begin_inset Formula $i\in\mathcal{T}$
-\end_inset
-
- has five cost parameters:
- human and AI skill (i.e.,
- human capital),
- human and AI time (i.e.,
- labor),
- and hand-off (or context-switching) cost.
- Denote the (human skill,
- machine skill,
- human time,
- machine time,
- hand-off time) costs of task 
-\begin_inset Formula $i$
-\end_inset
-
- with 
-\begin_inset Formula $(c_{i}^{H},c_{i}^{AI},t_{i}^{H},t_{i}^{AI},t_{i}^{s})$
-\end_inset
-
-.
- The skill costs 
-\begin_inset Formula $c_{i}^{x}$
-\end_inset
-
- (
-\begin_inset Formula $x\in\{H,AI\}$
-\end_inset
-
-) are a one-off cost that paid by the firm to train the worker to do task 
-\begin_inset Formula $i$
-\end_inset
-
-.
- Once trained,
- the firm employs the worker for the duration of task's time cost 
-\begin_inset Formula $t_{i}^{x}$
-\end_inset
-
- to produce of one unit of the good.
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Hand-off cost 
-\begin_inset Formula $t_{i}^{s}$
-\end_inset
-
- is a frictional cost that a worker must pay to hand-off output of his/her task to the next worker.
- Hand-off can be viewed as an additional task at the end of task 
-\begin_inset Formula $i$
-\end_inset
-
- that takes time 
-\begin_inset Formula $t_{i}^{s}$
-\end_inset
-
- to complete but requires no additional skills.
- We discuss hand-off costs a bit more after introducing jobs next.
-\end_layout
-
-\begin_layout Itemize
-Firms assign tasks to workers in 
-\begin_inset Quotes eld
-\end_inset
-
-jobs.
-\begin_inset Quotes erd
-\end_inset
-
- A job is a contiguous set of tasks in the production process 
-\begin_inset Formula $\mathcal{T}$
-\end_inset
-
-.
- Jobs are mutually exclusive and collectively cover all tasks in 
-\begin_inset Formula $\mathcal{T}$
-\end_inset
-
-.
- Let 
-\begin_inset Formula $\mathcal{J}_{j}=\{\mathcal{H}_{j},\mathcal{A}_{j}\}$
-\end_inset
-
- denote the set of manual tasks and AI chains associated with job 
-\begin_inset Formula $j$
-\end_inset
-
- assigned to worker 
-\begin_inset Formula $j$
-\end_inset
-
- (each worker is assigned to one job,
- so we can use the same index for the worker and their job).
- Formally,
- assuming the firm splits the production process into 
-\begin_inset Formula $J$
-\end_inset
-
- distinct jobs we have:
-\begin_inset Formula 
-\begin{align*}
-\forall j\neq j^{'},\quad j,j^{'}\in\{1,2,...,J\}: & \qquad\mathcal{J}_{j}\cap\mathcal{J}_{j^{'}}=\emptyset,\\
-\end{align*}
-
-\end_inset
-
-and
-\begin_inset Formula 
-\[
-\bigcup_{j=1}^{J}\mathcal{J}_{j}=\mathcal{T}.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Hand-off cost of a task is only realized when the task falls at the boundary of two consecutive jobs 
-\begin_inset Formula $j$
-\end_inset
-
- and 
-\begin_inset Formula $j+1$
-\end_inset
-
-.
- That is,
- if task 
-\begin_inset Formula $i$
-\end_inset
-
- is the last task in job 
-\begin_inset Formula $j$
-\end_inset
-
-,
- work 
-\begin_inset Formula $j$
-\end_inset
-
- incurs an additional time cost 
-\begin_inset Formula $t_{i}^{s}$
-\end_inset
-
- to hand-off the output to the next worker.
- Every task other than 
-\begin_inset Formula $i$
-\end_inset
-
- in job 
-\begin_inset Formula $j$
-\end_inset
-
- has zero realized hand-off time cost.
- With a slight abuse of notation,
- we show hand-off cost of job 
-\begin_inset Formula $j$
-\end_inset
-
- with 
-\begin_inset Formula $t_{j}^{s}:=t_{i}^{s}$
-\end_inset
-
-.
- 
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Remember that even though we are using notation 
-\begin_inset Formula $t_{j}^{s}$
-\end_inset
-
- to show the hand-off time cost of job 
-\begin_inset Formula $j$
-\end_inset
-
- it is an inherent property of the 
-\bar under
-last task of the job
-\bar default
-,
- not the job itself.
- So,
- 
-\begin_inset Formula $t_{j}^{s}$
-\end_inset
-
- is actually determined by the task at the boundary of job 
-\begin_inset Formula $j$
-\end_inset
-
-,
- and may differ from one job structure to another.
-\end_layout
-
-\begin_layout Itemize
-Continuing on the previous point,
- hand-off costs and thus production costs depend on structure of jobs or 
-\begin_inset Quotes eld
-\end_inset
-
-job design.
-\begin_inset Quotes erd
-\end_inset
-
- But how are costs determined?
-\begin_inset Newline newline
-\end_inset
-
-Consider some collection of jobs 
-\begin_inset Formula $\mathcal{J}=\{\mathcal{J}_{j}\}_{j=1}^{J}=\{\mathcal{H}_{j},\mathcal{A}_{j}\}_{j=1}^{J}$
-\end_inset
-
- containing 
-\begin_inset Formula $J$
-\end_inset
-
- distinct jobs.
- The wage that has to be paid to worker employed in job 
-\begin_inset Formula $j$
-\end_inset
-
- is given by
-\begin_inset Formula 
-\begin{equation}
-w_{j}:=v_{L}+\sum_{a\in\mathcal{A}_{j}}c_{a}^{AI}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{H},\label{eq:wage}
-\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula $v_{L}$
-\end_inset
-
- is worker's value of leisure.
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-To make workers indifferent between working at different jobs the firm compensates them for the job's required skill costs.
- Moreover,
- the firm pays workers the value of their leisure to make them indifferent between working and not working.
-\end_layout
-
-\end_inset
-
- The two other terms are the sum of skill costs of job 
-\begin_inset Formula $j$
-\end_inset
-
-'s constituent modules (AI chains and manual tasks).
- Similarly,
- the time (or labor) cost of job 
-\begin_inset Formula $j$
-\end_inset
-
- is:
-\begin_inset Formula 
-\begin{equation}
-t_{j}:=t_{j}^{s}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{H}.\label{eq:time}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-The wage bill for job 
-\begin_inset Formula $j$
-\end_inset
-
- is the product of 
-\begin_inset Formula $w_{j}$
-\end_inset
-
- and 
-\begin_inset Formula $t_{j}$
-\end_inset
-
-:
-\begin_inset Formula 
-\begin{equation}
-WageBill_{j}=w_{j}t_{j},\label{eq:wage_bill}
-\end{equation}
-
-\end_inset
-
-which represents workers being compensated proportionally to their skill level and the time required to complete the job.
- Producing one unit of the consumption good 
-\begin_inset Formula $X$
-\end_inset
-
- only involves paying the labor time cost of workers performing tasks directly associated with that unit,
- as the one-time human capital training costs have already been incurred.
-\end_layout
-
-\begin_layout Itemize
-With this production function,
- optimal allocation of tasks to jobs (and thus job boundaries) are determined by solving firm's cost minimization problem:
-\begin_inset Formula 
-\[
-\min_{J,\mathcal{J}=\{\mathcal{H}_{j},\mathcal{A}_{j}\}_{j=1}^{J}}\ \ \sum_{j=1}^{J}w_{j}t_{j}=\sum_{j=1}^{J}\left[\left(v_{L}+\sum_{a\in\mathcal{A}_{j}}c_{a}^{AI}+\sum_{h\in\mathcal{H}_{j}}c_{h}^{H}\right)\left(t_{j}^{s}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{H}\right)\right].
-\]
-
-\end_inset
-
-(We have a section dedicated to solving this problem via dynamic programming.)
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-To produce one unit of the consumption good 
-\begin_inset Formula $X$
-\end_inset
-
-,
- each task in the production process must be performed exactly once:
- it cannot be the case that,
- for example,
- task 1 is done twice while task 2 is done once because task 1 is cheaper.
- All tasks must be done in fixed proportions.
- Thus,
- at the level of tasks,
- production function takes a Leontief form.
-\end_layout
-
-\begin_layout Itemize
-Completion of a task creates an 
-\begin_inset Quotes eld
-\end_inset
-
-intermediate good,
-\begin_inset Quotes erd
-\end_inset
-
- which is used as input in the production of the final good.
- Each worker produces intermediate goods by performing tasks assigned to them in their job.
- The firm buys the intermediate goods (i.e.,
- output of tasks) from workers in a perfectly competitive market,
- and produces the good at no additional cost.
- 
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Without loss,
- we can imagine each worker produces only a single intermediate good–the output of the last task assigned to them in their job (think of it as output of each task being the input of the next task;
- The worker produces intermediate task outputs and uses them as inputs to ultimately produce the output of the last task assigned to them).
- Let 
-\begin_inset Formula $x_{j}$
-\end_inset
-
- show the intermediate good produced in job 
-\begin_inset Formula $j$
-\end_inset
-
-.
- The production function of the consumption good 
-\begin_inset Formula $X$
-\end_inset
-
- can be written as:
-\begin_inset Formula 
-\[
-X(x_{1},...,x_{J})=min(x_{1},...,x_{J}).
-\]
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-General Equilibrium
 \end_layout
 
 \begin_layout Standard
-The AI's success probability in completing AI module 
-\begin_inset Formula $a\in\mathcal{A}$
-\end_inset
+Quantities
+\end_layout
 
-,
- denoted by 
-\begin_inset Formula $q_{a}$
-\end_inset
-
-,
- in every attempt is
+\begin_layout Standard
 \begin_inset Formula 
 \[
-q_{a}=\alpha^{d_{a}},
+\boxed{\;\frac{dH}{ds}=\tau_{H}\Big(-\phi_{u}\,\frac{du}{ds}+\Lambda_{0}\Big),\qquad\frac{dM}{ds}=\tau_{M}\Big(-\frac{\phi_{u}}{u}\,\frac{du}{ds}+\Lambda_{1}\Big).\;}
 \]
 
 \end_inset
 
-where 
-\begin_inset Formula $\alpha\in(0,1)$
-\end_inset
 
- is the (general) AI quality and 
-\begin_inset Formula $d_{a}>0$
-\end_inset
+\end_layout
 
- is the module's completion difficulty.
- The AI's (expected) time cost to complete module 
-\begin_inset Formula $a$
-\end_inset
+\begin_layout Standard
+Wages
+\end_layout
 
- is:
+\begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{t_{a}^{AI}}{q_{a}}=\frac{t_{a}^{AI}}{\alpha^{d_{a}}}=t_{a}^{AI}\alpha^{-d_{a}},
+\boxed{\;\frac{dw_{H}}{ds}=\tau_{H}^{\rho-1}\,\frac{d\theta_{H}}{ds}}
 \]
 
 \end_inset
 
-where 
-\begin_inset Formula $t_{a}^{AI}$
-\end_inset
 
- is the management cost of AI module 
-\begin_inset Formula $a$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Each task is either done manually by a human or is a part of an AI-completed chain.
- If the task 
-\begin_inset Formula $i$
-\end_inset
-
- is done manually,
- its time cost is simply just 
-\begin_inset Formula $t_{i}^{H}$
-\end_inset
-
-.
- If task 
-\begin_inset Formula $i$
-\end_inset
-
- is a part of an AI chain 
-\begin_inset Formula $a$
-\end_inset
-
- it is either augmented or automated.
- The success probability of any task of an AI module 
-\begin_inset Formula $a$
-\end_inset
-
- appears as a multiplicative term in the success probability of the chain 
-\begin_inset Formula $q_{a}$
-\end_inset
-
-.
- If task 
-\begin_inset Formula $i$
-\end_inset
-
- is augmented,
- it management time 
-\begin_inset Formula $t_{i}^{AI}$
-\end_inset
-
- also determines AI chain's management time whereas if automated task's contribution to the AI chain cost is limited to its success probability alone.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-In any job design,
- each job is (potentially) comprised by tasks that are done by humans manually and/or AI chains.
- Fix some job design 
-\begin_inset Formula $\mathcal{J}^{k}=\{\mathcal{J}_{j}\}_{j=1}^{J_{k}}$
-\end_inset
-
-.
- Show the set of tasks in job 
-\begin_inset Formula $j$
-\end_inset
-
- that are done by human with 
-\begin_inset Formula $\mathcal{H}_{j}^{k}(\mathcal{J}^{k})$
-\end_inset
-
- and the set of AI chains in job 
-\begin_inset Formula $j$
-\end_inset
-
- that are done by the AI with 
-\begin_inset Formula $\mathcal{C}_{j}^{k}(\mathcal{J}^{k})$
-\end_inset
-
-.
- Let us show the cost of a chain 
-\begin_inset Formula $c\in\mathcal{C}_{j}$
-\end_inset
-
- with 
-\begin_inset Formula $\frac{t_{c}}{q_{c}}$
-\end_inset
-
-.
- In this notation,
- 
-\begin_inset Formula $t_{c}$
-\end_inset
-
- is the management time of the augmented task in the chain (for example,
- if task 
-\begin_inset Formula $i\in c$
-\end_inset
-
- is the augmented task,
- then 
-\begin_inset Formula $t_{c}=t_{i}^{m}$
-\end_inset
-
-) and 
-\begin_inset Formula $q_{c}$
-\end_inset
-
- is the composite success probability which is defined as 
-\begin_inset Formula $q_{c}=\prod_{i\in c}q_{i}$
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-
-\series bold
-Production
-\end_layout
-
-\begin_layout Standard
-There are 
-\begin_inset Formula $K$
-\end_inset
-
- consumption goods 
-\begin_inset Formula $X_{1},\cdots,X_{K}$
-\end_inset
-
- in the economy.
- We call each 
-\begin_inset Formula $k\in\{1,\cdots,K\}$
-\end_inset
-
- a sector.
- A single firm produces all goods and sells them to the consumers in a perfectly competitive market.
- 
-\end_layout
-
-\begin_layout Standard
-The production function for consumption good 
-\begin_inset Formula $X_{k}$
-\end_inset
-
- is CES with three components (human labor,
- AI labor,
- AI quality) modeled as two separate inputs (human and machine):
-\begin_inset Formula 
-\begin{equation}
-X_{k}=\left(\sum_{j=1}^{J_{k}}\left[\sum_{a_{j}\in\mathcal{A}_{j}^{k}}\eta_{a_{j}}^{k}\left(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right)^{\rho}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}\eta_{h_{j}}\left(t_{h_{j}}^{H,k}\right)^{\rho}\right]\right)^{\frac{1}{\rho}}\label{eq:prod_fun}
-\end{equation}
-
-\end_inset
-
-Here,
- 
-\begin_inset Formula $t_{a_{j}}^{AI,k}$
-\end_inset
-
- is the AI management time cost for composite AI chain 
-\begin_inset Formula $a_{j}$
-\end_inset
-
- and 
-\begin_inset Formula $t_{h_{j}}^{H,k}$
-\end_inset
-
- is the human execution time cost for composite manual task 
-\begin_inset Formula $h_{j}$
-\end_inset
-
-.
- Note that the production function exhibits constant elasticity of substitution 
-\begin_inset Formula $\sigma=\frac{1}{1-\rho}$
-\end_inset
-
- between all modules (AI chains and manual tasks).
-\end_layout
-
-\begin_layout Standard
-For some fixed job design 
-\begin_inset Formula $\mathcal{J}^{k}=\{\mathcal{J}_{j}^{k}\}_{j=1}^{J_{k}}=\{\mathcal{H}_{j}^{k},\mathcal{A}_{j}^{k}\}_{j=1}^{J_{k}}$
-\end_inset
-
-,
- The cost of producing 
-\begin_inset Formula $X$
-\end_inset
-
- units is:
-\begin_inset Formula 
-\begin{equation}
-C_{k}=\sum_{j=1}^{J_{k}}w_{j}^{k}t_{j}^{k}=\sum_{j=1}^{J_{k}}\left[\underbrace{\left(v_{L}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}c_{a_{j}}^{AI,k}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}c_{h_{j}}^{AI,k}\right)}_{\text{wage of job \ensuremath{j}: }w_{j}^{k}}\underbrace{\left(t_{j}^{s}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}t_{a_{j}}^{AI,k}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}t_{h_{j}}^{AI,k}\right)}_{\text{amount of labor employed for job \ensuremath{j}}}\right].\label{eq:firm_cost}
-\end{equation}
-
-\end_inset
-
-The wage of AI chain input and human input in manual task is the same and equal to 
-\begin_inset Formula $w_{j}=\left(v_{L}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}c_{a_{j}}^{AI,k}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}c_{h_{j}}^{AI,k}\right)$
-\end_inset
-
- of job 
-\begin_inset Formula $j$
-\end_inset
-
- containing those inputs.
- 
-\end_layout
-
-\begin_layout Standard
-The firm's profit maximization problem in any sector 
-\begin_inset Formula $k$
-\end_inset
-
- is:
 \begin_inset Formula 
 \[
-\max_{\{t_{h_{j}}^{H,k}\},\{t_{a_{j}}^{AI,k}\},\{\mathcal{H}_{j}^{k},\mathcal{A}_{j}^{k}\}_{j=1}^{J_{k}},J_{k}}\ \ p^{k}X_{k}-C_{k},
-\]
-
-\end_inset
-
-which in expanded form becomes:
-\begin_inset Formula 
-\begin{align}
-\max_{\{t_{h_{j}}^{H,k}\},\{t_{a_{j}}^{AI,k}\},\{\mathcal{H}_{j}^{k},\mathcal{A}_{j}^{k}\}_{j=1}^{J_{k}},J_{k}}\ \  & p^{k}\left(\sum_{j=1}^{J_{k}}\left[\sum_{a_{j}\in\mathcal{A}_{j}^{k}}\eta_{a_{j}}^{k}\left(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right)^{\rho}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}\eta_{h_{j}}\left(t_{h_{j}}^{H,k}\right)^{\rho}\right]\right)^{\frac{1}{\rho}}\label{eq:firm_problem}\\
- & \ \ \ \ -\sum_{j=1}^{J_{k}}\left[w_{j}^{k}\left(t_{j}^{s}+\sum_{a_{j}\in\mathcal{A}_{j}^{k}}t_{a_{j}}^{AI,k}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}t_{h_{j}}^{AI,k}\right)\right]
-\end{align}
-
-\end_inset
-
-The firm chooses which tasks to do manually and which ones via AI,
- the amount of labor employed for manual tasks 
-\begin_inset Formula $t_{h_{j}}^{H,k}$
-\end_inset
-
-,
- amount of labor employed for managing AI chains 
-\begin_inset Formula $t_{a_{j}}^{AI,k}$
-\end_inset
-
-,
- and the job assignments 
-\begin_inset Formula $\mathcal{J}^{k}=\{\mathcal{H}_{j}^{k},\mathcal{C}_{j}^{k}\}_{j=1}^{J_{k}}$
-\end_inset
-
- while taking the AI quality 
-\begin_inset Formula $\alpha$
-\end_inset
-
- as given.
- 
-\end_layout
-
-\begin_layout Standard
-(?)This problem can be solved in two steps.
- In the (discrete) outer loop we fix some job assignment and in the (continuous) inner loop we solve for optimal labor allocations given a job design.
- The solution will be the job design maximizing profits.
-\end_layout
-
-\begin_layout Standard
-Equivalently,
- we can consider the dual problem:
-\begin_inset Formula 
-\begin{align}
-\min_{\{t_{h}^{H}\},\{t_{a}^{AI}\},\{\mathcal{H}_{j},\mathcal{A}_{j}\}_{j=1}^{J},J}\  & C_{k}=\sum_{j=1}^{J}\left[w_{j}\left(t_{j}^{s}+\sum_{a\in\mathcal{A}_{j}}t_{a}^{AI}\alpha^{-d_{a}}+\sum_{h\in\mathcal{H}_{j}}t_{h}^{H}\right)\right]\label{eq:dual}\\
-s.t.\  & X_{k}=\left(\sum_{j=1}^{J}\left[\sum_{a\in\mathcal{A}_{j}^{k}}\eta_{a}\left(t_{a}^{AI}\alpha^{-d_{a}}\right)^{\rho}+\sum_{h\in\mathcal{H}_{j}}\eta_{h}\left(t_{h}^{H}\right)^{\rho}\right]\right)^{\frac{1}{\rho}}\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Consumption
-\end_layout
-
-\begin_layout Standard
-A representative household supplies one unit of labor inelastically and has a CES utility function over the 
-\begin_inset Formula $K$
-\end_inset
-
- goods:
-\begin_inset Formula 
-\[
-U(X_{1},...,X_{K})=\left(\sum_{k=1}^{K}\delta_{k}X_{k}^{\frac{\sigma-1}{\sigma}}\right)^{\frac{\sigma}{\sigma-1}},\qquad0<\delta_{k}<1,\qquad\sum_{k=1}^{K}\delta_{k}=1,\qquad\sigma>0.
-\]
-
-\end_inset
-
-Goods are substitutes if 
-\begin_inset Formula $\sigma>1$
-\end_inset
-
-,
- complements if 
-\begin_inset Formula $\sigma<1$
-\end_inset
-
-,
- and 
-\begin_inset Formula $\sigma=1$
-\end_inset
-
- corresponds to the Cobb–Douglas case.
- The household faces the budget constraint
-\begin_inset Formula 
-\begin{equation}
-\sum_{k=1}^{K}p^{k}X_{k}=\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}w_{j}^{k}t_{j}^{k}\right),\label{eq:budget_constraint}
-\end{equation}
-
-\end_inset
-
-where 
-\begin_inset Formula $I$
-\end_inset
-
- is the total income earned from supplying labor to jobs across all sectors.
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-
-\series bold
-Goods Prices
-\end_layout
-
-\begin_layout Subsubsection
-
-\series bold
-Intermediate Goods Prices
-\end_layout
-
-\begin_layout Plain Layout
-Per unit of intermediate good 
-\begin_inset Formula $x_{j}^{k}$
-\end_inset
-
-,
- the firm employs 
-\begin_inset Formula $l_{i}^{h}$
-\end_inset
-
- amount of labor on manual tasks 
-\begin_inset Formula $i\in\mathcal{H}_{j}^{k}$
-\end_inset
-
- and 
-\begin_inset Formula $l_{c}^{m}$
-\end_inset
-
- amount of labor on each AI-completed chain 
-\begin_inset Formula $c\in\mathcal{C}_{j}^{k}$
-\end_inset
-
-.
- That is:
-\begin_inset Formula 
-\begin{align*}
-\forall i\in\mathcal{H}_{j}^{k} & :l_{i}^{h}=t_{i}^{h},\\
-\forall c\in\mathcal{C}_{j}^{k} & :l_{c}^{m}=t_{c}^{m}\alpha^{-d_{c}}.
-\end{align*}
-
-\end_inset
-
-Moreover,
- define the total amount of labor spent on production of intermediate good 
-\begin_inset Formula $x_{j}^{k}$
-\end_inset
-
- as:
-\begin_inset Formula 
-\begin{align*}
-l_{j}^{k} & :=t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}l_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}l_{c}^{m}\\
- & =t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}
-\end{align*}
-
-\end_inset
-
-The per unit production cost (i.e.,
- the wage bill) of good 
-\begin_inset Formula $x_{j}^{k}$
-\end_inset
-
- can be rewritten as:
-\begin_inset Formula 
-\begin{align*}
-WageBill_{j} & =w_{j}^{k}l_{j}^{k}\\
- & =w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
-\end{align*}
-
-\end_inset
-
-This just a rephrasing of equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:wage_bill"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-.
- 
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Markets are perfectly competitive,
- therefore the price of intermediate good 
-\begin_inset Formula $x_{j}^{k}$
-\end_inset
-
-,
- denoted by 
-\begin_inset Formula $p_{j}^{k}$
-\end_inset
-
-,
- equals the marginal cost of its production:
-\begin_inset Formula 
-\begin{align}
-p_{j}^{k} & =w_{j}^{k}l_{j}^{k}\label{eq:intermediate_good_price}\\
- & =w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Consumption Goods Prices
-\end_layout
-
-\begin_layout Plain Layout
-Given the Leontief nature of production at the job level,
- perfect competition in the consumption goods market implies that price of 
-\begin_inset Formula $X_{K}$
-\end_inset
-
-,
- 
-\begin_inset Formula $p^{k}$
-\end_inset
-
-,
- equals the sum of the prices of its constituent intermediate goods:
-\begin_inset Formula 
-\begin{align*}
-p^{k} & =\sum_{j=1}^{J_{k}}p_{j}\\
- & =\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\\
- & =\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)
-\end{align*}
-
-\end_inset
-
-To maintain consistency in notation between the final and intermediate goods markets,
- define
-\begin_inset Formula 
-\begin{align}
-w^{k}l^{k} & \equiv\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\label{eq:aggregate_price}\\
- & =\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),
-\end{align}
-
-\end_inset
-
-so that 
-\begin_inset Formula $p^{k}=w^{k}l^{k}$
-\end_inset
-
-.
- 
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:aggregate_price"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- seems quite similar to equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:intermediate_good_price"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-.
- If we let 
-\begin_inset Formula $l^{k}$
-\end_inset
-
- be the total amount of time (or labor) spent on producing good 
-\begin_inset Formula $X_{k}$
-\end_inset
-
-,
- i.e.,
-\begin_inset Formula 
-\begin{align*}
-l^{k} & =\sum_{j=1}^{J_{k}}l_{j}^{k}\\
- & =\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),
-\end{align*}
-
-\end_inset
-
-then 
-\begin_inset Formula $w^{k}$
-\end_inset
-
- can be interpreted as the weighted average wage rate of the entire sector:
-\begin_inset Formula 
-\begin{align*}
-w^{k} & =\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}}{\sum_{j=1}^{J_{k}}l_{j}^{k}}\\
- & =\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)}{\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)}.
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-Finally,
- note that once 
-\begin_inset Formula $l^{k}$
-\end_inset
-
- is determined,
- all 
-\begin_inset Formula $l_{j}^{k}$
-\end_inset
-
-s are automatically pinned down.
- This is due to the assumption made in the second to last bullet point of Section 1 that tasks are done in fixed proportions.
- So,
- it is without loss to only focus on working with 
-\begin_inset Formula $l^{k}$
-\end_inset
-
- and ignore 
-\begin_inset Formula $l_{j}^{k}$
-\end_inset
-
-s for the rest of the analysis.
-\end_layout
-
-\begin_layout Subsection
-Labor Market Clearing
-\end_layout
-
-\begin_layout Plain Layout
-The (representative) household supplies one unit of labor inelastically to all jobs across all sectors.
- Since 
-\begin_inset Formula $l$
-\end_inset
-
- is the per unit of good labor employed the labor market clearing condition satisfies:
-\begin_inset Formula 
-\begin{equation}
-\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}x_{j}^{k}\right)=1.\label{eq:labor_market_clearing}
-\end{equation}
-
-\end_inset
-
-Given the Leontief production at task level,
- 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:labor_market_clearing"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- can be expressed as:
-\begin_inset Formula 
-\begin{align}
-\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}x_{j}^{k}\right) & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}X_{k}\right)\label{eq:labor_market_clearing_simplified}\\
- & =\sum_{k=1}^{K}l^{k}X_{k}\\
- & =1
-\end{align}
-
-\end_inset
-
-With this,
- we can now derive household's earned labor income 
-\begin_inset Formula $I$
-\end_inset
-
- mentioned in 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:budget_constraint"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- in term of the primitives of the problem:
-\begin_inset Formula 
-\begin{align*}
-I & =\sum_{k=1}^{K}p^{k}X_{k}\\
- & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}p_{j}^{k}\right)X_{k}\\
- & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k}\right)X_{k}\\
- & =\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)l_{j}^{k}\right)X_{k}\\
- & =v_{L}\underbrace{\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}l_{j}^{k}\right)X_{k}}_{=1}+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)l_{j}^{k}\right)X_{k}\\
- & =v_{L}+\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left(\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)\right)X_{k},
-\end{align*}
-
-\end_inset
-
-where we used 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:wage"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- to arrive at the last line.
- The household's budget thus consists of two parts:
- a part that compensates the worker for their forgone leisure and a part that rewards them proportional to how much they produce consumption goods.
-\end_layout
-
-\begin_layout Subsection
-Equilibrium
-\end_layout
-
-\begin_layout Plain Layout
-Here we solve for the equilibrium allocations and sectoral employment.
- The consumer chooses 
-\begin_inset Formula $X_{k}$
-\end_inset
-
- to maximize
-\begin_inset Formula 
-\[
-U(x_{1},\dots,x_{K})=\Bigl(\sum_{k=1}^{K}\delta_{k}\,x_{k}^{\tfrac{\sigma-1}{\sigma}}\Bigr)^{\tfrac{\sigma}{\sigma-1}},
-\]
-
-\end_inset
-
-subject to
-\begin_inset Formula 
-\[
-\sum_{k=1}^{K}p^{k}X_{k}=I.
-\]
-
-\end_inset
-
-By the standard first-order conditions,
- the ratio of marginal utilities equals the ratio of prices for any two goods 
-\begin_inset Formula $f$
-\end_inset
-
- and 
-\begin_inset Formula $g$
-\end_inset
-
-:
-\begin_inset Formula 
-\[
-\frac{\partial U/\partial X_{f}}{\partial U/\partial X_{g}}=\frac{p^{f}}{p^{g}}.
-\]
-
-\end_inset
-
-From CES properties,
- we obtain:
-\begin_inset Formula 
-\[
-\left(\frac{X_{f}}{X_{g}}\right)^{-\tfrac{1}{\sigma}}=\frac{p^{f}}{p^{g}}\,\cdot\,\frac{\delta_{g}}{\delta_{f}},\quad\Longrightarrow\quad\frac{X_{f}}{X_{g}}=\left(\frac{p^{g}}{p^{f}}\,\cdot\,\frac{\delta_{f}}{\delta_{g}}\right)^{\sigma}.
-\]
-
-\end_inset
-
-Define 
-\begin_inset Formula 
-\[
-R_{f}=\frac{X_{f}}{X_{1}}=\Bigl(\frac{p^{1}}{p^{f}}\cdot\frac{\delta_{f}}{\delta_{1}}\Bigr)^{\sigma},
+\boxed{\;\frac{dw_{M}}{ds}=w_{M}\Big[(\rho-1)\frac{dA_{1}}{A_{1}}+(1-\rho)\frac{dA_{0}}{A_{0}}\Big]+\tau_{M}^{\rho-1}A_{1}^{\rho-1}A_{0}^{\,1-\rho}\,\frac{d\theta_{M}}{ds},\;}
 \]
 
 \end_inset
 
 with 
-\begin_inset Formula $R_{1}=1$
+\begin_inset Formula $dA_{0},dA_{1}$
 \end_inset
 
-.
- Substitute 
-\begin_inset Formula $X_{f}=R_{f}\,X_{1}$
+ from Step 1 and 
+\begin_inset Formula $\frac{d\theta_{M}}{ds},\frac{d\theta_{H}}{ds}$
 \end_inset
 
- into the simplified labor market clearing condition 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:labor_market_clearing_simplified"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
-:
- 
-\begin_inset Formula 
-\[
-\sum_{k=1}^{K}l^{k}\,(R_{k}\,X_{1})=x_{1}\Bigl[\sum_{k=1}^{K}l^{k}\,R_{k}\Bigr]=1,
-\]
-
-\end_inset
-
-which yields 
-\begin_inset Formula 
-\[
-X_{1}^{*}=\frac{1}{\sum_{k=1}^{K}l^{k}\,R_{k}},\quad X_{f}^{*}=R_{f}\,X_{1}^{*}=\frac{R_{f}}{\sum_{k=1}^{K}l^{k}\,R_{k}}.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-Amount of labor employed in sector 
-\begin_inset Formula $k$
-\end_inset
-
- is given by 
-\begin_inset Formula $L_{k}^{*}=l^{k}\,X_{k}^{*}$
-\end_inset
-
-.
- Thus,
- the equilibrium can be summarized as:
-\begin_inset Formula 
-\begin{align*}
-w_{j}^{k}=\Biggl(v_{L}+\sum_{i\in\mathcal{J}_{j}^{k}}c_{i}^{k}\Biggr), & \qquad l_{j}^{k}=\Biggl(t_{j}^{sk}+\sum_{i\in\mathcal{J}_{j}^{k}}t_{i}^{k}\Biggr),\\
-p_{j}^{k}=w_{j}^{k}l_{j}^{k}, & \qquad p^{k}=w^{k}l{}^{k}=\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k},\\
-X_{k}^{*}=\frac{R_{k}}{\sum_{\ell=1}^{K}l^{\ell}\,R_{\ell}}, & \qquad L_{k}^{*}=l^{k}\,X_{k}^{*}=\sum_{j=1}^{J_{k}}l_{j}^{k}\,X_{k}^{*},
-\end{align*}
-
-\end_inset
-
-where
-\begin_inset Formula 
-\[
-R_{k}=\Bigl(\frac{p^{1}}{p^{k}}\cdot\frac{\delta_{k}}{\delta_{1}}\Bigr)^{\sigma}.
-\]
-
-\end_inset
-
-Rewriting these as a function of primitives we have:
- 
-\begin_inset Formula 
-\begin{align*}
-w_{j}^{k}=\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right), & \qquad l_{j}^{k}=\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right),\\
-p_{j}^{k}=w_{j}^{k}l_{j}^{k}=\left(v_{L}+\sum_{i\in\mathcal{H}_{j}^{k}}c_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}c_{c}^{m}\right)\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right), & \qquad p^{k}=w^{k}l{}^{k}=\sum_{j=1}^{J_{k}}w_{j}^{k}l_{j}^{k},\\
-X_{k}^{*}=\frac{R_{k}}{\sum_{\ell=1}^{K}\left[\sum_{j=1}^{J_{\ell}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{\ell}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{\ell}}t_{c}^{m}\alpha^{-d_{c}}\right)\right]R_{\ell}}, & \qquad L_{k}^{*}=l^{k}\,X_{k}^{*}=\left[\sum_{j=1}^{J_{k}}\left(t_{j}^{s}+\sum_{i\in\mathcal{H}_{j}^{k}}t_{i}^{h}+\sum_{c\in\mathcal{C}_{j}^{k}}t_{c}^{m}\alpha^{-d_{c}}\right)\right]X_{k}^{*},
-\end{align*}
-
-\end_inset
-
-In this way,
- the job design of the production process 
-\begin_inset Formula $\mathcal{T}_{k}$
-\end_inset
-
- (and thus the corresponding skill and time costs of tasks) determines goods prices 
-\begin_inset Formula $p^{k}$
-\end_inset
-
-,
- which then determine the consumption bundle 
-\begin_inset Formula $\{X_{k}^{*}\}_{k=1}^{K}$
-\end_inset
-
- and the sectoral labor allocations 
-\begin_inset Formula $\{L_{k}^{*}\}_{k=1}^{K}$
-\end_inset
-
-.
- Notice that the equilibrium outcome also depends implicitly on job designs through 
-\begin_inset Formula $J_{k}s$
-\end_inset
-
- and 
-\begin_inset Formula $t_{j}^{sk}$
-\end_inset
-
-s.
- 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Labor Market Clearing
+ from Step 4.
 \end_layout
 
 \begin_layout Standard
-The (representative) household supplies one unit of labor inelastically to all modules across all sectors.
- The labor market clearing condition satisfies:
-\begin_inset Formula 
-\begin{equation}
-\sum_{k=1}^{K}\left(\sum_{j=1}^{J_{k}}\left[\sum_{a\in\mathcal{A}_{j}^{k}}t_{a}^{AI,k}+\sum_{h\in\mathcal{H}_{j}^{k}}t_{h}^{H,k}\right]\right)=1.\label{eq:labor_market_clearing}
-\end{equation}
-
+That’s the full,
+ analytical comp\SpecialChar nobreakdash
+statics:
+ everything expressed in 
+\begin_inset Formula $(A_{0},A_{1},u,\phi_{u})$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Subsection
-Some Math
-\end_layout
-
-\begin_layout Subsubsection
-Production Side Equations
-\end_layout
-
-\begin_layout Standard
-First,
- notice that since markets are competitive price of good 
-\begin_inset Formula $k$
+ and the chosen shift operator through 
+\begin_inset Formula $(\Lambda_{0},\Lambda_{1})$
 \end_inset
 
 ,
+ plus the endogenous responses 
+\begin_inset Formula $d\theta_{M},d\theta_{H}$
+\end_inset
+
+ implied by your aggregation mapping (eqs.
+ (18),
+ (24)).
  
-\begin_inset Formula $p^{k}$
-\end_inset
-
-,
- is given by:
-\begin_inset Formula 
-\begin{equation}
-p^{k}=\frac{C_{k}}{X_{k}}\label{eq:price}
-\end{equation}
-
-\end_inset
-
-Suppose the job design is fixed.
- In the inner loop firm solves 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:firm_problem"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- via FOCs:
-\begin_inset Formula 
-\begin{align*}
-[t_{a}^{AI}] & :p^{k}X^{1-\rho}\eta_{a}\rho(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}})^{\rho-1}\alpha^{-d_{a_{j}}}=w_{j}\alpha^{-d_{a}}\quad\Rightarrow\quad t_{a_{j}}^{AI,k}=\alpha^{d_{a_{j}}}\left(\frac{w_{j}}{p^{k}\rho\eta_{a}X^{1-\rho}}\right)^{\frac{1}{\rho-1}}\\{}
-[t_{h}^{H}] & :p^{k}X^{1-\rho}\eta_{h}\rho(t_{h_{j}}^{H,k})^{\rho-1}=w_{j}\quad\Rightarrow\quad t_{h_{j}}^{H,k}=\left(\frac{w_{j}}{p^{k}\rho\eta_{h}X^{1-\rho}}\right)^{\frac{1}{\rho-1}}
-\end{align*}
-
-\end_inset
-
-And thus the ratio of AI and human labor in a job is:
-\begin_inset Formula 
-\begin{equation}
-\frac{t_{a}^{AI,k}}{t_{h}^{H,k}}=\alpha^{d_{a}}\left(\frac{\eta_{h}}{\eta_{a}}\right)^{\frac{1}{\rho-1}},\label{eq:input_ratio}
-\end{equation}
-
-\end_inset
-
-while the ratio of AI labor between two jobs is:
-\begin_inset Formula 
-\begin{equation}
-\frac{t_{a_{j}}^{AI,k}}{t_{a_{j^{'}}}^{AI,k}}=\alpha^{d_{a_{j}}-d_{a_{j^{'}}}}\left(\frac{w_{j}}{w_{j^{'}}}\right)^{\frac{1}{\rho-1}}.\label{eq:cross_job_AI_ratio}
-\end{equation}
-
-\end_inset
-
-Equation 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:cross_job_AI_ratio"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- implies that job 
-\begin_inset Formula $j$
-\end_inset
-
- will have more AI labor in equilibrium if:
- 1) it is more 
-\begin_inset Quotes eld
-\end_inset
-
-AI-able
-\begin_inset Quotes erd
-\end_inset
-
-,
- meaning that AI is on average more successful in executing AI chains in job 
-\begin_inset Formula $j$
-\end_inset
-
-,
- and 2) job 
-\begin_inset Formula $j$
-\end_inset
-
- is cheaper than job 
-\begin_inset Formula $j^{'}$
-\end_inset
-
-.
- 
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Also,
- the marginal rate of substitution is:
-\begin_inset Formula 
-\[
-MRS_{h,a}=\frac{\eta_{h}}{\eta_{a}}\left(\frac{t_{h}^{H}}{t_{a}^{AI}\alpha^{-d_{a}}}\right)^{\rho-1}\alpha^{d_{a}}.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
-Substituting 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:input_ratio"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- into the labor market clearing 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:labor_market_clearing"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- determines the level of human labor demanded:
-\begin_inset Formula 
-\[
-\sum_{k=1}^{K}\sum_{j=1}^{J_{k}}\left[\sum_{h\in\mathcal{H}_{j}^{k}}t_{h}^{H,k}+\sum_{a\in\mathcal{A}_{j}^{k}}t_{h}^{H,k}\,\alpha^{d_{a}}\left(\frac{\eta_{h}}{\eta_{a}}\right)^{\frac{1}{\rho-1}}\right]=1.
-\]
-
-\end_inset
-
-Finally,
- using 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:price"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- and 
-\begin_inset CommandInset ref
-LatexCommand eqref
-reference "eq:input_ratio"
-plural "false"
-caps "false"
-noprefix "false"
-nolink "false"
-
-\end_inset
-
- the price of good 
-\begin_inset Formula $k$
-\end_inset
-
- can be written as a function of human labor demanded in each job:
-\begin_inset Formula 
-\[
-p^{k}=\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}\left[t_{j}^{s}+\sum_{h_{j}\in\mathcal{H}j^{k}}t{}_{h_{j}}^{H,k}\left(1+\alpha^{d_{a_{j}}}\left(\frac{\eta_{h_{j}}}{\eta_{a_{j}}}\right)^{\frac{1}{\rho-1}}\alpha^{-d_{a_{j}}}\right)\right]}{\left(\sum_{j=1}^{J_{k}}\sum_{h_{j}\in\mathcal{H}j^{k}}\eta_{h_{j}}(t_{h_{j}}^{H,k})^{\rho}\left[1+\left(\frac{\eta_{a_{j}}}{\eta_{h_{j}}}\right)^{\frac{-1}{\rho-1}}\right]\right)^{\frac{1}{\rho}}}.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Supply Side Equations
-\end_layout
-
-\begin_layout Standard
-From the household's problem we obtain the demand for consumption good 
-\begin_inset Formula $X_{k}$
-\end_inset
-
- as:
-\begin_inset Formula 
-\begin{equation}
-X_{k}(p^{1},…,p^{K},I)=\frac{\delta_{k}^{\sigma}(p^{k})^{-\sigma}}{\sum_{l=1}^{K}\delta_{l}^{\sigma}(p^{l})^{1-\sigma}}\left(\sum_{k\text{’}=1}^{K}\sum_{j=1}^{J_{k\text{’}}}w_{j}^{k\text{’}}\left(t_{j}^{s,k\text{’}}+\sum_{a_{j}\in\mathcal{A}_{j}^{k\text{’}}}t_{a_{j}}^{AI,k\text{’}}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k\text{’}}}t_{h_{j}}^{AI,k\text{’}}\right)\right).\label{eq:good_demand}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Equilibrium
-\end_layout
-
-\begin_layout Standard
-Equilibrium is characterized by the following 6 equations that must be solved simultaneously.
- The unknowns are 
-\begin_inset Formula $\{\{t_{h_{j}}^{H,k}\}_{j=1}^{J_{k}}\}_{k=1}^{K}$
-\end_inset
-
-,
- 
-\begin_inset Formula $\{\{t_{a_{j}}^{AI,k}\}_{j=1}^{J_{k}}\}_{k=1}^{K}$
-\end_inset
-
-,
- 
-\begin_inset Formula $\{X_{k}\}_{k=1}^{K}$
-\end_inset
-
-,
- and 
-\begin_inset Formula $\{p^{k}\}_{k=1}^{K}$
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Enumerate
-Optimal labor allocation:
-\begin_inset Formula 
-\[
-t_{h_{j}}^{H,k}=\left(\frac{w_{j}}{p^{k}\rho\eta_{h}X^{1-\rho}}\right)^{\frac{1}{\rho-1}},\qquad t_{a_{j}}^{AI,k}=\alpha^{d_{a_{j}}}\left(\frac{w_{j}}{p^{k}\rho\eta_{a}X^{1-\rho}}\right)^{\frac{1}{\rho-1}}.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Supply and demand of goods:
-\begin_inset Formula 
-\begin{align*}
-X_{k}^{S} & =\left(\sum_{j=1}^{J_{k}}\left[\sum_{a_{j}\in\mathcal{A}_{j}^{k}}\eta_{a_{j}}^{k}\left(t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right)^{\rho}+\sum_{h_{j}\in\mathcal{H}_{j}^{k}}\eta_{h_{j}}\left(t_{h_{j}}^{H,k}\right)^{\rho}\right]\right)^{\frac{1}{\rho}},\\
-X_{k}^{D} & =\frac{\delta_{k}^{\sigma}(p^{k})^{-\sigma}}{\sum_{l=1}^{K}\delta_{l}^{\sigma}(p^{l})^{1-\sigma}}\left(\sum_{k\text{’}=1}^{K}\sum_{j=1}^{J_{k\text{’}}}w_{j}^{k\text{’}}\left(t_{j}^{s,k\text{’}}+\sum_{a_{j}\in\mathcal{A}_{j}^{k\text{’}}}t_{a_{j}}^{AI,k\text{’}}\alpha^{-d_{a}}+\sum_{h_{j}\in\mathcal{H}_{j}^{k\text{’}}}t_{h_{j}}^{AI,k\text{’}}\right)\right),\\
-X_{k}^{D} & =X_{k}^{S}.
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Prices of goods follow:
-\begin_inset Formula 
-\[
-p^{k}=\frac{\sum_{j=1}^{J_{k}}w_{j}^{k}\left[t_{j}^{s}+\sum_{h_{j}\in\mathcal{H}j^{k}}t_{h_{j}}^{H,k}+\sum_{a_{j}\in\mathcal{A}j^{k}}t_{a_{j}}^{AI,k}\alpha^{-d_{a_{j}}}\right]}{X_{k}}.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\align block
-Labor market clears:
-\begin_inset Formula 
-\[
-\sum_{k=1}^{K}\sum_{j=1}^{J_{k}}\left[\sum_{h\in\mathcal{H}j^{k}}t_{h_{j}}^{H,k}+\sum_{a\in\mathcal{A}j^{k}}t_{a_{j}}^{AI,k}\right]=1.
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\align block
-Overall,
- we have one more equation than we have unknowns.
- So,
- we can solve for the equilibrium allocations and prices numerically.
- Note that these solutions take the job design as fixed.
- In the next step we should choose the optimal job design in the outer loop.
-\begin_inset Note Note
-status collapsed
-
-\begin_layout Plain Layout
-Thoughts,
- Comments,
- Ideas
-\end_layout
-
-\begin_layout Plain Layout
-Below I give some thoughts on the model.
- The points are structured into three items:
- a reframing proposal,
- an observation about current modeling assumptions,
- and a concern regarding integration with existing literature.
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Reframing how consumers enter the model
-\series default
-:
- This first point suggests a minor restructuring of how consumers enter the market.
- This proposal is essentially a reframing of the earlier version and does not significantly alter the core outcomes,
- but I would still appreciate discussing it further in person.
- Currently,
- consumption goods are produced directly through a labor-only production function,
- placing household preferences as the primary source of economic variation.
- I'm unsure if this framing is standard in the literature.
- Alternatively,
- we might reframe these consumption goods as intermediate inputs used in a subsequent CES production function,
- which produces a single final good directly sold to households.
- Although the mathematical implications would remain identical,
- the conceptual shift could better align our model with standard practices.
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Observation on job design integration into GE
-\series default
-:
- Currently,
- I implicitly treat job designs as exogenously given,
- a condition that doesn't naturally emerge endogenously from the GE setup.
- While firm's cost-minimization problem could be interpreted as an endogenous decision itself,
- I remain somewhat unhappy with the existing separation of these two aspects.
- I would appreciate feedback or ideas on how we might integrate the cost-minimization decision more naturally within the GE framework.
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Concern about connection to literature
-\series default
-:
- Our current model notably diverges from common task-based models in the literature.
- Ideally,
- we would want to link our framework somehow to the task model of 
-\begin_inset CommandInset href
-LatexCommand href
-name "Acemoglu and Autor (2011)"
-target "https://economics.mit.edu/sites/default/files/publications/Skills%2C%20Tasks%20and%20Technologies%20-%20Implications%20for%20.pdf"
-literal "false"
-
-\end_inset
-
-,
- which is pretty well-known and accepted.
- However,
- I don't quite know how we can get this connection,
- primarily because of our unique concept of 
-\begin_inset Quotes eld
-\end_inset
-
-chaining,
-\begin_inset Quotes erd
-\end_inset
-
- where an individual task might be more cost-efficient when performed by humans but more efficient overall when automated as part of a sequence of tasks (we currently have a proposition on this in the paper).
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Directly adopting AA's approach into our current framework would entail representing task-level choices between human and machine labor for instance like:
- (see p.
- 1121 of handbook chapter for reference)
-\begin_inset Formula 
-\[
-x(i)=A_{human}\alpha_{human}(i)h(i)+A_{machine}\alpha_{machine}(i)m(i).
-\]
-
-\end_inset
-
-Here,
- the 
-\begin_inset Formula $\alpha$
-\end_inset
-
-s represent productivity parameters for each task 
-\begin_inset Formula $i$
-\end_inset
-
-,
- and 
-\begin_inset Formula $h(i)$
-\end_inset
-
- and 
-\begin_inset Formula $m(i)$
-\end_inset
-
- denote the two types of workers (human or machine).
- Initially,
- I avoided this formulation because explicitly incorporating our 
-\begin_inset Quotes eld
-\end_inset
-
-chaining
-\begin_inset Quotes erd
-\end_inset
-
- concept seemed challenging at first glance (if not impossible).
- Incorporating the chaining nuances explicitly into this more generalized task-based framework would likely require substantial restructuring,
- and I remain skeptical about its feasibility without heavy modifications.
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_body
