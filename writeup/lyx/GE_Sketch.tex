@@ -77,7 +77,30 @@ H = \int_{\,\frac{w_M \tau_M}{1-w_H \tau_H}}^{1} \tau_H \phi(\bar{\alpha})\,d\ba
 \end{comment}
 
 
-\bigskip
+\begin{corollary}
+For $\rho \in (-1,0)$ the distribution of heterogeneity $\phi(\bar{\alpha})$ is strictly decreasing in $\bar{\alpha}$. 
+\end{corollary}
+
+\begin{proof}
+We have:
+\[
+\phi^{'}(\bar{\alpha}) = \frac{\phi(\alpha)}{\alpha\,(\rho-1)}\Big[1+(\rho+1)\frac{(1-\theta_H\,\tau_H^\rho)^\frac{\rho}{\rho-1}\,(\theta_M\,\tau_M^\rho)^{\frac{1}{1-\rho}}\,\alpha^{\frac{\rho}{\rho-1}}}{1-\theta_H\,\tau_H^\rho-(1-\theta_H\,\tau_H^\rho)^\frac{\rho}{\rho-1}\,(\theta_M\,\tau_M^\rho)^{\frac{1}{1-\rho}}\,\alpha^{\frac{\rho}{\rho-1}}}\Big]
+\]
+Recall that we started with the assumption that $\rho < 0$ to derive the heterogeneity formula so $\rho - 1 < 0$.
+For $\rho > -1$ the term in the bracket is always positive and thus $\phi(\bar{\alpha})$ is strictly decreasing for $\rho \in (-1,0)$.
+\end{proof}
+
+The strictly decreasing nature of $\phi(\bar{\alpha})$ for $\rho \in (-1,0)$ has a nice interpretation: there are many firms with low productivity (i.e., low effective AI quality) in the economy and only some with high productivity (i.e., high effective AI quality). See Figure below.
+
+\begin{figure}[h!]
+    \centering
+    \caption{$\phi(\bar{\alpha})$ is strictly decreasing for $\rho \in (-1,0)$}
+    \includegraphics[width=0.8\linewidth]{GE/phi_distribution_1.png}
+    \includegraphics[width=0.8\linewidth]{GE/phi_distribution_2.png}
+    \includegraphics[width=0.8\linewidth]{GE/phi_distribution_3.png}
+\end{figure}
+
+
 
 \section*{Setup}
 
@@ -152,9 +175,9 @@ X=\Gamma(u;\phi),\quad (\text{i.e.}\quad S=\Gamma(u;\phi)^{\rho}),
 \end{equation}
 
 \section*{Equilibrium}
-Setting labor supply \eqref{eq:labor_supply} equal to labor demand \eqref{eq:labor_demand}:
+Setting labor supply \eqref{eq:labor_supply} equal to labor demand \eqref{eq:labor_demand} we get:
 \begin{equation}
-\beta_M \;=\; \theta_M M^{\rho-2} S^{\frac{1}{\rho}-1}.
+\beta_M \;=\; \theta_M M^{\rho-2} S^{\frac{1}{\rho}-1},
 \qquad
 \beta_H \;=\; \theta_H H^{\rho-2} S^{\frac{1}{\rho}-1}, \label{eq:labor_demand_supply}
 \end{equation}
@@ -167,15 +190,14 @@ M
 = \left[ \frac{\beta_M}{\theta_M}\,\Gamma^{\,1-\frac{1}{\rho}} \right]^{\frac{1}{\rho-2}}. \label{eq:ge_allocations}
 \end{equation}
 
-The two equations in \eqref{eq:ge_allocations} express $H$ and $M$ in terms of $\Gamma$. 
-Notice that $\Gamma$ depends on $H$ and $M$ itself through the participation threshold $u$ which in indirect function of $H$ and $M$ through wages $w_H$ and $w_M$.
+Notice that the two equations in \eqref{eq:ge_allocations} express $H$ and $M$ in terms of $\Gamma$ which depends on $H$ and $M$ itself through the participation threshold $u$ and wages $w_H$ and $w_M$.
 Therefore, the equilibrium allocation is determined via some fixed point relation.
 
-Once $H$ and $M$ are determined, we can use the labor supply equations in \eqref{eq:labor_supply} to pin down wages.
+Once $H$ and $M$ are obtained, we can use the labor supply equations in \eqref{eq:labor_supply} to pin down wages.
 This completes specifying the equilibrium allocations and prices.
 
 
-\section*{Comparative Statics w.r.t. Effective AI Quality}
+\section*{Comparative Statics w.r.t. AI Quality}
 
 \textcolor{red}{can be improved}
 We consider how a change in effective AI quality parameter affects the aggregate human and AI management labor as well as their shares in the aggregate CES production function.
@@ -186,10 +208,10 @@ We need some definitinos first.
 \paragraph{General AI Quality Improvement.}
 %Let $\{\phi_\varepsilon\}_\varepsilon$ be any differentiable family.
 When $\phi(\bar{\alpha})$ changes the effect on outcome variables depend on how the distribution shifts.
-Therefore, we will work with the derivative of $\phi$. 
+Therefore, we inevitably need to work with the derivative of $\phi$. 
 Define
 \[
-\delta\phi(\bar{\alpha}):= \frac{\partial \phi(\bar{\alpha})}{\partial \bar{\alpha}} \Big(= \frac{\partial \phi_\varepsilon(\bar{\alpha})}{\partial \varepsilon} \Big)
+\delta\phi(\bar{\alpha}):= \frac{\partial \phi_\varepsilon(\bar{\alpha})}{\partial \varepsilon }
 \]
 and the linear functionals
 \[
@@ -242,10 +264,10 @@ d\ln\!\Big(\frac{M}{H}\Big)
 &= d\ln\!\Big(\frac{\tau_M}{\tau_H}\Big)
 + (B-A) - (\mu-\lambda)\,du.\label{eq:ln_MH}
 \end{align}
-Substituting for $du$ from \eqref{eq:du} into \eqref{eq:ln_MH} gives
+Substituting for $du$ from \eqref{eq:du} into \eqref{eq:ln_MH} above gives
 \[
 d\ln M - d\ln H
-= (B-A) \;+\; d\ln\!\Big(\frac{\tau_M}{\tau_H}\Big) - (\mu-\lambda)\, u\Big(d\ln M + \kappa\,d\ln H + d\ln \tau_M + \kappa\,d\ln \tau_H\Big).
+= (B-A) \;+\; d\ln\!\Big(\tfrac{\tau_M}{\tau_H}\Big) - (\mu-\lambda)\, u\Big(d\ln M + \kappa\,d\ln H + d\ln \tau_M + \kappa\,d\ln \tau_H\Big).
 \]
 Expand the last term on the RHS and move all $d\ln M$ and $d\ln H$ terms to the LHS to get:
 \begin{equation}
@@ -253,7 +275,7 @@ Expand the last term on the RHS and move all $d\ln M$ and $d\ln H$ terms to the 
 \big[\,1 + (\mu-\lambda)u\,\big]\,d\ln M
 + \big[\, -1 + (\mu-\lambda)u\,\kappa\,\big]\,d\ln H
 =
-(B-A) + d\ln\!\Big(\frac{\tau_M}{\tau_H}\Big)
+(B-A) + d\ln\!\Big(\tfrac{\tau_M}{\tau_H}\Big)
  - (\mu-\lambda)u\big(d\ln \tau_M + \kappa\,d\ln \tau_H\big)
 }
 \tag{$\mathrm{R}_{\mathrm{gen}}$}\label{eq:Rgen}
@@ -396,15 +418,7 @@ And recall from \eqref{eq:d_theta}:
 d\ln\theta_H=-(\rho-2)\,d\ln H-(1-\rho)\,\frac{d\Gamma}{\Gamma}.~}
 \end{equation}
 
-
-
-\section*{Implications}
-
-Here we discuss the implications of the resutls.
-
-
-\newpage
-
+\vspace{2cm}
 
 \begin{definition}[AI-tilt of $\phi$]
 We say a $\phi$-shift $\delta\phi$ is \emph{AI-tilted} if it increases the \emph{AI-management labor intensity per unit of output} relative to human labor intensity at the given cutoff. Formally:
@@ -435,6 +449,51 @@ and from \eqref{eq:dtheta},
 \]
 
 It is straightforward to see that $\frac{\theta_M}{\theta_H}$ moves in the same direction as $\frac{M}{H}$ as $2-\rho>0$ for $\rho<0$.
+
+
+\vspace{2cm}
+
+Assuming automation strategy and job design are fixed, so that $d\tau_H=d\tau_M=0$ we have:
+\[
+d\ln\!\Big(\tfrac{M}{H}\Big)
+=
+\frac{(B-A)[A'_H + A'_M+C\lambda u(\kappa+1)] - (\mu-\lambda)uCA(\kappa+1)}
+{A'_H+A'_M+C\lambda u(\kappa+1) - (\mu - \lambda)u[\kappa A'_M-A'_H]}
+,
+\]
+
+Now we try to sign different parameters:
+\begin{itemize}
+    \item $ \mu - \lambda \geq 0$: Given the definitions of $\mu$ and $\lambda$ we have
+    \[
+    \mu - \lambda 
+    = 
+    \phi(u) \Big[ \frac{1}{u \Psi} - \frac{1}{\Gamma} \Big] 
+    = 
+    \frac{\phi(u)}{u \Psi \Gamma} \Big[\Gamma - u\Psi \Big]
+    =
+    \frac{\phi(u)}{u \Psi \Gamma}
+    \int_{u}^{1}\phi(\bar{\alpha}) \Big[ 1 - \frac{u}{\bar{\alpha}} \Big]\,d\bar{\alpha}.
+    \]
+    Notice that:
+    \[
+    \forall \bar{\alpha} \in (u, 1): 
+    \bar{\alpha} \geq u
+    \Longleftrightarrow
+    1 \geq \frac{u}{\bar{\alpha}}
+    \Longleftrightarrow
+    1 - \frac{u}{\bar{\alpha}} \geq 0
+    \Longleftrightarrow
+    \mu - \lambda \geq 0.
+    \]
+    \item $C$: for $\rho \in (-\infty, -1)$ where complementarity is strong between aggregate inputs we have $C>0$ from \eqref{eq:C_def}. For moderate complementarities $\rho \in (-1, 0)$ we have $C>0$ only if $S > 1-\rho$.
+    \item $A$: Depends on the nature of changes in the distribution. For a FOSD kind of shift where more mass will be in the participation region we have $A>0$.
+    
+\end{itemize}
+
+
+
+\newpage
 
 
 
@@ -483,5 +542,355 @@ Here $\kappa$ is a tightness index for human labor market relative to skill-adju
     \item If $\kappa$ is large, the human labor market is close to capacity: small increases in $H$ creates large upward pressure on human labor wage $w_H$, which strongly increases the threshold $u$.
 \end{itemize}
 
+
+
+
+\newpage
+
+
+
+
+\begin{proposition}[General condition for $M$ to increase without small-cutoff approximation]\label{prop:M_increase_general}
+Maintain $\rho<0$, $K\equiv 1$.  
+Let $A,B,\lambda,\mu,\kappa,A_M',A_H',C$ be as defined in \eqref{eq:A-B-def}–\eqref{eq:Aprime}, and set
+\[
+\Lambda := (B-A) + \big[d\ln\tau_M - d\ln\tau_H\big].
+\]
+From \eqref{eq:Rgen}, \eqref{eq:A}, and \eqref{eq:du}, the first-order responses $(d\ln M,d\ln H)$ solve
+\[
+\begin{bmatrix}
+p_{11} & p_{12} \\
+p_{21} & p_{22}
+\end{bmatrix}
+\begin{bmatrix}
+d\ln M \\[2pt]
+d\ln H
+\end{bmatrix}
+=
+\begin{bmatrix}
+q_{1} \\[2pt]
+q_{2}
+\end{bmatrix}
+\]
+with
+\begin{align*}
+p_{11} &:= 1+(\mu-\lambda)u, 
+&\quad p_{12} &:= -1+(\mu-\lambda)u\,\kappa, \\
+p_{21} &:= A_M' + C\,\lambda\,u, 
+&\quad p_{22} &:= A_H' + C\,\lambda\,u\,\kappa, \\
+q_{1}  &:= \Lambda - (\mu-\lambda)u\big[d\ln\tau_M+\kappa\,d\ln\tau_H\big], \\
+q_{2}  &:= C\,A - C\,\lambda\,u\big[d\ln \tau_M + \kappa\,d\ln \tau_H\big].
+\end{align*}
+Let $\Delta := p_{11}p_{22} - p_{12}p_{21}$.
+
+Then:
+\[
+d\ln M = \frac{q_{1} p_{22} - p_{12} q_{2}}{\Delta}.
+\]
+\smallskip
+\noindent
+\textbf{Conclusion:} $M$ increases iff
+\[
+\boxed{\ q_{1} p_{22} - p_{12} q_{2} > 0 \quad\text{and}\quad \Delta>0\ }.
+\]
+This condition incorporates:
+\begin{itemize}
+\item The \emph{scale effect} $C\,A$ (via $q_{2}$),
+\item The \emph{composition advantage} $\Lambda$ (via $q_{1}$),
+\item Full cutoff feedback through $\lambda u$ and $\mu u$,
+\item CES geometry through $A_M',A_H',C,\kappa$.
+\end{itemize}
+\end{proposition}
+
+
+
+
+
+
+
+
+
+\newpage
+
+
+
+\begin{proposition}[Comparative-statics signs with a general $\delta\phi$]\label{prop:signs}
+Fix $\rho<0$, $K\equiv1$. Let a small `quality improvement'' shock change $\phi$ by $\delta\phi$ (no shape restriction), and allow $\tau_M,\tau_H$ to move. Define
+\[
+\Gamma=\textstyle\int_u^1\phi,\quad \Psi=\int_u^1\frac{\phi}{\bar\alpha},\quad
+A=\Gamma^{-1}\!\int_u^1\delta\phi,\quad B=\Psi^{-1}\!\int_u^1\frac{\delta\phi}{\bar\alpha},
+\]
+\[
+\lambda=\frac{\phi(u)}{\Gamma},\quad \mu=\frac{\phi(u)}{u\,\Psi},\quad
+\kappa=\frac{w_H\tau_H}{1-w_H\tau_H},\quad s_j=\frac{\theta_j j^\rho}{S},\ j\in\{M,H\},\ S=X^\rho.
+\]
+
+\smallskip
+\noindent\textbf{(i) Relative mix and relative weights always move together.}
+\[
+\boxed{
+d\ln\!\Big(\tfrac{M}{H}\Big)
+=\underbrace{(B-A)}_{\text{$\phi$-tilt}}
+\;+\;\underbrace{d\ln\tau_M-d\ln\tau_H}_{\text{time-cost gap}}
+\;-\;\underbrace{(\mu-\lambda)\,u\Big(d\ln M+\kappa\,d\ln H+d\ln\tau_M+\kappa\,d\ln\tau_H\Big)}_{\text{cutoff feedback}},
+}
+\]
+and
+\[
+\boxed{\ d\ln\!\Big(\tfrac{\theta_M}{\theta_H}\Big)=(2-\rho)\,d\ln\!\Big(\tfrac{M}{H}\Big)\ .\ }
+\]
+Hence, whenever the RHS above is $>0$ (resp. $<0$), both $\frac{M}{H}$ and $\frac{\theta_M}{\theta_H}$ rise (resp. fall).
+
+\smallskip
+\noindent\textbf{(ii) Individual weights split around a common term.}
+From \eqref{eq:micro_int_variation},
+\[
+d\ln\theta_M=(2-\rho)\,d\ln M-(1-\rho)\,\frac{d\Gamma}{\Gamma},\qquad
+d\ln\theta_H=(2-\rho)\,d\ln H-(1-\rho)\,\frac{d\Gamma}{\Gamma}.
+\]
+Thus $\operatorname{sign}\big(d\ln\theta_M-d\ln\theta_H\big)=\operatorname{sign}\big(d\ln M-d\ln H\big)$, but $d\ln\theta_M$ and $d\ln\theta_H$ can \emph{both} fall if the aggregate scale effect $d\Gamma/\Gamma$ dominates.
+
+\end{proposition}
+
+\vspace{1cm}
+
+\begin{corollary}[Baseline, transparent sufficient conditions for $M\uparrow$]\label{cor:Mup}
+Assume (i) $\tau_M,\tau_H$ fixed, (ii) negligible cutoff sensitivity: $\lambda u\approx\mu u\approx0$, (iii) modest capital share $s_K\approx0$. Then the linearized system solves to
+\[
+d\ln H=\frac{A}{2}-s_M(B-A),\qquad
+d\ln M=\frac{A}{2}+s_H(B-A),\qquad (s_M+s_H=1).
+\]
+Consequently:
+\begin{enumerate}
+\item If the $\phi$-shift is \emph{AI-tilted} ($B\ge A\ge0$), then $d\ln M\ge A/2>0$; hence $M$ rises. 
+\item If the $\phi$-shift is \emph{not AI-tilted} ($0\le B\le A$) and $s_H\le\frac12$, then $d\ln M\ge A/2-s_H(A-B)\ge0$; hence $M$ rises.
+\item $H$ rises iff $A\ge 2s_M(B-A)$. In particular, if $B\le A$ then $d\ln H\ge A/2>0$.
+\end{enumerate}
+\end{corollary}
+
+\begin{corollary}[When do the weights $\theta_M,\theta_H$ rise?]\label{cor:weights}
+Under the same baseline as Cor.~\ref{cor:Mup}:
+\[
+d\ln\theta_M=\frac{\rho}{2}A+(2-\rho)\,s_H(B-A),\qquad
+d\ln\theta_H=\frac{\rho}{2}A-(2-\rho)\,s_M(B-A).
+\]
+Since $\rho<0$, the scale term $\frac{\rho}{2}A<0$. Therefore:
+\begin{enumerate}
+\item $\theta_M$ rises iff 
+\[
+( B-A )\ \ge\ \frac{-\rho}{2(2-\rho)\,s_H}\,A\quad(\text{sufficient `AI-tilt'' in }\phi).
+\]
+\item $\theta_H$ rises iff 
+\[
+( A-B )\ \ge\ \frac{-\rho}{2(2-\rho)\,s_M}\,A\quad(\text{sufficient `H-tilt'' in }\phi).
+\]
+\item Regardless of (1)-(2), $\displaystyle d\ln\!\Big(\frac{\theta_M}{\theta_H}\Big)=(2-\rho)\,d\ln\!\Big(\frac{M}{H}\Big)$; so if mix shifts toward $M$, the relative weight $\theta_M/\theta_H$ rises.
+\end{enumerate}
+\end{corollary}
+
+\begin{corollary}[Relaxing the baseline]\label{cor:relax}
+\leavevmode
+\begin{enumerate}
+\item \emph{Moving time costs.} If $\tau_M/\tau_H$ improves by $\Delta_\tau:=d\ln(\tau_M/\tau_H)>0$, then in Prop.~\ref{prop:signs}(i) add $\Delta_\tau$ to the mix RHS. In the baseline formulas, replace $(B-A)$ by $(B-A)+\Delta_\tau$, which \emph{weakens} the conditions for $M\uparrow$ and \emph{strengthens} those for $\theta_M/\theta_H\uparrow$.
+\item \emph{Non-negligible cutoff.} When $\lambda u,\mu u$ are not small, require the net mix driver to dominate the feedback:
+\[
+(B-A)+d\ln(\tau_M/\tau_H)\ >\ (\mu-\lambda)\,u\Big|d\ln M+\kappa\,d\ln H+d\ln\tau_M+\kappa d\ln\tau_H\Big|.
+\]
+Sufficient condition (one-sided): if $B\ge A$, $d\ln(\tau_M/\tau_H)\ge0$, and $\lambda u,\mu u$ are $o(1)$, then $d\ln(M/H)>0$.
+\item \emph{Positive capital share.} With $s_K>0$, the exact coefficients become
+\[
+A_M'=2s_M+(\rho-2)\frac{\theta_M}{\theta_K}\,s_K,\quad
+A_H'=2s_H+(\rho-2)\frac{\theta_H}{\theta_K}\,s_K,\quad
+C=1-(1-\rho)\frac{s_K}{\theta_K},
+\]
+but the qualitative results in Cor.~\ref{cor:Mup} survive if $s_K$ is not too large (the thresholds shift smoothly).
+\end{enumerate}
+\end{corollary}
+
+\begin{remark}[Role of the $\rho$-regime]
+All signs above hold for any $\rho<0$; changing $\rho$ only rescales thresholds. 
+For example, with $\rho=-1$, the $\theta_M\uparrow$ threshold in Cor.~\ref{cor:weights}(1) becomes $(B-A)\ge \frac{1}{6s_H}A$; with more negative $\rho$ (e.g.\ $\rho<-1$), $(2-\rho)$ is larger, so less `AI-tilt'' is needed for $\theta_M\uparrow$.
+\end{remark}
+
+
+
+
+\newpage
+
+
+
+\begin{proposition}[Comparative statics with a general $\delta\phi$]\label{prop:signs}
+Fix $\rho<0$, $K\equiv 1$. Let a small `quality improvement'' shock change $\phi$ by $\delta\phi$ (no shape restriction), and allow $\tau_M,\tau_H$ to move.  
+Let 
+\[
+\Gamma=\int_u^1\phi,\quad \Psi=\int_u^1\frac{\phi}{\bar\alpha},\quad
+A=\frac{1}{\Gamma}\int_u^1\delta\phi,\quad B=\frac{1}{\Psi}\int_u^1\frac{\delta\phi}{\bar\alpha},
+\]
+\[
+\lambda=\frac{\phi(u)}{\Gamma},\quad \mu=\frac{\phi(u)}{u\,\Psi},\quad
+\kappa=\frac{w_H\tau_H}{1-w_H\tau_H},
+\]
+and 
+\[
+s_M=\frac{\theta_M M^\rho}{S},\quad s_H=\frac{\theta_H H^\rho}{S},\quad s_K=\frac{\theta_K}{S},\quad S=X^\rho.
+\]
+
+\smallskip
+\noindent\textbf{(i) Relative mix and relative weights.}  
+From the micro–macro consistency condition:
+\[
+d\ln\!\Big(\frac{M}{H}\Big)
+= (B-A) + \big[d\ln\tau_M - d\ln\tau_H\big]
+- (\mu-\lambda)u\Big( d\ln M + \kappa\,d\ln H + d\ln\tau_M + \kappa\,d\ln\tau_H\Big).
+\]
+Moreover,
+\[
+\boxed{\ d\ln\!\Big(\frac{\theta_M}{\theta_H}\Big)=(2-\rho)\,d\ln\!\Big(\frac{M}{H}\Big)\ }
+\]
+so any positive (negative) movement in $M/H$ produces the same sign change in $\theta_M/\theta_H$.
+
+\smallskip
+\noindent\textbf{(ii) Individual weights.}  
+Using $d\Gamma/\Gamma=A-\lambda u(\dots)$:
+\[
+d\ln\theta_M=(2-\rho)\,d\ln M-(1-\rho)\frac{d\Gamma}{\Gamma},\quad
+d\ln\theta_H=(2-\rho)\,d\ln H-(1-\rho)\frac{d\Gamma}{\Gamma}.
+\]
+They share the same $-(1-\rho)\frac{d\Gamma}{\Gamma}$ scale term, so both can move in the same direction if that term dominates.
+
+\end{proposition}
+
+\begin{definition}[AI-tilt of $\phi$]
+We say a $\phi$-shift $\delta\phi$ is \emph{AI-tilted} if it increases the \emph{AI-management labor intensity per unit of output} relative to human labor intensity at the given cutoff. Formally:
+\[
+B-A \;=\; \frac{1}{\Psi}\int_u^1\frac{\delta\phi}{\bar\alpha} \;-\; \frac{1}{\Gamma}\int_u^1\delta\phi \;>\; 0.
+\]
+Equivalently, the proportional increase in $\Psi$ exceeds that in $\Gamma$ — i.e., the distribution shifts weight toward high-$\bar\alpha$ firms in a way that raises $\int\phi/\bar\alpha$ more than $\int\phi$.
+\end{definition}
+
+\begin{corollary}[Sufficient conditions for $M\uparrow$]\label{cor:Mup}
+Assume $\lambda u$ and $\mu u$ are small (cutoff feedback negligible), and keep $s_K$ arbitrary. Then the first-order system solves to
+\[
+d\ln H=\frac{C\,A - A_M'(B-A) - A_M'\big[d\ln\tau_M - d\ln\tau_H\big]}{\Delta},\quad
+d\ln M=d\ln H + (B-A) + \big[d\ln\tau_M - d\ln\tau_H\big],
+\]
+where 
+\[
+A_M'=2s_M+(\rho-2)\frac{\theta_M}{\theta_K}s_K,\quad
+A_H'=2s_H+(\rho-2)\frac{\theta_H}{\theta_K}s_K,
+\]
+\[
+C=1-(1-\rho)\frac{s_K}{\theta_K},\quad
+\Delta = A_M' + A_H'.
+\]
+If $(B-A) + [d\ln\tau_M - d\ln\tau_H] > 0$ and $\Delta>0$, then $d\ln M>0$ regardless of $s_K$.
+\end{corollary}
+
+\begin{corollary}[Weight changes]\label{cor:weights}
+Under the same small-cutoff assumption:
+\[
+d\ln\theta_M \gtrless 0 \quad\Longleftrightarrow\quad (B-A) + [d\ln\tau_M - d\ln\tau_H] \gtrless \frac{(1-\rho)}{(2-\rho)}\frac{d\Gamma}{\Gamma} - d\ln M,
+\]
+with the analogous condition for $\theta_H$ replacing $d\ln M$ by $d\ln H$.
+In particular, if the shift is AI-tilted and the time-cost gap $d\ln\tau_M - d\ln\tau_H\ge0$, then $\theta_M/\theta_H$ rises.
+\end{corollary}
+
+\begin{remark}
+If $\rho<0$ is more negative (e.g.\ $\rho<-1$), the $(2-\rho)$ term in $d\ln(\theta_M/\theta_H)$ is larger, so any given AI-tilt or time-cost improvement produces a larger proportional increase in $\theta_M/\theta_H$.
+\end{remark}
+
+
+
+
+\newpage
+
+
+
+\begin{proposition}[Level comparative statics for $M$ and $H$]\label{prop:levels}
+Maintain $\rho<0$, $K\equiv1$, and allow $\tau_M,\tau_H$ to move. Let a small quality shock change $\phi$ by $\delta\phi$.
+Define
+\[
+\Gamma=\int_u^1\phi,\quad \Psi=\int_u^1\frac{\phi}{\bar\alpha},\quad
+A=\frac{1}{\Gamma}\int_u^1\delta\phi,\quad B=\frac{1}{\Psi}\int_u^1\frac{\delta\phi}{\bar\alpha},
+\]
+\[
+\lambda=\frac{\phi(u)}{\Gamma},\ \mu=\frac{\phi(u)}{u\,\Psi},\ 
+\kappa=\frac{w_H\tau_H}{1-w_H\tau_H},\ 
+S=X^\rho,\ 
+s_j=\frac{\theta_j j^\rho}{S}\ (j\in\{M,H\}),\ s_K=\frac{\theta_K}{S}.
+\]
+Let
+\[
+A_M':=2s_M+(\rho-2)\frac{\theta_M}{\theta_K}\,s_K,\qquad
+A_H':=2s_H+(\rho-2)\frac{\theta_H}{\theta_K}\,s_K,\qquad
+C:=1-(1-\rho)\frac{1}{S}.
+\]
+(i) The first-order responses $(d\ln M,d\ln H)$ solve the $2\times2$ linear system derived from the
+mix identity and the aggregation identity. In compact form (general case with cutoff feedback):
+\[
+\begin{aligned}
+d\ln M&=\frac{q_1 p_{22}-p_{12}q_2}{\Delta},\qquad
+d\ln H=\frac{p_{11}q_2-q_1 p_{21}}{\Delta},
+\\[-2pt]
+p_{11}&:=1+(\mu-\lambda)u,\qquad\quad
+p_{12}:=-1+(\mu-\lambda)u\,\kappa,
+\\[-2pt]
+p_{21}&:=A_M'+C\,\lambda\,u,\qquad
+p_{22}:=A_H'+C\,\lambda\,u\,\kappa,
+\\[-2pt]
+q_1&:=(B-A)+\big[d\ln\tau_M-d\ln\tau_H\big] - (\mu-\lambda)u\big[d\ln\tau_M+\kappa\,d\ln\tau_H\big],
+\\[-2pt]
+q_2&:=C\,A - C\,\lambda\,u\big[d\ln\tau_M+\kappa\,d\ln\tau_H\big],
+\qquad
+\Delta:=p_{11}p_{22}-p_{12}p_{21}.
+\end{aligned}
+\]
+If $\Delta>0$ (a mild regularity), then $\operatorname{sign}(d\ln M)=\operatorname{sign}(q_1 p_{22}-p_{12}q_2)$ and
+$\operatorname{sign}(d\ln H)=\operatorname{sign}(p_{11}q_2-q_1 p_{21})$.
+
+(ii) \emph{Transparent formulas under small cutoff feedback.} 
+If $\lambda u$ and $\mu u$ are negligible (so $p_{11}\!=\!1$, $p_{12}\!=\!-1$, $p_{21}\!=\!A_M'$, $p_{22}\!=\!A_H'$, $q_1\!=\!(B\!-\!A)+[d\ln\tau_M-d\ln\tau_H]$, $q_2\!=\!C A$), then with
+\[
+\Lambda\ :=\ (B-A)\ +\ \big[d\ln\tau_M-d\ln\tau_H\big],\qquad \Delta:=A_M'+A_H',
+\]
+the level elasticities collapse to
+\[
+\boxed{\ d\ln H=\frac{C\,A - A_M'\,\Lambda}{\Delta},\qquad
+d\ln M=\frac{C\,A + A_H'\,\Lambda}{\Delta}\ }.
+\]
+\end{proposition}
+
+\begin{corollary}[When does $M$ increase? When can both $M$ and $H$ increase?]\label{cor:MHsigns}
+Under the small-cutoff approximation in Prop.~\ref{prop:levels}(ii) and $\Delta>0$:
+\begin{enumerate}
+\item \textbf{$M$ increases} iff 
+\[
+\boxed{\ C\,A + A_H'\,\Lambda\ >\ 0\ }\quad\text{with}\quad \Lambda=(B-A)+\big[d\ln\tau_M-d\ln\tau_H\big].
+\]
+\item \textbf{$H$ increases} iff \(\boxed{\,C\,A - A_M'\,\Lambda>0\,}\).
+\item \textbf{Both increase} iff
+\[
+\boxed{\ -\,\frac{C\,A}{A_H'}\ <\ \Lambda\ <\ \frac{C\,A}{A_M'}\ }\quad\text{(interval nonempty if $C\,A>0$ and $A_M',A_H'>0$).}
+\]
+\item \textbf{Only $M$ rises (while $H$ falls)} iff
+\[
+\boxed{\ \Lambda\ >\ \max\!\Big\{\,\frac{C\,A}{A_M'}\,,\ -\,\frac{C\,A}{A_H'}\,\Big\}\ }.
+\]
+\item \textbf{Only $H$ rises (while $M$ falls)} iff
+\[
+\boxed{\ \Lambda\ <\ \min\!\Big\{\,\frac{C\,A}{A_M'}\,,\ -\,\frac{C\,A}{A_H'}\,\Big\}\ }.
+\]
+\end{enumerate}
+\end{corollary}
+
+\begin{remark}[Economic reading of the thresholds]
+\leavevmode
+\begin{itemize}
+\item $A=\Gamma^{-1}\!\int_u^1\delta\phi$ is the \emph{scale} effect: more mass above the cutoff ($A>0$) pushes both $H$ and $M$ up via $C\,A$.
+\item $\Lambda=(B-A)+[d\ln\tau_M-d\ln\tau_H]$ is the \emph{composition} advantage of $M$: an \textbf{AI-tilted} distribution shift (formally, $B-A>0$ meaning the proportional gain in $\Psi=\int\phi/\bar\alpha$ exceeds that in $\Gamma=\int\phi$) and/or a \textbf{time-cost} improvement for $M$ ($d\ln\tau_M-d\ln\tau_H>0$) raises $M$ relative to $H$.
+\item Capital enters \emph{only} via $A_M',A_H',C$: a larger $s_K$ (holding other shares) makes $(\rho-2)\frac{\theta_j}{\theta_K}s_K$ more negative and shrinks $A_M',A_H'$, while $C=1-(1-\rho)/S$ (with $\rho<0$) dampens the pure scale term. As $s_K$ grows, the interval for `both increase'' narrows.
+\item If you don't want the small-cutoff approximation, use the general test from Prop.~\ref{prop:levels}(i): check the signs of $q_1 p_{22}-p_{12}q_2$ and $p_{11}q_2-q_1 p_{21}$; the qualitative role of $(A,\Lambda)$ is unchanged---only shrunk by the feedback terms proportional to $\lambda u,\mu u$.
+\end{itemize}
+\end{remark}
 
 \end{document}
