@@ -354,7 +354,7 @@ for index, assignment in enumerate(generate_worker_assignments(len(T))):
     
     filename = f"../writeup/plots/job_design/job_design_{index}.png"
     image_files.append(filename)
-    plt.savefig(filename, dpi=100)
+    plt.savefig(filename, dpi=110)
     plt.close()
 
 
