@@ -228,9 +228,6 @@ def draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_titl
             alpha=0.2,
         )
         ax.add_patch(worker_box)
-        # Optionally, add worker labels (currently commented out)
-        # center_x = (start_x + end_x) / 2
-        # ax.text(center_x, max_y, f"Worker {worker_id}", horizontalalignment="center", verticalalignment="bottom")
 
     # Draw transition attached rectangles with pink fill.
     for x, y, h, total_c, task_idx in transition_rects:
@@ -247,14 +244,14 @@ def draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_titl
         )
         ax.add_patch(transition_rect)
 
-        # Add hand-off index at center of hand-off rectangle
+        # Add hand-off index at center of hand-off rectangle with format h_{task_idx,task_idx+1}
         if h > 0:
             center_x = x + h / 2
             center_y = y - total_c / 2
             ax.text(
                 center_x,
                 center_y,
-                f"$h_{{{task_idx}}}$",
+                f"$h_{{{task_idx}{task_idx+1}}}$",
                 horizontalalignment="center",
                 verticalalignment="center",
                 fontsize=10
@@ -274,7 +271,7 @@ def draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_titl
     ax.set_xticks([])
     ax.set_yticks([])
 
-    return fig, ax
+    return fig, ax, worker_sections
 
 
 def generate_worker_assignments(n):
@@ -301,16 +298,16 @@ C = np.array([1, 8, 1])  # Main rectangle heights
 H = np.array([0, 0, 0])  # Attached rectangle widths (height fixed at 0.15)
 W = np.array([1, 2, 3])  # Worker assignments
 
-fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_title_string=False)
+fig, ax, _ = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_title_string=False)
 plt.savefig(f"../writeup/plots/tent_poll.png", dpi=300)
 plt.close()
 
 
 # Job Design with two tasks
-handoff_height = 0  # Fixed height for attached rectangles
+handoff_height = 0 # Set non-zero height for hand-off rectangles
 T = np.array([4, 3])  # Main rectangle lengths
 C = np.array([2, 3])  # Main rectangle heights
-H = np.array([0, 0])  # No hand-off
+H = np.array([1.5, 0])  # Add hand-off width for first task, none for second
 
 image_files = []
 for index, assignment in enumerate(generate_worker_assignments(len(T))):
@@ -319,7 +316,42 @@ for index, assignment in enumerate(generate_worker_assignments(len(T))):
         break
 
     W = np.array(assignment)
-    fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=True, design_title_string=True)
+    
+    # For [1,2] design (index 0), don't show individual annotations
+    show_individual_annotations = (index != 0)
+    
+    fig, ax, worker_sections = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=show_individual_annotations, design_title_string=True)
+    
+    # Add curly brace annotation for hand-off time if this is the [1][2] design (index 1)
+    if index == 1 and H[0] > 0:
+        # Position curly brace under the first pink hand-off rectangle
+        arrow_start_x = T[0]  # Start of hand-off rectangle
+        arrow_end_x = T[0] + H[0]  # End of hand-off rectangle
+        # The bottom edge of the pink rectangle is at y=0 (since the first task starts at y=0)
+        arrow_y = 0  # At the bottom edge of the pink rectangle
+        
+        # Draw curly brace (similar to the time annotations)
+        draw_brace(ax, xy1=(arrow_start_x, arrow_y), xy2=(arrow_end_x, arrow_y), 
+                  width=0.25, orientation='down', color='red', lw=1)
+        
+        # Add label
+        ax.text((arrow_start_x + arrow_end_x) / 2, arrow_y - 0.3, 
+               r'$t_1^S$', ha='center', va='top', fontsize=10, color='red')
+    
+    # For [1,2] design (index 0), add overall bounding box annotations
+    if index == 0:
+        # Calculate overall dimensions
+        total_t = sum(T)
+        total_c = sum(C)
+        
+        # Add left curly brace for total c (c1 + c2) in Teal
+        draw_brace(ax, xy1=(0, total_c), xy2=(0, 0), width=0.25, orientation='left', color='#1b9e77', lw=1)
+        ax.text(-0.3, total_c / 2, r'$c_1+c_2$', ha='right', va='center', fontsize=10, color='#1b9e77')
+        
+        # Add bottom curly brace for total t (t1 + t2) in Red
+        draw_brace(ax, xy1=(0, 0), xy2=(total_t, 0), width=0.25, orientation='down', color='red', lw=1)
+        ax.text(total_t / 2, -0.3, r'$t_1+t_2$', ha='center', va='top', fontsize=10, color='red')
+    
     filename = f"../writeup/plots/job_design/job_design_{index}.png"
     image_files.append(filename)
     plt.savefig(filename, dpi=100)
@@ -345,7 +377,7 @@ grid_image.save(f"../writeup/plots/job_design.png")
 
 
 # Job Design with three tasks
-handoff_height = 0.025  # Fixed height for attached rectangles
+handoff_height = 0  # Fixed height for attached rectangles
 T = np.array([1, 2, 2])  # Main rectangle lengths
 C = np.array([3, 1, 2])  # Main rectangle heights
 H_handoff = np.array([3, 0.5, 0])  # Attached hand-off lengths
@@ -361,10 +393,10 @@ for H, my_str in zip([H_handoff, H_no_handoff], ["with_handoff", "no_handoff"]):
             break
 
         W = np.array(assignment)
-        fig, ax = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=False, design_title_string=True)
+        fig, ax, _ = draw_rect_square_sequence(T, C, H, W, rectanlge_annotation=False, design_title_string=True)
         filename = f"../writeup/plots/job_design/job_design_{index}_{my_str}.png"
         image_files.append(filename)
-        plt.savefig(filename, dpi=100)
+        plt.savefig(filename, dpi=300)
         plt.close()
 
 
@@ -382,3 +414,7 @@ for H, my_str in zip([H_handoff, H_no_handoff], ["with_handoff", "no_handoff"]):
         grid_image.paste(img, (x, y))
 
     grid_image.save(f"../writeup/plots/combined_grid_{my_str}.png")
+    
+    
+
+    
