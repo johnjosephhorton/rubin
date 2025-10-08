@@ -346,9 +346,9 @@ grid_image.save(f"../writeup/plots/job_design.png")
 
 # Job Design with three tasks
 handoff_height = 0.025  # Fixed height for attached rectangles
-T = np.array([1, 2, 1.5])  # Main rectangle lengths
+T = np.array([1, 2, 2])  # Main rectangle lengths
 C = np.array([3, 1, 2])  # Main rectangle heights
-H_handoff = np.array([2.5, 0.5, 0])  # Attached hand-off lengths
+H_handoff = np.array([3, 0.5, 0])  # Attached hand-off lengths
 H_no_handoff = np.array([0, 0, 0])  # No hand-off
 
 
