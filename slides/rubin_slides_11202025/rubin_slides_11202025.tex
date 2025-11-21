@@ -1,0 +1,1721 @@
+%% LyX 2.4.2.1 created this file.  For more info, see https://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english,aspectratio=1610]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\usepackage{dsfont}
+\usepackage{amstext}
+\usepackage{amsthm}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+% this default might be overridden by plain title style
+\newcommand\makebeamertitle{\frame{\maketitle}}%
+% (ERT) argument for the TOC
+\AtBeginDocument{%
+  \let\origtableofcontents=\tableofcontents
+  \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+  \def\gobbletableofcontents#1{\origtableofcontents}
+}
+\theoremstyle{plain}
+\newtheorem{thm}{\protect\theoremname}[section]
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{\protect\definitionname}
+\theoremstyle{plain}
+\newtheorem{prop}[thm]{\protect\propositionname}
+\ifx\proof\undefined
+\newenvironment{proof}[1][\protect\proofname]{\par
+	\normalfont\topsep6\p@\@plus6\p@\relax
+	\trivlist
+	\itemindent\parindent
+	\item[\hskip\labelsep\scshape #1]\ignorespaces
+}{%
+	\endtrivlist\@endpefalse
+}
+\providecommand{\proofname}{Proof}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\theoremstyle{theorem}
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+\newtheorem{step}{Step}
+
+\newtheorem{proposition}{Proposition}
+
+\usepackage{tikz} 
+\usepackage{wrapfig}
+\usepackage{caption}
+\setbeamertemplate{caption}[numbered]
+\usepackage[position=top]{caption,subfig}
+%\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{\insertframenumber{}}
+
+\AtBeginSection[]
+{\begin{frame}{Outline}
+\tableofcontents[currentsection] 
+\end{frame} 
+}
+
+
+\usetheme{CambridgeUS}           % main theme
+\usecolortheme{beaver}         % colour palette
+\usefonttheme{professionalfonts} % use your document fonts
+\setbeamertemplate{section in toc}[sections numbered] % tweak templates
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+% For illustration of AI task automation flow
+\usetikzlibrary{shapes.geometric, arrows, positioning, arrows.meta, fit, decorations.pathreplacing, calc}
+
+% Define styles
+\tikzstyle{task} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=gray!10, rounded corners, text width=2.2cm, align=center]
+\tikzstyle{decision} = [rectangle, minimum width=4cm, minimum height=2cm, text centered, draw=black, fill=orange!30, rounded corners, text width=3cm, align=center]
+\tikzstyle{decision2} = [rectangle, minimum width=4cm, minimum height=2cm, text centered, draw=black, fill=green!30, rounded corners, text width=3cm, align=center]
+\tikzstyle{process} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=olive!30, rounded corners, text width=3cm, align=center]
+\tikzstyle{process2} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=blue!30, text width=3cm, align=center]
+\tikzstyle{smallbox} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=olive!30, text width=1.5cm, align=center]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+%%%%%%%%%%%%%%%%%%%%
+
+
+
+\newcommand{\T}[0]{\mathcal{T}}
+\newcommand{\J}[0]{\mathcal{J}}
+\newcommand{\machine}[1]{\langle #1 \rangle}
+\newcommand{\human}[1]{( #1 )}
+\newcommand{\cost}[1]{C\{ #1 \}}
+\newcommand{\costdo}[1]{T_H\{ #1 \}}
+\newcommand{\costmanage}[1]{T_M\{ #1 \}}
+\newcommand{\timecost}[1]{t_{#1}}
+\newcommand{\hccost}[1]{c_{#1}}
+\newcommand{\labor}[1]{l_{#1}}
+\newcommand{\handofftime}[1]{t^{s}_{#1}}
+\newcommand{\humantime}[1]{t^{h}_{#1}}
+\newcommand{\machinetime}[1]{t^{m}_{#1}}
+\newcommand{\humanhc}[1]{c^{h}_{#1}}
+\newcommand{\machinehc}[1]{c^{m}_{#1}}
+
+\makeatother
+
+\usepackage{babel}
+\providecommand{\definitionname}{Definition}
+\providecommand{\propositionname}{Proposition}
+\providecommand{\theoremname}{Theorem}
+
+\begin{document}
+\title[Economic Impacts of GenAI on Structure of Work]{The Economic Impacts of Generative AI on the Structure of Work}
+\author[Demirer, Horton, Immorlica, Lucier, Shahidi (2025)]{Mert Demirer (MIT)\\
+John J. Horton (MIT)\\
+\textbf{Nicole Immorlica (Yale \& Microsoft)}\\
+Brendan Lucier (Microsoft)\\
+Peyman Shahidi (MIT)\textbf{}\\
+\textbf{}\\
+\vspace{0.9cm}
+{[}Your Conference Title Here{]}}
+\date{{[}Date Here{]}}
+
+\makebeamertitle
+\section{Introduction}
+
+\begin{frame}{Motivation}
+
+\begin{itemize}
+\item Hot question of the day: how Artificial Intelligence (AI) will affect
+human workers?
+\begin{itemize}
+\item Will it substitute or complement them? Raise or reduce wages? Upskill
+or deskill workers? \pause 
+\end{itemize}
+\item Many recent papers studied this, often drawing on established approaches.\begin{figure}[h!]
+ \begin{center}
+   \includegraphics[width=0.6\textwidth]{plots/p.png}
+ \end{center}
+\end{figure}\pause
+\item Though the tools they use not originally designed to explain feature
+of GenAI in mind.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Motivation}
+
+\begin{itemize}
+\item Hot question of the day: how Artificial Intelligence (AI) will affect
+human workers?
+\begin{itemize}
+\item Will it substitute or complement them? Raise or reduce wages? Upskill
+or deskill workers?
+\end{itemize}
+\item Many recent papers studied this, often drawing on established approaches.
+\begin{figure}[h!]
+ \begin{center}
+   \includegraphics[width=0.6\textwidth]{plots/pp.png}
+ \end{center}
+\end{figure}
+\item Except for a few...
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Paper in a Nutshell}
+\begin{itemize}
+\item In this paper, we: 
+\begin{itemize}
+\item Develop a task-based production framework tailored to features of
+GenAI,
+\item Study effect of AI on firm's organizational structure, treating tasks
+and jobs as endogenous objects,
+\item Map firm-level production functions to a macro CES production function,
+assuming firms deploy the same general-purpose AI technology differently,
+and
+\item Empirically validate several implications of the model. \pause
+\end{itemize}
+\item In our framework:
+\begin{itemize}
+\item Three modes of task execution recognized: manual, AI-augmented, AI-automated,
+\item AI can chain multiple tasks together, \textit{potentially} overturning
+standard comparative-advantage logic,
+\item AI can either upskill or deskill workers,
+\item Improvements in AI quality generate discontinuous productivity gains
+(by triggering discrete reorganizations of work).
+\end{itemize}
+\item The paper relates to organization and labor economics literatures,
+and economics of of AI.
+\end{itemize}
+\end{frame}
+%
+\section{Model}
+\begin{frame}{A Task-based Model of Production}
+\begin{itemize}
+\item Production is a sequence of steps (which later are aggregated to tasks,
+and then to jobs).
+\item \uline{All} steps have to be completed to produce the good $\rightarrow$
+production is Leontief in steps.
+\item Consider, e.g., data scientists workflow:
+\begin{itemize}
+\item Step 1: Define the business decision and success metric.
+\item Step 2: Discover and fetch relevant data for answering the question.
+\item Step 3: Build an analysis pipeline (e.g., write code).
+\item Step 4: Produce report and visuals based on analysis outputs.
+\item Step 5: Present to and persuade supervisor to take action.
+\end{itemize}
+\end{itemize}
+\begin{figure}[h!]
+  \begin{center}
+\resizebox{0.75\textwidth}{!}{
+\begin{tikzpicture}[node distance=1.8cm]
+
+    % Task Sequence
+    \node (task1) [task] {Step 1};
+    \node (task2) [task, right=1.75cm of task1] {Step 2};
+    \node (task3) [task, right=1.75cm of task2] {Step 3};
+    \node (task4) [task, right=1.75cm of task3] {Step 4};
+    \node (task5) [task, right=1.75cm of task4] {Step 5};
+
+    % Arrows
+    \draw [arrow] (task1.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task2.west);
+    \draw [arrow] (task2.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task3.west);
+    \draw [arrow] (task3.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task4.west);
+    \draw [arrow] (task4.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task5.west);
+\end{tikzpicture}}
+   \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Geometric Representation of Steps and Production}
+\begin{itemize}
+\item Steps have intrinsic cost parameters in 2(+1) dimensions:
+\begin{enumerate}
+\item Skill $c_{i}$ $\rightarrow$ human capital required to perform the
+step
+\item Time $t_{i}$ $\rightarrow$ time it takes to complete the step
+\end{enumerate}
+\item Production can be viewed as stacked rectangles of height $c_{i}$
+and width $t_{i}$:
+\end{itemize}
+\begin{figure}[h!]
+ \begin{center}
+   \includegraphics[width=0.34\textwidth]{plots/tent_poll.png}
+ \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Step Execution in Absence of AI}
+\begin{itemize}
+\item In absence of AI, all steps are executed manually.
+\end{itemize}
+\begin{figure}[h!]
+  \begin{center}
+\resizebox{0.88\textwidth}{!}{
+\begin{tikzpicture}[node distance=1.8cm]
+
+    % Task Sequence
+    \node (task1) [task] {Step 1};
+    \node (task2) [task, right=1.75cm of task1] {Step 2};
+    \node (task3) [task, right=1.75cm of task2] {Step 3};
+    \node (task4) [task, right=1.75cm of task3] {Step 4};
+    \node (task5) [task, right=1.75cm of task4] {Step 5};
+
+    % Arrows
+    \draw [arrow] (task1.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task2.west);
+    \draw [arrow] (task2.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task3.west);
+    \draw [arrow] (task3.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task4.west);
+    \draw [arrow] (task4.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task5.west);
+\end{tikzpicture}}
+   \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Definition - Manual Step}
+\begin{defn}[Manual Step]
+ A step $i$ is said to be performed manually if it is executed entirely
+by a human worker without AI assistance. The associated skill and
+time costs for a manual step are denoted by $(c_{i}^{H},t_{i}^{H})$.
+\end{defn}
+\end{frame}
+%
+\begin{frame}{AI Can Augment Humans in Performing Step}
+\begin{itemize}
+\item AI can assist humans in executing steps.\begin{figure}[h!]
+  \begin{center}
+\resizebox{0.88\textwidth}{!}{
+\begin{tikzpicture}[node distance=1.8cm]
+
+    % Task Sequence
+    \node (task1) [task] {Step 1};
+    \node (task2) [task, right=1.75cm of task1] {Step 2};
+    \node (task3) [task, right=1.75cm of task2] {Step 3};
+    \node (task4) [decision, right=1.75cm of task3] {Step 4: \\ \textbf{Can AI help with this step?}};
+    \node (task5) [task, right=1.75cm of task4] {Step 5};
+
+    % AI Processes
+    \node (prompt) [process, below=2.5cm of task2, xshift=-1cm] {Ask AI to do Step 4 \\ (``prompt'')};
+    \node (attempt) [process2, right=0.75cm of prompt] {AI produces an output};
+    \node (evaluate) [process, right=0.75cm of attempt] {Is the work acceptable?};
+
+    % Define a coordinate 1cm to the right of the evaluate box
+    \coordinate (extendEval) at ([xshift=1cm]evaluate.east);
+
+    % Success/Failure Nodes
+    \node (yes) [smallbox, right=1cm of extendEval, yshift=1cm] {Yes};
+    \node (no) [smallbox, right=1cm of extendEval, yshift=-1cm] {No};
+
+    % Arrows
+    \draw [arrow] (task1.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task2.west);
+    \draw [arrow] (task2.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task3.west);
+    \draw [arrow] (task3.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task4.west);
+    \draw [arrow] (task4.south) to[out=-125,in=45] 
+    %node[midway, above] {$\timecost{p}$} 
+    (prompt.north);
+    \draw [arrow] (prompt.east) -- (attempt.west);
+    \draw [arrow] (attempt.east) -- (evaluate.west);
+    
+    % Draw extension line before branching
+    \draw [arrow] (evaluate.east) -- 
+    %node[midway, above] {$\timecost{e}$} 
+    (extendEval);
+    
+    % Arrows from the extended coordinate
+    \draw [arrow] (extendEval) -- node[midway, above] {$q_4 \ \ \ \ $} (yes.west);
+    \draw [arrow] (extendEval) -- node[midway, below] {$1-q_4 \ \ \ \ \ $} (no.west);
+
+    \draw [arrow] (yes.east) to[out=0,in=-90] 
+    %node[midway, right] {$\ \ \ \ \ \handofftime{}$} 
+    (task5.south);
+    \draw [arrow] (no.south) to[out=-165,in=-30] (prompt.south);
+
+\end{tikzpicture}}
+   \end{center}
+\end{figure}Step 4: Produce report and visuals based on analysis outputs.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Definition - Augmented Step}
+\begin{defn}[Augmented Step]
+ A step $i$ is said to be augmented if it is executed by the AI,
+after which its output is reviewed and approved by a human worker.
+The associated skill and (expected) time costs of managing a single
+augmented step are denoted by $(c_{i}^{M},\text{\ensuremath{\tfrac{t_{i}^{M}}{q_{i}}}})$,
+where $q_{i}\in(0,1]$ is the AI's probability of successfully completing
+the step.
+\end{defn}
+\begin{itemize}
+\item Specifically, $q_{i}=\alpha^{d_{i}}$:
+\begin{itemize}
+\item $\alpha\in(0,1]$ is the general-purpose AI's quality level: $\uparrow\alpha\longrightarrow\uparrow q_{i}$,
+\item $d_{i}>0$ is AI's difficulty in performing step $i$: $\uparrow d_{i}\longrightarrow\downarrow q_{i}$.
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{AI Can Also Automate Steps}
+\begin{itemize}
+\item AI can also execute steps without direct human oversight in ``AI
+Chains.''\begin{figure}[h!]
+  \begin{center}
+\resizebox{0.88\textwidth}{!}{
+\begin{tikzpicture}[
+    node distance=1.8cm,
+    dashedbox/.style={draw, rectangle, rounded corners, dashed, inner sep=0.5cm, line width=1.2pt}
+]
+
+	% Task Sequence
+	\node (task1) [task] {Step 1};
+	\node (task2) [decision2, right=1.75cm of task1] {Step 2: \\ \textbf{Can AI do this ``under the hood''?}};
+	\node (task3) [decision2, right=1.75cm of task2] {Step 3: \\ \textbf{Can AI do this ``under the hood''?}};
+	\node (task4) [decision, right=1.75cm of task3] {Step 4: \\ Can AI help with this step?};
+	\node (task5) [task, right=1.75cm of task4] {Step 5};
+
+	% Dashed group around Steps 2-4
+	\node[dashedbox, draw=blue, fit=(task2)(task3)(task4)] (AIchain) {};
+
+    % AI Processes
+    \node (prompt) [process, below=2.5cm of task2, xshift=-1cm] {Ask AI to do \textcolor{red}{Steps 2-4} \\ (``prompt'')};
+    \node (attempt) [process2, right=0.75cm of prompt] {AI produces an output};
+    \node (evaluate) [process, right=0.75cm of attempt] {Is the work acceptable?};
+
+    % Define a coordinate 1cm to the right of the evaluate box
+    \coordinate (extendEval) at ([xshift=1cm]evaluate.east);
+
+    % Success/Failure Nodes
+    \node (yes) [smallbox, right=1cm of extendEval, yshift=1cm] {Yes};
+    \node (no) [smallbox, right=1cm of extendEval, yshift=-1cm] {No};
+
+    % Arrows
+    \draw [arrow] (task1.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task2.west);
+    \draw [arrow] (task2.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task3.west);
+    \draw [arrow] (task3.east) -- 
+    %node[midway, above] {$\humantime{} + \handofftime{}$} 
+    (task4.west);
+    \draw [arrow] (task4.south) to[out=-125,in=45] 
+    %node[midway, above] {$\timecost{p}$} 
+    (prompt.north);
+    \draw [arrow] (prompt.east) -- (attempt.west);
+    \draw [arrow] (attempt.east) -- (evaluate.west);
+    
+    % Draw extension line before branching
+    \draw [arrow] (evaluate.east) -- 
+    %node[midway, above] {$\timecost{e}$} 
+    (extendEval);
+    
+    % Arrows from the extended coordinate
+    \draw [arrow] (extendEval) -- node[midway, above] {$\textcolor{red}{\tilde{q}} \ \ \ \ $} (yes.west);
+    \draw [arrow] (extendEval) -- node[midway, below] {$\textcolor{red}{1-\tilde{q}}\  \ \ \ \ $} (no.west);
+
+    \draw [arrow] (yes.east) to[out=0,in=-90] 
+    %node[midway, right] {$\ \ \ \ \ \handofftime{}$} 
+    (task5.south);
+    \draw [arrow] (no.south) to[out=-165,in=-30] (prompt.south);
+
+\end{tikzpicture}}
+   \end{center}
+\end{figure}
+
+Step 2: Discover and fetch relevant data for answering the question.
+
+Step 3: Build an analysis pipeline (e.g., write code).
+
+Step 4: Produce report and visuals based on analysis outputs.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Definition - Automated Step and AI Chain}
+\begin{defn}[Automated Step]
+ A step is said to be automated if it is executed entirely by AI
+without direct human intervention, and its output is passed directly
+to a subsequent augmented or automated step. The direct human costs
+(in both skill and time dimension) associated with an automated step
+are zero.
+\end{defn}
+\vspace{0.5cm}
+\begin{defn}[AI Chain]
+ An AI chain is a contiguous block of one or more sequential steps
+executed by AI, in which all steps but the final one are automated
+and the final step is augmented. An AI chain spanning steps $(s_{\ell},\dots,s_{i})$
+has steps $(s_{\ell},\dots,s_{i-1})$ automated and step $s_{i}$
+augmented. The skill and time costs of this AI chain are given by
+$(c_{i}^{M},\tfrac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}})$, where $q_{r}$
+denotes the AI success probability for step $s_{r}$.
+\end{defn}
+\end{frame}
+%
+\begin{frame}{Three Modes of Step Execution}
+\begin{itemize}
+\item The model recognizes three modes of step execution: 
+\begin{enumerate}
+\item Manually by human (Steps 1 and 5)
+\item Augmented with AI but still requiring human oversight (Step 4)
+\item Fully Automated by AI without \uline{direct} human oversight (Steps
+2 and 3)
+\end{enumerate}
+\end{itemize}
+\begin{figure}[ht!]
+  \begin{center}
+  \begin{tikzpicture}[scale=0.75, transform shape,
+    node distance=0.5cm and 1.2cm,
+    every node/.style={rectangle, rounded corners, draw, align=center, minimum width=2cm, minimum height=1cm},
+    manual/.style={fill=gray!10},
+    automated/.style={fill=green!30},
+    augmented/.style={fill=orange!30},
+    labelbox/.style={draw, rectangle, rounded corners, font=\bfseries, minimum width=2.25cm, minimum height=1cm},
+    dashedbox/.style={draw, rectangle, rounded corners, dashed, inner sep=0.3cm, line width=1pt},
+    >=latex
+  ]
+
+    % Top layer (Steps)
+    \node[manual] (S1) {Step 1\\(Manual)};
+    \node[automated, right=of S1] (S2) {Step 2\\(Automated)};
+    \node[automated, right=of S2] (S3) {Step 3\\(Automated)};
+    \node[augmented, right=of S3] (S4) {Step 4\\(Augmented)};
+    \node[manual, right=of S4] (S5) {Step 5\\(Manual)};
+
+    % Arrows between steps
+    \draw[->, thick] (S1) -- (S2);
+    \draw[->, thick] (S2) -- (S3);
+    \draw[->, thick] (S3) -- (S4);
+    \draw[->, thick] (S4) -- (S5);
+
+    % Dashed boxes around steps
+    \node[dashedbox, draw=olive, fit=(S1)] (DS1) {};
+    \node[dashedbox, draw=blue, fit=(S2)(S3)(S4)] (DS2-4) {};
+    \node[dashedbox, draw=olive, fit=(S5)] (DS5) {};
+
+    % AI box top center aligned with Step 3
+    \node[labelbox, fill=blue!20, above=1.25cm of S3] (AI) {AI};
+
+    % Human box bottom center aligned with Step 3
+    \node[labelbox, fill=olive!20, below=1.5cm of S3] (Human) {Human};
+
+    % Lines from AI box to AI steps
+    \draw[thin, blue!80] (AI.south) -- (S2.north);
+    \draw[thin, blue!80] (AI.south) -- (S3.north);
+    \draw[thin, blue] (AI.south) -- (S4.north);
+
+    % Lines from Human box to Human steps
+    \draw[thin, olive!80] (S1.south) -- (Human.north);
+    \draw[thin, olive] (S4.south) -- (Human.north);
+    \draw[thin, olive!80] (S5.south) -- (Human.north);
+  \end{tikzpicture}
+  \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Model}
+\begin{itemize}
+\item Firm's production consists of a sequence of steps. Steps are partitioned
+into tasks ($\textit{\textit{automation strategy}}$), and tasks are
+partitioned into jobs ($\textit{job design}$).
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/hierarchical_production_illustration.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Notation and Other Assumptions}
+\begin{itemize}
+\item Firm's production consists of a sequence of steps $\mathcal{S}=(s_{1},\ldots,s_{m})$.
+\item Firm partitions contiguous subsequences of steps into a sequence of
+tasks $\mathcal{T}=(T_{1},\ldots,T_{n})$ where $T_{b}=(s_{i},\ldots,s_{i+\ell})$
+for some $i$ and $\ell$.
+\item Firm also partitions contiguous subsequences of tasks into jobs $\mathcal{J}=(J_{1},\ldots,J_{p}).$
+\item We call $\mathcal{T}$ the firm's $\textit{\textit{automation strategy}}$
+and $\mathcal{J}$ the firm's $\textit{job design}$.
+\end{itemize}
+$\ $
+\begin{itemize}
+\item Labor is the only input (for now).
+\item Firm assigns each job to a single worker.
+\item Workers are ex-ante identical; but acquire human capital needed to
+perform skills associated with tasks in their jobs after assignment.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Construction of Tasks from Steps, and Jobs from Tasks}
+\begin{itemize}
+\item Tasks are the basic units of work of a human worker. 
+\item A task is either a human task or an AI chain. Task's cost derived
+from its constituent steps: 
+\begin{itemize}
+\item $(c_{i}^{H},t_{i}^{H})$if human,
+\item $\left(c_{i}^{M},\frac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}}\right)$
+if AI chain.
+\end{itemize}
+\end{itemize}
+\vspace{0.5cm}
+\begin{itemize}
+\item A contiguous set of tasks are aggregated into a job. Cost parameters
+of job $j$ determined by its constituent tasks:
+\begin{itemize}
+\item $\text{Wage}_{j}=\sum_{\text{task }b\in j}c_{b}$
+\item $\text{\ensuremath{\text{Employment Duration}_{j}}}=\sum_{\text{task }b\in j}t_{b}.$
+\end{itemize}
+\item Workers paid wage rates for every unit of time being employed. Thus,
+wage bill of job $j$ is:
+\[
+\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}c_{b}\right)\left(\sum_{\text{task }b\in j}t_{b}\right).
+\]
+\textcolor{white}{The term $t^{S}(j)$ is the hand-off time cost associated
+with the last task of the job (and hence the last step of the job).}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Visual Example of Job Construction}
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.65\linewidth]{plots/combined_grid_no_handoff.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Construction of Jobs from Tasks - Hand-off Cost Introduction}
+\begin{itemize}
+\item Tasks are the basic units of work of a human worker. 
+\item A task is either a human task or an AI chain. Task's cost derived
+from its constituent steps: 
+\begin{itemize}
+\item $(c_{i}^{H},t_{i}^{H})$if human,
+\item $\left(c_{i}^{M},\frac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}}\right)$
+if AI chain.
+\end{itemize}
+\end{itemize}
+\vspace{0.5cm}
+\begin{itemize}
+\item A contiguous set of tasks are aggregated into a job. Cost parameters
+of job $j$ determined by its constituent tasks:
+\begin{itemize}
+\item $\text{Wage}_{j}=\sum_{\text{task }b\in j}c_{b}$
+\item $\text{\ensuremath{\text{Employment Duration}_{j}}}={\color{red}t^{S}(j}\mathclose{\color{red})}+\sum_{\text{task }b\in j}t_{b}.$
+\end{itemize}
+\item Workers paid wage rates for every unit of time being employed. Thus,
+wage bill of job $j$ is:
+\[
+\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}c_{b}\right)\left({\color{red}t^{S}(j}\mathclose{\color{red})}+\sum_{\text{task }b\in j}t_{b}\right).
+\]
+The term \textcolor{red}{$t^{S}(j)$} is the hand-off time cost associated
+with the last task of the job.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Aggregation of Steps into Tasks into Jobs with Hand-offs}
+\begin{itemize}
+\item Hand-off only realized at the boundary of jobs (traced back from jobs
+layer to steps layer).
+\item Hand-off time cost is an intrinsic property of steps (the third cost
+parameter).
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/hierarchical_production_illustration.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Role of Hand-off in Determining Job Boundaries}
+\begin{itemize}
+\item Hand-off captures inefficiencies arising from coordination frictions
+among multiple workers.
+\item Firm trades off:
+\begin{enumerate}
+\item Specializing workers and paying a coordination cost,
+\item Assigning more tasks to workers and paying them higher per-unit-time
+wages but saving up on coordination costs.
+\[
+\text{TotalCost}=\sum_{j=1}^{J}\text{WageBill}_{j}=\sum_{j=1}^{J}\left[\left(\sum_{\text{task }b\in j}c_{b}\right)\left(t^{S}(j)+\sum_{\text{task }b\in j}t_{b}\right)\right].
+\]
+\end{enumerate}
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.65\linewidth]{plots/job_design.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Visual Example of Job Construction with Hand-offs}
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.65\linewidth]{plots/combined_grid_with_handoff.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Firm's Organizational Structure}
+\begin{itemize}
+\item Two optimization horizons:
+\begin{enumerate}
+\item Long-run: job design $\mathcal{J}$ and automation strategy $\mathcal{T}$
+can flexibly adjust:
+\[
+\min_{\mathcal{T}}\ \min_{\mathcal{J}}\ \text{TotalCost}(\mathcal{J};\mathcal{T})=\sum_{J_{j}\in\mathcal{J}}\text{WageBill}_{j}=\sum_{J_{j}\in\mathcal{J}}\Biggl[\Biggl(\sum_{T_{b}\in J_{j}}c_{b}\Biggr)\Biggl(t^{S}(J_{j})+\sum_{T_{b}\in J_{j}}t_{b}\Biggr)\Biggr].
+\]
+\item Short-run: job design $\mathcal{J}$ and worker wages fixed, automation
+strategy $\mathcal{T}$ adjusts within each job:
+\[
+\min_{\mathcal{T}}\;\sum_{T_{b}\in\mathcal{T}}t_{b}.
+\]
+\end{enumerate}
+\end{itemize}
+\end{frame}
+%
+\section{Optimization}
+\begin{frame}{Short-Term Optimization: Automation Design}
+\begin{itemize}
+\item In the short-term, job boundaries and wages are fixed. AI only allows
+to optimize completion times within jobs. 
+\item W/o loss to assume there is a single job with $m$ steps.
+\item Goal is to find the optimal automation strategy $\mathcal{T}$ that
+minimizes total completion time.
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.75\linewidth]{plots/hierarchical_production_illustration_shortTerm.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Short-Term Optimization: Automation Design - Continued}
+\begin{prop}
+Given $m$ steps organized into a single job, the time-optimal automation
+strategy can be calculated in time $O(m^{2})$ via dynamic programming.
+\end{prop}
+\begin{proof}
+At step $k\leq m$ show the minimum time needed to complete the job
+with $C[k]$. We have:
+\[
+C[k]=\min\ \Biggl\{ C[k-1]+t_{k}^{H},\ \min_{\ell<k}\Biggl\{ C[\ell]+\frac{t_{k}^{M}}{\prod_{i=\ell+1}^{k}q_{i}}\Biggr\}\Biggr\}.
+\]
+\begin{itemize}
+\item First term: \textrm{Step $k$ done manually, optimize over steps 1
+to $k-1$ separately}; 
+\item Second term: \textrm{Step $k$ augmented; optimize the optimal length
+of chain ending in $k$.}
+\end{itemize}
+Given $(C[0],C[1],...,C[k-1])$ we can calculate $C[k]$ in time $O(k)$
+by considering each potential choice of $\ell$. Doing so for each
+$k=1,2,...,m$ yields the value of $C[m]$ in $O(m^{2})$ time.
+\end{proof}
+\end{frame}
+%
+\begin{frame}{Approximate Solution to Long-Term Optimization Problem}
+\begin{itemize}
+\item Turns out, the long-term optimization is a massive combinatorial problem.
+\hyperlink{A1:Optimization}{\beamergotobutton{Backup Slides}}
+\item We approximate a near-optimal solution in polynomial time by discretizing
+the skill and time costs:
+\end{itemize}
+\begin{prop}
+Fix any sequence of $m$ steps $\mathcal{S}=(s_{1},\dotsc,s_{m})$
+for which all skill costs, time costs, and hand-off costs lie in $[1/B,B]$
+for some $B>0$. Then for any $\epsilon>0$, an approximately cost-minimizing
+pair of automation strategy $\mathcal{T}$ and job design $\mathcal{J}$
+minimizing the long-term production cost to within a factor of $(1+\epsilon)$
+can be computed in time $O(m^{2}\epsilon^{-2}\log^{2}(mB))$ by dynamic
+programming.
+\end{prop}
+\end{frame}
+%
+\section{Discussion}
+\begin{frame}{Task Interdependence - Overturning of Comparative Advantage Logic}
+\begin{itemize}
+\item For a single step, the decision whether to execute manually or augment
+with AI depends on which cost is lower.
+\item However, a human-efficient step may be preferable to automate as a
+part of an AI chain.
+\end{itemize}
+\begin{exampleblock}{Example 0}
+Consider a production process with 2 steps with identical skill and
+time cost parameters: $(c^{H},t^{H})=(1,\tfrac{3}{2})$ and $(c^{M},t^{M})=(1,1)$,
+and take AI success probabilities $q_{1}=\tfrac{3}{5}$ and $q_{2}=\tfrac{4}{5}$.
+
+It's more cost-efficient to execute Step 1 manually:
+\[
+\underbrace{(1)(\tfrac{3}{2})}_{\text{Manual Execution}}=\tfrac{3}{2}<\tfrac{5}{3}=\underbrace{(1)(\tfrac{3}{5})^{-1}}_{\text{AI-Augmented Execution}}.
+\]
+
+However, the AI chain has a lower cost than executing the first task
+manually and augmenting the second step.
+\[
+\underbrace{(1)(1)(\tfrac{3}{5}\times\tfrac{4}{5})^{-1}}_{\text{AI Chain}}=\tfrac{25}{12}\ \ <\ \ \tfrac{11}{4}=\underbrace{(1)(\tfrac{3}{2})+(1)(\tfrac{4}{5})^{-1}}_{\text{Step 1 Manual, Step 2 AI-Augmented}}
+\]
+\end{exampleblock}
+\end{frame}
+%
+\begin{frame}{Fragmentation Index - Motivating Examples}
+\begin{itemize}
+\item Because of task interdependence, it becomes important where AI-able
+steps are positioned in the workflow.
+\end{itemize}
+\begin{exampleblock}{Example 1}
+Consider a job consisting of $m(=2k)$ steps. Each step has $t^{H}=5$
+and $t^{M}=1$, but the steps vary in how difficult they are for an
+AI to complete: odd-numbered steps can be successfully completed by
+an AI with probability 1, whereas even-numbered steps will be successfully
+completed with probability only 0.1:
+
+{\footnotesize
+\[
+\textcolor{blue!70}{(Easy)_{1}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{2}}\longrightarrow\textcolor{blue!70}{(Easy)_{3}}\longrightarrow\cdots\cdots\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m-2}}\longrightarrow\textcolor{blue!70}{(Easy)_{m-1}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m}}
+\]
+}{\footnotesize\par}
+
+It is suboptimal to attempt to use AI on any of the even-numbered
+steps, \textit{even as part of a chain}. The optimal automation strategy
+is to employ AI-augmentation on the odd-numbered steps (for a cost
+of 1 each) and perform even-numbered steps manually (for a cost of
+5 each), resulting in overall time cost of $3m$.
+\end{exampleblock}
+\end{frame}
+%
+\begin{frame}{Fragmentation Index - Motivating Examples}
+\begin{itemize}
+\item Because of task interdependence, it becomes important where AI-able
+steps are positioned in the workflow.
+\end{itemize}
+\begin{exampleblock}{Example 2}
+Suppose in the previous example easy and hard steps are not interleaved,
+but rather the first $\frac{m}{2}$ steps can each be completed by
+AI with probability 1 and the last $\frac{m}{2}$ steps can each be
+completed with probability 0.1:{\footnotesize
+\[
+\textcolor{blue!70}{(Easy)_{1}}\longrightarrow\textcolor{blue!70}{(Easy)_{2}}\longrightarrow\cdots\cdots\longrightarrow\textcolor{blue!70}{(Easy)_{\tfrac{m}{2}}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{\tfrac{m}{2}+1}}\longrightarrow{\cdots\cdots}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m-1}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m}}
+\]
+}The optimal strategy chains together the first $\frac{m}{2}$ steps
+into a single automated AI chain, for a combined cost of 1. The remaining
+$\frac{m}{2}$ steps are performed manually. Overall time cost will
+be $1+\frac{5m}{2}$, which is strictly less than $3m$ for $m\geq4$
+steps.
+\end{exampleblock}
+\end{frame}
+%
+\begin{frame}{Fragmentation Index}
+\begin{itemize}
+\item To extend the idea, we introduce a measure of dispersion of AI-exposed
+tasks in production process \uline{in the short run}: \textit{fragmentation index}.
+$\uparrow$ FI $\rightarrow$ $\downarrow$ sensitive production is
+to AI improvements. \hyperlink{A2:Fragmentation}{\beamergotobutton{Formal Definition}}
+\item We show that the fragmentation index of a job approximates the time
+cost of an optimal automation strategy for the job. 
+\end{itemize}
+\begin{prop}
+Fix a single job with a sequence of $m$ steps $\mathcal{S}=\{s_{1},\dotsc,s_{m}\}$,
+each with $t_{i}^{M}=1$. Let $FI$ denote its fragmentation index
+and let $OPT$ denote the minimum time cost over all automation strategies.
+Then $\tfrac{1}{8}OPT\leq FI\leq\tfrac{5}{4}OPT$. If we further assume
+$t_{i}^{H}\geq1$ for all $i$, then $\tfrac{1}{4}OPT\leq FI\leq\tfrac{5}{4}OPT$.
+\end{prop}
+\begin{itemize}
+\item Key takeaways: 
+\begin{itemize}
+\item Jobs with high fragmentation index will tend to have higher time costs
+even under optimal use of AI chaining. (i.e., structure of production
+limits returns to AI improvement).
+\item Key driver of efficiency gains via AI automation not just the \# of
+steps that are automated, but the \uline{number of adjacent steps}
+in the production process that have high exposure to AI. \label{Fragmentation_Main}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Impact of AI Deployment on Worker Specialization}
+\begin{itemize}
+\item In short-run, gains from AI derive primarily from cost-savings. \uline{But},
+in the long run, automation may alter the skill requirements of workers
+and degree of specialization.
+\end{itemize}
+\begin{exampleblock}{Example 3}
+ Consider a job consisting of a single step. This step has manual
+time and skill requirements $(c^{H},t^{H})=(5,5)$. Suppose that,
+under AI augmentation, this step has $(c^{M},t^{M})=(1,1)$ and probability
+$q=\tfrac{1}{8}$ of successful completion. Despite the task taking
+longer to complete with AI (due to the low likelihood of success on
+any individual attempt), the reduced skill requirement of managing
+the AI process means that it is firm-optimal to employ AI augmentation.
+\end{exampleblock}
+\begin{itemize}
+\item We allow skill and time requirements of work to vary endogenously,
+and unify two views:
+\begin{itemize}
+\item AI automates mundane (i.e., low-skill, high-time) tasks and allows
+high-skill workers to do more high-skill tasks.
+\item AI deskills high-skilled labor and replaces them with low-skill AI
+management.
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Ambiguous Effect on Worker Specialization}
+\begin{itemize}
+\item Direction of the effect? Our framework remains agnostic, and can support
+both!
+\item One hypothesis: AI automation has a normalizing effect on tasks, reverting
+both skill and time requirements toward the mean (i.e., ``square-like).
+\item If hand-off time requirements remain unchanged, then tent-pole inefficiencies
+due to grouping of tasks together in the same job reduces $\rightarrow$
+less worker specialization.
+\end{itemize}
+\begin{figure}[h!]
+ \begin{center}
+   \includegraphics[width=0.25\textwidth]{plots/tent_poll.png}
+ \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Numerical Example Leading to Less Specialization}
+\begin{exampleblock}{Example 4}
+ Consider a two-step production process, with costs $(c_{1}^{H},t_{1}^{H},t_{1}^{S})=(2,4,5)$
+and $(c_{2}^{H},t_{2}^{H})=(4,2)$. That is, the first step is low-skill
+but time-intensive and the second step is high-skill but can be completed
+quickly. Combining both steps into a single job (at a labor cost of
+$(2+4)(4+2)=36$) is strictly worse than separating into two specialized
+jobs with a handoff (at a total cost of $(2)(4+5)+(4)(2)=26$). 
+
+However, if each step of production could be augmented separately
+via AI to yield effective skill and time costs of $(c^{M},t^{M})=(2,2)$
+for each, then the optimal design combines both augmented steps into
+a single job at a total cost of $(2+2)(2+2)=16$, which is better
+than separating into two distinct jobs (incurring cost $(2)(2+5)+(2)(2)=18$).
+\end{exampleblock}
+\end{frame}
+%
+\begin{frame}{Numerical Example Leading to More Specialization}
+\begin{itemize}
+\item If AI-augmented steps have higher skill requirements than the corresponding
+manual steps.
+\end{itemize}
+\begin{exampleblock}{Example 5}
+ Consider a different two-step production process, with manual skill
+and time costs $(c_{1}^{H},t_{1}^{H})=(c_{2}^{H},t_{2}^{H})$ and
+hand-off cost $t_{1}^{S}=5$.
+
+The optimal job design separates these into two separate jobs at a
+total cost of $(3)(3+5)+(3)(3)=33$, with each job requiring a worker
+of skill $3$. 
+
+Suppose AI augmentation can allow each step to be completed with $(c^{M},t^{M})=(2,1/4)$,
+and an AI success probability of $1/8$, for a total expected execution
+time of $(1/4)\times(1/8)^{-1}=2$. In this case, the optimal design
+employs AI augmentation in each step and combines the two steps into
+a single job, resulting in a total cost of $(2+2)(2+2)=16$ and requiring
+a worker of skill $4$. 
+
+This is preferable to combining the two steps into a single AI chain,
+which would result in a total cost of $(2)((1/4)\times(1/8)^{-1}\times(1/8)^{-1})=32$.
+\end{exampleblock}
+\end{frame}
+%
+\begin{frame}{Non-monotone Impacts of AI Improvements}
+\begin{exampleblock}{Example 6}
+ Consider a production process with two steps. The first step is
+short but high-skill and difficult for AI tools to perform correctly:
+$(c_{1}^{H},t_{1}^{H},t_{1}^{S})=(5,1,1)$. Task 1's AI difficulty
+score, $d_{1}$, is $6$. Therefore $q_{1}=\alpha^{6}$. The AI management
+skill and time requirements are the same as the manual execution requirements:
+$(c_{1}^{M},t_{1}^{M})=(5,1)$. The second step is low-skill and timely
+to execute manually, but easy for AI: $(c_{2}^{H},t_{1}^{H})=(2,4)$
+and $(c_{2}^{M},t_{2}^{M})=(2,1)$ with AI difficulty score $1$. 
+\end{exampleblock}
+\begin{figure}[h!]
+ \begin{center}
+   \includegraphics[width=0.8\textwidth]{plots/nonmonotone_returns.png}
+ \end{center}
+\end{figure}
+\end{frame}
+%
+\section{Production Function Aggregation}
+\begin{frame}{Micro to Macro Production Function Aggregation - High-level Summary}
+\begin{itemize}
+\item To say anything about broader impacts of AI need to have a macro production
+function. \label{Aggregation_Main}
+\item We aggregate individual firms' production functions into a macro CES
+production function in two steps:
+\begin{enumerate}
+\item From
+\[
+x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} ,
+\]
+to
+\[
+x=\min\,\left\{ \frac{\bar{\alpha}\,l_{M}}{\tau_{M}},\,\frac{l_{H}}{\tau_{H}}\right\} ,
+\]
+where $\tau_{M}$ and $\tau_{H}$ are firm-level aggregate management
+and human skill-adjusted labor.
+\item With ``proper'' heterogeneity across firms in AI deployment quality,
+the individual production functions aggregate into:
+\[
+X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\,K^{\rho}\right)^{\frac{1}{\rho}},
+\]
+where $M$ and $H$ are economy-wide aggregate management and human
+labor. The capital $K$ can be normalized to $1$ without loss. \hyperlink{A3:Aggregation}{\beamergotobutton{Aggregation Details}}
+\end{enumerate}
+\end{itemize}
+\end{frame}
+%
+\section{Empirical Evaluation}
+\begin{frame}{Model's Predictions that We Test}
+\begin{itemize}
+\item We empirically validate three predictions of the model:
+\begin{enumerate}
+\item AI-executed steps cluster in contiguous blocks, forming AI chains.
+\item Step-level AI exposure is not the only determinant of AI execution;
+where AI-able steps sit in the workflow also matters for execution
+outcomes. (Recall the fragmentation argument.)
+\item The same step may be executed differently across occupations depending
+on AI execution status of its neighbors.
+\end{enumerate}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Data Sources}
+\begin{itemize}
+\item We construct a task-level dataset by combining: \label{Data_Sources}
+\begin{enumerate}
+\item May 2023 O{*}NET tasks and occupations data
+\begin{itemize}
+\item We treat O{*}NET tasks as steps in our theoretical framework. 
+\item With their mode of execution determined, steps are then mapped to
+tasks.
+\end{itemize}
+\item Human-generated labels for AI exposure of tasks (Eloundou et al.,
+2024)
+\item AI execution outcomes of tasks from Anthropic's Economic Index dataset
+(Handa et al., 2025)
+\item GPT-produced sequence of tasks within occupation
+\end{enumerate}
+\end{itemize}
+\vspace{0.25cm}
+\begin{itemize}
+\item (1)-(3) external sources. We create (4) by prompting GPT-5-mini to
+order tasks. \hyperlink{A4:GPT_TaskOrderingPrompt}{\beamergotobutton{GPT Prompt}}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Augmented and Automated Tasks (Anthropic)}
+\begin{itemize}
+\item Following approach of Anthropic who grouped Claude conversations into
+5(+1) categories:
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.9\linewidth]{plots/anthropic_executionMode_examples.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Augmented and Automated Tasks - Merged w/ O{*}NET}
+\begin{itemize}
+\item After merging Anthropic labels with the O{*}NET set of tasks:
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.75\linewidth]{plots/all_labels_histogram.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Augmented and Automated Tasks - Example Task Sequence 1}
+\begin{itemize}
+\item Example occupation with many AI tasks:
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.7\linewidth]{plots/task_sequence_15-1251.00_Computer_Programmers.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Augmented and Automated Tasks - Example Task Sequence 2}
+\begin{itemize}
+\item Example occupation with some (out of order!) AI tasks:
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.7\linewidth]{plots/task_sequence_11-3131.00_Training_and_Development_Managers.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Augmented and Automated Tasks - Example Task Sequence 3}
+\begin{itemize}
+\item Example occupation with no AI tasks:
+\end{itemize}
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.7\linewidth]{plots/task_sequence_49-2096.00_Electronic_Equipment_Installers_and_Repairers__Motor_Vehicles.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Pred. \#1: AI-executed Steps Tend to Form AI Chains}
+\begin{itemize}
+\item Prediction \#1: AI-executed steps tend to appear next together, forming
+AI chains. \pause
+\item We treat all AI steps the same (augmented or automated) and calculate:
+\begin{itemize}
+\item Average length of AI chains: 1.45
+\item Average number of AI chains per occupation: 2.1 \pause
+\end{itemize}
+\end{itemize}
+\vspace{0.25cm}
+\begin{itemize}
+\item What's the benchmark? Are these small or big?
+\item Calculate same statistics in two different placebo datasets constructed
+via:
+\begin{enumerate}
+\item Randomizing task positions within occupations,
+\item Randomizing execution label assignments of tasks across entire dataset.
+\end{enumerate}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#1: AI-executed Steps Tend to Form AI Chains - Robustness Test
+1}
+\begin{itemize}
+\item Histogram of statistics from 1,000 different task-position reshuffles
+vs. actual values\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/aiChain_length_count_taskPositionReshuffle.png}
+    \end{center}
+\end{figure}
+\item Takeaways: 
+\begin{itemize}
+\item Occurrence of AI tasks in clusters in original data is meaningful,
+\item GPT-generated occupation task sequence non-random.
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#1: AI-executed Steps Tend to Form AI Chains - Robustness Test
+2}
+\begin{itemize}
+\item Histogram of statistics from 1,000 different task execution label
+reshuffles vs. actual values\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/aiChain_length_count_taskLabelReshuffle.png}
+    \end{center}
+\end{figure}
+\item Takeaways: 
+\begin{itemize}
+\item Occurrence of AI tasks in clusters in original data is meaningful,
+\item Non-random distribution of Anthropic-reported AI-executed tasks.
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#2: AI-able Task Fragmentation Matters}
+\begin{itemize}
+\item Prediction \#2: Step-level AI exposure is not the only determinant
+of AI execution; where AI-able steps sit in the workflow also matters
+for execution outcomes. \pause
+\item Regression:
+\[
+\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\]
+
+\begin{itemize}
+\item $\text{ai\_fraction}_{o}$: fraction of AI-executed tasks in occupation
+$o$
+\item $\text{ai\_exposure}_{o}$: fraction of AI-exposed tasks (E1) in occupation
+$o$
+\item $\text{fragmentation\_index}_{o}$: measure of how fragmented AI tasks
+are in occupation $o$
+\end{itemize}
+\item Model predicts $\beta_{1}>0$ and $\beta_{2}<0$.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#2: AI-able Task Fragmentation Matters - Measuring FI}
+\begin{itemize}
+\item Regression:
+\[
+\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\]
+\item Fragmentation index measured in four ways for robustness:
+\begin{enumerate}
+\item Based on realized AI execution outcomes, AI chain defined per model's
+definition (strict)
+\item Based on realized AI execution outcomes, AI chain defined regardless
+of type of AI tasks -- augmented and automated tasks treated similarly
+\item Based on AI exposure measures, only consider E1 tasks as AI-exposed
+(strict)
+\item Based on AI exposure measures, consider E1 and E2 tasks as AI-exposed
+\end{enumerate}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#2: AI-able Task Fragmentation Matters - Results}
+
+\[
+\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\]
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
+
+\[
+\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\]
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation1.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
+
+\[
+\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\]
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation2.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
+
+\[
+\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\]
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation3.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
+
+\[
+\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\]
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation4.png}
+    \end{center}
+\end{figure}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome}
+\begin{itemize}
+\item Prediction \#3: Same step may be executed differently across occupations
+depending on AI execution status of its neighbors. \pause
+\item Step X more likely to be automated in Occupation 1:\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{plots/sameTask_diffOcc_graphic.png}
+    \end{center}
+\end{figure}
+\item Local gains from executing step X as part of an AI chain in Occupation
+1 is higher.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Practical Considerations}
+\begin{itemize}
+\item Issue: O{*}NET tasks are occupation-specific: no task appears in >1
+occupation. \label{DWA}
+\item Solution: O{*}NET has a hierarchical categorization of tasks.
+\begin{itemize}
+\item Multiple tasks $\rightarrow$ Single detailed work activity (DWA)
+\end{itemize}
+\item Tasks within a DWA are more or less similar. 
+\begin{itemize}
+\item To ensure similarity we further ask GPT-5-mini to pick the tasks within
+DWAs that are most similar in terms of execution method and required
+skills. \hyperlink{A4:GPT_DWAsimilarTasksPrompt}{\beamergotobutton{GPT Prompt}}
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Example DWAs}
+\begin{itemize}
+\item Example DWAs, and tasks dropped in the ``finding similar tasks''
+procedure (red font):\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/sameDWA.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Regression}
+\begin{itemize}
+\item Prediction \#3: Same step may be executed differently across occupations
+depending on AI execution status of its neighbors.
+\item Regression: (ran on the subset of ``similar'' tasks)
+\begin{align*}
+\Pr\!\left(\text{is\_automated}_{t}=1|X_{t}\right) & =\Lambda\!\Big(\beta_{0}+\beta_{1}\,\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}+\beta_{2}\,\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}\\
+ & \ \ \ \ \ \ \ \ +\beta_{3}\,\mathds{1}_{\{(t+1)\ \text{Task is AI}\}}+\beta_{4}\,\mathds{1}_{\{(t+2)\ \text{Task is AI}\}}\Big)
+\end{align*}
+
+\begin{itemize}
+\item $\Lambda$ is logistic CDF.
+\item $\text{is\_automated}_{t}=1$ if task $t$ is automated.
+\item $\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}=1$ if task two positions
+before task $t$ is AI.
+\item $\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}=1$ if task before task
+$t$ is AI.
+\item $\mathds{1}_{\{(t+1)\ \text{Task is AI}\}}=1$ if task after task
+$t$ is AI.
+\item $\mathds{1}_{\{(t+2)\ \text{Task is AI}\}}=1$ if task two positions
+after task $t$ is AI.
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Results}
+\begin{itemize}
+\item Average marginal effect of immediate neighbors being AI on automatability
+of middle task positive and robust.
+\item Average marginal effect of distant neighbors being AI on automatability
+of middle task weaker and disappear after occupational family FEs.
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.65\linewidth]{plots/sameDWA_regression.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Results}
+\begin{itemize}
+\item Average marginal effect of \uline{immediate neighbors} being AI on
+automatability of middle task \uline{positive and robust}.
+\item Average marginal effect of distant neighbors being AI on automatability
+of middle task weaker and disappear after occupational family FEs.
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.65\linewidth]{plots/sameDWA_regression_explanation1.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Results}
+\begin{itemize}
+\item Average marginal effect of immediate neighbors being AI on automatability
+of middle task positive and robust.
+\item Average marginal effect of \uline{distant neighbors} being AI on automatability
+of middle task \uline{weaker and disappear} after occupational family
+FEs. \begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.65\linewidth]{plots/sameDWA_regression_explanation2.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Robustness Test}
+\begin{itemize}
+\item How should we interpret these? Could these have happened by chance?
+\pause No!
+\item Test: randomize position of tasks within occupations and repeat the
+same analysis.
+\item Compare position-randomized outcomes against actual outcomes.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Robustness Test}
+\begin{itemize}
+\item Observation \#1: in random-position placebos all neighbors contribute
+equally to automatability of middle task (i.e., all four distributions
+similar mean and shape) \begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_filtered_is_automated_no_fe.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Robustness Test}
+\begin{itemize}
+\item Observation \#2: effect of immediate neighbors (two middle columns)
+stronger than in randomized-position placebos \begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_filtered_is_automated_no_fe.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Robustness Test}
+\begin{itemize}
+\item Observation \#3: effect of farther neighbors (two side columns) weaker
+than in randomized-position placebos \begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_filtered_is_automated_no_fe.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Robustness Test}
+\begin{itemize}
+\item Observation \#4: effect of farther neighbors disappears (and even
+becomes negative) after controlling for occupational families but
+positive effect of immediate neighbors persists\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{plots/AME_filtered_is_automated_fe_MajorGroup.png}
+    \end{center}
+\end{figure}\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{plots/AME_filtered_is_automated_fe_MinorGroup.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
+Outcome - Robustness Test}
+\begin{itemize}
+\item Together: it is more likely that the same task is automated if its
+immediate neighbors are AI-executed; farther neighbors do not contribute
+to automation of task (at least not yet -- perhaps with more capable
+AIs we see longer chains form and farther neighbors also contribute
+to some extent)
+\end{itemize}
+\end{frame}
+%
+\section{Summary}
+\begin{frame}{Summary}
+\begin{itemize}
+\item Developed a task-based framework to study implications of AI automation:
+\begin{itemize}
+\item Firm trades off coordination frictions against paying higher wages.
+\item AI automation might overturn the simple comparative-advantage logic
+through the chaining logic.
+\item Gave efficient algorithms for the firm's cost minimization problem,
+determining optimal organizational structure.
+\end{itemize}
+\item Showed that discrete reorganization of work leads to non-monotone
+returns from improving AI quality.
+\begin{itemize}
+\item Explains why firms heavily invest in AI without immediate returns.
+\end{itemize}
+\item Showed how to map micro production functions to a CES macro production
+function if firms heterogenous in how they deploy general-purpose
+AI technology.
+\item Provided empirical support for implications of the model.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[plain, noframenumbering]{}
+
+\begin{center}
+
+Thanks for your attention! \\~\\
+
+{[}your email here{]}
+
+\end{center}
+\end{frame}
+%
+\section{Appendix}
+
+\label{A1:Optimization}
+\begin{frame}[noframenumbering]{Warm-up to Long-Term Optimization: Job Design Without AI}
+\begin{prop}
+Given a fixed sequence of tasks $\mathcal{T}=(T_{1},\dotsc,T_{n})$
+with skill and time costs $c=(c_{1},\dotsc,c_{n})$ and $t=(t_{1},\dotsc,t_{n})$,
+the cost-minimizing job design $\mathcal{J}$ can be computed in time
+$O(n^{2})$ by dynamic programming.
+\end{prop}
+\begin{proof}
+Let $C[k]$ be the minimum cost of a job design for tasks 1 through
+$k$, \textit{including hand-off costs for task $k$}. We have:
+\[
+C[k]=\min_{s<k}\Biggl\{ C[s]+\Biggl[\Biggl(\sum_{i=s+1}^{k}c_{i}\Biggr)\Biggl(t_{k}^{S}+\sum_{i=s+1}^{k}t_{i}\Biggr)\Biggr]\Biggr\}.
+\]
+Optimize over the choice of final job $\{s+1,...,k\}$, accounting
+recursively for the optimal job design for the remaining jobs. Each
+$C[k]$ can be calculated in $O(k)$ time by considering each choice
+of $s=1,...,k$. Doing so for each $k=1,2,...,n$ will take $O(n^{2})$
+time.
+\end{proof}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Long-Term Optimization: Automation and Job Design}
+\begin{itemize}
+\item Let $V(i)$ denote the minimum cost required to complete steps 1 through
+$i$, including any hand-off costs to a subsequent worker.
+\item Let $W(i,c,t)$ be the minimum cost of completing steps 1 through
+$i$, as well as some additional (but unspecified) set of tasks with
+cost profile $(c,t)$ that have already been assigned as a single
+job to a single worker referred to as the ``active worker''.
+\item By definition:
+\[
+V(i)=W(i,0,t_{i}^{S})
+\]
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Long-Term Optimization: Automation and Job Design - Continued}
+\begin{prop}
+For each $i\geq1$, the minimum cost function $W(i,\;c,\;t)$ satisfies
+the following recursive relation:
+
+\begin{align*}
+W(i,\; \hccost{},\; \timecost{})
+= \min\Biggl\{ 
+& \hccost{}\,\timecost{} \; + \; V(i), \; \; \; \; W(i-1,\; \hccost{} + c_i ^H,\; \timecost{} + t_i ^H), \\
+& \ \min_{r < i} \ W\left(r,\; \hccost{} + c_i ^M,\; \timecost{} + \frac{t_i^M}{\prod_{s=r+1}^{i} q_s}\right)
+\Biggr\}.
+\end{align*}
+
+The cost of the optimal joint automation and job design for a given
+sequence of $m$ steps is then $V(m)=W(m,\;0,\;0)$.
+\end{prop}
+\begin{itemize}
+\item Term 1: end ``previous'' worker's job at $i$; start job of active
+worker from $i+1$. Cost of steps 1 to $i$ is $V(i)$.
+\item Term 2: step $i$ executed manually; its manual costs are added to
+active worker's job costs.
+\item Term 3: augment step $i$ and choose the length of AI chain task terminating
+in $i$ optimally.
+\end{itemize}
+\hyperlink{Optimization_Main}{\beamergotobutton{Return}}
+\end{frame}
+%
+\label{A2:Fragmentation}
+\begin{frame}{Fragmentation Index - Formal Definition}
+\begin{itemize}
+\item Assume $t_{i}^{M}=1$ for all steps.
+\item Assume independent step success $q_{i}$. A step that does not succeed
+is said to fail.
+\item Write $F$ for the set of steps that fail.
+\item Write $\mathcal{C}=\{C_{1},...,C_{k}\}$ for the random variable representing
+the collection of maximal connected components of non-failed steps.
+\item The weight of each $C_{j}\in\mathcal{C}$ is defined to be minimum
+of its augmentation cost or sum of it manual steps
+\[
+w(C_{j})=min\{1,\;\sum_{i\in C_{j}}t_{i}^{H}\}.
+\]
+\item Given a realization of $C$ and $F$, the realized fragmentation is:
+\[
+\sum_{i\in F}\min\,\{t_{i}^{H},\frac{t_{i}^{M}}{q_{i}}\}+\sum_{C_{j}\in\mathcal{C}}w(C_{j}).
+\]
+\item Fragmentation index is the expected value of the realized fragmentation
+above. \hyperlink{Fragmentation_Main}{\beamergotobutton{Return}}
+\end{itemize}
+\end{frame}
+%
+\label{A3:Aggregation}
+\begin{frame}[noframenumbering]{Micro to Macro Production Function Aggregation}
+\begin{itemize}
+\item Production function aggregation setup:
+\begin{itemize}
+\item Firms use (1) skill-adjusted AI management labor, (2) skill-adjusted
+human labor, (3) capital.
+\item Assume capital is plenty and is a fixed input so firms decide on (1)
+and (2) conditional on capital stock.
+\item Different types of labor have different base wage rates: $w_{M}$
+for AI management and $w_{H}$ for human labor.
+\item Updated job wage equation:
+\[
+\text{Wage}_{j}=w_{H}\left(\sum_{T_{b}^{H}\in J}c_{b}^{H}\right)+w_{M}\left(\sum_{T_{b}^{M}\in J}c_{b}^{M}\right).
+\]
+\item Skill-adjusted time requirement of task $b$ is:
+\[
+\tau_{b}=\frac{w_{H}\left(\sum_{T_{\ell}^{H}\in J(b)}c_{\ell}^{H}\right)+w_{M}\left(\sum_{T_{\ell}^{M}\in J(b)}c_{\ell}^{M}\right)}{w_{O(b)}}\,t_{b},
+\]
+where $O(b)=H$ if $b$ is a manual task and $O(b)=M$ if $b$ is
+an AI chain.
+\item Wage bill paid to task $b$ is thus $w_{H}\tau_{b}$ if executed manually
+and $w_{M}\tau_{b}\alpha^{-d_{b}}$ if executed via AI.
+\end{itemize}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{(1) Within-Firm Aggregation}
+\begin{itemize}
+\item Fix automation strategy $\mathcal{T}$ and job design $\mathcal{J}$.
+\item Assume hand-offs are performed manually $\rightarrow$ model as an
+additional $p-1$ manual tasks where $p$ is number of jobs.
+\item With hand-offs being standalone tasks $\rightarrow$ reorder tasks
+in the production sequence: $1,...,k$ are AI chains, and $k+1,...n+p-1$
+are manual tasks.
+\item Individual firm's production function is Leontief in steps:
+\[
+x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} ,
+\]
+where $x$ is output and $l_{i}$ is labor assigned to task $i$.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{(1) Within-Firm Aggregation - Continued}
+
+\[
+x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} .
+\]
+
+\begin{itemize}
+\item Can be represented as:
+\[
+x=\min\,\left\{ \frac{\bar{\alpha}\,l_{M}}{\tau_{M}},\,\frac{l_{H}}{\tau_{H}}\right\} ,
+\]
+where $\bar{\alpha}$ is the effective AI quality level and:
+\[
+\tau_{M}=\sum_{b=1}^{k}\tau_{b}^{M},\qquad\qquad\tau_{H}=\sum_{j=1}^{p-1}\tau^{S}(J_{j})+\sum_{b=k+1}^{n}\tau_{b}^{H},\qquad\qquad\bar{\alpha}=\frac{\sum_{b=1}^{k}\tau_{b}^{M}}{\sum_{b=1}^{k}\tau_{b}^{M}\alpha^{-d_{b}}},
+\]
+if the rate of substitution of inputs within groups are independent
+of rate of substitution in the other group (which is satisfied in
+the Leontief case).
+\item This representation gives insight into how much AI management versus
+human labor is used at the firm level.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{(2) Across-Firm Aggregation}
+\begin{itemize}
+\item Consider a unit mass of firms. 
+\item Firms do not know their actual AI quality parameter before production
+occurs; they make decisions based on a common prior.
+\item Production unfolds in two stages:
+\begin{itemize}
+\item Stage 1: firms decide on organization structure (i.e., automation
+strategy $\mathcal{T}$ and job design $\mathcal{J}$) based on expected
+effective AI quality level.
+\item Stage 2: effective AI quality is realized and firms produce.
+\end{itemize}
+\item We show that with proper heterogeneity in effective AI quality levels
+micro production functions can aggregate into a CES production function
+of the form: 
+\[
+X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\,K^{\rho}\right)^{\frac{1}{\rho}},
+\]
+where capital can be normalized to 1 without loss.
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{(2) Across-Firm Aggregation - Continued}
+\begin{itemize}
+\item Normalize the output price $p=1$, so that $w_{M}$ and $w_{H}$ are
+real wage rates. A firm's profitability condition implies:
+\[
+w_{M}\,l_{M}+w_{H}\,l_{H}\leq x.
+\]
+\item In equilibrium:
+\[
+x=\frac{\bar{\alpha}\,l_{M}}{\tau_{M}}=\frac{l_{H}}{\tau_{H}}.
+\]
+Substituting for $l_{H}$ and $x$ in terms of $\tau_{M}$ and $\tau_{H}$
+we obtain:
+\[
+w_{M}\,l_{M}+w_{H}\,\frac{\tau_{H}\,\bar{\alpha}\,l_{M}}{\tau_{M}}\leq\frac{\bar{\alpha}\,l_{M}}{\tau_{M}}.
+\]
+\item Rearrange terms to get:
+\[
+\gamma=\frac{w_{M}\,\tau_{M}}{1-w_{H}\,\tau_{H}}\leq\bar{\alpha}\leq1.
+\]
+\item Let $\phi(\bar{\alpha})$ be the dist. of output in terms of effective
+AI quality level of firms. By definition:
+\[
+X=\int_{\gamma}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha},\qquad M=\int_{\gamma}^{1}\,\tau_{M}\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha},\qquad H=\int_{\gamma}^{1}\,\tau_{H}\,\phi(\bar{\alpha})\,d\bar{\alpha}.
+\]
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{(2) Across-Firm Aggregation - Continued}
+\begin{itemize}
+\item We have $X,M,H$, all in terms of $\phi(\bar{\alpha})$ in
+\[
+X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\right)^{\frac{1}{\rho}}.
+\]
+\item Solving for $\phi(\bar{\alpha})$ when $\rho<0$ (i.e., $\sigma<1$)
+yields the following closed form:{\tiny
+\[
+\phi(\bar{\alpha})=\frac{\left(1-\theta_{M}-\theta_{H}\right)^{\frac{1}{\rho}}\left(1-\theta_{H}\,\tau_{H}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{M}\,\tau_{M}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\theta_{H}\,\tau_{H}^{\rho}-\left(1-\theta_{H}\,\tau_{H}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{M}\,\tau_{M}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
+\]
+}{\tiny\par}
+\end{itemize}
+\begin{itemize}
+\item \textit{...Conjecture...}: For certain parameter values $(\theta_{M},\theta_{H},\rho)$
+a first-order stochastic shift in effective AI quality level $\bar{\alpha}$
+will increase the ratio of $\tfrac{M}{H}$, implying that (relatively)
+more AI management labor will be employed in the aggregate economy.
+\item \textit{...Caveat...}: We've fixed automation strategy $\mathcal{T}$
+and job design $\mathcal{J}$; bear in mind that production function
+frontier is non-smooth.
+\end{itemize}
+\hyperlink{Aggregation_Main}{\beamergotobutton{Return}}
+\end{frame}
+%
+\label{A4:GPT_TaskOrderingPrompt}
+\begin{frame}{GPT-5-mini Prompt for Task Ordering}
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.75\linewidth]{plots/gpt_prompt1.png}
+    \end{center}
+\end{figure}\hyperlink{Data_Sources}{\beamergotobutton{Return}}
+\end{frame}
+%
+\label{A4:GPT_DWAsimilarTasksPrompt}
+\begin{frame}{GPT-5-mini Prompt for Finding Similar Tasks in a DWA}
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.55\linewidth]{plots/gpt_prompt2.png}
+    \end{center}
+\end{figure}\hyperlink{DWA}{\beamergotobutton{Return}}
+\end{frame}
+
+\end{document}
