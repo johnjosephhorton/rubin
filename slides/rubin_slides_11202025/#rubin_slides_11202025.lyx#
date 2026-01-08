@@ -1,0 +1,10883 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass beamer
+\begin_preamble
+\theoremstyle{theorem}
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+\newtheorem{step}{Step}
+
+\newtheorem{proposition}{Proposition}
+
+\usepackage{tikz} 
+\usepackage{wrapfig}
+\usepackage{caption}
+\setbeamertemplate{caption}[numbered]
+\usepackage[position=top]{caption,subfig}
+%\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{\insertframenumber{}}
+
+\AtBeginSection[]
+{\begin{frame}{Outline}
+\tableofcontents[currentsection] 
+\end{frame} 
+}
+
+
+\usetheme{CambridgeUS}           % main theme
+\usecolortheme{beaver}         % colour palette
+\usefonttheme{professionalfonts} % use your document fonts
+\setbeamertemplate{section in toc}[sections numbered] % tweak templates
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+% For illustration of AI task automation flow
+\usetikzlibrary{shapes.geometric, arrows, positioning, arrows.meta, fit, decorations.pathreplacing, calc}
+
+% Define styles
+\tikzstyle{task} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=gray!10, rounded corners, text width=2.2cm, align=center]
+\tikzstyle{decision} = [rectangle, minimum width=4cm, minimum height=2cm, text centered, draw=black, fill=orange!30, rounded corners, text width=3cm, align=center]
+\tikzstyle{decision2} = [rectangle, minimum width=4cm, minimum height=2cm, text centered, draw=black, fill=green!30, rounded corners, text width=3cm, align=center]
+\tikzstyle{process} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=olive!30, rounded corners, text width=3cm, align=center]
+\tikzstyle{process2} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=blue!30, text width=3cm, align=center]
+\tikzstyle{smallbox} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=olive!30, text width=1.5cm, align=center]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+%%%%%%%%%%%%%%%%%%%%
+
+
+
+\newcommand{\T}[0]{\mathcal{T}}
+\newcommand{\J}[0]{\mathcal{J}}
+\newcommand{\machine}[1]{\langle #1 \rangle}
+\newcommand{\human}[1]{( #1 )}
+\newcommand{\cost}[1]{C\{ #1 \}}
+\newcommand{\costdo}[1]{T_H\{ #1 \}}
+\newcommand{\costmanage}[1]{T_M\{ #1 \}}
+\newcommand{\timecost}[1]{t_{#1}}
+\newcommand{\hccost}[1]{c_{#1}}
+\newcommand{\labor}[1]{l_{#1}}
+\newcommand{\handofftime}[1]{t^{s}_{#1}}
+\newcommand{\humantime}[1]{t^{h}_{#1}}
+\newcommand{\machinetime}[1]{t^{m}_{#1}}
+\newcommand{\humanhc}[1]{c^{h}_{#1}}
+\newcommand{\machinehc}[1]{c^{m}_{#1}}
+\end_preamble
+\options aspectratio=1610
+\use_default_options true
+\begin_modules
+theorems-std
+theorems-sec
+\end_modules
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding auto-legacy
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Title
+The Economic Impacts of Generative AI on the Structure of Work
+\begin_inset Argument 1
+status collapsed
+
+\begin_layout Plain Layout
+Economic Impacts of GenAI on Structure of Work
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Mert Demirer (MIT)
+\begin_inset Newline newline
+\end_inset
+
+John J.
+ Horton (MIT)
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+Nicole Immorlica (Yale & Microsoft)
+\series default
+
+\begin_inset Newline newline
+\end_inset
+
+Brendan Lucier (Microsoft)
+\begin_inset Newline newline
+\end_inset
+
+Peyman Shahidi (MIT)
+\begin_inset Argument 1
+status collapsed
+
+\begin_layout Plain Layout
+Demirer,
+ Horton,
+ Immorlica,
+ Lucier,
+ Shahidi (2025)
+\end_layout
+
+\end_inset
+
+
+\series bold
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\series default
+
+\begin_inset VSpace 0.9cm
+\end_inset
+
+[Your Conference Title Here]
+\end_layout
+
+\begin_layout Date
+[Date Here]
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Introduction}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Motivation
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hot question of the day:
+ how Artificial Intelligence (AI) will affect human workers?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Will it substitute or complement them?
+ Raise or reduce wages?
+ Upskill or deskill workers?
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Many recent papers studied this,
+ often drawing on established approaches.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+includegraphics[width=0.6
+\backslash
+textwidth]{plots/p.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Though the tools they use not originally designed to explain feature of GenAI in mind.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Motivation
+\end_layout
+
+\end_inset
+
+
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hot question of the day:
+ how Artificial Intelligence (AI) will affect human workers?
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Will it substitute or complement them?
+ Raise or reduce wages?
+ Upskill or deskill workers?
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Many recent papers studied this,
+ often drawing on established approaches.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+includegraphics[width=0.6
+\backslash
+textwidth]{plots/pp.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Except for a few...
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Paper in a Nutshell
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In this paper,
+ we:
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Develop a task-based production framework tailored to features of GenAI,
+\end_layout
+
+\begin_layout Itemize
+Study effect of AI on firm's organizational structure,
+ treating tasks and jobs as endogenous objects,
+\end_layout
+
+\begin_layout Itemize
+Map firm-level production functions to a macro CES production function,
+ assuming firms deploy the same general-purpose AI technology differently,
+ and
+\end_layout
+
+\begin_layout Itemize
+Empirically validate several implications of the model.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+In our framework:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Three modes of task execution recognized:
+ manual,
+ AI-augmented,
+ AI-automated,
+\end_layout
+
+\begin_layout Itemize
+AI can chain multiple tasks together,
+ 
+\shape italic
+potentially
+\shape default
+ overturning standard comparative-advantage logic,
+\end_layout
+
+\begin_layout Itemize
+AI can either upskill or deskill workers,
+\end_layout
+
+\begin_layout Itemize
+Improvements in AI quality generate discontinuous productivity gains (by triggering discrete reorganizations of work).
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+The paper relates to organization and labor economics literatures,
+ and economics of of AI.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Model}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+A Task-based Model of Production
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Production is a sequence of steps (which later are aggregated to tasks,
+ and then to jobs).
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+All
+\bar default
+ steps have to be completed to produce the good 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ production is Leontief in steps.
+\end_layout
+
+\begin_layout Itemize
+Consider,
+ e.g.,
+ data scientists workflow:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Step 1:
+ Define the business decision and success metric.
+\end_layout
+
+\begin_layout Itemize
+Step 2:
+ Discover and fetch relevant data for answering the question.
+\end_layout
+
+\begin_layout Itemize
+Step 3:
+ Build an analysis pipeline (e.g.,
+ write code).
+\end_layout
+
+\begin_layout Itemize
+Step 4:
+ Produce report and visuals based on analysis outputs.
+\end_layout
+
+\begin_layout Itemize
+Step 5:
+ Present to and persuade supervisor to take action.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+resizebox{0.75
+\backslash
+textwidth}{!}{
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[node distance=1.8cm]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Task Sequence
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task1) [task] {Step 1};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task2) [task,
+ right=1.75cm of task1] {Step 2};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task3) [task,
+ right=1.75cm of task2] {Step 3};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task4) [task,
+ right=1.75cm of task3] {Step 4};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task5) [task,
+ right=1.75cm of task4] {Step 5};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task1.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task2.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task2.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task3.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task3.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task4.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task4.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task5.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Geometric Representation of Steps and Production
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Steps have intrinsic cost parameters in 2(+1) dimensions:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Skill 
+\begin_inset Formula $c_{i}$
+\end_inset
+
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ human capital required to perform the step
+\end_layout
+
+\begin_layout Enumerate
+Time 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ time it takes to complete the step
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Production can be viewed as stacked rectangles of height 
+\begin_inset Formula $c_{i}$
+\end_inset
+
+ and width 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+:
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+includegraphics[width=0.34
+\backslash
+textwidth]{plots/tent_poll.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Step Execution in Absence of AI
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In absence of AI,
+ all steps are executed manually.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+resizebox{0.88
+\backslash
+textwidth}{!}{
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[node distance=1.8cm]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Task Sequence
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task1) [task] {Step 1};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task2) [task,
+ right=1.75cm of task1] {Step 2};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task3) [task,
+ right=1.75cm of task2] {Step 3};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task4) [task,
+ right=1.75cm of task3] {Step 4};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task5) [task,
+ right=1.75cm of task4] {Step 5};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task1.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task2.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task2.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task3.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task3.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task4.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task4.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task5.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Definition - Manual Step
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Definition
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Manual Step
+\end_layout
+
+\end_inset
+
+ A step 
+\begin_inset Formula $i$
+\end_inset
+
+ is said to be performed manually if it is executed entirely by a human worker without AI assistance.
+ The associated skill and time costs for a manual step are denoted by 
+\begin_inset Formula $(c_{i}^{H},t_{i}^{H})$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+AI Can Augment Humans in Performing Step
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+AI can assist humans in executing steps.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+resizebox{0.88
+\backslash
+textwidth}{!}{
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[node distance=1.8cm]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Task Sequence
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task1) [task] {Step 1};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task2) [task,
+ right=1.75cm of task1] {Step 2};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task3) [task,
+ right=1.75cm of task2] {Step 3};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task4) [decision,
+ right=1.75cm of task3] {Step 4:
+ 
+\backslash
+
+\backslash
+ 
+\backslash
+textbf{Can AI help with this step?}};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (task5) [task,
+ right=1.75cm of task4] {Step 5};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % AI Processes
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (prompt) [process,
+ below=2.5cm of task2,
+ xshift=-1cm] {Ask AI to do Step 4 
+\backslash
+
+\backslash
+ (``prompt'')};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (attempt) [process2,
+ right=0.75cm of prompt] {AI produces an output};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (evaluate) [process,
+ right=0.75cm of attempt] {Is the work acceptable?};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Define a coordinate 1cm to the right of the evaluate box
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+coordinate (extendEval) at ([xshift=1cm]evaluate.east);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Success/Failure Nodes
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (yes) [smallbox,
+ right=1cm of extendEval,
+ yshift=1cm] {Yes};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (no) [smallbox,
+ right=1cm of extendEval,
+ yshift=-1cm] {No};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task1.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task2.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task2.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task3.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task3.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task4.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task4.south) to[out=-125,in=45] 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+timecost{p}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (prompt.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (prompt.east) -- (attempt.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (attempt.east) -- (evaluate.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Draw extension line before branching
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (evaluate.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+timecost{e}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (extendEval);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Arrows from the extended coordinate
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (extendEval) -- node[midway,
+ above] {$q_4 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ $} (yes.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (extendEval) -- node[midway,
+ below] {$1-q_4 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ $} (no.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (yes.east) to[out=0,in=-90] 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ right] {$
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task5.south);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (no.south) to[out=-165,in=-30] (prompt.south);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+Step 4:
+ Produce report and visuals based on analysis outputs.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Definition - Augmented Step
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Definition
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Augmented Step
+\end_layout
+
+\end_inset
+
+ A step 
+\begin_inset Formula $i$
+\end_inset
+
+ is said to be augmented if it is executed by the AI,
+ after which its output is reviewed and approved by a human worker.
+ The associated skill and (expected) time costs of managing a single augmented step are denoted by 
+\begin_inset Formula $(c_{i}^{M},\text{\ensuremath{\tfrac{t_{i}^{M}}{q_{i}}}})$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $q_{i}\in(0,1]$
+\end_inset
+
+ is the AI's probability of successfully completing the step.
+\end_layout
+
+\begin_layout Itemize
+Specifically,
+ 
+\begin_inset Formula $q_{i}=\alpha^{d_{i}}$
+\end_inset
+
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\alpha\in(0,1]$
+\end_inset
+
+ is the general-purpose AI's quality level:
+ 
+\begin_inset Formula $\uparrow\alpha\longrightarrow\uparrow q_{i}$
+\end_inset
+
+,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $d_{i}>0$
+\end_inset
+
+ is AI's difficulty in performing step 
+\begin_inset Formula $i$
+\end_inset
+
+:
+ 
+\begin_inset Formula $\uparrow d_{i}\longrightarrow\downarrow q_{i}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+AI Can Also Automate Steps
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+AI can also execute steps without direct human oversight in 
+\begin_inset Quotes eld
+\end_inset
+
+AI Chains.
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+resizebox{0.88
+\backslash
+textwidth}{!}{
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[
+\end_layout
+
+\begin_layout Plain Layout
+
+    node distance=1.8cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+    dashedbox/.style={draw,
+ rectangle,
+ rounded corners,
+ dashed,
+ inner sep=0.5cm,
+ line width=1.2pt}
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	% Task Sequence
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+node (task1) [task] {Step 1};
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+node (task2) [decision2,
+ right=1.75cm of task1] {Step 2:
+ 
+\backslash
+
+\backslash
+ 
+\backslash
+textbf{Can AI do this ``under the hood''?}};
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+node (task3) [decision2,
+ right=1.75cm of task2] {Step 3:
+ 
+\backslash
+
+\backslash
+ 
+\backslash
+textbf{Can AI do this ``under the hood''?}};
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+node (task4) [decision,
+ right=1.75cm of task3] {Step 4:
+ 
+\backslash
+
+\backslash
+ Can AI help with this step?};
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+node (task5) [task,
+ right=1.75cm of task4] {Step 5};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	% Dashed group around Steps 2-4
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+node[dashedbox,
+ draw=blue,
+ fit=(task2)(task3)(task4)] (AIchain) {};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % AI Processes
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (prompt) [process,
+ below=2.5cm of task2,
+ xshift=-1cm] {Ask AI to do 
+\backslash
+textcolor{red}{Steps 2-4} 
+\backslash
+
+\backslash
+ (``prompt'')};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (attempt) [process2,
+ right=0.75cm of prompt] {AI produces an output};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (evaluate) [process,
+ right=0.75cm of attempt] {Is the work acceptable?};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Define a coordinate 1cm to the right of the evaluate box
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+coordinate (extendEval) at ([xshift=1cm]evaluate.east);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Success/Failure Nodes
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (yes) [smallbox,
+ right=1cm of extendEval,
+ yshift=1cm] {Yes};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node (no) [smallbox,
+ right=1cm of extendEval,
+ yshift=-1cm] {No};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task1.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task2.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task2.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task3.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task3.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+humantime{} + 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task4.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (task4.south) to[out=-125,in=45] 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+timecost{p}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (prompt.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (prompt.east) -- (attempt.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (attempt.east) -- (evaluate.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Draw extension line before branching
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (evaluate.east) -- 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ above] {$
+\backslash
+timecost{e}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (extendEval);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Arrows from the extended coordinate
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (extendEval) -- node[midway,
+ above] {$
+\backslash
+textcolor{red}{
+\backslash
+tilde{q}} 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ $} (yes.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (extendEval) -- node[midway,
+ below] {$
+\backslash
+textcolor{red}{1-
+\backslash
+tilde{q}}
+\backslash
+  
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ $} (no.west);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (yes.east) to[out=0,in=-90] 
+\end_layout
+
+\begin_layout Plain Layout
+
+    %node[midway,
+ right] {$
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+handofftime{}$} 
+\end_layout
+
+\begin_layout Plain Layout
+
+    (task5.south);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw [arrow] (no.south) to[out=-165,in=-30] (prompt.south);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Step 2:
+ Discover and fetch relevant data for answering the question.
+\end_layout
+
+\begin_layout Standard
+Step 3:
+ Build an analysis pipeline (e.g.,
+ write code).
+\end_layout
+
+\begin_layout Standard
+Step 4:
+ Produce report and visuals based on analysis outputs.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Definition - Automated Step and AI Chain
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Definition
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Automated Step
+\end_layout
+
+\end_inset
+
+ A step is said to be automated if it is executed entirely by AI without direct human intervention,
+ and its output is passed directly to a subsequent augmented or automated step.
+ The direct human costs (in both skill and time dimension) associated with an automated step are zero.
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.5cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Definition
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+AI Chain
+\end_layout
+
+\end_inset
+
+ An AI chain is a contiguous block of one or more sequential steps executed by AI,
+ in which all steps but the final one are automated and the final step is augmented.
+ An AI chain spanning steps 
+\begin_inset Formula $(s_{\ell},\dots,s_{i})$
+\end_inset
+
+ has steps 
+\begin_inset Formula $(s_{\ell},\dots,s_{i-1})$
+\end_inset
+
+ automated and step 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+ augmented.
+ The skill and time costs of this AI chain are given by 
+\begin_inset Formula $(c_{i}^{M},\tfrac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}})$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $q_{r}$
+\end_inset
+
+ denotes the AI success probability for step 
+\begin_inset Formula $s_{r}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Three Modes of Step Execution
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The model recognizes three modes of step execution:
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Manually by human (Steps 1 and 5)
+\end_layout
+
+\begin_layout Enumerate
+Augmented with AI but still requiring human oversight (Step 4)
+\end_layout
+
+\begin_layout Enumerate
+Fully Automated by AI without 
+\bar under
+direct
+\bar default
+ human oversight (Steps 2 and 3)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[ht!]
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+begin{tikzpicture}[scale=0.75,
+ transform shape,
+\end_layout
+
+\begin_layout Plain Layout
+
+    node distance=0.5cm and 1.2cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+    every node/.style={rectangle,
+ rounded corners,
+ draw,
+ align=center,
+ minimum width=2cm,
+ minimum height=1cm},
+\end_layout
+
+\begin_layout Plain Layout
+
+    manual/.style={fill=gray!10},
+\end_layout
+
+\begin_layout Plain Layout
+
+    automated/.style={fill=green!30},
+\end_layout
+
+\begin_layout Plain Layout
+
+    augmented/.style={fill=orange!30},
+\end_layout
+
+\begin_layout Plain Layout
+
+    labelbox/.style={draw,
+ rectangle,
+ rounded corners,
+ font=
+\backslash
+bfseries,
+ minimum width=2.25cm,
+ minimum height=1cm},
+\end_layout
+
+\begin_layout Plain Layout
+
+    dashedbox/.style={draw,
+ rectangle,
+ rounded corners,
+ dashed,
+ inner sep=0.3cm,
+ line width=1pt},
+\end_layout
+
+\begin_layout Plain Layout
+
+    >=latex
+\end_layout
+
+\begin_layout Plain Layout
+
+  ]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Top layer (Steps)
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[manual] (S1) {Step 1
+\backslash
+
+\backslash
+(Manual)};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[automated,
+ right=of S1] (S2) {Step 2
+\backslash
+
+\backslash
+(Automated)};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[automated,
+ right=of S2] (S3) {Step 3
+\backslash
+
+\backslash
+(Automated)};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[augmented,
+ right=of S3] (S4) {Step 4
+\backslash
+
+\backslash
+(Augmented)};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[manual,
+ right=of S4] (S5) {Step 5
+\backslash
+
+\backslash
+(Manual)};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Arrows between steps
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[->,
+ thick] (S1) -- (S2);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[->,
+ thick] (S2) -- (S3);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[->,
+ thick] (S3) -- (S4);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[->,
+ thick] (S4) -- (S5);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Dashed boxes around steps
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[dashedbox,
+ draw=olive,
+ fit=(S1)] (DS1) {};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[dashedbox,
+ draw=blue,
+ fit=(S2)(S3)(S4)] (DS2-4) {};
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[dashedbox,
+ draw=olive,
+ fit=(S5)] (DS5) {};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % AI box top center aligned with Step 3
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[labelbox,
+ fill=blue!20,
+ above=1.25cm of S3] (AI) {AI};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Human box bottom center aligned with Step 3
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+node[labelbox,
+ fill=olive!20,
+ below=1.5cm of S3] (Human) {Human};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Lines from AI box to AI steps
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[thin,
+ blue!80] (AI.south) -- (S2.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[thin,
+ blue!80] (AI.south) -- (S3.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[thin,
+ blue] (AI.south) -- (S4.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    % Lines from Human box to Human steps
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[thin,
+ olive!80] (S1.south) -- (Human.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[thin,
+ olive] (S4.south) -- (Human.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+draw[thin,
+ olive!80] (S5.south) -- (Human.north);
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+end{tikzpicture}
+\end_layout
+
+\begin_layout Plain Layout
+
+  
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Model
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Firm's production consists of a sequence of steps.
+ Steps are partitioned into tasks (
+\begin_inset Formula $\textit{\textit{automation strategy}}$
+\end_inset
+
+),
+ and tasks are partitioned into jobs (
+\begin_inset Formula $\textit{job design}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/hierarchical_production_illustration.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Notation and Other Assumptions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Firm's production consists of a sequence of steps 
+\begin_inset Formula $\mathcal{S}=(s_{1},\ldots,s_{m})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Firm partitions contiguous subsequences of steps into a sequence of tasks 
+\begin_inset Formula $\mathcal{T}=(T_{1},\ldots,T_{n})$
+\end_inset
+
+ where 
+\begin_inset Formula $T_{b}=(s_{i},\ldots,s_{i+\ell})$
+\end_inset
+
+ for some 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $\ell$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Firm also partitions contiguous subsequences of tasks into jobs 
+\begin_inset Formula $\mathcal{J}=(J_{1},\ldots,J_{p}).$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We call 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ the firm's 
+\begin_inset Formula $\textit{\textit{automation strategy}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ the firm's 
+\begin_inset Formula $\textit{job design}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Labor is the only input (for now).
+\end_layout
+
+\begin_layout Itemize
+Firm assigns each job to a single worker.
+\end_layout
+
+\begin_layout Itemize
+Workers are ex-ante identical;
+ but acquire human capital needed to perform skills associated with tasks in their jobs after assignment.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Construction of Tasks from Steps,
+ and Jobs from Tasks
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Tasks are the basic units of work of a human worker.
+ 
+\end_layout
+
+\begin_layout Itemize
+A task is either a human task or an AI chain.
+ Task's cost derived from its constituent steps:
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $(c_{i}^{H},t_{i}^{H})$
+\end_inset
+
+if human,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\left(c_{i}^{M},\frac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}}\right)$
+\end_inset
+
+ if AI chain.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.5cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A contiguous set of tasks are aggregated into a job.
+ Cost parameters of job 
+\begin_inset Formula $j$
+\end_inset
+
+ determined by its constituent tasks:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\text{Wage}_{j}=\sum_{\text{task }b\in j}c_{b}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\text{\text{Employment Duration}_{j}}=\sum_{\text{task }b\in j}t_{b}.$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Workers paid wage rates for every unit of time being employed.
+ Thus,
+ wage bill of job 
+\begin_inset Formula $j$
+\end_inset
+
+ is:
+\begin_inset Formula 
+\[
+\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}c_{b}\right)\left(\sum_{\text{task }b\in j}t_{b}\right).
+\]
+
+\end_inset
+
+
+\color white
+The term 
+\begin_inset Formula $t^{S}(j)$
+\end_inset
+
+ is the hand-off time cost associated with the last task of the job (and hence the last step of the job).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Visual Example of Job Construction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.65
+\backslash
+linewidth]{plots/combined_grid_no_handoff.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Construction of Jobs from Tasks - Hand-off Cost Introduction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Tasks are the basic units of work of a human worker.
+ 
+\end_layout
+
+\begin_layout Itemize
+A task is either a human task or an AI chain.
+ Task's cost derived from its constituent steps:
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $(c_{i}^{H},t_{i}^{H})$
+\end_inset
+
+if human,
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\left(c_{i}^{M},\frac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}}\right)$
+\end_inset
+
+ if AI chain.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.5cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A contiguous set of tasks are aggregated into a job.
+ Cost parameters of job 
+\begin_inset Formula $j$
+\end_inset
+
+ determined by its constituent tasks:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\text{Wage}_{j}=\sum_{\text{task }b\in j}c_{b}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\text{\text{Employment Duration}_{j}}={\color{red}t^{S}(j)}+\sum_{\text{task }b\in j}t_{b}.$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Workers paid wage rates for every unit of time being employed.
+ Thus,
+ wage bill of job 
+\begin_inset Formula $j$
+\end_inset
+
+ is:
+\begin_inset Formula 
+\[
+\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}c_{b}\right)\left({\color{red}t^{S}(j)}+\sum_{\text{task }b\in j}t_{b}\right).
+\]
+
+\end_inset
+
+The term 
+\color red
+
+\begin_inset Formula $t^{S}(j)$
+\end_inset
+
+
+\color inherit
+ is the hand-off time cost associated with the last task of the job.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Aggregation of Steps into Tasks into Jobs with Hand-offs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hand-off only realized at the boundary of jobs (traced back from jobs layer to steps layer).
+\end_layout
+
+\begin_layout Itemize
+Hand-off time cost is an intrinsic property of steps (the third cost parameter).
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/hierarchical_production_illustration.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Role of Hand-off in Determining Job Boundaries
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Hand-off captures inefficiencies arising from coordination frictions among multiple workers.
+\end_layout
+
+\begin_layout Itemize
+Firm trades off:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Specializing workers and paying a coordination cost,
+\end_layout
+
+\begin_layout Enumerate
+Assigning more tasks to workers and paying them higher per-unit-time wages but saving up on coordination costs.
+\begin_inset Formula 
+\[
+\text{TotalCost}=\sum_{j=1}^{J}\text{WageBill}_{j}=\sum_{j=1}^{J}\left[\left(\sum_{\text{task }b\in j}c_{b}\right)\left(t^{S}(j)+\sum_{\text{task }b\in j}t_{b}\right)\right].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.65
+\backslash
+linewidth]{plots/job_design.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Visual Example of Job Construction with Hand-offs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.65
+\backslash
+linewidth]{plots/combined_grid_with_handoff.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Firm's Organizational Structure
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Two optimization horizons:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Long-run:
+ job design 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ and automation strategy 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ can flexibly adjust:
+\begin_inset Formula 
+\[
+\min_{\mathcal{T}}\ \min_{\mathcal{J}}\ \text{TotalCost}(\mathcal{J};\mathcal{T})=\sum_{J_{j}\in\mathcal{J}}\text{WageBill}_{j}=\sum_{J_{j}\in\mathcal{J}}\Biggl[\Biggl(\sum_{T_{b}\in J_{j}}c_{b}\Biggr)\Biggl(t^{S}(J_{j})+\sum_{T_{b}\in J_{j}}t_{b}\Biggr)\Biggr].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Short-run:
+ job design 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ and worker wages fixed,
+ automation strategy 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ adjusts within each job:
+\begin_inset Formula 
+\[
+\min_{\mathcal{T}}\;\sum_{T_{b}\in\mathcal{T}}t_{b}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Optimization}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Short-Term Optimization:
+ Automation Design
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In the short-term,
+ job boundaries and wages are fixed.
+ AI only allows to optimize completion times within jobs.
+ 
+\end_layout
+
+\begin_layout Itemize
+W/o loss to assume there is a single job with 
+\begin_inset Formula $m$
+\end_inset
+
+ steps.
+\end_layout
+
+\begin_layout Itemize
+Goal is to find the optimal automation strategy 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ that minimizes total completion time.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.75
+\backslash
+linewidth]{plots/hierarchical_production_illustration_shortTerm.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Short-Term Optimization:
+ Automation Design - Continued
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Proposition
+Given 
+\begin_inset Formula $m$
+\end_inset
+
+ steps organized into a single job,
+ the time-optimal automation strategy can be calculated in time 
+\begin_inset Formula $O(m^{2})$
+\end_inset
+
+ via dynamic programming.
+\end_layout
+
+\begin_layout Proof
+At step 
+\begin_inset Formula $k\leq m$
+\end_inset
+
+ show the minimum time needed to complete the job with 
+\begin_inset Formula $C[k]$
+\end_inset
+
+.
+ We have:
+\begin_inset Formula 
+\[
+C[k]=\min\ \Biggl\{ C[k-1]+t_{k}^{H},\ \min_{\ell<k}\Biggl\{ C[\ell]+\frac{t_{k}^{M}}{\prod_{i=\ell+1}^{k}q_{i}}\Biggr\}\Biggr\}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+First term:
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Step 
+\begin_inset Formula $k$
+\end_inset
+
+ done manually,
+ optimize over steps 1 to 
+\begin_inset Formula $k-1$
+\end_inset
+
+ separately
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\nospellcheck default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+;
+ 
+\end_layout
+
+\begin_layout Itemize
+Second term:
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Step 
+\begin_inset Formula $k$
+\end_inset
+
+ augmented;
+ optimize the optimal length of chain ending in 
+\begin_inset Formula $k$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Proof
+Given 
+\begin_inset Formula $(C[0],C[1],...,C[k-1])$
+\end_inset
+
+ we can calculate 
+\begin_inset Formula $C[k]$
+\end_inset
+
+ in time 
+\begin_inset Formula $O(k)$
+\end_inset
+
+ by considering each potential choice of 
+\begin_inset Formula $\ell$
+\end_inset
+
+.
+ Doing so for each 
+\begin_inset Formula $k=1,2,...,m$
+\end_inset
+
+ yields the value of 
+\begin_inset Formula $C[m]$
+\end_inset
+
+ in 
+\begin_inset Formula $O(m^{2})$
+\end_inset
+
+ time.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Approximate Solution to Long-Term Optimization Problem
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Turns out,
+ the long-term optimization is a massive combinatorial problem.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A1:Optimization}{
+\backslash
+beamergotobutton{Backup Slides}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We approximate a near-optimal solution in polynomial time by discretizing the skill and time costs:
+\end_layout
+
+\begin_layout Proposition
+Fix any sequence of 
+\begin_inset Formula $m$
+\end_inset
+
+ steps 
+\begin_inset Formula $\mathcal{S}=(s_{1},\dotsc,s_{m})$
+\end_inset
+
+ for which all skill costs,
+ time costs,
+ and hand-off costs lie in 
+\begin_inset Formula $[1/B,B]$
+\end_inset
+
+ for some 
+\begin_inset Formula $B>0$
+\end_inset
+
+.
+ Then for any 
+\begin_inset Formula $\epsilon>0$
+\end_inset
+
+,
+ an approximately cost-minimizing pair of automation strategy 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ and job design 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ minimizing the long-term production cost to within a factor of 
+\begin_inset Formula $(1+\epsilon)$
+\end_inset
+
+ can be computed in time 
+\begin_inset Formula $O(m^{2}\epsilon^{-2}\log^{2}(mB))$
+\end_inset
+
+ by dynamic programming.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Discussion}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Task Interdependence - Overturning of Comparative Advantage Logic
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+For a single step,
+ the decision whether to execute manually or augment with AI depends on which cost is lower.
+\end_layout
+
+\begin_layout Itemize
+However,
+ a human-efficient step may be preferable to automate as a part of an AI chain.
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Example 0
+\end_layout
+
+\end_inset
+
+Consider a production process with 2 steps with identical skill and time cost parameters:
+ 
+\begin_inset Formula $(c^{H},t^{H})=(1,\tfrac{3}{2})$
+\end_inset
+
+ and 
+\begin_inset Formula $(c^{M},t^{M})=(1,1)$
+\end_inset
+
+,
+ and take AI success probabilities 
+\begin_inset Formula $q_{1}=\tfrac{3}{5}$
+\end_inset
+
+ and 
+\begin_inset Formula $q_{2}=\tfrac{4}{5}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout ExampleBlock
+
+\end_layout
+
+\begin_layout ExampleBlock
+It's more cost-efficient to execute Step 1 manually:
+\begin_inset Formula 
+\[
+\underbrace{(1)(\tfrac{3}{2})}_{\text{Manual Execution}}=\tfrac{3}{2}<\tfrac{5}{3}=\underbrace{(1)(\tfrac{3}{5})^{-1}}_{\text{AI-Augmented Execution}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ExampleBlock
+However,
+ the AI chain has a lower cost than executing the first task manually and augmenting the second step.
+\begin_inset Formula 
+\[
+\underbrace{(1)(1)(\tfrac{3}{5}\times\tfrac{4}{5})^{-1}}_{\text{AI Chain}}=\tfrac{25}{12}\ \ <\ \ \tfrac{11}{4}=\underbrace{(1)(\tfrac{3}{2})+(1)(\tfrac{4}{5})^{-1}}_{\text{Step 1 Manual, Step 2 AI-Augmented}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Fragmentation Index - Motivating Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Because of task interdependence,
+ it becomes important where AI-able steps are positioned in the workflow.
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Example 1
+\end_layout
+
+\end_inset
+
+Consider a job consisting of 
+\begin_inset Formula $m(=2k)$
+\end_inset
+
+ steps.
+ Each step has 
+\begin_inset Formula $t^{H}=5$
+\end_inset
+
+ and 
+\begin_inset Formula $t^{M}=1$
+\end_inset
+
+,
+ but the steps vary in how difficult they are for an AI to complete:
+ odd-numbered steps can be successfully completed by an AI with probability 1,
+ whereas even-numbered steps will be successfully completed with probability only 0.1:
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[
+\end_layout
+
+\begin_layout Plain Layout
+
+    scale=0.8,
+\end_layout
+
+\begin_layout Plain Layout
+
+    node distance=0.5cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+    every node/.style={
+\end_layout
+
+\begin_layout Plain Layout
+
+        rectangle,
+ rounded corners,
+ draw,
+\end_layout
+
+\begin_layout Plain Layout
+
+        minimum width=1.45cm,
+ minimum height=0.85cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+        align=center
+\end_layout
+
+\begin_layout Plain Layout
+
+    },
+\end_layout
+
+\begin_layout Plain Layout
+
+    easy/.style={fill=teal!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    hard/.style={fill=red!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    idx/.style={draw=none,
+ font=
+\backslash
+scriptsize},
+\end_layout
+
+\begin_layout Plain Layout
+
+    >=latex,
+\end_layout
+
+\begin_layout Plain Layout
+
+    thick
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Nodes
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy] (E1) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E1] {1};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of E1] (H2) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of H2] {2};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of H2] (E3) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E3] {3};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[draw=none,
+ right=of E3] (Dots) {$
+\backslash
+cdots 
+\backslash
+cdots$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Dots] (Hk) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hk] {m--2};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of Hk] (Ek1) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Ek1] {m--1};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Ek1] (Hm) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hm] {m};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E1) -- (H2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (H2) -- (E3);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E3) -- (Dots);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Dots) -- (Hk);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Hk) -- (Ek1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Ek1) -- (Hm);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout ExampleBlock
+It is suboptimal to attempt to use AI on any of the even-numbered steps,
+ 
+\shape italic
+even as part of a chain
+\shape default
+.
+ The optimal automation strategy is to employ AI-augmentation on the odd-numbered steps (for a cost of 1 each) and perform even-numbered steps manually (for a cost of 5 each),
+ resulting in overall time cost of 
+\begin_inset Formula $3m$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Fragmentation Index - Motivating Examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Because of task interdependence,
+ it becomes important where AI-able steps are positioned in the workflow.
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Example 2
+\end_layout
+
+\end_inset
+
+Suppose in the previous example easy and hard steps are not interleaved,
+ but rather the first 
+\begin_inset Formula $\frac{m}{2}$
+\end_inset
+
+ steps can each be completed by AI with probability 1 and the last 
+\begin_inset Formula $\frac{m}{2}$
+\end_inset
+
+ steps can each be completed with probability 0.1:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[
+\end_layout
+
+\begin_layout Plain Layout
+
+    scale=0.8,
+\end_layout
+
+\begin_layout Plain Layout
+
+    node distance=0.5cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+    every node/.style={
+\end_layout
+
+\begin_layout Plain Layout
+
+        rectangle,
+ rounded corners,
+ draw,
+\end_layout
+
+\begin_layout Plain Layout
+
+        minimum width=1.45cm,
+ minimum height=0.85cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+        align=center
+\end_layout
+
+\begin_layout Plain Layout
+
+    },
+\end_layout
+
+\begin_layout Plain Layout
+
+    easy/.style={fill=teal!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    hard/.style={fill=red!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    idx/.style={draw=none,
+ font=
+\backslash
+scriptsize},
+\end_layout
+
+\begin_layout Plain Layout
+
+    >=latex,
+\end_layout
+
+\begin_layout Plain Layout
+
+    thick
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ----- Easy segment -----
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy] (E1) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E1] {1};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of E1] (E2) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E2] {2};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[draw=none,
+ right=of E2] (Dots1) {$
+\backslash
+cdots 
+\backslash
+cdots$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of Dots1] (Ek) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Ek] {$
+\backslash
+tfrac{m}{2}$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ----- Hard segment -----
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Ek] (H1) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of H1] {$
+\backslash
+tfrac{m}{2}+1$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[draw=none,
+ right=of H1] (Dots2) {$
+\backslash
+cdots 
+\backslash
+cdots$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Dots2] (Hm1) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hm1] {$m-1$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Hm1] (Hm) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hm] {$m$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E1) -- (E2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E2) -- (Dots1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Dots1) -- (Ek);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Ek) -- (H1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (H1) -- (Dots2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Dots2) -- (Hm1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Hm1) -- (Hm);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+The optimal strategy chains together the first 
+\begin_inset Formula $\frac{m}{2}$
+\end_inset
+
+ steps into a single automated AI chain,
+ for a combined cost of 1.
+ The remaining 
+\begin_inset Formula $\frac{m}{2}$
+\end_inset
+
+ steps are performed manually.
+ Overall time cost will be 
+\begin_inset Formula $1+\frac{5m}{2}$
+\end_inset
+
+,
+ which is strictly less than 
+\begin_inset Formula $3m$
+\end_inset
+
+ for 
+\begin_inset Formula $m\geq4$
+\end_inset
+
+ steps.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Fragmentation Index
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+To extend the idea,
+ we introduce a measure of dispersion of AI-exposed tasks in production process 
+\bar under
+in the short run
+\bar default
+:
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textit{fragmentation index}
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset Formula $\uparrow$
+\end_inset
+
+ FI 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\begin_inset Formula $\downarrow$
+\end_inset
+
+ sensitive production is to AI improvements.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A2:Fragmentation}{
+\backslash
+beamergotobutton{Formal Definition}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We show that the fragmentation index of a job approximates the time cost of an optimal automation strategy for the job.
+ 
+\end_layout
+
+\begin_layout Proposition
+Fix a single job with a sequence of 
+\begin_inset Formula $m$
+\end_inset
+
+ steps 
+\begin_inset Formula $\mathcal{S}=\{s_{1},\dotsc,s_{m}\}$
+\end_inset
+
+,
+ each with 
+\begin_inset Formula $t_{i}^{M}=1$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $FI$
+\end_inset
+
+ denote its fragmentation index and let 
+\begin_inset Formula $OPT$
+\end_inset
+
+ denote the minimum time cost over all automation strategies.
+ Then 
+\begin_inset Formula $\tfrac{1}{8}OPT\leq FI\leq\tfrac{5}{4}OPT$
+\end_inset
+
+.
+ If we further assume 
+\begin_inset Formula $t_{i}^{H}\geq1$
+\end_inset
+
+ for all 
+\begin_inset Formula $i$
+\end_inset
+
+,
+ then 
+\begin_inset Formula $\tfrac{1}{4}OPT\leq FI\leq\tfrac{5}{4}OPT$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Key takeaways:
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Jobs with high fragmentation index will tend to have higher time costs even under optimal use of AI chaining.
+ (i.e.,
+ structure of production limits returns to AI improvement).
+\end_layout
+
+\begin_layout Itemize
+Key driver of efficiency gains via AI automation not just the # of steps that are automated,
+ but the 
+\bar under
+number of adjacent steps
+\bar default
+ in the production process that have high exposure to AI.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{Fragmentation_Main}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Impact of AI Deployment on Worker Specialization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+In short-run,
+ gains from AI derive primarily from cost-savings.
+ 
+\bar under
+But
+\bar default
+,
+ in the long run,
+ automation may alter the skill requirements of workers and degree of specialization.
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Example 3
+\end_layout
+
+\end_inset
+
+ Consider a job consisting of a single step.
+ This step has manual time and skill requirements 
+\begin_inset Formula $(c^{H},t^{H})=(5,5)$
+\end_inset
+
+.
+ Suppose that,
+ under AI augmentation,
+ this step has 
+\begin_inset Formula $(c^{M},t^{M})=(1,1)$
+\end_inset
+
+ and probability 
+\begin_inset Formula $q=\tfrac{1}{8}$
+\end_inset
+
+ of successful completion.
+ Despite the task taking longer to complete with AI (due to the low likelihood of success on any individual attempt),
+ the reduced skill requirement of managing the AI process means that it is firm-optimal to employ AI augmentation.
+\end_layout
+
+\begin_layout Itemize
+We allow skill and time requirements of work to vary endogenously,
+ and unify two views:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+AI automates mundane (i.e.,
+ low-skill,
+ high-time) tasks and allows high-skill workers to do more high-skill tasks.
+\end_layout
+
+\begin_layout Itemize
+AI deskills high-skilled labor and replaces them with low-skill AI management.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Ambiguous Effect on Worker Specialization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Direction of the effect?
+ Our framework remains agnostic,
+ and can support both!
+\end_layout
+
+\begin_layout Itemize
+One hypothesis:
+ AI automation has a normalizing effect on tasks,
+ reverting both skill and time requirements toward the mean (i.e.,
+ 
+\begin_inset Quotes eld
+\end_inset
+
+square-like).
+\end_layout
+
+\begin_layout Itemize
+If hand-off time requirements remain unchanged,
+ then tent-pole inefficiencies due to grouping of tasks together in the same job reduces 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ less worker specialization.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+includegraphics[width=0.25
+\backslash
+textwidth]{plots/tent_poll.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Numerical Example Leading to Less Specialization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout ExampleBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Example 4
+\end_layout
+
+\end_inset
+
+ Consider a two-step production process,
+ with costs 
+\begin_inset Formula $(c_{1}^{H},t_{1}^{H},t_{1}^{S})=(2,4,5)$
+\end_inset
+
+ and 
+\begin_inset Formula $(c_{2}^{H},t_{2}^{H})=(4,2)$
+\end_inset
+
+.
+ That is,
+ the first step is low-skill but time-intensive and the second step is high-skill but can be completed quickly.
+ Combining both steps into a single job (at a labor cost of 
+\begin_inset Formula $(2+4)(4+2)=36$
+\end_inset
+
+) is strictly worse than separating into two specialized jobs with a handoff (at a total cost of 
+\begin_inset Formula $(2)(4+5)+(4)(2)=26$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout ExampleBlock
+
+\end_layout
+
+\begin_layout ExampleBlock
+However,
+ if each step of production could be augmented separately via AI to yield effective skill and time costs of 
+\begin_inset Formula $(c^{M},t^{M})=(2,2)$
+\end_inset
+
+ for each,
+ then the optimal design combines both augmented steps into a single job at a total cost of 
+\begin_inset Formula $(2+2)(2+2)=16$
+\end_inset
+
+,
+ which is better than separating into two distinct jobs (incurring cost 
+\begin_inset Formula $(2)(2+5)+(2)(2)=18$
+\end_inset
+
+).
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Numerical Example Leading to More Specialization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+If AI-augmented steps have higher skill requirements than the corresponding manual steps.
+\end_layout
+
+\begin_layout ExampleBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Example 5
+\end_layout
+
+\end_inset
+
+ Consider a different two-step production process,
+ with manual skill and time costs 
+\begin_inset Formula $(c_{1}^{H},t_{1}^{H})=(c_{2}^{H},t_{2}^{H})$
+\end_inset
+
+ and hand-off cost 
+\begin_inset Formula $t_{1}^{S}=5$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout ExampleBlock
+The optimal job design separates these into two separate jobs at a total cost of 
+\begin_inset Formula $(3)(3+5)+(3)(3)=33$
+\end_inset
+
+,
+ with each job requiring a worker of skill 
+\begin_inset Formula $3$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout ExampleBlock
+
+\end_layout
+
+\begin_layout ExampleBlock
+Suppose AI augmentation can allow each step to be completed with 
+\begin_inset Formula $(c^{M},t^{M})=(2,1/4)$
+\end_inset
+
+,
+ and an AI success probability of 
+\begin_inset Formula $1/8$
+\end_inset
+
+,
+ for a total expected execution time of 
+\begin_inset Formula $(1/4)\times(1/8)^{-1}=2$
+\end_inset
+
+.
+ In this case,
+ the optimal design employs AI augmentation in each step and combines the two steps into a single job,
+ resulting in a total cost of 
+\begin_inset Formula $(2+2)(2+2)=16$
+\end_inset
+
+ and requiring a worker of skill 
+\begin_inset Formula $4$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout ExampleBlock
+
+\end_layout
+
+\begin_layout ExampleBlock
+This is preferable to combining the two steps into a single AI chain,
+ which would result in a total cost of 
+\begin_inset Formula $(2)((1/4)\times(1/8)^{-1}\times(1/8)^{-1})=32$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Non-monotone Impacts of AI Improvements
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout ExampleBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Example 6
+\end_layout
+
+\end_inset
+
+ Consider a production process with two steps.
+ The first step is short but high-skill and difficult for AI tools to perform correctly:
+ 
+\begin_inset Formula $(c_{1}^{H},t_{1}^{H},t_{1}^{S})=(5,1,1)$
+\end_inset
+
+.
+ Task 1's AI difficulty score,
+ 
+\begin_inset Formula $d_{1}$
+\end_inset
+
+,
+ is 
+\begin_inset Formula $6$
+\end_inset
+
+.
+ Therefore 
+\begin_inset Formula $q_{1}=\alpha^{6}$
+\end_inset
+
+.
+ The AI management skill and time requirements are the same as the manual execution requirements:
+ 
+\begin_inset Formula $(c_{1}^{M},t_{1}^{M})=(5,1)$
+\end_inset
+
+.
+ The second step is low-skill and timely to execute manually,
+ but easy for AI:
+ 
+\begin_inset Formula $(c_{2}^{H},t_{1}^{H})=(2,4)$
+\end_inset
+
+ and 
+\begin_inset Formula $(c_{2}^{M},t_{2}^{M})=(2,1)$
+\end_inset
+
+ with AI difficulty score 
+\begin_inset Formula $1$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[h!]
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+   
+\backslash
+includegraphics[width=0.8
+\backslash
+textwidth]{plots/nonmonotone_returns.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Production Function Aggregation}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Micro to Macro Production Function Aggregation - High-level Summary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+To say anything about broader impacts of AI need to have a macro production function.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{Aggregation_Main}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We aggregate individual firms' production functions into a macro CES production function in two steps:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+From
+\begin_inset Formula 
+\[
+x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} ,
+\]
+
+\end_inset
+
+to
+\begin_inset Formula 
+\[
+x=\min\,\left\{ \frac{\bar{\alpha}\,l_{M}}{\tau_{M}},\,\frac{l_{H}}{\tau_{H}}\right\} ,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\tau_{M}$
+\end_inset
+
+ and 
+\begin_inset Formula $\tau_{H}$
+\end_inset
+
+ are firm-level aggregate management and human skill-adjusted labor.
+\end_layout
+
+\begin_layout Enumerate
+With 
+\begin_inset Quotes eld
+\end_inset
+
+proper
+\begin_inset Quotes erd
+\end_inset
+
+ heterogeneity across firms in AI deployment quality,
+ the individual production functions aggregate into:
+\begin_inset Formula 
+\[
+X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\,K^{\rho}\right)^{\frac{1}{\rho}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $M$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+ are economy-wide aggregate management and human labor.
+ The capital 
+\begin_inset Formula $K$
+\end_inset
+
+ can be normalized to 
+\begin_inset Formula $1$
+\end_inset
+
+ without loss.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A3:Aggregation}{
+\backslash
+beamergotobutton{Aggregation Details}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Empirical Evaluation}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Data Sources
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+We empirically test three implications of the model.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{Data_Sources}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.5cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Construct a task-level dataset containing three attributes for each task:
+ (1) exposure to AI,
+ (2) realized model of execution,
+ (3) position in production sequence by combining:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+O*NET occupations and tasks (May 2023)
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Every O*NET task is mapped to a step in our theoretical framework.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Human-generated labels for AI exposure of O*NET tasks (Eloundou et al.,
+ 2024)
+\end_layout
+
+\begin_layout Enumerate
+AI execution outcomes of O*NET tasks from Anthropic's Economic Index (Handa et al.,
+ 2025)
+\end_layout
+
+\begin_layout Enumerate
+GPT-produced sequence of tasks within occupation 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.5cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+(1)-(3) external sources.
+ We create (4) by prompting GPT-5-mini to order tasks.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A4:GPT_TaskOrderingPrompt}{
+\backslash
+beamergotobutton{GPT Prompt}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Augmented and Automated Tasks (Anthropic)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+We follow Anthropic's approach in labeling augmented and automated tasks:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.96
+\backslash
+linewidth]{plots/anthropic_executionMode_examples.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Augmented and Automated Tasks - Merged w/ O*NET
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+After merging Anthropic labels with the O*NET set of tasks:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/all_labels_histogram.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Augmented and Automated Tasks - Example Task Sequence 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example occupation with many AI tasks:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.7
+\backslash
+linewidth]{plots/task_sequence_15-1251.00_Computer_Programmers.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Augmented and Automated Tasks - Example Task Sequence 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example occupation with some (out of order!) AI tasks:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.7
+\backslash
+linewidth]{plots/task_sequence_11-3131.00_Training_and_Development_Managers.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Augmented and Automated Tasks - Example Task Sequence 3
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example occupation with no AI tasks:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.7
+\backslash
+linewidth]{plots/task_sequence_49-2096.00_Electronic_Equipment_Installers_and_Repairers__Motor_Vehicles.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #1:
+ AI-executed Steps Tend to Form AI Chains
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Prediction #1:
+ AI-executed steps tend to appear next together,
+ forming AI chains.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We treat all AI steps the same (augmented or automated) and calculate:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average length of AI chains:
+ 1.45
+\end_layout
+
+\begin_layout Itemize
+Average number of AI chains per occupation:
+ 2.1 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.25cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+What's the benchmark?
+ Are these small or big?
+\end_layout
+
+\begin_layout Itemize
+We calculate the same statistics in two different placebo datasets constructed via:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Randomizing task positions within occupations,
+\end_layout
+
+\begin_layout Enumerate
+Randomizing execution label assignments of tasks across entire dataset.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #1:
+ AI-executed Steps Tend to Form AI Chains - Robustness Test 1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Histogram of statistics from 1,000 different task-position reshuffles vs.
+ actual values
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/aiChain_length_count_taskPositionReshuffle.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Takeaways:
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Occurrence of AI tasks in clusters in original data not not random,
+\end_layout
+
+\begin_layout Itemize
+GPT-generated occupation task sequence non-random.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #1:
+ AI-executed Steps Tend to Form AI Chains - Robustness Test 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Histogram of statistics from 1,000 different task execution label reshuffles vs.
+ actual values
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/aiChain_length_count_taskLabelReshuffle.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Takeaways:
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Occurrence of AI tasks in clusters in original data not not random,
+\end_layout
+
+\begin_layout Itemize
+Non-random distribution of Anthropic-reported AI-executed tasks.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Prediction #2:
+ Step-level AI exposure is not the only determinant of job-level AI adoption;
+ where AI-able steps sit in the workflow also matters for execution outcomes.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Empirical fragmentation index (EFI) is measured by number of 
+\bar under
+potential chains
+\bar default
+ divided by all steps.
+\end_layout
+
+\begin_layout Itemize
+Example:
+ consider an occupation with five O*NET tasks:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+If none of 5 are exposed to AI 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ EFI = 5 / 5 = 1
+\end_layout
+
+\begin_layout Itemize
+If two contiguous tasks are exposed to AI 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ EFI = 4 / 5 = 0.8
+\end_layout
+
+\begin_layout Itemize
+If two non-contiguous tasks are exposed to AI 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ EFI = 5 / 5 = 1
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+In a sense,
+ EFI measures the number of hand-offs between tasks in the extreme case where all AI-exposed tasks are executed by AI.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We calculate two versions of EFI:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Only considering E1 tasks as AI-exposed (14% of tasks) – a strict measure
+\end_layout
+
+\begin_layout Enumerate
+Considering both E1 and E2 tasks as AI-exposed (44% of tasks)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Prediction #2:
+ Step-level AI exposure is not the only determinant of job-level AI adoption;
+ where AI-able steps sit in the workflow also matters for execution outcomes.
+\end_layout
+
+\begin_layout Itemize
+Regression:
+\begin_inset Formula 
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\text{ai\_execution}_{o}$
+\end_inset
+
+:
+ fraction of AI-executed tasks in occupation 
+\begin_inset Formula $o$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\text{ai\_exposure}_{o}$
+\end_inset
+
+:
+ fraction of AI-exposed tasks (E1) in occupation 
+\begin_inset Formula $o$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\text{empirical\_fragmentation\_index}_{o}$
+\end_inset
+
+:
+ measure of how fragmented AI-exposed tasks are in occupation 
+\begin_inset Formula $o$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Model predicts 
+\begin_inset Formula $\beta_{1}>0$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta_{2}<0$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/fragmentation_regression.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A5:EFI_execution-based}{
+\backslash
+beamergotobutton{Ex post EFI measures}}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{EFI_exposure-based}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/fragmentation_regression_explanation1.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A5:EFI_execution-based}{
+\backslash
+beamergotobutton{Ex post EFI measures}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/fragmentation_regression_explanation2.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A5:EFI_execution-based}{
+\backslash
+beamergotobutton{Ex post EFI measures}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/fragmentation_regression_explanation3.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A5:EFI_execution-based}{
+\backslash
+beamergotobutton{Ex post EFI measures}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Prediction #3:
+ The same step may be executed differently across occupations depending on AI execution status of its neighbors.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Step X more likely to be automated in Occupation 1:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.8
+\backslash
+linewidth]{plots/sameTask_diffOcc_graphic.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Local gains from executing step X as part of an AI chain in Occupation 1 is higher.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Practical Considerations
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Issue:
+ O*NET tasks are occupation-specific:
+ no task appears in >1 occupation.
+\end_layout
+
+\begin_layout Itemize
+Solution:
+ O*NET has a hierarchical categorization of tasks.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Multiple tasks 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Single detailed work activity (DWA)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Tasks within a DWA are more or less similar.
+ 
+\end_layout
+
+\begin_layout Itemize
+We treat tasks in the same DWA as the 
+\begin_inset Quotes eld
+\end_inset
+
+same step
+\begin_inset Quotes erd
+\end_inset
+
+ appearing across different occupations.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Example DWAs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example DWAs and tasks associated with them:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/sameDWA_examples.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Regression
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Prediction #3:
+ Same step may be executed differently across occupations depending on AI execution status of its neighbors.
+\end_layout
+
+\begin_layout Itemize
+Regression:
+\begin_inset Formula 
+\begin{align*}
+\Pr\!\left(\text{is\_ai}_{t}=1|X_{t}\right) & =\Lambda\!\Big(\beta_{0}+\beta_{1}\,\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}+\beta_{2}\,\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}\\
+ & \ \ \ \ \ \ \ \ +\beta_{3}\,\mathds{1}_{\{(t+1)\ \text{Task is AI}\}}+\beta_{4}\,\mathds{1}_{\{(t+2)\ \text{Task is AI}\}}+\varepsilon_{t}\Big)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\Lambda$
+\end_inset
+
+ is logistic CDF.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\text{is\_ai}_{t}=1$
+\end_inset
+
+ if task 
+\begin_inset Formula $t$
+\end_inset
+
+ is AI (augmented or automated).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}=1$
+\end_inset
+
+ if task two positions before task 
+\begin_inset Formula $t$
+\end_inset
+
+ is AI.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}=1$
+\end_inset
+
+ if task before task 
+\begin_inset Formula $t$
+\end_inset
+
+ is AI.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathds{1}_{\{(t+1)\ \text{Task is AI}\}}=1$
+\end_inset
+
+ if task after task 
+\begin_inset Formula $t$
+\end_inset
+
+ is AI.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mathds{1}_{\{(t+2)\ \text{Task is AI}\}}=1$
+\end_inset
+
+ if task two positions after task 
+\begin_inset Formula $t$
+\end_inset
+
+ is AI.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
+\end_layout
+
+\begin_layout Itemize
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
+\end_layout
+
+\begin_layout Itemize
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_explanation1.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
+\end_layout
+
+\begin_layout Itemize
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_explanation2.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
+\end_layout
+
+\begin_layout Itemize
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_explanation3.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
+\end_layout
+
+\begin_layout Itemize
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_explanation4.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The magnitudes are hard to interpret as there is no benchmark for these effects.
+\end_layout
+
+\begin_layout Itemize
+But could these have happened by chance?
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+ No!
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Test:
+ randomize position of tasks within occupations and repeat the same analysis.
+\end_layout
+
+\begin_layout Itemize
+Compare position-randomized outcomes against actual outcomes.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #1:
+ in random-position placebos all neighbors contribute equally to automatability of middle task (i.e.,
+ all four distributions similar mean and shape) 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #2:
+ effect of immediate neighbors (middle columns) stronger than in randomized-position placebos 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #3:
+ effect of farther neighbors (side columns) weaker than in randomized-position placebos 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (SOC major group FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_major_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (SOC minor group FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_minor_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (DWA FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_with_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (number of DWA task in occupation FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa_withTaskDWACount.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (DWA FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_with_dwa_withTaskDWACount.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Further Robustness Tests
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+As further robustness:
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{Pred3_robustness}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Ask GPT-5-mini to pick the tasks within DWAs that are most similar in terms of execution method and required skills,
+ and keep only one task per occupation.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A4:GPT_DWAsimilarTasksPrompt}{
+\backslash
+beamergotobutton{GPT Prompt}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Results quantitatively the same.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A6:DWA_regression_ai_GPT}{
+\backslash
+beamergotobutton{GPT-filtered Sample}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Test contribution of neighbors on likelihood of automation (instead of AI execution):
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Results quantitatively attenuated but qualitative in the same direction.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A7:DWA_regression_automated}{
+\backslash
+beamergotobutton{Automation (Main Sample)}}
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A8:DWA_regression_automated_GPT}{
+\backslash
+beamergotobutton{Automation (GPT-filtered Sample)}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Summary}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Summary
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Developed a task-based framework to study implications of AI automation:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Firm trades off coordination frictions against paying higher wages.
+\end_layout
+
+\begin_layout Itemize
+AI automation might overturn the simple comparative-advantage logic through the chaining logic.
+\end_layout
+
+\begin_layout Itemize
+Gave efficient algorithms for the firm's cost minimization problem,
+ determining optimal organizational structure.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Showed that discrete reorganization of work leads to non-monotone returns from improving AI quality.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Explains why firms heavily invest in AI without immediate returns.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Showed how to map micro production functions to a CES macro production function if firms heterogenous in how they deploy general-purpose AI technology.
+\end_layout
+
+\begin_layout Itemize
+Provided empirical support for implications of the model.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+Thanks for your attention!
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+~
+\backslash
+
+\backslash
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout PlainFrame
+[your email here]
+\end_layout
+
+\begin_layout PlainFrame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+section{Appendix}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A1:Optimization}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Warm-up to Long-Term Optimization:
+ Job Design Without AI
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Proposition
+Given a fixed sequence of tasks 
+\begin_inset Formula $\mathcal{T}=(T_{1},\dotsc,T_{n})$
+\end_inset
+
+ with skill and time costs 
+\begin_inset Formula $c=(c_{1},\dotsc,c_{n})$
+\end_inset
+
+ and 
+\begin_inset Formula $t=(t_{1},\dotsc,t_{n})$
+\end_inset
+
+,
+ the cost-minimizing job design 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+ can be computed in time 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+ by dynamic programming.
+\end_layout
+
+\begin_layout Proof
+Let 
+\begin_inset Formula $C[k]$
+\end_inset
+
+ be the minimum cost of a job design for tasks 1 through 
+\begin_inset Formula $k$
+\end_inset
+
+,
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textit{including hand-off costs for task $k$}
+\end_layout
+
+\end_inset
+
+.
+ We have:
+\begin_inset Formula 
+\[
+C[k]=\min_{s<k}\Biggl\{ C[s]+\Biggl[\Biggl(\sum_{i=s+1}^{k}c_{i}\Biggr)\Biggl(t_{k}^{S}+\sum_{i=s+1}^{k}t_{i}\Biggr)\Biggr]\Biggr\}.
+\]
+
+\end_inset
+
+Optimize over the choice of final job 
+\begin_inset Formula $\{s+1,...,k\}$
+\end_inset
+
+,
+ accounting recursively for the optimal job design for the remaining jobs.
+ Each 
+\begin_inset Formula $C[k]$
+\end_inset
+
+ can be calculated in 
+\begin_inset Formula $O(k)$
+\end_inset
+
+ time by considering each choice of 
+\begin_inset Formula $s=1,...,k$
+\end_inset
+
+.
+ Doing so for each 
+\begin_inset Formula $k=1,2,...,n$
+\end_inset
+
+ will take 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+ time.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Long-Term Optimization:
+ Automation and Job Design
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Let 
+\begin_inset Formula $V(i)$
+\end_inset
+
+ denote the minimum cost required to complete steps 1 through 
+\begin_inset Formula $i$
+\end_inset
+
+,
+ including any hand-off costs to a subsequent worker.
+\end_layout
+
+\begin_layout Itemize
+Let 
+\begin_inset Formula $W(i,c,t)$
+\end_inset
+
+ be the minimum cost of completing steps 1 through 
+\begin_inset Formula $i$
+\end_inset
+
+,
+ as well as some additional (but unspecified) set of tasks with cost profile 
+\begin_inset Formula $(c,t)$
+\end_inset
+
+ that have already been assigned as a single job to a single worker referred to as the 
+\begin_inset Quotes eld
+\end_inset
+
+active worker
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+By definition:
+\begin_inset Formula 
+\[
+V(i)=W(i,0,t_{i}^{S})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Long-Term Optimization:
+ Automation and Job Design - Continued
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Proposition
+For each 
+\begin_inset Formula $i\geq1$
+\end_inset
+
+,
+ the minimum cost function 
+\begin_inset Formula $W(i,\;c,\;t)$
+\end_inset
+
+ satisfies the following recursive relation:
+\end_layout
+
+\begin_layout Proposition
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{align*}
+\end_layout
+
+\begin_layout Plain Layout
+
+W(i,
+\backslash
+;
+ 
+\backslash
+hccost{},
+\backslash
+;
+ 
+\backslash
+timecost{})
+\end_layout
+
+\begin_layout Plain Layout
+
+= 
+\backslash
+min
+\backslash
+Biggl
+\backslash
+{ 
+\end_layout
+
+\begin_layout Plain Layout
+
+& 
+\backslash
+hccost{}
+\backslash
+,
+\backslash
+timecost{} 
+\backslash
+;
+ + 
+\backslash
+;
+ V(i),
+ 
+\backslash
+;
+ 
+\backslash
+;
+ 
+\backslash
+;
+ 
+\backslash
+;
+ W(i-1,
+\backslash
+;
+ 
+\backslash
+hccost{} + c_i ^H,
+\backslash
+;
+ 
+\backslash
+timecost{} + t_i ^H),
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+& 
+\backslash
+ 
+\backslash
+min_{r < i} 
+\backslash
+ W
+\backslash
+left(r,
+\backslash
+;
+ 
+\backslash
+hccost{} + c_i ^M,
+\backslash
+;
+ 
+\backslash
+timecost{} + 
+\backslash
+frac{t_i^M}{
+\backslash
+prod_{s=r+1}^{i} q_s}
+\backslash
+right)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+Biggr
+\backslash
+}.
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{align*}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proposition
+The cost of the optimal joint automation and job design for a given sequence of 
+\begin_inset Formula $m$
+\end_inset
+
+ steps is then 
+\begin_inset Formula $V(m)=W(m,\;0,\;0)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Term 1:
+ end 
+\begin_inset Quotes eld
+\end_inset
+
+previous
+\begin_inset Quotes erd
+\end_inset
+
+ worker's job at 
+\begin_inset Formula $i$
+\end_inset
+
+;
+ start job of active worker from 
+\begin_inset Formula $i+1$
+\end_inset
+
+.
+ Cost of steps 1 to 
+\begin_inset Formula $i$
+\end_inset
+
+ is 
+\begin_inset Formula $V(i)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Term 2:
+ step 
+\begin_inset Formula $i$
+\end_inset
+
+ executed manually;
+ its manual costs are added to active worker's job costs.
+\end_layout
+
+\begin_layout Itemize
+Term 3:
+ augment step 
+\begin_inset Formula $i$
+\end_inset
+
+ and choose the length of AI chain task terminating in 
+\begin_inset Formula $i$
+\end_inset
+
+ optimally.
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Optimization_Main}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A2:Fragmentation}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Fragmentation Index - Formal Definition
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Assume 
+\begin_inset Formula $t_{i}^{M}=1$
+\end_inset
+
+ for all steps.
+\end_layout
+
+\begin_layout Itemize
+Assume independent step success 
+\begin_inset Formula $q_{i}$
+\end_inset
+
+.
+ A step that does not succeed is said to fail.
+\end_layout
+
+\begin_layout Itemize
+Write 
+\begin_inset Formula $F$
+\end_inset
+
+ for the set of steps that fail.
+\end_layout
+
+\begin_layout Itemize
+Write 
+\begin_inset Formula $\mathcal{C}=\{C_{1},...,C_{k}\}$
+\end_inset
+
+ for the random variable representing the collection of maximal connected components of non-failed steps.
+\end_layout
+
+\begin_layout Itemize
+The weight of each 
+\begin_inset Formula $C_{j}\in\mathcal{C}$
+\end_inset
+
+ is defined to be minimum of its augmentation cost or sum of it manual steps
+\begin_inset Formula 
+\[
+w(C_{j})=min\{1,\;\sum_{i\in C_{j}}t_{i}^{H}\}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Given a realization of 
+\begin_inset Formula $C$
+\end_inset
+
+ and 
+\begin_inset Formula $F$
+\end_inset
+
+,
+ the realized fragmentation is:
+\begin_inset Formula 
+\[
+\sum_{i\in F}\min\,\{t_{i}^{H},\frac{t_{i}^{M}}{q_{i}}\}+\sum_{C_{j}\in\mathcal{C}}w(C_{j}).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Fragmentation index is the expected value of the realized fragmentation above.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Fragmentation_Main}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A3:Aggregation}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Micro to Macro Production Function Aggregation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Production function aggregation setup:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Firms use (1) skill-adjusted AI management labor,
+ (2) skill-adjusted human labor,
+ (3) capital.
+\end_layout
+
+\begin_layout Itemize
+Assume capital is plenty and is a fixed input so firms decide on (1) and (2) conditional on capital stock.
+\end_layout
+
+\begin_layout Itemize
+Different types of labor have different base wage rates:
+ 
+\begin_inset Formula $w_{M}$
+\end_inset
+
+ for AI management and 
+\begin_inset Formula $w_{H}$
+\end_inset
+
+ for human labor.
+\end_layout
+
+\begin_layout Itemize
+Updated job wage equation:
+\begin_inset Formula 
+\[
+\text{Wage}_{j}=w_{H}\left(\sum_{T_{b}^{H}\in J}c_{b}^{H}\right)+w_{M}\left(\sum_{T_{b}^{M}\in J}c_{b}^{M}\right).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Skill-adjusted time requirement of task 
+\begin_inset Formula $b$
+\end_inset
+
+ is:
+\begin_inset Formula 
+\[
+\tau_{b}=\frac{w_{H}\left(\sum_{T_{\ell}^{H}\in J(b)}c_{\ell}^{H}\right)+w_{M}\left(\sum_{T_{\ell}^{M}\in J(b)}c_{\ell}^{M}\right)}{w_{O(b)}}\,t_{b},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $O(b)=H$
+\end_inset
+
+ if 
+\begin_inset Formula $b$
+\end_inset
+
+ is a manual task and 
+\begin_inset Formula $O(b)=M$
+\end_inset
+
+ if 
+\begin_inset Formula $b$
+\end_inset
+
+ is an AI chain.
+\end_layout
+
+\begin_layout Itemize
+Wage bill paid to task 
+\begin_inset Formula $b$
+\end_inset
+
+ is thus 
+\begin_inset Formula $w_{H}\tau_{b}$
+\end_inset
+
+ if executed manually and 
+\begin_inset Formula $w_{M}\tau_{b}\alpha^{-d_{b}}$
+\end_inset
+
+ if executed via AI.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+(1) Within-Firm Aggregation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Fix automation strategy 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ and job design 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Assume hand-offs are performed manually 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ model as an additional 
+\begin_inset Formula $p-1$
+\end_inset
+
+ manual tasks where 
+\begin_inset Formula $p$
+\end_inset
+
+ is number of jobs.
+\end_layout
+
+\begin_layout Itemize
+With hand-offs being standalone tasks 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ reorder tasks in the production sequence:
+ 
+\begin_inset Formula $1,...,k$
+\end_inset
+
+ are AI chains,
+ and 
+\begin_inset Formula $k+1,...n+p-1$
+\end_inset
+
+ are manual tasks.
+\end_layout
+
+\begin_layout Itemize
+Individual firm's production function is Leontief in steps:
+\begin_inset Formula 
+\[
+x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} ,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $x$
+\end_inset
+
+ is output and 
+\begin_inset Formula $l_{i}$
+\end_inset
+
+ is labor assigned to task 
+\begin_inset Formula $i$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+(1) Within-Firm Aggregation - Continued
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} .
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Can be represented as:
+\begin_inset Formula 
+\[
+x=\min\,\left\{ \frac{\bar{\alpha}\,l_{M}}{\tau_{M}},\,\frac{l_{H}}{\tau_{H}}\right\} ,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\bar{\alpha}$
+\end_inset
+
+ is the effective AI quality level and:
+\begin_inset Formula 
+\[
+\tau_{M}=\sum_{b=1}^{k}\tau_{b}^{M},\qquad\qquad\tau_{H}=\sum_{j=1}^{p-1}\tau^{S}(J_{j})+\sum_{b=k+1}^{n}\tau_{b}^{H},\qquad\qquad\bar{\alpha}=\frac{\sum_{b=1}^{k}\tau_{b}^{M}}{\sum_{b=1}^{k}\tau_{b}^{M}\alpha^{-d_{b}}},
+\]
+
+\end_inset
+
+if the rate of substitution of inputs within groups are independent of rate of substitution in the other group (which is satisfied in the Leontief case).
+\end_layout
+
+\begin_layout Itemize
+This representation gives insight into how much AI management versus human labor is used at the firm level.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+(2) Across-Firm Aggregation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Consider a unit mass of firms.
+ 
+\end_layout
+
+\begin_layout Itemize
+Firms do not know their actual AI quality parameter before production occurs;
+ they make decisions based on a common prior.
+\end_layout
+
+\begin_layout Itemize
+Production unfolds in two stages:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Stage 1:
+ firms decide on organization structure (i.e.,
+ automation strategy 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ and job design 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+) based on expected effective AI quality level.
+\end_layout
+
+\begin_layout Itemize
+Stage 2:
+ effective AI quality is realized and firms produce.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+We show that with proper heterogeneity in effective AI quality levels micro production functions can aggregate into a CES production function of the form:
+ 
+\begin_inset Formula 
+\[
+X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\,K^{\rho}\right)^{\frac{1}{\rho}},
+\]
+
+\end_inset
+
+where capital can be normalized to 1 without loss.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+(2) Across-Firm Aggregation - Continued
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Normalize the output price 
+\begin_inset Formula $p=1$
+\end_inset
+
+,
+ so that 
+\begin_inset Formula $w_{M}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{H}$
+\end_inset
+
+ are real wage rates.
+ A firm's profitability condition implies:
+\begin_inset Formula 
+\[
+w_{M}\,l_{M}+w_{H}\,l_{H}\leq x.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+In equilibrium:
+\begin_inset Formula 
+\[
+x=\frac{\bar{\alpha}\,l_{M}}{\tau_{M}}=\frac{l_{H}}{\tau_{H}}.
+\]
+
+\end_inset
+
+Substituting for 
+\begin_inset Formula $l_{H}$
+\end_inset
+
+ and 
+\begin_inset Formula $x$
+\end_inset
+
+ in terms of 
+\begin_inset Formula $\tau_{M}$
+\end_inset
+
+ and 
+\begin_inset Formula $\tau_{H}$
+\end_inset
+
+ we obtain:
+\begin_inset Formula 
+\[
+w_{M}\,l_{M}+w_{H}\,\frac{\tau_{H}\,\bar{\alpha}\,l_{M}}{\tau_{M}}\leq\frac{\bar{\alpha}\,l_{M}}{\tau_{M}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Rearrange terms to get:
+\begin_inset Formula 
+\[
+\gamma=\frac{w_{M}\,\tau_{M}}{1-w_{H}\,\tau_{H}}\leq\bar{\alpha}\leq1.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Let 
+\begin_inset Formula $\phi(\bar{\alpha})$
+\end_inset
+
+ be the dist.
+ of output in terms of effective AI quality level of firms.
+ By definition:
+\begin_inset Formula 
+\[
+X=\int_{\gamma}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha},\qquad M=\int_{\gamma}^{1}\,\tau_{M}\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha},\qquad H=\int_{\gamma}^{1}\,\tau_{H}\,\phi(\bar{\alpha})\,d\bar{\alpha}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+(2) Across-Firm Aggregation - Continued
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+We have 
+\begin_inset Formula $X,M,H$
+\end_inset
+
+,
+ all in terms of 
+\begin_inset Formula $\phi(\bar{\alpha})$
+\end_inset
+
+ in
+\begin_inset Formula 
+\[
+X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\right)^{\frac{1}{\rho}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Solving for 
+\begin_inset Formula $\phi(\bar{\alpha})$
+\end_inset
+
+ when 
+\begin_inset Formula $\rho<0$
+\end_inset
+
+ (i.e.,
+ 
+\begin_inset Formula $\sigma<1$
+\end_inset
+
+) yields the following closed form:
+\size tiny
+
+\begin_inset Formula 
+\[
+\phi(\bar{\alpha})=\frac{\left(1-\theta_{M}-\theta_{H}\right)^{\frac{1}{\rho}}\left(1-\theta_{H}\,\tau_{H}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{M}\,\tau_{M}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\theta_{H}\,\tau_{H}^{\rho}-\left(1-\theta_{H}\,\tau_{H}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{M}\,\tau_{M}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textit{...Conjecture...}
+\end_layout
+
+\end_inset
+
+:
+ For certain parameter values 
+\begin_inset Formula $(\theta_{M},\theta_{H},\rho)$
+\end_inset
+
+ a first-order stochastic shift in effective AI quality level 
+\begin_inset Formula $\bar{\alpha}$
+\end_inset
+
+ will increase the ratio of 
+\begin_inset Formula $\tfrac{M}{H}$
+\end_inset
+
+,
+ implying that (relatively) more AI management labor will be employed in the aggregate economy.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textit{...Caveat...}
+\end_layout
+
+\end_inset
+
+:
+ We've fixed automation strategy 
+\begin_inset Formula $\mathcal{T}$
+\end_inset
+
+ and job design 
+\begin_inset Formula $\mathcal{J}$
+\end_inset
+
+;
+ bear in mind that production function frontier is non-smooth.
+\end_layout
+
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Aggregation_Main}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A5:EFI_execution-based}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Ex-post EFI Measures
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/fragmentation_regression_appendix.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{EFI_exposure-based}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A4:GPT_TaskOrderingPrompt}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+GPT-5-mini Prompt for Task Ordering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.75
+\backslash
+linewidth]{plots/gpt_prompt1.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Data_Sources}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A4:GPT_DWAsimilarTasksPrompt}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+GPT-5-mini Prompt for Finding Similar Tasks in a DWA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.55
+\backslash
+linewidth]{plots/gpt_prompt2.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Pred3_robustness}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A6:DWA_regression_ai_GPT}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Example DWA Task Selection
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example DWAs and tasks surviving the GPT filtering procedure:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/sameDWA_examples_red.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - GPT Sample AI Execution
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Same results hold if ask GPT to filter the DWA tasks:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_GPT.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Pred3_robustness}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A7:DWA_regression_automated}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Main Sample AI Automation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Effects attenuated but directionally the same if study AI automation instead of AI execution:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_automation.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Pred3_robustness}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A8:DWA_regression_automated_GPT}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - GPT Sample AI Automation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Effects attenuated but directionally the same if study AI automation and use the GPT-filtered sample:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_automation_GPT.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Pred3_robustness}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
