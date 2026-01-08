@@ -4145,12 +4145,302 @@ Consider a job consisting of
 \end_layout
 
 \begin_layout ExampleBlock
+\begin_inset ERT
+status open
 
-\size footnotesize
-\begin_inset Formula 
-\[
-\textcolor{blue!70}{(Easy)_{1}}\longrightarrow{\color{red}(Hard)_{2}}\longrightarrow\textcolor{blue!70}{(Easy)_{3}}\longrightarrow\cdots\cdots\longrightarrow{\color{red}(Hard)_{m-2}}\longrightarrow\textcolor{blue!70}{(Easy)_{m-1}}\longrightarrow{\color{red}(Hard)_{m}}
-\]
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[
+\end_layout
+
+\begin_layout Plain Layout
+
+    scale=0.6,
+\end_layout
+
+\begin_layout Plain Layout
+
+    node distance=0.6cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+    every node/.style={
+\end_layout
+
+\begin_layout Plain Layout
+
+        rectangle,
+ rounded corners,
+ draw,
+\end_layout
+
+\begin_layout Plain Layout
+
+        minimum width=1.5cm,
+ minimum height=0.85cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+        align=center
+\end_layout
+
+\begin_layout Plain Layout
+
+    },
+\end_layout
+
+\begin_layout Plain Layout
+
+    easy/.style={fill=teal!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    hard/.style={fill=red!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    idx/.style={draw=none,
+ font=
+\backslash
+scriptsize},
+\end_layout
+
+\begin_layout Plain Layout
+
+    >=latex,
+\end_layout
+
+\begin_layout Plain Layout
+
+    thick
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Nodes
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy] (E1) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E1] {1};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of E1] (H2) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of H2] {2};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of H2] (E3) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E3] {3};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[draw=none,
+ right=of E3] (Dots) {$
+\backslash
+cdots 
+\backslash
+cdots$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Dots] (Hk) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hk] {m--2};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of Hk] (Ek1) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Ek1] {m--1};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Ek1] (Hm) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hm] {m};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E1) -- (H2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (H2) -- (E3);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E3) -- (Dots);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Dots) -- (Hk);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Hk) -- (Ek1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Ek1) -- (Hm);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
 
 \end_inset
 
@@ -4219,17 +4509,337 @@ Suppose in the previous example easy and hard steps are not interleaved,
 \end_inset
 
  steps can each be completed with probability 0.1:
-\size footnotesize
+\begin_inset ERT
+status open
 
-\begin_inset Formula 
-\[
-\textcolor{blue!70}{(Easy)_{1}}\longrightarrow\textcolor{blue!70}{(Easy)_{2}}\longrightarrow\cdots\cdots\longrightarrow\textcolor{blue!70}{(Easy)_{\tfrac{m}{2}}}\longrightarrow{\color{red}(Hard)_{\tfrac{m}{2}+1}}\longrightarrow{\cdots\cdots}\longrightarrow{\color{red}(Hard)_{m-1}}\longrightarrow{\color{red}(Hard)_{m}}
-\]
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzpicture}[
+\end_layout
+
+\begin_layout Plain Layout
+
+    scale=0.6,
+\end_layout
+
+\begin_layout Plain Layout
+
+    node distance=0.6cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+    every node/.style={
+\end_layout
+
+\begin_layout Plain Layout
+
+        rectangle,
+ rounded corners,
+ draw,
+\end_layout
+
+\begin_layout Plain Layout
+
+        minimum width=1.5cm,
+ minimum height=0.85cm,
+\end_layout
+
+\begin_layout Plain Layout
+
+        align=center
+\end_layout
+
+\begin_layout Plain Layout
+
+    },
+\end_layout
+
+\begin_layout Plain Layout
+
+    easy/.style={fill=teal!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    hard/.style={fill=red!40},
+\end_layout
+
+\begin_layout Plain Layout
+
+    idx/.style={draw=none,
+ font=
+\backslash
+scriptsize},
+\end_layout
+
+\begin_layout Plain Layout
+
+    >=latex,
+\end_layout
+
+\begin_layout Plain Layout
+
+    thick
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ----- Easy segment -----
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy] (E1) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E1] {1};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of E1] (E2) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of E2] {2};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[draw=none,
+ right=of E2] (Dots1) {$
+\backslash
+cdots 
+\backslash
+cdots$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[easy,
+ right=of Dots1] (Ek) {Easy};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Ek] {$
+\backslash
+tfrac{m}{2}$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% ----- Hard segment -----
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Ek] (H1) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of H1] {$
+\backslash
+tfrac{m}{2}+1$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[draw=none,
+ right=of H1] (Dots2) {$
+\backslash
+cdots 
+\backslash
+cdots$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Dots2] (Hm1) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hm1] {$m-1$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[hard,
+ right=of Hm1] (Hm) {Hard};
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+node[idx,
+ below=1pt of Hm] {$m$};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% Arrows
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E1) -- (E2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (E2) -- (Dots1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Dots1) -- (Ek);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Ek) -- (H1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (H1) -- (Dots2);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Dots2) -- (Hm1);
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+draw[->] (Hm1) -- (Hm);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzpicture}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
 
 \end_inset
 
-
-\size default
 The optimal strategy chains together the first 
 \begin_inset Formula $\frac{m}{2}$
 \end_inset
@@ -5079,49 +5689,6 @@ section{Empirical Evaluation}
 status open
 
 \begin_layout Plain Layout
-Model's Predictions that We Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-We empirically validate three predictions of the model:
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-AI-executed steps cluster in contiguous blocks,
- forming AI chains.
-\end_layout
-
-\begin_layout Enumerate
-Step-level AI exposure is not the only determinant of AI execution;
- where AI-able steps sit in the workflow also matters for execution outcomes.
- (Recall the fragmentation argument.)
-\end_layout
-
-\begin_layout Enumerate
-The same step may be executed differently across occupations depending on AI execution status of its neighbors.
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
 Data Sources
 \end_layout
 
@@ -5132,7 +5699,20 @@ Data Sources
 
 \begin_deeper
 \begin_layout Itemize
-We construct a task-level dataset by combining:
+We empirically test three implications of the model.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
  
 \begin_inset ERT
 status open
@@ -5149,35 +5729,67 @@ label{Data_Sources}
 
 \end_layout
 
+\end_deeper
+\begin_layout Frame
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{0.5cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Construct a task-level dataset containing three attributes for each task:
+ (1) exposure to AI,
+ (2) realized model of execution,
+ (3) position in production sequence by combining:
+\end_layout
+
 \begin_deeper
 \begin_layout Enumerate
-May 2023 O*NET tasks and occupations data
+O*NET occupations and tasks (May 2023)
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-We treat O*NET tasks as steps in our theoretical framework.
- 
-\end_layout
-
-\begin_layout Itemize
-With their mode of execution determined,
- steps are then mapped to tasks.
+Every O*NET task is mapped to a step in our theoretical framework.
 \end_layout
 
 \end_deeper
 \begin_layout Enumerate
-Human-generated labels for AI exposure of tasks (Eloundou et al.,
+Human-generated labels for AI exposure of O*NET tasks (Eloundou et al.,
  2024)
 \end_layout
 
 \begin_layout Enumerate
-AI execution outcomes of tasks from Anthropic's Economic Index dataset (Handa et al.,
+AI execution outcomes of O*NET tasks from Anthropic's Economic Index (Handa et al.,
  2025)
 \end_layout
 
 \begin_layout Enumerate
-GPT-produced sequence of tasks within occupation
+GPT-produced sequence of tasks within occupation 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -5190,7 +5802,7 @@ status open
 
 
 \backslash
-vspace{0.25cm}
+vspace{0.5cm}
 \end_layout
 
 \end_inset
@@ -5243,7 +5855,7 @@ Augmented and Automated Tasks (Anthropic)
 
 \begin_deeper
 \begin_layout Itemize
-Following approach of Anthropic who grouped Claude conversations into 5(+1) categories:
+We follow Anthropic's approach in labeling augmented and automated tasks:
 \end_layout
 
 \begin_layout Standard
@@ -5675,7 +6287,7 @@ What's the benchmark?
 \end_layout
 
 \begin_layout Itemize
-Calculate same statistics in two different placebo datasets constructed via:
+We calculate the same statistics in two different placebo datasets constructed via:
 \end_layout
 
 \begin_deeper
@@ -5767,7 +6379,7 @@ Takeaways:
 
 \begin_deeper
 \begin_layout Itemize
-Occurrence of AI tasks in clusters in original data is meaningful,
+Occurrence of AI tasks in clusters in original data not not random,
 \end_layout
 
 \begin_layout Itemize
@@ -5854,7 +6466,7 @@ Takeaways:
 
 \begin_deeper
 \begin_layout Itemize
-Occurrence of AI tasks in clusters in original data is meaningful,
+Occurrence of AI tasks in clusters in original data not not random,
 \end_layout
 
 \begin_layout Itemize
@@ -5888,7 +6500,7 @@ Pred.
 \begin_deeper
 \begin_layout Itemize
 Prediction #2:
- Step-level AI exposure is not the only determinant of AI execution;
+ Step-level AI exposure is not the only determinant of job-level AI adoption;
  where AI-able steps sit in the workflow also matters for execution outcomes.
  
 \begin_inset ERT
@@ -5907,10 +6519,118 @@ pause
 \end_layout
 
 \begin_layout Itemize
+Empirical fragmentation index (EFI) is measured by number of 
+\bar under
+potential chains
+\bar default
+ divided by all steps.
+\end_layout
+
+\begin_layout Itemize
+Example:
+ consider an occupation with five O*NET tasks:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+If none of 5 are exposed to AI 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ EFI = 5 / 5 = 1
+\end_layout
+
+\begin_layout Itemize
+If two contiguous tasks are exposed to AI 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ EFI = 4 / 5 = 0.8
+\end_layout
+
+\begin_layout Itemize
+If two non-contiguous tasks are exposed to AI 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ EFI = 5 / 5 = 1
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+In a sense,
+ EFI measures the number of hand-offs between tasks in the extreme case where all AI-exposed tasks are executed by AI.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+We calculate two versions of EFI:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Only considering E1 tasks as AI-exposed (14% of tasks) – a strict measure
+\end_layout
+
+\begin_layout Enumerate
+Considering both E1 and E2 tasks as AI-exposed (44% of tasks)
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Test
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
 Regression:
 \begin_inset Formula 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}+\varepsilon_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \end_inset
@@ -5920,7 +6640,7 @@ Regression:
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Formula $\text{ai\_fraction}_{o}$
+\begin_inset Formula $\text{ai\_execution}_{o}$
 \end_inset
 
 :
@@ -5944,11 +6664,11 @@ Regression:
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\text{fragmentation\_index}_{o}$
+\begin_inset Formula $\text{empirical\_fragmentation\_index}_{o}$
 \end_inset
 
 :
- measure of how fragmented AI tasks are in occupation 
+ measure of how fragmented AI-exposed tasks are in occupation 
 \begin_inset Formula $o$
 \end_inset
 
@@ -5983,68 +6703,6 @@ status open
 \begin_layout Plain Layout
 Pred.
  #2:
- AI-able Task Fragmentation Matters - Measuring FI
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Regression:
-\begin_inset Formula 
-\[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}+\varepsilon_{o}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Fragmentation index measured in four ways for robustness:
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-Based on realized AI execution outcomes,
- AI chain defined per model's definition (strict)
-\end_layout
-
-\begin_layout Enumerate
-Based on realized AI execution outcomes,
- AI chain defined regardless of type of AI tasks – augmented and automated tasks treated similarly
-\end_layout
-
-\begin_layout Enumerate
-Based on AI exposure measures,
- only consider E1 tasks as AI-exposed (strict)
-\end_layout
-
-\begin_layout Enumerate
-Based on AI exposure measures,
- consider E1 and E2 tasks as AI-exposed
-\end_layout
-
-\end_deeper
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Pred.
- #2:
  AI-able Task Fragmentation Matters - Results
 \end_layout
 
@@ -6057,7 +6715,7 @@ Pred.
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}+\varepsilon_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \end_inset
@@ -6087,7 +6745,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.5
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/fragmentation_regression.png}
 \end_layout
@@ -6111,6 +6769,37 @@ end{figure}
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A:EFI_execution-based}{
+\backslash
+beamergotobutton{Ex post EFI measures}}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{EFI_exposure-based}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
@@ -6148,7 +6837,7 @@ Pred.
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}+\varepsilon_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \end_inset
@@ -6178,7 +6867,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.5
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/fragmentation_regression_explanation1.png}
 \end_layout
@@ -6200,6 +6889,21 @@ end{figure}
 \end_inset
 
 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A:EFI_execution-based}{
+\backslash
+beamergotobutton{Ex post EFI measures}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -6239,7 +6943,7 @@ Pred.
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}+\varepsilon_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \end_inset
@@ -6269,7 +6973,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.5
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/fragmentation_regression_explanation2.png}
 \end_layout
@@ -6291,6 +6995,21 @@ end{figure}
 \end_inset
 
 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A:EFI_execution-based}{
+\backslash
+beamergotobutton{Ex post EFI measures}}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -6330,7 +7049,7 @@ Pred.
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}+\varepsilon_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \end_inset
@@ -6360,7 +7079,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.5
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/fragmentation_regression_explanation3.png}
 \end_layout
@@ -6382,54 +7101,6 @@ end{figure}
 \end_inset
 
 
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 3
-status open
-
-\begin_layout Plain Layout
-noframenumbering
-\end_layout
-
-\end_inset
-
-
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Pred.
- #2:
- AI-able Task Fragmentation Matters - Results
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}+\varepsilon_{o}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset ERT
 status open
 
@@ -6437,37 +7108,9 @@ status open
 
 
 \backslash
-begin{figure}[htbp]
-\end_layout
-
-\begin_layout Plain Layout
-
-    
+hyperlink{A:EFI_execution-based}{
 \backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-includegraphics[width=0.5
-\backslash
-linewidth]{plots/fragmentation_regression_explanation4.png}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{figure}
+beamergotobutton{Ex post EFI measures}}
 \end_layout
 
 \end_inset
@@ -6490,7 +7133,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome
+ Local Context Matters in Step's AI Execution Mode
 \end_layout
 
 \end_inset
@@ -6501,7 +7144,7 @@ Pred.
 \begin_deeper
 \begin_layout Itemize
 Prediction #3:
- Same step may be executed differently across occupations depending on AI execution status of its neighbors.
+ The same step may be executed differently across occupations depending on AI execution status of its neighbors.
  
 \begin_inset ERT
 status open
@@ -6584,7 +7227,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Practical Considerations
+ Local Context Matters in Step's AI Execution Mode - Practical Considerations
 \end_layout
 
 \end_inset
@@ -6670,7 +7313,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Example DWAs
+ Local Context Matters in Step's AI Execution Mode - Example DWAs
 \end_layout
 
 \end_inset
@@ -6750,7 +7393,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Regression
+ Local Context Matters in Step's AI Execution Mode - Regression
 \end_layout
 
 \end_inset
@@ -6766,15 +7409,6 @@ Prediction #3:
 
 \begin_layout Itemize
 Regression:
- (ran on the subset of 
-\begin_inset Quotes eld
-\end_inset
-
-similar
-\begin_inset Quotes erd
-\end_inset
-
- tasks)
 \begin_inset Formula 
 \begin{align*}
 \Pr\!\left(\text{is\_automated}_{t}=1|X_{t}\right) & =\Lambda\!\Big(\beta_{0}+\beta_{1}\,\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}+\beta_{2}\,\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}\\
@@ -6865,7 +7499,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Results
+ Local Context Matters in Step's AI Execution Mode - Results
 \end_layout
 
 \end_inset
@@ -6951,7 +7585,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Results
+ Local Context Matters in Step's AI Execution Mode - Results
 \end_layout
 
 \end_inset
@@ -7045,7 +7679,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Results
+ Local Context Matters in Step's AI Execution Mode - Results
 \end_layout
 
 \end_inset
@@ -7129,7 +7763,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Robustness Test
+ Local Context Matters in Step's AI Execution Mode - Robustness Test
 \end_layout
 
 \end_inset
@@ -7181,7 +7815,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Robustness Test
+ Local Context Matters in Step's AI Execution Mode - Robustness Test
 \end_layout
 
 \end_inset
@@ -7254,7 +7888,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Robustness Test
+ Local Context Matters in Step's AI Execution Mode - Robustness Test
 \end_layout
 
 \end_inset
@@ -7326,7 +7960,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Robustness Test
+ Local Context Matters in Step's AI Execution Mode - Robustness Test
 \end_layout
 
 \end_inset
@@ -7398,7 +8032,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Robustness Test
+ Local Context Matters in Step's AI Execution Mode - Robustness Test
 \end_layout
 
 \end_inset
@@ -7523,7 +8157,7 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
- Execution Mode of Neighbors Matter in Step's Execution Outcome - Robustness Test
+ Local Context Matters in Step's AI Execution Mode - Robustness Test
 \end_layout
 
 \end_inset
@@ -9015,6 +9649,128 @@ beamergotobutton{Return}}
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A:EFI_execution-based}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #2:
+ AI-able Task Fragmentation Matters - Ex-post EFI Measures
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/fragmentation_regression_appendix.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{EFI_exposure-based}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
 \end_inset
