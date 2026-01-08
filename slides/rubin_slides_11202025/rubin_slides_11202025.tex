@@ -180,12 +180,10 @@ and
 \item Three modes of task execution recognized: manual, AI-augmented, AI-automated,
 \item AI can chain multiple tasks together, \textit{potentially} overturning
 standard comparative-advantage logic,
-\item AI can either upskill or deskill workers,
 \item Improvements in AI quality generate discontinuous productivity gains
 (by triggering discrete reorganizations of work).
 \end{itemize}
-\item The paper relates to organization and labor economics literatures,
-and economics of of AI.
+\item The paper relates to AI and labor economics literatures.
 \end{itemize}
 \end{frame}
 %
@@ -531,7 +529,7 @@ denotes the AI success probability for step $s_{r}$.
 \end{figure}
 \end{frame}
 %
-\begin{frame}{Model}
+\begin{frame}{Firm's Objective}
 \begin{itemize}
 \item Firm's production consists of a sequence of steps. Steps are partitioned
 into tasks ($\textit{\textit{automation strategy}}$), and tasks are
@@ -678,12 +676,12 @@ wages but saving up on coordination costs.
 \begin{itemize}
 \item Two optimization horizons:
 \begin{enumerate}
-\item Long-run: job design $\mathcal{J}$ and automation strategy $\mathcal{T}$
+\item Long-run: job design $\mathcal{J}$ and AI deployment strategy $\mathcal{T}$
 can flexibly adjust:
 \[
 \min_{\mathcal{T}}\ \min_{\mathcal{J}}\ \text{TotalCost}(\mathcal{J};\mathcal{T})=\sum_{J_{j}\in\mathcal{J}}\text{WageBill}_{j}=\sum_{J_{j}\in\mathcal{J}}\Biggl[\Biggl(\sum_{T_{b}\in J_{j}}c_{b}\Biggr)\Biggl(t^{S}(J_{j})+\sum_{T_{b}\in J_{j}}t_{b}\Biggr)\Biggr].
 \]
-\item Short-run: job design $\mathcal{J}$ and worker wages fixed, automation
+\item Short-run: job design $\mathcal{J}$ and worker wages fixed, AI deployment
 strategy $\mathcal{T}$ adjusts within each job:
 \[
 \min_{\mathcal{T}}\;\sum_{T_{b}\in\mathcal{T}}t_{b}.
@@ -693,13 +691,13 @@ strategy $\mathcal{T}$ adjusts within each job:
 \end{frame}
 %
 \section{Optimization}
-\begin{frame}{Short-Term Optimization: Automation Design}
+\begin{frame}{Short-Term Optimization: AI Strategy Design}
 \begin{itemize}
 \item In the short-term, job boundaries and wages are fixed. AI only allows
 to optimize completion times within jobs. 
 \item W/o loss to assume there is a single job with $m$ steps.
-\item Goal is to find the optimal automation strategy $\mathcal{T}$ that
-minimizes total completion time.
+\item Goal is to find the optimal AI deployment strategy $\mathcal{T}$
+that minimizes total completion time.
 \end{itemize}
 \begin{figure}[htbp]
     \begin{center}
@@ -708,10 +706,11 @@ minimizes total completion time.
 \end{figure}
 \end{frame}
 %
-\begin{frame}{Short-Term Optimization: Automation Design - Continued}
+\begin{frame}{Short-Term Optimization: AI Strategy Design - Continued}
 \begin{prop}
-Given $m$ steps organized into a single job, the time-optimal automation
-strategy can be calculated in time $O(m^{2})$ via dynamic programming.
+Given $m$ steps organized into a single job, the time-optimal AI
+deployment strategy can be calculated in time $O(m^{2})$ via dynamic
+programming.
 \end{prop}
 \begin{proof}
 At step $k\leq m$ show the minimum time needed to complete the job
@@ -742,7 +741,7 @@ the skill and time costs:
 Fix any sequence of $m$ steps $\mathcal{S}=(s_{1},\dotsc,s_{m})$
 for which all skill costs, time costs, and hand-off costs lie in $[1/B,B]$
 for some $B>0$. Then for any $\epsilon>0$, an approximately cost-minimizing
-pair of automation strategy $\mathcal{T}$ and job design $\mathcal{J}$
+pair of AI deployment strategy $\mathcal{T}$ and job design $\mathcal{J}$
 minimizing the long-term production cost to within a factor of $(1+\epsilon)$
 can be computed in time $O(m^{2}\epsilon^{-2}\log^{2}(mB))$ by dynamic
 programming.
@@ -787,17 +786,59 @@ AI to complete: odd-numbered steps can be successfully completed by
 an AI with probability 1, whereas even-numbered steps will be successfully
 completed with probability only 0.1:
 
-{\footnotesize
-\[
-\textcolor{blue!70}{(Easy)_{1}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{2}}\longrightarrow\textcolor{blue!70}{(Easy)_{3}}\longrightarrow\cdots\cdots\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m-2}}\longrightarrow\textcolor{blue!70}{(Easy)_{m-1}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m}}
-\]
-}{\footnotesize\par}
+\begin{figure}
+\begin{tikzpicture}[
+    scale=0.8,
+    node distance=0.5cm,
+    every node/.style={
+        rectangle, rounded corners, draw,
+        minimum width=1.45cm, minimum height=0.85cm,
+        align=center
+    },
+    easy/.style={fill=teal!40},
+    hard/.style={fill=red!40},
+    idx/.style={draw=none, font=\scriptsize},
+    >=latex,
+    thick
+]
+
+% Nodes
+\node[easy] (E1) {Easy};
+\node[idx, below=1pt of E1] {1};
+
+\node[hard, right=of E1] (H2) {Hard};
+\node[idx, below=1pt of H2] {2};
+
+\node[easy, right=of H2] (E3) {Easy};
+\node[idx, below=1pt of E3] {3};
+
+\node[draw=none, right=of E3] (Dots) {$\cdots \cdots$};
+
+\node[hard, right=of Dots] (Hk) {Hard};
+\node[idx, below=1pt of Hk] {m--2};
+
+\node[easy, right=of Hk] (Ek1) {Easy};
+\node[idx, below=1pt of Ek1] {m--1};
+
+\node[hard, right=of Ek1] (Hm) {Hard};
+\node[idx, below=1pt of Hm] {m};
+
+% Arrows
+\draw[->] (E1) -- (H2);
+\draw[->] (H2) -- (E3);
+\draw[->] (E3) -- (Dots);
+\draw[->] (Dots) -- (Hk);
+\draw[->] (Hk) -- (Ek1);
+\draw[->] (Ek1) -- (Hm);
+
+\end{tikzpicture}
+\end{figure}
 
 It is suboptimal to attempt to use AI on any of the even-numbered
-steps, \textit{even as part of a chain}. The optimal automation strategy
-is to employ AI-augmentation on the odd-numbered steps (for a cost
-of 1 each) and perform even-numbered steps manually (for a cost of
-5 each), resulting in overall time cost of $3m$.
+steps, \textit{even as part of a chain}. The optimal AI deployment
+strategy is to employ AI-augmentation on the odd-numbered steps (for
+a cost of 1 each) and perform even-numbered steps manually (for a
+cost of 5 each), resulting in overall time cost of $3m$.
 \end{exampleblock}
 \end{frame}
 %
@@ -810,11 +851,57 @@ steps are positioned in the workflow.
 Suppose in the previous example easy and hard steps are not interleaved,
 but rather the first $\frac{m}{2}$ steps can each be completed by
 AI with probability 1 and the last $\frac{m}{2}$ steps can each be
-completed with probability 0.1:{\footnotesize
-\[
-\textcolor{blue!70}{(Easy)_{1}}\longrightarrow\textcolor{blue!70}{(Easy)_{2}}\longrightarrow\cdots\cdots\longrightarrow\textcolor{blue!70}{(Easy)_{\tfrac{m}{2}}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{\tfrac{m}{2}+1}}\longrightarrow{\cdots\cdots}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m-1}}\longrightarrow\mathopen{\color{red}(}{\color{red}Hard}\mathclose{\color{red})_{m}}
-\]
-}The optimal strategy chains together the first $\frac{m}{2}$ steps
+completed with probability 0.1:\begin{figure}
+\begin{tikzpicture}[
+    scale=0.8,
+    node distance=0.5cm,
+    every node/.style={
+        rectangle, rounded corners, draw,
+        minimum width=1.45cm, minimum height=0.85cm,
+        align=center
+    },
+    easy/.style={fill=teal!40},
+    hard/.style={fill=red!40},
+    idx/.style={draw=none, font=\scriptsize},
+    >=latex,
+    thick
+]
+
+% ----- Easy segment -----
+\node[easy] (E1) {Easy};
+\node[idx, below=1pt of E1] {1};
+
+\node[easy, right=of E1] (E2) {Easy};
+\node[idx, below=1pt of E2] {2};
+
+\node[draw=none, right=of E2] (Dots1) {$\cdots \cdots$};
+
+\node[easy, right=of Dots1] (Ek) {Easy};
+\node[idx, below=1pt of Ek] {$\tfrac{m}{2}$};
+
+% ----- Hard segment -----
+\node[hard, right=of Ek] (H1) {Hard};
+\node[idx, below=1pt of H1] {$\tfrac{m}{2}+1$};
+
+\node[draw=none, right=of H1] (Dots2) {$\cdots \cdots$};
+
+\node[hard, right=of Dots2] (Hm1) {Hard};
+\node[idx, below=1pt of Hm1] {$m-1$};
+
+\node[hard, right=of Hm1] (Hm) {Hard};
+\node[idx, below=1pt of Hm] {$m$};
+
+% Arrows
+\draw[->] (E1) -- (E2);
+\draw[->] (E2) -- (Dots1);
+\draw[->] (Dots1) -- (Ek);
+\draw[->] (Ek) -- (H1);
+\draw[->] (H1) -- (Dots2);
+\draw[->] (Dots2) -- (Hm1);
+\draw[->] (Hm1) -- (Hm);
+
+\end{tikzpicture}
+\end{figure}The optimal strategy chains together the first $\frac{m}{2}$ steps
 into a single automated AI chain, for a combined cost of 1. The remaining
 $\frac{m}{2}$ steps are performed manually. Overall time cost will
 be $1+\frac{5m}{2}$, which is strictly less than $3m$ for $m\geq4$
@@ -829,14 +916,14 @@ tasks in production process \uline{in the short run}: \textit{fragmentation inde
 $\uparrow$ FI $\rightarrow$ $\downarrow$ sensitive production is
 to AI improvements. \hyperlink{A2:Fragmentation}{\beamergotobutton{Formal Definition}}
 \item We show that the fragmentation index of a job approximates the time
-cost of an optimal automation strategy for the job. 
+cost of an optimal AI deployment strategy for the job. 
 \end{itemize}
 \begin{prop}
 Fix a single job with a sequence of $m$ steps $\mathcal{S}=\{s_{1},\dotsc,s_{m}\}$,
 each with $t_{i}^{M}=1$. Let $FI$ denote its fragmentation index
-and let $OPT$ denote the minimum time cost over all automation strategies.
-Then $\tfrac{1}{8}OPT\leq FI\leq\tfrac{5}{4}OPT$. If we further assume
-$t_{i}^{H}\geq1$ for all $i$, then $\tfrac{1}{4}OPT\leq FI\leq\tfrac{5}{4}OPT$.
+and let $OPT$ denote the minimum time cost over all AI deployment
+strategies. Then $\tfrac{1}{8}OPT\leq FI\leq\tfrac{5}{4}OPT$. If
+we further assume $t_{i}^{H}\geq1$ for all $i$, then $\tfrac{1}{4}OPT\leq FI\leq\tfrac{5}{4}OPT$.
 \end{prop}
 \begin{itemize}
 \item Key takeaways: 
@@ -986,38 +1073,28 @@ labor. The capital $K$ can be normalized to $1$ without loss. \hyperlink{A3:Aggr
 \end{frame}
 %
 \section{Empirical Evaluation}
-\begin{frame}{Model's Predictions that We Test}
-\begin{itemize}
-\item We empirically validate three predictions of the model:
-\begin{enumerate}
-\item AI-executed steps cluster in contiguous blocks, forming AI chains.
-\item Step-level AI exposure is not the only determinant of AI execution;
-where AI-able steps sit in the workflow also matters for execution
-outcomes. (Recall the fragmentation argument.)
-\item The same step may be executed differently across occupations depending
-on AI execution status of its neighbors.
-\end{enumerate}
-\end{itemize}
-\end{frame}
-%
 \begin{frame}{Data Sources}
 \begin{itemize}
-\item We construct a task-level dataset by combining: \label{Data_Sources}
-\begin{enumerate}
-\item May 2023 O{*}NET tasks and occupations data
-\begin{itemize}
-\item We treat O{*}NET tasks as steps in our theoretical framework. 
-\item With their mode of execution determined, steps are then mapped to
-tasks.
+\item We empirically test three implications of the model. \pause \label{Data_Sources}
 \end{itemize}
-\item Human-generated labels for AI exposure of tasks (Eloundou et al.,
-2024)
-\item AI execution outcomes of tasks from Anthropic's Economic Index dataset
+\vspace{0.5cm}
+\begin{itemize}
+\item Construct a task-level dataset containing three attributes for each
+task: (1) exposure to AI, (2) realized model of execution, (3) position
+in production sequence by combining:
+\begin{enumerate}
+\item O{*}NET occupations and tasks (May 2023)
+\begin{itemize}
+\item Every O{*}NET task is mapped to a step in our theoretical framework.
+\end{itemize}
+\item Human-generated labels for AI exposure of O{*}NET tasks (Eloundou
+et al., 2024)
+\item AI execution outcomes of O{*}NET tasks from Anthropic's Economic Index
 (Handa et al., 2025)
-\item GPT-produced sequence of tasks within occupation
+\item GPT-produced sequence of tasks within occupation \pause
 \end{enumerate}
 \end{itemize}
-\vspace{0.25cm}
+\vspace{0.5cm}
 \begin{itemize}
 \item (1)-(3) external sources. We create (4) by prompting GPT-5-mini to
 order tasks. \hyperlink{A4:GPT_TaskOrderingPrompt}{\beamergotobutton{GPT Prompt}}
@@ -1026,12 +1103,12 @@ order tasks. \hyperlink{A4:GPT_TaskOrderingPrompt}{\beamergotobutton{GPT Prompt}
 %
 \begin{frame}{Augmented and Automated Tasks (Anthropic)}
 \begin{itemize}
-\item Following approach of Anthropic who grouped Claude conversations into
-5(+1) categories:
+\item We follow Anthropic's approach in labeling augmented and automated
+tasks:
 \end{itemize}
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.9\linewidth]{plots/anthropic_executionMode_examples.png}
+    \includegraphics[width=0.96\linewidth]{plots/anthropic_executionMode_examples.png}
     \end{center}
 \end{figure}
 \end{frame}
@@ -1042,7 +1119,7 @@ order tasks. \hyperlink{A4:GPT_TaskOrderingPrompt}{\beamergotobutton{GPT Prompt}
 \end{itemize}
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.75\linewidth]{plots/all_labels_histogram.png}
+    \includegraphics[width=0.6\linewidth]{plots/all_labels_histogram.png}
     \end{center}
 \end{figure}
 \end{frame}
@@ -1093,8 +1170,8 @@ AI chains. \pause
 \vspace{0.25cm}
 \begin{itemize}
 \item What's the benchmark? Are these small or big?
-\item Calculate same statistics in two different placebo datasets constructed
-via:
+\item We calculate the same statistics in two different placebo datasets
+constructed via:
 \begin{enumerate}
 \item Randomizing task positions within occupations,
 \item Randomizing execution label assignments of tasks across entire dataset.
@@ -1113,7 +1190,7 @@ vs. actual values\begin{figure}[htbp]
 \end{figure}
 \item Takeaways: 
 \begin{itemize}
-\item Occurrence of AI tasks in clusters in original data is meaningful,
+\item Occurrence of AI tasks in clusters in original data not not random,
 \item GPT-generated occupation task sequence non-random.
 \end{itemize}
 \end{itemize}
@@ -1130,7 +1207,7 @@ reshuffles vs. actual values\begin{figure}[htbp]
 \end{figure}
 \item Takeaways: 
 \begin{itemize}
-\item Occurrence of AI tasks in clusters in original data is meaningful,
+\item Occurrence of AI tasks in clusters in original data not not random,
 \item Non-random distribution of Anthropic-reported AI-executed tasks.
 \end{itemize}
 \end{itemize}
@@ -1139,113 +1216,108 @@ reshuffles vs. actual values\begin{figure}[htbp]
 \begin{frame}{Pred. \#2: AI-able Task Fragmentation Matters}
 \begin{itemize}
 \item Prediction \#2: Step-level AI exposure is not the only determinant
-of AI execution; where AI-able steps sit in the workflow also matters
-for execution outcomes. \pause
-\item Regression:
-\[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
-\]
-
+of job-level AI adoption; where AI-able steps sit in the workflow
+also matters for execution outcomes. \pause
+\item Empirical fragmentation index (EFI) is measured by number of \uline{potential
+chains} divided by all steps.
+\item Example: consider an occupation with five O{*}NET tasks:
 \begin{itemize}
-\item $\text{ai\_fraction}_{o}$: fraction of AI-executed tasks in occupation
-$o$
-\item $\text{ai\_exposure}_{o}$: fraction of AI-exposed tasks (E1) in occupation
-$o$
-\item $\text{fragmentation\_index}_{o}$: measure of how fragmented AI tasks
-are in occupation $o$
+\item If none of 5 are exposed to AI $\rightarrow$ EFI = 5 / 5 = 1
+\item If two contiguous tasks are exposed to AI $\rightarrow$ EFI = 4 /
+5 = 0.8
+\item If two non-contiguous tasks are exposed to AI $\rightarrow$ EFI =
+5 / 5 = 1\pause
 \end{itemize}
-\item Model predicts $\beta_{1}>0$ and $\beta_{2}<0$.
+\item In a sense, EFI measures the number of hand-offs between tasks in
+the extreme case where all AI-exposed tasks are executed by AI.\pause
+\item We calculate two versions of EFI:
+\begin{enumerate}
+\item Only considering E1 tasks as AI-exposed (14\% of tasks) -- a strict
+measure
+\item Considering both E1 and E2 tasks as AI-exposed (44\% of tasks)
+\end{enumerate}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#2: AI-able Task Fragmentation Matters - Measuring FI}
+\begin{frame}{Pred. \#2: AI-able Task Fragmentation Matters - Test}
 \begin{itemize}
+\item Prediction \#2: Step-level AI exposure is not the only determinant
+of job-level AI adoption; where AI-able steps sit in the workflow
+also matters for execution outcomes.
 \item Regression:
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
-\item Fragmentation index measured in four ways for robustness:
-\begin{enumerate}
-\item Based on realized AI execution outcomes, AI chain defined per model's
-definition (strict)
-\item Based on realized AI execution outcomes, AI chain defined regardless
-of type of AI tasks -- augmented and automated tasks treated similarly
-\item Based on AI exposure measures, only consider E1 tasks as AI-exposed
-(strict)
-\item Based on AI exposure measures, consider E1 and E2 tasks as AI-exposed
-\end{enumerate}
+
+\begin{itemize}
+\item $\text{ai\_execution}_{o}$: fraction of AI-executed tasks in occupation
+$o$
+\item $\text{ai\_exposure}_{o}$: fraction of AI-exposed tasks (E1) in occupation
+$o$
+\item $\text{empirical\_fragmentation\_index}_{o}$: measure of how fragmented
+AI-exposed tasks are in occupation $o$
+\end{itemize}
+\item Model predicts $\beta_{1}>0$ and $\beta_{2}<0$.
 \end{itemize}
 \end{frame}
 %
 \begin{frame}{Pred. \#2: AI-able Task Fragmentation Matters - Results}
 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression.png}
+    \includegraphics[width=0.6\linewidth]{plots/fragmentation_regression.png}
     \end{center}
 \end{figure}
+
+\hyperlink{A5:EFI_execution-based}{\beamergotobutton{Ex post EFI measures}}\label{EFI_exposure-based}
 \end{frame}
 %
 \begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation1.png}
+    \includegraphics[width=0.6\linewidth]{plots/fragmentation_regression_explanation1.png}
     \end{center}
-\end{figure}
+\end{figure}\hyperlink{A5:EFI_execution-based}{\beamergotobutton{Ex post EFI measures}}
 \end{frame}
 %
 \begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation2.png}
+    \includegraphics[width=0.6\linewidth]{plots/fragmentation_regression_explanation2.png}
     \end{center}
-\end{figure}
+\end{figure}\hyperlink{A5:EFI_execution-based}{\beamergotobutton{Ex post EFI measures}}
 \end{frame}
 %
 \begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
 
 \[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
 \]
 
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation3.png}
+    \includegraphics[width=0.6\linewidth]{plots/fragmentation_regression_explanation3.png}
     \end{center}
-\end{figure}
+\end{figure}\hyperlink{A5:EFI_execution-based}{\beamergotobutton{Ex post EFI measures}}
 \end{frame}
 %
-\begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Results}
-
-\[
-\text{ai\_fraction}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{fragmentation\_index}_{o}
-\]
-
-\begin{figure}[htbp]
-    \begin{center}
-    \includegraphics[width=0.5\linewidth]{plots/fragmentation_regression_explanation4.png}
-    \end{center}
-\end{figure}
-\end{frame}
-%
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode}
 \begin{itemize}
-\item Prediction \#3: Same step may be executed differently across occupations
+\item Prediction \#3: The same step may be executed differently across occupations
 depending on AI execution status of its neighbors. \pause
 \item Step X more likely to be automated in Occupation 1:\begin{figure}[htbp]
     \begin{center}
@@ -1257,50 +1329,45 @@ depending on AI execution status of its neighbors. \pause
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Practical Considerations}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Practical
+Considerations}
 \begin{itemize}
 \item Issue: O{*}NET tasks are occupation-specific: no task appears in >1
-occupation. \label{DWA}
+occupation.
 \item Solution: O{*}NET has a hierarchical categorization of tasks.
 \begin{itemize}
 \item Multiple tasks $\rightarrow$ Single detailed work activity (DWA)
 \end{itemize}
 \item Tasks within a DWA are more or less similar. 
-\begin{itemize}
-\item To ensure similarity we further ask GPT-5-mini to pick the tasks within
-DWAs that are most similar in terms of execution method and required
-skills. \hyperlink{A4:GPT_DWAsimilarTasksPrompt}{\beamergotobutton{GPT Prompt}}
-\end{itemize}
+\item We treat tasks in the same DWA as the ``same step'' appearing across
+different occupations.
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Example DWAs}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Example
+DWAs}
 \begin{itemize}
-\item Example DWAs, and tasks dropped in the ``finding similar tasks''
-procedure (red font):\begin{figure}[htbp]
+\item Example DWAs and tasks associated with them:\begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=\linewidth]{plots/sameDWA.png}
+    \includegraphics[width=\linewidth]{plots/sameDWA_examples.png}
     \end{center}
 \end{figure}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Regression}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Regression}
 \begin{itemize}
 \item Prediction \#3: Same step may be executed differently across occupations
 depending on AI execution status of its neighbors.
-\item Regression: (ran on the subset of ``similar'' tasks)
+\item Regression:
 \begin{align*}
-\Pr\!\left(\text{is\_automated}_{t}=1|X_{t}\right) & =\Lambda\!\Big(\beta_{0}+\beta_{1}\,\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}+\beta_{2}\,\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}\\
- & \ \ \ \ \ \ \ \ +\beta_{3}\,\mathds{1}_{\{(t+1)\ \text{Task is AI}\}}+\beta_{4}\,\mathds{1}_{\{(t+2)\ \text{Task is AI}\}}\Big)
+\Pr\!\left(\text{is\_ai}_{t}=1|X_{t}\right) & =\Lambda\!\Big(\beta_{0}+\beta_{1}\,\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}+\beta_{2}\,\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}\\
+ & \ \ \ \ \ \ \ \ +\beta_{3}\,\mathds{1}_{\{(t+1)\ \text{Task is AI}\}}+\beta_{4}\,\mathds{1}_{\{(t+2)\ \text{Task is AI}\}}+\varepsilon_{t}\Big)
 \end{align*}
 
 \begin{itemize}
 \item $\Lambda$ is logistic CDF.
-\item $\text{is\_automated}_{t}=1$ if task $t$ is automated.
+\item $\text{is\_ai}_{t}=1$ if task $t$ is AI (augmented or automated).
 \item $\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}=1$ if task two positions
 before task $t$ is AI.
 \item $\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}=1$ if task before task
@@ -1313,124 +1380,210 @@ after task $t$ is AI.
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Results}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Results}
 \begin{itemize}
-\item Average marginal effect of immediate neighbors being AI on automatability
-of middle task positive and robust.
-\item Average marginal effect of distant neighbors being AI on automatability
-of middle task weaker and disappear after occupational family FEs.
+\item Average marginal effect of immediate neighbors being AI on AI execution
+of task positive and robust.
+\item Average marginal effect of distant neighbors being AI on AI execution
+of task weaker and disappear after occupational family and DWA FEs.
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.65\linewidth]{plots/sameDWA_regression.png}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression.png}
     \end{center}
 \end{figure}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}[noframenumbering]{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Results}
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Results}
 \begin{itemize}
-\item Average marginal effect of \uline{immediate neighbors} being AI on
-automatability of middle task \uline{positive and robust}.
-\item Average marginal effect of distant neighbors being AI on automatability
-of middle task weaker and disappear after occupational family FEs.
+\item Average marginal effect of immediate neighbors being AI on AI execution
+of task positive and robust.
+\item Average marginal effect of distant neighbors being AI on AI execution
+of task weaker and disappear after occupational family and DWA FEs.
 \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.65\linewidth]{plots/sameDWA_regression_explanation1.png}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression_explanation1.png}
     \end{center}
 \end{figure}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}[noframenumbering]{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Results}
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Results}
 \begin{itemize}
-\item Average marginal effect of immediate neighbors being AI on automatability
-of middle task positive and robust.
-\item Average marginal effect of \uline{distant neighbors} being AI on automatability
-of middle task \uline{weaker and disappear} after occupational family
-FEs. \begin{figure}[htbp]
+\item Average marginal effect of immediate neighbors being AI on AI execution
+of task positive and robust.
+\item Average marginal effect of distant neighbors being AI on AI execution
+of task weaker and disappear after occupational family and DWA FEs.
+\begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.65\linewidth]{plots/sameDWA_regression_explanation2.png}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression_explanation2.png}
     \end{center}
 \end{figure}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Robustness Test}
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Results}
 \begin{itemize}
-\item How should we interpret these? Could these have happened by chance?
-\pause No!
+\item Average marginal effect of immediate neighbors being AI on AI execution
+of task positive and robust.
+\item Average marginal effect of distant neighbors being AI on AI execution
+of task weaker and disappear after occupational family and DWA FEs.
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression_explanation3.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Results}
+\begin{itemize}
+\item Average marginal effect of immediate neighbors being AI on AI execution
+of task positive and robust.
+\item Average marginal effect of distant neighbors being AI on AI execution
+of task weaker and disappear after occupational family and DWA FEs.
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression_explanation4.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test}
+\begin{itemize}
+\item The magnitudes are hard to interpret as there is no benchmark for
+these effects.
+\item But could these have happened by chance? \pause No!
+\begin{itemize}
 \item Test: randomize position of tasks within occupations and repeat the
 same analysis.
 \item Compare position-randomized outcomes against actual outcomes.
 \end{itemize}
+\end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Robustness Test}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
 \begin{itemize}
 \item Observation \#1: in random-position placebos all neighbors contribute
 equally to automatability of middle task (i.e., all four distributions
 similar mean and shape) \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=\linewidth]{plots/AME_filtered_is_automated_no_fe.png}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
     \end{center}
 \end{figure}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Robustness Test}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
 \begin{itemize}
-\item Observation \#2: effect of immediate neighbors (two middle columns)
-stronger than in randomized-position placebos \begin{figure}[htbp]
-    \begin{center}
-    \includegraphics[width=\linewidth]{plots/AME_filtered_is_automated_no_fe.png}
-    \end{center}
-\end{figure}
-\end{itemize}
-\end{frame}
-%
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Robustness Test}
-\begin{itemize}
-\item Observation \#3: effect of farther neighbors (two side columns) weaker
+\item Observation \#2: effect of immediate neighbors (middle columns) stronger
 than in randomized-position placebos \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=\linewidth]{plots/AME_filtered_is_automated_no_fe.png}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
     \end{center}
 \end{figure}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Robustness Test}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
 \begin{itemize}
-\item Observation \#4: effect of farther neighbors disappears (and even
-becomes negative) after controlling for occupational families but
-positive effect of immediate neighbors persists\begin{figure}[htbp]
+\item Observation \#3: effect of farther neighbors (side columns) weaker
+than in randomized-position placebos \begin{figure}[htbp]
     \begin{center}
-    \includegraphics[width=0.8\linewidth]{plots/AME_filtered_is_automated_fe_MajorGroup.png}
-    \end{center}
-\end{figure}\begin{figure}[htbp]
-    \begin{center}
-    \includegraphics[width=0.8\linewidth]{plots/AME_filtered_is_automated_fe_MinorGroup.png}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
     \end{center}
 \end{figure}
 \end{itemize}
 \end{frame}
 %
-\begin{frame}[noframenumbering]{Pred. \#3: Execution Mode of Neighbors Matter in Step's Execution
-Outcome - Robustness Test}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
 \begin{itemize}
-\item Together: it is more likely that the same task is automated if its
-immediate neighbors are AI-executed; farther neighbors do not contribute
-to automation of task (at least not yet -- perhaps with more capable
-AIs we see longer chains form and farther neighbors also contribute
-to some extent)
+\item Observation \#4: effect of farther neighbors disappears after controlling
+for occupational families but remains positive for immediate neighbors
+(SOC major group FEs)\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_major_fe_no_dwa.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
+\begin{itemize}
+\item Observation \#4: effect of farther neighbors disappears after controlling
+for occupational families but remains positive for immediate neighbors
+(SOC minor group FEs)\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_minor_fe_no_dwa.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
+\begin{itemize}
+\item Observation \#4: effect of farther neighbors disappears after controlling
+for occupational families but remains positive for immediate neighbors
+(DWA FEs)\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_no_fe_with_dwa.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
+\begin{itemize}
+\item Observation \#4: effect of farther neighbors disappears after controlling
+for occupational families but remains positive for immediate neighbors
+(\# of DWA tasks in occupation FEs)\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_no_fe_no_dwa_withTaskDWACount.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Robustness
+Test Results}
+\begin{itemize}
+\item Observation \#4: effect of farther neighbors disappears after controlling
+for occupational families but remains positive for immediate neighbors
+(\# of DWA tasks in occupation + DWA FEs)\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/AME_full_is_ai_no_fe_with_dwa_withTaskDWACount.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Further
+Robustness Tests}
+\begin{itemize}
+\item As further robustness: \label{Pred3_robustness}
+\begin{itemize}
+\item Ask GPT-5-mini to pick the tasks within DWAs that are most similar
+in terms of execution method and required skills, and keep only one
+task per occupation. \hyperlink{A4:GPT_DWAsimilarTasksPrompt}{\beamergotobutton{GPT Prompt}}
+\begin{itemize}
+\item Results quantitatively the same. \hyperlink{A6:DWA_regression_ai_GPT}{\beamergotobutton{GPT-filtered Sample}}
+\end{itemize}
+\item Test contribution of neighbors on likelihood of automation (instead
+of AI execution):
+\begin{itemize}
+\item Results quantitatively attenuated but qualitative in the same direction.
+\\  \hyperlink{A7:DWA_regression_automated}{\beamergotobutton{Automation (Main Sample)}}\\ \hyperlink{A8:DWA_regression_automated_GPT}{\beamergotobutton{Automation (GPT-filtered Sample)}}
+\end{itemize}
+\end{itemize}
 \end{itemize}
 \end{frame}
 %
@@ -1492,7 +1645,7 @@ time.
 \end{proof}
 \end{frame}
 %
-\begin{frame}[noframenumbering]{Long-Term Optimization: Automation and Job Design}
+\begin{frame}[noframenumbering]{Long-Term Optimization: AI Strategy and Job Design}
 \begin{itemize}
 \item Let $V(i)$ denote the minimum cost required to complete steps 1 through
 $i$, including any hand-off costs to a subsequent worker.
@@ -1507,7 +1660,7 @@ V(i)=W(i,0,t_{i}^{S})
 \end{itemize}
 \end{frame}
 %
-\begin{frame}[noframenumbering]{Long-Term Optimization: Automation and Job Design - Continued}
+\begin{frame}[noframenumbering]{Long-Term Optimization: AI Strategy and Job Design - Continued}
 \begin{prop}
 For each $i\geq1$, the minimum cost function $W(i,\;c,\;t)$ satisfies
 the following recursive relation:
@@ -1520,7 +1673,7 @@ W(i,\; \hccost{},\; \timecost{})
 \Biggr\}.
 \end{align*}
 
-The cost of the optimal joint automation and job design for a given
+The cost of the optimal joint AI strategy and job design for a given
 sequence of $m$ steps is then $V(m)=W(m,\;0,\;0)$.
 \end{prop}
 \begin{itemize}
@@ -1586,7 +1739,7 @@ and $w_{M}\tau_{b}\alpha^{-d_{b}}$ if executed via AI.
 %
 \begin{frame}[noframenumbering]{(1) Within-Firm Aggregation}
 \begin{itemize}
-\item Fix automation strategy $\mathcal{T}$ and job design $\mathcal{J}$.
+\item Fix AI deployment strategy $\mathcal{T}$ and job design $\mathcal{J}$.
 \item Assume hand-offs are performed manually $\rightarrow$ model as an
 additional $p-1$ manual tasks where $p$ is number of jobs.
 \item With hand-offs being standalone tasks $\rightarrow$ reorder tasks
@@ -1630,7 +1783,7 @@ human labor is used at the firm level.
 occurs; they make decisions based on a common prior.
 \item Production unfolds in two stages:
 \begin{itemize}
-\item Stage 1: firms decide on organization structure (i.e., automation
+\item Stage 1: firms decide on organization structure (i.e., AI deployment
 strategy $\mathcal{T}$ and job design $\mathcal{J}$) based on expected
 effective AI quality level.
 \item Stage 2: effective AI quality is realized and firms produce.
@@ -1691,11 +1844,25 @@ yields the following closed form:{\tiny
 a first-order stochastic shift in effective AI quality level $\bar{\alpha}$
 will increase the ratio of $\tfrac{M}{H}$, implying that (relatively)
 more AI management labor will be employed in the aggregate economy.
-\item \textit{...Caveat...}: We've fixed automation strategy $\mathcal{T}$
+\item \textit{...Caveat...}: We've fixed AI deployment strategy $\mathcal{T}$
 and job design $\mathcal{J}$; bear in mind that production function
 frontier is non-smooth.
 \end{itemize}
 \hyperlink{Aggregation_Main}{\beamergotobutton{Return}}
+\end{frame}
+%
+\label{A5:EFI_execution-based}
+\begin{frame}[noframenumbering]{Pred. \#2: AI-able Task Fragmentation Matters - Ex-post EFI Measures}
+
+\[
+\text{ai\_execution}_{o}=\beta_{0}+\beta_{1}\,\text{ai\_exposure}_{o}+\beta_{2}\,\text{empirical\_fragmentation\_index}_{o}+\varepsilon_{o}
+\]
+
+\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.6\linewidth]{plots/fragmentation_regression_appendix.png}
+    \end{center}
+\end{figure}\hyperlink{EFI_exposure-based}{\beamergotobutton{Return}}
 \end{frame}
 %
 \label{A4:GPT_TaskOrderingPrompt}
@@ -1715,7 +1882,57 @@ frontier is non-smooth.
     \begin{center}
     \includegraphics[width=0.55\linewidth]{plots/gpt_prompt2.png}
     \end{center}
-\end{figure}\hyperlink{DWA}{\beamergotobutton{Return}}
+\end{figure}\hyperlink{Pred3_robustness}{\beamergotobutton{Return}}
 \end{frame}
+%
+\label{A6:DWA_regression_ai_GPT}
+\begin{frame}{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Example
+DWA Task Selection}
+\begin{itemize}
+\item Example DWAs and tasks surviving the GPT filtering procedure:\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=\linewidth]{plots/sameDWA_examples_red.png}
+    \end{center}
+\end{figure}
+\end{itemize}
+\end{frame}
+%
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - GPT
+Sample AI Execution}
+\begin{itemize}
+\item Same results hold if ask GPT to filter the DWA tasks:\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression_GPT.png}
+    \end{center}
+\end{figure}\hyperlink{Pred3_robustness}{\beamergotobutton{Return}}
+\end{itemize}
+\end{frame}
+%
+\label{A7:DWA_regression_automated}
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - Main
+Sample AI Automation}
+\begin{itemize}
+\item Effects attenuated but directionally the same if study AI automation
+instead of AI execution:\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression_automation.png}
+    \end{center}
+\end{figure}\hyperlink{Pred3_robustness}{\beamergotobutton{Return}}
+\end{itemize}
+\end{frame}
+%
+\label{A8:DWA_regression_automated_GPT}
+\begin{frame}[noframenumbering]{Pred. \#3: Local Context Matters in Step's AI Execution Mode - GPT
+Sample AI Automation}
+\begin{itemize}
+\item Effects attenuated but directionally the same if study AI automation
+and use the GPT-filtered sample:\begin{figure}[htbp]
+    \begin{center}
+    \includegraphics[width=0.6\linewidth]{plots/sameDWA_regression_automation_GPT.png}
+    \end{center}
+\end{figure}\hyperlink{Pred3_robustness}{\beamergotobutton{Return}}
+\end{itemize}
+\end{frame}
+%
 
 \end{document}

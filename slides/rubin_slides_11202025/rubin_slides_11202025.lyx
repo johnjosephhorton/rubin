@@ -54,19 +54,32 @@
 
 \newcommand{\T}[0]{\mathcal{T}}
 \newcommand{\J}[0]{\mathcal{J}}
-\newcommand{\machine}[1]{\langle #1 \rangle}
-\newcommand{\human}[1]{( #1 )}
-\newcommand{\cost}[1]{C\{ #1 \}}
-\newcommand{\costdo}[1]{T_H\{ #1 \}}
-\newcommand{\costmanage}[1]{T_M\{ #1 \}}
-\newcommand{\timecost}[1]{t_{#1}}
-\newcommand{\hccost}[1]{c_{#1}}
-\newcommand{\labor}[1]{l_{#1}}
-\newcommand{\handofftime}[1]{t^{s}_{#1}}
-\newcommand{\humantime}[1]{t^{h}_{#1}}
-\newcommand{\machinetime}[1]{t^{m}_{#1}}
-\newcommand{\humanhc}[1]{c^{h}_{#1}}
-\newcommand{\machinehc}[1]{c^{m}_{#1}}
+
+\newcommand{\manualLetter}{M}
+\newcommand{\AIletter}{A}
+\newcommand{\handoffLetter}{H}
+\newcommand{\skillCostLetter}{c}
+\newcommand{\timeCostLetter}{t}
+\newcommand{\laborLetter}{l}
+\newcommand{\skillAdjustedTimeLetter}{\ensuremath{\tau}}
+\newcommand{\aggregateManualLabor}{M}
+\newcommand{\aggregateAIlabor}{A}
+
+\newcommand{\timecost}[1]{\ensuremath{\timeCostLetter_{#1}}}
+\newcommand{\skillcost}[1]{\ensuremath{\skillCostLetter_{#1}}}
+\newcommand{\labor}[1]{\ensuremath{\laborLetter_{#1}}}
+\newcommand{\handofftime}[1]{\ensuremath{\timeCostLetter^{\handoffLetter}_{#1}}}
+
+\newcommand{\manualTime}[1]{\ensuremath{\timeCostLetter^{\manualLetter}_{#1}}}
+\newcommand{\AItime}[1]{\ensuremath{\timeCostLetter^{\AIletter}_{#1}}}
+\newcommand{\manualSkill}[1]{\ensuremath{\skillCostLetter^{\manualLetter}_{#1}}}
+\newcommand{\AIskill}[1]{\ensuremath{\skillCostLetter^{\AIletter}_{#1}}}
+
+\newcommand{\minTime}[1]{\ensuremath{\timeCostLetter^*_{#1}}}
+
+\newcommand{\skillAdjustedTimeManual}[1]{\ensuremath{\skillAdjustedTimeLetter^{\manualLetter}_{#1}}}
+\newcommand{\skillAdjustedTimeAI}[1]{\ensuremath{\skillAdjustedTimeLetter^{\AIletter}_{#1}}}
+\newcommand{\skillAdjustedTimeHandoff}[1]{\ensuremath{\skillAdjustedTimeLetter^{\handoffLetter}_{#1}}}
 \end_preamble
 \options aspectratio=1610
 \use_default_options true
@@ -557,17 +570,12 @@ potentially
 \end_layout
 
 \begin_layout Itemize
-AI can either upskill or deskill workers,
-\end_layout
-
-\begin_layout Itemize
 Improvements in AI quality generate discontinuous productivity gains (by triggering discrete reorganizations of work).
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-The paper relates to organization and labor economics literatures,
- and economics of of AI.
+The paper relates to AI and labor economics literatures.
 \end_layout
 
 \end_deeper
@@ -893,7 +901,7 @@ Steps have intrinsic cost parameters in 2(+1) dimensions:
 \begin_deeper
 \begin_layout Enumerate
 Skill 
-\begin_inset Formula $c_{i}$
+\begin_inset Formula $\textbackslash skillcost\{i\}$
 \end_inset
 
  
@@ -905,7 +913,7 @@ Skill
 
 \begin_layout Enumerate
 Time 
-\begin_inset Formula $t_{i}$
+\begin_inset Formula $\textbackslash timecost\{i\}$
 \end_inset
 
  
@@ -918,11 +926,11 @@ Time
 \end_deeper
 \begin_layout Itemize
 Production can be viewed as stacked rectangles of height 
-\begin_inset Formula $c_{i}$
+\begin_inset Formula $\textbackslash skillcost\{i\}$
 \end_inset
 
  and width 
-\begin_inset Formula $t_{i}$
+\begin_inset Formula $\textbackslash timecost\{i\}$
 \end_inset
 
 :
@@ -1244,7 +1252,7 @@ Manual Step
 
  is said to be performed manually if it is executed entirely by a human worker without AI assistance.
  The associated skill and time costs for a manual step are denoted by 
-\begin_inset Formula $(c_{i}^{H},t_{i}^{H})$
+\begin_inset Formula $(\textbackslash skillcost\{i\},\textbackslash timecost\{i\})$
 \end_inset
 
 .
@@ -1741,7 +1749,7 @@ Augmented Step
  is said to be augmented if it is executed by the AI,
  after which its output is reviewed and approved by a human worker.
  The associated skill and (expected) time costs of managing a single augmented step are denoted by 
-\begin_inset Formula $(c_{i}^{M},\text{\ensuremath{\tfrac{t_{i}^{M}}{q_{i}}}})$
+\begin_inset Formula $(\textbackslash skillcost\{i\},\text{\ensuremath{\tfrac{\textbackslash timecost\{i\}}{q_{i}}}})$
 \end_inset
 
 ,
@@ -2405,7 +2413,7 @@ AI Chain
 
  augmented.
  The skill and time costs of this AI chain are given by 
-\begin_inset Formula $(c_{i}^{M},\tfrac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}})$
+\begin_inset Formula $(\textbackslash skillcost\{i\},\tfrac{\textbackslash timecost\{i\}}{\prod_{r=\ell}^{i}q_{r}})$
 \end_inset
 
 ,
@@ -2843,7 +2851,7 @@ end{figure}
 status open
 
 \begin_layout Plain Layout
-Model
+Firm's Objective
 \end_layout
 
 \end_inset
@@ -2948,7 +2956,7 @@ Firm partitions contiguous subsequences of steps into a sequence of tasks
 \end_inset
 
  where 
-\begin_inset Formula $T_{b}=(s_{i},\ldots,s_{i+\ell})$
+\begin_inset Formula $\textbackslash timecost\{b\}=(s_{i},\ldots,s_{i+\ell})$
 \end_inset
 
  for some 
@@ -3046,14 +3054,14 @@ A task is either a human task or an AI chain.
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Formula $(c_{i}^{H},t_{i}^{H})$
+\begin_inset Formula $(\textbackslash skillcost\{i\},\textbackslash timecost\{i\})$
 \end_inset
 
-if human,
+ if human,
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\left(c_{i}^{M},\frac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}}\right)$
+\begin_inset Formula $\left(\textbackslash skillcost\{i\},\frac{\textbackslash timecost\{i\}}{\prod_{r=\ell}^{i}q_{r}}\right)$
 \end_inset
 
  if AI chain.
@@ -3089,14 +3097,14 @@ A contiguous set of tasks are aggregated into a job.
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Formula $\text{Wage}_{j}=\sum_{\text{task }b\in j}c_{b}$
+\begin_inset Formula $\text{Wage}_{j}=\sum_{\text{task }b\in j}\textbackslash skillcost\{b\}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\text{\text{Employment Duration}_{j}}=\sum_{\text{task }b\in j}t_{b}.$
+\begin_inset Formula $\text{\text{Employment Duration}_{j}}=\sum_{\text{task }b\in j}\textbackslash timecost\{b\}.$
 \end_inset
 
 
@@ -3113,7 +3121,7 @@ Workers paid wage rates for every unit of time being employed.
  is:
 \begin_inset Formula 
 \[
-\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}c_{b}\right)\left(\sum_{\text{task }b\in j}t_{b}\right).
+\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}\textbackslash skillcost\{b\}\right)\left(\sum_{\text{task }b\in j}\textbackslash timecost\{b\}\right).
 \]
 
 \end_inset
@@ -3121,7 +3129,7 @@ Workers paid wage rates for every unit of time being employed.
 
 \color white
 The term 
-\begin_inset Formula $t^{S}(j)$
+\begin_inset Formula $\textbackslash handofftime\{\}(j)$
 \end_inset
 
  is the hand-off time cost associated with the last task of the job (and hence the last step of the job).
@@ -3228,14 +3236,14 @@ A task is either a human task or an AI chain.
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Formula $(c_{i}^{H},t_{i}^{H})$
+\begin_inset Formula $(\textbackslash skillcost\{i\},\textbackslash timecost\{i\})$
 \end_inset
 
-if human,
+ if human,
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\left(c_{i}^{M},\frac{t_{i}^{M}}{\prod_{r=\ell}^{i}q_{r}}\right)$
+\begin_inset Formula $\left(\textbackslash skillcost\{i\},\frac{\textbackslash timecost\{i\}}{\prod_{r=\ell}^{i}q_{r}}\right)$
 \end_inset
 
  if AI chain.
@@ -3271,14 +3279,14 @@ A contiguous set of tasks are aggregated into a job.
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Formula $\text{Wage}_{j}=\sum_{\text{task }b\in j}c_{b}$
+\begin_inset Formula $\text{Wage}_{j}=\sum_{\text{task }b\in j}\textbackslash skillcost\{b\}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\text{\text{Employment Duration}_{j}}={\color{red}t^{S}(j)}+\sum_{\text{task }b\in j}t_{b}.$
+\begin_inset Formula $\text{\text{Employment Duration}_{j}}={\color{red}\textbackslash handofftime\{\}(j)}+\sum_{\text{task }b\in j}\textbackslash timecost\{b\}.$
 \end_inset
 
 
@@ -3295,7 +3303,7 @@ Workers paid wage rates for every unit of time being employed.
  is:
 \begin_inset Formula 
 \[
-\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}c_{b}\right)\left({\color{red}t^{S}(j)}+\sum_{\text{task }b\in j}t_{b}\right).
+\text{WageBill}_{j}=\left(\sum_{\text{task }b\in j}\textbackslash skillcost\{b\}\right)\left({\color{red}\textbackslash handofftime\{\}(j)}+\sum_{\text{task }b\in j}\textbackslash timecost\{b\}\right).
 \]
 
 \end_inset
@@ -3303,7 +3311,7 @@ Workers paid wage rates for every unit of time being employed.
 The term 
 \color red
 
-\begin_inset Formula $t^{S}(j)$
+\begin_inset Formula $\textbackslash handofftime\{\}(j)$
 \end_inset
 
 
@@ -3426,7 +3434,7 @@ Specializing workers and paying a coordination cost,
 Assigning more tasks to workers and paying them higher per-unit-time wages but saving up on coordination costs.
 \begin_inset Formula 
 \[
-\text{TotalCost}=\sum_{j=1}^{J}\text{WageBill}_{j}=\sum_{j=1}^{J}\left[\left(\sum_{\text{task }b\in j}c_{b}\right)\left(t^{S}(j)+\sum_{\text{task }b\in j}t_{b}\right)\right].
+\text{TotalCost}=\sum_{j=1}^{J}\text{WageBill}_{j}=\sum_{j=1}^{J}\left[\left(\sum_{\text{task }b\in j}\textbackslash skillcost\{b\}\right)\left(\textbackslash handofftime\{\}(j)+\sum_{\text{task }b\in j}\textbackslash timecost\{b\}\right)\right].
 \]
 
 \end_inset
@@ -3580,14 +3588,14 @@ Long-run:
 \begin_inset Formula $\mathcal{J}$
 \end_inset
 
- and automation strategy 
+ and AI deployment strategy 
 \begin_inset Formula $\mathcal{T}$
 \end_inset
 
  can flexibly adjust:
 \begin_inset Formula 
 \[
-\min_{\mathcal{T}}\ \min_{\mathcal{J}}\ \text{TotalCost}(\mathcal{J};\mathcal{T})=\sum_{J_{j}\in\mathcal{J}}\text{WageBill}_{j}=\sum_{J_{j}\in\mathcal{J}}\Biggl[\Biggl(\sum_{T_{b}\in J_{j}}c_{b}\Biggr)\Biggl(t^{S}(J_{j})+\sum_{T_{b}\in J_{j}}t_{b}\Biggr)\Biggr].
+\min_{\mathcal{T}}\ \min_{\mathcal{J}}\ \text{TotalCost}(\mathcal{J};\mathcal{T})=\sum_{J_{j}\in\mathcal{J}}\text{WageBill}_{j}=\sum_{J_{j}\in\mathcal{J}}\Biggl[\Biggl(\sum_{\textbackslash timecost\{b\}\in J_{j}}\textbackslash skillcost\{b\}\Biggr)\Biggl(\textbackslash handofftime\{\}(J_{j})+\sum_{\textbackslash timecost\{b\}\in J_{j}}\textbackslash timecost\{b\}\Biggr)\Biggr].
 \]
 
 \end_inset
@@ -3602,14 +3610,14 @@ Short-run:
 \end_inset
 
  and worker wages fixed,
- automation strategy 
+ AI deployment strategy 
 \begin_inset Formula $\mathcal{T}$
 \end_inset
 
  adjusts within each job:
 \begin_inset Formula 
 \[
-\min_{\mathcal{T}}\;\sum_{T_{b}\in\mathcal{T}}t_{b}.
+\min_{\mathcal{T}}\;\sum_{\textbackslash timecost\{b\}\in\mathcal{T}}\textbackslash timecost\{b\}.
 \]
 
 \end_inset
@@ -3648,7 +3656,7 @@ status open
 
 \begin_layout Plain Layout
 Short-Term Optimization:
- Automation Design
+ AI Strategy Design
 \end_layout
 
 \end_inset
@@ -3673,7 +3681,7 @@ W/o loss to assume there is a single job with
 \end_layout
 
 \begin_layout Itemize
-Goal is to find the optimal automation strategy 
+Goal is to find the optimal AI deployment strategy 
 \begin_inset Formula $\mathcal{T}$
 \end_inset
 
@@ -3740,7 +3748,7 @@ status open
 
 \begin_layout Plain Layout
 Short-Term Optimization:
- Automation Design - Continued
+ AI Strategy Design - Continued
 \end_layout
 
 \end_inset
@@ -3755,8 +3763,8 @@ Given
 \end_inset
 
  steps organized into a single job,
- the time-optimal automation strategy can be calculated in time 
-\begin_inset Formula $O(m^{2})$
+ the time-optimal AI deployment strategy can be calculated in time 
+\begin_inset Formula $O(\textbackslash aggregateAIlabor\textasciicircum\{)$
 \end_inset
 
  via dynamic programming.
@@ -3775,7 +3783,7 @@ At step
  We have:
 \begin_inset Formula 
 \[
-C[k]=\min\ \Biggl\{ C[k-1]+t_{k}^{H},\ \min_{\ell<k}\Biggl\{ C[\ell]+\frac{t_{k}^{M}}{\prod_{i=\ell+1}^{k}q_{i}}\Biggr\}\Biggr\}.
+C[k]=\min\ \Biggl\{ C[k-1]+\textbackslash timecost\{k\},\ \min_{\ell<k}\Biggl\{ C[\ell]+\frac{\textbackslash timecost\{k\}}{\prod_{i=\ell+1}^{k}q_{i}}\Biggr\}\Biggr\}.
 \]
 
 \end_inset
@@ -3883,7 +3891,7 @@ Given
 \end_inset
 
  in 
-\begin_inset Formula $O(m^{2})$
+\begin_inset Formula $O(\textbackslash aggregateAIlabor\textasciicircum\{)$
 \end_inset
 
  time.
@@ -3961,7 +3969,7 @@ Fix any sequence of
 \end_inset
 
 ,
- an approximately cost-minimizing pair of automation strategy 
+ an approximately cost-minimizing pair of AI deployment strategy 
 \begin_inset Formula $\mathcal{T}$
 \end_inset
 
@@ -3974,7 +3982,7 @@ Fix any sequence of
 \end_inset
 
  can be computed in time 
-\begin_inset Formula $O(m^{2}\epsilon^{-2}\log^{2}(mB))$
+\begin_inset Formula $O(\textbackslash aggregateAIlabor\textasciicircum\{\epsilon^{-2}\log^{2}(mB))$
 \end_inset
 
  by dynamic programming.
@@ -4040,11 +4048,11 @@ Example 0
 
 Consider a production process with 2 steps with identical skill and time cost parameters:
  
-\begin_inset Formula $(c^{H},t^{H})=(1,\tfrac{3}{2})$
+\begin_inset Formula $(\textbackslash manualSkill\{\},\textbackslash manualTime\{\})=(1,\tfrac{3}{2})$
 \end_inset
 
  and 
-\begin_inset Formula $(c^{M},t^{M})=(1,1)$
+\begin_inset Formula $(\textbackslash AIskill\{\},\textbackslash AItime\{\})=(1,1)$
 \end_inset
 
 ,
@@ -4131,11 +4139,11 @@ Consider a job consisting of
 
  steps.
  Each step has 
-\begin_inset Formula $t^{H}=5$
+\begin_inset Formula $\textbackslash manualTime\{\}=5$
 \end_inset
 
  and 
-\begin_inset Formula $t^{M}=1$
+\begin_inset Formula $\textbackslash AItime\{\}=1$
 \end_inset
 
 ,
@@ -4164,12 +4172,12 @@ begin{tikzpicture}[
 
 \begin_layout Plain Layout
 
-    scale=0.6,
+    scale=0.8,
 \end_layout
 
 \begin_layout Plain Layout
 
-    node distance=0.6cm,
+    node distance=0.5cm,
 \end_layout
 
 \begin_layout Plain Layout
@@ -4186,7 +4194,7 @@ begin{tikzpicture}[
 
 \begin_layout Plain Layout
 
-        minimum width=1.5cm,
+        minimum width=1.45cm,
  minimum height=0.85cm,
 \end_layout
 
@@ -4454,7 +4462,7 @@ It is suboptimal to attempt to use AI on any of the even-numbered steps,
 even as part of a chain
 \shape default
 .
- The optimal automation strategy is to employ AI-augmentation on the odd-numbered steps (for a cost of 1 each) and perform even-numbered steps manually (for a cost of 5 each),
+ The optimal AI deployment strategy is to employ AI-augmentation on the odd-numbered steps (for a cost of 1 each) and perform even-numbered steps manually (for a cost of 5 each),
  resulting in overall time cost of 
 \begin_inset Formula $3m$
 \end_inset
@@ -4528,12 +4536,12 @@ begin{tikzpicture}[
 
 \begin_layout Plain Layout
 
-    scale=0.6,
+    scale=0.8,
 \end_layout
 
 \begin_layout Plain Layout
 
-    node distance=0.6cm,
+    node distance=0.5cm,
 \end_layout
 
 \begin_layout Plain Layout
@@ -4550,7 +4558,7 @@ begin{tikzpicture}[
 
 \begin_layout Plain Layout
 
-        minimum width=1.5cm,
+        minimum width=1.45cm,
  minimum height=0.85cm,
 \end_layout
 
@@ -4942,7 +4950,7 @@ beamergotobutton{Formal Definition}}
 \end_layout
 
 \begin_layout Itemize
-We show that the fragmentation index of a job approximates the time cost of an optimal automation strategy for the job.
+We show that the fragmentation index of a job approximates the time cost of an optimal AI deployment strategy for the job.
  
 \end_layout
 
@@ -4957,7 +4965,7 @@ Fix a single job with a sequence of
 
 ,
  each with 
-\begin_inset Formula $t_{i}^{M}=1$
+\begin_inset Formula $\textbackslash timecost\{i\}=1$
 \end_inset
 
 .
@@ -4969,14 +4977,14 @@ Fix a single job with a sequence of
 \begin_inset Formula $OPT$
 \end_inset
 
- denote the minimum time cost over all automation strategies.
+ denote the minimum time cost over all AI deployment strategies.
  Then 
 \begin_inset Formula $\tfrac{1}{8}OPT\leq FI\leq\tfrac{5}{4}OPT$
 \end_inset
 
 .
  If we further assume 
-\begin_inset Formula $t_{i}^{H}\geq1$
+\begin_inset Formula $\textbackslash timecost\{i\}\geq1$
 \end_inset
 
  for all 
@@ -5073,14 +5081,14 @@ Example 3
 
  Consider a job consisting of a single step.
  This step has manual time and skill requirements 
-\begin_inset Formula $(c^{H},t^{H})=(5,5)$
+\begin_inset Formula $(\textbackslash manualSkill\{\},\textbackslash manualTime\{\})=(5,5)$
 \end_inset
 
 .
  Suppose that,
  under AI augmentation,
  this step has 
-\begin_inset Formula $(c^{M},t^{M})=(1,1)$
+\begin_inset Formula $(\textbackslash AIskill\{\},\textbackslash AItime\{\})=(1,1)$
 \end_inset
 
  and probability 
@@ -5237,11 +5245,11 @@ Example 4
 
  Consider a two-step production process,
  with costs 
-\begin_inset Formula $(c_{1}^{H},t_{1}^{H},t_{1}^{S})=(2,4,5)$
+\begin_inset Formula $(\textbackslash manualSkill\{1\},\textbackslash manualTime\{1\},\textbackslash handofftime\{1\})=(2,4,5)$
 \end_inset
 
  and 
-\begin_inset Formula $(c_{2}^{H},t_{2}^{H})=(4,2)$
+\begin_inset Formula $(\textbackslash manualSkill\{2\},\textbackslash manualTime\{2\})=(4,2)$
 \end_inset
 
 .
@@ -5266,7 +5274,7 @@ Example 4
 \begin_layout ExampleBlock
 However,
  if each step of production could be augmented separately via AI to yield effective skill and time costs of 
-\begin_inset Formula $(c^{M},t^{M})=(2,2)$
+\begin_inset Formula $(\textbackslash AIskill\{\},\textbackslash AItime\{\})=(2,2)$
 \end_inset
 
  for each,
@@ -5320,11 +5328,11 @@ Example 5
 
  Consider a different two-step production process,
  with manual skill and time costs 
-\begin_inset Formula $(c_{1}^{H},t_{1}^{H})=(c_{2}^{H},t_{2}^{H})$
+\begin_inset Formula $(\textbackslash manualSkill\{1\},\textbackslash manualTime\{1\})=(\textbackslash manualSkill\{2\},\textbackslash manualTime\{2\})$
 \end_inset
 
  and hand-off cost 
-\begin_inset Formula $t_{1}^{S}=5$
+\begin_inset Formula $\textbackslash handofftime\{1\}=5$
 \end_inset
 
 .
@@ -5350,7 +5358,7 @@ The optimal job design separates these into two separate jobs at a total cost of
 
 \begin_layout ExampleBlock
 Suppose AI augmentation can allow each step to be completed with 
-\begin_inset Formula $(c^{M},t^{M})=(2,1/4)$
+\begin_inset Formula $(\textbackslash AIskill\{\},\textbackslash AItime\{\})=(2,1/4)$
 \end_inset
 
 ,
@@ -5426,7 +5434,7 @@ Example 6
  Consider a production process with two steps.
  The first step is short but high-skill and difficult for AI tools to perform correctly:
  
-\begin_inset Formula $(c_{1}^{H},t_{1}^{H},t_{1}^{S})=(5,1,1)$
+\begin_inset Formula $(\textbackslash manualSkill\{1\},\textbackslash manualTime\{1\},\textbackslash handofftime\{1\})=(5,1,1)$
 \end_inset
 
 .
@@ -5448,18 +5456,18 @@ Example 6
 .
  The AI management skill and time requirements are the same as the manual execution requirements:
  
-\begin_inset Formula $(c_{1}^{M},t_{1}^{M})=(5,1)$
+\begin_inset Formula $(\textbackslash AIskill\{1\},\textbackslash AItime\{1\})=(5,1)$
 \end_inset
 
 .
  The second step is low-skill and timely to execute manually,
  but easy for AI:
  
-\begin_inset Formula $(c_{2}^{H},t_{1}^{H})=(2,4)$
+\begin_inset Formula $(\textbackslash manualSkill\{2\},\textbackslash manualTime\{2\})=(2,4)$
 \end_inset
 
  and 
-\begin_inset Formula $(c_{2}^{M},t_{2}^{M})=(2,1)$
+\begin_inset Formula $(\textbackslash AIskill\{2\},\textbackslash AItime\{2\})=(2,1)$
 \end_inset
 
  with AI difficulty score 
@@ -5581,7 +5589,7 @@ We aggregate individual firms' production functions into a macro CES production 
 From
 \begin_inset Formula 
 \[
-x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} ,
+x=\min\left\{ \frac{\textbackslash labor\{1\}}{\textbackslash skillAdjustedTimeAI\{1\}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{\textbackslash labor\{k\}}{\textbackslash skillAdjustedTimeAI\{k\}\,\alpha^{-d_{k}}},\,\frac{\textbackslash labor\{k+1\}}{\textbackslash skillAdjustedTimeManual\{k+1\}},\,\cdots,\,\frac{\textbackslash labor\{n\}}{\textbackslash skillAdjustedTimeManual\{n\}},\,\frac{\textbackslash labor\{n+1\}}{\textbackslash skillAdjustedTimeHandoff\{\}(J_{1})},\,\cdots,\,\frac{\textbackslash labor\{n+p-1\}}{\textbackslash skillAdjustedTimeHandoff\{\}(J_{p-1})}\right\} ,
 \]
 
 \end_inset
@@ -5589,17 +5597,17 @@ x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}
 to
 \begin_inset Formula 
 \[
-x=\min\,\left\{ \frac{\bar{\alpha}\,l_{M}}{\tau_{M}},\,\frac{l_{H}}{\tau_{H}}\right\} ,
+x=\min\,\left\{ \frac{\bar{\alpha}\,\textbackslash labor\{AIletter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}},\,\frac{\textbackslash labor\{\textbackslash manualLetter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}}\right\} ,
 \]
 
 \end_inset
 
 where 
-\begin_inset Formula $\tau_{M}$
+\begin_inset Formula $\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}$
 \end_inset
 
  and 
-\begin_inset Formula $\tau_{H}$
+\begin_inset Formula $\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}$
 \end_inset
 
  are firm-level aggregate management and human skill-adjusted labor.
@@ -5618,7 +5626,7 @@ proper
  the individual production functions aggregate into:
 \begin_inset Formula 
 \[
-X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\,K^{\rho}\right)^{\frac{1}{\rho}},
+X=\left(\textbackslash theta\_\{\textbackslash AIletter\}\,\textbackslash aggregateAIlabor\textasciicircum\{+\textbackslash theta\_\{\textbackslash manualLetter\}\,\textbackslash aggregateManualLabor\textasciicircum\{+(1-\textbackslash theta\_\{\textbackslash AIletter\}-\textbackslash theta\_\{\textbackslash manualLetter\})\,K^{\rho}\right)^{\frac{1}{\rho}},
 \]
 
 \end_inset
@@ -5880,7 +5888,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.9
+includegraphics[width=0.96
 \backslash
 linewidth]{plots/anthropic_executionMode_examples.png}
 \end_layout
@@ -5952,7 +5960,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.75
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/all_labels_histogram.png}
 \end_layout
@@ -6627,6 +6635,12 @@ Pred.
 
 \begin_deeper
 \begin_layout Itemize
+Prediction #2:
+ Step-level AI exposure is not the only determinant of job-level AI adoption;
+ where AI-able steps sit in the workflow also matters for execution outcomes.
+\end_layout
+
+\begin_layout Itemize
 Regression:
 \begin_inset Formula 
 \[
@@ -6777,7 +6791,7 @@ status open
 
 
 \backslash
-hyperlink{A:EFI_execution-based}{
+hyperlink{A5:EFI_execution-based}{
 \backslash
 beamergotobutton{Ex post EFI measures}}
 \end_layout
@@ -6896,7 +6910,7 @@ status open
 
 
 \backslash
-hyperlink{A:EFI_execution-based}{
+hyperlink{A5:EFI_execution-based}{
 \backslash
 beamergotobutton{Ex post EFI measures}}
 \end_layout
@@ -7002,7 +7016,7 @@ status open
 
 
 \backslash
-hyperlink{A:EFI_execution-based}{
+hyperlink{A5:EFI_execution-based}{
 \backslash
 beamergotobutton{Ex post EFI measures}}
 \end_layout
@@ -7108,7 +7122,7 @@ status open
 
 
 \backslash
-hyperlink{A:EFI_execution-based}{
+hyperlink{A5:EFI_execution-based}{
 \backslash
 beamergotobutton{Ex post EFI measures}}
 \end_layout
@@ -7240,20 +7254,6 @@ Pred.
 Issue:
  O*NET tasks are occupation-specific:
  no task appears in >1 occupation.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-label{DWA}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Itemize
@@ -7276,28 +7276,18 @@ Tasks within a DWA are more or less similar.
  
 \end_layout
 
-\begin_deeper
 \begin_layout Itemize
-To ensure similarity we further ask GPT-5-mini to pick the tasks within DWAs that are most similar in terms of execution method and required skills.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-hyperlink{A4:GPT_DWAsimilarTasksPrompt}{
-\backslash
-beamergotobutton{GPT Prompt}}
-\end_layout
-
+We treat tasks in the same DWA as the 
+\begin_inset Quotes eld
 \end_inset
 
+same step
+\begin_inset Quotes erd
+\end_inset
 
+ appearing across different occupations.
 \end_layout
 
-\end_deeper
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
@@ -7323,16 +7313,7 @@ Pred.
 
 \begin_deeper
 \begin_layout Itemize
-Example DWAs,
- and tasks dropped in the 
-\begin_inset Quotes eld
-\end_inset
-
-finding similar tasks
-\begin_inset Quotes erd
-\end_inset
-
- procedure (red font):
+Example DWAs and tasks associated with them:
 \begin_inset ERT
 status open
 
@@ -7356,7 +7337,7 @@ begin{center}
 \backslash
 includegraphics[width=
 \backslash
-linewidth]{plots/sameDWA.png}
+linewidth]{plots/sameDWA_examples.png}
 \end_layout
 
 \begin_layout Plain Layout
@@ -7411,7 +7392,7 @@ Prediction #3:
 Regression:
 \begin_inset Formula 
 \begin{align*}
-\Pr\!\left(\text{is\_automated}_{t}=1|X_{t}\right) & =\Lambda\!\Big(\beta_{0}+\beta_{1}\,\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}+\beta_{2}\,\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}\\
+\Pr\!\left(\text{is\_ai}_{t}=1|X_{t}\right) & =\Lambda\!\Big(\beta_{0}+\beta_{1}\,\mathds{1}_{\{(t-2)\ \text{Task is AI}\}}+\beta_{2}\,\mathds{1}_{\{(t-1)\ \text{Task is AI}\}}\\
  & \ \ \ \ \ \ \ \ +\beta_{3}\,\mathds{1}_{\{(t+1)\ \text{Task is AI}\}}+\beta_{4}\,\mathds{1}_{\{(t+2)\ \text{Task is AI}\}}+\varepsilon_{t}\Big)
 \end{align*}
 
@@ -7429,14 +7410,14 @@ Regression:
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $\text{is\_automated}_{t}=1$
+\begin_inset Formula $\text{is\_ai}_{t}=1$
 \end_inset
 
  if task 
 \begin_inset Formula $t$
 \end_inset
 
- is automated.
+ is AI (augmented or automated).
 \end_layout
 
 \begin_layout Itemize
@@ -7509,11 +7490,11 @@ Pred.
 
 \begin_deeper
 \begin_layout Itemize
-Average marginal effect of immediate neighbors being AI on automatability of middle task positive and robust.
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
 \end_layout
 
 \begin_layout Itemize
-Average marginal effect of distant neighbors being AI on automatability of middle task weaker and disappear after occupational family FEs.
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
  
 \begin_inset ERT
 status open
@@ -7536,7 +7517,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.65
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/sameDWA_regression.png}
 \end_layout
@@ -7595,19 +7576,11 @@ Pred.
 
 \begin_deeper
 \begin_layout Itemize
-Average marginal effect of 
-\bar under
-immediate neighbors
-\bar default
- being AI on automatability of middle task 
-\bar under
-positive and robust
-\bar default
-.
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
 \end_layout
 
 \begin_layout Itemize
-Average marginal effect of distant neighbors being AI on automatability of middle task weaker and disappear after occupational family FEs.
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
  
 \begin_inset ERT
 status open
@@ -7630,7 +7603,7 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.65
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/sameDWA_regression_explanation1.png}
 \end_layout
@@ -7689,19 +7662,11 @@ Pred.
 
 \begin_deeper
 \begin_layout Itemize
-Average marginal effect of immediate neighbors being AI on automatability of middle task positive and robust.
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
 \end_layout
 
 \begin_layout Itemize
-Average marginal effect of 
-\bar under
-distant neighbors
-\bar default
- being AI on automatability of middle task 
-\bar under
-weaker and disappear
-\bar default
- after occupational family FEs.
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
  
 \begin_inset ERT
 status open
@@ -7724,393 +7689,9 @@ begin{center}
 
     
 \backslash
-includegraphics[width=0.65
+includegraphics[width=0.6
 \backslash
 linewidth]{plots/sameDWA_regression_explanation2.png}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{figure}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Pred.
- #3:
- Local Context Matters in Step's AI Execution Mode - Robustness Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-How should we interpret these?
- Could these have happened by chance?
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-pause
-\end_layout
-
-\end_inset
-
- No!
-\end_layout
-
-\begin_layout Itemize
-Test:
- randomize position of tasks within occupations and repeat the same analysis.
-\end_layout
-
-\begin_layout Itemize
-Compare position-randomized outcomes against actual outcomes.
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Pred.
- #3:
- Local Context Matters in Step's AI Execution Mode - Robustness Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Observation #1:
- in random-position placebos all neighbors contribute equally to automatability of middle task (i.e.,
- all four distributions similar mean and shape) 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{figure}[htbp]
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-includegraphics[width=
-\backslash
-linewidth]{plots/AME_filtered_is_automated_no_fe.png}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{figure}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Pred.
- #3:
- Local Context Matters in Step's AI Execution Mode - Robustness Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Observation #2:
- effect of immediate neighbors (two middle columns) stronger than in randomized-position placebos 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{figure}[htbp]
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-includegraphics[width=
-\backslash
-linewidth]{plots/AME_filtered_is_automated_no_fe.png}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{figure}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Pred.
- #3:
- Local Context Matters in Step's AI Execution Mode - Robustness Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Observation #3:
- effect of farther neighbors (two side columns) weaker than in randomized-position placebos 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{figure}[htbp]
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-includegraphics[width=
-\backslash
-linewidth]{plots/AME_filtered_is_automated_no_fe.png}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{figure}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-\begin_inset Separator plain
-\end_inset
-
-
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Pred.
- #3:
- Local Context Matters in Step's AI Execution Mode - Robustness Test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Observation #4:
- effect of farther neighbors disappears (and even becomes negative) after controlling for occupational families but positive effect of immediate neighbors persists
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{figure}[htbp]
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-includegraphics[width=0.8
-\backslash
-linewidth]{plots/AME_filtered_is_automated_fe_MajorGroup.png}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-end{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{figure}
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{figure}[htbp]
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-begin{center}
-\end_layout
-
-\begin_layout Plain Layout
-
-    
-\backslash
-includegraphics[width=0.8
-\backslash
-linewidth]{plots/AME_filtered_is_automated_fe_MinorGroup.png}
 \end_layout
 
 \begin_layout Plain Layout
@@ -8157,6 +7738,168 @@ status open
 \begin_layout Plain Layout
 Pred.
  #3:
+ Local Context Matters in Step's AI Execution Mode - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
+\end_layout
+
+\begin_layout Itemize
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_explanation3.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Average marginal effect of immediate neighbors being AI on AI execution of task positive and robust.
+\end_layout
+
+\begin_layout Itemize
+Average marginal effect of distant neighbors being AI on AI execution of task weaker and disappear after occupational family and DWA FEs.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_explanation4.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
  Local Context Matters in Step's AI Execution Mode - Robustness Test
 \end_layout
 
@@ -8167,11 +7910,772 @@ Pred.
 
 \begin_deeper
 \begin_layout Itemize
-Together:
- it is more likely that the same task is automated if its immediate neighbors are AI-executed;
- farther neighbors do not contribute to automation of task (at least not yet – perhaps with more capable AIs we see longer chains form and farther neighbors also contribute to some extent)
+The magnitudes are hard to interpret as there is no benchmark for these effects.
 \end_layout
 
+\begin_layout Itemize
+But could these have happened by chance?
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pause
+\end_layout
+
+\end_inset
+
+ No!
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Test:
+ randomize position of tasks within occupations and repeat the same analysis.
+\end_layout
+
+\begin_layout Itemize
+Compare position-randomized outcomes against actual outcomes.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #1:
+ in random-position placebos all neighbors contribute equally to automatability of middle task (i.e.,
+ all four distributions similar mean and shape) 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #2:
+ effect of immediate neighbors (middle columns) stronger than in randomized-position placebos 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #3:
+ effect of farther neighbors (side columns) weaker than in randomized-position placebos 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (SOC major group FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_major_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (SOC minor group FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_minor_fe_no_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (DWA FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_with_dwa.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (# of DWA tasks in occupation FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_no_dwa_withTaskDWACount.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Robustness Test Results
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Observation #4:
+ effect of farther neighbors disappears after controlling for occupational families but remains positive for immediate neighbors (# of DWA tasks in occupation + DWA FEs)
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/AME_full_is_ai_no_fe_with_dwa_withTaskDWACount.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Further Robustness Tests
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+As further robustness:
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{Pred3_robustness}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Ask GPT-5-mini to pick the tasks within DWAs that are most similar in terms of execution method and required skills,
+ and keep only one task per occupation.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A4:GPT_DWAsimilarTasksPrompt}{
+\backslash
+beamergotobutton{GPT Prompt}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Results quantitatively the same.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A6:DWA_regression_ai_GPT}{
+\backslash
+beamergotobutton{GPT-filtered Sample}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Test contribution of neighbors on likelihood of automation (instead of AI execution):
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Results quantitatively attenuated but qualitative in the same direction.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A7:DWA_regression_automated}{
+\backslash
+beamergotobutton{Automation (Main Sample)}}
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{A8:DWA_regression_automated_GPT}{
+\backslash
+beamergotobutton{Automation (GPT-filtered Sample)}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\end_deeper
 \end_deeper
 \begin_layout Standard
 \begin_inset Separator plain
@@ -8458,7 +8962,7 @@ textit{including hand-off costs for task $k$}
  We have:
 \begin_inset Formula 
 \[
-C[k]=\min_{s<k}\Biggl\{ C[s]+\Biggl[\Biggl(\sum_{i=s+1}^{k}c_{i}\Biggr)\Biggl(t_{k}^{S}+\sum_{i=s+1}^{k}t_{i}\Biggr)\Biggr]\Biggr\}.
+C[k]=\min_{s<k}\Biggl\{ C[s]+\Biggl[\Biggl(\sum_{i=s+1}^{k}\textbackslash skillcost\{i\}\Biggr)\Biggl(\textbackslash timecost\{k\}+\sum_{i=s+1}^{k}\textbackslash timecost\{i\}\Biggr)\Biggr]\Biggr\}.
 \]
 
 \end_inset
@@ -8517,7 +9021,7 @@ status open
 
 \begin_layout Plain Layout
 Long-Term Optimization:
- Automation and Job Design
+ AI Strategy and Job Design
 \end_layout
 
 \end_inset
@@ -8541,7 +9045,7 @@ Let
 
 \begin_layout Itemize
 Let 
-\begin_inset Formula $W(i,c,t)$
+\begin_inset Formula $W(i,\textbackslash skillcost\{\},\textbackslash timecost\{\})$
 \end_inset
 
  be the minimum cost of completing steps 1 through 
@@ -8550,7 +9054,7 @@ Let
 
 ,
  as well as some additional (but unspecified) set of tasks with cost profile 
-\begin_inset Formula $(c,t)$
+\begin_inset Formula $(\textbackslash skillcost\{\},\textbackslash timecost\{\})$
 \end_inset
 
  that have already been assigned as a single job to a single worker referred to as the 
@@ -8568,7 +9072,7 @@ active worker
 By definition:
 \begin_inset Formula 
 \[
-V(i)=W(i,0,t_{i}^{S})
+V(i)=W(i,0,\textbackslash timecost\{i\})
 \]
 
 \end_inset
@@ -8600,7 +9104,7 @@ status open
 
 \begin_layout Plain Layout
 Long-Term Optimization:
- Automation and Job Design - Continued
+ AI Strategy and Job Design - Continued
 \end_layout
 
 \end_inset
@@ -8759,7 +9263,7 @@ end{align*}
 \end_layout
 
 \begin_layout Proposition
-The cost of the optimal joint automation and job design for a given sequence of 
+The cost of the optimal joint AI strategy and job design for a given sequence of 
 \begin_inset Formula $m$
 \end_inset
 
@@ -8882,7 +9386,7 @@ Fragmentation Index - Formal Definition
 \begin_deeper
 \begin_layout Itemize
 Assume 
-\begin_inset Formula $t_{i}^{M}=1$
+\begin_inset Formula $\textbackslash timecost\{i\}=1$
 \end_inset
 
  for all steps.
@@ -8921,7 +9425,7 @@ The weight of each
  is defined to be minimum of its augmentation cost or sum of it manual steps
 \begin_inset Formula 
 \[
-w(C_{j})=min\{1,\;\sum_{i\in C_{j}}t_{i}^{H}\}.
+w(C_{j})=min\{1,\;\sum_{i\in C_{j}}\textbackslash timecost\{i\}\}.
 \]
 
 \end_inset
@@ -8942,7 +9446,7 @@ Given a realization of
  the realized fragmentation is:
 \begin_inset Formula 
 \[
-\sum_{i\in F}\min\,\{t_{i}^{H},\frac{t_{i}^{M}}{q_{i}}\}+\sum_{C_{j}\in\mathcal{C}}w(C_{j}).
+\sum_{i\in F}\min\,\{\textbackslash timecost\{i\},\frac{\textbackslash timecost\{i\}}{q_{i}}\}+\sum_{C_{j}\in\mathcal{C}}w(C_{j}).
 \]
 
 \end_inset
@@ -9040,11 +9544,11 @@ Assume capital is plenty and is a fixed input so firms decide on (1) and (2) con
 \begin_layout Itemize
 Different types of labor have different base wage rates:
  
-\begin_inset Formula $w_{M}$
+\begin_inset Formula $w\_\{\textbackslash AIletter\}$
 \end_inset
 
  for AI management and 
-\begin_inset Formula $w_{H}$
+\begin_inset Formula $w\_\{\textbackslash manualLetter\}$
 \end_inset
 
  for human labor.
@@ -9054,7 +9558,7 @@ Different types of labor have different base wage rates:
 Updated job wage equation:
 \begin_inset Formula 
 \[
-\text{Wage}_{j}=w_{H}\left(\sum_{T_{b}^{H}\in J}c_{b}^{H}\right)+w_{M}\left(\sum_{T_{b}^{M}\in J}c_{b}^{M}\right).
+\text{Wage}_{j}=w\_\{\textbackslash manualLetter\}\left(\sum_{\textbackslash timecost\{b\}\in J}\textbackslash skillcost\{b\}\right)+w\_\{\textbackslash AIletter\}\left(\sum_{\textbackslash timecost\{b\}\in J}\textbackslash skillcost\{b\}\right).
 \]
 
 \end_inset
@@ -9070,13 +9574,13 @@ Skill-adjusted time requirement of task
  is:
 \begin_inset Formula 
 \[
-\tau_{b}=\frac{w_{H}\left(\sum_{T_{\ell}^{H}\in J(b)}c_{\ell}^{H}\right)+w_{M}\left(\sum_{T_{\ell}^{M}\in J(b)}c_{\ell}^{M}\right)}{w_{O(b)}}\,t_{b},
+\tau_{b}=\frac{w\_\{\textbackslash manualLetter\}\left(\sum_{T_{\ell}^{H}\in J(b)}c_{\ell}^{H}\right)+w\_\{\textbackslash AIletter\}\left(\sum_{T_{\ell}^{M}\in J(b)}c_{\ell}^{M}\right)}{w_{E(b)}}\,\textbackslash timecost\{b\},
 \]
 
 \end_inset
 
 where 
-\begin_inset Formula $O(b)=H$
+\begin_inset Formula $E(b)=\manualLetter$
 \end_inset
 
  if 
@@ -9084,7 +9588,7 @@ where
 \end_inset
 
  is a manual task and 
-\begin_inset Formula $O(b)=M$
+\begin_inset Formula $E(b)=\AIletter$
 \end_inset
 
  if 
@@ -9100,11 +9604,11 @@ Wage bill paid to task
 \end_inset
 
  is thus 
-\begin_inset Formula $w_{H}\tau_{b}$
+\begin_inset Formula $w\_\{\textbackslash manualLetter\}\tau_{b}$
 \end_inset
 
  if executed manually and 
-\begin_inset Formula $w_{M}\tau_{b}\alpha^{-d_{b}}$
+\begin_inset Formula $w\_\{\textbackslash AIletter\}\tau_{b}\alpha^{-d_{b}}$
 \end_inset
 
  if executed via AI.
@@ -9144,7 +9648,7 @@ status open
 
 \begin_deeper
 \begin_layout Itemize
-Fix automation strategy 
+Fix AI deployment strategy 
 \begin_inset Formula $\mathcal{T}$
 \end_inset
 
@@ -9193,7 +9697,7 @@ With hand-offs being standalone tasks
 Individual firm's production function is Leontief in steps:
 \begin_inset Formula 
 \[
-x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} ,
+x=\min\left\{ \frac{\textbackslash labor\{1\}}{\textbackslash skillAdjustedTimeAI\{1\}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{\textbackslash labor\{k\}}{\textbackslash skillAdjustedTimeAI\{k\}\,\alpha^{-d_{k}}},\,\frac{\textbackslash labor\{k+1\}}{\textbackslash skillAdjustedTimeManual\{k+1\}},\,\cdots,\,\frac{\textbackslash labor\{n\}}{\textbackslash skillAdjustedTimeManual\{n\}},\,\frac{\textbackslash labor\{n+1\}}{\textbackslash skillAdjustedTimeHandoff\{\}(J_{1})},\,\cdots,\,\frac{\textbackslash labor\{n+p-1\}}{\textbackslash skillAdjustedTimeHandoff\{\}(J_{p-1})}\right\} ,
 \]
 
 \end_inset
@@ -9248,7 +9752,7 @@ status open
 \begin_layout Standard
 \begin_inset Formula 
 \[
-x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}}{\tau_{k}^{M}\,\alpha^{-d_{k}}},\,\frac{l_{k+1}}{\tau_{k+1}^{H}},\,\cdots,\,\frac{l_{n}}{\tau_{n}^{H}},\,\frac{l_{n+1}}{\tau^{S}(J_{1})},\,\cdots,\,\frac{l_{n+p-1}}{\tau^{S}(J_{p-1})}\right\} .
+x=\min\left\{ \frac{\textbackslash labor\{1\}}{\textbackslash skillAdjustedTimeAI\{1\}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{\textbackslash labor\{k\}}{\textbackslash skillAdjustedTimeAI\{k\}\,\alpha^{-d_{k}}},\,\frac{\textbackslash labor\{k+1\}}{\textbackslash skillAdjustedTimeManual\{k+1\}},\,\cdots,\,\frac{\textbackslash labor\{n\}}{\textbackslash skillAdjustedTimeManual\{n\}},\,\frac{\textbackslash labor\{n+1\}}{\textbackslash skillAdjustedTimeHandoff\{\}(J_{1})},\,\cdots,\,\frac{\textbackslash labor\{n+p-1\}}{\textbackslash skillAdjustedTimeHandoff\{\}(J_{p-1})}\right\} .
 \]
 
 \end_inset
@@ -9260,7 +9764,7 @@ x=\min\left\{ \frac{l_{1}}{\tau_{1}^{M}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{l_{k}
 Can be represented as:
 \begin_inset Formula 
 \[
-x=\min\,\left\{ \frac{\bar{\alpha}\,l_{M}}{\tau_{M}},\,\frac{l_{H}}{\tau_{H}}\right\} ,
+x=\min\,\left\{ \frac{\bar{\alpha}\,\textbackslash labor\{AIletter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}},\,\frac{\textbackslash labor\{\textbackslash manualLetter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}}\right\} ,
 \]
 
 \end_inset
@@ -9272,7 +9776,7 @@ where
  is the effective AI quality level and:
 \begin_inset Formula 
 \[
-\tau_{M}=\sum_{b=1}^{k}\tau_{b}^{M},\qquad\qquad\tau_{H}=\sum_{j=1}^{p-1}\tau^{S}(J_{j})+\sum_{b=k+1}^{n}\tau_{b}^{H},\qquad\qquad\bar{\alpha}=\frac{\sum_{b=1}^{k}\tau_{b}^{M}}{\sum_{b=1}^{k}\tau_{b}^{M}\alpha^{-d_{b}}},
+\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}=\sum_{b=1}^{k}\tau_{b}^{M},\qquad\qquad\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}=\sum_{j=1}^{p-1}\textbackslash skillAdjustedTimeHandoff\{\}(J_{j})+\sum_{b=k+1}^{n}\tau_{b}^{H},\qquad\qquad\bar{\alpha}=\frac{\sum_{b=1}^{k}\tau_{b}^{M}}{\sum_{b=1}^{k}\tau_{b}^{M}\alpha^{-d_{b}}},
 \]
 
 \end_inset
@@ -9334,7 +9838,7 @@ Production unfolds in two stages:
 \begin_layout Itemize
 Stage 1:
  firms decide on organization structure (i.e.,
- automation strategy 
+ AI deployment strategy 
 \begin_inset Formula $\mathcal{T}$
 \end_inset
 
@@ -9356,7 +9860,7 @@ We show that with proper heterogeneity in effective AI quality levels micro prod
  
 \begin_inset Formula 
 \[
-X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\,K^{\rho}\right)^{\frac{1}{\rho}},
+X=\left(\textbackslash theta\_\{\textbackslash AIletter\}\,\textbackslash aggregateAIlabor\textasciicircum\{+\textbackslash theta\_\{\textbackslash manualLetter\}\,\textbackslash aggregateManualLabor\textasciicircum\{+(1-\textbackslash theta\_\{\textbackslash AIletter\}-\textbackslash theta\_\{\textbackslash manualLetter\})\,K^{\rho}\right)^{\frac{1}{\rho}},
 \]
 
 \end_inset
@@ -9403,18 +9907,18 @@ Normalize the output price
 
 ,
  so that 
-\begin_inset Formula $w_{M}$
+\begin_inset Formula $w\_\{\textbackslash AIletter\}$
 \end_inset
 
  and 
-\begin_inset Formula $w_{H}$
+\begin_inset Formula $w\_\{\textbackslash manualLetter\}$
 \end_inset
 
  are real wage rates.
  A firm's profitability condition implies:
 \begin_inset Formula 
 \[
-w_{M}\,l_{M}+w_{H}\,l_{H}\leq x.
+w\_\{\textbackslash AIletter\}\,\textbackslash labor\{AIletter\}+w\_\{\textbackslash manualLetter\}\,\textbackslash labor\{\textbackslash manualLetter\}\leq x.
 \]
 
 \end_inset
@@ -9426,13 +9930,13 @@ w_{M}\,l_{M}+w_{H}\,l_{H}\leq x.
 In equilibrium:
 \begin_inset Formula 
 \[
-x=\frac{\bar{\alpha}\,l_{M}}{\tau_{M}}=\frac{l_{H}}{\tau_{H}}.
+x=\frac{\bar{\alpha}\,\textbackslash labor\{AIletter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}}=\frac{\textbackslash labor\{\textbackslash manualLetter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}}.
 \]
 
 \end_inset
 
 Substituting for 
-\begin_inset Formula $l_{H}$
+\begin_inset Formula $\textbackslash labor\{\textbackslash manualLetter\}$
 \end_inset
 
  and 
@@ -9440,17 +9944,17 @@ Substituting for
 \end_inset
 
  in terms of 
-\begin_inset Formula $\tau_{M}$
+\begin_inset Formula $\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}$
 \end_inset
 
  and 
-\begin_inset Formula $\tau_{H}$
+\begin_inset Formula $\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}$
 \end_inset
 
  we obtain:
 \begin_inset Formula 
 \[
-w_{M}\,l_{M}+w_{H}\,\frac{\tau_{H}\,\bar{\alpha}\,l_{M}}{\tau_{M}}\leq\frac{\bar{\alpha}\,l_{M}}{\tau_{M}}.
+w\_\{\textbackslash AIletter\}\,\textbackslash labor\{AIletter\}+w\_\{\textbackslash manualLetter\}\,\frac{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}\,\bar{\alpha}\,\textbackslash labor\{AIletter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}}\leq\frac{\bar{\alpha}\,\textbackslash labor\{AIletter\}}{\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}}.
 \]
 
 \end_inset
@@ -9462,7 +9966,7 @@ w_{M}\,l_{M}+w_{H}\,\frac{\tau_{H}\,\bar{\alpha}\,l_{M}}{\tau_{M}}\leq\frac{\bar
 Rearrange terms to get:
 \begin_inset Formula 
 \[
-\gamma=\frac{w_{M}\,\tau_{M}}{1-w_{H}\,\tau_{H}}\leq\bar{\alpha}\leq1.
+\gamma=\frac{w\_\{\textbackslash AIletter\}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}}{1-w\_\{\textbackslash manualLetter\}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}}\leq\bar{\alpha}\leq1.
 \]
 
 \end_inset
@@ -9480,7 +9984,7 @@ Let
  By definition:
 \begin_inset Formula 
 \[
-X=\int_{\gamma}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha},\qquad M=\int_{\gamma}^{1}\,\tau_{M}\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha},\qquad H=\int_{\gamma}^{1}\,\tau_{H}\,\phi(\bar{\alpha})\,d\bar{\alpha}.
+X=\int_{\gamma}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha},\qquad M=\int_{\gamma}^{1}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha},\qquad H=\int_{\gamma}^{1}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}\,\phi(\bar{\alpha})\,d\bar{\alpha}.
 \]
 
 \end_inset
@@ -9533,7 +10037,7 @@ We have
  in
 \begin_inset Formula 
 \[
-X=\left(\theta_{M}\,M^{\rho}+\theta_{H}\,H^{\rho}+(1-\theta_{M}-\theta_{H})\right)^{\frac{1}{\rho}}.
+X=\left(\textbackslash theta\_\{\textbackslash AIletter\}\,\textbackslash aggregateAIlabor\textasciicircum\{+\textbackslash theta\_\{\textbackslash manualLetter\}\,\textbackslash aggregateManualLabor\textasciicircum\{+(1-\textbackslash theta\_\{\textbackslash AIletter\}-\textbackslash theta\_\{\textbackslash manualLetter\})\right)^{\frac{1}{\rho}}.
 \]
 
 \end_inset
@@ -9560,7 +10064,7 @@ Solving for
 
 \begin_inset Formula 
 \[
-\phi(\bar{\alpha})=\frac{\left(1-\theta_{M}-\theta_{H}\right)^{\frac{1}{\rho}}\left(1-\theta_{H}\,\tau_{H}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{M}\,\tau_{M}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\theta_{H}\,\tau_{H}^{\rho}-\left(1-\theta_{H}\,\tau_{H}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{M}\,\tau_{M}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
+\phi(\bar{\alpha})=\frac{\left(1-\textbackslash theta\_\{\textbackslash AIletter\}-\textbackslash theta\_\{\textbackslash manualLetter\}\right)^{\frac{1}{\rho}}\left(1-\textbackslash theta\_\{\textbackslash manualLetter\}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}\right)^{\frac{\rho}{\rho-1}}\left(\textbackslash theta\_\{\textbackslash AIletter\}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\textbackslash theta\_\{\textbackslash manualLetter\}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}-\left(1-\textbackslash theta\_\{\textbackslash manualLetter\}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash manualLetter\}\right)^{\frac{\rho}{\rho-1}}\left(\textbackslash theta\_\{\textbackslash AIletter\}\,\textbackslash skillAdjustedTimeLetter\_\{\textbackslash AIletter\}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
 \]
 
 \end_inset
@@ -9589,7 +10093,7 @@ textit{...Conjecture...}
 
 :
  For certain parameter values 
-\begin_inset Formula $(\theta_{M},\theta_{H},\rho)$
+\begin_inset Formula $(\textbackslash theta\_\{\textbackslash AIletter\},\textbackslash theta\_\{\textbackslash manualLetter\},\rho)$
 \end_inset
 
  a first-order stochastic shift in effective AI quality level 
@@ -9618,7 +10122,7 @@ textit{...Caveat...}
 \end_inset
 
 :
- We've fixed automation strategy 
+ We've fixed AI deployment strategy 
 \begin_inset Formula $\mathcal{T}$
 \end_inset
 
@@ -9664,7 +10168,7 @@ status open
 
 
 \backslash
-label{A:EFI_execution-based}
+label{A5:EFI_execution-based}
 \end_layout
 
 \end_inset
@@ -9958,7 +10462,7 @@ status open
 
 
 \backslash
-hyperlink{DWA}{
+hyperlink{Pred3_robustness}{
 \backslash
 beamergotobutton{Return}}
 \end_layout
@@ -9969,5 +10473,419 @@ beamergotobutton{Return}}
 \end_layout
 
 \end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A6:DWA_regression_ai_GPT}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Example DWA Task Selection
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Example DWAs and tasks surviving the GPT filtering procedure:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=
+\backslash
+linewidth]{plots/sameDWA_examples_red.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - GPT Sample AI Execution
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Same results hold if ask GPT to filter the DWA tasks:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_GPT.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Pred3_robustness}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A7:DWA_regression_automated}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - Main Sample AI Automation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Effects attenuated but directionally the same if study AI automation instead of AI execution:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_automation.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Pred3_robustness}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+label{A8:DWA_regression_automated_GPT}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 3
+status open
+
+\begin_layout Plain Layout
+noframenumbering
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Pred.
+ #3:
+ Local Context Matters in Step's AI Execution Mode - GPT Sample AI Automation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Effects attenuated but directionally the same if study AI automation and use the GPT-filtered sample:
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{figure}[htbp]
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+includegraphics[width=0.6
+\backslash
+linewidth]{plots/sameDWA_regression_automation_GPT.png}
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\backslash
+end{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{figure}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperlink{Pred3_robustness}{
+\backslash
+beamergotobutton{Return}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
