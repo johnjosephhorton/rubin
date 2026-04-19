@@ -1,6 +1,6 @@
 # QJE Revision Issues — Index
 
-Triage of referee and editor feedback on MS 45218 "Chaining Tasks, Redefining Work: A Theory of AI Automation". Source feedback: [../submission/QJE/referee_and_editor_responses.md](../submission/QJE/referee_and_editor_responses.md) and GitHub Issue #3.
+Triage of referee and editor feedback on MS 45218 "Chaining Tasks, Redefining Work: A Theory of AI Automation", plus additional suggestions received outside the QJE review process. Source feedback: [../submission/QJE/referee_and_editor_responses.md](../submission/QJE/referee_and_editor_responses.md) and GitHub Issue #3.
 
 Each issue file below:
 - Quotes the referee(s) raising the concern
@@ -15,12 +15,12 @@ A rough placement on (effort to do, payoff in a resubmission). Numbers correspon
 ```
 Payoff
   ^
-H |  02 03 08 10                      01 16
+H |  02 03 08 10 26                   01 16
   |  20 19 11                         21 03-opt2
   |  06 07 17
   |            14 15 12
 M |  04 18 22                         05
-  |     09
+  |     09 27
   |
 L |  23 24 25 13
   +---------------------------------> Effort
@@ -83,6 +83,13 @@ L |  23 24 25 13
 | [23](23-appendix-appendix-typo.md) | "Appendix Appendix" artifact (6 occurrences) | L | H |
 | [24](24-table-notes-page-overflow.md) | Table C.III notes run off page | L | H |
 | [25](25-notation-nitpicks.md) | Notation nitpicks (p.17, 22, 28, 32) | L | M–H |
+
+### G. Literature review additions
+
+| # | Issue | Effort | Payoff |
+|---|---|---|---|
+| [26](26-strategy-innovation-literature.md) | Strategy / innovation refs on modularity (Baldwin, Wernerfelt, Henderson–Clark) | L–M | H |
+| [27](27-cite-related-task-based-ai-paper.md) | Cite related task-based AI model in lit review | L | L–M |
 
 ## Suggested meeting agenda
 
