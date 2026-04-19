@@ -1,0 +1,288 @@
+\section{Data Appendix \textendash \  Robustness to Alternative GPT Prompts}
+\label{app:gptPrompts_robustness}
+
+\renewcommand{\thefigure}{F.\arabic{figure}}
+\setcounter{figure}{0}
+
+In this appendix, we assess whether our results are sensitive to the specific GPT prompt used to order tasks within occupations.  
+Although alternative prompts can generate different task sequences, we show that these differences do not exhibit systematic patterns across subsets of occupations, and that our headline results are robust to prompt formulation.
+
+We begin by generating task orderings for each occupation using 10 alternative prompts in addition to the baseline prompt.
+We use the same structure as the first prompt in Appendix~\ref{app:prompts}, but only change the sentence starting with ``\textit{Provide the typical sequential...}'' with an alternative from the list below:
+\begin{enumerate}
+    \item \small \textit{Imagine a typical workday for this occupation. As the day unfolds, tasks arise and are completed as needed. Order the tasks in the sequence they most naturally occur.}
+    \item \small \textit{For each task, consider its inputs and outputs. Order tasks so outputs of earlier tasks plausibly feed into later tasks. If tasks are parallel, place the more upstream task first.}
+    \item \small \textit{Order tasks to minimize rework, waiting, and unnecessary handoffs. Assume an experienced worker executing the workflow efficiently.}
+    \item \small \textit{Think about what must ultimately be produced in this occupation and what needs to happen before that. Use this reasoning to produce a natural forward sequence of tasks.}
+    \item \small \textit{Identify which tasks logically depend on others, then order the tasks in a single sequence consistent with those dependencies and typical practice.}
+    \item \small \textit{Order tasks according to how information is generated, transformed, and used over the course of the work.}
+    \item \small \textit{Order tasks based on when mistakes would be most costly, placing tasks that prevent or constrain downstream errors earlier.}
+    \item \small \textit{Order tasks so that tasks informing important decisions tend to occur before tasks that rely on those decisions.}
+    \item \small \textit{Order the tasks as an experienced practitioner would intuitively carry them out, without explicitly planning or formalizing the workflow.}
+    \item \small \textit{Order the tasks to reflect how the work is most commonly carried out in practice, rather than how it is formally described.}
+\end{enumerate}
+Notice that these prompts are not simple re-wordings of the same instruction.  
+Instead, they approach the task ordering problem from different perspectives, so that, in principle, the resulting task sequences could differ.  
+Our aim is to quantify how much variation these alternative prompt formulations induce in practice, and whether such variation poses a concern for our purposes.
+
+To measure the degree of overlap between task orderings, we compute pairwise Kendall's $\tau$ within each occupation across all pairs of prompts.\footnote{
+Kendall's $\tau$ is a standard rank correlation measure that, roughly speaking, captures the fraction of task pairs that appear in the same relative order across two ranked lists.
+This measure ranges from $-1$ (completely reversed orderings) to $1$ (identical orderings), with $0$ indicating no systematic overlap.  
+Higher values therefore correspond to greater similarity between task sequences.
+}
+Across all occupations and prompt pairs, the average Kendall's $\tau$ is $0.6$, with the full distribution shown in Panel (a) of Figure~\ref{fig:kendall_tau_dist}.
+This value implies that task orderings are not identical across prompts, but that there is a reasonably high degree of overlap given the diversity of prompt formulations considered.
+More importantly for our analyses, we find no evidence that GPT generates systematically different task orderings across different types of occupations.
+Specifically, we split occupations based on whether they fall above or below the median in the \emph{main prompt sample} along three dimensions discussed in Subsection~\ref{sec:fragmentation_prediction}: the empirical fragmentation index (Definition~2), the share of occupation tasks exposed to AI (E1), and the share of tasks executed by AI.
+Panels (b)\textendash(d) of Figure~\ref{fig:kendall_tau_dist} show that the mean Kendall's $\tau$ is very similar for above- and below-median occupations in all cases.
+\begin{figure}[ht!]
+\centering
+\caption{Kendall's $\tau$ Distribution Across GPT Prompt Task Orderings}
+\label{fig:kendall_tau_dist}
+\vspace{0.2cm}
+
+\begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \caption{Full Sample}
+    \includegraphics[width=\linewidth]{plots/GPT_task_sequences_overlap_analysis/GPT_task_sequence_robustness_distribution.png}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \caption{Empirical Fragmentation Index Split}
+    \includegraphics[width=\linewidth]{plots/GPT_task_sequences_overlap_analysis/GPT_task_sequence_robustness_by_fragmentation_index_distribution.png}
+\end{subfigure}
+
+\vspace{0.3cm}
+
+\begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \caption{AI Exposure (E1) Split}
+    \includegraphics[width=\linewidth]{plots/GPT_task_sequences_overlap_analysis/GPT_task_sequence_robustness_by_human_E1_fraction_distribution.png}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.49\linewidth}
+    \centering
+    \caption{AI Execution Split}
+    \includegraphics[width=\linewidth]{plots/GPT_task_sequences_overlap_analysis/GPT_task_sequence_robustness_by_ai_fraction_distribution.png}
+\end{subfigure}
+
+\vspace{0.2cm}
+\raggedright \footnotesize{
+\emph{Notes:} Each panel shows the distribution of mean Kendall's $\tau$ computed across 11 prompts (main + ten alternatives) within occupations. 
+Split figures in Panels (b)\textendash (d) compare occupations above (red) and below (blue) the median of the indicated measure, computed in the sample generated by the main prompt.
+}
+\end{figure}
+
+% Additionally, Figures~\ref{fig:kendall_tau_sample_byFragmentation}\textendash\ref{fig:kendall_tau_sample_byExecution} plot the mean Kendall's $\tau$ for 75 randomly chosen occupations in the dataset, ordered in descending order for more nuanced inspection.
+% On the horizontal axis, the range between the minimum and maximum $\tau$ across all prompt pairs is shown in gray.
+% Blue markers indicate occupations below the median of the corresponding variable in the \emph{main prompt sample}, while red markers indicate occupations above the median.
+% The dashed vertical lines report the mean Kendall's $\tau$ for each group of observations.
+% Across all three figures, the group means appear almost identical. 
+% \begin{figure}[ht!]
+%     \begin{center}
+%     \caption{Robustness of Task Sequences to GPT Prompts by Empirical Fragmentation Index}
+%     \label{fig:kendall_tau_sample_byFragmentation}
+%     \includegraphics[width=0.95\linewidth]{plots/GPT_task_sequences_overlap_analysis/GPT_task_sequence_robustness_by_fragmentation_index.png}
+%     \end{center}
+%     \raggedright \footnotesize{\emph{Notes:} This figure shows that task sequences generated by GPT using 10 alternative prompts do not exhibit systematic differences across more versus less fragmented occupations.  
+%     Blue markers indicate occupations below the median empirical fragmentation index (Definition~2) in the full sample, while red markers indicate occupations above the median.
+%     }
+% \end{figure}
+% \begin{figure}[ht!]
+%     \begin{center}
+%     \caption{Robustness of Task Sequences to GPT Prompts by Share of AI-exposed Tasks in Occupation}
+%     \label{fig:kendall_tau_sample_byExposure}
+%     \includegraphics[width=0.95\linewidth]{plots/GPT_task_sequences_overlap_analysis/GPT_task_sequence_robustness_by_human_E1_fraction.png}
+%     \end{center}
+%     \raggedright \footnotesize{\emph{Notes:} This figure shows that task sequences generated by GPT using 10 alternative prompts do not exhibit systematic differences across more versus less AI-exposed occupations.  
+%     Blue markers indicate occupations below the median AI exposure in the full sample, while red markers indicate occupations above the median.  
+%     }
+% \end{figure}
+% \begin{figure}[ht!]
+%     \begin{center}
+%     \caption{Robustness of Task Sequences to GPT Prompts by Share of AI-executed Tasks in Occupation}
+%     \label{fig:kendall_tau_sample_byExecution}
+%     \includegraphics[width=0.95\linewidth]{plots/GPT_task_sequences_overlap_analysis/GPT_task_sequence_robustness_by_ai_fraction.png}
+%     \end{center}
+%     \raggedright \footnotesize{\emph{Notes:} This figure shows that task sequences generated by GPT using 10 alternative prompts do not exhibit systematic differences across more versus less AI-executed occupations.  
+%     Blue markers indicate occupations below the median AI execution in the full sample, while red markers indicate occupations above the median.  
+%     }
+% \end{figure}
+% In short, GPT-generated task orderings do not appear to differ systematically across different types of occupations, and even when using meaningfully different prompt formulations, the resulting task sequences remain fairly similar overall, though not identical.
+In the following Subsections, we show that we obtain the same results for each of our headline analyses using these alternative prompts.
+
+
+
+
+\subsection{Robustness of Prediction \#1 Results to Alternative GPT Prompts}
+\label{app:gptPrompts_robustness_pred1}
+
+Here, we examine how sensitive the AI chain length and AI chains count statistics are to the choice of GPT prompt.
+Panel~(a) of Figure~\ref{fig:ai_chains_length_count_prompt_robustness} reports the average AI chain length computed under each prompt, and Panel~(b) reports the corresponding average AI chains count.
+Across prompts, both statistics remain tightly clustered around the baseline value implied by the main prompt.
+In particular, the mean across alternative prompts (the dashed colored lines) matches the main sample estimate from the main prompt, which lies in the extreme tail of the placebo distributions in Figure~\ref{fig:aiChains_graphs_def1} in both cases.
+\begin{figure}[ht!]
+\caption{Robustness of AI Chain Length and AI Chain Counts to GPT Prompts}
+\label{fig:ai_chains_length_count_prompt_robustness}
+\begin{center}
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \captionsetup{labelformat=empty}
+        \caption{(a) Average AI Chain Length}
+        \includegraphics[width=\textwidth]{plots/aiChain_length_count_robustness/aiChain_length_robustness.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \captionsetup{labelformat=empty}
+        \caption{(b) Average AI Chains Count}
+        \includegraphics[width=\textwidth]{plots/aiChain_length_count_robustness/aiChain_count_robustness.png}
+    \end{subfigure}
+\end{subfigure}
+\end{center}
+\raggedright \footnotesize{
+\emph{Notes:} This figure shows that the average AI chain length and average AI chains count measures are robust to alternative prompt formulations.
+Panel~(a) reports average AI chain length, and Panel~(b) reports the average number of AI chains per occupation, computed separately under each prompt.
+Prompt~0 corresponds to the baseline prompt used in the main text.
+The dashed black reference line in each panel is the mean of the same statistic across 1{,}000 randomized task-position reshuffle placebos shown in Figure~\ref{fig:aiChains_graphs_def1}.
+The dashed colored line reports the mean of the statistic across all 11 prompts.
+}
+\end{figure}
+
+
+
+
+\subsection{Robustness of Prediction \#2 Results to Alternative GPT Prompts}
+\label{app:gptPrompts_robustness_pred2}
+
+Here, we re-estimate Equation~\eqref{eq:fragmentation_index_regression} using task orderings generated by the alternative prompts and report the analogs of the estimates in Tables~\ref{tab:fragmentation_index_regression_exposure} and \ref{tab:fragmentation_index_regression_execution}.
+
+Figure~\ref{fig:efi_regression_exposure_robustness} plots the equivalents of estimated coefficients reported in Table~\ref{tab:fragmentation_index_regression_exposure} for the main variables across the three specifications (baseline, SOC major group fixed effects, and SOC minor group fixed effects) for empirical fragmentation index Definition~1 in Panel~(A) and Definition~2 in Panel~(B).
+Across all specifications, the estimates obtained under alternative prompts fall within the range of the main prompt estimates in both magnitude and statistical significance.
+Specifically, the estimates on occupation-level AI exposure are positive and statistically different from zero throughout.
+For EFI, the Definition~1 coefficients in Panel~(A) vary in sign but remain statistically indistinguishable from zero, while the Definition~2 coefficients in Panel~(B) are consistently negative and statistically different from zero.
+This mirrors the results obtained under the main prompt and reflects measurement differences across EFI definitions.
+Recall that under Definition~1 only about 14\% of tasks are labeled AI-exposed under the E1 measure, which makes AI chain formation sparse and leaves EFI weakly measured.
+Definition~2, however, allows both E1 and E2 exposure labels to form AI chains, yielding a denser exposure signal and therefore a more precisely estimated relationship between fragmentation and AI execution.
+
+Similarly, Figure~\ref{fig:efi_regression_execution_robustness} plots the equivalents of estimates reported in Table~\ref{tab:fragmentation_index_regression_execution} for the two ex-post, execution-based EFI definitions 3 and 4 using alternative prompts.
+Again, similar to the results obtained from the main prompt, the estimated coefficient on AI exposure is positive and the estimated coefficient on empirical fragmentation index is negative.
+
+
+\subsection{Robustness of Prediction \#3 Results to Alternative GPT Prompts}
+\label{app:gptPrompts_robustness_pred3}
+
+Here, we assess the robustness of our spillover results for neighboring tasks being AI-executed on the focal task's likelihood of AI execution.
+
+For each alternative prompt, we re-estimate Equation~\eqref{eq:DWA_regression_ai} on the corresponding main sample under four specifications: baseline, SOC major group fixed effects, SOC minor group fixed effects, and DWA fixed effects.
+Figure~\ref{fig:DWA_regression_aiExecution_mainSample_robustness} reports the equivalent of average marginal effects reported in columns (1)\textendash(4) of Table~\ref{tab:DWA_regression_aiExecution_mainSample} for all prompts.
+The layout and color coding of specifications in this figure mirror those in Figure~\ref{fig:DWA_regression_aiExecution_mainSample} from the reshuffled task positions robustness exercise.
+
+We find that even though the average effect of more distant neighbors across alternative prompts is slightly larger than under the main prompt, the substantive conclusion remains unchanged.
+The two immediate neighbors (middle columns) still have larger and more precisely estimated effects than more distant neighbors (side columns), and the effects of distant neighbors attenuate and become less distinguishable from zero as additional fixed effects are included in Panels~(B)\textendash (D).
+
+\newpage
+\begin{figure}[ht!]
+  \begin{center}
+  \caption{Robustness of Table~\ref{tab:fragmentation_index_regression_exposure} Estimates to GPT Prompts} 
+  \label{fig:efi_regression_exposure_robustness}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): Empirical Fragmentation Index Definition 1}
+    \includegraphics[width=\textwidth]{plots/fragmentationIndex_robustness/fragmentation_index_robustness_definition_3.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): Empirical Fragmentation Index Definition 2}
+    \includegraphics[width=\textwidth]{plots/fragmentationIndex_robustness/fragmentation_index_robustness_definition_4.png}
+  \end{subfigure}
+  \end{center}
+  \raggedright \footnotesize{\emph{Notes:} This figure shows that the estimated relationships between occupation-level AI execution and both AI exposure and the empirical fragmentation index are robust to alternative prompt formulations.
+  Panel~(A) reports coefficients on AI exposure (top row, blue) and EFI (bottom row, gold) for exposure-based EFI Definition~1.
+  Panel~(B) reports the corresponding coefficients for exposure-based EFI Definition~2.
+  Error bars denote 90\% confidence intervals.
+  The dashed colored lines report the mean across all 11 prompts.
+  In each graph, the Prompt~0 estimate is highlighted in red and corresponds to the estimate reported in Table~\ref{tab:fragmentation_index_regression_exposure} using the main prompt.
+  The Panel~(A) graphs correspond to columns (1)\textendash(3), and the Panel~(B) graphs correspond to columns (4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression_exposure}.
+}
+\end{figure}
+
+\begin{figure}[ht!]
+  \begin{center}
+  \caption{Robustness of Table~\ref{tab:fragmentation_index_regression_execution} Estimates to GPT Prompts} 
+  \label{fig:efi_regression_execution_robustness}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): Empirical Fragmentation Index Definition 3}
+    \includegraphics[width=\textwidth]{plots/fragmentationIndex_robustness/fragmentation_index_robustness_definition_1.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): Empirical Fragmentation Index Definition 4}
+    \includegraphics[width=\textwidth]{plots/fragmentationIndex_robustness/fragmentation_index_robustness_definition_2.png}
+  \end{subfigure}
+  \end{center}
+  \raggedright \footnotesize{\emph{Notes:} This figure shows that the estimated relationships between occupation-level AI execution and both AI exposure and the empirical fragmentation index are robust to alternative prompt formulations.
+  Panel~(A) reports coefficients on AI exposure (top row, blue) and EFI (bottom row, gold) for execution-based EFI Definition~3.
+  Panel~(B) reports the corresponding coefficients for execution-based EFI Definition~4.
+  Error bars denote 90\% confidence intervals.
+  The dashed colored lines report the mean across all 11 prompts.
+  In each graph, the Prompt~0 estimate is highlighted in red and corresponds to the estimate reported in Table~\ref{tab:fragmentation_index_regression_execution} using the main prompt.
+  The Panel~(A) graphs correspond to columns (1)\textendash(3), and the Panel~(B) graphs correspond to columns (4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression_execution}.
+}
+\end{figure}
+
+\begin{figure}[ht!]
+  \begin{center}
+  \caption{Robustness of Table~\ref{tab:DWA_regression_aiExecution_mainSample} Estimates to GPT Prompts} 
+  \label{fig:DWA_regression_aiExecution_mainSample_robustness}
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): No Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs_robustness/ame_no_fe_no_dwa_robustness.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): SOC Major Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs_robustness/ame_major_fe_no_dwa_robustness.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (C): SOC Minor Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs_robustness/ame_minor_fe_no_dwa_robustness.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (D): Detailed Work Activity Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs_robustness/ame_no_fe_with_dwa_robustness.png}
+  \end{subfigure}
+  \end{center}
+  \raggedright \footnotesize{\emph{Notes:} This figure shows that the spillover effect of neighboring tasks being AI-executed on the focal task's AI execution is robust to alternative prompt formulations.
+  Across prompts, the two immediate neighbors (middle columns) have larger and more precisely estimated effects than more distant neighbors (side columns).
+  The effects of distant neighbors attenuate toward zero and become less distinguishable from zero as additional fixed effects are included.
+  Panels~(A)\textendash(D) report the prompt-specific analogs of the estimates in columns (1)\textendash(4) of Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+  Error bars denote 90\% confidence intervals.
+  The dashed colored lines report the mean across all 11 prompts.
+  In each graph, the Prompt~0 estimate corresponds to the estimate reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample} using the main prompt.
+}
+\end{figure}

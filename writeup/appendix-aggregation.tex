@@ -1,0 +1,69 @@
+\section{Technical Details \textendash \  Derivation of Effective AI Quality Heterogeneity Distribution}
+\label{app:aggregationDist}
+
+In this appendix we describe how to obtain the analytical formula for distribution of heterogeneity $\phi(\bar{\alpha})$ expressed in (\ref{eq:phi}) by extending the method of \cite{levhari1968note}.
+
+Define $u=({w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}})/(1-w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter})$ and rewrite equation (\ref{eq:macro_agg_prod_with_micro_aggregates}) as:
+\begin{equation}
+\left(\int_{u}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha}\right)^{\rho}
+=
+\theta_{\AIletter}\left(\skillAdjustedTimeLetter_{\AIletter}\int_{u}^{1}\,\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha}\right)^{\rho}
++
+\theta_{\manualLetter} \left(\skillAdjustedTimeLetter_{\manualLetter}\int_{u}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha}\right)^{\rho}
++
+\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right).
+\label{eq:macro_agg_prod_with_hetDist}
+\end{equation}
+Our goal is to solve for $\phi(\bar{\alpha})$ in the equation above as a function of $\theta_{\AIletter},\theta_{\manualLetter},\rho$.
+Define:
+\begin{equation}
+\Gamma(u)=\int_{u}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha},\label{eq:gamma}
+\end{equation}
+and
+\begin{equation}
+\Psi(u)=\int_{u}^{1}\,\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha}.\label{eq:psi}
+\end{equation}
+Note that $\Gamma^{'}(u)=-\phi(u)$ and $\Psi^{'}(u)=-\phi(u)/u$.
+Rewrite equation (\ref{eq:macro_agg_prod_with_hetDist}) as:
+\[
+\Gamma^{\rho}(u)=\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\,\Psi^{\rho}(u)+\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\,\Gamma^{\rho}(u)+(1-\theta_{\AIletter}-\theta_{\manualLetter}).
+\]
+Rearranging terms, we obtain:
+\begin{equation}
+\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)\Gamma^{\rho}(u)=\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\,\Psi^{\rho}(u)+(1-\theta_{\AIletter}-\theta_{\manualLetter}).\label{eq:macro_agg_pro_with_gamma}
+\end{equation}
+
+Differentiating equation (\ref{eq:macro_agg_pro_with_gamma}) with respect to $u$ yields:
+\[
+\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)\Gamma^{\rho-1}(u)=\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\,\Psi^{\rho-1}(u)\,u^{-1}.
+\]
+Solving for $\Psi^{\rho-1}(u)$ as a function of $u$ and $\Gamma^{\rho-1}(u)$ we get:
+\[
+\Psi^{\rho-1}(u)=\frac{\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)}{\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}}\Gamma^{\rho-1}(u)\,u.
+\]
+Finally, express $\Psi(u)$ in terms of $\Gamma(u)$:
+\begin{equation}
+\Psi(u)=\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{1}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{1}{\rho-1}}\,\Gamma(u).\label{eq:psi_solved}
+\end{equation}
+
+
+Substituting \( \Psi(u) \) from equation (\ref{eq:psi_solved}) into equation (\ref{eq:macro_agg_pro_with_gamma}), we have:
+\[
+\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)\Gamma^{\rho}(u)=\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\,\Gamma^{\rho}(u)+\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right).
+\]
+Rearranging terms to solve for \( \Gamma(u) \), we get:
+\[
+\Gamma(u)=\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1}{\rho}}.
+\]
+
+Recall that \( \Gamma'(u)=-\phi(u) \).
+Differentiating \( \Gamma(u) \), we obtain:
+\begin{align*}
+\Gamma'(u)&=\frac{\partial}{\partial u}\left[\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1}{\rho}}\right] \\
+&=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{\rho-1}u^{\frac{1}{\rho-1}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
+\end{align*}
+Thus, we have:
+\begin{equation}
+\phi(\bar{\alpha})=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}},
+\end{equation}
+which is the formula provided in (\ref{eq:phi}) in the main text.

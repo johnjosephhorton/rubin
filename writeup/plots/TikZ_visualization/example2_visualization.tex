@@ -1,0 +1,51 @@
+\begin{adjustbox}{center}
+\begin{tikzpicture}[
+    scale=0.8,
+    node distance=0.6cm,
+    every node/.style={
+        rectangle, rounded corners, draw,
+        minimum width=1.5cm, minimum height=0.85cm,
+        align=center
+    },
+    easy/.style={fill=teal!40},
+    hard/.style={fill=red!40},
+    idx/.style={draw=none, font=\scriptsize},
+    >=latex,
+    thick
+]
+
+% ----- Easy segment -----
+\node[easy] (E1) {Easy};
+\node[idx, below=1pt of E1] {1};
+
+\node[easy, right=of E1] (E2) {Easy};
+\node[idx, below=1pt of E2] {2};
+
+\node[draw=none, right=of E2] (Dots1) {$\cdots \cdots$};
+
+\node[easy, right=of Dots1] (Ek) {Easy};
+\node[idx, below=1pt of Ek] {$\tfrac{m}{2}$};
+
+% ----- Hard segment -----
+\node[hard, right=of Ek] (H1) {Hard};
+\node[idx, below=1pt of H1] {$\tfrac{m}{2}+1$};
+
+\node[draw=none, right=of H1] (Dots2) {$\cdots \cdots$};
+
+\node[hard, right=of Dots2] (Hm1) {Hard};
+\node[idx, below=1pt of Hm1] {$m-1$};
+
+\node[hard, right=of Hm1] (Hm) {Hard};
+\node[idx, below=1pt of Hm] {$m$};
+
+% Arrows
+\draw[->] (E1) -- (E2);
+\draw[->] (E2) -- (Dots1);
+\draw[->] (Dots1) -- (Ek);
+\draw[->] (Ek) -- (H1);
+\draw[->] (H1) -- (Dots2);
+\draw[->] (Dots2) -- (Hm1);
+\draw[->] (Hm1) -- (Hm);
+
+\end{tikzpicture}
+\end{adjustbox}

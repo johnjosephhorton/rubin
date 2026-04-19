@@ -1,0 +1,63 @@
+\section{GPT-5-mini Prompts}
+\label{app:prompts}
+
+This Appendix provides the GPT-5-mini prompts used to generate a task sequence for each occupation (Prompt 1), and for finding similar tasks across occupations for each DWA (Prompt 2). \\
+
+\begin{tcolorbox}[colback=gray!5, colframe=black!60, title={Prompt \#1: GPT-5-mini Prompt for Ordering of Tasks in Occupation}]
+\begin{verbatim}
+You are an expert in workflow analysis for the occupation: {{ occupation }}. 
+Below is a list of {{ num_tasks }} tasks that are part of this occupation:
+{{ tasks_list }}
+
+Provide the typical sequential order in which these tasks are performed in a 
+real-world workflow. 
+
+Return your answer as a JSON array where each element has:
+- "Task Position": the sequence number (1, 2, 3, etc.).
+- "Task Title": the exact task text from the list above.
+Format: [{"Task Position": 1, "Task Title": "..."}, 
+         {"Task Position": 2, "Task Title": "..."},
+         ...]
+Only return the JSON array, nothing else.
+\end{verbatim}
+\end{tcolorbox}
+
+\newpage
+\begin{tcolorbox}[colback=gray!5, colframe=black!60, title={Prompt \#2: GPT-5-mini Prompt for Finding Similar Tasks in Each DWA}]
+\begin{verbatim}
+You are an expert in workflow analysis for the detailed work activity: 
+{{ detailed_work_activity }}.
+
+Below is a list of {{ num_tasks }} task IDs and titles that belong to this 
+detailed work activity and appear across similar or different occupations 
+(tasks and occupations are ordered such that the first task belongs to the 
+first occupation, the second task belongs to the second occupation, etc.).
+Tasks IDs: {{ tasks_ids }}
+Tasks list: {{ tasks_list }}
+Occupations list: {{ occupations_list }}
+Occupation Codes list: {{ occupation_codes_list }}
+
+Determine which tasks are similar in nature and in terms of their objectives, 
+methods, or required skills. There may be more than one task associated with 
+an occupation. Return only the most relevant task for every occupation. 
+Only look for tasks that are actually similar. Do not feel obliged to return 
+all occupations.
+
+Return the task-occupation pairs you determine as similar as a JSON array 
+where each element has:
+- "Task ID": the exact task ID from the list of task IDs above
+- "Task Title": the exact task text from the list of tasks above
+- "O*NET-SOC Code": the exact occupation code text from the list of occupation
+   codes above
+- "Occupation Title": the exact occupation text from the list of occupations 
+   above
+Format: [{"Task ID": 1234, "Task Title": "...", 
+          "O*NET-SOC Code": "...", "Occupation Title": "..."}, 
+          {"Task ID": 5678, "Task Title": "...", 
+          "O*NET-SOC Code": "...", "Occupation Title": "..."}, 
+          ...]
+Only return the JSON array, nothing else.
+\end{verbatim}
+\end{tcolorbox}
+
+

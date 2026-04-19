@@ -1,0 +1,132 @@
+\section{Appendix Tables}
+\label{app:tables}
+
+\renewcommand{\thetable}{C.\arabic{table}}
+\setcounter{table}{0}
+
+
+\begin{table}[h!]
+    \caption{Role of AI-able Task Fragmentation in Determining AI Execution Outcomes (Using Execution-Based Empirical Fragmentation Measures)}
+    \label{tab:fragmentation_index_regression_execution}
+    \begin{center}
+    \input{tables/fragmentation_index_regression_execution.tex}
+    \end{center}
+    \footnotesize{\emph{Notes:}} This table shows that occupation-level AI execution outcomes depend not only on the overall exposure of tasks to AI, but also on where AI-able steps are situated within the production sequence.
+    The table reports results from estimating regression~\eqref{eq:fragmentation_index_regression}.
+    The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\text{ai\_execution}$).
+    The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation, while the ``Empirical Fragmentation Index'' captures how dispersed AI-able steps are across the occupation’s workflow.
+    Definition~3 measures fragmentation based on realized AI chains per the model's definition (given in Definition~\ref{def:ai_chain} of the model section), whereas Definition~4 expands the definition of AI chains by treating both automated and augmented tasks contributing equally to the formation of AI chains in measuring task fragmentation.
+\end{table}
+
+
+
+
+\newpage
+\begin{landscape}
+\begin{table}[htbp]
+    \caption{Example O*NET Tasks Associated with Claude Conversations, and Calculated Augmentation vs.\ Automation Outcomes}
+    \label{tab:example_anthropic_AI_tasks}
+    \begin{center}
+    \input{tables/anthropic_AI_tasks_example.tex}
+    \end{center}
+    \footnotesize{\emph{Notes:} Augmentation percentage is the sum of Validation, Task Iteration, and Learning types of conversations whereas the automation percentage is the sum of Directive and Feedback Loop types of conversations. 
+    Whichever mode between Augmentation and Automation has a higher share is selected as the task's mode of AI execution, ignoring the Filtered share.}
+\end{table}
+\end{landscape}
+
+
+
+
+\newpage
+\begin{landscape}
+\begin{table}[p]
+\caption{Example DWAs with Tasks in Multiple Occupations and the Tasks Surviving the ``Finding Similar Tasks'' Procedure}
+\label{tab:DWA_tasks}
+
+\resizebox{0.545\textheight}{!}{%
+\begin{minipage}{\textheight}
+
+\begin{center}
+
+\vspace{-0.1cm}
+
+\captionsetup{labelformat=empty}
+\caption{\hfill \Large{Panel (A)}}
+\input{tables/DWA_tasks_before_filter.tex}
+
+\vspace{0.3cm}
+
+\captionsetup{labelformat=empty}
+\caption{\hfill \Large{Panel (B)}}
+\input{tables/DWA_tasks_after_filter.tex}
+\end{center}
+\end{minipage}
+}
+
+\vspace{0.3cm}
+
+\footnotesize{\emph{Notes:} Panel (A) shows three example detailed work activities (DWAs) and tasks associated with them in the O*NET dataset. 
+Entries highlighted with a red font are those that are dropped in the ``finding similar tasks'' procedure described in text. 
+Panel (B) shows the set of tasks for DWAs of Panel (A) that successfully survive the ``finding similar tasks'' procedure.}
+\end{table}
+\end{landscape}
+
+
+
+
+\newpage
+\begin{table}[ht!]
+\begin{center}
+\caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution Likelihood (GPT-filtered Sample)}
+\label{tab:DWA_regression_aiExecution_GPTsample}
+\resizebox{\textwidth}{!}{
+\input{tables/noTasksWithRepetitiveDWAs/GPT_ai.tex}
+}
+\end{center}
+\footnotesize{\emph{Notes:}} 
+This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai}.  
+The dependent variable in all specifications is an indicator for whether task $t$ is AI-executed ($\text{is\_ai}_{t}$).  
+The sample is restricted to similar tasks across occupations, identified by GPT-5-mini as tasks belonging to the same DWA with similar execution nature and skill characteristics.  
+All specifications control for the AI exposure status of task $t$ and for the total number of tasks in task $t$'s occupation.
+Standard errors are bootstrapped using $B=200$ replications and clustered at the DWA level.  
+\end{table}
+
+
+
+
+\newpage
+\begin{table}[ht!]
+\begin{center}
+\caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Automation Likelihood}
+\label{tab:DWA_regression_aiAutomation_mainSample}
+\resizebox{\textwidth}{!}{
+\input{tables/randomTieBreak/allTasks_automated.tex}
+}
+\end{center}
+\footnotesize{\emph{Notes:}} 
+This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{t}$) instead of ($\text{is\_ai}_{t}$).  
+The sample is restricted to similar tasks across occupations, identified as tasks belonging to the same DWA in the O*NET dataset.  
+Tasks that are mapped to multiple DWAs are retained, with one associated DWA assigned randomly for estimation to preserve sufficient variation in the data.  
+All specifications control for the AI exposure status of task $t$ and for the total number of tasks in task $t$’s occupation.  
+Standard errors are bootstrapped using $B=200$ replications and clustered at the DWA level.  
+\end{table}
+
+
+
+
+\newpage
+\begin{table}[ht!]
+\begin{center}
+\caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Automation Likelihood (GPT-filtered Sample)}
+\label{tab:DWA_regression_aiAutomation_GPTsample}
+\resizebox{\textwidth}{!}{
+\input{tables/randomTieBreak/GPT_automated.tex}
+}
+\end{center}
+\footnotesize{\emph{Notes:}} 
+This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{t}$) instead of ($\text{is\_ai}_{t}$).
+The sample is restricted to similar tasks across occupations, identified by GPT-5-mini as tasks belonging to the same DWA with similar execution nature and skill characteristics.
+Tasks that are mapped to multiple DWAs are retained, with one associated DWA assigned randomly for estimation to preserve sufficient variation in the data.  
+All specifications control for the AI exposure status of task $t$ and for the total number of tasks in task $t$'s occupation.
+Standard errors are bootstrapped using $B=200$ replications and clustered at the DWA level.  
+\end{table}

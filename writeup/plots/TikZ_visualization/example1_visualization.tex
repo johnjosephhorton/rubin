@@ -1,0 +1,47 @@
+\begin{adjustbox}{center}
+\begin{tikzpicture}[
+    scale=0.8,
+    node distance=0.6cm,
+    every node/.style={
+        rectangle, rounded corners, draw,
+        minimum width=1.5cm, minimum height=0.85cm,
+        align=center
+    },
+    easy/.style={fill=teal!40},
+    hard/.style={fill=red!40},
+    idx/.style={draw=none, font=\scriptsize},
+    >=latex,
+    thick
+]
+
+% Nodes
+\node[easy] (E1) {Easy};
+\node[idx, below=1pt of E1] {1};
+
+\node[hard, right=of E1] (H2) {Hard};
+\node[idx, below=1pt of H2] {2};
+
+\node[easy, right=of H2] (E3) {Easy};
+\node[idx, below=1pt of E3] {3};
+
+\node[draw=none, right=of E3] (Dots) {$\cdots \cdots$};
+
+\node[hard, right=of Dots] (Hk) {Hard};
+\node[idx, below=1pt of Hk] {m--2};
+
+\node[easy, right=of Hk] (Ek1) {Easy};
+\node[idx, below=1pt of Ek1] {m--1};
+
+\node[hard, right=of Ek1] (Hm) {Hard};
+\node[idx, below=1pt of Hm] {m};
+
+% Arrows
+\draw[->] (E1) -- (H2);
+\draw[->] (H2) -- (E3);
+\draw[->] (E3) -- (Dots);
+\draw[->] (Dots) -- (Hk);
+\draw[->] (Hk) -- (Ek1);
+\draw[->] (Ek1) -- (Hm);
+
+\end{tikzpicture}
+\end{adjustbox}

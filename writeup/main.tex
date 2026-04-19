@@ -1,0 +1,181 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{dialogue}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{booktabs, array, makecell}
+\usepackage{pdflscape}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{tcolorbox}
+
+\usepackage{color-edits}
+
+\addauthor[BL]{bl}{blue}
+\addauthor[PS]{ps}{red}
+\addauthor[NSI]{nsi}{orange}
+
+\newcommand{\minitab}[2][1]{\begin{tabular}{#1}#2\end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%
+% For appendix math formulas
+\theoremstyle{plain}
+    \ifx\thechapter\undefined
+      \newtheorem{lem}{\protect\lemmaname}
+    \else
+      \newtheorem{lem}{\protect\lemmaname}[chapter]
+    \fi
+\theoremstyle{plain}
+    \ifx\thechapter\undefined
+  \newtheorem{cor}{\protect\corollaryname}
+\else
+      \newtheorem{cor}{\protect\corollaryname}[chapter]
+    \fi
+\providecommand{\corollaryname}{Corollary}
+\providecommand{\lemmaname}{Lemma}
+%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%
+% For illustration of AI task automation flow
+\usepackage{tikz}
+\usepackage{adjustbox}
+\usetikzlibrary{shapes.geometric, arrows, positioning, arrows.meta, fit, decorations.pathreplacing, decorations.pathmorphing, calc}
+
+% Define styles
+\tikzstyle{task} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=gray!20, rounded corners, text width=2.2cm, align=center]
+\tikzstyle{decision} = [rectangle, minimum width=4cm, minimum height=2cm, text centered, draw=black, fill=green!20, rounded corners, text width=3cm, align=center]
+\tikzstyle{process} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=orange!40, rounded corners, text width=3cm, align=center]
+\tikzstyle{process2} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=gray!10, text width=3cm, align=center]
+\tikzstyle{smallbox} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=gray!20, text width=1.5cm, align=center]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+%%%%%%%%%%%%%%%%%%%%
+
+
+
+\DeclareMathOperator{\CostBlock}{CostBlock}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{observation}{Observation}
+\newtheorem{example}{Example}
+\DeclareMathOperator{\minCost}{minCost}
+
+\begin{document}
+\pagenumbering{gobble}
+
+\title{Chaining Tasks, Redefining Work: A Theory of AI Automation\thanks{We thank Seyed Mahdi Hosseini Maasoum, Guy Lichtinger, Anand Shah, Philip Trammell, Michael Zhao, and seminar participants at the Economics of AI Reading Group and Social Analytics Lab at MIT for helpful discussions.}}
+
+\author{
+Mert Demirer\thanks{mdemirer@mit.edu} \\ MIT
+\and
+John J. Horton\thanks{jjhorton@mit.edu} \\ MIT \& NBER
+\and
+Nicole Immorlica\thanks{nicimm@microsoft.com} \\ Yale \& Microsoft
+\and
+Brendan Lucier\thanks{brlucier@microsoft.com} \\ Microsoft
+\and
+Peyman Shahidi\thanks{peymansh@mit.edu} \\ MIT
+\\[2em]
+{
+% \color[RGB]{0,51,153}\textbf{\large Preliminary Draft \textendash \ Comments Welcome!}\\
+{\color[RGB]{0,51,153}[Click \href{https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf}{here} for the most recent version.]}
+}
+\\~\\
+}
+
+
+
+\date{\today{}}
+
+
+\newcommand{\T}[0]{\mathcal{T}}
+\newcommand{\J}[0]{\mathcal{J}}
+
+\newcommand{\manualLetter}{M}
+\newcommand{\AIletter}{A}
+\newcommand{\handoffLetter}{H}
+\newcommand{\skillCostLetter}{c}
+\newcommand{\timeCostLetter}{t}
+\newcommand{\laborLetter}{l}
+\newcommand{\skillAdjustedTimeLetter}{\ensuremath{\tau}}
+\newcommand{\aggregateManualLabor}{M}
+\newcommand{\aggregateAIlabor}{A}
+
+\newcommand{\timecost}[1]{\ensuremath{\timeCostLetter_{#1}}}
+\newcommand{\skillcost}[1]{\ensuremath{\skillCostLetter_{#1}}}
+\newcommand{\hccost}[1]{\skillcost{#1}}
+\newcommand{\labor}[1]{\ensuremath{\laborLetter_{#1}}}
+\newcommand{\handofftime}[1]{\ensuremath{\timeCostLetter^{\handoffLetter}_{#1}}}
+
+\newcommand{\manualTime}[1]{\ensuremath{\timeCostLetter^{\manualLetter}_{#1}}}
+\newcommand{\AItime}[1]{\ensuremath{\timeCostLetter^{\AIletter}_{#1}}}
+\newcommand{\manualSkill}[1]{\ensuremath{\skillCostLetter^{\manualLetter}_{#1}}}
+\newcommand{\AIskill}[1]{\ensuremath{\skillCostLetter^{\AIletter}_{#1}}}
+
+\newcommand{\minTime}[1]{\ensuremath{\timeCostLetter^*_{#1}}}
+
+\newcommand{\skillAdjustedTimeManual}[1]{\ensuremath{\skillAdjustedTimeLetter^{\manualLetter}_{#1}}}
+\newcommand{\skillAdjustedTimeAI}[1]{\ensuremath{\skillAdjustedTimeLetter^{\AIletter}_{#1}}}
+\newcommand{\skillAdjustedTimeHandoff}[1]{\ensuremath{\skillAdjustedTimeLetter^{\handoffLetter}_{#1}}}
+
+\newcommand{\topic}[1]{\paragraph{#1}}
+\renewcommand{\arraystretch}{1.25}
+
+
+\maketitle
+\begin{abstract}
+\noindent Production is a sequence of steps that can be executed (1) manually, (2) augmented with AI, or (3) fully automated within contiguous AI-executed steps called ``chains.'' 
+Firms optimally bundle steps into tasks and then jobs, trading off specialization gains against coordination costs. 
+We characterize the optimal assignment of humans and AI to steps and the firm's resulting job structure, showing that comparative advantage logic can fail with AI chaining.
+The model implies non-linear productivity gains from AI quality improvements and admits a CES representation at the macro level.
+Empirical evidence supports the model's key predictions that (1) AI-executed steps co-occur in chains, (2) dispersion of AI-exposed steps lowers AI execution at the job level, and (3) adjacency to AI-executed steps increases the likelihood that a step is AI-executed.
+
+% \noindent We introduce a task-based model of production that responds to automation technologies such as AI, and empirically validate several of its core implications.
+% Production is a sequence of \emph{steps} that firms aggregate into \emph{tasks} and then into \emph{jobs}, each performed by a single worker.
+% A firm can reduce wage costs of jobs by assigning each worker a narrower set of tasks, thereby increasing specialization, but doing so introduces coordination frictions among a larger number of workers.
+% The optimal organizational structure resulting from these aggregations balances these opposing forces.
+% Production steps may be executed \emph{manually} by humans, \emph{augmented} with AI assistance under human oversight, or \emph{automated} within an AI chain, where multiple consecutive steps are executed by AI and only the final output is verified by a human.
+% A key implication of chaining is that it can overturn simple comparative advantage logic: a step where a human has an advantage over AI in isolation may nonetheless be optimally automated as part of an AI chain if it sits next to strong AI performing steps.
+% Productivity gains therefore depend not only on AI-ability of individual steps but also on where these steps are positioned in the workflow.
+% We characterize how firms optimally allocate steps between humans and AI in both the short run, when job boundaries are fixed, and the long run, when AI deployment strategy and job design are jointly chosen.
+% This framework yields predictions about task- versus job-level exposure to AI, worker specialization, and the non-linear productivity gains when marginal improvements in AI quality trigger discrete reorganizations of work.
+% Finally, we show how production functions obtained from firm-level cost minimization can map into an aggregate CES production function to study the macroeconomic implications of improvements in AI quality.
+\end{abstract}
+
+
+
+\newpage 
+\clearpage
+\pagenumbering{arabic}
+\input{intro.tex}
+\input{literature.tex}
+\input{model.tex}
+\input{optimization.tex}
+\input{discussion.tex}
+\input{aggregation.tex}
+\input{empirics.tex}
+\input{conclusion.tex}
+
+\bibliographystyle{aer}
+\bibliography{rubin}
+
+\newpage
+\appendix
+\include{appendix-FI.tex}
+\include{appendix-aggregation.tex}
+\include{appendix-tables.tex}
+\include{appendix-figures.tex}
+\include{appendix-prompts.tex}
+\include{appendix-GPTprompts_robustness.tex}
+
+\end{document}

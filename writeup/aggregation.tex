@@ -1,0 +1,223 @@
+\section{Macro-level Production Function}
+\label{sec:aggregation}
+
+So far, the model has focused on individual firm decision-making: how a firm allocates production steps among automation, augmentation, and manual execution, and how its micro-level choices of task assignment and job design determine internal productivity and costs.
+Ultimately, however, our interest extends beyond the firm to the broader economy. 
+Improvements in AI quality not only alter how individual firms organize production but also affect the composition of inputs used across the economy and the aggregate relationship between labor, capital, and output.
+Yet the firm-level optimization framework developed above prevents direct analysis of these aggregate effects and also makes our approach distinct from the large literature in which production is modeled directly at the task level and then aggregated to the economy level (e.g., \cite{acemoglu2022artificial, acemoglu2024tasks, acemoglu2025simple}).
+To bridge this gap, this section examines whether the micro-level cost-minimization problem of firms can be aggregated into well-behaved firm- and economy-level production functions. 
+In particular, we show that the detailed, many-input Leontief representation of production at the task level can be reduced to a more compact formulation with only a small number of effective inputs, and that aggregating across heterogeneous firms (in terms of AI quality level) yields a macro-level production function with a CES form. 
+This provides a tractable link between micro-level organization decisions and macroeconomic implications of improving AI quality.
+
+We begin by showing how a firm's micro-level decisions can be explicitly represented by a Leontief production function at the task level.
+Next, we demonstrate how, for the purposes of analyzing labor allocation within a firm, this detailed task-level production function can be simplified into a Leontief production function with just two aggregate inputs: skill-adjusted AI management labor and skill-adjusted manual labor (we will describe what we mean by ``skill-adjusted'' below).
+Finally, we explore how the production functions of numerous individual firms, which differ only in how they can effectively put the same AI technology into use, can be aggregated into a single, economy-wide CES production function.
+In this macro-level representation, the inputs are economy-wide aggregates of the corresponding micro-level inputs from individual firms, thereby facilitating clearer insights into the overall labor allocation in the economy.
+
+Before the aggregation analysis, let us first describe the setup of production.
+A firm uses two production inputs: (1) skill-adjusted AI management labor (to complete AI-assisted tasks), and (2) skill-adjusted manual labor (to perform manual tasks).
+These two types of labor demand different compensations: executing an AI-assisted task with skill and time cost of one demands $w_{\AIletter}$, while completing a manual task with similar skill and time requirements commands a compensation of $w_{\manualLetter}$.
+We call $w_{\AIletter}$ and $w_{\manualLetter}$ the \emph{base wage rates} for AI management and manual labor, respectively.
+
+Firms use these two inputs to complete tasks.
+Recall that the skill and time requirements of tasks are determined by the firm's AI strategy $\T$, while the aggregate skill requirements of jobs depend jointly on the AI strategy and job design $\J$.
+Specifically, the per unit of time compensation of a worker employed to do tasks of a job is determined by all tasks in that job.
+Consider Job 1 in Figure~\ref{fig:hierarchical_production} for example.
+The worker assigned to perform Job 1 is required to obtain not only the skill required for manual Task 1, $\manualSkill{1}$, but must also possess the required skill for AI-assisted Task 2, $\AIskill{2}$, as the worker's total compensation per unit of time is determined at the job level, and equals $\manualSkill{1} + \AIskill{2}$.
+Therefore, the more tasks firm includes in a job, the higher required compensation for every task in that job.
+
+In order to produce, the firm hires manual labor to perform manual tasks and AI management labor for AI-assisted tasks.
+Therefore, the total compensation of a job will be a weighted average of skill costs of the job's tasks, with weights being the base wage rates of each type of labor.
+Specifically, the compensation for job $J$ will be:
+\begin{equation}
+w_{\manualLetter} \left(\sum_{T_b^{\manualLetter} \in J} \manualSkill{b}\right) + w_{\AIletter} \left(\sum_{T_b^{\AIletter} \in J} \AIskill{b}\right),\label{eq:new_wage}
+\end{equation}
+which is composed of the sum of contributions of skill costs from its manual tasks denoted by set $T_b^{\manualLetter}$ (each weighted by $w_{\manualLetter}$) and its AI-assisted tasks denoted by set $T_b^{\AIletter}$ (each weighted by $w_{\AIletter}$).\footnote{
+This formulation is essentially equivalent to the original definition of wage in \eqref{eq:wage}, as pointed out in Footnote~\ref{foot:wage}. 
+If we multiply each skill cost in \eqref{eq:new_wage} by its respective base wage rate and redefine the task's skill cost as the resulting product, we arrive at the original formulation given by \eqref{eq:wage}.
+The formulation in \eqref{eq:new_wage} allows tasks to contribute differently to the job's wage depending on their mode of execution and type of labor that need to perform them.}
+
+Next, we define skill-adjusted labor, which is the smallest unit of work in our analysis.
+Let $J(b)$ denote the job to which task $b$ belongs, and $E(b)$ be the mode of execution of task $b$ (i.e., $E(b) = \manualLetter$ if $b$ is a manual task, or $E(b) = \AIletter$ if $b$ is an AI chain).
+Define the skill-adjusted time requirement of task $b$ as
+\[
+\skillAdjustedTimeLetter_b = \frac{w_{\manualLetter} \left(\sum_{T_{\ell}^{\manualLetter} \in J(b)} \manualSkill{\ell}\right) + w_{\AIletter} \left(\sum_{T_{\ell}^{\AIletter} \in J(b)} \AIskill{\ell}\right)}{w_{E(b)}} \, \timecost{b}.\label{eq:skill_adjusted_time}
+\]
+Note that the fraction appearing behind $\timecost{b}$ represents an effective skill adjustment factor, as the numerator captures the total compensation of the job task $b$ belongs to, while the denominator normalizes by the base wage rate for the specific mode of execution of task $b$.
+The resulting fraction thus has units of skill intensity.
+This characterization becomes useful later as it allows expressing the (expected) wage bill paid for task $b$ simply as $w_{\AIletter}\,\skillAdjustedTimeLetter_{b}\,\alpha^{-d_b}$ if it is AI-assisted or as $w_{\manualLetter}\,\skillAdjustedTimeLetter_{b}$ if it is executed manually.
+
+
+\subsection{Within-Firm Aggregation: Leontief to Leontief}
+\label{sec:agg_within}
+
+We now consider the firm's production.
+To produce output, each firm must complete requirements of all \( m \) production steps \( s_1, \ldots, s_m \).
+This naturally results in a Leontief production structure with multiple inputs.\footnote{
+Different AI deployment strategies and job designs lead to different input proportions but share the same fundamental Leontief form.
+}
+Although firms choose whether to execute each step manually or by the help of AI, we show that analyzing labor allocation can be simplified.
+Specifically, production function of the firm can be represented by a Leontief function with only two firm-level aggregate inputs: AI management labor and manual labor.
+
+Suppose the firm solves the long-run cost minimization problem \eqref{eq:totalcost_with_handoff} for a given AI quality level $\alpha$, and obtains the optimal AI strategy \( \T \) and job design \( \J \).
+Let \( |\T| = n \), implying the original \( m \) production steps are organized into \( n \) distinct tasks, and \( |\J| = p \), indicating these \( n \) tasks are grouped into \( p \) jobs.
+Given the fixed AI strategy, the execution mode for each production step is predetermined. 
+This lets us consider and work directly with tasks rather than individual steps.
+Furthermore, with the job design held fixed, each firm takes the job boundaries and the total skill requirements within jobs as given.
+
+We assume hand-offs are performed manually by the worker who completes the final task of each job.
+This allows us to simplify the analysis in two ways:
+(1) Since job design is fixed, we know exactly which steps occur at the job boundaries and thus incur hand-off time costs. Therefore, hand-off of job $J_j$ can be treated as a standalone, human-executed task with time requirement \( \handofftime{}(J_j) \) and skill requirement equal to the total skill requirement of job $J_j$.\footnote{
+Denote the skill-adjusted time cost of hand-off task of job $J_j$ with $\skillAdjustedTimeHandoff{}(J_j)$.
+}
+(2) The order of tasks---including the newly defined hand-off tasks---can be rearranged within the production sequence.
+Specifically, we relabel tasks such that tasks \( 1 \) to \( k \) are AI-assisted and thus require AI management labor, while tasks \( k+1 \) to \( n \), along with the hand-off tasks \( n+1 \) to \( n+p-1 \), are executed manually and require manual labor.\footnote{
+Recall that the final job \( p \) requires no hand-off by definition. The last hand-off thus occurs at the end of job \( p-1 \).
+}
+
+The firm's task-level production can be expressed in the following Leontief form:
+\begin{equation}
+x = \min\left\{\frac{\labor{1}}{\skillAdjustedTimeAI{1}\,\alpha^{-d_{1}}},\,\cdots,\,\frac{\labor{k}}{\skillAdjustedTimeAI{k}\,\alpha^{-d_{k}}},\,\frac{\labor{k+1}}{\skillAdjustedTimeManual{k+1}},\,\cdots,\,\frac{\labor{n}}{\skillAdjustedTimeManual{n}},\,\frac{\labor{n+1}}{\skillAdjustedTimeHandoff{}(J_1)},\,\cdots,\,\frac{\labor{n+p-1}}{\skillAdjustedTimeHandoff{}(J_{p-1})}\right\}.\label{eq:task_level_prod}
+\end{equation}
+The \( x \) on the left-hand side represents the firm's output while $\labor{b}$ is the amount of labor assigned to task $b$. All other variables remain as previously defined.
+
+Since the AI strategy and job design are fixed, the required amount of skill-adjusted time to spend on each task in the denominators of (\ref{eq:task_level_prod}) are fixed, and the firm takes them as given.
+In equilibrium, allocation of labor to tasks satisfies
+\[
+x=\frac{\labor{1}}{\skillAdjustedTimeAI{1}\,\alpha^{-d_{1}}}=\cdots=\frac{\labor{k}}{\skillAdjustedTimeAI{k}\,\alpha^{-d_{k}}}=\frac{\labor{k+1}}{\skillAdjustedTimeManual{k+1}}=\cdots=\frac{\labor{n}}{\skillAdjustedTimeManual{n}}=\frac{\labor{n+1}}{\skillAdjustedTimeHandoff{}(J_1)}=\cdots=\frac{\labor{n+p-1}}{\skillAdjustedTimeHandoff{}(J_{p-1})}.
+\]
+Notice that the ratio of labor allocated to any two tasks $a$ and $b$ is independent of output level and wage rates (regardless of whether tasks $a$ and $b$ are executed manually or by the help of AI), and solely depends on their relative skill-adjusted time requirements, which are fixed given $\T$ and $\J$.
+The fixed ratio of labor inputs implies that the rate of substitution between any pair of tasks is independent of the labor allocated to other tasks:
+\begin{equation}
+\frac{\partial}{\partial \labor{z}}\left(\frac{\frac{\Delta x}{\Delta \labor{a}}}{\frac{\Delta x}{\Delta \labor{b}}}\right)=0,\qquad\forall z\neq a,b.\label{eq:task_subst_rate_indep}
+\end{equation}
+
+A necessary and sufficient condition to aggregate the firm's production function from a Leontief with one input per task into a Leontief with (firm-level) aggregate AI management labor and manual labor is that the rate of substitution between any two tasks within the same aggregate input type is independent of all tasks in the other aggregate input type \citep{leontief1947introduction, fisher1965embodied, felipe2003aggregation}.
+In other words, the relative amount of labor allocated to any two human-executed (AI-managed) tasks should depend exclusively on tasks within the human-executed (AI-managed) group.
+
+The condition expressed in (\ref{eq:task_subst_rate_indep}) satisfies the aggregation requirement above.\footnote{In fact, this condition is stricter than necessary. It not only guarantees labor independence across aggregated input types, but also imposes a stronger condition: that the rate of substitution between tasks within the same aggregate input type is independent even of other tasks within the same aggregate type.}
+Thus, the firm's production function can be represented as:
+\begin{equation}
+x=\min\,\left\{\frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}},\,\frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}}\right\}.\label{eq:micro_agg_prod}
+\end{equation}
+Here, $\labor{\AIletter}$ and $\labor{\manualLetter}$ represent respectively the firm-level aggregate AI management labor and manual labor.
+Moreover, the aggregate skill-adjusted AI and manual time requirements, $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$, are defined as the sum of skill-adjusted time requirements of tasks in their respective groups:
+\begin{align}
+\skillAdjustedTimeLetter_{\AIletter} & = \sum_{b=1}^{k}\skillAdjustedTimeAI{b}, \label{eq:def_t_AI}\\[8pt]
+\skillAdjustedTimeLetter_{\manualLetter} & = \sum_{j=1}^{p-1}\skillAdjustedTimeHandoff{}(J_j) + \sum_{b=k+1}^{n}\skillAdjustedTimeManual{b}. \label{eq:def_t_H}
+\end{align}
+Finally, $\bar{\alpha}$ is the firm's effective AI quality level defined as
+\begin{equation}
+\bar{\alpha}=\frac{\sum_{b=1}^{k}\skillAdjustedTimeAI{b}}{\sum_{b=1}^{k}\skillAdjustedTimeAI{b}\alpha^{-d_{b}}},\label{eq:alpha_bar}
+\end{equation}
+so that the following relationship holds:
+\[
+\frac{\skillAdjustedTimeLetter_{\AIletter}}{\bar{\alpha}}=\sum_{b=1}^{k}\skillAdjustedTimeAI{b}\alpha^{-d_{b}}.
+\]
+
+In short, (\ref{eq:micro_agg_prod}) allows us to analyze labor allocation using the simpler two-input Leontief production function for a given AI strategy \( \T \) and job design \( \J \).
+This firm-level aggregate Leontief function implies the equilibrium condition:
+\begin{equation}
+x=\frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}
+=\,\frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}}.
+\label{eq:micro_fixed_proportions}
+\end{equation}
+The representation in \eqref{eq:micro_agg_prod} helps us gain clearer insights into the allocation between manual and AI management labor at the firm level by removing the need to deal with the complex, many-input production function (\ref{eq:task_level_prod}) at the level of individual tasks.
+
+
+
+\subsection{Cross-Firm Aggregation: Leontief to CES}
+
+Next, we analyze whether Leontief production functions of many firms can be collectively represented by a single economy-wide production function, where each input in the macro function aggregates the corresponding inputs from the micro functions. 
+To do so, we draw on the extensive literature on aggregation theorems in production theory, which establishes conditions for the existence of an aggregate production function based on individual firms' production functions.
+The central idea is to introduce an appropriate form of heterogeneity across firms, allowing micro-level production functions to be smoothed into a well-behaved aggregate function (see \cite{sato1975production}, Chapters 2 and 4, for existence conditions.).\footnote{
+For instance, \cite{houthakker1955pareto} studies aggregation from micro Leontief functions to a macro Cobb-Douglas function; \cite{levhari1968note} investigates aggregation from micro Leontief functions to a macro CES function; and \cite{sato1969micro} explores aggregation from micro CES to macro CES functions. 
+See \cite{baqaee2019foundations} for a broader formulation of this problem.}
+While most existence results in this literature do not yield a closed-form functional representation, we show here that under certain conditions on firm heterogeneity, firm-level Leontief production functions can be aggregated into an economy-wide CES production function.
+
+Consider a unit mass of firms in the economy, each producing output with AI management labor, human labor, and capital.
+We assume capital is a fixed input, so firms make labor decisions conditional on their given capital stock.
+Moreover, we impose a Leontief structure between capital and labor inputs, normalizing the production process so that exactly one unit of capital is required per unit of output produced.\footnote{This normalization can be interpreted as assuming identical capital productivity across firms. Since we introduce firm-level heterogeneity through variations in AI quality, we abstract away from additional sources of heterogeneity across firms.} 
+Firms do not know their individual effective AI quality level before production occurs; instead, they share a common prior belief regarding the distribution from which these quality levels are drawn.
+
+Production unfolds in two stages.
+In the first stage, firms solve the long-run cost minimization problem \eqref{eq:totalcost_with_handoff}, committing to an AI deployment strategy $\T$ and a job design $\J$ based on their \emph{expected} AI quality levels.
+Since firms hold the same expectations about the distribution of effective AI quality, they choose identical AI strategies and job designs.
+In the second stage, firms learn their realized effective AI quality levels, hire the required labor and capital, and begin production.\footnote{As production depends on the realized effective AI quality level, $\bar{\alpha}$ also determines firms' sizes.}
+The resulting Leontief production function, determined by the previously selected AI strategy, job design, and the firm's realized effective AI quality, takes a form similar to (\ref{eq:micro_agg_prod}).
+
+This two-stage structure mirrors realistic firm behavior.
+Firms initially decide how to structure operations and post job vacancies.
+Only after making these structural commitments do they hire workers and acquire machines to begin production.
+Once hiring occurs, firms discover the actual productivity levels of inputs, which necessitates operating under their previously chosen organizational structures.
+
+In what follows, we demonstrate that the heterogeneity in effective AI quality level can be structured so that micro-level Leontief production functions (\ref{eq:micro_agg_prod}) aggregate into a macro-level CES production function, in which the CES inputs are aggregates of the micro-level inputs \citep{levhari1968note}.
+Suppose specifically that the macro-level production function takes the form:
+\begin{equation}
+X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho}+\theta_{\manualLetter}\,\aggregateManualLabor^{\rho}+(1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^\rho\right)^{\frac{1}{\rho}},\label{eq:macro_agg_prod}
+\end{equation}
+where $X$ represents the (economy-wide) aggregate output, $\aggregateAIlabor$ denotes aggregate AI management labor, $\aggregateManualLabor$ denotes aggregate manual labor, $K$ is aggregate capital, and parameters $\theta_{\AIletter}$ and $\theta_{\manualLetter}$ represent the weights of corresponding inputs.
+Since the measure of firms in the economy is normalized to $1$, aggregate capital is also normalized to $1$, making the third term in (\ref{eq:macro_agg_prod}) effectively constant at $1-\theta_{\AIletter}-\theta_{\manualLetter}$.
+
+To link the macro production function above to the micro production functions, we must relate aggregated firm-level inputs \( \labor{\AIletter}\) and \( \labor{\manualLetter} \) from (\ref{eq:micro_agg_prod}) to their corresponding economy-wide aggregates \( \aggregateAIlabor\) and \( \aggregateManualLabor \) in (\ref{eq:macro_agg_prod}).
+This requires either determining the macro production function parameters from the distribution of heterogeneity, or specifying the form of heterogeneity given a set of macro production function parameters.
+We adopt the latter approach and derive the output probability density function in terms of effective AI quality, denoted by \( \phi(\bar{\alpha}) \), as a function of \( \theta_{\AIletter}, \theta_{\manualLetter}, \rho \).
+Throughout, we assume that $\rho<0$ (which implies elasticity of substitution $\sigma<1$), indicating that macro-level production exhibits some degree of complementarity between aggregate inputs.
+
+Normalize the output price to $p=1$, so that $w_{\AIletter}$ and $w_{\manualLetter}$ can be interpreted as real wage rates for a unit of skill-adjusted AI management and manual labor, respectively.
+A firm produces only if it earns nonnegative profits:
+\[
+w_{\AIletter}\,\labor{\AIletter}+w_{\manualLetter}\,\labor{\manualLetter}\leq x.
+\]
+Substituting for $\labor{\manualLetter}$ and $x$ from (\ref{eq:micro_fixed_proportions}) into the profitability condition yields:
+\[
+w_{\AIletter}\,\labor{\AIletter}+w_{\manualLetter}\,\frac{\skillAdjustedTimeLetter_{\manualLetter}\,\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}} \leq \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}.
+\]
+Rearranging terms and canceling $\labor{\AIletter}$ gives the lower bound of firms' effective AI quality level:\footnote{We assume the parameters $w_{\AIletter},\,w_{\manualLetter},\,\skillAdjustedTimeLetter_{\AIletter},\,\skillAdjustedTimeLetter_{\manualLetter}$ are such that $0 < ({w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}})/(1-w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}) < 1$.}
+\[
+\bar{\alpha} \geq \frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}.
+\]
+This lower bound implies that only firms with realized effective AI quality level above this threshold will produce in equilibrium and others exit the market.
+Moreover, observe from \eqref{eq:alpha_bar} that for $d_b \geq 0$ the upper bound of $\bar{\alpha}$ is 1 and is achieved when $\alpha \rightarrow 1^{-}$.
+Therefore:
+\begin{equation}
+\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}} \leq \bar{\alpha} \leq 1.
+\label{eq:alpha_threshold}
+\end{equation}
+
+Let $\phi(\bar{\alpha})$ be the distribution of output across firms according to their effective AI quality level. 
+A firm with effective AI quality $\bar{\alpha}$ thus produces output $x = \phi(\bar{\alpha})$ by definition.
+From equation (\ref{eq:micro_fixed_proportions}), it directly follows that the AI management labor and manual labor used by this firm are: $\labor{\AIletter} = (\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha})\,\phi(\bar{\alpha}),$ and $\labor{\manualLetter} = \skillAdjustedTimeLetter_{\manualLetter}\,\phi(\bar{\alpha}).$
+Consequently, aggregate output $X$, aggregate AI management labor $\aggregateAIlabor$, and aggregate manual labor $\aggregateManualLabor$ can be expressed as:
+\begin{align}
+X & = \int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha}, \label{eq:micro_X}\\
+\aggregateAIlabor & = \int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\skillAdjustedTimeLetter_{\AIletter}\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha}, \label{eq:micro_M}\\
+\aggregateManualLabor & = \int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\skillAdjustedTimeLetter_{\manualLetter}\,\phi(\bar{\alpha})\,d\bar{\alpha}.\label{eq:micro_H}
+\end{align}
+
+Substituting the aggregated variables from the micro-level equations (\ref{eq:micro_X}, \ref{eq:micro_M}, \ref{eq:micro_H}) into the aggregate production function (\ref{eq:macro_agg_prod}), we obtain:
+\begin{equation}
+\int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha}
+=
+\left(
+\theta_{\AIletter}\left(\skillAdjustedTimeLetter_{\AIletter}\int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\frac{\phi(\bar{\alpha})}{\bar{\alpha}}\,d\bar{\alpha}\right)^{\rho}
++
+\theta_{\manualLetter} \left(\skillAdjustedTimeLetter_{\manualLetter}\int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha}\right)^{\rho}
++
+\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)
+\right)^{\frac{1}{\rho}}.
+\label{eq:macro_agg_prod_with_micro_aggregates}
+\end{equation}
+Solving for $\phi(\bar{\alpha})$ in terms of \( \theta_{\AIletter}, \theta_{\manualLetter}, \rho \) we get the following  distribution for effective AI quality:
+\begin{equation}
+\phi(\bar{\alpha})=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.\label{eq:phi}
+\end{equation}
+See Appendix \ref{app:aggregationDist} for derivation details.
+
+This completes the production function aggregation procedure.
+The derived distribution (\ref{eq:phi}) characterizes firm-level heterogeneity in the effective AI quality level required to support a macro CES production function of the form (\ref{eq:macro_agg_prod}), with economy-wide aggregate AI management and manual labor inputs and parameters $\theta_{\AIletter}, \theta_{\manualLetter}, \rho$, obtained from micro-level Leontief production functions of the form (\ref{eq:micro_agg_prod}).
+
+
+The aggregation results in this section provide a foundation for linking micro-level technology deployment and organizational choices to macroeconomic production frameworks.
+By showing how heterogeneous firms with step-by-step Leontief technologies and endogenous task boundaries can be represented by a CES aggregator, our framework offers a micro-founded rationale for using aggregate CES production functions to study labor demand, substitution patterns, and productivity in economies adopting new AI technologies.
+This connection clarifies how firm-level decisions about automation, augmentation, and job design scale up to shape aggregate technological change.

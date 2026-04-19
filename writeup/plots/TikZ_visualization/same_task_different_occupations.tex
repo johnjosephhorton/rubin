@@ -1,0 +1,57 @@
+\begin{adjustbox}{center}
+\begin{tikzpicture}[
+    node distance=1cm,
+    every node/.style={rectangle, rounded corners, draw, minimum width=1.9cm, minimum height=0.9cm, align=center},
+    human/.style={fill=olive!20},
+    ai/.style={fill=blue!20},
+    xnode/.style={fill=teal!20},
+    >=latex
+]
+
+% ======================
+% OCCUPATION 1
+% ======================
+
+\node[draw=none, anchor=west] (L1) at (0,0) {\textbf{Occupation 1:}};
+
+% Place chain on its own clean baseline
+\begin{scope}[xshift=3.5cm, yshift=0cm]
+
+\node[draw=none] (Dots1L) at (0,0) {\ \ $\cdots \cdots$};
+\node[ai, right=1 of Dots1L] (A1a) {AI};
+\node[xnode, right=1 of A1a] (X1) {X};
+\node[ai, right=1 of X1] (A1b) {AI};
+\node[draw=none, right=1 of A1b] (Dots1R) {$\cdots \cdots$};
+
+\draw[->, thick] (Dots1L.east) -- (A1a);
+\draw[->, thick] (A1a) -- (X1);
+\draw[->, thick] (X1) -- (A1b);
+\draw[->, thick] (A1b) -- (Dots1R.west);
+
+\end{scope}
+
+
+% ======================
+% OCCUPATION 2
+% ======================
+
+\node[draw=none, anchor=west] (L2) at (0,-1.4) {\textbf{Occupation 2:}};
+
+% Place chain on its own line (same centering)
+\begin{scope}[xshift=3.5cm, yshift=-1.4cm]
+
+\node[draw=none] (Dots2L) at (0,0) {\ \ $\cdots \cdots$};
+\node[human, right=1 of Dots2L] (H2a) {Manual};
+\node[xnode, right=1 of H2a] (X2) {X};
+\node[human, right=1 of X2] (H2b) {Manual};
+\node[draw=none, right=1 of H2b] (Dots2R) {$\cdots \cdots$};
+
+\draw[->, thick] (Dots2L.east) -- (H2a);
+\draw[->, thick] (H2a) -- (X2);
+\draw[->, thick] (X2) -- (H2b);
+\draw[->, thick] (H2b) -- (Dots2R.west);
+
+\end{scope}
+
+\end{tikzpicture}
+\end{adjustbox}

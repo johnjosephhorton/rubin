@@ -1,0 +1,206 @@
+\section{Discussion}
+
+\subsection{Job-level AI Exposure and the Fragmentation Index}
+\label{sec:fragmentation}
+
+For a single step in isolation, the decision whether or not to deploy AI augmentation depends simply on whether the manual execution cost exceeds the AI management cost.  
+That is, the optimal choice of whether to use AI assistance depends only on the AI exposure of the step in question. 
+For two or more steps, however, the optimal deployment of AI depends on more than the exposure of each step in isolation.  
+This can arise because of the benefits of automating multiple steps together in an AI chain.  
+Even if one step can be completed more effectively through manual work, it may be preferable to automate it as part of a larger collection of steps that can be jointly delegated to AI.  
+Whether this occurs in the optimal AI strategy depends on the relationship between other nearby steps in the production process.
+
+Returning to the short-run optimization problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:optimization.short}, we can interpret job-level AI exposure as the extent to which an optimal AI strategy employs AI automation and augmentation.  
+Intuitively, a run of \emph{consecutive} steps in the production process that an AI can perform effectively is a natural candidate for an AI chain.  
+A job that contains such runs of consecutive steps is therefore likely to benefit most from AI automation.  
+On the other hand, a job for which AI-friendly steps are separated by intermediate steps that an AI is likely to fail is less exposed to large-scale automation, even though its task-level exposure to AI may appear high.
+
+\begin{example}
+    Consider a job consisting of $m$ steps, where $m$ is even.  
+    Each step takes time $5$ to complete manually and has an AI management time of $1$, but the steps vary in how difficult they are for an AI to complete: odd-numbered steps can be successfully completed by an AI with probability $1$, whereas even-numbered steps will be successfully completed with probability only $0.1$, as shown below:\\~\\~\\
+    \input{plots/TikZ_visualization/example1_visualization.tex}
+    In this scenario, it is suboptimal to attempt to use AI on any of the even-numbered steps, even as part of a chain.  
+    The optimal AI deployment strategy is to employ AI-augmentation on the odd-numbered steps (for a cost of $1$ each) and perform even-numbered steps manually (for a cost of $5$ each), resulting in an overall time cost of $3m$.
+\end{example}
+\begin{example}
+    Next suppose that easy and hard steps are not interleaved, but rather the first $m/2$ steps can each be completed by AI with probability $1$ and the last $m/2$ steps can each be completed with probability $0.1$, as follows:\\~\\~\\
+    \input{plots/TikZ_visualization/example2_visualization.tex}
+    In this case, the optimal AI strategy chains together the first $m/2$ steps into a single automated AI chain, for a combined cost of $1$. 
+    The remaining $m/2$ steps are then performed manually.  
+    This results in an overall time cost of $1 + 5m/2$, which is strictly less than $3m$ as long as there are four or more steps.
+\end{example}
+
+To make this intuition more precise, let us return to the short-run optimization problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:optimization.short}.  
+Recall that in this short-run problem we are fixing a single job assigned to a worker with a fixed wage, so our focus is on optimizing the time cost of production.  
+Consider the special case where AI management costs are normalized: $\AItime{i} = 1$ for all $i$.  
+That is, each step of production requires the same amount of time to prompt and manage one attempt by an AI process.
+Under this assumption, we will define a measure of the dispersion of AI-exposed tasks in a production process, which we refer to as the \emph{fragmentation index} of a job.  
+We then show that the fragmentation index of a job approximates (up to constant factors) the time cost of an optimal AI strategy for that job.  
+In other words, jobs for which the fragmentation index is high will tend to yield less benefit from AI automation in the short-term where worker wages and job boundaries are fixed.  
+Notably, this intuition makes heavy use of the short-run assumption that worker wages are fixed and independent of task skill requirements; we discuss examples where this intuition fails when describing long-run effects in Section~\ref{sec:discussion.skills}.
+
+Intuitively, the fragmentation index is motivated by a hypothetical scenario where a prophet can ``see the future'' to determine which tasks would be completed successfully by AI on its first attempt and which would not. If many tasks in sequence will all complete successfully on the first try, these are a good candidate for an AI chain. The prophet might therefore chain together all contiguous sequences of tasks that would all succeed, and perform all other tasks manually. The fragmentation index is then the expected cost of this strategy, under the assumption that the prophet's foresight is correct. Notably, this AI strategy isn't necessarily optimal even with the benefit of foresight: a long AI chain with a good probability of success might be optimal even if the prophet knows that it will fail on the first attempt. However, what we show is that its cost approximates the cost of the optimal strategy even without foresight.
+
+To define the fragmentation index more formally, consider a random process in which each step $s_i$ succeeds independently with probability $q_i$; any task that does not succeed is said to fail.  
+Write $F$ for the set of steps that fail, and $\mathcal{C} = \{C_1, \dotsc, C_k\}$ for the random variable representing the collection of maximal connected components of non-failed steps.  
+The weight of each $C_j \in \mathcal{C}$ is defined to be $\omega(C_j) = \min\{ 1, \sum_{i \in C_j} \manualTime{i} \}$.  
+That is, each $C_j$ has weight $1$ unless the sum of the manual time costs for each of its steps is less than $1$ (due to our assumption that AI management costs are normalized to $1$).
+
+Given a realization of $\mathcal{C}$ and $F$, we define the realized fragmentation to be 
+\begin{equation}
+    \sum_{i \in F}\min\left\{\manualTime{i}, \frac{\AItime{i}}{q_i}\right\} + \sum_{C_j \in \mathcal{C}} \omega(C_j).\label{eq:fragmentation}
+\end{equation}
+The \emph{fragmentation index} is defined to be the expected value of the realized fragmentation.
+
+Intuitively, we expect the fragmentation index to be lower when highly automatable steps (that is, those for which the AI are likely to succeed) are clustered together, since a large cluster of highly automatable steps are more likely to realize as a single connected component when failures are realized.
+
+We will show that the fragmentation index is within a constant factor of the cost of the optimal (short-term) AI strategy for a given fixed job's step sequence.
+
+\begin{proposition}
+\label{prop:fragmentation}
+   Fix a single job with a sequence of $m$ steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, each with $\AItime{i} = 1$.
+   Let $FI$ denote its fragmentation index and let $OPT$ denote the minimum time cost over all AI strategies.
+   Then $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+   If we further assume $\manualTime{i} \geq 1$ for all $i$, then $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+\end{proposition}
+
+We prove Proposition~\ref{prop:fragmentation} in Appendix~\ref{app:FI}.  
+The key take-away from Proposition~\ref{prop:fragmentation} is that jobs with high fragmentation index---i.e., those for which the expected number of \emph{consecutive} successful step executions by an AI is low---will tend to have higher time costs even under optimal use of AI chaining.  
+A key driver of efficiency gains via AI automation is therefore not simply the expected number of steps that can be automated effectively, but the number of \emph{adjacent} steps in the production process that have high exposure to AI.
+
+An implication of our proof of Proposition~\ref{prop:fragmentation} is a natural and approximately optimal greedy algorithm for constructing AI strategies. The algorithm groups tasks into chains as long as the probability of success is sufficiently high; if the success probability falls too low then the chain is terminated and a new chain is started (with chains of length 1 converted to manual execution when appropriate).
+
+
+\subsection{Impact of AI Deployment on Worker Skill and Specialization}
+\label{sec:discussion.skills}
+
+While the fragmentation index captures the short-run impact of AI deployment on task completion time, in the long run AI strategy also alters the skill requirements of workers and the degree of specialization within the workforce.  
+This can dampen or even reverse the short-run intuition that gains from AI derive primarily from time savings, as the following example shows.
+
+\begin{example}
+    Consider a job consisting of a single step.  
+    This step has manual time and skill requirements $(\manualTime{},\manualSkill{}) = (5,5)$.  
+    Suppose that, under AI augmentation, this step has an AI management time of $1$ (per attempt), an AI management skill requirement $1$, and probability $1/8$ of successful completion. 
+    That is, $(\AItime{},\AIskill{}) = (1,1)$ and $q=1/8$.
+    Despite the task taking longer to complete with AI (due to the low likelihood of success on any individual attempt), the reduced skill requirement of managing the AI process means that it is firm-optimal to employ AI augmentation.
+\end{example}
+
+The impact of AI on worker skill reflects two common narratives about the impact of AI on work: first, that AI can automate mundane or repetitive tasks and allow high-skill workers to concentrate more of their time on meaningful high-skill tasks; second, that AI could lead to deskilling as high-skilled labor for manual task completion is replaced with low-skill AI management. 
+Our framework unifies these two perspectives by endogenizing (a) the nature (i.e., time and skill requirements) of work to be automated and (b) how the AI strategy impacts requisite worker skill.  
+If replacing a given sequence of production steps in given job with an AI chain is beneficial, in the long term, then either the total time needed to complete the steps is shortened, the total skill needed to manage the AI automation is reduced relative to completing the steps manually, or both.  
+For an example of the latter, a step with low skill requirement but high time requirement (such as Step 2 in Figure~\ref{fig:job_design}) may be optimally augmented by AI even when doing so increases the skill needed for AI management, if the time savings are substantial enough.  
+In this case, the skill required to complete the same job might increase: AI augmentation can be viewed as complementing worker capabilities.  
+Alternatively, it may also be beneficial to employ AI on production steps with high skill requirements (such as Step 1 in Figure~\ref{fig:job_design}) even if this results in an AI-assisted task that takes longer to complete, as long as it requires substantially less worker skill to manage the AI.  
+This can ultimately lead to a deskilling of the labor force assigned to the job as AI capital substitutes for high-skilled human work.  
+
+This discussion has so far focused on impacts within a single job. 
+Our framework likewise captures how AI deployment strategy shapes job design and, in particular, patterns of worker specialization across tasks. 
+Consider again the example from Figure~\ref{fig:job_design}, which highlights how hand-off costs and the structure of what we refer to as \emph{tent-pole tasks} can influence how production steps are bundled into specialized jobs. 
+A tent-pole task is a short but high-skill task that sits immediately next to time-consuming, low-skill ones.\footnote{
+This juxtaposition creates a classic friction: if a single highly skilled worker performs all adjacent tasks, a substantial share of their time is spent on low-skill work, whereas assigning the surrounding low-skill tasks to different workers raises hand-off costs when work passes between them. 
+Historically, this tension has been an important driver of the division of labor. 
+As AI automation alters the time and skill profiles of individual tasks in the production sequence, it changes exactly this trade-off, shifting when it is efficient to have a single worker perform a cluster of tasks versus when specialization across workers remains optimal.
+}
+The second task in Figure~\ref{fig:tent_pole} is an example of a tent-pole task.
+\begin{figure}[ht!]
+ \caption{Illustration of Tent‐Pole Tasks} 
+ \label{fig:tent_pole}
+ \begin{center}
+   \includegraphics[width=0.4\textwidth]{plots/tent_pole.png}
+ \end{center}
+ \begin{footnotesize}
+   \emph{Notes:} This figure illustrates tent‐pole tasks.  
+   The width and height of each rectangle specify the time ($\timecost{}$) and human capital ($\skillcost{}$) requirements of the task, respectively.
+   Tasks 1 and 3 have a high time cost and low human capital requirement (wide and short) whereas Task 2, which is the tent-pole task, exhibits a low time cost and high human capital requirement (narrow and tall).
+   The hand-off time costs (\handofftime{}) are assumed to be zero for simplicity.
+ \end{footnotesize}
+\end{figure}
+
+As AI deployment strategy influences the time and skill profile of tasks, the incentive to specialize workers likewise changes.
+To predict the direction of this effect, one hypothesis is that AI deployment will tend to have a normalizing effect on tasks, reverting both skill requirements and time requirements toward the mean and making tasks more ``square-like'' (in terms of our geometric interpretation of job design costs).  
+If so, and if hand-off time costs remain unaffected, then (roughly speaking) tent-pole inefficiencies due to grouping tasks together into the same job would be reduced.  
+This suggests that AI deployment may reduce worker specialization.
+
+\begin{example}
+   Consider a two-step production process, with manual skill and time costs $(\manualSkill{1}, \manualTime{1}) = (2,4)$ and $(\manualSkill{2}, \manualTime{2}) = (4,2)$ and hand-off cost $\handofftime{1} = 5$.
+   That is, the first step is low-skill but time-intensive and the second step is high-skill but can be completed quickly.
+   In this example, combining both steps into a single job (at a labor cost of $(2+4)(4+2) = 36$) is strictly worse than separating into two specialized jobs with a hand-off (at a total cost of $(2)(4+5) + (4)(2) = 26$).
+   However, if each step of production could be augmented separately via AI to yield effective skill and time costs of $(2,2)$ for each, then the optimal design combines both augmented steps into a single job at a total cost of $(2+2)(2+2) = 16$, which is better than separating into two distinct jobs (incurring cost $(2)(2+5) + (2)(2) = 18$).
+\end{example}
+
+It is also technically possible in our model for AI to increase the amount of specialization in an optimal job design.  
+This could happen if AI-augmented steps have higher skill requirements than the corresponding manual steps, leading to an increased need for high-skill workers.  
+Even if AI management is assumed to require no more skill than manual completion, an increased deployment of AI can lead to more responsibilities being combined into a single job, leading to a higher worker skill requirement, as the following example shows. 
+
+\begin{example}
+   Consider a different two-step production process, with manual skill and time costs $(\manualSkill{1}, \manualTime{1}) = (\manualSkill{2}, \manualTime{2}) = (3,3)$ and hand-off cost $\handofftime{1} = 5$.
+   The optimal job design separates these into two separate jobs at a total cost of $(3)(3+5) + (3)(3) = 33$, with each job requiring a worker of skill $3$.
+   Suppose AI augmentation can allow each step to be completed with an AI management skill of $2$, a management time of $1/4$, and an AI success probability of $1/8$, for a total expected execution time of $(1/4) \times (1/8)^{-1} = 2$.
+   In this case, the optimal design employs AI augmentation in each step and combines the two steps into a single job, resulting in a total cost of $(2+2)(2+2) = 16$ and requiring a worker of skill $4$.
+   Note that this is preferable to combining the two steps into a single AI chain, which would result in a total cost of $(2)( (1/4) \times (1/8)^{-1} \times (1/8)^{-1} ) = 32$.
+\end{example}
+
+
+
+\subsection{Non-Linear Impacts of AI Improvements}
+
+Improvements to AI technology naturally lead to improvements in the overall cost of production, but these effects need not be linear.  
+The full economic impact of a disruptive general-purpose technology can take significant time and investment to materialize, with notable historical examples ranging from the steam engine to electricity to computers.  
+In each case, a new technology enables modest short-term improvements to existing production processes, but the full impact is not felt until large-scale reorganization of production is enabled.  
+This drives a potentially non-monotone marginal value from technology improvements, where major improvements are only unlocked after surpassing a threshold of capability at which they become feasible.
+
+Our framework captures such non-monotonicities in the marginal value of technological improvements.  
+This arises in our model via optimization over different AI deployment and job design strategies.  
+One can think of parameter $\alpha \in (0,1]$ in our model as metric of the quality of a general purpose AI technology, taken to be the probability that a task of normalized difficulty $1$ is completed successfully.  
+We can then model general technology improvements as increasing the value of $\alpha$.  
+For a given \emph{fixed} AI strategy (described by a task sequence $\T$) and job design (described by job sequence $\J$), the total cost can be expressed as a polynomial in $(1/\alpha)$.  
+As a result, the cost of $\T$ and $\J$ shifts in a continuous and smooth manner as $\alpha$ increases, with monotone marginal gains to technology improvements.  
+However, the optimal choice of design (expressed as optimization problem \eqref{eq:totalcost_with_handoff}) involves taking the minimum-cost solution over many possible AI strategies and job designs.  
+AI strategies with a higher degree of AI chaining will naturally involve higher powers of $1/\alpha$ in their cost expressions, meaning that they are more sensitive to changes in $\alpha$ and become preferable only at higher values of $\alpha$ (i.e., as AI becomes more effective as a tool). 
+This naturally leads to scenarios where the productivity improvements of AI integration are modest at low levels of quality but can grow sharply past a certain inflection point, as we describe in the following example illustrated in Figure~\ref{fig:example_5_graph} below.
+
+\begin{example}
+Consider a production process with two steps.  
+The first step is short but high-skill and difficult for AI tools to perform correctly.  
+Specifically, its manual skill cost is $\manualSkill{1} = 5$, its manual time cost is $\manualTime{1} = 1$, and its hand-off time is $1$.  
+Its AI difficulty score, $d_1$, is $6$, meaning that an AI can successfully complete the step with probability $q_1 = \alpha^6$.  
+The AI management skill and time requirements are the same as the manual execution requirements: $(\AIskill{1}, \AItime{1}) = (5,1)$.
+
+The second step is low-skill and time-consuming to execute manually, but easy for AI.  
+It has $(\manualSkill{2}, \manualTime{2}) = (2,4)$ and AI difficulty score $1$.  
+The skill needed to manage the AI is also $2$, but the time needed to manage the AI is reduced to $1$: $(\AIskill{2}, \AItime{2}) = (2,1)$.
+
+Consider the optimal AI strategy and job design for this example as a function of $\alpha$, the general AI quality metric.  
+The costs of different AI strategies are plotted in Panel (a) of Figure~\ref{fig:example_5_graph}.  
+For $\alpha < 0.25$, it is optimal to complete each step manually as a separate task, and to separate the two tasks into separate specialized jobs. 
+This incurs a total cost of $(5)(1+1) + (2)(4) = 18$.  
+As this strategy does not employ AI, the cost is not affected by improvements to $\alpha$ in this range, which is evident in Panel (b) of the figure.
+
+For $\alpha \in (0.25, 0.77)$, the optimal AI strategy changes: it is better to use AI augmentation for the second step, reducing that step's total completion cost from $(2)(4)$ to $(2)(1/\alpha)$.  
+As $\alpha$ increases, the total execution cost drops gradually from $18$ (at $\alpha = 0.25$) to $10 + 2/\alpha \approx 12.5$ (at $\alpha \approx 0.77$). 
+This gradual improvement is visible as a modest slope in Panel (b).
+
+However, once $\alpha$ grows larger than $0.77$, the optimal AI strategy and job design change more dramatically.  
+At this point, it is better to combine both steps into a single AI chain, automating step $1$, and to assign the resulting aggregate task to a single low-skill worker. 
+The completion cost of this strategy is $(2)(1/\alpha^7)$. 
+This cost starts at approximately $12.5$ at $\alpha = 0.77$ but drops sharply, eventually converging to a total cost of $2$ at $\alpha = 1$. 
+This sharp drop indicates substantial marginal benefits from incremental improvements in AI quality in this region, illustrated by the pronounced jump in the slope in Panel (b) at $\alpha \approx 0.77$.
+\end{example}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \caption{Cost Analysis of AI Strategies in Example 6} 
+  \label{fig:example_5_graph}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \caption{Total Cost by AI Strategy}
+    \includegraphics[width=\textwidth]{plots/example5_costs.png}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \caption{Marginal Benefit of Improving AI Quality}
+    \includegraphics[width=\textwidth]{plots/example5_marginalBenefit.png}
+  \end{subfigure}
+  \end{center}
+  \footnotesize{\emph{Notes:} Panel (a) shows total execution costs under various AI strategies as AI quality $\alpha$ improves. 
+  Panel (b) illustrates the marginal reduction in optimal costs associated with increased AI quality. 
+  Dashed vertical lines indicate thresholds where optimal AI deployment strategies shift.}
+\end{figure}
