@@ -6,13 +6,13 @@
 # Paths with {placeholder} segments are constructed dynamically at runtime.
 # ===========================================================================
 
-# analysis/old/GPT_task_sequences_overlap.ipynb
+# analysis/GPT_task_sequences_overlap.ipynb
 #   -> writeup/plots/GPT_task_sequences_overlap_analysis
 #
 # analysis/old/bls_sector_shares.ipynb
 #   -> writeup/plots
 #
-# analysis/old/combined_grid.ipynb
+# analysis/combined_grid.ipynb
 #   -> writeup/plots/combined_grid_{my_str}.png
 #   -> writeup/plots/job_design
 #   -> writeup/plots/job_design.png
@@ -35,7 +35,7 @@
 # analysis/old/example5_costCurves.py
 #   -> writeup/plots
 #
-# analysis/old/example5_plot.ipynb
+# analysis/example5_plot.ipynb
 #   -> writeup/plots
 #
 # analysis/old/heterogeneity_dist_plot.ipynb
@@ -52,7 +52,7 @@
 #   -> writeup/plots/job_design/job_design_{index}_{my_str}.png
 #   -> writeup/plots/tent_poll.png
 #
-# analysis/old/onet_GPT_aiExposure.ipynb
+# analysis/onet_GPT_aiExposure.ipynb
 #   -> writeup/plots/GPT_aiExposure
 #
 # analysis/old/onet_adHoc_stats.ipynb
@@ -61,13 +61,13 @@
 # analysis/old/onet_antrhopicIndex.ipynb
 #   -> writeup/plots/anthropic_AI_index
 #
-# analysis/old/onet_antrhopicIndex_execTypeVaryingDWA.ipynb
+# analysis/onet_antrhopicIndex_execTypeVaryingDWA.ipynb
 #   -> writeup/plots/execTypeVaryingDWA{path_suffix}
 #
 # analysis/old/onet_antrhopicIndex_execTypeVaryingDWA_additionalAnalyses.ipynb
 #   -> writeup/plots/execTypeVaryingDWA_{folder_path_suffix}
 #
-# analysis/old/onet_antrhopicIndex_execTypeVaryingDWA_robustness.ipynb
+# analysis/onet_antrhopicIndex_execTypeVaryingDWA_robustness.ipynb
 #   -> writeup/plots/execTypeVaryingDWA{path_suffix}_robustness
 #
 # analysis/old/onet_antrhopicIndex_industryWeighted.ipynb
@@ -79,13 +79,13 @@
 # analysis/old/onet_antrhopicIndex_wageAndTime.ipynb
 #   -> writeup/plots/anthropic_AI_index/wageAndTime_measures
 #
-# analysis/old/onet_chainLength.ipynb
+# analysis/onet_chainLength.ipynb
 #   -> writeup/plots/aiChain_length_count
 #
-# analysis/old/onet_chainLength_robustness.ipynb
+# analysis/onet_chainLength_robustness.ipynb
 #   -> writeup/plots/aiChain_length_count_robustness
 #
-# analysis/old/onet_cleaning.ipynb
+# analysis/onet_cleaning.ipynb
 #   -> writeup/plots
 #
 # analysis/old/onet_contiguityMeasure.ipynb
@@ -94,15 +94,15 @@
 # analysis/old/onet_dwa_level_exposure.ipynb
 #   -> writeup/plots/taskcounts_aiexposure
 #
-# analysis/old/onet_eloundou_anthropic_GPTsequence_mergeReshuffle.ipynb
+# analysis/onet_eloundou_anthropic_GPTsequence_mergeReshuffle.ipynb
 #   -> writeup/plots/ONET_Eloundou_Anthropic_GPT
 #   -> writeup/plots/ONET_Eloundou_Anthropic_GPT_frequent
 #
-# analysis/old/onet_fragmentationIndex.ipynb
+# analysis/onet_fragmentationIndex.ipynb
 #   -> writeup/plots/fragmentationIndex
 #   -> writeup/plots/fragmentationIndex_frequent
 #
-# analysis/old/onet_fragmentationIndex_robustness.ipynb
+# analysis/onet_fragmentationIndex_robustness.ipynb
 #   -> writeup/plots/fragmentationIndex_robustness
 #
 # analysis/old/onet_my_naiveAIClassification.ipynb
@@ -127,13 +127,13 @@
 # analysis/old/onet_taskPerOccupation_measure.ipynb
 #   -> writeup/plots
 #
-# analysis/old/onet_taskSequence_vs_antrhopicIndex.ipynb
+# analysis/onet_taskSequence_vs_antrhopicIndex.ipynb
 #   -> writeup/plots/taskSequence_vs_anthropicIndex
 #
 # analysis/old/onet_task_adjacency.py
 #   -> writeup/plots
 #
-# analysis/old/onet_task_and_occ_sequence.ipynb
+# analysis/onet_task_and_occ_sequence.ipynb
 #   -> writeup/plots
 #
 # analysis/old/onet_task_and_occ_sequence_detailed.ipynb
@@ -142,7 +142,7 @@
 # analysis/old/onet_task_and_occ_sequence_frequentTasksOnly.ipynb
 #   -> writeup/plots
 #
-# analysis/old/onet_task_and_occ_sequence_robustness.ipynb
+# analysis/onet_task_and_occ_sequence_robustness.ipynb
 #   -> writeup/plots
 #
 # analysis/old/onet_task_durations.ipynb
