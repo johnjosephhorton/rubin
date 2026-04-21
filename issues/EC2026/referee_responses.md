@@ -66,7 +66,7 @@ The paper studies a very interesting, important, and timely topic. The model cou
 
 > 🟡 **RESPONSE DRAFTED — paper update pending**
 >
-> **What we did:** We assume workers do not have bargaining power and that workflows and operations are designed entirely by the firm. The firm decides *how* work is conducted and hires workers to execute those tasks — there is no bargaining in the short run. Workers are indeed paid their marginal value of work: this is the content of the wage formulation, where wages are the per-unit-time flow value of a worker's marginal product and the skill requirements of the job pin down that flow value. We are implicitly assuming (i) the supply of workers is inelastic, and (ii) there is a representative worker employed at the firm. Extending to an elastic labor supply with strategic wage-setting or to a GE with heterogeneous workers and scarcity/abundance of skilled labor is a natural next step.
+> **What we did:** We assume workers do not have bargaining power and that workflows and operations are designed entirely by the firm. The firm decides *how* work is conducted and hires workers to execute those tasks — there is no bargaining in the short run. Workers are indeed paid their marginal value of work: this is the content of the wage formulation, where wages are the per-unit-time flow value of a worker's marginal product and the skill requirements of the job pin down that flow value. We are implicitly assuming (i) the supply of workers is inelastic, and (ii) there is a representative worker employed at the firm. Extending to an elastic labor supply with strategic wage-setting or to a GE with heterogeneous workers and scarcity/abundance of skilled labor is a natural next step, but falls out of scope of the current paper.
 >
 > **Where in the paper:** Model setup; wage-equation paragraph in Section 3 / Section 6 (`writeup/model.tex`, `writeup/aggregation.tex`).
 >
@@ -75,6 +75,8 @@ The paper studies a very interesting, important, and timely topic. The model cou
 - Does the firm pay the human worker while she is waiting for the AI tasks to be completed? If yes, the paper benefits from justifying this.
 
 > 🟡 **RESPONSE DRAFTED — paper update pending**
+>
+> We're assuming the time it takes the AI to complete its assigned tasks is negligible compared to human execution/management costs. For a given step, the time it takes the AI to complete that step is captured in the per-attempt management cost time t^{AI, old}_i. One potential extension (following the suggestion of R4 is to make this cost depend on the length of the chain). The simplest possible way of doing so is to consider a fixed overhead cost of AI management for each additional step that is added to the chain. See below for further discussion. The optimization theorems remain unaffected, but the fragmentation index bounds will probably change (See response to R4 below.)
 >
 > **What we did:** We propose a structural modification to the model that jointly addresses this comment and R#2016D's main critique on verification-cost scaling. The per-step AI-management cost becomes chain-length-dependent:
 >
