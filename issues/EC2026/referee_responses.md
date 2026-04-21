@@ -1,9 +1,22 @@
-# EC 2026 Referee Reports — Paper #2016
+# Chaining Tasks, Redefining Work — EC'26 Revision Response Tracker
+
+*Running document mapping every EC'26 referee comment to our response status.*
 
 *"Chaining Tasks, Redefining Work: A Theory of AI Automation"*
-Demirer, Horton, Immorlica, Lucier & Shahidi
+Demirer, Horton, Immorlica, Lucier & Shahidi — paper #2016
 
-Four reviews received from EC'26 program committee.
+Under each referee comment is a response callout with three fields:
+
+- **What we did** — plain-English description of the response, suitable for any reader.
+- **Where in the paper** — the section or paragraph where the fix lives (or will live).
+- **Internal tracking** — links to the detailed issue file under `issues/EC2026/`, commit hashes when the change lands, and open questions for coauthors.
+
+**Status legend:**
+
+- ✅ addressed / verified in the paper
+- 🟡 response drafted / partially addressed — paper update still pending
+- 🔴 open — no response drafted yet
+- 🟣 declined per referee's own suggestion
 
 ---
 
@@ -37,12 +50,47 @@ Finally, the authors complement their theory with empirical findings.
 
 The paper studies a very interesting, important, and timely topic. The model could benefit from stronger justification for some of its assumptions (please see my questions below).
 
-### [Optional] Feedback for Authors
+### Feedback for Authors
 
 - The paper benefits from discussing why only the steps performed by humans incur a cost, since AI use can be expensive for firms as well.
+
+> 🟡 **RESPONSE DRAFTED — paper update pending**
+>
+> **What we did:** We assume the marginal cost of deploying AI is negligible relative to the cost of human time. One concrete microfoundation: the firm has paid a subscription fee to access AI, and from there the marginal cost of using the technology is effectively zero. We will state this assumption explicitly in the model setup and note that extending to a positive marginal AI cost is a natural follow-on.
+>
+> **Where in the paper:** Model setup (Section 3 area of `writeup/model.tex`), with a sentence in the introduction signaling the assumption.
+>
+> **Internal tracking:** Full analysis in [01-ai-usage-cost.md](01-ai-usage-cost.md). Not yet committed to the paper.
+
 - The paper also benefits from a discussion of the worker side of the market. For instance, what happens if workers are strategic and charge based on the marginal value of their work to the firm, or if there is a shortage or abundance of skilled workers?
+
+> 🟡 **RESPONSE DRAFTED — paper update pending**
+>
+> **What we did:** We assume workers do not have bargaining power and that workflows and operations are designed entirely by the firm. The firm decides *how* work is conducted and hires workers to execute those tasks — there is no bargaining in the short run. Workers are indeed paid their marginal value of work: this is the content of the wage formulation, where wages are the per-unit-time flow value of a worker's marginal product and the skill requirements of the job pin down that flow value. We are implicitly assuming (i) the supply of workers is inelastic, and (ii) there is a representative worker employed at the firm. Extending to an elastic labor supply with strategic wage-setting or to a GE with heterogeneous workers and scarcity/abundance of skilled labor is a natural next step.
+>
+> **Where in the paper:** Model setup; wage-equation paragraph in Section 3 / Section 6 (`writeup/model.tex`, `writeup/aggregation.tex`).
+>
+> **Internal tracking:** Full analysis in [02-worker-market-conditions.md](02-worker-market-conditions.md). Not yet committed to the paper.
+
 - Does the firm pay the human worker while she is waiting for the AI tasks to be completed? If yes, the paper benefits from justifying this.
+
+> 🟡 **RESPONSE DRAFTED — paper update pending**
+>
+> **What we did:** We assume the time the AI takes to perform a step is negligible relative to the human's manual execution time or management/verification time. Under this assumption, the question of "idle-wait wages" does not bind: any paid wait time is a second-order term. We will state this explicitly alongside the AI-cost assumption.
+>
+> **Where in the paper:** Model setup (Section 3 area of `writeup/model.tex`), adjacent to the AI-cost assumption.
+>
+> **Internal tracking:** Full analysis in [03-wage-during-ai-wait.md](03-wage-during-ai-wait.md). Not yet committed to the paper.
+
 - The paper also benefits from clarifying the main takeaway from Section 5: Does this say one cannot benefit much from knowing the successes and reordering the steps?
+
+> 🟡 **RESPONSE DRAFTED — paper update pending**
+>
+> **What we did:** We assume workflows are fixed and reorganizing the order of work is not allowed. What Section 5 establishes, under that assumption, is that given a workflow, occupations whose AI-able steps are less fragmented stand to gain more from AI. The high-level takeaway is that **individual exposure to AI is not the only determinant of AI's gains**. Local complementarities — whether a step is adjacent to other AI-friendly steps — also determine how much an occupation benefits from AI. The fragmentation index is the observable summary statistic that captures this adjacency structure. We will add a framing paragraph at the start of Section 5 and a closing takeaway that makes these points explicit.
+>
+> **Where in the paper:** Section 5 of the theory (`writeup/discussion.tex` / `writeup/appendix-FI.tex` framing).
+>
+> **Internal tracking:** Full analysis in [09-fragmentation-index-role.md](09-fragmentation-index-role.md). Not yet committed to the paper. This response also partially addresses R#2016C's related concern about the fragmentation index's role.
 
 ---
 
@@ -76,6 +124,14 @@ The empirical reliance on GPT-generated task orderings (Appendix H) partially ad
 
 As a piece of recommendation, the authors might provide additional validation of GPT-generated sequences against direct observation where possible (e.g., detailed work studies, time-motion data, or interviews with practitioners in selected occupations). More fundamentally, the long-run model (Section 6.1) should be extended to allow firms to choose task orderings jointly with AI deployment and job design. Even a simplified version, say, allowing permutations of a subset of tasks, might be helpful.
 
+> 🔴 **OPEN — no response drafted yet**
+>
+> **What we did:** Not yet addressed.
+>
+> **Where in the paper:** TBD.
+>
+> **Internal tracking:** Full analysis and options in [04-endogenous-workflow-redesign.md](04-endogenous-workflow-redesign.md).
+
 **2. Firm Boundaries, Vertical Integration, and the "Make-or-Buy" Decision for AI Services.** One of the paper's most intriguing implications but largely underdeveloped concerns how AI reshapes firm boundaries. The model implicitly treats AI deployment as an internal capability choice, but in practice, firms increasingly access AI through markets (API calls, SaaS platforms, outsourced AI services). The hand-off cost $t_i^H$ in the model captures coordination frictions within jobs, but there is no analogous friction for task handoffs across firm boundaries.
 
 Unlike previous automation waves (robotics, ERP systems) that required firm-specific customization and capital investment, modern AI increasingly operates as a platform technology with non-negligible inference costs. AI deployment, thus, may favor vertical disintegration: firms could specialize in supervising/validating AI outputs (augmented steps) while outsourcing the AI execution itself.
@@ -83,6 +139,14 @@ Unlike previous automation waves (robotics, ERP systems) that required firm-spec
 The model's job design problem (Equation 2) highlights that bundling tasks into jobs trades off skill-based wage premiums ($\sum c_b$) against hand-off costs ($t^H$). But AI fundamentally alters this tradeoff in ways the current framework cannot capture. If AI chains can be outsourced with low transaction costs, the optimal organizational structure may shift from "integrated jobs with long AI chains" to "specialized evaluation roles coordinating multiple external AI providers." This parallels the modularity literature's prediction that standardized interfaces enable vertical disintegration.
 
 The authors might benefit from explicitly modeling the make-or-buy decision for AI execution. Formally, allow the firm to choose whether AI chains are executed internally (incurring fixed AI management costs but zero marginal hand-offs) or externally (incurring per-transaction costs but enabling finer task decomposition).
+
+> 🔴 **OPEN — no response drafted yet**
+>
+> **What we did:** Not yet addressed.
+>
+> **Where in the paper:** TBD.
+>
+> **Internal tracking:** Full analysis and options in [05-firm-boundaries-make-or-buy-ai.md](05-firm-boundaries-make-or-buy-ai.md). Notably this reviewer explicitly invokes Baldwin & Clark (2000), which also connects to the strategy/innovation references suggested by Ezra Zuckerman in the QJE round (see `../QJE/26-strategy-innovation-literature.md`).
 
 **3. The Trajectory of AI Capabilities and the Inevitability of Full Automation.** The model treats AI quality ($\alpha$, governing success probability $q_i = \alpha^{d_i}$) as a fixed parameter, with Section 6.2's non-linearity analysis showing that marginal returns to $\alpha$ increase sharply once reorganization becomes optimal (Figure 2). Long-run implication: as $\alpha \to 1$, the model predicts near-complete automation of all but the final verification step in each job.
 
@@ -92,6 +156,14 @@ The current framework assumes humans provide two irreplaceable functions: (1) ve
 
 I think the long-run equilibrium of full automation is worthy of discussion.
 
+> 🔴 **OPEN — no response drafted yet**
+>
+> **What we did:** Not yet addressed.
+>
+> **Where in the paper:** TBD.
+>
+> **Internal tracking:** Full analysis and options in [06-full-automation-limit-trajectory.md](06-full-automation-limit-trajectory.md).
+
 ### Minor Concerns
 
 **4. Exposition and Accessibility.** The paper is technically rigorous but dense, particularly Sections 3–5. The model introduces considerable notation (steps $s_i$, tasks $T_b$, jobs $J_j$, execution modes, skill costs $c_i^M$, time costs $t_i^M$, hand-off costs $t_i^H$, AI probabilities $q_i$, etc.) that accumulates quickly. Feels a lot of notations floating around and have been having a hard time following the exposition. Maybe, consider:
@@ -100,7 +172,23 @@ I think the long-run equilibrium of full automation is worthy of discussion.
 - Include a worked numerical example in the main text (currently relegated to Appendix B) to build intuition before the general analysis.
 - Consider moving Proposition 1 (short-run dynamic programming) to an appendix and leading with the fragmentation index intuition (currently Section 5), which is more central to the empirical application.
 
+> 🔴 **OPEN — no response drafted yet**
+>
+> **What we did:** Not yet addressed.
+>
+> **Where in the paper:** TBD.
+>
+> **Internal tracking:** Full analysis and options in [07-exposition-notation-load.md](07-exposition-notation-load.md).
+
 **5. Discussion of Skill Requirements and Worker Outcomes.** Section 6.1's discussion of worker skill effects (Examples E.1–E.3) is interesting but underdeveloped. The model shows AI can increase or decrease skill requirements depending on task structure, but the paper does not connect these predictions to measurable outcomes. Do we expect AI-exposed occupations to exhibit wage polarization? Changes in educational requirements? Skill premium shifts?
+
+> 🔴 **OPEN — no response drafted yet**
+>
+> **What we did:** Not yet addressed.
+>
+> **Where in the paper:** TBD.
+>
+> **Internal tracking:** Full analysis and options in [08-skill-predictions-observables.md](08-skill-predictions-observables.md).
 
 ---
 
@@ -120,6 +208,18 @@ From a technical perspective, I would not describe the proofs as difficult. The 
 
 My main reservation is that I did not fully understand the point of the fragmentation index and, by extension, the role of the empirical section. Proposition 5 shows that the fragmentation index approximates the short-run optimum up to constants, but I was left uncertain what exactly this contributes beyond a rough proxy for the intuition that clustering matters. It is not the main algorithmic tool, nor does it seem central to the main task-allocation results. Similarly, although the empirical section documents patterns consistent with chaining, its connection to the paper's main organizational-design contribution feels somewhat indirect. Overall, I think the paper's strongest contribution is the model; the fragmentation index and empirical section are less convincing and less clearly integrated into the central contribution.
 
+> 🟡 **RESPONSE DRAFTED (partial) — paper update pending**
+>
+> **What we did:** The drafted response to R#2016A's Section-5-takeaway question above also addresses part of this concern: we will add an explicit framing paragraph explaining that the fragmentation index is the *observable* summary statistic that captures workflow adjacency — the theoretical optimum depends on per-step success probabilities `p_i` that the econometrician does not see, while the fragmentation index only needs the binary exposure pattern and is provably within constant factors of the optimum. This justifies its use in the empirical section even though it is not the algorithmic tool. The tighter integration of the empirical section with the paper's central contribution is still open.
+>
+> **Where in the paper:** Section 5 framing paragraph; introduction paragraph explicitly previewing the index's role.
+>
+> **Internal tracking:** Full analysis in [09-fragmentation-index-role.md](09-fragmentation-index-role.md). Partially addressed by the draft to R#2016A's Section-5 comment; remaining items (empirical-section integration) still open.
+
+> 📝 **Author note on R#2016C overall**
+>
+> Reviewer #2016C's main takeaways: they were a big fan of the way the model is set up; they found the optimization proofs straightforward; and their reservation is concentrated on the role of the fragmentation index and — by extension — the relevance of the empirical section. We have no additional comments on this review beyond the note above.
+
 ---
 
 ## Review #2016D
@@ -136,6 +236,26 @@ The strongest challenge to the paper is the assumption that "appending a neighbo
 
 Many of the paper's key results hinge on this assumption. If verification costs increase in the size of the AI chain, the claims with respect to comparative advantage and fragmentation weaken, as well as the J-curve microfoundation.
 
+> 🟡 **RESPONSE DRAFTED — paper update pending**
+>
+> **What we did:** We thank the reviewer for pressing on this assumption. The legal-drafting example is a sharp way to frame the concern, and we want to clarify how our model relates to it. Our framework abstracts from the *quality* of AI output and treats execution as binary: at each attempt, the AI either successfully completes a chain or it does not. The Firm A vs. Firm B distinction the reviewer draws is a real-world feature our model does not attempt to capture directly; it is an explicit simplifying assumption that we now state prominently alongside the chain definition.
+>
+> That said, we believe the central economic force the reviewer is highlighting — that longer AI chains should carry a higher verification burden — *is* in the model, but operates through the success-probability channel rather than through per-attempt verification cost. In our setup, the cost of a single verification is held fixed regardless of chain length, but the end-to-end success probability of a chain is the product of per-step success probabilities and is therefore weakly decreasing in chain length. Longer chains fail more often in expectation; each failure requires an additional round of AI execution and verification. The *expected* verification effort of a long chain is therefore strictly higher than that of a short chain, even though the per-attempt cost is invariant. In this sense, the effective evaluation cost of the output does rise with chain length — not because each verification takes longer, but because the expected number of verifications rises.
+>
+> If the reviewer reads this channel as insufficient to carry the concern, the obvious alternative is to make per-attempt verification cost itself an increasing function of chain length. We discuss this extension and its implications for the propositions on comparative-advantage reversal and fragmentation as a candidate structural change.
+>
+> **Where in the paper:** Model-setup paragraph establishing the binary-execution abstraction; optionally a remark in Section 3 (near the AI-chain definition) making the success-probability channel explicit. Candidate draft of that remark is held in [10-verification-cost-chain-length.md](10-verification-cost-chain-length.md) but not yet included in the paper — inclusion decision is pending.
+>
+> **Internal tracking:** Full analysis and options in [10-verification-cost-chain-length.md](10-verification-cost-chain-length.md). This was flagged as the highest-priority item in the EC2026 triage; the drafted response argues the existing model already captures the reviewer's concern through the success-probability channel, with the chain-length-dependent verification cost extension held as a structural fallback.
+
 The GPT-generated workflows in the empirical application are interesting, though the validation is focused on internal consistency and not external validity. It would have been helpful to have a benchmark.
+
+> 🔴 **OPEN — no response drafted yet**
+>
+> **What we did:** Not yet addressed.
+>
+> **Where in the paper:** TBD.
+>
+> **Internal tracking:** Full analysis and options in [11-gpt-workflow-external-validation.md](11-gpt-workflow-external-validation.md).
 
 That being said, the overall argument in the paper is fresh and important. It helps to move forward the task-based discourse with a realistic view of production.

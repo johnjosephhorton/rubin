@@ -30,3 +30,5 @@ The current model takes wages as exogenous (the wage bill is `(v_L + Σ skill_i)
 | 4. Capacity constraint | Low (2–3 days comparative statics) | Medium — targeted, less ambitious |
 
 **Recommendation:** Option 2 in Section 6 alongside the CES aggregation, or Option 1 as a defensive minimum. Option 3 if the revision reframes as a job-design theory and wants to take worker heterogeneity seriously.
+
+*Response to this comment is tracked in [`referee_responses.md`](referee_responses.md).*

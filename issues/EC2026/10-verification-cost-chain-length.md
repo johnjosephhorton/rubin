@@ -56,3 +56,15 @@ The reviewer's critique is accurate: the paper does make this assumption and man
 
 ## Cross-cutting implication
 If the paper adopts Option 1 or 4, multiple other results need updating downstream — including Proposition 6's `F I ≤ (5/4) OP T` bound (which becomes something different under variable verification cost), Example 5, and the empirical predictions. Anticipate a 2–4 week follow-through across the theory sections.
+
+---
+
+## Candidate draft remark for the paper — NOT YET INCLUDED
+
+*This is a draft of a possible in-paper remark addressing this comment, held for future decision. The response in [`referee_responses.md`](referee_responses.md) makes the same argument at response-letter polish; this is the corresponding paper-voice version, to be placed near the AI-chain definition in Section 3 (or wherever we define the chain formally) if and when we decide to include it. The actual paper has not been modified.*
+
+> *Remark (verification cost and chain length).* The per-attempt verification cost in our setup is independent of chain length: a single validation check at the end of the chain suffices, regardless of how many AI-executed steps precede it. A reader might reasonably ask whether this captures the intuition that verifying a longer AI output should itself be more costly — a human reviewing a fully AI-generated legal brief must check both the arguments and the cited cases, whereas a human reviewing only the arguments (having gathered the cases themselves) need only check the arguments.
+>
+> Two comments on this. First, our framework abstracts from output quality and treats execution as binary, success or failure. The intuition about graded verification difficulty is genuine, but modelling it would require re-specifying the value of an executed step as a continuum rather than a 0/1 outcome; we leave this to future work. Second, the concern that longer chains demand more verification *effort* is captured in our model through the success-probability channel rather than through per-attempt cost. End-to-end chain success equals the product of per-step success probabilities, and is therefore weakly decreasing in chain length. A longer chain fails more often and therefore requires more rounds of AI execution and verification *in expectation*. The expected verification burden of a long chain is strictly higher than that of a short chain, even when the per-attempt cost is fixed.
+
+**Status:** candidate only. Decision on whether to incorporate into the paper is deferred. The structural fallback (Option 1 above — let per-attempt cost itself depend on chain length) remains available if the success-probability framing does not satisfy readers.

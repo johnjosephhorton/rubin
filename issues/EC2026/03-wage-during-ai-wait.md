@@ -33,3 +33,5 @@ The ambiguity comes from how the wage equation compresses "time" — it's unclea
 | 3. Concurrent work | High (1+ week; new parameter, new optimization problem) | High but adds complexity counter to R1's parameter-load critique |
 
 **Recommendation:** Option 1 at minimum. Option 2 if you want to demonstrate robustness without adding modelling machinery. Skip Option 3 unless the paper is reframing around gig-economy / contract labor.
+
+*Response to this comment is tracked in [`referee_responses.md`](referee_responses.md).*

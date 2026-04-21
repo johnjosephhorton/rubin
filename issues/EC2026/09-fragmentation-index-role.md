@@ -37,3 +37,5 @@ Two referees independently flag that the fragmentation index feels disconnected 
 | 4. Intro clarification | Trivial (½ day) | Medium — previews but doesn't fix the structural issue |
 
 **Recommendation:** Option 2 as minimum fix (cheap, targeted). Option 1 if the paper is being heavily restructured. Note: both reviewers are otherwise favorable — Option 2 alone may be sufficient.
+
+*Response to this comment is tracked in [`referee_responses.md`](referee_responses.md).*

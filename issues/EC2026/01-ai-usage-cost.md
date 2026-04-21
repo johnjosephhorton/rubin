@@ -30,3 +30,5 @@ The current cost accounting attributes zero direct cost to AI execution — the 
 | 4. Proportional | Medium (2–3 days) | High — cleanest comparative statics |
 
 **Recommendation:** Option 2 as the minimum response. Option 3 if the revision also tackles firm boundaries (EC Issue 05).
+
+*Response to this comment is tracked in [`referee_responses.md`](referee_responses.md).*
