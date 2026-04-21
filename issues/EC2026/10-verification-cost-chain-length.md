@@ -59,12 +59,56 @@ If the paper adopts Option 1 or 4, multiple other results need updating downstre
 
 ---
 
-## Candidate draft remark for the paper — NOT YET INCLUDED
+## Proposed structural solution — concrete formulation
 
-*This is a draft of a possible in-paper remark addressing this comment, held for future decision. The response in [`referee_responses.md`](referee_responses.md) makes the same argument at response-letter polish; this is the corresponding paper-voice version, to be placed near the AI-chain definition in Section 3 (or wherever we define the chain formally) if and when we decide to include it. The actual paper has not been modified.*
+**This is now the preferred direction.** The earlier candidate-remark approach (which argued the success-probability channel alone was sufficient to carry R#2016D's concern) has been superseded by an explicit structural modification of the model that simultaneously addresses R#2016A's question about whether the firm pays the human worker while the AI executes (see [Issue 03](03-wage-during-ai-wait.md)) and R#2016D's main critique about verification effort scaling with chain length.
 
-> *Remark (verification cost and chain length).* The per-attempt verification cost in our setup is independent of chain length: a single validation check at the end of the chain suffices, regardless of how many AI-executed steps precede it. A reader might reasonably ask whether this captures the intuition that verifying a longer AI output should itself be more costly — a human reviewing a fully AI-generated legal brief must check both the arguments and the cited cases, whereas a human reviewing only the arguments (having gathered the cases themselves) need only check the arguments.
->
-> Two comments on this. First, our framework abstracts from output quality and treats execution as binary, success or failure. The intuition about graded verification difficulty is genuine, but modelling it would require re-specifying the value of an executed step as a continuum rather than a 0/1 outcome; we leave this to future work. Second, the concern that longer chains demand more verification *effort* is captured in our model through the success-probability channel rather than through per-attempt cost. End-to-end chain success equals the product of per-step success probabilities, and is therefore weakly decreasing in chain length. A longer chain fails more often and therefore requires more rounds of AI execution and verification *in expectation*. The expected verification burden of a long chain is strictly higher than that of a short chain, even when the per-attempt cost is fixed.
+### The modification
 
-**Status:** candidate only. Decision on whether to incorporate into the paper is deferred. The structural fallback (Option 1 above — let per-attempt cost itself depend on chain length) remains available if the success-probability framing does not satisfy readers.
+The per-step AI-management cost is replaced by a chain-length-dependent version:
+
+```
+t^{AI, new}_i  =  t^{AI, old}_i  +  (n − 1) · t^{Chain}
+```
+
+where:
+
+- `t^{AI, old}_i` is the current step-specific AI-management / verification cost — a characteristic of step `i` alone.
+- `t^{Chain}` is a new *global* parameter: the constant overhead cost of extending an AI chain by one step, borne at verification time.
+- `n` is the length of the chain ending at step `i`.
+
+At `t^{Chain} = 0` the model reduces to the current one. For `t^{Chain} > 0`, longer chains carry a strictly larger per-step verification cost, reflecting the additional burden on the human of checking more preceding AI-executed work.
+
+### Expected implications
+
+1. **Short-run DP (Proposition 1).** The current O(m²) DP already iterates over chain start/end pairs, so chain length at the endpoint is implicit in the DP state. The new cost term `(n − 1) · t^{Chain}` can be computed in constant time given the chain boundaries. **DP complexity expected to remain O(m²).**
+
+2. **Long-run joint optimization (Proposition 2).** The polynomial-time approximation argument rests on the same primitive — computing the cost of a job under a given chain structure — which remains polynomial under the modified cost. **Approximation guarantee expected to carry over** (with updated constants).
+
+3. **Fragmentation index bound (Proposition 6).** This is where we expect the bound itself to change. Under the current model, `FI ≤ (5/4) · OPT`. Under the modified cost, OPT rises relative to a fragmented baseline (because long chains are now more costly to verify). Our conjecture:
+
+    ```
+    FI  ≤  Const · f(t^{Chain} / t^{AI, old}) · OPT
+    ```
+
+    with:
+
+    - `f(0) = 1` — recovers the current bound at zero overhead.
+    - `f` increasing in the ratio — the bound loosens as the per-step chain overhead grows relative to the baseline verification cost.
+
+    The *proportional* structure of the bound survives; the specific proportional constant becomes a function of how costly extending a chain is relative to the baseline per-step verification cost.
+
+### Why this addresses both reviewer concerns at once
+
+- **R#2016D (verification cost scaling with chain length, legal-drafting example).** Direct: the `(n − 1) · t^{Chain}` term is precisely the "extra verification effort for longer chains" the reviewer is asking for. The Firm A vs. Firm B gradient becomes visible in the wage equation.
+- **R#2016A (wage-during-AI-wait).** `t^{Chain}` is legitimately interpreted as the human's engaged / oversight time while the AI executes intermediate chain steps. The firm pays for this time via the wage equation. The chain-length dependence makes it explicit that longer chains involve more compensated human time.
+
+### Open items
+
+- Rigorous re-derivation of the short-run and long-run DP complexity under the new cost (expected to go through unchanged; verification needed).
+- Rigorous re-derivation of the FI bound, including identifying the exact form of `f`.
+- Whether `t^{Chain}` should itself be step-specific (`t^{Chain}_i`) or global. Current proposal is global, matching the "constant overhead per extension" interpretation.
+
+### Status
+
+Drafted as a proposed solution. Paper not yet modified. Decision on whether to adopt, and if so how exactly to integrate it into the theory sections, is deferred.

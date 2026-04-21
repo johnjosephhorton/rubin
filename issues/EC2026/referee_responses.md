@@ -76,11 +76,19 @@ The paper studies a very interesting, important, and timely topic. The model cou
 
 > 🟡 **RESPONSE DRAFTED — paper update pending**
 >
-> **What we did:** We assume the time the AI takes to perform a step is negligible relative to the human's manual execution time or management/verification time. Under this assumption, the question of "idle-wait wages" does not bind: any paid wait time is a second-order term. We will state this explicitly alongside the AI-cost assumption.
+> **What we did:** We propose a structural modification to the model that jointly addresses this comment and R#2016D's main critique on verification-cost scaling. The per-step AI-management cost becomes chain-length-dependent:
 >
-> **Where in the paper:** Model setup (Section 3 area of `writeup/model.tex`), adjacent to the AI-cost assumption.
+> ```
+> t^{AI, new}_i  =  t^{AI, old}_i  +  (n − 1) · t^{Chain}
+> ```
 >
-> **Internal tracking:** Full analysis in [03-wage-during-ai-wait.md](03-wage-during-ai-wait.md). Not yet committed to the paper.
+> where `t^{AI, old}_i` is the current step-specific AI-management cost (characteristic of step `i`), `t^{Chain}` is a constant per-additional-chained-step overhead, and `n` is the length of the chain ending at step `i`. The `(n − 1) · t^{Chain}` term captures the human time associated with overseeing / engaging with a longer AI chain — which can be read two ways: (a) the human's engaged time while the AI executes the chain's intermediate steps (the wage-during-wait interpretation that addresses this comment), and (b) the additional per-step verification effort required for longer AI outputs (the interpretation that addresses R#2016D). The firm does pay for this time in the wage equation, and it now scales explicitly with chain length.
+>
+> The earlier draft under this comment — that AI execution time is second-order relative to human time — remains true as a special case (`t^{Chain} = 0`). The structural modification generalises it.
+>
+> **Where in the paper:** Model setup (Section 3 area of `writeup/model.tex`), adjacent to the chain definition. Full specification of the modification and its implications for the propositions and the fragmentation-index bound is drafted in [10-verification-cost-chain-length.md](10-verification-cost-chain-length.md).
+>
+> **Internal tracking:** Full analysis in [03-wage-during-ai-wait.md](03-wage-during-ai-wait.md), with the structural modification specified in [10-verification-cost-chain-length.md](10-verification-cost-chain-length.md). Not yet committed to the paper. **Cross-reference**: this single modification jointly addresses the R#2016D verification-cost-scaling critique below.
 
 - The paper also benefits from clarifying the main takeaway from Section 5: Does this say one cannot benefit much from knowing the successes and reordering the steps?
 
@@ -238,15 +246,35 @@ Many of the paper's key results hinge on this assumption. If verification costs 
 
 > 🟡 **RESPONSE DRAFTED — paper update pending**
 >
-> **What we did:** We thank the reviewer for pressing on this assumption. The legal-drafting example is a sharp way to frame the concern, and we want to clarify how our model relates to it. Our framework abstracts from the *quality* of AI output and treats execution as binary: at each attempt, the AI either successfully completes a chain or it does not. The Firm A vs. Firm B distinction the reviewer draws is a real-world feature our model does not attempt to capture directly; it is an explicit simplifying assumption that we now state prominently alongside the chain definition.
+> **What we did:** We thank the reviewer for pressing on this assumption. The legal-drafting example is a sharp way to frame the concern. Our framework abstracts from the *quality* of AI output and treats execution as binary (success/failure) at each attempt — the Firm A vs. Firm B verification-difficulty gradient is a real-world feature our model does not attempt to capture as a continuum. That is an explicit simplifying assumption we now state prominently alongside the chain definition.
 >
-> That said, we believe the central economic force the reviewer is highlighting — that longer AI chains should carry a higher verification burden — *is* in the model, but operates through the success-probability channel rather than through per-attempt verification cost. In our setup, the cost of a single verification is held fixed regardless of chain length, but the end-to-end success probability of a chain is the product of per-step success probabilities and is therefore weakly decreasing in chain length. Longer chains fail more often in expectation; each failure requires an additional round of AI execution and verification. The *expected* verification effort of a long chain is therefore strictly higher than that of a short chain, even though the per-attempt cost is invariant. In this sense, the effective evaluation cost of the output does rise with chain length — not because each verification takes longer, but because the expected number of verifications rises.
+> We agree with the reviewer that the central economic force — verification being more costly for longer chains — should be present in the model rather than sitting entirely outside it. We propose the following structural modification. The per-step AI-management (verification) cost becomes chain-length-dependent:
 >
-> If the reviewer reads this channel as insufficient to carry the concern, the obvious alternative is to make per-attempt verification cost itself an increasing function of chain length. We discuss this extension and its implications for the propositions on comparative-advantage reversal and fragmentation as a candidate structural change.
+> ```
+> t^{AI, new}_i  =  t^{AI, old}_i  +  (n − 1) · t^{Chain}
+> ```
 >
-> **Where in the paper:** Model-setup paragraph establishing the binary-execution abstraction; optionally a remark in Section 3 (near the AI-chain definition) making the success-probability channel explicit. Candidate draft of that remark is held in [10-verification-cost-chain-length.md](10-verification-cost-chain-length.md) but not yet included in the paper — inclusion decision is pending.
+> where `t^{AI, old}_i` is the current step-specific verification cost (a characteristic of step `i`), `t^{Chain}` is a constant per-additional-chained-step overhead, and `n` is the length of the chain ending at step `i`. The `(n − 1) · t^{Chain}` term is exactly the "additional verification burden" the reviewer is describing: the more steps have been chained together, the more verification effort the human must expend at the end of the chain. The model reduces to the current setup when `t^{Chain} = 0`.
 >
-> **Internal tracking:** Full analysis and options in [10-verification-cost-chain-length.md](10-verification-cost-chain-length.md). This was flagged as the highest-priority item in the EC2026 triage; the drafted response argues the existing model already captures the reviewer's concern through the success-probability channel, with the chain-length-dependent verification cost extension held as a structural fallback.
+> Implications we expect (and will verify as part of the revision):
+>
+> 1. *Short-run dynamic program (Proposition 1).* The current O(m²) DP already iterates over chain start and end positions, so the chain length at the endpoint is implicit in the DP state. The chain-length-dependent cost term `(n − 1) · t^{Chain}` can be computed in constant time per `(start, end)` pair. We expect the DP to remain O(m²).
+>
+> 2. *Long-run joint optimization (Proposition 2).* The existing polynomial-time approximation argument rests on the same primitive operation — computing the cost of a job given a chain structure — which remains polynomial under the new cost. We expect the approximation guarantee to carry over.
+>
+> 3. *Fragmentation-index bound.* This is the bound we expect to move. Under the current model, `FI ≤ (5/4) · OPT` (Proposition 6). Under the modified cost, OPT rises relative to a fragmented baseline, so the ratio changes. Our conjecture is that the bound takes the form
+>
+> ```
+> FI  ≤  Const · f(t^{Chain} / t^{AI, old}) · OPT
+> ```
+>
+> with `f(0) = 1` (recovering the current bound at zero overhead) and `f` increasing in the overhead ratio. The proportionality structure survives; the specific constants depend on how large `t^{Chain}` is relative to the baseline verification cost. We will re-derive the bound and discuss it.
+>
+> **Scope of the modification.** This single structural change addresses R#2016D's critique *and* R#2016A's related question about whether the firm pays the worker while the AI executes (see the response to R#2016A above). In both readings, `t^{Chain}` captures real human time that the firm compensates — whether that is time spent overseeing the AI during its chain execution, time spent verifying a longer output, or both.
+>
+> **Where in the paper:** Model setup (near the AI-chain definition); Proposition 1 and Proposition 6 (revised statements and proofs in the appendix); a short remark on why the bound form generalizes cleanly.
+>
+> **Internal tracking:** Concrete formulation and expected implications drafted in [10-verification-cost-chain-length.md](10-verification-cost-chain-length.md). The prior "Candidate draft remark" in that file (which argued the success-probability channel alone was sufficient) is now superseded by this structural modification.
 
 The GPT-generated workflows in the empirical application are interesting, though the validation is focused on internal consistency and not external validity. It would have been helpful to have a benchmark.
 

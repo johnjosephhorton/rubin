@@ -35,3 +35,17 @@ The ambiguity comes from how the wage equation compresses "time" — it's unclea
 **Recommendation:** Option 1 at minimum. Option 2 if you want to demonstrate robustness without adding modelling machinery. Skip Option 3 unless the paper is reframing around gig-economy / contract labor.
 
 *Response to this comment is tracked in [`referee_responses.md`](referee_responses.md).*
+
+---
+
+## Proposed structural solution — joint with [Issue 10](10-verification-cost-chain-length.md)
+
+We now prefer a structural modification that jointly addresses this comment and R#2016D's verification-cost-scaling critique. The per-step AI-management cost becomes chain-length-dependent:
+
+```
+t^{AI, new}_i  =  t^{AI, old}_i  +  (n − 1) · t^{Chain}
+```
+
+where `(n − 1) · t^{Chain}` captures the additional human time associated with a longer chain. Under the wage-during-AI-wait reading of this comment, that term is the human's engaged / oversight time while the AI runs the chain's intermediate steps. Under R#2016D's verification-difficulty reading, the same term is the extra per-step verification effort for longer AI outputs. The firm compensates the human for this time via the wage equation, and the dependence on chain length is now explicit. Full specification and expected implications are in [Issue 10](10-verification-cost-chain-length.md#proposed-structural-solution--concrete-formulation).
+
+The earlier "AI execution time is second-order" framing is a special case of the structural solution at `t^{Chain} = 0`.
