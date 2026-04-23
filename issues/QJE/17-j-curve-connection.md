@@ -17,6 +17,8 @@
 2. **Scope-of-claim hedge.** Replace "microfoundation for productivity J-curves" with "a model that produces threshold effects in measured productivity, complementary to the intangibles-complementarity explanation of Brynjolfsson, Rock & Syverson (2021)".
 3. **Remove the claim.** Drop the J-curve framing entirely; keep threshold discontinuity as a standalone result.
 
+Downside: model already too dense. Adding cost of AI makes it even worse.
+
 ## Effort vs. payoff
 
 | Option | Effort | Payoff |
