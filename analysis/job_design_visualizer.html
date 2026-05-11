@@ -1195,8 +1195,10 @@ function feelingLucky() {
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
   const round2 = (x) => Math.round(x * 100) / 100;
 
-  // Start from working example
-  const fresh = WORKING_EXAMPLE.map(s => ({ ...s }));
+  // Start from the user's CURRENT step parameters so that perturbations
+  // build on whatever they have on screen (including any steps they added
+  // or fields they edited), instead of snapping back to the fixed baseline.
+  const fresh = state.steps.map(s => ({ ...s }));
 
   // Perturbation 1: bump q on 1–2 randomly-chosen steps by ±[0.05, 0.15]
   const nQ = 1 + Math.floor(rng() * 2);
