@@ -291,7 +291,7 @@
 <div class="container">
 
 <h1>Job Design Visualizer</h1>
-<p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI automation strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (worker assignment).</p>
+<p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (worker assignment).</p>
 
 <!-- ============================================ -->
 <!-- 1. STEP PARAMETERS                            -->
@@ -331,7 +331,7 @@
 <!-- 2. STAGE 1 — STEPS → TASKS                    -->
 <!-- ============================================ -->
 <div class="panel" id="stage1-panel">
-  <h2><span class="stage-label">Stage 1</span>AI Automation Strategy: Steps → Tasks</h2>
+  <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
   <p class="hint">
     Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
     <span style="color:var(--step-auto-stroke)">Automated</span>, or
@@ -673,7 +673,7 @@ function renderStage1() {
   if (!state.solution) {
     const p = document.createElement('div');
     p.className = 'pending';
-    p.textContent = 'Click ▶ Solve to compute the optimal AI automation strategy.';
+    p.textContent = 'Click ▶ Solve to compute the optimal AI strategy.';
     r.appendChild(p);
     return;
   }
@@ -1005,7 +1005,7 @@ function renderGeomView(svg, geom, view) {
       }
       const ttl = svgEl('title');
       const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
-      ttl.textContent = `${b.label}: c=${b.h.toFixed(3)}, t=${b.w.toFixed(3)} [steps: ${stepNames}]`;
+      ttl.textContent = `${b.label}: c=${b.h.toFixed(2)}, t=${b.w.toFixed(2)} [steps: ${stepNames}]`;
       rect.appendChild(ttl);
     }
   });
@@ -1036,7 +1036,7 @@ function renderGeomView(svg, geom, view) {
       x: MX(jb.x + jb.w / 2), y: MY(jb.y + jb.h) - 8,
       'text-anchor': 'middle', 'font-size': '13', 'font-weight': '600', fill: '#111827',
     });
-    titleEl.textContent = `Job ${jb.jobIdx + 1} — wage bill = ${wageBill.toFixed(3)}`;
+    titleEl.textContent = `Job ${jb.jobIdx + 1} — wage bill = ${wageBill.toFixed(2)}`;
     svg.appendChild(titleEl);
   });
 }
@@ -1072,18 +1072,18 @@ function renderCost() {
     tr.innerHTML = `
       <td>Job ${ji+1}</td>
       <td>${indices.map(ti => `T${ti+1}`).join(', ')}</td>
-      <td>${sC.toFixed(3)}</td>
-      <td>${sT.toFixed(3)}</td>
-      <td>${tH.toFixed(3)}</td>
-      <td>${wb.toFixed(3)}</td>
+      <td>${sC.toFixed(2)}</td>
+      <td>${sT.toFixed(2)}</td>
+      <td>${tH.toFixed(2)}</td>
+      <td>${wb.toFixed(2)}</td>
     `;
     tbody.appendChild(tr);
   });
   const trT = document.createElement('tr');
   trT.className = 'total';
-  trT.innerHTML = `<td>Total</td><td colspan="4"></td><td>${cost.toFixed(3)}</td>`;
+  trT.innerHTML = `<td>Total</td><td colspan="4"></td><td>${cost.toFixed(2)}</td>`;
   tbody.appendChild(trT);
-  tot.textContent = cost.toFixed(3);
+  tot.textContent = cost.toFixed(2);
   extra.textContent = `${tasks.length} task${tasks.length===1?'':'s'} · ${jobs.length} job${jobs.length===1?'':'s'} · ${state.steps.length} step${state.steps.length===1?'':'s'}`;
 }
 
