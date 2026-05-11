@@ -420,21 +420,35 @@
 // Working-example defaults (kept fixed; Feeling Lucky perturbs these)
 // ----------------------------------------------------------------------------
 // This baseline reproduces the three-task example from Section 2 of the paper
-// (Table~\ref{tab:job_design} & Figure~\ref{fig:job_design}):
-//   Task 1: (c=3, t=1, tH=3)
-//   Task 2: (c=1, t=2, tH=0.5)
-//   Task 3: (c=2, t=2, tH=0)
-// AI parameters are set so manual strictly dominates AI at every step, so
-// the Stage-1 solver picks 3 manual tasks (one step per task).
-// Expected Stage-2 result with hand-offs: [T1, T2][T3], total cost = 18
-// (vs. full specialization [T1][T2][T3] = 18.5 — paper's Table panel (b)).
+// (Table~\ref{tab:job_design} & Figure~\ref{fig:job_design}) at the *task*
+// level — same (c, t, tH) for all three tasks and the same optimal partition
+// [T1,T2][T3] with total cost = 18 — but now T2 emerges from the Stage-1
+// solver as an AI chain of two steps (s2 Automated → s3 Augmented), rather
+// than a single manual step.
+//
+// Solved tasks at the optimum (modes M, C, A, M):
+//   T1 = manual(s1)         : (c=3, t=1, tH=3)
+//   T2 = chain(s2, s3)      : (c=cA_3=1, t=tA_3/(q_2·q_3)=0.5/0.25=2, tH=tH_3=0.5)
+//   T3 = manual(s4)         : (c=2, t=2, tH=0)
+//
+// Design notes:
+//  - q_1 = 0.10 keeps s1 out of any chain: chain(s1,s2,s3) would have time
+//    0.5/(0.10·0.25) = 20, ballooning that task's cost well above the
+//    baseline 18, so the optimum never extends the chain leftward.
+//  - cA_3=1, tA_3=0.5, q_3=q_2=0.5 set the chain's task-level (c,t)=(1,2).
+//  - Manual costs (cM,tM) for s2 and s3 are set high enough that breaking the
+//    chain into separate Augmented or Manual tasks is uneconomic.
 // ===========================================================================
 const WORKING_EXAMPLE = [
-  // Manual choice (cM·tM) is strictly better than any AI alternative.
-  // cM·tM = 3, while cA·tA/q ≥ 12 at every step.
-  { name: 's1', tM: 1.0, cM: 3.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 3.0 },
-  { name: 's2', tM: 2.0, cM: 1.0, tA: 2.0, cA: 2.0, q: 0.50, tH: 0.5 },
-  { name: 's3', tM: 2.0, cM: 2.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 0.0 },
+  // s1: stays Manual. cM·tM = 3 (cheap). Low q_1 prevents chain extension.
+  { name: 's1', tM: 1.0, cM: 3.0, tA: 2.0, cA: 3.0, q: 0.10, tH: 3.0 },
+  // s2: Automated step inside the chain (no direct human cost when Auto).
+  //     Manual (cM·tM=10) and Aug-singleton (cA·tA/q=4) options both lose.
+  { name: 's2', tM: 2.0, cM: 5.0, tA: 1.0, cA: 2.0, q: 0.50, tH: 1.0 },
+  // s3: Augmented final step of the chain. cA=1, tA=0.5 set chain (c,t)=(1,2).
+  { name: 's3', tM: 2.0, cM: 4.0, tA: 0.5, cA: 1.0, q: 0.50, tH: 0.5 },
+  // s4: stays Manual. cM·tM = 4; Aug-singleton (3·4=12) loses.
+  { name: 's4', tM: 2.0, cM: 2.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 0.0 },
 ];
 
 let state = {
