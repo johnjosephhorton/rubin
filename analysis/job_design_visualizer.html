@@ -243,10 +243,21 @@
   .swatch-step-man   { background: var(--step-man-fill);   border-color: var(--step-man-stroke); }
   .swatch-step-auto  { background: var(--step-auto-fill);  border-color: var(--step-auto-stroke); }
   .swatch-step-aug   { background: var(--step-aug-fill);   border-color: var(--step-aug-stroke); }
+  /* Dashed task swatches used in Stage 1's legend (mirror the dashed
+     task containers in the Stage 1 ribbon). */
   .swatch-task-man   { background: var(--task-man-fill);   border-color: var(--task-man-stroke);   border-style: dashed; }
   .swatch-task-chain { background: var(--task-chain-fill); border-color: var(--task-chain-stroke); border-style: dashed; }
+  /* Solid task swatches used in Stage 2's legend (mirror the filled
+     task boxes inside the Stage 2 ribbon). */
+  .swatch-task-man-solid   { background: var(--task-man-fill);   border-color: var(--task-man-stroke); }
+  .swatch-task-chain-solid { background: var(--task-chain-fill); border-color: var(--task-chain-stroke); }
   .swatch-job        { background: var(--job-fill);        border-color: var(--job-stroke);        border-style: dashed; }
-  .swatch-handoff    { background: var(--handoff-fill);    border-color: var(--handoff-stroke); }
+  /* Hand-off legend is rendered as a small curly red line (matching
+     the actual hand-off arrow in the ribbon), not a colored box. */
+  .legend-handoff-line {
+    display: inline-block; width: 22px; height: 12px;
+    vertical-align: middle;
+  }
 
   /* === Geometric view === */
   .geom-container {
@@ -387,10 +398,20 @@
   </p>
   <div class="ribbon" id="stage2-ribbon"></div>
   <div class="legend">
-    <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task</div>
-    <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain task</div>
+    <div class="legend-item"><span class="legend-swatch swatch-task-man-solid"></span>Manual task</div>
+    <div class="legend-item"><span class="legend-swatch swatch-task-chain-solid"></span>AI chain task</div>
     <div class="legend-item"><span class="legend-swatch swatch-job"></span>Job (one worker)</div>
-    <div class="legend-item"><span class="legend-swatch swatch-handoff"></span>Hand-off</div>
+    <div class="legend-item">
+      <svg class="legend-handoff-line" viewBox="0 0 22 12">
+        <defs>
+          <marker id="legend-ho-marker" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#c95466"/>
+          </marker>
+        </defs>
+        <path d="M 1 6 Q 5 2, 9 6 T 17 6" stroke="#c95466" stroke-width="1.8" fill="none" marker-end="url(#legend-ho-marker)"/>
+      </svg>
+      Hand-off
+    </div>
   </div>
 </div>
 
