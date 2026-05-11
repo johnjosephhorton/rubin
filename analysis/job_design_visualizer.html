@@ -45,8 +45,26 @@
     line-height: 1.45;
   }
   .container { max-width: 1200px; margin: 0 auto; }
-  h1 { font-size: 30px; margin: 0 0 4px 0; text-align: center; }
+  h1 { font-size: 30px; margin: 0 0 2px 0; text-align: center; }
+  .paper-link {
+    text-align: center; font-size: 19px; margin: 0 0 10px 0; color: var(--text);
+  }
+  .paper-link a { color: var(--accent); text-decoration: none; }
+  .paper-link a:hover { text-decoration: underline; }
   .subtitle { color: var(--muted); text-align: center; margin-bottom: 24px; font-size: 16px; }
+
+  /* Inline black arrow between consecutive steps/tasks within the same job. */
+  .flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #1f2937; font-weight: 700;
+    padding: 0 2px; user-select: none; line-height: 1;
+  }
+
+  /* Thick vertical divider between the Step View and Task View. */
+  .geom-divider {
+    width: 4px; background: #374151; border-radius: 2px;
+    align-self: stretch; flex: 0 0 4px;
+  }
 
   .panel {
     background: var(--panel);
@@ -291,6 +309,9 @@
 <div class="container">
 
 <h1>Job Design Visualizer</h1>
+<p class="paper-link">
+  for <a href="https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf" target="_blank" rel="noopener"><strong>&ldquo;Chaining Tasks, Redefining Work: A Theory of AI Automation&rdquo;</strong></a>
+</p>
 <p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (worker assignment).</p>
 
 <!-- ============================================ -->
@@ -381,6 +402,7 @@
         <h3>Step View</h3>
         <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
+      <div class="geom-divider"></div>
       <div class="geom-half">
         <h3>Task View</h3>
         <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -677,18 +699,25 @@ function renderStage1() {
     r.appendChild(p);
     return;
   }
-  const { modes, tasks } = state.solution;
+  const { modes, tasks, levels, jobs } = state.solution;
+  // Map task index → job index (used to decide if a hand-off arrow is needed
+  // between two adjacent task groups, matching Figure 2 of the paper).
+  const jobOfTask = new Array(tasks.length);
+  jobs.forEach((indices, ji) => indices.forEach(ti => { jobOfTask[ti] = ji; }));
+
   tasks.forEach((task, ti) => {
     const tg = document.createElement('div');
     tg.className = 'task-group ' + (task.type === 'chain' ? 'chain' : '');
     const lbl = document.createElement('span');
     lbl.className = 'tg-label';
     lbl.textContent = task.type === 'chain'
-      ? `T${ti+1} · AI chain (|k|=${task.stepIdxs.length})`
-      : `T${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'} task`;
+      ? `T${ti+1} · AI Chain (|k|=${task.stepIdxs.length})`
+      : `T${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'} Task`;
     tg.appendChild(lbl);
 
-    task.stepIdxs.forEach(si => {
+    task.stepIdxs.forEach((si, k) => {
+      // Black arrow between consecutive steps WITHIN the same task.
+      if (k > 0) tg.appendChild(makeFlowArrow());
       const m = modes[si];
       const sb = document.createElement('div');
       sb.className = 'step-box ' + modeClass(m);
@@ -698,6 +727,16 @@ function renderStage1() {
       tg.appendChild(sb);
     });
     r.appendChild(tg);
+
+    // Connector to the next task group: black flow arrow if same job,
+    // red hand-off arrow if this task ends a job (matches paper's Figure 2).
+    if (ti < tasks.length - 1) {
+      if (jobOfTask[ti] === jobOfTask[ti + 1]) {
+        r.appendChild(makeFlowArrow());
+      } else {
+        r.appendChild(makeHandoffArrow(`s1-ho-${ti}`, levels[ti].tH));
+      }
+    }
   });
 }
 
@@ -724,13 +763,15 @@ function renderStage2() {
     lbl.textContent = `Job ${ji+1}`;
     jg.appendChild(lbl);
 
-    indices.forEach(ti => {
+    indices.forEach((ti, k) => {
+      // Black arrow between consecutive tasks WITHIN the same job.
+      if (k > 0) jg.appendChild(makeFlowArrow());
       const task = tasks[ti];
       const lv = levels[ti];
       const tb = document.createElement('div');
       tb.className = 'task-box ' + (task.type === 'chain' ? 'chain' : '');
       const nm = document.createElement('div'); nm.className = 'nm';
-      nm.textContent = `T${ti+1} (${task.type === 'chain' ? 'AI chain' : task.type === 'aug' ? 'Augmented' : 'Manual'})`;
+      nm.textContent = `T${ti+1} (${task.type === 'chain' ? 'AI Chain' : task.type === 'aug' ? 'Augmented' : 'Manual'})`;
       const meta = document.createElement('div'); meta.className = 'meta';
       meta.textContent = `c=${lv.c.toFixed(2)}, t=${lv.t.toFixed(2)}`;
       tb.appendChild(nm); tb.appendChild(meta);
@@ -738,29 +779,43 @@ function renderStage2() {
     });
     r.appendChild(jg);
 
-    // Hand-off arrow between jobs (red curly-ish arrow)
+    // Hand-off arrow between jobs (red curly arrow with t^H label).
     if (ji < jobs.length - 1) {
       const lastTaskIdx = indices[indices.length - 1];
-      const tH = levels[lastTaskIdx].tH;
-      const h = document.createElement('div');
-      h.className = 'handoff';
-      h.innerHTML = `
-        <svg width="56" height="36" viewBox="0 0 56 36">
-          <defs>
-            <marker id="ho-arrow-${ji}" viewBox="0 0 10 10" refX="9" refY="5"
-                    markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="${getCSS('--handoff-stroke')}"/>
-            </marker>
-          </defs>
-          <path d="M 4 18 Q 14 8, 24 18 T 50 18"
-                stroke="${getCSS('--handoff-stroke')}" stroke-width="2.2" fill="none"
-                marker-end="url(#ho-arrow-${ji})"/>
-        </svg>
-        <span class="lbl">t<span class="superscript">H</span>=${tH.toFixed(2)}</span>
-      `;
-      r.appendChild(h);
+      r.appendChild(makeHandoffArrow(`s2-ho-${ji}`, levels[lastTaskIdx].tH));
     }
   });
+}
+
+// Small black arrow ('→') used inside ribbons between consecutive
+// steps (Stage 1) or tasks (Stage 2) within the same job.
+function makeFlowArrow() {
+  const a = document.createElement('div');
+  a.className = 'flow-arrow';
+  a.textContent = '→';
+  return a;
+}
+
+// Red curly hand-off arrow placed between two adjacent ribbon containers
+// at a job boundary, labeled with the relevant t^H value.
+function makeHandoffArrow(uid, tH) {
+  const h = document.createElement('div');
+  h.className = 'handoff';
+  h.innerHTML = `
+    <svg width="56" height="36" viewBox="0 0 56 36">
+      <defs>
+        <marker id="ho-arrow-${uid}" viewBox="0 0 10 10" refX="9" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="${getCSS('--handoff-stroke')}"/>
+        </marker>
+      </defs>
+      <path d="M 4 18 Q 14 8, 24 18 T 50 18"
+            stroke="${getCSS('--handoff-stroke')}" stroke-width="2.2" fill="none"
+            marker-end="url(#ho-arrow-${uid})"/>
+    </svg>
+    <span class="lbl">t<span class="superscript">H</span>=${tH.toFixed(2)}</span>
+  `;
+  return h;
 }
 
 function getCSS(varName) {
@@ -834,6 +889,7 @@ function computeGeom() {
       x: cumX, y: cumY, w: lv.t, h: lv.c,
       type: lv.type, label: taskLabel(tasks[ti], steps),
       stepIdxs: tasks[ti].stepIdxs,
+      taskIdx: ti, c: lv.c, t: lv.t,
     });
     cumX += lv.t; cumY += lv.c;
     jobTotalT += lv.t; jobTotalC += lv.c;
@@ -895,15 +951,15 @@ function renderGeomView(svg, geom, view) {
 
   const xLabel = svgEl('text');
   setAttrs(xLabel, {
-    x: plotLeft + (totalWidthUnits * GEOM.unitX) / 2, y: plotBottom + 22,
-    'text-anchor': 'middle', 'font-size': '11', fill: '#6b7280',
+    x: plotLeft + (totalWidthUnits * GEOM.unitX) / 2, y: plotBottom + 24,
+    'text-anchor': 'middle', 'font-size': '15', 'font-weight': '500', fill: '#374151',
   });
   xLabel.textContent = 'time';
   svg.appendChild(xLabel);
   const yLabel = svgEl('text');
-  const yLx = plotLeft - 14, yLy = plotBottom - (totalHeightUnits * GEOM.unitY) / 2;
+  const yLx = plotLeft - 16, yLy = plotBottom - (totalHeightUnits * GEOM.unitY) / 2;
   setAttrs(yLabel, {
-    x: yLx, y: yLy, 'text-anchor': 'middle', 'font-size': '11', fill: '#6b7280',
+    x: yLx, y: yLy, 'text-anchor': 'middle', 'font-size': '15', 'font-weight': '500', fill: '#374151',
     transform: `rotate(-90 ${yLx} ${yLy})`,
   });
   yLabel.textContent = 'skill';
@@ -935,7 +991,8 @@ function renderGeomView(svg, geom, view) {
     const taskColors = fillsForType(b.type);
     if (view === 'step') {
       // Subdivide each task rectangle into equal-width sub-cells (one per
-      // constituent step), each filled with the step's MODE color.
+      // constituent step), each filled with the step's MODE color. Each cell
+      // is annotated with the step name (line 1) and the mode (line 2).
       const nSteps = b.stepIdxs.length;
       const cellWUnits = b.w / nSteps;
       const modes = state.solution.modes;
@@ -951,16 +1008,27 @@ function renderGeomView(svg, geom, view) {
           'stroke-width': '1',
         });
         svg.appendChild(cellRect);
+
+        const cx = MX(cellX + cellWUnits / 2);
+        const cy = MY(b.y + b.h / 2);
         const txt = svgEl('text');
         setAttrs(txt, {
-          x: MX(cellX + cellWUnits / 2), y: MY(b.y + b.h / 2),
+          x: cx, y: cy,
           'text-anchor': 'middle', 'dominant-baseline': 'central',
-          'font-size': '12', fill: '#1f2937',
+          fill: '#1f2937',
         });
-        txt.textContent = steps[si].name;
+        const tspanName = svgEl('tspan');
+        setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '14', 'font-weight': '600' });
+        tspanName.textContent = steps[si].name;
+        txt.appendChild(tspanName);
+        const tspanMode = svgEl('tspan');
+        setAttrs(tspanMode, { x: cx, dy: '1.25em', 'font-size': '11', fill: '#4a5568' });
+        tspanMode.textContent = modeLabel(m);
+        txt.appendChild(tspanMode);
         svg.appendChild(txt);
+
         const ttl = svgEl('title');
-        ttl.textContent = `${steps[si].name} (${m === 'M' ? 'Manual' : m === 'C' ? 'Automated' : 'Augmented'})`;
+        ttl.textContent = `${steps[si].name} (${modeLabel(m)})`;
         cellRect.appendChild(ttl);
       });
       // Outer task border (overlay).
@@ -973,7 +1041,9 @@ function renderGeomView(svg, geom, view) {
       });
       svg.appendChild(outerRect);
     } else {
-      // Task view: solid task-colored rectangle + task label (current behavior).
+      // Task view: solid task-colored rectangle. Label by TASK number with
+      // its type (Manual / AI Chain / Augmented) on line 1, and the (c, t)
+      // breakdown on line 2 — consistent with the Stage 2 ribbon.
       const rect = svgEl('rect');
       setAttrs(rect, {
         x: MX(b.x), y: MY(b.y + b.h),
@@ -982,14 +1052,27 @@ function renderGeomView(svg, geom, view) {
         'stroke-width': '1.5', rx: '2',
       });
       svg.appendChild(rect);
+
+      const taskTypeLbl = b.type === 'chain' ? 'AI Chain'
+                       : b.type === 'aug' ? 'Augmented' : 'Manual';
+      const cx = MX(b.x + b.w / 2);
+      const cy = MY(b.y + b.h / 2);
       const txt = svgEl('text');
       setAttrs(txt, {
-        x: MX(b.x + b.w / 2), y: MY(b.y + b.h / 2),
+        x: cx, y: cy,
         'text-anchor': 'middle', 'dominant-baseline': 'central',
-        'font-size': b.type === 'chain' ? '11' : '12', fill: '#1f2937',
+        fill: '#1f2937',
       });
-      txt.textContent = b.label;
+      const tspanName = svgEl('tspan');
+      setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '14', 'font-weight': '600' });
+      tspanName.textContent = `T${b.taskIdx + 1} (${taskTypeLbl})`;
+      txt.appendChild(tspanName);
+      const tspanMeta = svgEl('tspan');
+      setAttrs(tspanMeta, { x: cx, dy: '1.25em', 'font-size': '11', fill: '#4a5568' });
+      tspanMeta.textContent = `c=${b.c.toFixed(2)}, t=${b.t.toFixed(2)}`;
+      txt.appendChild(tspanMeta);
       svg.appendChild(txt);
+
       if (b.type === 'chain' && b.stepIdxs.length > 1) {
         const seg = (b.w * GEOM.unitX) / b.stepIdxs.length;
         for (let k = 1; k < b.stepIdxs.length; k++) {
@@ -1005,7 +1088,9 @@ function renderGeomView(svg, geom, view) {
       }
       const ttl = svgEl('title');
       const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
-      ttl.textContent = `${b.label}: c=${b.h.toFixed(2)}, t=${b.w.toFixed(2)} [steps: ${stepNames}]`;
+      const taskTypeForTitle = b.type === 'chain' ? 'AI Chain'
+                             : b.type === 'aug' ? 'Augmented' : 'Manual';
+      ttl.textContent = `T${b.taskIdx + 1} (${taskTypeForTitle}): c=${b.c.toFixed(2)}, t=${b.t.toFixed(2)} [steps: ${stepNames}]`;
       rect.appendChild(ttl);
     }
   });
