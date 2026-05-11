@@ -757,142 +757,215 @@ function renderGeom() {
   const { tasks, levels, jobs } = state.solution;
   const steps = state.steps;
 
-  const jobInfos = jobs.map((indices, ji) => {
-    const isLast = ji === jobs.length - 1;
-    let cumT = 0, cumC = 0;
-    const taskBoxes = indices.map(ti => {
-      const lv = levels[ti];
-      const box = {
-        x: cumT, y: cumC, w: lv.t, h: lv.c, taskIdx: ti,
-        type: lv.type, label: taskLabel(tasks[ti], steps),
-        stepIdxs: tasks[ti].stepIdxs,
-      };
-      cumT += lv.t; cumC += lv.c;
-      return box;
+  // Map task index -> job index
+  const jobOfTask = new Array(tasks.length);
+  jobs.forEach((indices, ji) => indices.forEach(ti => { jobOfTask[ti] = ji; }));
+
+  // ---------------------------------------------------------------------------
+  // Walk through tasks left-to-right, accumulating (cumX, cumY) GLOBALLY across
+  // ALL jobs. Within each job: task k is drawn at (cumX, cumY) with the next
+  // task at (cumX + t_k, cumY + c_k), creating a staircase. A non-final job's
+  // hand-off rectangle occupies the strip immediately to the right of its last
+  // task, at the cumulative-y range of THIS job (height = job's skill sum).
+  // After the hand-off, the NEXT job's first task starts at (cumX+tH, cumY) —
+  // continuing the staircase upward.
+  // ---------------------------------------------------------------------------
+  const taskBoxes = [];      // {x, y, w, h, type, label, stepIdxs}
+  const handoffBoxes = [];   // {x, y, w, h, jobIdx, tH}
+  const jobBoxes = [];       // {x, y, w, h, jobIdx, totalC, totalT, tH}
+
+  let cumX = 0, cumY = 0;
+  let curJob = jobOfTask[0];
+  let jobStartX = 0, jobStartY = 0;
+  let jobTotalT = 0, jobTotalC = 0;
+
+  for (let ti = 0; ti < tasks.length; ti++) {
+    const lv = levels[ti];
+    const ji = jobOfTask[ti];
+
+    // If we crossed a job boundary, close the previous job (with hand-off).
+    if (ji !== curJob) {
+      const prevIndices = jobs[curJob];
+      const prevLastIdx = prevIndices[prevIndices.length - 1];
+      const isLast = curJob === jobs.length - 1;
+      const tH = isLast ? 0 : levels[prevLastIdx].tH;
+
+      if (tH > 0) {
+        handoffBoxes.push({
+          x: cumX, y: jobStartY,
+          w: tH, h: jobTotalC,
+          jobIdx: curJob, tH,
+        });
+        cumX += tH;
+      }
+      jobBoxes.push({
+        x: jobStartX, y: jobStartY,
+        w: jobTotalT + tH, h: jobTotalC,
+        jobIdx: curJob, totalC: jobTotalC, totalT: jobTotalT, tH,
+      });
+
+      // Start new job: cumY is unchanged (staircase continues upward).
+      curJob = ji;
+      jobStartX = cumX;
+      jobStartY = cumY;
+      jobTotalT = 0;
+      jobTotalC = 0;
+    }
+
+    // Place this task at (cumX, cumY).
+    taskBoxes.push({
+      x: cumX, y: cumY, w: lv.t, h: lv.c,
+      type: lv.type, label: taskLabel(tasks[ti], steps),
+      stepIdxs: tasks[ti].stepIdxs,
     });
-    const lastTaskIdx = indices[indices.length - 1];
-    const tH = isLast ? 0 : levels[lastTaskIdx].tH;
-    return {
-      taskBoxes, totalT: cumT, totalC: cumC, tH,
-      width: cumT + tH, height: cumC, isLast,
-    };
+    cumX += lv.t;
+    cumY += lv.c;
+    jobTotalT += lv.t;
+    jobTotalC += lv.c;
+  }
+  // Close the final job (no hand-off).
+  jobBoxes.push({
+    x: jobStartX, y: jobStartY,
+    w: jobTotalT, h: jobTotalC,
+    jobIdx: curJob, totalC: jobTotalC, totalT: jobTotalT, tH: 0,
   });
 
-  let xCursor = 0;
-  const gapUnits = GEOM.jobGap / GEOM.unitX;
-  jobInfos.forEach(j => { j.xOffset = xCursor; xCursor += j.width + gapUnits; });
-  const totalWidthUnits = Math.max(1, xCursor - gapUnits);
-  const totalHeightUnits = Math.max(1, ...jobInfos.map(j => j.height));
+  const totalWidthUnits = Math.max(1, cumX);
+  const totalHeightUnits = Math.max(1, cumY);
 
-  const W = totalWidthUnits * GEOM.unitX + 2 * GEOM.pad + 40;
-  const H = Math.max(GEOM.minH, totalHeightUnits * GEOM.unitY + 2 * GEOM.pad + 60);
+  // SVG dimensions: leave space at top for job titles, at left for axis label,
+  // at bottom for tick labels.
+  const padTop = 30, padBottom = 30, padLeft = 50, padRight = 30;
+  const W = totalWidthUnits * GEOM.unitX + padLeft + padRight;
+  const H = Math.max(GEOM.minH, totalHeightUnits * GEOM.unitY + padTop + padBottom);
   setAttrs(svg, { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
 
-  const plotLeft = GEOM.pad;
-  const plotBottom = H - GEOM.pad - 20;
+  const plotLeft = padLeft;
+  const plotBottom = H - padBottom;
   const MX = (x) => plotLeft + x * GEOM.unitX;
   const MY = (y) => plotBottom - y * GEOM.unitY;
 
-  // baseline
+  // Baseline (x-axis) and left axis line.
   const baseline = svgEl('line');
   setAttrs(baseline, {
-    x1: plotLeft, x2: plotLeft + totalWidthUnits * GEOM.unitX,
+    x1: plotLeft, x2: MX(totalWidthUnits),
     y1: plotBottom, y2: plotBottom,
     stroke: '#d1d5db', 'stroke-width': '1',
   });
   svg.appendChild(baseline);
+  const leftAxis = svgEl('line');
+  setAttrs(leftAxis, {
+    x1: plotLeft, x2: plotLeft,
+    y1: plotBottom, y2: MY(totalHeightUnits),
+    stroke: '#d1d5db', 'stroke-width': '1',
+  });
+  svg.appendChild(leftAxis);
 
-  jobInfos.forEach((job, ji) => {
-    const g = svgEl('g'); svg.appendChild(g);
+  // Axis labels.
+  const xLabel = svgEl('text');
+  setAttrs(xLabel, {
+    x: plotLeft + (totalWidthUnits * GEOM.unitX) / 2, y: plotBottom + 22,
+    'text-anchor': 'middle', 'font-size': '11', fill: '#6b7280',
+  });
+  xLabel.textContent = 'time';
+  svg.appendChild(xLabel);
+  const yLabel = svgEl('text');
+  const yLx = plotLeft - 14, yLy = plotBottom - (totalHeightUnits * GEOM.unitY) / 2;
+  setAttrs(yLabel, {
+    x: yLx, y: yLy, 'text-anchor': 'middle', 'font-size': '11', fill: '#6b7280',
+    transform: `rotate(-90 ${yLx} ${yLy})`,
+  });
+  yLabel.textContent = 'skill';
+  svg.appendChild(yLabel);
 
-    // Job bounding box (dashed cyan)
-    if (job.height > 0 && job.width > 0) {
-      const bbox = svgEl('rect');
-      setAttrs(bbox, {
-        x: MX(job.xOffset), y: MY(job.height),
-        width: job.width * GEOM.unitX, height: job.height * GEOM.unitY,
-        fill: 'none', stroke: getCSS('--bbox-stroke'), 'stroke-width': '1.6',
-        'stroke-dasharray': '5 3',
-      });
-      g.appendChild(bbox);
-    }
-
-    // Task rectangles (olive or blue)
-    job.taskBoxes.forEach(b => {
-      if (b.w <= 0 || b.h <= 0) return;
-      const colors = fillsForType(b.type);
-      const rect = svgEl('rect');
-      setAttrs(rect, {
-        x: MX(job.xOffset + b.x), y: MY(b.y + b.h),
-        width: b.w * GEOM.unitX, height: b.h * GEOM.unitY,
-        fill: colors.fill, stroke: colors.stroke,
-        'stroke-width': '1.5', rx: '2',
-      });
-      g.appendChild(rect);
-
-      const txt = svgEl('text');
-      setAttrs(txt, {
-        x: MX(job.xOffset + b.x + b.w / 2),
-        y: MY(b.y + b.h / 2),
-        'text-anchor': 'middle', 'dominant-baseline': 'central',
-        'font-size': b.type === 'chain' ? '11' : '12', fill: '#1f2937',
-      });
-      txt.textContent = b.label;
-      g.appendChild(txt);
-
-      // Inner step subdivisions for chains
-      if (b.type === 'chain' && b.stepIdxs.length > 1) {
-        const seg = (b.w * GEOM.unitX) / b.stepIdxs.length;
-        for (let k = 1; k < b.stepIdxs.length; k++) {
-          const xLine = MX(job.xOffset + b.x) + seg * k;
-          const ln = svgEl('line');
-          setAttrs(ln, {
-            x1: xLine, x2: xLine, y1: MY(b.y + b.h), y2: MY(b.y),
-            stroke: colors.stroke, 'stroke-width': '0.8',
-            'stroke-dasharray': '3 2', opacity: '0.6',
-          });
-          g.appendChild(ln);
-        }
-      }
-
-      const ttl = svgEl('title');
-      const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
-      ttl.textContent = `${b.label}: c=${b.h.toFixed(3)}, t=${b.w.toFixed(3)} [steps: ${stepNames}]`;
-      rect.appendChild(ttl);
+  // 1) Draw job bounding boxes first (so they sit behind task rectangles).
+  jobBoxes.forEach(jb => {
+    if (jb.h <= 0 || jb.w <= 0) return;
+    const bbox = svgEl('rect');
+    setAttrs(bbox, {
+      x: MX(jb.x), y: MY(jb.y + jb.h),
+      width: jb.w * GEOM.unitX, height: jb.h * GEOM.unitY,
+      fill: 'none', stroke: getCSS('--bbox-stroke'),
+      'stroke-width': '1.8', 'stroke-dasharray': '5 3',
     });
+    svg.appendChild(bbox);
+  });
 
-    // Hand-off rectangle (pink)
-    if (!job.isLast && job.tH > 0 && job.height > 0) {
-      const hrect = svgEl('rect');
-      setAttrs(hrect, {
-        x: MX(job.xOffset + job.totalT), y: MY(job.height),
-        width: job.tH * GEOM.unitX, height: job.height * GEOM.unitY,
-        fill: getCSS('--handoff-fill'), stroke: getCSS('--handoff-stroke'),
-        'stroke-width': '1.2', 'stroke-dasharray': '3 3',
-      });
-      g.appendChild(hrect);
+  // 2) Draw hand-off rectangles (pink).
+  handoffBoxes.forEach(h => {
+    const hrect = svgEl('rect');
+    setAttrs(hrect, {
+      x: MX(h.x), y: MY(h.y + h.h),
+      width: h.w * GEOM.unitX, height: h.h * GEOM.unitY,
+      fill: getCSS('--handoff-fill'), stroke: getCSS('--handoff-stroke'),
+      'stroke-width': '1.2', 'stroke-dasharray': '3 3',
+    });
+    svg.appendChild(hrect);
 
-      const hlbl = svgEl('text');
-      setAttrs(hlbl, {
-        x: MX(job.xOffset + job.totalT + job.tH / 2),
-        y: MY(job.height / 2),
-        'text-anchor': 'middle', 'dominant-baseline': 'central',
-        'font-size': '11', fill: '#7a3a44',
-      });
-      hlbl.innerHTML = `t<tspan baseline-shift="super" font-size="8">H</tspan>`;
-      g.appendChild(hlbl);
+    const hlbl = svgEl('text');
+    setAttrs(hlbl, {
+      x: MX(h.x + h.w / 2), y: MY(h.y + h.h / 2),
+      'text-anchor': 'middle', 'dominant-baseline': 'central',
+      'font-size': '11', fill: '#7a3a44',
+    });
+    hlbl.innerHTML = `t<tspan baseline-shift="super" font-size="8">H</tspan>=${h.tH.toFixed(2)}`;
+    svg.appendChild(hlbl);
+  });
+
+  // 3) Draw task rectangles (olive/blue) on top.
+  taskBoxes.forEach(b => {
+    if (b.w <= 0 || b.h <= 0) return;
+    const colors = fillsForType(b.type);
+    const rect = svgEl('rect');
+    setAttrs(rect, {
+      x: MX(b.x), y: MY(b.y + b.h),
+      width: b.w * GEOM.unitX, height: b.h * GEOM.unitY,
+      fill: colors.fill, stroke: colors.stroke,
+      'stroke-width': '1.5', rx: '2',
+    });
+    svg.appendChild(rect);
+
+    const txt = svgEl('text');
+    setAttrs(txt, {
+      x: MX(b.x + b.w / 2), y: MY(b.y + b.h / 2),
+      'text-anchor': 'middle', 'dominant-baseline': 'central',
+      'font-size': b.type === 'chain' ? '11' : '12', fill: '#1f2937',
+    });
+    txt.textContent = b.label;
+    svg.appendChild(txt);
+
+    // Inner step subdivisions for chains
+    if (b.type === 'chain' && b.stepIdxs.length > 1) {
+      const seg = (b.w * GEOM.unitX) / b.stepIdxs.length;
+      for (let k = 1; k < b.stepIdxs.length; k++) {
+        const xLine = MX(b.x) + seg * k;
+        const ln = svgEl('line');
+        setAttrs(ln, {
+          x1: xLine, x2: xLine, y1: MY(b.y + b.h), y2: MY(b.y),
+          stroke: colors.stroke, 'stroke-width': '0.8',
+          'stroke-dasharray': '3 2', opacity: '0.6',
+        });
+        svg.appendChild(ln);
+      }
     }
 
-    // Job title with wage bill
-    const wageBill = job.totalC * (job.totalT + job.tH);
+    const ttl = svgEl('title');
+    const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
+    ttl.textContent = `${b.label}: c=${b.h.toFixed(3)}, t=${b.w.toFixed(3)} [steps: ${stepNames}]`;
+    rect.appendChild(ttl);
+  });
+
+  // 4) Job titles: place ABOVE each job's bounding box, centered horizontally.
+  jobBoxes.forEach(jb => {
+    if (jb.h <= 0 || jb.w <= 0) return;
+    const wageBill = jb.totalC * (jb.totalT + jb.tH);
     const titleEl = svgEl('text');
     setAttrs(titleEl, {
-      x: MX(job.xOffset + job.width / 2),
-      y: MY(Math.max(job.height, 0.1)) - 10,
+      x: MX(jb.x + jb.w / 2), y: MY(jb.y + jb.h) - 8,
       'text-anchor': 'middle', 'font-size': '13', 'font-weight': '600', fill: '#111827',
     });
-    titleEl.textContent = `Job ${ji+1} — wage bill = ${wageBill.toFixed(3)}`;
-    g.appendChild(titleEl);
+    titleEl.textContent = `Job ${jb.jobIdx + 1} — wage bill = ${wageBill.toFixed(3)}`;
+    svg.appendChild(titleEl);
   });
 }
 
