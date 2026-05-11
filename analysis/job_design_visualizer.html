@@ -1079,13 +1079,14 @@ function renderGeomView(svg, geom, view) {
         ttl.textContent = `${steps[si].name} (${modeLabel(m)})`;
         cellRect.appendChild(ttl);
       });
-      // Outer task border (overlay).
+      // Outer task border (overlay) — stroke width matches the Task View
+      // task-rectangle stroke so the two panels feel visually consistent.
       const outerRect = svgEl('rect');
       setAttrs(outerRect, {
         x: MX(b.x), y: MY(b.y + b.h),
         width: b.w * GEOM.unitX, height: b.h * GEOM.unitY,
         fill: 'none', stroke: taskColors.stroke,
-        'stroke-width': '2.5', rx: '2',
+        'stroke-width': '1.5', rx: '2',
       });
       svg.appendChild(outerRect);
     } else {
