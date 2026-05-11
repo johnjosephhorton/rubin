@@ -231,7 +231,19 @@
     overflow-x: auto;
     padding: 10px;
   }
-  svg.geom { display: block; min-width: 100%; }
+  .geom-row {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .geom-half { flex: 1 1 0; min-width: 0; }
+  .geom-half h3 {
+    font-size: 13px; font-weight: 600;
+    margin: 0 0 6px 0; text-align: center; color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  svg.geom { display: block; width: 100%; height: auto; }
+  @media (max-width: 900px) {
+    .geom-row { flex-direction: column; }
+  }
 
   /* === Cost summary & breakdown === */
   .cost-summary {
@@ -359,7 +371,16 @@
     Hand-off rectangles (pink) appear between non-final jobs.
   </p>
   <div class="geom-container">
-    <svg class="geom" id="geom-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="geom-row">
+      <div class="geom-half">
+        <h3>Step View</h3>
+        <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="geom-half">
+        <h3>Task View</h3>
+        <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -739,6 +760,11 @@ function fillsForType(type) {
   if (type === 'chain') return { fill: getCSS('--task-chain-fill'), stroke: getCSS('--task-chain-stroke') };
   return { fill: getCSS('--task-man-fill'), stroke: getCSS('--task-man-stroke') };
 }
+function stepFillsForMode(mode) {
+  if (mode === 'C') return { fill: getCSS('--step-auto-fill'), stroke: getCSS('--step-auto-stroke') };
+  if (mode === 'A') return { fill: getCSS('--step-aug-fill'), stroke: getCSS('--step-aug-stroke') };
+  return { fill: getCSS('--step-man-fill'), stroke: getCSS('--step-man-stroke') };
+}
 
 function taskLabel(task, steps) {
   if (task.type === 'man') return steps[task.lastStep].name + ' (M)';
@@ -746,34 +772,15 @@ function taskLabel(task, steps) {
   return `${steps[task.stepIdxs[0]].name}→${steps[task.lastStep].name}`;
 }
 
-function renderGeom() {
-  const svg = document.getElementById('geom-svg');
-  while (svg.firstChild) svg.removeChild(svg.firstChild);
-  if (!state.solution) {
-    setAttrs(svg, { width: 600, height: 60, viewBox: '0 0 600 60' });
-    const t = svgEl('text');
-    setAttrs(t, { x: 20, y: 32, 'font-size': '13', fill: '#6b7280' });
-    t.textContent = 'Click ▶ Solve to render the optimum.';
-    svg.appendChild(t);
-    return;
-  }
-
+// Compute the shared staircase geometry (used by both views).
+function computeGeom() {
+  if (!state.solution) return null;
   const { tasks, levels, jobs } = state.solution;
   const steps = state.steps;
 
-  // Map task index -> job index
   const jobOfTask = new Array(tasks.length);
   jobs.forEach((indices, ji) => indices.forEach(ti => { jobOfTask[ti] = ji; }));
 
-  // ---------------------------------------------------------------------------
-  // Walk through tasks left-to-right, accumulating (cumX, cumY) GLOBALLY across
-  // ALL jobs. Within each job: task k is drawn at (cumX, cumY) with the next
-  // task at (cumX + t_k, cumY + c_k), creating a staircase. A non-final job's
-  // hand-off rectangle occupies the strip immediately to the right of its last
-  // task, at the cumulative-y range of THIS job (height = job's skill sum).
-  // After the hand-off, the NEXT job's first task starts at (cumX+tH, cumY) —
-  // continuing the staircase upward.
-  // ---------------------------------------------------------------------------
   const taskBoxes = [];      // {x, y, w, h, type, label, stepIdxs}
   const handoffBoxes = [];   // {x, y, w, h, jobIdx, tH}
   const jobBoxes = [];       // {x, y, w, h, jobIdx, totalC, totalT, tH}
@@ -787,85 +794,86 @@ function renderGeom() {
     const lv = levels[ti];
     const ji = jobOfTask[ti];
 
-    // If we crossed a job boundary, close the previous job (with hand-off).
     if (ji !== curJob) {
       const prevIndices = jobs[curJob];
       const prevLastIdx = prevIndices[prevIndices.length - 1];
       const isLast = curJob === jobs.length - 1;
       const tH = isLast ? 0 : levels[prevLastIdx].tH;
-
       if (tH > 0) {
-        handoffBoxes.push({
-          x: cumX, y: jobStartY,
-          w: tH, h: jobTotalC,
-          jobIdx: curJob, tH,
-        });
+        handoffBoxes.push({ x: cumX, y: jobStartY, w: tH, h: jobTotalC, jobIdx: curJob, tH });
         cumX += tH;
       }
       jobBoxes.push({
-        x: jobStartX, y: jobStartY,
-        w: jobTotalT + tH, h: jobTotalC,
+        x: jobStartX, y: jobStartY, w: jobTotalT + tH, h: jobTotalC,
         jobIdx: curJob, totalC: jobTotalC, totalT: jobTotalT, tH,
       });
-
-      // Start new job: cumY is unchanged (staircase continues upward).
       curJob = ji;
-      jobStartX = cumX;
-      jobStartY = cumY;
-      jobTotalT = 0;
-      jobTotalC = 0;
+      jobStartX = cumX; jobStartY = cumY;
+      jobTotalT = 0; jobTotalC = 0;
     }
-
-    // Place this task at (cumX, cumY).
     taskBoxes.push({
       x: cumX, y: cumY, w: lv.t, h: lv.c,
       type: lv.type, label: taskLabel(tasks[ti], steps),
       stepIdxs: tasks[ti].stepIdxs,
     });
-    cumX += lv.t;
-    cumY += lv.c;
-    jobTotalT += lv.t;
-    jobTotalC += lv.c;
+    cumX += lv.t; cumY += lv.c;
+    jobTotalT += lv.t; jobTotalC += lv.c;
   }
-  // Close the final job (no hand-off).
   jobBoxes.push({
-    x: jobStartX, y: jobStartY,
-    w: jobTotalT, h: jobTotalC,
+    x: jobStartX, y: jobStartY, w: jobTotalT, h: jobTotalC,
     jobIdx: curJob, totalC: jobTotalC, totalT: jobTotalT, tH: 0,
   });
 
   const totalWidthUnits = Math.max(1, cumX);
   const totalHeightUnits = Math.max(1, cumY);
 
-  // SVG dimensions: leave space at top for job titles, at left for axis label,
-  // at bottom for tick labels.
   const padTop = 30, padBottom = 30, padLeft = 50, padRight = 30;
   const W = totalWidthUnits * GEOM.unitX + padLeft + padRight;
   const H = Math.max(GEOM.minH, totalHeightUnits * GEOM.unitY + padTop + padBottom);
-  setAttrs(svg, { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
 
   const plotLeft = padLeft;
   const plotBottom = H - padBottom;
   const MX = (x) => plotLeft + x * GEOM.unitX;
   const MY = (y) => plotBottom - y * GEOM.unitY;
 
-  // Baseline (x-axis) and left axis line.
+  return { taskBoxes, handoffBoxes, jobBoxes, W, H, MX, MY,
+           plotLeft, plotBottom, totalWidthUnits, totalHeightUnits, steps };
+}
+
+// Render one of the two side-by-side panels.
+// view = 'step'  → subdivide task rectangles into step-mode-colored cells,
+//                  with step names; the outer rectangle is bordered by the
+//                  task color.
+// view = 'task'  → solid task-colored rectangle with the task name label.
+function renderGeomView(svg, geom, view) {
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  if (!geom) {
+    setAttrs(svg, { width: 600, height: 60, viewBox: '0 0 600 60' });
+    const t = svgEl('text');
+    setAttrs(t, { x: 20, y: 32, 'font-size': '13', fill: '#6b7280' });
+    t.textContent = 'Click ▶ Solve to render the optimum.';
+    svg.appendChild(t);
+    return;
+  }
+  const { taskBoxes, handoffBoxes, jobBoxes, W, H, MX, MY,
+          plotLeft, plotBottom, totalWidthUnits, totalHeightUnits, steps } = geom;
+  setAttrs(svg, { width: W, height: H, viewBox: `0 0 ${W} ${H}`,
+                  preserveAspectRatio: 'xMidYMid meet' });
+
+  // Axes.
   const baseline = svgEl('line');
   setAttrs(baseline, {
-    x1: plotLeft, x2: MX(totalWidthUnits),
-    y1: plotBottom, y2: plotBottom,
+    x1: plotLeft, x2: MX(totalWidthUnits), y1: plotBottom, y2: plotBottom,
     stroke: '#d1d5db', 'stroke-width': '1',
   });
   svg.appendChild(baseline);
   const leftAxis = svgEl('line');
   setAttrs(leftAxis, {
-    x1: plotLeft, x2: plotLeft,
-    y1: plotBottom, y2: MY(totalHeightUnits),
+    x1: plotLeft, x2: plotLeft, y1: plotBottom, y2: MY(totalHeightUnits),
     stroke: '#d1d5db', 'stroke-width': '1',
   });
   svg.appendChild(leftAxis);
 
-  // Axis labels.
   const xLabel = svgEl('text');
   setAttrs(xLabel, {
     x: plotLeft + (totalWidthUnits * GEOM.unitX) / 2, y: plotBottom + 22,
@@ -882,7 +890,7 @@ function renderGeom() {
   yLabel.textContent = 'skill';
   svg.appendChild(yLabel);
 
-  // 1) Draw job bounding boxes first (so they sit behind task rectangles).
+  // 1) Job bounding boxes (dashed cyan).
   jobBoxes.forEach(jb => {
     if (jb.h <= 0 || jb.w <= 0) return;
     const bbox = svgEl('rect');
@@ -895,7 +903,7 @@ function renderGeom() {
     svg.appendChild(bbox);
   });
 
-  // 2) Draw hand-off rectangles (pink).
+  // 2) Hand-off rectangles (pink).
   handoffBoxes.forEach(h => {
     const hrect = svgEl('rect');
     setAttrs(hrect, {
@@ -905,7 +913,6 @@ function renderGeom() {
       'stroke-width': '1.2', 'stroke-dasharray': '3 3',
     });
     svg.appendChild(hrect);
-
     const hlbl = svgEl('text');
     setAttrs(hlbl, {
       x: MX(h.x + h.w / 2), y: MY(h.y + h.h / 2),
@@ -916,50 +923,88 @@ function renderGeom() {
     svg.appendChild(hlbl);
   });
 
-  // 3) Draw task rectangles (olive/blue) on top.
+  // 3) Task / step rectangles.
   taskBoxes.forEach(b => {
     if (b.w <= 0 || b.h <= 0) return;
-    const colors = fillsForType(b.type);
-    const rect = svgEl('rect');
-    setAttrs(rect, {
-      x: MX(b.x), y: MY(b.y + b.h),
-      width: b.w * GEOM.unitX, height: b.h * GEOM.unitY,
-      fill: colors.fill, stroke: colors.stroke,
-      'stroke-width': '1.5', rx: '2',
-    });
-    svg.appendChild(rect);
-
-    const txt = svgEl('text');
-    setAttrs(txt, {
-      x: MX(b.x + b.w / 2), y: MY(b.y + b.h / 2),
-      'text-anchor': 'middle', 'dominant-baseline': 'central',
-      'font-size': b.type === 'chain' ? '11' : '12', fill: '#1f2937',
-    });
-    txt.textContent = b.label;
-    svg.appendChild(txt);
-
-    // Inner step subdivisions for chains
-    if (b.type === 'chain' && b.stepIdxs.length > 1) {
-      const seg = (b.w * GEOM.unitX) / b.stepIdxs.length;
-      for (let k = 1; k < b.stepIdxs.length; k++) {
-        const xLine = MX(b.x) + seg * k;
-        const ln = svgEl('line');
-        setAttrs(ln, {
-          x1: xLine, x2: xLine, y1: MY(b.y + b.h), y2: MY(b.y),
-          stroke: colors.stroke, 'stroke-width': '0.8',
-          'stroke-dasharray': '3 2', opacity: '0.6',
+    const taskColors = fillsForType(b.type);
+    if (view === 'step') {
+      // Subdivide each task rectangle into equal-width sub-cells (one per
+      // constituent step), each filled with the step's MODE color.
+      const nSteps = b.stepIdxs.length;
+      const cellWUnits = b.w / nSteps;
+      const modes = state.solution.modes;
+      b.stepIdxs.forEach((si, k) => {
+        const m = modes[si];
+        const stepColors = stepFillsForMode(m);
+        const cellX = b.x + k * cellWUnits;
+        const cellRect = svgEl('rect');
+        setAttrs(cellRect, {
+          x: MX(cellX), y: MY(b.y + b.h),
+          width: cellWUnits * GEOM.unitX, height: b.h * GEOM.unitY,
+          fill: stepColors.fill, stroke: stepColors.stroke,
+          'stroke-width': '1',
         });
-        svg.appendChild(ln);
+        svg.appendChild(cellRect);
+        const txt = svgEl('text');
+        setAttrs(txt, {
+          x: MX(cellX + cellWUnits / 2), y: MY(b.y + b.h / 2),
+          'text-anchor': 'middle', 'dominant-baseline': 'central',
+          'font-size': '12', fill: '#1f2937',
+        });
+        txt.textContent = steps[si].name;
+        svg.appendChild(txt);
+        const ttl = svgEl('title');
+        ttl.textContent = `${steps[si].name} (${m === 'M' ? 'Manual' : m === 'C' ? 'Automated' : 'Augmented'})`;
+        cellRect.appendChild(ttl);
+      });
+      // Outer task border (overlay).
+      const outerRect = svgEl('rect');
+      setAttrs(outerRect, {
+        x: MX(b.x), y: MY(b.y + b.h),
+        width: b.w * GEOM.unitX, height: b.h * GEOM.unitY,
+        fill: 'none', stroke: taskColors.stroke,
+        'stroke-width': '2.5', rx: '2',
+      });
+      svg.appendChild(outerRect);
+    } else {
+      // Task view: solid task-colored rectangle + task label (current behavior).
+      const rect = svgEl('rect');
+      setAttrs(rect, {
+        x: MX(b.x), y: MY(b.y + b.h),
+        width: b.w * GEOM.unitX, height: b.h * GEOM.unitY,
+        fill: taskColors.fill, stroke: taskColors.stroke,
+        'stroke-width': '1.5', rx: '2',
+      });
+      svg.appendChild(rect);
+      const txt = svgEl('text');
+      setAttrs(txt, {
+        x: MX(b.x + b.w / 2), y: MY(b.y + b.h / 2),
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
+        'font-size': b.type === 'chain' ? '11' : '12', fill: '#1f2937',
+      });
+      txt.textContent = b.label;
+      svg.appendChild(txt);
+      if (b.type === 'chain' && b.stepIdxs.length > 1) {
+        const seg = (b.w * GEOM.unitX) / b.stepIdxs.length;
+        for (let k = 1; k < b.stepIdxs.length; k++) {
+          const xLine = MX(b.x) + seg * k;
+          const ln = svgEl('line');
+          setAttrs(ln, {
+            x1: xLine, x2: xLine, y1: MY(b.y + b.h), y2: MY(b.y),
+            stroke: taskColors.stroke, 'stroke-width': '0.8',
+            'stroke-dasharray': '3 2', opacity: '0.6',
+          });
+          svg.appendChild(ln);
+        }
       }
+      const ttl = svgEl('title');
+      const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
+      ttl.textContent = `${b.label}: c=${b.h.toFixed(3)}, t=${b.w.toFixed(3)} [steps: ${stepNames}]`;
+      rect.appendChild(ttl);
     }
-
-    const ttl = svgEl('title');
-    const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
-    ttl.textContent = `${b.label}: c=${b.h.toFixed(3)}, t=${b.w.toFixed(3)} [steps: ${stepNames}]`;
-    rect.appendChild(ttl);
   });
 
-  // 4) Job titles: place ABOVE each job's bounding box, centered horizontally.
+  // 4) Job titles above each job's bbox.
   jobBoxes.forEach(jb => {
     if (jb.h <= 0 || jb.w <= 0) return;
     const wageBill = jb.totalC * (jb.totalT + jb.tH);
@@ -971,6 +1016,12 @@ function renderGeom() {
     titleEl.textContent = `Job ${jb.jobIdx + 1} — wage bill = ${wageBill.toFixed(3)}`;
     svg.appendChild(titleEl);
   });
+}
+
+function renderGeom() {
+  const geom = computeGeom();
+  renderGeomView(document.getElementById('geom-svg-steps'), geom, 'step');
+  renderGeomView(document.getElementById('geom-svg-tasks'), geom, 'task');
 }
 
 // ===========================================================================
