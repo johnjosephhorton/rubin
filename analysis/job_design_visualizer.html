@@ -322,7 +322,7 @@
 <!-- ============================================ -->
 <div class="panel">
   <div class="panel-header">
-    <h2>Step Cost Parameters</h2>
+    <h2>Cost Parameters</h2>
     <div class="actions">
       <button class="btn-light" id="reset-btn">Reset</button>
       <button class="btn-light" id="add-step-btn">+ Add step</button>
@@ -394,7 +394,7 @@
 <!-- 4. GEOMETRIC VIEW                             -->
 <!-- ============================================ -->
 <div class="panel">
-  <h2>Geometric View of the Optimum</h2>
+  <h2>Geometric View of the Optimal Design</h2>
   <p class="hint">
     Each task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
     Hand-off rectangles (pink) appear between non-final jobs.
@@ -431,14 +431,14 @@
         <th>&Sigma; c<span class="subscript">b</span> <span class="unit">($)</span></th>
         <th>&Sigma; t<span class="subscript">b</span> (time)</th>
         <th>t<span class="superscript">H</span>(J<span class="subscript">j</span>)</th>
-        <th>Wage bill <span class="unit">($)</span></th>
+        <th>Wage Bill <span class="unit">($)</span></th>
       </tr>
     </thead>
     <tbody id="cost-tbody"></tbody>
   </table>
   <div class="formula">
-    Wage bill of job J<span class="subscript">j</span> = (&Sigma;<span class="subscript">b&isin;J<span class="subscript">j</span></span> c<span class="subscript">b</span>) &middot; (t<span class="superscript">H</span>(J<span class="subscript">j</span>) + &Sigma;<span class="subscript">b&isin;J<span class="subscript">j</span></span> t<span class="subscript">b</span>).
-    Total cost = &Sigma;<span class="subscript">j</span> Wage bill<span class="subscript">j</span>.
+    Wage Bill of job J<span class="subscript">j</span> = (&Sigma;<span class="subscript">b&isin;J<span class="subscript">j</span></span> c<span class="subscript">b</span>) &middot; (t<span class="superscript">H</span>(J<span class="subscript">j</span>) + &Sigma;<span class="subscript">b&isin;J<span class="subscript">j</span></span> t<span class="subscript">b</span>).
+    Total cost = &Sigma;<span class="subscript">j</span> Wage Bill<span class="subscript">j</span>.
   </div>
 </div>
 
@@ -470,15 +470,15 @@
 //    chain into separate Augmented or Manual tasks is uneconomic.
 // ===========================================================================
 const WORKING_EXAMPLE = [
-  // s1: stays Manual. cM·tM = 3 (cheap). Low q_1 prevents chain extension.
-  { name: 's1', tM: 1.0, cM: 3.0, tA: 2.0, cA: 3.0, q: 0.10, tH: 3.0 },
-  // s2: Automated step inside the chain (no direct human cost when Auto).
+  // Step 1: stays Manual. cM·tM = 3 (cheap). Low q prevents chain extension.
+  { name: 'Step 1', tM: 1.0, cM: 3.0, tA: 2.0, cA: 3.0, q: 0.10, tH: 3.0 },
+  // Step 2: Automated step inside the chain (no direct human cost when Auto).
   //     Manual (cM·tM=10) and Aug-singleton (cA·tA/q=4) options both lose.
-  { name: 's2', tM: 2.0, cM: 5.0, tA: 1.0, cA: 2.0, q: 0.50, tH: 1.0 },
-  // s3: Augmented final step of the chain. cA=1, tA=0.5 set chain (c,t)=(1,2).
-  { name: 's3', tM: 2.0, cM: 4.0, tA: 0.5, cA: 1.0, q: 0.50, tH: 0.5 },
-  // s4: stays Manual. cM·tM = 4; Aug-singleton (3·4=12) loses.
-  { name: 's4', tM: 2.0, cM: 2.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 0.0 },
+  { name: 'Step 2', tM: 2.0, cM: 5.0, tA: 1.0, cA: 2.0, q: 0.50, tH: 1.0 },
+  // Step 3: Augmented final step of the chain. cA=1, tA=0.5 set chain (c,t)=(1,2).
+  { name: 'Step 3', tM: 2.0, cM: 4.0, tA: 0.5, cA: 1.0, q: 0.50, tH: 0.5 },
+  // Step 4: stays Manual. cM·tM = 4; Aug-singleton (3·4=12) loses.
+  { name: 'Step 4', tM: 2.0, cM: 2.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 0.0 },
 ];
 
 let state = {
@@ -714,8 +714,8 @@ function renderStage1() {
     const lbl = document.createElement('span');
     lbl.className = 'tg-label';
     lbl.textContent = task.type === 'chain'
-      ? `T${ti+1} · AI Chain (|k|=${task.stepIdxs.length})`
-      : `T${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'} Task`;
+      ? `Task ${ti+1} · AI Chain (|k|=${task.stepIdxs.length})`
+      : `Task ${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'} Task`;
     tg.appendChild(lbl);
 
     task.stepIdxs.forEach((si, k) => {
@@ -774,7 +774,7 @@ function renderStage2() {
       const tb = document.createElement('div');
       tb.className = 'task-box ' + (task.type === 'chain' ? 'chain' : '');
       const nm = document.createElement('div'); nm.className = 'nm';
-      nm.textContent = `T${ti+1} (${task.type === 'chain' ? 'AI Chain' : task.type === 'aug' ? 'Augmented' : 'Manual'})`;
+      nm.textContent = `Task ${ti+1} (${task.type === 'chain' ? 'AI Chain' : task.type === 'aug' ? 'Augmented' : 'Manual'})`;
       const meta = document.createElement('div'); meta.className = 'meta';
       meta.textContent = `c=${lv.c.toFixed(2)}, t=${lv.t.toFixed(2)}`;
       tb.appendChild(nm); tb.appendChild(meta);
@@ -957,7 +957,7 @@ function renderGeomView(svg, geom, view) {
     x: plotLeft + (totalWidthUnits * GEOM.unitX) / 2, y: plotBottom + 24,
     'text-anchor': 'middle', 'font-size': '15', 'font-weight': '500', fill: '#374151',
   });
-  xLabel.textContent = 'time';
+  xLabel.textContent = 'Time';
   svg.appendChild(xLabel);
   const yLabel = svgEl('text');
   const yLx = plotLeft - 16, yLy = plotBottom - (totalHeightUnits * GEOM.unitY) / 2;
@@ -965,7 +965,7 @@ function renderGeomView(svg, geom, view) {
     x: yLx, y: yLy, 'text-anchor': 'middle', 'font-size': '15', 'font-weight': '500', fill: '#374151',
     transform: `rotate(-90 ${yLx} ${yLy})`,
   });
-  yLabel.textContent = 'skill';
+  yLabel.textContent = 'Skill';
   svg.appendChild(yLabel);
 
   // 1) Hand-off rectangles (pink) go on the back of the plot area.
@@ -1021,7 +1021,7 @@ function renderGeomView(svg, geom, view) {
           fill: '#1f2937',
         });
         const tspanName = svgEl('tspan');
-        setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '14', 'font-weight': '600' });
+        setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '12', 'font-weight': '600' });
         tspanName.textContent = steps[si].name;
         txt.appendChild(tspanName);
         const tspanMode = svgEl('tspan');
@@ -1067,8 +1067,8 @@ function renderGeomView(svg, geom, view) {
         fill: '#1f2937',
       });
       const tspanName = svgEl('tspan');
-      setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '14', 'font-weight': '600' });
-      tspanName.textContent = `T${b.taskIdx + 1}`;
+      setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '12', 'font-weight': '600' });
+      tspanName.textContent = `Task ${b.taskIdx + 1}`;
       txt.appendChild(tspanName);
       const tspanMeta = svgEl('tspan');
       setAttrs(tspanMeta, { x: cx, dy: '1.3em', 'font-size': '11', fill: '#4a5568' });
@@ -1093,7 +1093,7 @@ function renderGeomView(svg, geom, view) {
       const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
       const taskTypeForTitle = b.type === 'chain' ? 'AI Chain'
                              : b.type === 'aug' ? 'Augmented' : 'Manual';
-      ttl.textContent = `T${b.taskIdx + 1} (${taskTypeForTitle}): c=${b.c.toFixed(2)}, t=${b.t.toFixed(2)} [steps: ${stepNames}]`;
+      ttl.textContent = `Task ${b.taskIdx + 1} (${taskTypeForTitle}): c=${b.c.toFixed(2)}, t=${b.t.toFixed(2)} [steps: ${stepNames}]`;
       rect.appendChild(ttl);
     }
   });
@@ -1124,7 +1124,7 @@ function renderGeomView(svg, geom, view) {
       x: MX(jb.x + jb.w / 2), y: MY(jb.y + jb.h) - 8,
       'text-anchor': 'middle', 'font-size': '13', 'font-weight': '600', fill: '#111827',
     });
-    titleEl.textContent = `Job ${jb.jobIdx + 1} — wage bill = $${wageBill.toFixed(2)}`;
+    titleEl.textContent = `Job ${jb.jobIdx + 1} — Wage Bill = $${wageBill.toFixed(2)}`;
     svg.appendChild(titleEl);
   });
 }
@@ -1159,7 +1159,7 @@ function renderCost() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>Job ${ji+1}</td>
-      <td>${indices.map(ti => `T${ti+1}`).join(', ')}</td>
+      <td>${indices.map(ti => `Task ${ti+1}`).join(', ')}</td>
       <td>$${sC.toFixed(2)}</td>
       <td>${sT.toFixed(2)}</td>
       <td>${tH.toFixed(2)}</td>
@@ -1259,7 +1259,7 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 });
 document.getElementById('add-step-btn').addEventListener('click', () => {
   state.steps.push({
-    name: `s${state.steps.length + 1}`,
+    name: `Step ${state.steps.length + 1}`,
     tM: 1.0, cM: 1.0, tA: 0.5, cA: 1.0, q: 0.85, tH: 0.0,
   });
   state.solution = null;
