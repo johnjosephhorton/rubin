@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Design Visualizer — Two-Stage Optimization</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --border: #e2e6ec;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --accent: #2563eb;
+
+    /* === Figure 2 palette (matches hierarchical_production_illustration.tex) === */
+    /* Step modes: manual = gray!10, automated = green!30, augmented = orange!30 */
+    --step-man-fill:   #e8eaed;
+    --step-man-stroke: #9aa0a6;
+    --step-auto-fill:  #c8ebd1;
+    --step-auto-stroke:#2f9b5b;
+    --step-aug-fill:   #fbdcb1;
+    --step-aug-stroke: #d28319;
+    /* Task types: manual task = olive!20, AI chain = blue!20 */
+    --task-man-fill:   #ebebd2;
+    --task-man-stroke: #808000;
+    --task-chain-fill: #d6d6ff;
+    --task-chain-stroke:#4040c0;
+    /* Job container: cyan!20 */
+    --job-fill:        #d6f7f7;
+    --job-stroke:      #0aa0a0;
+    /* Hand-off: pink/red */
+    --handoff-fill:    #f8c8cf;
+    --handoff-stroke: #c95466;
+    /* Job bounding box (dashed) */
+    --bbox-stroke:    #0aa0a0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 24px;
+    line-height: 1.45;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 4px 0; text-align: center; }
+  .subtitle { color: var(--muted); text-align: center; margin-bottom: 24px; font-size: 14px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .panel h2 { font-size: 16px; margin: 0 0 12px 0; }
+  .panel .hint { color: var(--muted); font-size: 12px; margin-bottom: 10px; }
+  .panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; gap: 10px; flex-wrap: wrap;
+  }
+  .panel-header .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .stage-label {
+    display: inline-block; font-size: 11px;
+    padding: 1px 8px; border-radius: 10px;
+    background: #eef0f4; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* === Buttons === */
+  .btn {
+    background: var(--accent); color: white; border: none;
+    padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 13px;
+  }
+  .btn:hover { background: #1d4fc1; }
+  .btn:disabled { background: #94a3b8; cursor: not-allowed; }
+  .btn-light {
+    background: white; color: var(--accent); border: 1px solid var(--accent);
+    padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 13px;
+  }
+  .btn-light:hover { background: #eef4ff; }
+  .btn-success {
+    background: #1f7a3a; color: white; border: none;
+    padding: 6px 14px; border-radius: 5px; cursor: pointer; font-size: 13px;
+    font-weight: 600;
+  }
+  .btn-success:hover { background: #186730; }
+  .btn-lucky {
+    background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+    color: #4a2a05; border: none;
+    padding: 6px 14px; border-radius: 5px; cursor: pointer; font-size: 13px;
+    font-weight: 600;
+  }
+  .btn-lucky:hover { filter: brightness(0.95); }
+  .btn-danger {
+    background: transparent; color: #c95466; border: none; font-size: 16px;
+    cursor: pointer; padding: 0 4px;
+  }
+
+  /* === Steps table === */
+  table.steps {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  table.steps th, table.steps td {
+    padding: 6px 8px; text-align: center;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  table.steps th { color: var(--muted); font-weight: 500; font-size: 12px; }
+  table.steps input[type="text"], table.steps input[type="number"] {
+    border: 1px solid var(--border); border-radius: 4px; padding: 3px 5px;
+    background: white; font-size: 13px; width: 100%;
+  }
+  table.steps input[type="text"] { text-align: left; }
+  table.steps input[type="number"] { text-align: right; }
+  table.steps .col-name { width: 80px; }
+  table.steps .col-num { width: 64px; }
+  table.steps .col-x { width: 30px; }
+  .superscript { vertical-align: super; font-size: 0.75em; }
+  .subscript { vertical-align: sub; font-size: 0.75em; }
+
+  /* === Stage ribbons (Derived tasks & Job partition) === */
+  .ribbon {
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: 14px;
+    padding: 10px 4px;
+  }
+
+  /* Step box (inside a task) */
+  .step-box {
+    background: var(--step-man-fill);
+    border: 1.5px solid var(--step-man-stroke);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px; min-width: 78px;
+    text-align: center;
+  }
+  .step-box.man    { background: var(--step-man-fill);  border-color: var(--step-man-stroke); }
+  .step-box.auto   { background: var(--step-auto-fill); border-color: var(--step-auto-stroke); }
+  .step-box.aug    { background: var(--step-aug-fill);  border-color: var(--step-aug-stroke); }
+  .step-box .nm    { font-weight: 600; }
+  .step-box .md    { font-size: 10px; color: #404040; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* Task group (a dashed colored container around one or more steps) */
+  .task-group {
+    border: 2px dashed var(--task-man-stroke);
+    border-radius: 8px;
+    background: rgba(0,0,0,0.0);
+    padding: 8px;
+    display: flex; gap: 8px; align-items: center;
+    position: relative;
+  }
+  .task-group.chain { border-color: var(--task-chain-stroke); }
+  .task-group .tg-label {
+    position: absolute; top: -10px; left: 8px;
+    background: var(--bg); padding: 0 5px;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--task-man-stroke); font-weight: 600;
+  }
+  .task-group.chain .tg-label { color: var(--task-chain-stroke); }
+
+  /* Task box (inside a job) */
+  .task-box {
+    background: var(--task-man-fill);
+    border: 1.5px solid var(--task-man-stroke);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px; min-width: 88px;
+    text-align: center;
+  }
+  .task-box.chain { background: var(--task-chain-fill); border-color: var(--task-chain-stroke); }
+  .task-box .nm   { font-weight: 600; }
+  .task-box .meta { font-size: 10px; color: #404040; margin-top: 2px; }
+
+  /* Job group (dashed cyan container around tasks) */
+  .job-group {
+    border: 2px dashed var(--job-stroke);
+    background: var(--job-fill);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex; gap: 8px; align-items: center;
+    position: relative;
+  }
+  .job-group .jg-label {
+    position: absolute; top: -10px; left: 10px;
+    background: var(--bg); padding: 0 5px;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--job-stroke); font-weight: 700;
+  }
+
+  /* Hand-off arrow (pink/red between jobs) */
+  .handoff {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-width: 56px; padding: 0 4px; color: var(--handoff-stroke);
+  }
+  .handoff svg { display: block; }
+  .handoff .lbl { font-size: 10px; margin-top: 2px; color: var(--handoff-stroke); }
+
+  /* === Legend === */
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    margin-top: 10px; font-size: 12px; color: var(--muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch {
+    display: inline-block; width: 14px; height: 14px;
+    border: 1.5px solid; border-radius: 3px;
+  }
+  .swatch-step-man   { background: var(--step-man-fill);   border-color: var(--step-man-stroke); }
+  .swatch-step-auto  { background: var(--step-auto-fill);  border-color: var(--step-auto-stroke); }
+  .swatch-step-aug   { background: var(--step-aug-fill);   border-color: var(--step-aug-stroke); }
+  .swatch-task-man   { background: var(--task-man-fill);   border-color: var(--task-man-stroke); }
+  .swatch-task-chain { background: var(--task-chain-fill); border-color: var(--task-chain-stroke); }
+  .swatch-job        { background: var(--job-fill);        border-color: var(--job-stroke); border-style: dashed; }
+  .swatch-handoff    { background: var(--handoff-fill);    border-color: var(--handoff-stroke); }
+
+  /* === Geometric view === */
+  .geom-container {
+    width: 100%;
+    background: #fafbfc;
+    border: 1px solid #eef0f3;
+    border-radius: 6px;
+    overflow-x: auto;
+    padding: 10px;
+  }
+  svg.geom { display: block; min-width: 100%; }
+
+  /* === Cost summary & breakdown === */
+  .cost-summary {
+    background: linear-gradient(180deg, #f1f9f3 0%, #e8f5ec 100%);
+    border: 1px solid #c8e6d0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 15px;
+    margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cost-summary strong { color: #1f7a3a; font-size: 22px; }
+  .cost-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .cost-table th, .cost-table td {
+    text-align: right; padding: 6px 10px;
+    border-bottom: 1px solid #f0f2f5;
+  }
+  .cost-table th { color: var(--muted); font-weight: 500; }
+  .cost-table th:first-child, .cost-table td:first-child { text-align: left; }
+  .cost-table tr.total { font-weight: 600; }
+  .cost-table tr.total td { border-top: 2px solid var(--border); border-bottom: none; }
+
+  .formula {
+    margin-top: 10px; font-size: 12px; color: var(--muted);
+    font-style: italic;
+  }
+  .footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 20px; }
+  .pending {
+    color: var(--muted); font-size: 13px; font-style: italic;
+    padding: 12px 4px;
+  }
+
+  @media (max-width: 720px) {
+    .ribbon { gap: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Job Design Visualizer</h1>
+<p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI automation strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (worker assignment).</p>
+
+<!-- ============================================ -->
+<!-- 1. STEP PARAMETERS                            -->
+<!-- ============================================ -->
+<div class="panel">
+  <div class="panel-header">
+    <h2>Step cost parameters</h2>
+    <div class="actions">
+      <button class="btn-light" id="reset-btn">Reset</button>
+      <button class="btn-light" id="add-step-btn">+ Add step</button>
+      <button class="btn-lucky" id="lucky-btn">🍀 Feeling Lucky</button>
+      <button class="btn-success" id="solve-btn">▶ Solve</button>
+    </div>
+  </div>
+  <p class="hint">
+    Each step <i>s</i><span class="subscript">i</span> has cost parameters in both modes: manual time <i>t</i><span class="superscript">M</span><span class="subscript">i</span> and skill <i>c</i><span class="superscript">M</span><span class="subscript">i</span>; AI time <i>t</i><span class="superscript">A</span><span class="subscript">i</span> and skill <i>c</i><span class="superscript">A</span><span class="subscript">i</span>; AI success probability <i>q</i><span class="subscript">i</span>; and hand-off time <i>t</i><span class="superscript">H</span><span class="subscript">i</span>.
+    The solver decides which mode each step takes, and how steps are grouped into tasks and tasks into jobs.
+  </p>
+  <table class="steps">
+    <thead>
+      <tr>
+        <th class="col-name">Step</th>
+        <th class="col-num">t<span class="superscript">M</span><span class="subscript">i</span></th>
+        <th class="col-num">c<span class="superscript">M</span><span class="subscript">i</span></th>
+        <th class="col-num">t<span class="superscript">A</span><span class="subscript">i</span></th>
+        <th class="col-num">c<span class="superscript">A</span><span class="subscript">i</span></th>
+        <th class="col-num">q<span class="subscript">i</span></th>
+        <th class="col-num">t<span class="superscript">H</span><span class="subscript">i</span></th>
+        <th class="col-x"></th>
+      </tr>
+    </thead>
+    <tbody id="step-tbody"></tbody>
+  </table>
+</div>
+
+<!-- ============================================ -->
+<!-- 2. STAGE 1 — STEPS → TASKS                    -->
+<!-- ============================================ -->
+<div class="panel" id="stage1-panel">
+  <h2><span class="stage-label">Stage 1</span>AI automation strategy: steps → tasks</h2>
+  <p class="hint">
+    Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
+    <span style="color:var(--step-auto-stroke)">Automated</span>, or
+    <span style="color:var(--step-aug-stroke)">Augmented</span> (chains: one or more Automated steps followed by an Augmented step).
+    A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; consecutive Automated→Augmented steps form one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
+  </p>
+  <div class="ribbon" id="stage1-ribbon"></div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch swatch-step-man"></span>Manual step</div>
+    <div class="legend-item"><span class="legend-swatch swatch-step-auto"></span>Automated step</div>
+    <div class="legend-item"><span class="legend-swatch swatch-step-aug"></span>Augmented step</div>
+    <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task (olive)</div>
+    <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain (blue)</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 3. STAGE 2 — TASKS → JOBS                     -->
+<!-- ============================================ -->
+<div class="panel" id="stage2-panel">
+  <h2><span class="stage-label">Stage 2</span>Job design: tasks → jobs</h2>
+  <p class="hint">
+    Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).
+    Each job boundary incurs a <span style="color:var(--handoff-stroke)">hand-off cost</span> determined by the final step of that job.
+  </p>
+  <div class="ribbon" id="stage2-ribbon"></div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task</div>
+    <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain task</div>
+    <div class="legend-item"><span class="legend-swatch swatch-job"></span>Job (one worker)</div>
+    <div class="legend-item"><span class="legend-swatch swatch-handoff"></span>Hand-off</div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 4. GEOMETRIC VIEW                             -->
+<!-- ============================================ -->
+<div class="panel">
+  <h2>Geometric view of the optimum</h2>
+  <p class="hint">
+    Each task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
+    Hand-off rectangles (pink) appear between non-final jobs.
+  </p>
+  <div class="geom-container">
+    <svg class="geom" id="geom-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 5. COST BREAKDOWN                             -->
+<!-- ============================================ -->
+<div class="panel">
+  <h2>Cost breakdown</h2>
+  <div class="cost-summary">
+    <span>Total cost: <strong id="total-cost">—</strong></span>
+    <span style="font-size: 13px; color: var(--muted);" id="cost-summary-extra"></span>
+  </div>
+  <table class="cost-table">
+    <thead>
+      <tr>
+        <th>Job</th>
+        <th>Tasks</th>
+        <th>&Sigma; c<span class="subscript">b</span> (skill)</th>
+        <th>&Sigma; t<span class="subscript">b</span> (time)</th>
+        <th>t<span class="superscript">H</span>(J<span class="subscript">j</span>)</th>
+        <th>Wage bill</th>
+      </tr>
+    </thead>
+    <tbody id="cost-tbody"></tbody>
+  </table>
+  <div class="formula">
+    Wage bill of job J<span class="subscript">j</span> = (&Sigma;<span class="subscript">b&isin;J<span class="subscript">j</span></span> c<span class="subscript">b</span>) &middot; (t<span class="superscript">H</span>(J<span class="subscript">j</span>) + &Sigma;<span class="subscript">b&isin;J<span class="subscript">j</span></span> t<span class="subscript">b</span>).
+    Total cost = &Sigma;<span class="subscript">j</span> Wage bill<span class="subscript">j</span>.
+  </div>
+</div>
+
+<p class="footer">Edit parameters then click <strong>Solve</strong>. Use <strong>Feeling Lucky</strong> for small perturbations around the working example.</p>
+</div>
+
+<script>
+// ===========================================================================
+// Working-example defaults (kept fixed; Feeling Lucky perturbs these)
+// ----------------------------------------------------------------------------
+// This baseline reproduces the three-task example from Section 2 of the paper
+// (Table~\ref{tab:job_design} & Figure~\ref{fig:job_design}):
+//   Task 1: (c=3, t=1, tH=3)
+//   Task 2: (c=1, t=2, tH=0.5)
+//   Task 3: (c=2, t=2, tH=0)
+// AI parameters are set so manual strictly dominates AI at every step, so
+// the Stage-1 solver picks 3 manual tasks (one step per task).
+// Expected Stage-2 result with hand-offs: [T1, T2][T3], total cost = 18
+// (vs. full specialization [T1][T2][T3] = 18.5 — paper's Table panel (b)).
+// ===========================================================================
+const WORKING_EXAMPLE = [
+  // Manual choice (cM·tM) is strictly better than any AI alternative.
+  // cM·tM = 3, while cA·tA/q ≥ 12 at every step.
+  { name: 's1', tM: 1.0, cM: 3.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 3.0 },
+  { name: 's2', tM: 2.0, cM: 1.0, tA: 2.0, cA: 2.0, q: 0.50, tH: 0.5 },
+  { name: 's3', tM: 2.0, cM: 2.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 0.0 },
+];
+
+let state = {
+  steps: WORKING_EXAMPLE.map(s => ({ ...s })),
+  solution: null, // {modes, tasks, levels, jobs, cost, jobInfos} after Solve
+};
+
+// ===========================================================================
+// Model: derive tasks from step modes; compute (c, t) for each task
+// ===========================================================================
+function deriveTasks(modes) {
+  const tasks = [];
+  let chainStart = -1;
+  for (let i = 0; i < modes.length; i++) {
+    const m = modes[i];
+    if (m === 'M') {
+      tasks.push({ type: 'man', stepIdxs: [i], lastStep: i });
+    } else if (m === 'C') {
+      if (chainStart < 0) chainStart = i;
+    } else if (m === 'A') {
+      if (chainStart >= 0) {
+        const idxs = [];
+        for (let k = chainStart; k <= i; k++) idxs.push(k);
+        tasks.push({ type: 'chain', stepIdxs: idxs, lastStep: i });
+        chainStart = -1;
+      } else {
+        tasks.push({ type: 'aug', stepIdxs: [i], lastStep: i });
+      }
+    }
+  }
+  return tasks;
+}
+
+function taskLevels(tasks, steps) {
+  return tasks.map(t => {
+    const last = steps[t.lastStep];
+    let c, time;
+    if (t.type === 'man') {
+      c = Number(last.cM) || 0;
+      time = Number(last.tM) || 0;
+    } else if (t.type === 'aug') {
+      c = Number(last.cA) || 0;
+      time = (Number(last.tA) || 0) / Math.max(0.0001, Number(last.q) || 0);
+    } else {
+      c = Number(last.cA) || 0;
+      let prodQ = 1;
+      for (const i of t.stepIdxs) prodQ *= Math.max(0.0001, Number(steps[i].q) || 0);
+      time = (Number(last.tA) || 0) / prodQ;
+    }
+    return {
+      c, t: time, tH: Number(last.tH) || 0,
+      type: t.type, stepIdxs: t.stepIdxs, lastStep: t.lastStep,
+    };
+  });
+}
+
+// ===========================================================================
+// Stage 2 optimum: optimal job partition given a fixed task sequence (O(n^2) DP)
+// ===========================================================================
+function optimalJobPartition(levels) {
+  const n = levels.length;
+  if (n === 0) return { boundaries: [], cost: 0 };
+  if (n === 1) return { boundaries: [], cost: levels[0].c * levels[0].t };
+  const prefC = [0], prefT = [0];
+  for (let i = 0; i < n; i++) {
+    prefC.push(prefC[i] + levels[i].c);
+    prefT.push(prefT[i] + levels[i].t);
+  }
+  const G = new Array(n + 1).fill(Infinity);
+  const argG = new Array(n + 1).fill(-1);
+  G[0] = 0;
+  for (let k = 1; k <= n; k++) {
+    for (let j = 0; j < k; j++) {
+      const sC = prefC[k] - prefC[j];
+      const sT = prefT[k] - prefT[j];
+      const cost = G[j] + sC * (sT + levels[k - 1].tH);
+      if (cost < G[k]) { G[k] = cost; argG[k] = j; }
+    }
+  }
+  // Final job: no hand-off
+  let bestCost = Infinity, bestArg = -1;
+  for (let j = 0; j < n; j++) {
+    const sC = prefC[n] - prefC[j];
+    const sT = prefT[n] - prefT[j];
+    const cost = G[j] + sC * sT;
+    if (cost < bestCost) { bestCost = cost; bestArg = j; }
+  }
+  const boundaries = new Array(n - 1).fill(false);
+  let split = bestArg;
+  while (split > 0) { boundaries[split - 1] = true; split = argG[split]; }
+  return { boundaries, cost: bestCost };
+}
+
+// ===========================================================================
+// Joint long-term optimum (Stage 1 + Stage 2)
+// Enumerate block-partitions of steps: each block is either a single Manual step
+// or an AI chain (k-1 Automated + 1 Augmented). For each mode config, optimize
+// jobs via the Stage-2 DP.
+// ===========================================================================
+const BRUTE_FORCE_LIMIT = 14;
+function solveOptimal(steps) {
+  const n = steps.length;
+  if (n === 0) return { modes: [], boundaries: [], cost: 0 };
+
+  let best = null;
+
+  function recurse(p, modes) {
+    if (p === n) {
+      const tasks = deriveTasks(modes);
+      const levels = taskLevels(tasks, steps);
+      const { boundaries: taskBdys, cost } = optimalJobPartition(levels);
+      if (!best || cost < best.cost) {
+        best = {
+          modes: modes.slice(),
+          tasks,
+          levels,
+          taskBoundaries: taskBdys,
+          cost,
+        };
+      }
+      return;
+    }
+    // Option (a): single Manual step
+    modes[p] = 'M'; recurse(p + 1, modes);
+    // Option (b): AI chain of length k = 1..n-p
+    for (let k = 1; k <= n - p; k++) {
+      for (let i = 0; i < k - 1; i++) modes[p + i] = 'C';
+      modes[p + k - 1] = 'A';
+      recurse(p + k, modes);
+    }
+  }
+
+  if (n <= BRUTE_FORCE_LIMIT) {
+    recurse(0, new Array(n));
+  } else {
+    // Heuristic fallback: per-step mode pick (no chaining)
+    const modes = [];
+    for (let i = 0; i < n; i++) {
+      const mC = Number(steps[i].cM) || 0;
+      const mT = Number(steps[i].tM) || 0;
+      const aC = Number(steps[i].cA) || 0;
+      const aT = (Number(steps[i].tA) || 0) / Math.max(0.0001, Number(steps[i].q) || 0);
+      modes.push((aC * aT < mC * mT) ? 'A' : 'M');
+    }
+    const tasks = deriveTasks(modes);
+    const levels = taskLevels(tasks, steps);
+    const { boundaries: taskBdys, cost } = optimalJobPartition(levels);
+    best = { modes, tasks, levels, taskBoundaries: taskBdys, cost };
+  }
+
+  // Derive jobs from task boundaries
+  const jobs = [];
+  let cur = [];
+  for (let i = 0; i < best.tasks.length; i++) {
+    cur.push(i);
+    if (i < best.tasks.length - 1 && best.taskBoundaries[i]) { jobs.push(cur); cur = []; }
+  }
+  if (cur.length) jobs.push(cur);
+  best.jobs = jobs;
+  return best;
+}
+
+// ===========================================================================
+// Rendering: parameter table
+// ===========================================================================
+function renderStepsTable() {
+  const tbody = document.getElementById('step-tbody');
+  tbody.innerHTML = '';
+  state.steps.forEach((step, i) => {
+    const tr = document.createElement('tr');
+
+    const nameTd = document.createElement('td');
+    const nameInp = document.createElement('input');
+    nameInp.type = 'text'; nameInp.value = step.name;
+    nameInp.addEventListener('input', e => { step.name = e.target.value; });
+    nameTd.appendChild(nameInp);
+    tr.appendChild(nameTd);
+
+    ['tM','cM','tA','cA','q','tH'].forEach(field => {
+      const td = document.createElement('td');
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.step = '0.01'; inp.value = step[field];
+      if (field === 'q') { inp.min = '0.01'; inp.max = '1'; }
+      inp.addEventListener('input', e => {
+        const v = parseFloat(e.target.value);
+        step[field] = isNaN(v) ? 0 : v;
+      });
+      td.appendChild(inp);
+      tr.appendChild(td);
+    });
+
+    const xTd = document.createElement('td');
+    const xBtn = document.createElement('button');
+    xBtn.className = 'btn-danger'; xBtn.textContent = '×'; xBtn.title = 'Remove step';
+    xBtn.addEventListener('click', () => {
+      if (state.steps.length <= 1) return;
+      state.steps.splice(i, 1);
+      state.solution = null;
+      renderAll();
+    });
+    xTd.appendChild(xBtn);
+    tr.appendChild(xTd);
+
+    tbody.appendChild(tr);
+  });
+}
+
+// ===========================================================================
+// Rendering: Stage 1 ribbon (steps → tasks)
+// ===========================================================================
+function modeLabel(m) { return m === 'M' ? 'Manual' : m === 'C' ? 'Automated' : 'Augmented'; }
+function modeClass(m) { return m === 'M' ? 'man' : m === 'C' ? 'auto' : 'aug'; }
+
+function renderStage1() {
+  const r = document.getElementById('stage1-ribbon');
+  r.innerHTML = '';
+  if (!state.solution) {
+    const p = document.createElement('div');
+    p.className = 'pending';
+    p.textContent = 'Click ▶ Solve to compute the optimal AI automation strategy.';
+    r.appendChild(p);
+    return;
+  }
+  const { modes, tasks } = state.solution;
+  tasks.forEach((task, ti) => {
+    const tg = document.createElement('div');
+    tg.className = 'task-group ' + (task.type === 'chain' ? 'chain' : '');
+    const lbl = document.createElement('span');
+    lbl.className = 'tg-label';
+    lbl.textContent = task.type === 'chain'
+      ? `T${ti+1} · AI chain (|k|=${task.stepIdxs.length})`
+      : `T${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'} task`;
+    tg.appendChild(lbl);
+
+    task.stepIdxs.forEach(si => {
+      const m = modes[si];
+      const sb = document.createElement('div');
+      sb.className = 'step-box ' + modeClass(m);
+      const nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = state.steps[si].name;
+      const md = document.createElement('div'); md.className = 'md'; md.textContent = modeLabel(m);
+      sb.appendChild(nm); sb.appendChild(md);
+      tg.appendChild(sb);
+    });
+    r.appendChild(tg);
+  });
+}
+
+// ===========================================================================
+// Rendering: Stage 2 ribbon (tasks → jobs with hand-off arrows)
+// ===========================================================================
+function renderStage2() {
+  const r = document.getElementById('stage2-ribbon');
+  r.innerHTML = '';
+  if (!state.solution) {
+    const p = document.createElement('div');
+    p.className = 'pending';
+    p.textContent = 'Click ▶ Solve to compute the optimal job design.';
+    r.appendChild(p);
+    return;
+  }
+  const { tasks, levels, jobs } = state.solution;
+
+  jobs.forEach((indices, ji) => {
+    const jg = document.createElement('div');
+    jg.className = 'job-group';
+    const lbl = document.createElement('span');
+    lbl.className = 'jg-label';
+    lbl.textContent = `Job ${ji+1}`;
+    jg.appendChild(lbl);
+
+    indices.forEach(ti => {
+      const task = tasks[ti];
+      const lv = levels[ti];
+      const tb = document.createElement('div');
+      tb.className = 'task-box ' + (task.type === 'chain' ? 'chain' : '');
+      const nm = document.createElement('div'); nm.className = 'nm';
+      nm.textContent = `T${ti+1} (${task.type === 'chain' ? 'AI chain' : task.type === 'aug' ? 'Augmented' : 'Manual'})`;
+      const meta = document.createElement('div'); meta.className = 'meta';
+      meta.textContent = `c=${lv.c.toFixed(2)}, t=${lv.t.toFixed(2)}`;
+      tb.appendChild(nm); tb.appendChild(meta);
+      jg.appendChild(tb);
+    });
+    r.appendChild(jg);
+
+    // Hand-off arrow between jobs (red curly-ish arrow)
+    if (ji < jobs.length - 1) {
+      const lastTaskIdx = indices[indices.length - 1];
+      const tH = levels[lastTaskIdx].tH;
+      const h = document.createElement('div');
+      h.className = 'handoff';
+      h.innerHTML = `
+        <svg width="56" height="36" viewBox="0 0 56 36">
+          <defs>
+            <marker id="ho-arrow-${ji}" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="${getCSS('--handoff-stroke')}"/>
+            </marker>
+          </defs>
+          <path d="M 4 18 Q 14 8, 24 18 T 50 18"
+                stroke="${getCSS('--handoff-stroke')}" stroke-width="2.2" fill="none"
+                marker-end="url(#ho-arrow-${ji})"/>
+        </svg>
+        <span class="lbl">t<span class="superscript">H</span>=${tH.toFixed(2)}</span>
+      `;
+      r.appendChild(h);
+    }
+  });
+}
+
+function getCSS(varName) {
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
+// ===========================================================================
+// Rendering: Geometric view (SVG)
+// ===========================================================================
+const GEOM = { unitX: 70, unitY: 70, jobGap: 30, pad: 30, minH: 280 };
+
+function svgEl(name) { return document.createElementNS('http://www.w3.org/2000/svg', name); }
+function setAttrs(el, attrs) { for (const k in attrs) el.setAttribute(k, attrs[k]); }
+
+function fillsForType(type) {
+  if (type === 'chain') return { fill: getCSS('--task-chain-fill'), stroke: getCSS('--task-chain-stroke') };
+  return { fill: getCSS('--task-man-fill'), stroke: getCSS('--task-man-stroke') };
+}
+
+function taskLabel(task, steps) {
+  if (task.type === 'man') return steps[task.lastStep].name + ' (M)';
+  if (task.type === 'aug') return steps[task.lastStep].name + ' (Aug)';
+  return `${steps[task.stepIdxs[0]].name}→${steps[task.lastStep].name}`;
+}
+
+function renderGeom() {
+  const svg = document.getElementById('geom-svg');
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  if (!state.solution) {
+    setAttrs(svg, { width: 600, height: 60, viewBox: '0 0 600 60' });
+    const t = svgEl('text');
+    setAttrs(t, { x: 20, y: 32, 'font-size': '13', fill: '#6b7280' });
+    t.textContent = 'Click ▶ Solve to render the optimum.';
+    svg.appendChild(t);
+    return;
+  }
+
+  const { tasks, levels, jobs } = state.solution;
+  const steps = state.steps;
+
+  const jobInfos = jobs.map((indices, ji) => {
+    const isLast = ji === jobs.length - 1;
+    let cumT = 0, cumC = 0;
+    const taskBoxes = indices.map(ti => {
+      const lv = levels[ti];
+      const box = {
+        x: cumT, y: cumC, w: lv.t, h: lv.c, taskIdx: ti,
+        type: lv.type, label: taskLabel(tasks[ti], steps),
+        stepIdxs: tasks[ti].stepIdxs,
+      };
+      cumT += lv.t; cumC += lv.c;
+      return box;
+    });
+    const lastTaskIdx = indices[indices.length - 1];
+    const tH = isLast ? 0 : levels[lastTaskIdx].tH;
+    return {
+      taskBoxes, totalT: cumT, totalC: cumC, tH,
+      width: cumT + tH, height: cumC, isLast,
+    };
+  });
+
+  let xCursor = 0;
+  const gapUnits = GEOM.jobGap / GEOM.unitX;
+  jobInfos.forEach(j => { j.xOffset = xCursor; xCursor += j.width + gapUnits; });
+  const totalWidthUnits = Math.max(1, xCursor - gapUnits);
+  const totalHeightUnits = Math.max(1, ...jobInfos.map(j => j.height));
+
+  const W = totalWidthUnits * GEOM.unitX + 2 * GEOM.pad + 40;
+  const H = Math.max(GEOM.minH, totalHeightUnits * GEOM.unitY + 2 * GEOM.pad + 60);
+  setAttrs(svg, { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
+
+  const plotLeft = GEOM.pad;
+  const plotBottom = H - GEOM.pad - 20;
+  const MX = (x) => plotLeft + x * GEOM.unitX;
+  const MY = (y) => plotBottom - y * GEOM.unitY;
+
+  // baseline
+  const baseline = svgEl('line');
+  setAttrs(baseline, {
+    x1: plotLeft, x2: plotLeft + totalWidthUnits * GEOM.unitX,
+    y1: plotBottom, y2: plotBottom,
+    stroke: '#d1d5db', 'stroke-width': '1',
+  });
+  svg.appendChild(baseline);
+
+  jobInfos.forEach((job, ji) => {
+    const g = svgEl('g'); svg.appendChild(g);
+
+    // Job bounding box (dashed cyan)
+    if (job.height > 0 && job.width > 0) {
+      const bbox = svgEl('rect');
+      setAttrs(bbox, {
+        x: MX(job.xOffset), y: MY(job.height),
+        width: job.width * GEOM.unitX, height: job.height * GEOM.unitY,
+        fill: 'none', stroke: getCSS('--bbox-stroke'), 'stroke-width': '1.6',
+        'stroke-dasharray': '5 3',
+      });
+      g.appendChild(bbox);
+    }
+
+    // Task rectangles (olive or blue)
+    job.taskBoxes.forEach(b => {
+      if (b.w <= 0 || b.h <= 0) return;
+      const colors = fillsForType(b.type);
+      const rect = svgEl('rect');
+      setAttrs(rect, {
+        x: MX(job.xOffset + b.x), y: MY(b.y + b.h),
+        width: b.w * GEOM.unitX, height: b.h * GEOM.unitY,
+        fill: colors.fill, stroke: colors.stroke,
+        'stroke-width': '1.5', rx: '2',
+      });
+      g.appendChild(rect);
+
+      const txt = svgEl('text');
+      setAttrs(txt, {
+        x: MX(job.xOffset + b.x + b.w / 2),
+        y: MY(b.y + b.h / 2),
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
+        'font-size': b.type === 'chain' ? '11' : '12', fill: '#1f2937',
+      });
+      txt.textContent = b.label;
+      g.appendChild(txt);
+
+      // Inner step subdivisions for chains
+      if (b.type === 'chain' && b.stepIdxs.length > 1) {
+        const seg = (b.w * GEOM.unitX) / b.stepIdxs.length;
+        for (let k = 1; k < b.stepIdxs.length; k++) {
+          const xLine = MX(job.xOffset + b.x) + seg * k;
+          const ln = svgEl('line');
+          setAttrs(ln, {
+            x1: xLine, x2: xLine, y1: MY(b.y + b.h), y2: MY(b.y),
+            stroke: colors.stroke, 'stroke-width': '0.8',
+            'stroke-dasharray': '3 2', opacity: '0.6',
+          });
+          g.appendChild(ln);
+        }
+      }
+
+      const ttl = svgEl('title');
+      const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
+      ttl.textContent = `${b.label}: c=${b.h.toFixed(3)}, t=${b.w.toFixed(3)} [steps: ${stepNames}]`;
+      rect.appendChild(ttl);
+    });
+
+    // Hand-off rectangle (pink)
+    if (!job.isLast && job.tH > 0 && job.height > 0) {
+      const hrect = svgEl('rect');
+      setAttrs(hrect, {
+        x: MX(job.xOffset + job.totalT), y: MY(job.height),
+        width: job.tH * GEOM.unitX, height: job.height * GEOM.unitY,
+        fill: getCSS('--handoff-fill'), stroke: getCSS('--handoff-stroke'),
+        'stroke-width': '1.2', 'stroke-dasharray': '3 3',
+      });
+      g.appendChild(hrect);
+
+      const hlbl = svgEl('text');
+      setAttrs(hlbl, {
+        x: MX(job.xOffset + job.totalT + job.tH / 2),
+        y: MY(job.height / 2),
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
+        'font-size': '11', fill: '#7a3a44',
+      });
+      hlbl.innerHTML = `t<tspan baseline-shift="super" font-size="8">H</tspan>`;
+      g.appendChild(hlbl);
+    }
+
+    // Job title with wage bill
+    const wageBill = job.totalC * (job.totalT + job.tH);
+    const titleEl = svgEl('text');
+    setAttrs(titleEl, {
+      x: MX(job.xOffset + job.width / 2),
+      y: MY(Math.max(job.height, 0.1)) - 10,
+      'text-anchor': 'middle', 'font-size': '13', 'font-weight': '600', fill: '#111827',
+    });
+    titleEl.textContent = `Job ${ji+1} — wage bill = ${wageBill.toFixed(3)}`;
+    g.appendChild(titleEl);
+  });
+}
+
+// ===========================================================================
+// Rendering: cost breakdown table
+// ===========================================================================
+function renderCost() {
+  const tbody = document.getElementById('cost-tbody');
+  tbody.innerHTML = '';
+  const tot = document.getElementById('total-cost');
+  const extra = document.getElementById('cost-summary-extra');
+  if (!state.solution) {
+    tot.textContent = '—';
+    extra.textContent = '';
+    return;
+  }
+  const { tasks, levels, jobs, cost } = state.solution;
+  jobs.forEach((indices, ji) => {
+    const isLast = ji === jobs.length - 1;
+    let sC = 0, sT = 0;
+    indices.forEach(ti => { sC += levels[ti].c; sT += levels[ti].t; });
+    const lastIdx = indices[indices.length - 1];
+    const tH = isLast ? 0 : levels[lastIdx].tH;
+    const wb = sC * (sT + tH);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>Job ${ji+1}</td>
+      <td>${indices.map(ti => `T${ti+1}`).join(', ')}</td>
+      <td>${sC.toFixed(3)}</td>
+      <td>${sT.toFixed(3)}</td>
+      <td>${tH.toFixed(3)}</td>
+      <td>${wb.toFixed(3)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  const trT = document.createElement('tr');
+  trT.className = 'total';
+  trT.innerHTML = `<td>Total</td><td colspan="4"></td><td>${cost.toFixed(3)}</td>`;
+  tbody.appendChild(trT);
+  tot.textContent = cost.toFixed(3);
+  extra.textContent = `${tasks.length} task${tasks.length===1?'':'s'} · ${jobs.length} job${jobs.length===1?'':'s'} · ${state.steps.length} step${state.steps.length===1?'':'s'}`;
+}
+
+// ===========================================================================
+// Renderer entry
+// ===========================================================================
+function renderAll() {
+  renderStepsTable();
+  renderStage1();
+  renderStage2();
+  renderGeom();
+  renderCost();
+}
+
+// ===========================================================================
+// "Feeling Lucky": small perturbations around the working example
+// ===========================================================================
+function feelingLucky() {
+  const rng = () => Math.random();
+  const choice = (arr) => arr[Math.floor(rng() * arr.length)];
+  const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+  const round2 = (x) => Math.round(x * 100) / 100;
+
+  // Start from working example
+  const fresh = WORKING_EXAMPLE.map(s => ({ ...s }));
+
+  // Perturbation 1: bump q on 1–2 randomly-chosen steps by ±[0.05, 0.15]
+  const nQ = 1 + Math.floor(rng() * 2);
+  const idxs = [];
+  while (idxs.length < nQ) {
+    const i = Math.floor(rng() * fresh.length);
+    if (!idxs.includes(i)) idxs.push(i);
+  }
+  idxs.forEach(i => {
+    const delta = (0.05 + rng() * 0.10) * (rng() < 0.5 ? -1 : 1);
+    fresh[i].q = round2(clamp(fresh[i].q + delta, 0.55, 0.99));
+  });
+
+  // Perturbation 2: ±20% bump on one cM
+  {
+    const i = Math.floor(rng() * fresh.length);
+    const f = 0.8 + rng() * 0.4;
+    fresh[i].cM = round2(fresh[i].cM * f);
+  }
+  // Perturbation 3: ±20% bump on one cA
+  {
+    const i = Math.floor(rng() * fresh.length);
+    const f = 0.8 + rng() * 0.4;
+    fresh[i].cA = round2(Math.max(0.1, fresh[i].cA * f));
+  }
+  // Perturbation 4: ±25% bump on one tA
+  {
+    const i = Math.floor(rng() * fresh.length);
+    const f = 0.75 + rng() * 0.5;
+    fresh[i].tA = round2(Math.max(0.05, fresh[i].tA * f));
+  }
+  // Perturbation 5: ±30% bump on a non-final tH
+  {
+    const i = Math.floor(rng() * (fresh.length - 1));
+    const f = 0.7 + rng() * 0.6;
+    fresh[i].tH = round2(Math.max(0, fresh[i].tH * f));
+  }
+
+  state.steps = fresh;
+  state.solution = null;
+  renderStepsTable();
+  // Auto-solve so the user sees the new perturbed result immediately
+  solve();
+}
+
+// ===========================================================================
+// Buttons
+// ===========================================================================
+function solve() {
+  state.solution = solveOptimal(state.steps);
+  renderAll();
+}
+
+document.getElementById('solve-btn').addEventListener('click', solve);
+document.getElementById('lucky-btn').addEventListener('click', feelingLucky);
+document.getElementById('reset-btn').addEventListener('click', () => {
+  state.steps = WORKING_EXAMPLE.map(s => ({ ...s }));
+  state.solution = null;
+  renderAll();
+});
+document.getElementById('add-step-btn').addEventListener('click', () => {
+  state.steps.push({
+    name: `s${state.steps.length + 1}`,
+    tM: 1.0, cM: 1.0, tA: 0.5, cA: 1.0, q: 0.85, tH: 0.0,
+  });
+  state.solution = null;
+  renderAll();
+});
+
+// Initial render: show the parameters; user must click Solve.
+renderAll();
+</script>
+</body>
+</html>
