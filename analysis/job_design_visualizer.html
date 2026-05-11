@@ -331,8 +331,10 @@
     </div>
   </div>
   <p class="hint">
-    Each step <i>s</i><span class="subscript">i</span> has cost parameters in both modes: manual time <i>t</i><span class="superscript">M</span><span class="subscript">i</span> and skill <i>c</i><span class="superscript">M</span><span class="subscript">i</span>; AI time <i>t</i><span class="superscript">A</span><span class="subscript">i</span> and skill <i>c</i><span class="superscript">A</span><span class="subscript">i</span>; AI success probability <i>q</i><span class="subscript">i</span>; and hand-off time <i>t</i><span class="superscript">H</span><span class="subscript">i</span>.
-    The solver decides which mode each step takes, and how steps are grouped into tasks and tasks into jobs.
+    Each step has a skill cost and a time cost for each mode of human (<i>c</i><span class="superscript">M</span><span class="subscript">i</span>, <i>t</i><span class="superscript">M</span><span class="subscript">i</span>) or AI-assisted (<i>c</i><span class="superscript">A</span><span class="subscript">i</span>, <i>t</i><span class="superscript">A</span><span class="subscript">i</span>) execution. These costs for AI-automated execution are zero. <i>q</i><span class="subscript">i</span> and <i>t</i><span class="superscript">H</span><span class="subscript">i</span> denote the AI's success probability and the (potential) hand-off time cost between workers.
+  </p>
+  <p class="hint">
+    The solver minimizes the firm's long-run cost-minimization problem, denoted in Equation 3 in the paper.
   </p>
   <table class="steps">
     <thead>
@@ -360,6 +362,8 @@
     Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
     <span style="color:var(--step-auto-stroke)">Automated</span>, or
     <span style="color:var(--step-aug-stroke)">Augmented</span> (chains: one or more Automated steps followed by an Augmented step).
+  </p>
+  <p class="hint">
     A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; consecutive Automated→Augmented steps form one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
   </p>
   <div class="ribbon" id="stage1-ribbon"></div>
@@ -419,6 +423,9 @@
 <!-- ============================================ -->
 <div class="panel">
   <h2>Production Cost Breakdown</h2>
+  <p class="hint">
+    Per-job wage bills under the cost-minimizing design. The total cost equals the sum of the wage bills across all jobs.
+  </p>
   <div class="cost-summary">
     <span>Total cost: <strong id="total-cost">—</strong></span>
     <span style="font-size: 15px; color: var(--muted);" id="cost-summary-extra"></span>
