@@ -904,20 +904,7 @@ function renderGeomView(svg, geom, view) {
   yLabel.textContent = 'skill';
   svg.appendChild(yLabel);
 
-  // 1) Job bounding boxes (dashed cyan).
-  jobBoxes.forEach(jb => {
-    if (jb.h <= 0 || jb.w <= 0) return;
-    const bbox = svgEl('rect');
-    setAttrs(bbox, {
-      x: MX(jb.x), y: MY(jb.y + jb.h),
-      width: jb.w * GEOM.unitX, height: jb.h * GEOM.unitY,
-      fill: 'none', stroke: getCSS('--bbox-stroke'),
-      'stroke-width': '1.8', 'stroke-dasharray': '5 3',
-    });
-    svg.appendChild(bbox);
-  });
-
-  // 2) Hand-off rectangles (pink).
+  // 1) Hand-off rectangles (pink) go on the back of the plot area.
   handoffBoxes.forEach(h => {
     const hrect = svgEl('rect');
     setAttrs(hrect, {
@@ -937,7 +924,7 @@ function renderGeomView(svg, geom, view) {
     svg.appendChild(hlbl);
   });
 
-  // 3) Task / step rectangles.
+  // 2) Task / step rectangles.
   taskBoxes.forEach(b => {
     if (b.w <= 0 || b.h <= 0) return;
     const taskColors = fillsForType(b.type);
@@ -1016,6 +1003,21 @@ function renderGeomView(svg, geom, view) {
       ttl.textContent = `${b.label}: c=${b.h.toFixed(3)}, t=${b.w.toFixed(3)} [steps: ${stepNames}]`;
       rect.appendChild(ttl);
     }
+  });
+
+  // 3) Job bounding boxes (dashed cyan) — drawn AFTER task/step rectangles
+  //    so the dashed cyan border overlays task outer borders on shared edges
+  //    and the job partition is clearly readable in both views.
+  jobBoxes.forEach(jb => {
+    if (jb.h <= 0 || jb.w <= 0) return;
+    const bbox = svgEl('rect');
+    setAttrs(bbox, {
+      x: MX(jb.x), y: MY(jb.y + jb.h),
+      width: jb.w * GEOM.unitX, height: jb.h * GEOM.unitY,
+      fill: 'none', stroke: getCSS('--bbox-stroke'),
+      'stroke-width': '2.5', 'stroke-dasharray': '6 3',
+    });
+    svg.appendChild(bbox);
   });
 
   // 4) Job titles above each job's bbox.
