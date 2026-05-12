@@ -1068,7 +1068,10 @@ function renderStepsTable() {
     const nameTd = document.createElement('td');
     const nameInp = document.createElement('input');
     nameInp.type = 'text'; nameInp.value = step.name;
-    nameInp.addEventListener('input', e => { step.name = e.target.value; });
+    nameInp.addEventListener('input', e => {
+      step.name = e.target.value;
+      serializeStateToURL();
+    });
     nameTd.appendChild(nameInp);
     tr.appendChild(nameTd);
 
@@ -1080,6 +1083,7 @@ function renderStepsTable() {
       inp.addEventListener('input', e => {
         const v = parseFloat(e.target.value);
         step[field] = isNaN(v) ? 0 : v;
+        serializeStateToURL();
       });
       td.appendChild(inp);
       tr.appendChild(td);
@@ -1919,6 +1923,52 @@ document.querySelectorAll('.geom-tab-button').forEach(btn => {
 });
 
 // ===========================================================================
+// URL state: serialize the current parameter set into the query string so
+// any configuration can be linked to (e.g., from a paper, slide deck, or
+// tweet). Format: six parallel comma-separated arrays — one per field —
+// plus an optional pipe-separated 'n' list when any step name differs from
+// the default 'Step <i>'. Number of steps is implicit (array length).
+//   ?cM=3,5,4,2&tM=1,2,2,2&cA=3,2,1,3&tA=2,1,0.5,2&q=0.1,0.5,0.5,0.5&tH=3,1,0.5,0
+// ===========================================================================
+const URL_FIELDS = ['cM','tM','cA','tA','q','tH'];
+
+function serializeStateToURL() {
+  const steps = state.steps;
+  if (!steps || !steps.length) return;
+  const params = new URLSearchParams();
+  for (const f of URL_FIELDS) {
+    params.set(f, steps.map(s => +(+s[f]).toFixed(4)).join(','));
+  }
+  if (steps.some((s, i) => s.name !== `Step ${i+1}`)) {
+    params.set('n', steps.map(s => s.name).join('|'));
+  }
+  const url = window.location.pathname + '?' + params.toString();
+  try { history.replaceState(null, '', url); } catch (e) { /* about:blank, etc. */ }
+}
+
+function loadStateFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  if (!URL_FIELDS.every(f => params.has(f))) return false;
+  const arrs = URL_FIELDS.map(f =>
+    params.get(f).split(',').map(v => parseFloat(v)));
+  const n = arrs[0].length;
+  if (n === 0 || !arrs.every(a => a.length === n && a.every(v => !isNaN(v)))) {
+    return false;
+  }
+  const names = params.has('n') ? params.get('n').split('|') : [];
+  state.steps = [];
+  for (let i = 0; i < n; i++) {
+    state.steps.push({
+      name: names[i] || `Step ${i+1}`,
+      cM: arrs[0][i], tM: arrs[1][i],
+      cA: arrs[2][i], tA: arrs[3][i],
+      q:  arrs[4][i], tH: arrs[5][i],
+    });
+  }
+  return true;
+}
+
+// ===========================================================================
 // Buttons
 // ===========================================================================
 // Quiet solve: recompute and render but DO NOT switch tabs. Used by Reset,
@@ -1926,6 +1976,7 @@ document.querySelectorAll('.geom-tab-button').forEach(btn => {
 function solveQuiet() {
   state.solution = solveOptimal(state.steps);
   renderAll();
+  serializeStateToURL();
 }
 // User-initiated Solve: also flip the LEFT column back to the ribbons so
 // the user immediately sees the optimal design they just solved for.
@@ -2052,8 +2103,10 @@ document.getElementById('add-step-btn').addEventListener('click', () => {
   document.addEventListener('touchcancel', end);
 })();
 
-// Initial render: solve immediately on page load so the visualizations,
-// ribbons, and cost breakdown are all populated when the user arrives.
+// Initial render: if the URL carries a parameter set (?cM=...&tM=...&...)
+// load it into state first so shared/permalinks resume their exact config.
+// Then solve and render so the visualizations match.
+loadStateFromURL();
 solveQuiet();
 
 // (Page loads at the CSS default 50/50 column split — the resizer in
