@@ -58,15 +58,54 @@
     margin: 0;
     padding: 0;
   }
-  h1 { font-size: 30px; margin: 0 0 2px 0; text-align: center; }
-  .paper-link {
-    text-align: center; font-size: 19px; margin: 0 0 10px 0; color: var(--text);
+  /* Put the page title and the 'for "..."' paper line on the same row,
+     baseline-aligned and centered as a unit. All entries share the same
+     24px font size; only the connector word 'for' is normal weight,
+     'Job Design Visualizer' and the linked paper title stay bold so the
+     title still reads as one continuous heading. Wraps to two lines on
+     narrow viewports. */
+  .title-row {
+    display: flex; flex-wrap: wrap;
+    align-items: baseline; justify-content: center;
+    column-gap: 12px; row-gap: 2px;
+    margin: 0 0 6px 0;
+    font-size: 24px;
   }
-  .paper-link a { color: var(--accent); text-decoration: none; }
-  .paper-link a:hover { text-decoration: underline; }
+  .title-row h1 { font-size: inherit; font-weight: 700; margin: 0; text-align: center; }
+  .title-row .paper-link {
+    text-align: center; font-size: inherit; font-weight: 400;
+    margin: 0; color: var(--text);
+  }
+  .title-row .paper-link a {
+    color: var(--accent); text-decoration: none;
+    font-weight: 700;
+  }
+  .title-row .paper-link a:hover { text-decoration: underline; }
   .paper-authors {
-    text-align: center; font-size: 15px; color: var(--muted);
-    margin: -4px 0 8px 0;
+    text-align: center; font-size: 18px; color: var(--muted);
+    margin: 0 0 6px 0;
+  }
+  /* View Paper + Copy BibTeX buttons, centered under the author line. */
+  .bibtex-row {
+    display: flex; justify-content: center; gap: 8px;
+    margin: 0 0 10px 0;
+  }
+  .bibtex-btn {
+    display: inline-block;
+    background: white;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+  }
+  .bibtex-btn:hover { background: #eef4ff; text-decoration: none; }
+  .bibtex-btn.copied {
+    background: #d1fae5; color: #065f46; border-color: #10b981;
   }
   .subtitle { color: var(--muted); text-align: center; margin-bottom: 14px; font-size: 16px; }
 
@@ -87,6 +126,7 @@
     display: flex; gap: 6px;
     flex: 0 0 auto;
     margin-bottom: 14px;
+    justify-content: center;
   }
   .inner-tab-button {
     padding: 8px 16px;
@@ -111,6 +151,11 @@
     flex: 1 1 auto;
     min-height: 0;
   }
+  /* The Optimization Visualization tab has Stage 1 + Stage 2 as its two
+     flex children; widen the gap between them so Stage 1's legend and
+     Stage 2's title are visually well separated. (Cost Parameters tab
+     keeps the tighter 12px default.) */
+  #inner-tab-ribbons.active { gap: 52px; }
 
   /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
      in the left column, Geometric View occupies the right column.
@@ -120,7 +165,7 @@
      Breakdown sits below; the user scrolls down for it. */
   .design-grid {
     display: grid;
-    grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 12px;
     align-items: stretch;
     min-height: calc(100vh - 175px);
@@ -254,6 +299,30 @@
   .mode-badge.man  { background: var(--step-man-fill);  color: #404040; border-color: var(--step-man-stroke); }
   .mode-badge.auto { background: var(--step-auto-fill); color: #14532d; border-color: var(--step-auto-stroke); }
   .mode-badge.aug  { background: var(--step-aug-fill);  color: #6e3e0a; border-color: var(--step-aug-stroke); }
+
+  /* === Derived Task Parameters table === */
+  /* Subsection title above the task table. */
+  h3.subsection-title {
+    font-size: 16px; font-weight: 600;
+    margin: 22px 0 8px 0;
+    color: var(--text);
+  }
+  /* Row tints mirror the task colors from the visualization. Manual and
+     Augmented-singleton tasks both share the olive task color (since both
+     are single-step tasks rendered olive in the geom view); AI chain
+     tasks get the blue tint. */
+  table.task-table tr.row-task-olive { background: rgba(128, 128,   0, 0.10); }
+  table.task-table tr.row-task-blue  { background: rgba( 64,  64, 192, 0.10); }
+  /* Task type badge — same pill shape as the step Mode badge but using
+     the task fills/strokes from the visualization. */
+  .task-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 5px;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    border: 1px solid transparent;
+  }
+  .task-badge.olive { background: var(--task-man-fill);   color: #5f5f00; border-color: var(--task-man-stroke); }
+  .task-badge.blue  { background: var(--task-chain-fill); color: #2d2d80; border-color: var(--task-chain-stroke); }
   .superscript { vertical-align: super; font-size: 0.75em; }
   .subscript { vertical-align: sub; font-size: 0.75em; }
   /* Subtle unit annotation (e.g., '($)' next to a header label). */
@@ -467,11 +536,16 @@
 <body>
 <div class="container">
 
-<h1>Job Design Visualizer</h1>
-<p class="paper-link">
-  for <a href="https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf" target="_blank" rel="noopener"><strong>&ldquo;Chaining Tasks, Redefining Work: A Theory of AI Automation&rdquo;</strong></a>
-</p>
+<div class="title-row">
+  <p class="paper-link">
+  Job Design Visualizer for &ldquo;Chaining Tasks, Redefining Work: A Theory of AI Automation&rdquo;
+  </p>
+</div>
 <p class="paper-authors">Demirer, Horton, Immorlica, Lucier, Shahidi (2026)</p>
+<div class="bibtex-row">
+  <a class="bibtex-btn" id="paper-btn" href="https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf" target="_blank" rel="noopener">View Paper</a>
+  <button class="bibtex-btn" id="bibtex-btn" type="button">Copy BibTeX</button>
+</div>
 <p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (job design).</p>
 
 <!-- ============================================ -->
@@ -503,7 +577,7 @@
     <p class="hint">
       Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
       <span style="color:var(--step-auto-stroke)">Automated</span>, or
-      <span style="color:var(--step-aug-stroke)">Augmented</span> (chains: one or more Automated steps followed by an Augmented step).
+      <span style="color:var(--step-aug-stroke)">Augmented</span>.
     </p>
     <p class="hint">
       A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; consecutive Automated→Augmented steps form one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
@@ -593,6 +667,24 @@
       </thead>
       <tbody id="step-tbody"></tbody>
     </table>
+
+    <h3 class="subsection-title">Derived Tasks</h3>
+    <p class="hint">
+      Each Manual step becomes a manual task with its (c<span class="superscript">M</span>, t<span class="superscript">M</span>); consecutive Automated steps followed by an Augmented step form one AI chain task whose skill and time costs are the augmented step's (c<span class="superscript">A</span>, t<span class="superscript">A</span>) and whose success probability q is the product of the constituent steps' q values. t<span class="superscript">H</span> is inherited from the task's last step.
+    </p>
+    <table class="steps task-table">
+      <thead>
+        <tr>
+          <th class="col-name">Task</th>
+          <th class="col-num">c <span class="unit">($)</span></th>
+          <th class="col-num">t</th>
+          <th class="col-num">q</th>
+          <th class="col-num">t<span class="superscript">H</span></th>
+          <th class="col-mode">Type</th>
+        </tr>
+      </thead>
+      <tbody id="task-tbody"></tbody>
+    </table>
   </div><!-- /#inner-tab-params -->
 </div><!-- /#setup-panel -->
 
@@ -613,7 +705,7 @@
     <div class="geom-tab-panel active" id="geom-tab-step">
       <p class="hint geom-hint">
         Each step is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
-        Hand-off rectangles (pink) appear between non-final jobs.<br>
+        Hand-off rectangles <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:var(--handoff-fill);border:1px dashed var(--handoff-stroke);"></span> appear between non-final jobs.<br>
         Automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill — they contribute zero direct cost.
       </p>
       <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -621,7 +713,7 @@
     <div class="geom-tab-panel" id="geom-tab-task">
       <p class="hint geom-hint">
         Each task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
-        Hand-off rectangles (pink) appear between non-final jobs.
+        Hand-off rectangles <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:var(--handoff-fill);border:1px dashed var(--handoff-stroke);"></span> appear between non-final jobs.
       </p>
       <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
@@ -963,8 +1055,8 @@ function renderStage1() {
     const lbl = document.createElement('span');
     lbl.className = 'tg-label';
     lbl.textContent = task.type === 'chain'
-      ? `Task ${ti+1} · AI Chain Task`
-      : `Task ${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'} Task`;
+      ? `Task ${ti+1} · AI Chain`
+      : `Task ${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'}`;
     tg.appendChild(lbl);
 
     task.stepIdxs.forEach((si, k) => {
@@ -1218,11 +1310,25 @@ function renderGeomView(svg, geom, view) {
   setAttrs(svg, { width: W, height: H, viewBox: `0 0 ${W} ${H}`,
                   preserveAspectRatio: 'xMidYMid meet' });
 
-  // Step View only: define a diagonal-stripe pattern used to fill Automated
-  // step cells, so the reader sees them as 'part of the chain, but zero
-  // direct cost' rather than as ordinary contributing cells.
+  // Build a <defs> block for this SVG: an arrowhead marker that all three
+  // views use on their axis lines, plus (for the Step View only) the
+  // diagonal-stripe pattern used to fill Automated step cells.
+  const defs = svgEl('defs');
+  const arrowMarkerId = `axis-arrow-${svg.id || 'default'}`;
+  const arrowMarker = svgEl('marker');
+  setAttrs(arrowMarker, {
+    id: arrowMarkerId,
+    viewBox: '0 0 10 10',
+    refX: '8', refY: '5',
+    markerWidth: '7', markerHeight: '7',
+    orient: 'auto',
+  });
+  const arrowPath = svgEl('path');
+  setAttrs(arrowPath, { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#6b7280' });
+  arrowMarker.appendChild(arrowPath);
+  defs.appendChild(arrowMarker);
+
   if (view === 'step') {
-    const defs = svgEl('defs');
     const patternId = `auto-hatch-${svg.id || 'step'}`;
     const pattern = svgEl('pattern');
     setAttrs(pattern, {
@@ -1241,11 +1347,29 @@ function renderGeomView(svg, geom, view) {
     pattern.appendChild(patBg);
     pattern.appendChild(patLine);
     defs.appendChild(pattern);
-    svg.appendChild(defs);
   }
+  svg.appendChild(defs);
 
-  // (Axis baseline + left-axis lines removed — only the tick marks and
-  //  numeric tick labels are kept, with the 'Skill' / 'Time' axis labels.)
+  // Axis lines with arrowheads — the horizontal baseline points right
+  // (the Time direction) and the vertical left-axis points up (the Skill
+  // direction). Each line extends 6px past the plot area so the arrow
+  // tip sits in the padding strip beyond the last tick.
+  const baseline = svgEl('line');
+  setAttrs(baseline, {
+    x1: plotLeft, x2: MX(totalWidthUnits) + 6,
+    y1: plotBottom, y2: plotBottom,
+    stroke: '#6b7280', 'stroke-width': '1.2',
+    'marker-end': `url(#${arrowMarkerId})`,
+  });
+  svg.appendChild(baseline);
+  const leftAxis = svgEl('line');
+  setAttrs(leftAxis, {
+    x1: plotLeft, x2: plotLeft,
+    y1: plotBottom, y2: MY(totalHeightUnits) - 6,
+    stroke: '#6b7280', 'stroke-width': '1.2',
+    'marker-end': `url(#${arrowMarkerId})`,
+  });
+  svg.appendChild(leftAxis);
 
   // Axis tick marks + numeric labels at staircase positions on each axis.
   // x-axis ticks at the right edge of every task and hand-off rectangle;
@@ -1555,10 +1679,59 @@ function renderCost() {
 // ===========================================================================
 function renderAll() {
   renderStepsTable();
+  renderTasksTable();
   renderStage1();
   renderStage2();
   renderGeom();
   renderCost();
+}
+
+// ===========================================================================
+// Derived Task Parameters table (below the Step Cost Parameters table).
+// One row per task in the latest solution. For Manual tasks the (c, t)
+// come from the single step's (cM, tM); for AI tasks they're the
+// augmented step's RAW (cA, tA), with q = product of step q's in the
+// task. t^H is inherited from the task's last step. Row colors mirror
+// the task colors in the visualization: olive for Manual / Augmented
+// singleton, blue for AI chain.
+// ===========================================================================
+function renderTasksTable() {
+  const tbody = document.getElementById('task-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  if (!state.solution) return;
+  const { tasks } = state.solution;
+  tasks.forEach((task, ti) => {
+    const tr = document.createElement('tr');
+    const lastStep = state.steps[task.lastStep];
+    let c, t, qStr, typeLbl, colorClass;
+    const tH = (+lastStep.tH) || 0;
+    if (task.type === 'man') {
+      c = (+lastStep.cM) || 0;
+      t = (+lastStep.tM) || 0;
+      qStr = '—';
+      typeLbl = 'Manual';
+      colorClass = 'olive';
+    } else {
+      c = (+lastStep.cA) || 0;
+      t = (+lastStep.tA) || 0;
+      let qProd = 1;
+      for (const i of task.stepIdxs) qProd *= (+state.steps[i].q) || 0;
+      qStr = fmtN(qProd);
+      typeLbl = task.type === 'aug' ? 'Augmented' : 'AI Chain';
+      colorClass = task.type === 'chain' ? 'blue' : 'olive';
+    }
+    tr.classList.add('row-task-' + colorClass);
+    tr.innerHTML = `
+      <td>Task ${ti+1}</td>
+      <td>$${fmtN(c)}</td>
+      <td>${fmtN(t)}</td>
+      <td>${qStr}</td>
+      <td>${fmtN(tH)}</td>
+      <td><span class="task-badge ${colorClass}">${typeLbl}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 // ===========================================================================
@@ -1670,6 +1843,49 @@ function solve() {
 
 document.getElementById('solve-btn').addEventListener('click', solve);
 document.getElementById('lucky-btn').addEventListener('click', feelingLucky);
+
+// Click-to-copy BibTeX button under the paper title.
+const BIBTEX_ENTRY = `@techreport{NBERw34859,
+ title = "Chaining Tasks, Redefining Work: A Theory of AI Automation",
+ author = "Demirer, Mert and Horton, John J and Immorlica, Nicole and Lucier, Brendan and Shahidi, Peyman",
+ institution = "National Bureau of Economic Research",
+ type = "Working Paper",
+ series = "Working Paper Series",
+ number = "34859",
+ year = "2026",
+ month = "February",
+ doi = {10.3386/w34859},
+ URL = "https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf",
+}`;
+(function bindBibtexButton() {
+  const btn = document.getElementById('bibtex-btn');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(BIBTEX_ENTRY);
+      } else {
+        // Older-browser fallback: temporary <textarea> + document.execCommand.
+        const ta = document.createElement('textarea');
+        ta.value = BIBTEX_ENTRY;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const original = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1500);
+    } catch (e) {
+      console.error('BibTeX copy failed:', e);
+    }
+  });
+})();
 document.getElementById('reset-btn').addEventListener('click', () => {
   state.steps = WORKING_EXAMPLE.map(s => ({ ...s }));
   solveQuiet();
