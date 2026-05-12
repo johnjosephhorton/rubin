@@ -251,7 +251,7 @@
   .step-box.auto   { background: var(--step-auto-fill); border-color: var(--step-auto-stroke); }
   .step-box.aug    { background: var(--step-aug-fill);  border-color: var(--step-aug-stroke); }
   .step-box .nm    { font-weight: 600; }
-  .step-box .md    { font-size: 10px; color: #404040; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+  .step-box .meta  { font-size: 10px; color: #404040; margin-top: 2px; }
 
   /* Task group (a colored, dashed container around one or more steps) */
   .task-group {
@@ -878,11 +878,20 @@ function renderStage1() {
       // Black arrow between consecutive steps WITHIN the same task.
       if (k > 0) tg.appendChild(makeFlowArrow());
       const m = modes[si];
+      const stepRec = state.steps[si];
       const sb = document.createElement('div');
       sb.className = 'step-box ' + modeClass(m);
-      const nm = document.createElement('div'); nm.className = 'nm'; nm.textContent = state.steps[si].name;
-      const md = document.createElement('div'); md.className = 'md'; md.textContent = modeLabel(m);
-      sb.appendChild(nm); sb.appendChild(md);
+      // Line 1: step name with mode label in parentheses, mirroring the
+      // Stage 2 ribbon task-box format ("Step 1 (Manual)" etc.).
+      const nm = document.createElement('div'); nm.className = 'nm';
+      nm.textContent = `${stepRec.name} (${modeLabel(m)})`;
+      // Line 2: mode-relevant cost parameter values.
+      //   Manual: $cM, tM     Auto / Aug: $cA, tA
+      const meta = document.createElement('div'); meta.className = 'meta';
+      meta.textContent = (m === 'M')
+        ? `$${(+stepRec.cM).toFixed(2)}, ${(+stepRec.tM).toFixed(2)}`
+        : `$${(+stepRec.cA).toFixed(2)}, ${(+stepRec.tA).toFixed(2)}`;
+      sb.appendChild(nm); sb.appendChild(meta);
       tg.appendChild(sb);
     });
     r.appendChild(tg);
@@ -1221,25 +1230,14 @@ function renderGeomView(svg, geom, view) {
           'text-anchor': 'middle', 'dominant-baseline': 'central',
           fill: '#1f2937',
         });
-        // Line 1: step name with mode in parentheses (e.g. "Step 1 (Manual)")
-        // Line 2: mode-relevant cost parameter values
-        //   Manual:  $cM, tM
-        //   Auto:    $cA, tA  (per-attempt inputs; the step has no direct
-        //                       contribution at the rectangle level, but the
-        //                       inputs are still informative)
-        //   Aug:     $cA, tA
-        const stepRec = state.steps[si];
-        const stepCostText = (m === 'M')
-          ? `$${(+stepRec.cM).toFixed(2)}, ${(+stepRec.tM).toFixed(2)}`
-          : `$${(+stepRec.cA).toFixed(2)}, ${(+stepRec.tA).toFixed(2)}`;
         const tspanName = svgEl('tspan');
         setAttrs(tspanName, { x: cx, dy: '-0.5em', 'font-size': '10', 'font-weight': '600' });
-        tspanName.textContent = `${steps[si].name} (${modeLabel(m)})`;
+        tspanName.textContent = steps[si].name;
         txt.appendChild(tspanName);
-        const tspanCost = svgEl('tspan');
-        setAttrs(tspanCost, { x: cx, dy: '1.25em', 'font-size': '9', fill: '#4a5568' });
-        tspanCost.textContent = stepCostText;
-        txt.appendChild(tspanCost);
+        const tspanMode = svgEl('tspan');
+        setAttrs(tspanMode, { x: cx, dy: '1.25em', 'font-size': '9', fill: '#4a5568' });
+        tspanMode.textContent = `(${modeLabel(m)})`;
+        txt.appendChild(tspanMode);
         svg.appendChild(txt);
 
         const ttl = svgEl('title');
