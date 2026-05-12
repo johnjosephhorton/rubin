@@ -155,7 +155,7 @@
      flex children; widen the gap between them so Stage 1's legend and
      Stage 2's title are visually well separated. (Cost Parameters tab
      keeps the tighter 12px default.) */
-  #inner-tab-ribbons.active { gap: 52px; }
+  #inner-tab-ribbons.active { gap: 13px; }
 
   /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
      in the left column, Geometric View occupies the right column.
@@ -165,10 +165,62 @@
      Breakdown sits below; the user scrolls down for it. */
   .design-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 12px;
+    /* left column | drag handle | right column.
+       Default 50/50 width; JS rewrites this on drag. */
+    grid-template-columns: minmax(220px, 1fr) 6px minmax(220px, 1fr);
+    gap: 0;
     align-items: stretch;
     min-height: calc(100vh - 175px);
+  }
+  /* Thin draggable column between the two .design-cols. Tap-and-hold +
+     drag to shift the split. Resting state is barely visible; on hover
+     or while dragging it highlights with the accent color. */
+  .design-resizer {
+    cursor: col-resize;
+    background: transparent;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    align-self: stretch;
+    transition: background 0.12s, border-color 0.12s;
+    /* Slightly wider hit area than the visible band so the handle is
+       comfortable to grab. */
+    position: relative;
+    z-index: 1;
+  }
+  .design-resizer::before {
+    content: ''; position: absolute;
+    top: 0; bottom: 0; left: -4px; right: -4px;
+  }
+  /* Subtle pulsing double-arrow centered on the resizer so first-time
+     visitors notice the column can be slid. The animation stops once
+     the user has hovered or dragged (see ::after rules below). */
+  .design-resizer::after {
+    content: '\21D4';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #6b7280;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
+    text-shadow: 0 0 8px rgba(255,255,255,0.9);
+    animation: resizer-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes resizer-pulse {
+    0%, 100% { opacity: 0.35; transform: translate(-50%, -50%) scale(1.0); }
+    50%      { opacity: 1.0;  transform: translate(-50%, -50%) scale(1.25); }
+  }
+  .design-resizer:hover::after,
+  .design-resizer.dragging::after,
+  .design-resizer.touched::after {
+    animation: none;
+    opacity: 1;
+  }
+  .design-resizer:hover,
+  .design-resizer.dragging {
+    background: var(--accent);
+    border-color: var(--accent);
   }
   .design-col {
     display: flex; flex-direction: column; gap: 12px;
@@ -448,6 +500,8 @@
   }
 
   /* === Geometric view === */
+  /* Flex column so the active tab panel inside can grow to fill the
+     panel's available vertical space. */
   .geom-container {
     width: 100%;
     background: #ffffff;
@@ -455,6 +509,8 @@
     border-radius: 6px;
     overflow-x: auto;
     padding: 8px 10px 10px;
+    display: flex; flex-direction: column;
+    flex: 1 1 auto; min-height: 0;
   }
   /* Tab bar inside the Geometric View panel: switches between Step View
      and Task View. Only one is visible at a time, so the active SVG can
@@ -480,21 +536,47 @@
     font-weight: 600;
   }
   .geom-tab-panel { display: none; }
-  .geom-tab-panel.active { display: block; }
-  /* Reserve enough vertical space for the longest hint (the Step View,
-     which has three lines) so the SVG below it starts at the same y
-     coordinate in every view — switching tabs only changes the
-     contents, not where the graph begins. The bumped line-height
-     gives a bit of breathing room between the three lines. */
-  .geom-hint {
+  /* The active tab panel becomes a flex column so the SVG can be
+     vertically aligned to the bottom of the geom-container (which in
+     turn fills the right column). 'margin-top: auto' on the SVG
+     absorbs the extra vertical space between the hint and the SVG,
+     so the SVG bottom hugs the column bottom = the page bottom. */
+  .geom-tab-panel.active {
+    display: flex; flex-direction: column;
+    flex: 1 1 auto; min-height: 0;
+  }
+  .geom-tab-panel.active > svg.geom { margin-top: auto; }
+  /* All three hints share a single grid cell so the cell sizes itself
+     to the tallest hint at the current column width. The inactive
+     hints are hidden but still contribute to layout — so the SVG below
+     this block always starts at the same Y coordinate regardless of
+     which tab is active or how wide the column is. */
+  .geom-hint-stack {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .geom-hint-stack > .geom-hint {
+    grid-row: 1;
+    grid-column: 1;
+    visibility: hidden;
     margin: 4px 2px 10px 2px !important;
-    min-height: calc(3 * 1.9em);
     line-height: 1.9;
   }
-  /* Cap the SVG's rendered height at 55vh. preserveAspectRatio scales
-     fonts and rectangles together when a smaller container constrains
-     the SVG. */
-  svg.geom { display: block; width: 100%; height: auto; max-height: 55vh; }
+  .geom-hint-stack > .geom-hint.active {
+    visibility: visible;
+  }
+  /* The SVG can grow up to 100vh (full viewport height) — but in
+     practice it's the column width that drives the figure's size,
+     so the cap rarely binds. On initial load, JS sets the column
+     split so the SVG renders at ~55vh tall; from there the divider
+     smoothly scales the figure up or down. */
+  svg.geom { display: block; width: 100%; height: 100%; max-height: 100vh; }
+
+  /* Container query on .geom-container so the description hint can
+     scale with the column width too: bigger right column → bigger
+     hint text; narrower → smaller. */
+  .geom-container { container-type: inline-size; }
+  .geom-hint { font-size: clamp(11px, 2.0cqw, 16px); }
 
   /* === Cost summary & breakdown === */
   .cost-summary {
@@ -609,7 +691,7 @@
   <div class="stage-section" id="stage2-section">
     <h2><span class="stage-label">Stage 2</span>Job Design: Tasks → Jobs</h2>
     <p class="hint">
-      Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).
+      Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).<br>
       Each job boundary incurs a <span style="color:var(--handoff-stroke)">hand-off cost</span> determined by the final step of that job.
     </p>
     <div class="ss-spacer ss-spacer-mid"></div>
@@ -690,6 +772,9 @@
 
 </div><!-- /.design-col (left: Setup) -->
 
+<!-- Drag handle between the two columns. -->
+<div class="design-resizer" id="design-resizer" role="separator" aria-orientation="vertical" aria-label="Resize columns"></div>
+
 <div class="design-col">
 <!-- ============================================ -->
 <!-- Geometric View (right column, always visible) -->
@@ -702,25 +787,30 @@
       <button class="geom-tab-button" data-geom-tab="task">Task View</button>
       <button class="geom-tab-button" data-geom-tab="job">Job View</button>
     </div>
-    <div class="geom-tab-panel active" id="geom-tab-step">
-      <p class="hint geom-hint">
+    <!-- All three hints share one grid cell so the tallest one defines
+         the height; only the active hint is visible. This pins the SVG
+         top to the same Y across Step/Task/Job tabs at any column width. -->
+    <div class="geom-hint-stack">
+      <p class="hint geom-hint active" data-view="step">
         Each step is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
-        Hand-off rectangles <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:var(--handoff-fill);border:1px dashed var(--handoff-stroke);"></span> appear between non-final jobs.<br>
+        Hand-off rectangles <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:var(--handoff-fill);border:1px dashed var(--handoff-stroke);"></span> appear between non-final jobs.
         Automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill — they contribute zero direct cost.
       </p>
-      <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
-    </div>
-    <div class="geom-tab-panel" id="geom-tab-task">
-      <p class="hint geom-hint">
+      <p class="hint geom-hint" data-view="task">
         Each task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
         Hand-off rectangles <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:var(--handoff-fill);border:1px dashed var(--handoff-stroke);"></span> appear between non-final jobs.
       </p>
+      <p class="hint geom-hint" data-view="job">
+        Each job is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
+      </p>
+    </div>
+    <div class="geom-tab-panel active" id="geom-tab-step">
+      <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="geom-tab-panel" id="geom-tab-task">
       <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="geom-tab-panel" id="geom-tab-job">
-      <p class="hint geom-hint">
-        Each job is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
-      </p>
       <svg class="geom" id="geom-svg-jobs" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
@@ -1820,6 +1910,9 @@ function switchGeomTab(name) {
   document.querySelectorAll('.geom-tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === `geom-tab-${name}`);
   });
+  document.querySelectorAll('.geom-hint-stack > .geom-hint').forEach(h => {
+    h.classList.toggle('active', h.dataset.view === name);
+  });
 }
 document.querySelectorAll('.geom-tab-button').forEach(btn => {
   btn.addEventListener('click', () => switchGeomTab(btn.dataset.geomTab));
@@ -1898,9 +1991,138 @@ document.getElementById('add-step-btn').addEventListener('click', () => {
   solveQuiet();
 });
 
+// Draggable resizer between the left (Setup) and right (Geometric View)
+// columns. Click-and-drag the thin handle to give either column more
+// room. The handle is mirrored on touch devices too. Each column has a
+// minimum width so neither collapses.
+(function setupResizer() {
+  const grid = document.querySelector('.design-grid');
+  const resizer = document.getElementById('design-resizer');
+  if (!grid || !resizer) return;
+
+  const RESIZER_W = 6;     // matches the CSS grid-template-columns track
+  const MIN_COL_W = 220;   // matches the minmax(...) floor in CSS
+
+  let dragging = false;
+
+  function applySplit(clientX) {
+    const rect = grid.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const total = rect.width;
+    const usable = total - RESIZER_W;
+    let leftW = x - RESIZER_W / 2;
+    leftW = Math.max(MIN_COL_W, Math.min(usable - MIN_COL_W, leftW));
+    const rightW = usable - leftW;
+    grid.style.gridTemplateColumns = `${leftW}px ${RESIZER_W}px ${rightW}px`;
+  }
+
+  function start() {
+    dragging = true;
+    resizer.classList.add('dragging');
+    document.body.style.userSelect = 'none';
+    // On first drag, release the SVG from its 30vh starting height so it
+    // resumes scaling with the column width (capped only by max-height:
+    // 100vh in CSS).
+    document.querySelectorAll('svg.geom').forEach(svg => {
+      svg.style.height = '';
+    });
+  }
+  function end() {
+    if (!dragging) return;
+    dragging = false;
+    resizer.classList.remove('dragging');
+    document.body.style.userSelect = '';
+  }
+
+  resizer.addEventListener('mousedown', (e) => { start(); e.preventDefault(); });
+  document.addEventListener('mousemove', (e) => { if (dragging) applySplit(e.clientX); });
+  document.addEventListener('mouseup', end);
+
+  resizer.addEventListener('touchstart', (e) => {
+    start();
+    if (e.touches[0]) e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchmove', (e) => {
+    if (dragging && e.touches[0]) {
+      applySplit(e.touches[0].clientX);
+      e.preventDefault();
+    }
+  }, { passive: false });
+  document.addEventListener('touchend', end);
+  document.addEventListener('touchcancel', end);
+})();
+
 // Initial render: solve immediately on page load so the visualizations,
 // ribbons, and cost breakdown are all populated when the user arrives.
 solveQuiet();
+
+// (Page loads at the CSS default 50/50 column split — the resizer in
+//  the middle scales both sides smoothly from there.)
+
+// Size the design grid so its bottom edge sits exactly at the bottom of
+// the viewport. Using the grid's measured top (instead of a hard-coded
+// 100vh − 175px) keeps the alignment robust as the top chrome height
+// changes with viewport width, fonts, etc. With the right column's
+// geom-container now a flex column and the SVG pushed via margin-top:
+// auto, the SVG's bottom edge lands flush at the page bottom; the
+// left column's stage-sections fill the matching height via their
+// existing flex-grow spacers.
+function fitGridToViewport() {
+  const grid = document.querySelector('.design-grid');
+  if (!grid) return;
+  const top = grid.getBoundingClientRect().top;
+  const bodyPad = 12;  // matches body padding-bottom
+  const target = Math.max(300, window.innerHeight - top - bodyPad);
+  grid.style.minHeight = target + 'px';
+}
+fitGridToViewport();
+window.addEventListener('resize', fitGridToViewport);
+window.addEventListener('load', fitGridToViewport);
+
+// On initial load, size the right column so the active SVG's natural
+// height (column-width × intrinsic aspect ratio) fills all the way down
+// to the page bottom. The user can then drag the resizer to grow or
+// shrink from there. CSS still caps SVG height at 100vh.
+function fitRightColumnToViewport() {
+  const grid = document.querySelector('.design-grid');
+  const svg = document.querySelector('.geom-tab-panel.active svg.geom');
+  if (!grid || !svg) return;
+
+  // Clear any prior inline overrides so the SVG/columns settle naturally.
+  document.querySelectorAll('svg.geom').forEach(s => { s.style.height = ''; });
+  grid.style.gridTemplateColumns = '';
+
+  // Wait one frame so the browser computes the natural layout (hint
+  // height etc.) before we measure where the SVG sits.
+  requestAnimationFrame(() => {
+    const svgRect = svg.getBoundingClientRect();
+    const gridRect = grid.getBoundingClientRect();
+    const bottomPad = 12;
+    const availableHeight = Math.max(150,
+      window.innerHeight - svgRect.top - bottomPad);
+
+    // Intrinsic aspect ratio from the SVG's width/height attributes.
+    const W = parseFloat(svg.getAttribute('width')) || svgRect.width;
+    const H = parseFloat(svg.getAttribute('height')) || svgRect.height;
+    const aspect = W / H;
+
+    // Right-column width that makes the SVG's natural height = available.
+    const colChrome = 22;  // .geom-container padding + border
+    const targetSvgWidth = availableHeight * aspect;
+    const targetRightW = targetSvgWidth + colChrome;
+
+    const RESIZER_W = 6;
+    const MIN_COL_W = 220;
+    const totalWidth = gridRect.width - RESIZER_W;
+    const rightW = Math.max(MIN_COL_W,
+      Math.min(totalWidth - MIN_COL_W, targetRightW));
+    const leftW = totalWidth - rightW;
+
+    grid.style.gridTemplateColumns = `${leftW}px ${RESIZER_W}px ${rightW}px`;
+  });
+}
+fitRightColumnToViewport();
+window.addEventListener('load', fitRightColumnToViewport);
 </script>
 </body>
 </html>
