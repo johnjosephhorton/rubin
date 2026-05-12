@@ -103,25 +103,18 @@
     min-height: 0;
   }
 
-  /* Two-column grid with the inner-tab buttons sitting in their own
-     row ABOVE the left column, so they don't eat into the row that
-     the Geometric View occupies. Row 1: tab bar in the left cell,
-     empty on the right. Row 2: left content cell + right Geometric
-     View cell, both stretched to the same height. */
+  /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
+     in the left column, Geometric View occupies the right column.
+     align-items: stretch makes both columns share the same row height
+     (driven by the taller Geometric View panel), and the panels inside
+     the left column grow (flex: 1 1 auto) so their combined height
+     matches the right column. */
   .design-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas:
-      "tabs ."
-      "left right";
-    grid-template-rows: auto 1fr;
-    column-gap: 12px;
-    row-gap: 6px;
+    gap: 12px;
     align-items: stretch;
   }
-  .design-grid > .inner-tab-bar { grid-area: tabs; }
-  .design-grid > .design-col:nth-of-type(1) { grid-area: left; }
-  .design-grid > .design-col:nth-of-type(2) { grid-area: right; }
   .design-col {
     display: flex; flex-direction: column; gap: 12px;
     min-width: 0;
@@ -429,13 +422,12 @@
 <!-- column always shows the Geometric View.      -->
 <!-- ============================================ -->
 <div class="design-grid">
+<div class="design-col">
 
 <div class="inner-tab-bar">
   <button class="inner-tab-button active" data-inner-tab="ribbons">Optimal Design</button>
   <button class="inner-tab-button" data-inner-tab="params">Cost Parameters</button>
 </div>
-
-<div class="design-col">
 
 <!-- Inner tab panel #1 — Stage 1 + Stage 2 ribbons -->
 <div class="inner-tab-panel active" id="inner-tab-ribbons">
