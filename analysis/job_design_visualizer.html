@@ -543,6 +543,7 @@
     <thead>
       <tr>
         <th>Job</th>
+        <th>Steps</th>
         <th>Tasks</th>
         <th>&Sigma; c<span class="subscript">b</span> <span class="unit">($)</span></th>
         <th>&Sigma; t<span class="subscript">b</span> (time)</th>
@@ -1339,9 +1340,13 @@ function renderCost() {
     const lastIdx = indices[indices.length - 1];
     const tH = isLast ? 0 : levels[lastIdx].tH;
     const wb = sC * (sT + tH);
+    const stepList = indices
+      .flatMap(ti => tasks[ti].stepIdxs.map(si => state.steps[si].name))
+      .join(', ');
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>Job ${ji+1}</td>
+      <td>${stepList}</td>
       <td>${indices.map(ti => `Task ${ti+1}`).join(', ')}</td>
       <td>$${sC.toFixed(2)}</td>
       <td>${sT.toFixed(2)}</td>
@@ -1352,7 +1357,7 @@ function renderCost() {
   });
   const trT = document.createElement('tr');
   trT.className = 'total';
-  trT.innerHTML = `<td>Total</td><td colspan="4"></td><td>$${cost.toFixed(2)}</td>`;
+  trT.innerHTML = `<td>Total</td><td colspan="5"></td><td>$${cost.toFixed(2)}</td>`;
   tbody.appendChild(trT);
   tot.textContent = `$${cost.toFixed(2)}`;
   extra.textContent = `${state.steps.length} step${state.steps.length===1?'':'s'} · ${tasks.length} task${tasks.length===1?'':'s'} · ${jobs.length} job${jobs.length===1?'':'s'}`;
