@@ -167,7 +167,25 @@
   table.steps input[type="number"] { text-align: right; }
   table.steps .col-name { width: 90px; }
   table.steps .col-num { width: 72px; }
+  table.steps .col-mode { width: 110px; }
   table.steps .col-x { width: 30px; }
+
+  /* Faint row tint that mirrors the chosen execution mode for each step. */
+  table.steps tr.row-man  { background: rgba(154, 160, 166, 0.10); }
+  table.steps tr.row-auto { background: rgba( 47, 155,  91, 0.10); }
+  table.steps tr.row-aug  { background: rgba(210, 131,  25, 0.10); }
+
+  /* Mode badge inside the Mode column: a pill filled with the mode's
+     intense color. */
+  .mode-badge {
+    display: inline-block; padding: 4px 10px; border-radius: 5px;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    border: 1px solid transparent;
+  }
+  .mode-badge.man  { background: var(--step-man-fill);  color: #404040; border-color: var(--step-man-stroke); }
+  .mode-badge.auto { background: var(--step-auto-fill); color: #14532d; border-color: var(--step-auto-stroke); }
+  .mode-badge.aug  { background: var(--step-aug-fill);  color: #6e3e0a; border-color: var(--step-aug-stroke); }
   .superscript { vertical-align: super; font-size: 0.75em; }
   .subscript { vertical-align: sub; font-size: 0.75em; }
   /* Subtle unit annotation (e.g., '($)' next to a header label). */
@@ -394,6 +412,7 @@
         <th class="col-num">t<span class="superscript">A</span><span class="subscript">i</span></th>
         <th class="col-num">q<span class="subscript">i</span></th>
         <th class="col-num">t<span class="superscript">H</span><span class="subscript">i</span></th>
+        <th class="col-mode">Mode</th>
         <th class="col-x"></th>
       </tr>
     </thead>
@@ -717,8 +736,13 @@ function solveOptimal(steps) {
 function renderStepsTable() {
   const tbody = document.getElementById('step-tbody');
   tbody.innerHTML = '';
+  const solvedModes = (state.solution && state.solution.modes) || null;
   state.steps.forEach((step, i) => {
     const tr = document.createElement('tr');
+    // Tint the row with a faint shade of the chosen execution mode so the
+    // optimal AI strategy is visible right inside the parameters table.
+    const m = solvedModes ? solvedModes[i] : null;
+    if (m) tr.classList.add('row-' + modeClass(m));
 
     const nameTd = document.createElement('td');
     const nameInp = document.createElement('input');
@@ -740,14 +764,27 @@ function renderStepsTable() {
       tr.appendChild(td);
     });
 
+    // Mode badge cell: an intensely-colored pill with the chosen execution
+    // mode for this step from the latest solve. Sits to the right of t^H.
+    const modeTd = document.createElement('td');
+    const badge = document.createElement('span');
+    if (m) {
+      badge.className = 'mode-badge ' + modeClass(m);
+      badge.textContent = modeLabel(m);
+    } else {
+      badge.textContent = '—';
+      badge.style.color = 'var(--muted)';
+    }
+    modeTd.appendChild(badge);
+    tr.appendChild(modeTd);
+
     const xTd = document.createElement('td');
     const xBtn = document.createElement('button');
     xBtn.className = 'btn-danger'; xBtn.textContent = '×'; xBtn.title = 'Remove step';
     xBtn.addEventListener('click', () => {
       if (state.steps.length <= 1) return;
       state.steps.splice(i, 1);
-      state.solution = null;
-      renderAll();
+      solveQuiet();
     });
     xTd.appendChild(xBtn);
     tr.appendChild(xTd);
@@ -1357,8 +1394,10 @@ function feelingLucky() {
   state.steps = fresh;
   state.solution = null;
   renderStepsTable();
-  // Auto-solve so the user sees the new perturbed result immediately
-  solve();
+  // Re-solve so the visualizations update with the perturbed values, but
+  // stay on the Cost Parameters tab so the user can see what changed in
+  // the inputs and tweak further.
+  solveQuiet();
 }
 
 // ===========================================================================
