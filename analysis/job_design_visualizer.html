@@ -86,6 +86,7 @@
   .inner-tab-bar {
     display: flex; gap: 6px;
     flex: 0 0 auto;
+    margin-bottom: 14px;
   }
   .inner-tab-button {
     padding: 8px 16px;
@@ -375,7 +376,7 @@
   /* === Geometric view === */
   .geom-container {
     width: 100%;
-    background: #fafbfc;
+    background: #ffffff;
     border: 1px solid #eef0f3;
     border-radius: 6px;
     overflow-x: auto;
@@ -925,6 +926,9 @@ function renderStepsTable() {
 // Rendering: Stage 1 ribbon (steps → tasks)
 // ===========================================================================
 function modeLabel(m) { return m === 'M' ? 'Manual' : m === 'C' ? 'Automated' : 'Augmented'; }
+// Round to at most 2 decimal places and drop trailing zeros, so the ribbon
+// labels read '2', '0.5', '0.63' instead of '2.00', '0.50', '0.63'.
+function fmtN(v) { return Number((+v).toFixed(2)).toString(); }
 function modeClass(m) { return m === 'M' ? 'man' : m === 'C' ? 'auto' : 'aug'; }
 
 function renderStage1() {
@@ -962,20 +966,18 @@ function renderStage1() {
       sb.className = 'step-box ' + modeClass(m);
       const nm = document.createElement('div'); nm.className = 'nm';
       nm.textContent = stepRec.name;
-      // Line 2: cost parameters relevant to the step's chosen mode.
-      //   Manual:    c = $cM,     t = tM
-      //   Automated: c = $0,      t = 0     (automated has no direct cost)
-      //                                     plus the AI success probability q
-      //   Augmented: c = $cA,     t = tA    (raw per-attempt AI inputs)
-      //                                     plus the AI success probability q
+      // Line 2: compact cost parameter format.
+      //   Manual:    (c,t)=($cM, tM)
+      //   Automated: (c,t)=($0, 0), q=q    (zero direct cost; q matters)
+      //   Augmented: (c,t)=($cA, tA), q=q
       const meta = document.createElement('div'); meta.className = 'meta';
       let metaText;
       if (m === 'M') {
-        metaText = `c=$${(+stepRec.cM).toFixed(2)}, t=${(+stepRec.tM).toFixed(2)}`;
+        metaText = `(c,t)=($${fmtN(stepRec.cM)}, ${fmtN(stepRec.tM)})`;
       } else if (m === 'C') {
-        metaText = `c=$0, t=0, q=${(+stepRec.q).toFixed(2)}`;
+        metaText = `(c,t)=($0, 0), q=${fmtN(stepRec.q)}`;
       } else {
-        metaText = `c=$${(+stepRec.cA).toFixed(2)}, t=${(+stepRec.tA).toFixed(2)}, q=${(+stepRec.q).toFixed(2)}`;
+        metaText = `(c,t)=($${fmtN(stepRec.cA)}, ${fmtN(stepRec.tA)}), q=${fmtN(stepRec.q)}`;
       }
       meta.textContent = metaText;
       sb.appendChild(nm); sb.appendChild(meta);
@@ -1027,13 +1029,20 @@ function renderStage2() {
       tb.className = 'task-box ' + (task.type === 'chain' ? 'chain' : '');
       const nm = document.createElement('div'); nm.className = 'nm';
       nm.textContent = `Task ${ti+1}`;
-      // Line 2: task-level cost parameters from taskLevels(), which already
-      // applies the right formula per task type:
-      //   Manual:                 c = cM,                  t = tM
-      //   Augmented (singleton):  c = cA,                  t = tA / q
-      //   AI chain (s_l..s_r):    c = cA of last step,     t = tA_r / Π q_i
+      // Line 2: compact task-level cost parameters.
+      //   Manual:                  (c,t)=($cM, tM)
+      //   Augmented (singleton):   (c,t)=($cA, tA/q), q=q
+      //   AI chain (s_l..s_r):     (c,t)=($cA_r, tA_r/Πq), q=Π q_i
       const meta = document.createElement('div'); meta.className = 'meta';
-      meta.textContent = `c=$${lv.c.toFixed(2)}, t=${lv.t.toFixed(2)}`;
+      if (task.type === 'man') {
+        meta.textContent = `(c,t)=($${fmtN(lv.c)}, ${fmtN(lv.t)})`;
+      } else {
+        // 'aug' (singleton) or 'chain': q is the product of step q's
+        // (equal to the step's q for a singleton).
+        let qProd = 1;
+        for (const i of task.stepIdxs) qProd *= (+state.steps[i].q) || 0;
+        meta.textContent = `(c,t)=($${fmtN(lv.c)}, ${fmtN(lv.t)}), q=${fmtN(qProd)}`;
+      }
       tb.appendChild(nm); tb.appendChild(meta);
       jg.appendChild(tb);
     });
