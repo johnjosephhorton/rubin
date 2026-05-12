@@ -662,7 +662,7 @@
       <span style="color:var(--step-aug-stroke)">Augmented</span>.
     </p>
     <p class="hint">
-      A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; consecutive Automated→Augmented steps form one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
+      A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; an Augmented step, alone or preceded by Automated steps, forms one <span style="color:var(--task-chain-stroke)">AI chain task</span> (length ≥ 1).
     </p>
     <div class="ss-spacer ss-spacer-mid"></div>
     <div class="ribbon" id="stage1-ribbon"></div>
@@ -859,36 +859,32 @@
 // ===========================================================================
 // Working-example defaults (kept fixed; Feeling Lucky perturbs these)
 // ----------------------------------------------------------------------------
-// This baseline reproduces the three-task example from Section 2 of the paper
-// (Table~\ref{tab:job_design} & Figure~\ref{fig:job_design}) at the *task*
-// level — same (c, t, tH) for all three tasks and the same optimal partition
-// [T1,T2][T3] with total cost = 18 — but now T2 emerges from the Stage-1
-// solver as an AI chain of two steps (s2 Automated → s3 Augmented), rather
-// than a single manual step.
+// Five-step "comparative-advantage breaks apart" baseline. Steps 1, 3, 5 each
+// look like cheap-Manual / expensive-Aug-singleton steps with clear human
+// comparative advantage. Steps 2 and 4 are the cheap-AI neighbors. Hand-off
+// costs are high enough (tH=20) that any job split is dominated, so the whole
+// production lands in a single job.
 //
-// Solved tasks at the optimum (modes M, C, A, M):
-//   T1 = manual(s1)         : (c=3, t=1, tH=3)
-//   T2 = chain(s2, s3)      : (c=cA_3=1, t=tA_3/(q_2·q_3)=0.5/0.25=2, tH=tH_3=0.5)
-//   T3 = manual(s4)         : (c=2, t=2, tH=0)
-//
-// Design notes:
-//  - q_1 = 0.10 keeps s1 out of any chain: chain(s1,s2,s3) would have time
-//    0.5/(0.10·0.25) = 20, ballooning that task's cost well above the
-//    baseline 18, so the optimum never extends the chain leftward.
-//  - cA_3=1, tA_3=0.5, q_3=q_2=0.5 set the chain's task-level (c,t)=(1,2).
-//  - Manual costs (cM,tM) for s2 and s3 are set high enough that breaking the
-//    chain into separate Augmented or Manual tasks is uneconomic.
+// At the optimum (modes M, C, C, A, M) the middle three steps collapse into
+// one AI chain spanning Steps 2–4: even though Step 3 individually prefers
+// Manual, once q_2 and q_4 are 0.95 the chain cost cA_4·tA_4 / (q_2·q_3·q_4)
+// undercuts the singleton sum (Aug_2 + Man_3 + Aug_4). Step 3 gets absorbed
+// despite no change in its own parameters — the headline insight of the paper.
 // ===========================================================================
 const WORKING_EXAMPLE = [
-  // Step 1: stays Manual. cM·tM = 3 (cheap). Low q prevents chain extension.
-  { name: 'Step 1', tM: 1.0, cM: 3.0, tA: 2.0, cA: 3.0, q: 0.10, tH: 3.0 },
-  // Step 2: Automated step inside the chain (no direct human cost when Auto).
-  //     Manual (cM·tM=10) and Aug-singleton (cA·tA/q=4) options both lose.
-  { name: 'Step 2', tM: 2.0, cM: 5.0, tA: 1.0, cA: 2.0, q: 0.50, tH: 1.0 },
-  // Step 3: Augmented final step of the chain. cA=1, tA=0.5 set chain (c,t)=(1,2).
-  { name: 'Step 3', tM: 2.0, cM: 4.0, tA: 0.5, cA: 1.0, q: 0.50, tH: 0.5 },
-  // Step 4: stays Manual. cM·tM = 4; Aug-singleton (3·4=12) loses.
-  { name: 'Step 4', tM: 2.0, cM: 2.0, tA: 2.0, cA: 3.0, q: 0.50, tH: 0.0 },
+  // Step 1: cheap Manual. AI singleton is expensive (cA·tA/q = 50); low q
+  //   also prevents the chain from extending leftward.
+  { name: 'Step 1', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, q: 0.20, tH: 20.0 },
+  // Step 2: expensive Manual (5), cheap AI. Augmented in default; here, with
+  //   q=0.95, it joins the chain as an Automated step inside it.
+  { name: 'Step 2', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, q: 0.95, tH: 20.0 },
+  // Step 3: classic human comparative advantage. Cheap Manual (1), expensive
+  //   AI singleton (33). Manual alone, but absorbed into the chain here.
+  { name: 'Step 3', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, q: 0.30, tH: 20.0 },
+  // Step 4: mirror of Step 2. The chain's Augmented endpoint.
+  { name: 'Step 4', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, q: 0.95, tH: 20.0 },
+  // Step 5: mirror of Step 1. Stays Manual; tH=0 because no hand-off after.
+  { name: 'Step 5', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, q: 0.20, tH: 0.0 },
 ];
 
 let state = {
@@ -1145,12 +1141,14 @@ function renderStage1() {
 
   tasks.forEach((task, ti) => {
     const tg = document.createElement('div');
-    tg.className = 'task-group ' + (task.type === 'chain' ? 'chain' : '');
+    // A solo Augmented step counts as a length-1 AI chain — visually grouped
+    // with multi-step chains, not with Manual tasks.
+    tg.className = 'task-group ' + (task.type === 'man' ? '' : 'chain');
     const lbl = document.createElement('span');
     lbl.className = 'tg-label';
-    lbl.textContent = task.type === 'chain'
-      ? `Task ${ti+1} · AI Chain`
-      : `Task ${ti+1} · ${task.type === 'aug' ? 'Augmented' : 'Manual'}`;
+    lbl.textContent = task.type === 'man'
+      ? `Task ${ti+1} · Manual`
+      : `Task ${ti+1} · AI Chain`;
     tg.appendChild(lbl);
 
     task.stepIdxs.forEach((si, k) => {
@@ -1222,7 +1220,7 @@ function renderStage2() {
       const task = tasks[ti];
       const lv = levels[ti];
       const tb = document.createElement('div');
-      tb.className = 'task-box ' + (task.type === 'chain' ? 'chain' : '');
+      tb.className = 'task-box ' + (task.type === 'man' ? '' : 'chain');
       const nm = document.createElement('div'); nm.className = 'nm';
       nm.textContent = `Task ${ti+1}`;
       // Line 2: compact task-level cost parameters. For AI tasks (singleton
@@ -1300,7 +1298,8 @@ function svgEl(name) { return document.createElementNS('http://www.w3.org/2000/s
 function setAttrs(el, attrs) { for (const k in attrs) el.setAttribute(k, attrs[k]); }
 
 function fillsForType(type) {
-  if (type === 'chain') return { fill: getCSS('--task-chain-fill'), stroke: getCSS('--task-chain-stroke') };
+  // Solo Augmented = length-1 AI chain → same colors as multi-step chains.
+  if (type !== 'man') return { fill: getCSS('--task-chain-fill'), stroke: getCSS('--task-chain-stroke') };
   return { fill: getCSS('--task-man-fill'), stroke: getCSS('--task-man-stroke') };
 }
 function stepFillsForMode(mode) {
@@ -1311,8 +1310,11 @@ function stepFillsForMode(mode) {
 
 function taskLabel(task, steps) {
   if (task.type === 'man') return steps[task.lastStep].name + ' (M)';
-  if (task.type === 'aug') return steps[task.lastStep].name + ' (Aug)';
-  return `${steps[task.stepIdxs[0]].name}→${steps[task.lastStep].name}`;
+  // For AI chains (including length-1 = solo Augmented), label by the
+  // span of steps the chain covers. A length-1 chain is just "Step k".
+  const first = steps[task.stepIdxs[0]].name;
+  const last  = steps[task.lastStep].name;
+  return first === last ? first : `${first}→${last}`;
 }
 
 // Compute the shared staircase geometry (used by both views).
@@ -1630,8 +1632,7 @@ function renderGeomView(svg, geom, view) {
       });
       svg.appendChild(rect);
 
-      const taskTypeLbl = b.type === 'chain' ? 'AI Chain'
-                       : b.type === 'aug' ? 'Augmented' : 'Manual';
+      const taskTypeLbl = b.type === 'man' ? 'Manual' : 'AI Chain';
       const cx = MX(b.x + b.w / 2);
       const cy = MY(b.y + b.h / 2);
       const txt = svgEl('text');
@@ -1652,8 +1653,7 @@ function renderGeomView(svg, geom, view) {
 
       const ttl = svgEl('title');
       const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
-      const taskTypeForTitle = b.type === 'chain' ? 'AI Chain'
-                             : b.type === 'aug' ? 'Augmented' : 'Manual';
+      const taskTypeForTitle = b.type === 'man' ? 'Manual' : 'AI Chain';
       ttl.textContent = `Task ${b.taskIdx + 1} (${taskTypeForTitle}): c=${b.c.toFixed(2)}, t=${b.t.toFixed(2)} [steps: ${stepNames}]`;
       rect.appendChild(ttl);
     }
@@ -1812,8 +1812,8 @@ function renderTasksTable() {
       let qProd = 1;
       for (const i of task.stepIdxs) qProd *= (+state.steps[i].q) || 0;
       qStr = fmtN(qProd);
-      typeLbl = task.type === 'aug' ? 'Augmented' : 'AI Chain';
-      colorClass = task.type === 'chain' ? 'blue' : 'olive';
+      typeLbl = 'AI Chain';
+      colorClass = 'blue';
     }
     tr.classList.add('row-task-' + colorClass);
     tr.innerHTML = `
@@ -1932,6 +1932,20 @@ document.querySelectorAll('.geom-tab-button').forEach(btn => {
 // ===========================================================================
 const URL_FIELDS = ['cM','tM','cA','tA','q','tH'];
 
+// Read the current column split (fraction of usable width given to the
+// left column) from the live grid. Returns null if the grid hasn't been
+// sized yet. Excludes the fixed-width resizer track from the denominator.
+function readCurrentSplit() {
+  const grid = document.querySelector('.design-grid');
+  if (!grid) return null;
+  const cs = getComputedStyle(grid).gridTemplateColumns;
+  const parts = cs.split(/\s+/).map(parseFloat).filter(v => !isNaN(v));
+  if (parts.length !== 3) return null;
+  const usable = parts[0] + parts[2];
+  if (usable <= 0) return null;
+  return parts[0] / usable;
+}
+
 function serializeStateToURL() {
   const steps = state.steps;
   if (!steps || !steps.length) return;
@@ -1942,8 +1956,30 @@ function serializeStateToURL() {
   if (steps.some((s, i) => s.name !== `Step ${i+1}`)) {
     params.set('n', steps.map(s => s.name).join('|'));
   }
+  // Persist the current slider position so shared URLs reproduce the
+  // exact layout the sharer was looking at, not just the cost params.
+  const split = readCurrentSplit();
+  if (split !== null) params.set('split', split.toFixed(4));
   const url = window.location.pathname + '?' + params.toString();
   try { history.replaceState(null, '', url); } catch (e) { /* about:blank, etc. */ }
+}
+
+// Apply a `split` value from the URL (a fraction in (0, 1)) to the
+// grid's column widths. Returns true if applied, false otherwise.
+function applyURLSplit() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('split')) return false;
+  const frac = parseFloat(params.get('split'));
+  if (isNaN(frac) || frac <= 0 || frac >= 1) return false;
+  const grid = document.querySelector('.design-grid');
+  if (!grid) return false;
+  const RESIZER_W = 6, MIN_COL_W = 220;
+  const usable = grid.getBoundingClientRect().width - RESIZER_W;
+  if (usable <= 2 * MIN_COL_W) return false;
+  let leftW = Math.max(MIN_COL_W, Math.min(usable - MIN_COL_W, frac * usable));
+  const rightW = usable - leftW;
+  grid.style.gridTemplateColumns = `${leftW}px ${RESIZER_W}px ${rightW}px`;
+  return true;
 }
 
 function loadStateFromURL() {
@@ -2083,6 +2119,9 @@ document.getElementById('add-step-btn').addEventListener('click', () => {
     dragging = false;
     resizer.classList.remove('dragging');
     document.body.style.userSelect = '';
+    // Persist the new split position into the URL so the shared link
+    // reproduces the exact layout the user was looking at.
+    serializeStateToURL();
   }
 
   resizer.addEventListener('mousedown', (e) => { start(); e.preventDefault(); });
@@ -2144,6 +2183,10 @@ function fitRightColumnToViewport() {
   // Clear any prior inline overrides so the SVG/columns settle naturally.
   document.querySelectorAll('svg.geom').forEach(s => { s.style.height = ''; });
   grid.style.gridTemplateColumns = '';
+
+  // If the URL specifies a slider position, honor it instead of auto-fitting.
+  // This makes shared links reproduce the exact layout the sharer was using.
+  if (applyURLSplit()) return;
 
   // Wait one frame so the browser computes the natural layout (hint
   // height etc.) before we measure where the SVG sits.
