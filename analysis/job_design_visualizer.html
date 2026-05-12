@@ -73,8 +73,9 @@
   /* Inline black arrow between consecutive steps/tasks within the same job. */
   .flow-arrow {
     display: flex; align-items: center; justify-content: center;
-    font-size: 24px; color: #1f2937; font-weight: 700;
-    padding: 0 2px; user-select: none; line-height: 1;
+    font-size: 20px; color: #1f2937; font-weight: 700;
+    padding: 0 1px; user-select: none; line-height: 1;
+    flex-shrink: 0;
   }
 
   /* Minimal vertical divider between the Step View and Task View. */
@@ -245,11 +246,14 @@
   .unit { font-size: 0.85em; color: var(--muted); font-weight: 500; }
 
   /* === Stage ribbons (Derived tasks & Job partition) === */
+  /* flex-wrap: nowrap forces the whole step / task sequence onto a
+     single horizontal line; the boxes shrink down to their min-width
+     under pressure but never break across lines. */
   .ribbon {
-    display: flex; flex-wrap: wrap; align-items: stretch;
+    display: flex; flex-wrap: nowrap; align-items: stretch;
     justify-content: center;
-    gap: 14px;
-    padding: 10px 4px;
+    gap: 10px;
+    padding: 8px 4px;
   }
 
   /* Step box (inside a task) — sized to match Stage 2's task-box. */
@@ -257,24 +261,25 @@
     background: var(--step-man-fill);
     border: 1.5px solid var(--step-man-stroke);
     border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 13px; min-width: 78px;
+    padding: 6px 10px;
+    font-size: 12px; min-width: 60px;
     text-align: center;
   }
   .step-box.man    { background: var(--step-man-fill);  border-color: var(--step-man-stroke); }
   .step-box.auto   { background: var(--step-auto-fill); border-color: var(--step-auto-stroke); }
   .step-box.aug    { background: var(--step-aug-fill);  border-color: var(--step-aug-stroke); }
   .step-box .nm    { font-weight: 600; }
-  .step-box .meta  { font-size: 10px; color: #404040; margin-top: 2px; }
+  .step-box .meta  { font-size: 9px; color: #404040; margin-top: 2px; }
 
   /* Task group (a colored, dashed container around one or more steps) */
   .task-group {
     border: 2px dashed var(--task-man-stroke);
     background: var(--task-man-fill);
     border-radius: 8px;
-    padding: 10px;
-    display: flex; gap: 8px; align-items: center;
+    padding: 8px;
+    display: flex; gap: 6px; align-items: center;
     position: relative;
+    flex-shrink: 0;
   }
   .task-group.chain {
     border-color: var(--task-chain-stroke);
@@ -295,22 +300,23 @@
     background: var(--task-man-fill);
     border: 1.5px solid var(--task-man-stroke);
     border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 13px; min-width: 78px;
+    padding: 6px 10px;
+    font-size: 12px; min-width: 60px;
     text-align: center;
   }
   .task-box.chain { background: var(--task-chain-fill); border-color: var(--task-chain-stroke); }
   .task-box .nm   { font-weight: 600; }
-  .task-box .meta { font-size: 10px; color: #404040; margin-top: 2px; }
+  .task-box .meta { font-size: 9px; color: #404040; margin-top: 2px; }
 
   /* Job group (dashed cyan container around tasks) */
   .job-group {
     border: 2px dashed var(--job-stroke);
     background: var(--job-fill);
     border-radius: 8px;
-    padding: 10px;
-    display: flex; gap: 8px; align-items: center;
+    padding: 8px;
+    display: flex; gap: 6px; align-items: center;
     position: relative;
+    flex-shrink: 0;
   }
   .job-group .jg-label {
     position: absolute; top: -10px;
