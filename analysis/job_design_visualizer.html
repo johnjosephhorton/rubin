@@ -901,17 +901,13 @@ function renderStage1() {
       const stepRec = state.steps[si];
       const sb = document.createElement('div');
       sb.className = 'step-box ' + modeClass(m);
-      // Line 1: step name with mode label in parentheses, mirroring the
-      // Stage 2 ribbon task-box format ("Step 1 (Manual)" etc.).
+      // Two-line label, mirroring the geom Step View style:
+      //   Line 1 (bold):       step name (e.g., 'Step 1')
+      //   Line 2 (small, light): '(Mode)' annotation
       const nm = document.createElement('div'); nm.className = 'nm';
-      nm.textContent = `${stepRec.name} (${modeLabel(m)})`;
-      // Line 2: mode-relevant cost parameter values in the Stage 2 format
-      // ('c=$X.XX, t=Y.YY' — $ sits between the '=' and the number for c).
-      //   Manual:  uses (cM, tM)     Auto / Aug: uses (cA, tA)
+      nm.textContent = stepRec.name;
       const meta = document.createElement('div'); meta.className = 'meta';
-      meta.textContent = (m === 'M')
-        ? `c=$${(+stepRec.cM).toFixed(2)}, t=${(+stepRec.tM).toFixed(2)}`
-        : `c=$${(+stepRec.cA).toFixed(2)}, t=${(+stepRec.tA).toFixed(2)}`;
+      meta.textContent = `(${modeLabel(m)})`;
       sb.appendChild(nm); sb.appendChild(meta);
       tg.appendChild(sb);
     });
@@ -956,13 +952,17 @@ function renderStage2() {
       // Black arrow between consecutive tasks WITHIN the same job.
       if (k > 0) jg.appendChild(makeFlowArrow());
       const task = tasks[ti];
-      const lv = levels[ti];
       const tb = document.createElement('div');
       tb.className = 'task-box ' + (task.type === 'chain' ? 'chain' : '');
+      // Two-line label, mirroring the geom Task View style:
+      //   Line 1 (bold):       'Task i'
+      //   Line 2 (small, light): '(Type)' annotation
       const nm = document.createElement('div'); nm.className = 'nm';
-      nm.textContent = `Task ${ti+1} (${task.type === 'chain' ? 'AI Chain' : task.type === 'aug' ? 'Augmented' : 'Manual'})`;
+      nm.textContent = `Task ${ti+1}`;
       const meta = document.createElement('div'); meta.className = 'meta';
-      meta.textContent = `c=$${lv.c.toFixed(2)}, t=${lv.t.toFixed(2)}`;
+      const typeLbl = task.type === 'chain' ? 'AI Chain'
+                    : task.type === 'aug' ? 'Augmented' : 'Manual';
+      meta.textContent = `(${typeLbl})`;
       tb.appendChild(nm); tb.appendChild(meta);
       jg.appendChild(tb);
     });
