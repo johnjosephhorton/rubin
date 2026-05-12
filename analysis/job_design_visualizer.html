@@ -36,15 +36,30 @@
     --bbox-stroke:    #0aa0a0;
   }
   * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+  }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
-    margin: 0;
-    padding: 24px;
     line-height: 1.45;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
   }
-  .container { max-width: none; width: 100%; margin: 0 auto; }
+  /* Fixed design width — every device sees the same starting layout.
+     The .container is scaled (uniformly) via JS so it always fits the
+     viewport, with transform-origin: top center keeping it centered. */
+  .container {
+    width: 1400px;
+    flex-shrink: 0;
+    padding: 16px 24px 24px;
+    transform-origin: top center;
+    will-change: transform;
+  }
   h1 { font-size: 30px; margin: 0 0 2px 0; text-align: center; }
   .paper-link {
     text-align: center; font-size: 19px; margin: 0 0 10px 0; color: var(--text);
@@ -1401,7 +1416,35 @@ function renderAll() {
   renderStage2();
   renderGeom();
   renderCost();
+  fitToScreen();
 }
+
+// ===========================================================================
+// Auto-fit: scale the whole page so the same starting layout fits any
+// viewport (laptop, desktop, etc.). We never upscale beyond 1; the container
+// is fixed at 1400px wide and centered, and we apply a uniform CSS scale
+// so the visible content always lands inside the window without scrolling.
+// rAF-coalesced so resize storms don't thrash layout.
+// ===========================================================================
+let __fitScheduled = false;
+function fitToScreen() {
+  if (__fitScheduled) return;
+  __fitScheduled = true;
+  requestAnimationFrame(() => {
+    __fitScheduled = false;
+    const container = document.querySelector('.container');
+    if (!container) return;
+    container.style.transform = 'none';
+    const cw = container.offsetWidth;
+    const ch = container.offsetHeight;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    if (cw <= 0 || ch <= 0) return;
+    const scale = Math.min(vw / cw, vh / ch, 1);
+    container.style.transform = `scale(${scale})`;
+  });
+}
+window.addEventListener('resize', fitToScreen);
 
 // ===========================================================================
 // "Feeling Lucky": small perturbations around the working example
@@ -1475,6 +1518,9 @@ function switchInnerTab(name) {
   document.querySelectorAll('.inner-tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === `inner-tab-${name}`);
   });
+  // The two inner panels can have slightly different natural heights, so
+  // re-fit the page after a swap to keep everything inside the viewport.
+  fitToScreen();
 }
 document.querySelectorAll('.inner-tab-button').forEach(btn => {
   btn.addEventListener('click', () => switchInnerTab(btn.dataset.innerTab));
