@@ -67,33 +67,37 @@
     margin: 0 6px;
   }
 
-  /* Top-level tab bar that toggles between the Cost Parameters panel
-     and the Stage 1 + Stage 2 ribbon panels, so they share one
-     vertical slot instead of stacking. */
-  .tab-bar {
-    display: flex; gap: 0;
-    border-bottom: 2px solid var(--border);
-    margin-bottom: 18px;
+  /* Inner tab switcher that lives at the top of the left column and
+     toggles between the Stage 1 + Stage 2 ribbons (default) and the
+     Cost Parameters editor. The right column (Geometric View) stays
+     visible regardless. */
+  .inner-tab-bar {
+    display: flex; gap: 6px;
+    flex: 0 0 auto;
   }
-  .tab-button {
-    padding: 12px 24px;
-    border: none; background: transparent;
-    cursor: pointer;
-    font-size: 16px;
+  .inner-tab-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
     color: var(--muted);
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
+    cursor: pointer;
     font-weight: 500;
-    transition: color 0.15s, border-color 0.15s;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
   }
-  .tab-button:hover { color: var(--text); }
-  .tab-button.active {
-    color: var(--text);
-    border-bottom-color: var(--accent);
+  .inner-tab-button:hover { color: var(--text); }
+  .inner-tab-button.active {
+    background: var(--accent); color: white; border-color: var(--accent);
     font-weight: 600;
   }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+  .inner-tab-panel { display: none; }
+  .inner-tab-panel.active {
+    display: flex; flex-direction: column;
+    gap: 12px;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
 
   /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
      in the left column, Geometric View occupies the right column.
@@ -406,60 +410,22 @@
 <p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (worker assignment).</p>
 
 <!-- ============================================ -->
-<!-- Tab bar: toggles Cost Parameters ↔ Ribbons    -->
+<!-- Single-page layout. The left column has a    -->
+<!-- mini tab switcher that flips between the     -->
+<!-- Stage 1 + Stage 2 ribbons (default) and the  -->
+<!-- Cost Parameters editor, while the right      -->
+<!-- column always shows the Geometric View.      -->
 <!-- ============================================ -->
-<div class="tab-bar">
-  <button class="tab-button active" data-tab="ribbons">Optimal Design</button>
-  <button class="tab-button" data-tab="params">Cost Parameters</button>
-</div>
-
-<!-- ============================================ -->
-<!-- 1. COST PARAMETERS (tab panel)                -->
-<!-- ============================================ -->
-<div class="tab-panel" id="tab-params">
-<div class="panel">
-  <div class="panel-header">
-    <h2>Cost Parameters</h2>
-    <div class="actions">
-      <button class="btn-light" id="reset-btn">Reset</button>
-      <button class="btn-light" id="add-step-btn">+ Add step</button>
-      <button class="btn-lucky" id="lucky-btn">🍀 Feeling Lucky</button>
-      <button class="btn-success" id="solve-btn">▶ Solve</button>
-    </div>
-  </div>
-  <p class="hint">
-    Each step has a skill cost and a time cost for each mode of human (<i>c</i><span class="superscript">M</span><span class="subscript">i</span>, <i>t</i><span class="superscript">M</span><span class="subscript">i</span>) or AI-assisted (<i>c</i><span class="superscript">A</span><span class="subscript">i</span>, <i>t</i><span class="superscript">A</span><span class="subscript">i</span>) execution. These costs for AI-automated execution are zero. <i>q</i><span class="subscript">i</span> and <i>t</i><span class="superscript">H</span><span class="subscript">i</span> denote the AI's success probability and the (potential) hand-off time cost between workers.
-  </p>
-  <p class="hint">
-    The solver minimizes the firm's cost minimization problem, denoted in Equation 3 in the paper.
-  </p>
-  <table class="steps">
-    <thead>
-      <tr>
-        <th class="col-name">Step</th>
-        <th class="col-num">c<span class="superscript">M</span><span class="subscript">i</span> <span class="unit">($)</span></th>
-        <th class="col-num">t<span class="superscript">M</span><span class="subscript">i</span></th>
-        <th class="col-num">c<span class="superscript">A</span><span class="subscript">i</span> <span class="unit">($)</span></th>
-        <th class="col-num">t<span class="superscript">A</span><span class="subscript">i</span></th>
-        <th class="col-num">q<span class="subscript">i</span></th>
-        <th class="col-num">t<span class="superscript">H</span><span class="subscript">i</span></th>
-        <th class="col-mode">Mode</th>
-        <th class="col-x"></th>
-      </tr>
-    </thead>
-    <tbody id="step-tbody"></tbody>
-  </table>
-</div>
-</div><!-- /#tab-params -->
-
-<!-- ============================================ -->
-<!-- 2. OPTIMAL DESIGN tab: 2-column grid          -->
-<!--    Left:  Stage 1 + Stage 2 ribbons           -->
-<!--    Right: Geometric View                      -->
-<!-- ============================================ -->
-<div class="tab-panel active" id="tab-ribbons">
 <div class="design-grid">
 <div class="design-col">
+
+<div class="inner-tab-bar">
+  <button class="inner-tab-button active" data-inner-tab="ribbons">Optimal Design</button>
+  <button class="inner-tab-button" data-inner-tab="params">Cost Parameters</button>
+</div>
+
+<!-- Inner tab panel #1 — Stage 1 + Stage 2 ribbons -->
+<div class="inner-tab-panel active" id="inner-tab-ribbons">
 <div class="panel" id="stage1-panel">
   <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
   <p class="hint">
@@ -507,11 +473,50 @@
     </div>
   </div>
 </div>
-</div><!-- /.design-col (left: Stage 1 + Stage 2) -->
+</div><!-- /#inner-tab-ribbons -->
+
+<!-- Inner tab panel #2 — Cost Parameters editor -->
+<div class="inner-tab-panel" id="inner-tab-params">
+<div class="panel">
+  <div class="panel-header">
+    <h2>Cost Parameters</h2>
+    <div class="actions">
+      <button class="btn-light" id="reset-btn">Reset</button>
+      <button class="btn-light" id="add-step-btn">+ Add step</button>
+      <button class="btn-lucky" id="lucky-btn">🍀 Feeling Lucky</button>
+      <button class="btn-success" id="solve-btn">▶ Solve</button>
+    </div>
+  </div>
+  <p class="hint">
+    Each step has a skill cost and a time cost for each mode of human (<i>c</i><span class="superscript">M</span><span class="subscript">i</span>, <i>t</i><span class="superscript">M</span><span class="subscript">i</span>) or AI-assisted (<i>c</i><span class="superscript">A</span><span class="subscript">i</span>, <i>t</i><span class="superscript">A</span><span class="subscript">i</span>) execution. These costs for AI-automated execution are zero. <i>q</i><span class="subscript">i</span> and <i>t</i><span class="superscript">H</span><span class="subscript">i</span> denote the AI's success probability and the (potential) hand-off time cost between workers.
+  </p>
+  <p class="hint">
+    The solver minimizes the firm's cost minimization problem, denoted in Equation 3 in the paper.
+  </p>
+  <table class="steps">
+    <thead>
+      <tr>
+        <th class="col-name">Step</th>
+        <th class="col-num">c<span class="superscript">M</span><span class="subscript">i</span> <span class="unit">($)</span></th>
+        <th class="col-num">t<span class="superscript">M</span><span class="subscript">i</span></th>
+        <th class="col-num">c<span class="superscript">A</span><span class="subscript">i</span> <span class="unit">($)</span></th>
+        <th class="col-num">t<span class="superscript">A</span><span class="subscript">i</span></th>
+        <th class="col-num">q<span class="subscript">i</span></th>
+        <th class="col-num">t<span class="superscript">H</span><span class="subscript">i</span></th>
+        <th class="col-mode">Mode</th>
+        <th class="col-x"></th>
+      </tr>
+    </thead>
+    <tbody id="step-tbody"></tbody>
+  </table>
+</div>
+</div><!-- /#inner-tab-params -->
+
+</div><!-- /.design-col (left: Stage 1+2 ribbons OR Cost Parameters) -->
 
 <div class="design-col">
 <!-- ============================================ -->
-<!-- 4. GEOMETRIC VIEW (right column of the grid)  -->
+<!-- Geometric View (right column, always visible) -->
 <!-- ============================================ -->
 <div class="panel">
   <h2>Geometric View of the Optimal Design</h2>
@@ -535,7 +540,6 @@
 </div>
 </div><!-- /.design-col (right: Geometric View) -->
 </div><!-- /.design-grid -->
-</div><!-- /#tab-ribbons -->
 
 <!-- ============================================ -->
 <!-- 5. COST BREAKDOWN                             -->
@@ -1445,34 +1449,36 @@ function feelingLucky() {
 }
 
 // ===========================================================================
-// Tabs (Cost Parameters ↔ Optimal Design ribbons)
+// Inner tab switcher: flips the LEFT column between the Stage 1 + Stage 2
+// ribbons (default) and the Cost Parameters editor. The right column
+// (Geometric View) stays visible regardless of which inner tab is active.
 // ===========================================================================
-function switchTab(name) {
-  document.querySelectorAll('.tab-button').forEach(b => {
-    b.classList.toggle('active', b.dataset.tab === name);
+function switchInnerTab(name) {
+  document.querySelectorAll('.inner-tab-button').forEach(b => {
+    b.classList.toggle('active', b.dataset.innerTab === name);
   });
-  document.querySelectorAll('.tab-panel').forEach(p => {
-    p.classList.toggle('active', p.id === `tab-${name}`);
+  document.querySelectorAll('.inner-tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === `inner-tab-${name}`);
   });
 }
-document.querySelectorAll('.tab-button').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+document.querySelectorAll('.inner-tab-button').forEach(btn => {
+  btn.addEventListener('click', () => switchInnerTab(btn.dataset.innerTab));
 });
 
 // ===========================================================================
 // Buttons
 // ===========================================================================
 // Quiet solve: recompute and render but DO NOT switch tabs. Used by Reset,
-// Add Step, and the initial page load.
+// Add Step, Feeling Lucky, and the initial page load.
 function solveQuiet() {
   state.solution = solveOptimal(state.steps);
   renderAll();
 }
-// User-initiated Solve: also surface the result by switching to the ribbons
-// tab so the visualizations are visible immediately.
+// User-initiated Solve: also flip the LEFT column back to the ribbons so
+// the user immediately sees the optimal design they just solved for.
 function solve() {
   solveQuiet();
-  switchTab('ribbons');
+  switchInnerTab('ribbons');
 }
 
 document.getElementById('solve-btn').addEventListener('click', solve);
