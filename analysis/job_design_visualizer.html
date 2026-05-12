@@ -111,7 +111,17 @@
     display: flex; flex-direction: column; gap: 12px;
     min-width: 0;
   }
-  .design-col .panel { margin-bottom: 0; flex: 1 1 auto; }
+  .design-col .panel {
+    margin-bottom: 0; flex: 1 1 auto;
+    display: flex; flex-direction: column;
+  }
+  /* Inside Stage 1 / Stage 2 panels: keep the title + hint at the top
+     and the legend at the bottom, with the ribbon centered vertically
+     in the leftover space (equal whitespace above and below). */
+  .design-col .panel .ribbon {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
   @media (max-width: 980px) {
     .design-grid { grid-template-columns: 1fr; }
   }
@@ -1203,11 +1213,11 @@ function renderGeomView(svg, geom, view) {
           fill: '#1f2937',
         });
         const tspanName = svgEl('tspan');
-        setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '12', 'font-weight': '600' });
+        setAttrs(tspanName, { x: cx, dy: '-0.5em', 'font-size': '10', 'font-weight': '600' });
         tspanName.textContent = steps[si].name;
         txt.appendChild(tspanName);
         const tspanMode = svgEl('tspan');
-        setAttrs(tspanMode, { x: cx, dy: '1.3em', 'font-size': '11', fill: '#4a5568' });
+        setAttrs(tspanMode, { x: cx, dy: '1.25em', 'font-size': '9', fill: '#4a5568' });
         tspanMode.textContent = `(${modeLabel(m)})`;
         txt.appendChild(tspanMode);
         svg.appendChild(txt);
@@ -1250,11 +1260,11 @@ function renderGeomView(svg, geom, view) {
         fill: '#1f2937',
       });
       const tspanName = svgEl('tspan');
-      setAttrs(tspanName, { x: cx, dy: '-0.55em', 'font-size': '12', 'font-weight': '600' });
+      setAttrs(tspanName, { x: cx, dy: '-0.5em', 'font-size': '10', 'font-weight': '600' });
       tspanName.textContent = `Task ${b.taskIdx + 1}`;
       txt.appendChild(tspanName);
       const tspanMeta = svgEl('tspan');
-      setAttrs(tspanMeta, { x: cx, dy: '1.3em', 'font-size': '11', fill: '#4a5568' });
+      setAttrs(tspanMeta, { x: cx, dy: '1.25em', 'font-size': '9', fill: '#4a5568' });
       tspanMeta.textContent = `(${taskTypeLbl})`;
       txt.appendChild(tspanMeta);
       svg.appendChild(txt);
