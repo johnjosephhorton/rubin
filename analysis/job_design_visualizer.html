@@ -238,13 +238,13 @@
     padding: 10px 4px;
   }
 
-  /* Step box (inside a task) */
+  /* Step box (inside a task) — sized to match Stage 2's task-box. */
   .step-box {
     background: var(--step-man-fill);
     border: 1.5px solid var(--step-man-stroke);
     border-radius: 6px;
-    padding: 8px 11px;
-    font-size: 13px; min-width: 96px;
+    padding: 8px 12px;
+    font-size: 13px; min-width: 78px;
     text-align: center;
   }
   .step-box.man    { background: var(--step-man-fill);  border-color: var(--step-man-stroke); }
@@ -446,8 +446,8 @@
     <div class="legend-item"><span class="legend-swatch swatch-step-man"></span>Manual step</div>
     <div class="legend-item"><span class="legend-swatch swatch-step-auto"></span>Automated step</div>
     <div class="legend-item"><span class="legend-swatch swatch-step-aug"></span>Augmented step</div>
-    <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task (olive)</div>
-    <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain (blue)</div>
+    <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task</div>
+    <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain</div>
   </div>
 </div>
 
@@ -464,7 +464,7 @@
   <div class="legend">
     <div class="legend-item"><span class="legend-swatch swatch-task-man-solid"></span>Manual task</div>
     <div class="legend-item"><span class="legend-swatch swatch-task-chain-solid"></span>AI chain task</div>
-    <div class="legend-item"><span class="legend-swatch swatch-job"></span>Job (one worker)</div>
+    <div class="legend-item"><span class="legend-swatch swatch-job"></span>Job</div>
     <div class="legend-item">
       <svg class="legend-handoff-line" viewBox="0 0 22 12">
         <defs>
@@ -885,12 +885,13 @@ function renderStage1() {
       // Stage 2 ribbon task-box format ("Step 1 (Manual)" etc.).
       const nm = document.createElement('div'); nm.className = 'nm';
       nm.textContent = `${stepRec.name} (${modeLabel(m)})`;
-      // Line 2: mode-relevant cost parameter values.
-      //   Manual: $cM, tM     Auto / Aug: $cA, tA
+      // Line 2: mode-relevant cost parameter values in the Stage 2 format
+      // ('c=$X.XX, t=Y.YY' — $ sits between the '=' and the number for c).
+      //   Manual:  uses (cM, tM)     Auto / Aug: uses (cA, tA)
       const meta = document.createElement('div'); meta.className = 'meta';
       meta.textContent = (m === 'M')
-        ? `$${(+stepRec.cM).toFixed(2)}, ${(+stepRec.tM).toFixed(2)}`
-        : `$${(+stepRec.cA).toFixed(2)}, ${(+stepRec.tA).toFixed(2)}`;
+        ? `c=$${(+stepRec.cM).toFixed(2)}, t=${(+stepRec.tM).toFixed(2)}`
+        : `c=$${(+stepRec.cA).toFixed(2)}, t=${(+stepRec.tA).toFixed(2)}`;
       sb.appendChild(nm); sb.appendChild(meta);
       tg.appendChild(sb);
     });
@@ -941,7 +942,7 @@ function renderStage2() {
       const nm = document.createElement('div'); nm.className = 'nm';
       nm.textContent = `Task ${ti+1} (${task.type === 'chain' ? 'AI Chain' : task.type === 'aug' ? 'Augmented' : 'Manual'})`;
       const meta = document.createElement('div'); meta.className = 'meta';
-      meta.textContent = `c=${lv.c.toFixed(2)}, t=${lv.t.toFixed(2)}`;
+      meta.textContent = `c=$${lv.c.toFixed(2)}, t=${lv.t.toFixed(2)}`;
       tb.appendChild(nm); tb.appendChild(meta);
       jg.appendChild(tb);
     });
