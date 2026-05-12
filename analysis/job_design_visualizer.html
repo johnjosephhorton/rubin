@@ -95,6 +95,24 @@
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
+  /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
+     in the left column, Geometric View occupies the right column.
+     Each column is its own flex stack so panel spacing stays uniform. */
+  .design-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+  .design-col {
+    display: flex; flex-direction: column; gap: 12px;
+    min-width: 0;
+  }
+  .design-col .panel { margin-bottom: 0; }
+  @media (max-width: 980px) {
+    .design-grid { grid-template-columns: 1fr; }
+  }
+
   .panel {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -204,8 +222,8 @@
     background: var(--step-man-fill);
     border: 1.5px solid var(--step-man-stroke);
     border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 13px; min-width: 118px;
+    padding: 8px 11px;
+    font-size: 13px; min-width: 96px;
     text-align: center;
   }
   .step-box.man    { background: var(--step-man-fill);  border-color: var(--step-man-stroke); }
@@ -242,8 +260,8 @@
     background: var(--task-man-fill);
     border: 1.5px solid var(--task-man-stroke);
     border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 13px; min-width: 88px;
+    padding: 8px 12px;
+    font-size: 13px; min-width: 78px;
     text-align: center;
   }
   .task-box.chain { background: var(--task-chain-fill); border-color: var(--task-chain-stroke); }
@@ -422,9 +440,13 @@
 </div><!-- /#tab-params -->
 
 <!-- ============================================ -->
-<!-- 2. RIBBONS — STAGE 1 + STAGE 2 (tab panel)    -->
+<!-- 2. OPTIMAL DESIGN tab: 2-column grid          -->
+<!--    Left:  Stage 1 + Stage 2 ribbons           -->
+<!--    Right: Geometric View                      -->
 <!-- ============================================ -->
 <div class="tab-panel active" id="tab-ribbons">
+<div class="design-grid">
+<div class="design-col">
 <div class="panel" id="stage1-panel">
   <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
   <p class="hint">
@@ -472,11 +494,11 @@
     </div>
   </div>
 </div>
+</div><!-- /.design-col (left: Stage 1 + Stage 2) -->
 
+<div class="design-col">
 <!-- ============================================ -->
-<!-- 4. GEOMETRIC VIEW (inside the Optimal Design  -->
-<!--    tab, sharing one scrollable stack with the -->
-<!--    Stage 1 + Stage 2 ribbons)                  -->
+<!-- 4. GEOMETRIC VIEW (right column of the grid)  -->
 <!-- ============================================ -->
 <div class="panel">
   <h2>Geometric View of the Optimal Design</h2>
@@ -498,6 +520,8 @@
     </div>
   </div>
 </div>
+</div><!-- /.design-col (right: Geometric View) -->
+</div><!-- /.design-grid -->
 </div><!-- /#tab-ribbons -->
 
 <!-- ============================================ -->
