@@ -51,7 +51,7 @@
   }
   .paper-link a { color: var(--accent); text-decoration: none; }
   .paper-link a:hover { text-decoration: underline; }
-  .subtitle { color: var(--muted); text-align: center; margin-bottom: 24px; font-size: 16px; }
+  .subtitle { color: var(--muted); text-align: center; margin-bottom: 14px; font-size: 16px; }
 
   /* Inline black arrow between consecutive steps/tasks within the same job. */
   .flow-arrow {
@@ -99,12 +99,12 @@
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 18px 20px;
-    margin-bottom: 18px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   }
-  .panel h2 { font-size: 19px; margin: 0 0 12px 0; }
-  .panel .hint { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+  .panel h2 { font-size: 19px; margin: 0 0 8px 0; }
+  .panel .hint { color: var(--muted); font-size: 14px; margin: 0 0 6px 0; }
   .panel-header {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 10px; gap: 10px; flex-wrap: wrap;
@@ -312,7 +312,7 @@
     border: 1px solid #eef0f3;
     border-radius: 6px;
     overflow-x: auto;
-    padding: 10px;
+    padding: 6px 8px;
   }
   .geom-row {
     display: flex; gap: 14px; align-items: flex-start;
@@ -472,10 +472,11 @@
     </div>
   </div>
 </div>
-</div><!-- /#tab-ribbons -->
 
 <!-- ============================================ -->
-<!-- 4. GEOMETRIC VIEW                             -->
+<!-- 4. GEOMETRIC VIEW (inside the Optimal Design  -->
+<!--    tab, sharing one scrollable stack with the -->
+<!--    Stage 1 + Stage 2 ribbons)                  -->
 <!-- ============================================ -->
 <div class="panel">
   <h2>Geometric View of the Optimal Design</h2>
@@ -497,6 +498,7 @@
     </div>
   </div>
 </div>
+</div><!-- /#tab-ribbons -->
 
 <!-- ============================================ -->
 <!-- 5. COST BREAKDOWN                             -->
@@ -935,7 +937,7 @@ function getCSS(varName) {
 // ===========================================================================
 // Rendering: Geometric view (SVG)
 // ===========================================================================
-const GEOM = { unitX: 70, unitY: 70, jobGap: 30, pad: 30, minH: 280 };
+const GEOM = { unitX: 55, unitY: 55, jobGap: 24, pad: 24, minH: 230 };
 
 function svgEl(name) { return document.createElementNS('http://www.w3.org/2000/svg', name); }
 function setAttrs(el, attrs) { for (const k in attrs) el.setAttribute(k, attrs[k]); }
