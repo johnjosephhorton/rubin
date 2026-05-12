@@ -78,12 +78,6 @@
     flex-shrink: 0;
   }
 
-  /* Minimal vertical divider between the Step View and Task View. */
-  .geom-divider {
-    width: 1px; background: #d1d5db;
-    align-self: stretch; flex: 0 0 1px;
-    margin: 0 6px;
-  }
 
   /* Inner tab switcher that lives at the top of the left column and
      toggles between the Stage 1 + Stage 2 ribbons (default) and the
@@ -371,21 +365,33 @@
     border: 1px solid #eef0f3;
     border-radius: 6px;
     overflow-x: auto;
-    padding: 6px 8px;
+    padding: 8px 10px 10px;
   }
-  .geom-row {
-    display: flex; gap: 14px; align-items: flex-start;
+  /* Tab bar inside the Geometric View panel: switches between Step View
+     and Task View. Only one is visible at a time, so the active SVG can
+     occupy the full right-column width and read much larger. */
+  .geom-tab-bar {
+    display: flex; gap: 6px; margin-bottom: 8px;
   }
-  .geom-half { flex: 1 1 0; min-width: 0; }
-  .geom-half h3 {
-    font-size: 15px; font-weight: 600;
-    margin: 0 0 6px 0; text-align: center; color: var(--text);
-    letter-spacing: 0.02em;
+  .geom-tab-button {
+    padding: 6px 14px;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
   }
+  .geom-tab-button:hover { color: var(--text); }
+  .geom-tab-button.active {
+    background: var(--accent); color: white; border-color: var(--accent);
+    font-weight: 600;
+  }
+  .geom-tab-panel { display: none; }
+  .geom-tab-panel.active { display: block; }
   svg.geom { display: block; width: 100%; height: auto; }
-  @media (max-width: 900px) {
-    .geom-row { flex-direction: column; }
-  }
 
   /* === Cost summary & breakdown === */
   .cost-summary {
@@ -561,16 +567,15 @@
     Hand-off rectangles (pink) appear between non-final jobs. In the Step View, automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill to mark their zero direct cost — the chain's cost is carried by the augmented step at the end.
   </p>
   <div class="geom-container">
-    <div class="geom-row">
-      <div class="geom-half">
-        <h3>Step View</h3>
-        <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
-      </div>
-      <div class="geom-divider"></div>
-      <div class="geom-half">
-        <h3>Task View</h3>
-        <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
-      </div>
+    <div class="geom-tab-bar">
+      <button class="geom-tab-button active" data-geom-tab="step">Step View</button>
+      <button class="geom-tab-button" data-geom-tab="task">Task View</button>
+    </div>
+    <div class="geom-tab-panel active" id="geom-tab-step">
+      <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="geom-tab-panel" id="geom-tab-task">
+      <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
 </div>
@@ -1553,6 +1558,20 @@ function switchInnerTab(name) {
 }
 document.querySelectorAll('.inner-tab-button').forEach(btn => {
   btn.addEventListener('click', () => switchInnerTab(btn.dataset.innerTab));
+});
+
+// Geometric View tab switcher (Step View ↔ Task View). Only one panel
+// is visible at a time so the active SVG can fill the full column width.
+function switchGeomTab(name) {
+  document.querySelectorAll('.geom-tab-button').forEach(b => {
+    b.classList.toggle('active', b.dataset.geomTab === name);
+  });
+  document.querySelectorAll('.geom-tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === `geom-tab-${name}`);
+  });
+}
+document.querySelectorAll('.geom-tab-button').forEach(btn => {
+  btn.addEventListener('click', () => switchGeomTab(btn.dataset.geomTab));
 });
 
 // ===========================================================================
