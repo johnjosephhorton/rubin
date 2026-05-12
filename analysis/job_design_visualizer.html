@@ -132,9 +132,15 @@
     margin-bottom: 0; flex: 1 1 auto;
     display: flex; flex-direction: column;
   }
-  /* Inside Stage 1 / Stage 2 panels: keep the title + hint at the top
-     and the legend at the bottom, with the ribbon centered vertically
-     in the leftover space (equal whitespace above and below). */
+  /* Stage 1 + Stage 2 share a single .panel (#stages-panel). Each stage's
+     content lives in its own .stage-section flex column so the two
+     sections divide the panel height evenly. */
+  .design-col .panel > .stage-section {
+    display: flex; flex-direction: column;
+    flex: 1 1 0; min-height: 0;
+  }
+  /* Within each stage-section: keep the title + hints at the top and
+     the legend at the bottom, with the ribbon centered vertically. */
   .design-col .panel .ribbon {
     margin-top: auto;
     margin-bottom: auto;
@@ -457,61 +463,63 @@
 
 <!-- Inner tab panel #1 — Stage 1 + Stage 2 ribbons -->
 <div class="inner-tab-panel active" id="inner-tab-ribbons">
-<div class="panel" id="stage1-panel">
-  <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
-  <p class="hint">
-    Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
-    <span style="color:var(--step-auto-stroke)">Automated</span>, or
-    <span style="color:var(--step-aug-stroke)">Augmented</span> (chains: one or more Automated steps followed by an Augmented step).
-  </p>
-  <p class="hint">
-    A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; consecutive Automated→Augmented steps form one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
-  </p>
-  <div class="ribbon" id="stage1-ribbon"></div>
-  <div class="legend">
-    <div class="legend-item"><span class="legend-swatch swatch-step-man"></span>Manual step</div>
-    <div class="legend-item"><span class="legend-swatch swatch-step-auto"></span>Automated step</div>
-    <div class="legend-item"><span class="legend-swatch swatch-step-aug"></span>Augmented step</div>
-    <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task</div>
-    <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain task</div>
-    <div class="legend-item">
-      <svg class="legend-handoff-line" viewBox="0 0 22 12">
-        <defs>
-          <marker id="legend-ho-marker-s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#c95466"/>
-          </marker>
-        </defs>
-        <path d="M 1 6 Q 5 2, 9 6 T 17 6" stroke="#c95466" stroke-width="1.8" fill="none" marker-end="url(#legend-ho-marker-s1)"/>
-      </svg>
-      Hand-off
+<!-- One shared panel hosting both Stage 1 and Stage 2 (same cell, same
+     background) — each stage in its own .stage-section so the ribbons
+     center vertically within their own half. -->
+<div class="panel" id="stages-panel">
+  <div class="stage-section" id="stage1-section">
+    <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
+    <p class="hint">
+      Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
+      <span style="color:var(--step-auto-stroke)">Automated</span>, or
+      <span style="color:var(--step-aug-stroke)">Augmented</span> (chains: one or more Automated steps followed by an Augmented step).
+    </p>
+    <p class="hint">
+      A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; consecutive Automated→Augmented steps form one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
+    </p>
+    <div class="ribbon" id="stage1-ribbon"></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch swatch-step-man"></span>Manual step</div>
+      <div class="legend-item"><span class="legend-swatch swatch-step-auto"></span>Automated step</div>
+      <div class="legend-item"><span class="legend-swatch swatch-step-aug"></span>Augmented step</div>
+      <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task</div>
+      <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain task</div>
+      <div class="legend-item">
+        <svg class="legend-handoff-line" viewBox="0 0 22 12">
+          <defs>
+            <marker id="legend-ho-marker-s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#c95466"/>
+            </marker>
+          </defs>
+          <path d="M 1 6 Q 5 2, 9 6 T 17 6" stroke="#c95466" stroke-width="1.8" fill="none" marker-end="url(#legend-ho-marker-s1)"/>
+        </svg>
+        Job hand-off
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ============================================ -->
-<!-- 3. STAGE 2 — TASKS → JOBS                     -->
-<!-- ============================================ -->
-<div class="panel" id="stage2-panel">
-  <h2><span class="stage-label">Stage 2</span>Job Design: Tasks → Jobs</h2>
-  <p class="hint">
-    Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).
-    Each job boundary incurs a <span style="color:var(--handoff-stroke)">hand-off cost</span> determined by the final step of that job.
-  </p>
-  <div class="ribbon" id="stage2-ribbon"></div>
-  <div class="legend">
-    <div class="legend-item"><span class="legend-swatch swatch-task-man-solid"></span>Manual task</div>
-    <div class="legend-item"><span class="legend-swatch swatch-task-chain-solid"></span>AI chain task</div>
-    <div class="legend-item"><span class="legend-swatch swatch-job"></span>Job</div>
-    <div class="legend-item">
-      <svg class="legend-handoff-line" viewBox="0 0 22 12">
-        <defs>
-          <marker id="legend-ho-marker" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#c95466"/>
-          </marker>
-        </defs>
-        <path d="M 1 6 Q 5 2, 9 6 T 17 6" stroke="#c95466" stroke-width="1.8" fill="none" marker-end="url(#legend-ho-marker)"/>
-      </svg>
-      Hand-off
+  <div class="stage-section" id="stage2-section">
+    <h2><span class="stage-label">Stage 2</span>Job Design: Tasks → Jobs</h2>
+    <p class="hint">
+      Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).
+      Each job boundary incurs a <span style="color:var(--handoff-stroke)">hand-off cost</span> determined by the final step of that job.
+    </p>
+    <div class="ribbon" id="stage2-ribbon"></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch swatch-task-man-solid"></span>Manual task</div>
+      <div class="legend-item"><span class="legend-swatch swatch-task-chain-solid"></span>AI chain task</div>
+      <div class="legend-item"><span class="legend-swatch swatch-job"></span>Job</div>
+      <div class="legend-item">
+        <svg class="legend-handoff-line" viewBox="0 0 22 12">
+          <defs>
+            <marker id="legend-ho-marker" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#c95466"/>
+            </marker>
+          </defs>
+          <path d="M 1 6 Q 5 2, 9 6 T 17 6" stroke="#c95466" stroke-width="1.8" fill="none" marker-end="url(#legend-ho-marker)"/>
+        </svg>
+        Job hand-off
+      </div>
     </div>
   </div>
 </div>
@@ -1426,6 +1434,18 @@ function renderGeomView(svg, geom, view) {
     }
     setAttrs(bbox, bboxAttrs);
     svg.appendChild(bbox);
+    // Job View: also place a 'Job N' label CENTERED inside the cyan
+    // rectangle, in dark cyan to match the overall theme.
+    if (view === 'job') {
+      const innerLbl = svgEl('text');
+      setAttrs(innerLbl, {
+        x: MX(jb.x + jb.w / 2), y: MY(jb.y + jb.h / 2),
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
+        'font-size': '18', 'font-weight': '700', fill: '#0a5a5a',
+      });
+      innerLbl.textContent = `Job ${jb.jobIdx + 1}`;
+      svg.appendChild(innerLbl);
+    }
   });
 
   // Job view intentionally skips the pink hand-off overlay: each job's
