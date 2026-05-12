@@ -468,6 +468,17 @@
     <div class="legend-item"><span class="legend-swatch swatch-step-aug"></span>Augmented step</div>
     <div class="legend-item"><span class="legend-swatch swatch-task-man"></span>Manual task</div>
     <div class="legend-item"><span class="legend-swatch swatch-task-chain"></span>AI chain task</div>
+    <div class="legend-item">
+      <svg class="legend-handoff-line" viewBox="0 0 22 12">
+        <defs>
+          <marker id="legend-ho-marker-s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#c95466"/>
+          </marker>
+        </defs>
+        <path d="M 1 6 Q 5 2, 9 6 T 17 6" stroke="#c95466" stroke-width="1.8" fill="none" marker-end="url(#legend-ho-marker-s1)"/>
+      </svg>
+      Hand-off
+    </div>
   </div>
 </div>
 
@@ -547,7 +558,7 @@
   <h2>Geometric View of the Optimal Design</h2>
   <p class="hint">
     Each step/task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
-    Hand-off rectangles (pink) appear between non-final jobs.
+    Hand-off rectangles (pink) appear between non-final jobs. In the Step View, automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill to mark their zero direct cost — the chain's cost is carried by the augmented step at the end.
   </p>
   <div class="geom-container">
     <div class="geom-row">
@@ -1136,6 +1147,32 @@ function renderGeomView(svg, geom, view) {
   setAttrs(svg, { width: W, height: H, viewBox: `0 0 ${W} ${H}`,
                   preserveAspectRatio: 'xMidYMid meet' });
 
+  // Step View only: define a diagonal-stripe pattern used to fill Automated
+  // step cells, so the reader sees them as 'part of the chain, but zero
+  // direct cost' rather than as ordinary contributing cells.
+  if (view === 'step') {
+    const defs = svgEl('defs');
+    const patternId = `auto-hatch-${svg.id || 'step'}`;
+    const pattern = svgEl('pattern');
+    setAttrs(pattern, {
+      id: patternId,
+      patternUnits: 'userSpaceOnUse',
+      width: '7', height: '7',
+      patternTransform: 'rotate(45)',
+    });
+    const patBg = svgEl('rect');
+    setAttrs(patBg, { width: '7', height: '7', fill: getCSS('--step-auto-fill') });
+    const patLine = svgEl('line');
+    setAttrs(patLine, {
+      x1: '0', y1: '0', x2: '0', y2: '7',
+      stroke: getCSS('--step-auto-stroke'), 'stroke-width': '1.6',
+    });
+    pattern.appendChild(patBg);
+    pattern.appendChild(patLine);
+    defs.appendChild(pattern);
+    svg.appendChild(defs);
+  }
+
   // Axes.
   const baseline = svgEl('line');
   setAttrs(baseline, {
@@ -1247,10 +1284,16 @@ function renderGeomView(svg, geom, view) {
         const stepColors = stepFillsForMode(m);
         const cellX = b.x + k * cellWUnits;
         const cellRect = svgEl('rect');
+        // Automated step cells get the diagonal-stripe pattern fill to
+        // signal 'zero direct cost' (the chain's cost is carried by the
+        // augmented step, not by any of the intermediate automated ones).
+        const cellFill = (m === 'C')
+          ? `url(#auto-hatch-${svg.id || 'step'})`
+          : stepColors.fill;
         setAttrs(cellRect, {
           x: MX(cellX), y: MY(b.y + b.h),
           width: cellWUnits * GEOM.unitX, height: b.h * GEOM.unitY,
-          fill: stepColors.fill, stroke: stepColors.stroke,
+          fill: cellFill, stroke: stepColors.stroke,
           'stroke-width': '1',
         });
         svg.appendChild(cellRect);
