@@ -99,18 +99,25 @@
     min-height: 0;
   }
 
-  /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
-     in the left column, Geometric View occupies the right column.
-     align-items: stretch makes both columns share the same row height
-     (driven by the taller Geometric View panel), and the panels inside
-     the left column grow (flex: 1 1 auto) so their combined height
-     matches the right column. */
+  /* Two-column grid with the inner-tab buttons sitting in their own
+     row ABOVE the left column, so they don't eat into the row that
+     the Geometric View occupies. Row 1: tab bar in the left cell,
+     empty on the right. Row 2: left content cell + right Geometric
+     View cell, both stretched to the same height. */
   .design-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 12px;
+    grid-template-areas:
+      "tabs ."
+      "left right";
+    grid-template-rows: auto 1fr;
+    column-gap: 12px;
+    row-gap: 6px;
     align-items: stretch;
   }
+  .design-grid > .inner-tab-bar { grid-area: tabs; }
+  .design-grid > .design-col:nth-of-type(1) { grid-area: left; }
+  .design-grid > .design-col:nth-of-type(2) { grid-area: right; }
   .design-col {
     display: flex; flex-direction: column; gap: 12px;
     min-width: 0;
@@ -417,12 +424,13 @@
 <!-- column always shows the Geometric View.      -->
 <!-- ============================================ -->
 <div class="design-grid">
-<div class="design-col">
 
 <div class="inner-tab-bar">
   <button class="inner-tab-button active" data-inner-tab="ribbons">Optimal Design</button>
   <button class="inner-tab-button" data-inner-tab="params">Cost Parameters</button>
 </div>
+
+<div class="design-col">
 
 <!-- Inner tab panel #1 — Stage 1 + Stage 2 ribbons -->
 <div class="inner-tab-panel active" id="inner-tab-ribbons">
@@ -1156,7 +1164,7 @@ function renderGeomView(svg, geom, view) {
   xLabel.textContent = 'Time';
   svg.appendChild(xLabel);
   const yLabel = svgEl('text');
-  const yLx = plotLeft - 46, yLy = plotBottom - (totalHeightUnits * GEOM.unitY) / 2;
+  const yLx = plotLeft - 32, yLy = plotBottom - (totalHeightUnits * GEOM.unitY) / 2;
   setAttrs(yLabel, {
     x: yLx, y: yLy, 'text-anchor': 'middle', 'font-size': '15', 'font-weight': '500', fill: '#374151',
     transform: `rotate(-90 ${yLx} ${yLy})`,
@@ -1216,14 +1224,25 @@ function renderGeomView(svg, geom, view) {
           'text-anchor': 'middle', 'dominant-baseline': 'central',
           fill: '#1f2937',
         });
+        // Line 1: step name with mode in parentheses (e.g. "Step 1 (Manual)")
+        // Line 2: mode-relevant cost parameter values
+        //   Manual:  $cM, tM
+        //   Auto:    $cA, tA  (per-attempt inputs; the step has no direct
+        //                       contribution at the rectangle level, but the
+        //                       inputs are still informative)
+        //   Aug:     $cA, tA
+        const stepRec = state.steps[si];
+        const stepCostText = (m === 'M')
+          ? `$${(+stepRec.cM).toFixed(2)}, ${(+stepRec.tM).toFixed(2)}`
+          : `$${(+stepRec.cA).toFixed(2)}, ${(+stepRec.tA).toFixed(2)}`;
         const tspanName = svgEl('tspan');
         setAttrs(tspanName, { x: cx, dy: '-0.5em', 'font-size': '10', 'font-weight': '600' });
-        tspanName.textContent = steps[si].name;
+        tspanName.textContent = `${steps[si].name} (${modeLabel(m)})`;
         txt.appendChild(tspanName);
-        const tspanMode = svgEl('tspan');
-        setAttrs(tspanMode, { x: cx, dy: '1.25em', 'font-size': '9', fill: '#4a5568' });
-        tspanMode.textContent = `(${modeLabel(m)})`;
-        txt.appendChild(tspanMode);
+        const tspanCost = svgEl('tspan');
+        setAttrs(tspanCost, { x: cx, dy: '1.25em', 'font-size': '9', fill: '#4a5568' });
+        tspanCost.textContent = stepCostText;
+        txt.appendChild(tspanCost);
         svg.appendChild(txt);
 
         const ttl = svgEl('title');
