@@ -570,12 +570,16 @@
     <div class="geom-tab-bar">
       <button class="geom-tab-button active" data-geom-tab="step">Step View</button>
       <button class="geom-tab-button" data-geom-tab="task">Task View</button>
+      <button class="geom-tab-button" data-geom-tab="job">Job View</button>
     </div>
     <div class="geom-tab-panel active" id="geom-tab-step">
       <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="geom-tab-panel" id="geom-tab-task">
       <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div class="geom-tab-panel" id="geom-tab-job">
+      <svg class="geom" id="geom-svg-jobs" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
 </div>
@@ -1253,28 +1257,37 @@ function renderGeomView(svg, geom, view) {
   yLabel.textContent = 'Skill';
   svg.appendChild(yLabel);
 
-  // 1) Hand-off rectangles (pink) go on the back of the plot area.
-  handoffBoxes.forEach(h => {
-    const hrect = svgEl('rect');
-    setAttrs(hrect, {
-      x: MX(h.x), y: MY(h.y + h.h),
-      width: h.w * GEOM.unitX, height: h.h * GEOM.unitY,
-      fill: getCSS('--handoff-fill'), stroke: getCSS('--handoff-stroke'),
-      'stroke-width': '1.2', 'stroke-dasharray': '3 3',
+  // Helper: render the pink hand-off rectangles + 't^H' labels. Used at
+  // different points in the draw order depending on view.
+  const drawHandoffs = () => {
+    handoffBoxes.forEach(h => {
+      const hrect = svgEl('rect');
+      setAttrs(hrect, {
+        x: MX(h.x), y: MY(h.y + h.h),
+        width: h.w * GEOM.unitX, height: h.h * GEOM.unitY,
+        fill: getCSS('--handoff-fill'), stroke: getCSS('--handoff-stroke'),
+        'stroke-width': '1.2', 'stroke-dasharray': '3 3',
+      });
+      svg.appendChild(hrect);
+      const hlbl = svgEl('text');
+      setAttrs(hlbl, {
+        x: MX(h.x + h.w / 2), y: MY(h.y + h.h / 2),
+        'text-anchor': 'middle', 'dominant-baseline': 'central',
+        'font-size': '11', fill: '#7a3a44',
+      });
+      hlbl.innerHTML = `t<tspan baseline-shift="super" font-size="8">H</tspan>`;
+      svg.appendChild(hlbl);
     });
-    svg.appendChild(hrect);
-    const hlbl = svgEl('text');
-    setAttrs(hlbl, {
-      x: MX(h.x + h.w / 2), y: MY(h.y + h.h / 2),
-      'text-anchor': 'middle', 'dominant-baseline': 'central',
-      'font-size': '11', fill: '#7a3a44',
-    });
-    hlbl.innerHTML = `t<tspan baseline-shift="super" font-size="8">H</tspan>`;
-    svg.appendChild(hlbl);
-  });
+  };
 
-  // 2) Task / step rectangles.
-  taskBoxes.forEach(b => {
+  // 1) Hand-off rectangles (pink). In step / task views they sit on the
+  //    back of the plot area. In job view they're drawn AFTER the cyan
+  //    bounding box (further down) so the pink stays visible on top of
+  //    the cyan fill.
+  if (view !== 'job') drawHandoffs();
+
+  // 2) Task / step rectangles — skipped entirely in job view.
+  if (view !== 'job') taskBoxes.forEach(b => {
     if (b.w <= 0 || b.h <= 0) return;
     const taskColors = fillsForType(b.type);
     if (view === 'step') {
@@ -1390,22 +1403,34 @@ function renderGeomView(svg, geom, view) {
     }
   });
 
-  // 3) Job bounding boxes (dashed cyan) — drawn AFTER task/step rectangles
-  //    so the dashed cyan border overlays task outer borders on shared edges
-  //    and the job partition is clearly readable in both views. Long dashes
-  //    + heavier stroke keep the cyan dominant where it coincides with the
-  //    olive/blue task outlines in the Step View.
+  // 3) Job bounding boxes. In step / task views: dashed cyan outline
+  //    drawn AFTER the task rectangles so the partition reads cleanly
+  //    on shared edges. In job view: solid cyan-FILLED rectangles
+  //    (this view dispenses with task/step detail and just shows the
+  //    job partition itself).
   jobBoxes.forEach(jb => {
     if (jb.h <= 0 || jb.w <= 0) return;
     const bbox = svgEl('rect');
-    setAttrs(bbox, {
+    const bboxAttrs = {
       x: MX(jb.x), y: MY(jb.y + jb.h),
       width: jb.w * GEOM.unitX, height: jb.h * GEOM.unitY,
-      fill: 'none', stroke: getCSS('--bbox-stroke'),
-      'stroke-width': '2.5', 'stroke-dasharray': '10 3',
-    });
+      stroke: getCSS('--bbox-stroke'),
+    };
+    if (view === 'job') {
+      bboxAttrs.fill = getCSS('--job-fill');
+      bboxAttrs['stroke-width'] = '2';
+    } else {
+      bboxAttrs.fill = 'none';
+      bboxAttrs['stroke-width'] = '2.5';
+      bboxAttrs['stroke-dasharray'] = '10 3';
+    }
+    setAttrs(bbox, bboxAttrs);
     svg.appendChild(bbox);
   });
+
+  // 3b) In job view, draw the hand-offs NOW so they're visible on top of
+  //     the solid cyan job rectangles.
+  if (view === 'job') drawHandoffs();
 
   // 4) Job titles above each job's bbox.
   jobBoxes.forEach(jb => {
@@ -1426,6 +1451,7 @@ function renderGeom() {
   const geom = computeGeom();
   renderGeomView(document.getElementById('geom-svg-steps'), geom, 'step');
   renderGeomView(document.getElementById('geom-svg-tasks'), geom, 'task');
+  renderGeomView(document.getElementById('geom-svg-jobs'),  geom, 'job');
 }
 
 // ===========================================================================
