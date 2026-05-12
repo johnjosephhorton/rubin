@@ -67,6 +67,34 @@
     margin: 0 6px;
   }
 
+  /* Top-level tab bar that toggles between the Cost Parameters panel
+     and the Stage 1 + Stage 2 ribbon panels, so they share one
+     vertical slot instead of stacking. */
+  .tab-bar {
+    display: flex; gap: 0;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 18px;
+  }
+  .tab-button {
+    padding: 12px 24px;
+    border: none; background: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-weight: 500;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab-button:hover { color: var(--text); }
+  .tab-button.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
   .panel {
     background: var(--panel);
     border: 1px solid var(--border);
@@ -329,8 +357,17 @@
 <p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (worker assignment).</p>
 
 <!-- ============================================ -->
-<!-- 1. STEP PARAMETERS                            -->
+<!-- Tab bar: toggles Cost Parameters ↔ Ribbons    -->
 <!-- ============================================ -->
+<div class="tab-bar">
+  <button class="tab-button active" data-tab="ribbons">Optimal Design</button>
+  <button class="tab-button" data-tab="params">Cost Parameters</button>
+</div>
+
+<!-- ============================================ -->
+<!-- 1. COST PARAMETERS (tab panel)                -->
+<!-- ============================================ -->
+<div class="tab-panel" id="tab-params">
 <div class="panel">
   <div class="panel-header">
     <h2>Cost Parameters</h2>
@@ -363,10 +400,12 @@
     <tbody id="step-tbody"></tbody>
   </table>
 </div>
+</div><!-- /#tab-params -->
 
 <!-- ============================================ -->
-<!-- 2. STAGE 1 — STEPS → TASKS                    -->
+<!-- 2. RIBBONS — STAGE 1 + STAGE 2 (tab panel)    -->
 <!-- ============================================ -->
+<div class="tab-panel active" id="tab-ribbons">
 <div class="panel" id="stage1-panel">
   <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
   <p class="hint">
@@ -414,6 +453,7 @@
     </div>
   </div>
 </div>
+</div><!-- /#tab-ribbons -->
 
 <!-- ============================================ -->
 <!-- 4. GEOMETRIC VIEW                             -->
@@ -1322,32 +1362,53 @@ function feelingLucky() {
 }
 
 // ===========================================================================
+// Tabs (Cost Parameters ↔ Optimal Design ribbons)
+// ===========================================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab-button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.id === `tab-${name}`);
+  });
+}
+document.querySelectorAll('.tab-button').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ===========================================================================
 // Buttons
 // ===========================================================================
-function solve() {
+// Quiet solve: recompute and render but DO NOT switch tabs. Used by Reset,
+// Add Step, and the initial page load.
+function solveQuiet() {
   state.solution = solveOptimal(state.steps);
   renderAll();
+}
+// User-initiated Solve: also surface the result by switching to the ribbons
+// tab so the visualizations are visible immediately.
+function solve() {
+  solveQuiet();
+  switchTab('ribbons');
 }
 
 document.getElementById('solve-btn').addEventListener('click', solve);
 document.getElementById('lucky-btn').addEventListener('click', feelingLucky);
 document.getElementById('reset-btn').addEventListener('click', () => {
   state.steps = WORKING_EXAMPLE.map(s => ({ ...s }));
-  state.solution = null;
-  renderAll();
+  solveQuiet();
 });
 document.getElementById('add-step-btn').addEventListener('click', () => {
   state.steps.push({
     name: `Step ${state.steps.length + 1}`,
     tM: 1.0, cM: 1.0, tA: 0.5, cA: 1.0, q: 0.85, tH: 0.0,
   });
-  state.solution = null;
-  renderAll();
+  solveQuiet();
 });
 
 // Initial render: solve immediately on page load so the visualizations,
 // ribbons, and cost breakdown are all populated when the user arrives.
-solve();
+solveQuiet();
 </script>
 </body>
 </html>
