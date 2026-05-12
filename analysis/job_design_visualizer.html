@@ -139,10 +139,18 @@
     display: flex; flex-direction: column;
     flex: 1 1 0; min-height: 0;
   }
-  /* Within each stage-section: keep the title + hints at the top and
-     the legend at the bottom, with the ribbon centered vertically. */
+  /* Layout within each stage-section: title + hints at the top, ribbon
+     pushed down to sit close to its legend, and a generous gap below
+     the legend (which separates Stage 1 from Stage 2's title). The
+     ribbon-to-legend spacing is small (6px) so the legend is clearly
+     attached to its ribbon; the auto margin below the legend absorbs
+     the rest of the section's spare height. */
   .design-col .panel .ribbon {
     margin-top: auto;
+    margin-bottom: 6px;
+  }
+  .design-col .panel .legend {
+    margin-top: 0;
     margin-bottom: auto;
   }
   @media (max-width: 980px) {
@@ -602,8 +610,7 @@
     </div>
     <div class="geom-tab-panel" id="geom-tab-job">
       <p class="hint geom-hint">
-        Each job is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
-        Hand-off rectangles (pink) appear between non-final jobs.
+        Each job is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
       </p>
       <svg class="geom" id="geom-svg-jobs" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
@@ -1440,13 +1447,14 @@ function renderGeomView(svg, geom, view) {
     setAttrs(bbox, bboxAttrs);
     svg.appendChild(bbox);
     // Job View: also place a 'Job N' label CENTERED inside the cyan
-    // rectangle, in dark cyan to match the overall theme.
+    // rectangle, using the same font size / weight / color as the
+    // Step and Task labels in their respective views.
     if (view === 'job') {
       const innerLbl = svgEl('text');
       setAttrs(innerLbl, {
         x: MX(jb.x + jb.w / 2), y: MY(jb.y + jb.h / 2),
         'text-anchor': 'middle', 'dominant-baseline': 'central',
-        'font-size': '18', 'font-weight': '700', fill: '#0a5a5a',
+        'font-size': '10', 'font-weight': '600', fill: '#1f2937',
       });
       innerLbl.textContent = `Job ${jb.jobIdx + 1}`;
       svg.appendChild(innerLbl);
