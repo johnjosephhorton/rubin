@@ -97,18 +97,21 @@
 
   /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
      in the left column, Geometric View occupies the right column.
-     Each column is its own flex stack so panel spacing stays uniform. */
+     align-items: stretch makes both columns share the same row height
+     (driven by the taller Geometric View panel), and the panels inside
+     the left column grow (flex: 1 1 auto) so their combined height
+     matches the right column. */
   .design-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 12px;
-    align-items: start;
+    align-items: stretch;
   }
   .design-col {
     display: flex; flex-direction: column; gap: 12px;
     min-width: 0;
   }
-  .design-col .panel { margin-bottom: 0; }
+  .design-col .panel { margin-bottom: 0; flex: 1 1 auto; }
   @media (max-width: 980px) {
     .design-grid { grid-template-columns: 1fr; }
   }
