@@ -1029,19 +1029,23 @@ function renderStage2() {
       tb.className = 'task-box ' + (task.type === 'chain' ? 'chain' : '');
       const nm = document.createElement('div'); nm.className = 'nm';
       nm.textContent = `Task ${ti+1}`;
-      // Line 2: compact task-level cost parameters.
+      // Line 2: compact task-level cost parameters. For AI tasks (singleton
+      // augmented OR multi-step chain) the (c, t) shown are the RAW cA, tA
+      // of the augmented step at the end of the task — the per-attempt
+      // inputs — and q is the product of the step success probabilities
+      // across the entire task (just the step's q for a singleton, the
+      // product of all q_i for a chain).
       //   Manual:                  (c,t)=($cM, tM)
-      //   Augmented (singleton):   (c,t)=($cA, tA/q), q=q
-      //   AI chain (s_l..s_r):     (c,t)=($cA_r, tA_r/Πq), q=Π q_i
+      //   Augmented (singleton):   (c,t)=($cA, tA), q=q
+      //   AI chain (s_l..s_r):     (c,t)=($cA_r, tA_r), q=Π q_i
       const meta = document.createElement('div'); meta.className = 'meta';
       if (task.type === 'man') {
         meta.textContent = `(c,t)=($${fmtN(lv.c)}, ${fmtN(lv.t)})`;
       } else {
-        // 'aug' (singleton) or 'chain': q is the product of step q's
-        // (equal to the step's q for a singleton).
+        const lastStep = state.steps[task.lastStep];
         let qProd = 1;
         for (const i of task.stepIdxs) qProd *= (+state.steps[i].q) || 0;
-        meta.textContent = `(c,t)=($${fmtN(lv.c)}, ${fmtN(lv.t)}), q=${fmtN(qProd)}`;
+        meta.textContent = `(c,t)=($${fmtN(lastStep.cA)}, ${fmtN(lastStep.tA)}), q=${fmtN(qProd)}`;
       }
       tb.appendChild(nm); tb.appendChild(meta);
       jg.appendChild(tb);
