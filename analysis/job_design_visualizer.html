@@ -120,7 +120,7 @@
      Breakdown sits below; the user scrolls down for it. */
   .design-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
     gap: 12px;
     align-items: stretch;
     min-height: calc(100vh - 175px);
@@ -173,6 +173,11 @@
     margin-bottom: 10px; gap: 10px; flex-wrap: wrap;
   }
   .panel-header .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  /* The Cost Parameters tab's action buttons are the only thing in its
+     .panel-header now, so center them within the column instead of
+     leaving them aligned to the start. */
+  .inner-tab-panel .panel-header { justify-content: center; }
+  .inner-tab-panel .panel-header .actions { justify-content: center; }
 
   .stage-label {
     display: inline-block; font-size: 13px;
@@ -410,12 +415,17 @@
   /* Reserve enough vertical space for the longest hint (the Step View,
      which has three lines) so the SVG below it starts at the same y
      coordinate in every view — switching tabs only changes the
-     contents, not where the graph begins. */
+     contents, not where the graph begins. The bumped line-height
+     gives a bit of breathing room between the three lines. */
   .geom-hint {
-    margin: 4px 2px 8px 2px !important;
-    min-height: calc(3 * 1.45em);
+    margin: 4px 2px 10px 2px !important;
+    min-height: calc(3 * 1.9em);
+    line-height: 1.9;
   }
-  svg.geom { display: block; width: 100%; height: auto; }
+  /* Cap the SVG's rendered height at 55vh. preserveAspectRatio scales
+     fonts and rectangles together when a smaller container constrains
+     the SVG. */
+  svg.geom { display: block; width: 100%; height: auto; max-height: 55vh; }
 
   /* === Cost summary & breakdown === */
   .cost-summary {
@@ -462,7 +472,7 @@
   for <a href="https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf" target="_blank" rel="noopener"><strong>&ldquo;Chaining Tasks, Redefining Work: A Theory of AI Automation&rdquo;</strong></a>
 </p>
 <p class="paper-authors">Demirer, Horton, Immorlica, Lucier, Shahidi (2026)</p>
-<p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (worker assignment).</p>
+<p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (job design).</p>
 
 <!-- ============================================ -->
 <!-- Single-page layout. The left column has a    -->
@@ -1234,19 +1244,8 @@ function renderGeomView(svg, geom, view) {
     svg.appendChild(defs);
   }
 
-  // Axes.
-  const baseline = svgEl('line');
-  setAttrs(baseline, {
-    x1: plotLeft, x2: MX(totalWidthUnits), y1: plotBottom, y2: plotBottom,
-    stroke: '#d1d5db', 'stroke-width': '1',
-  });
-  svg.appendChild(baseline);
-  const leftAxis = svgEl('line');
-  setAttrs(leftAxis, {
-    x1: plotLeft, x2: plotLeft, y1: plotBottom, y2: MY(totalHeightUnits),
-    stroke: '#d1d5db', 'stroke-width': '1',
-  });
-  svg.appendChild(leftAxis);
+  // (Axis baseline + left-axis lines removed — only the tick marks and
+  //  numeric tick labels are kept, with the 'Skill' / 'Time' axis labels.)
 
   // Axis tick marks + numeric labels at staircase positions on each axis.
   // x-axis ticks at the right edge of every task and hand-off rectangle;
