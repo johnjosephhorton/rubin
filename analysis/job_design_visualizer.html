@@ -52,12 +52,15 @@
   }
   /* Fixed design width — every device sees the same starting layout.
      The .container is scaled (uniformly) via JS so it always fits the
-     viewport, with transform-origin: top center keeping it centered. */
+     viewport, with transform-origin: top center keeping it centered.
+     Initial transform: scale(0) avoids a one-frame flash of the
+     un-scaled (overflowing) container before fitToScreen() lands. */
   .container {
-    width: 1400px;
+    width: 1320px;
     flex-shrink: 0;
-    padding: 16px 24px 24px;
+    padding: 14px 22px 20px;
     transform-origin: top center;
+    transform: scale(0);
     will-change: transform;
   }
   h1 { font-size: 30px; margin: 0 0 2px 0; text-align: center; }
@@ -1422,29 +1425,38 @@ function renderAll() {
 // ===========================================================================
 // Auto-fit: scale the whole page so the same starting layout fits any
 // viewport (laptop, desktop, etc.). We never upscale beyond 1; the container
-// is fixed at 1400px wide and centered, and we apply a uniform CSS scale
+// is fixed at 1320px wide and centered, and we apply a uniform CSS scale
 // so the visible content always lands inside the window without scrolling.
-// rAF-coalesced so resize storms don't thrash layout.
+//
+// Synchronous so callers that render new content (renderAll, switchInnerTab)
+// get an immediate re-fit before the next paint — no flash of overflow. The
+// 'resize' listener is debounced to avoid layout thrashing during drag.
 // ===========================================================================
-let __fitScheduled = false;
 function fitToScreen() {
-  if (__fitScheduled) return;
-  __fitScheduled = true;
-  requestAnimationFrame(() => {
-    __fitScheduled = false;
-    const container = document.querySelector('.container');
-    if (!container) return;
-    container.style.transform = 'none';
-    const cw = container.offsetWidth;
-    const ch = container.offsetHeight;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    if (cw <= 0 || ch <= 0) return;
-    const scale = Math.min(vw / cw, vh / ch, 1);
-    container.style.transform = `scale(${scale})`;
-  });
+  const container = document.querySelector('.container');
+  if (!container) return;
+  // Temporarily clear the transform so offsetWidth/offsetHeight read the
+  // container's NATURAL (unscaled) size.
+  container.style.transform = 'none';
+  const cw = container.offsetWidth;
+  const ch = container.offsetHeight;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  if (cw <= 0 || ch <= 0) return;
+  // Leave a 2px safety margin so rounding doesn't reintroduce overflow.
+  const scale = Math.min((vw - 2) / cw, (vh - 2) / ch, 1);
+  container.style.transform = `scale(${scale})`;
 }
-window.addEventListener('resize', fitToScreen);
+let __fitTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(__fitTimer);
+  __fitTimer = setTimeout(fitToScreen, 50);
+});
+// Re-fit once everything (web fonts, late SVG sizing, images) has loaded,
+// in case the natural height changes between the first synchronous fit and
+// the fully-painted document.
+window.addEventListener('load', fitToScreen);
+document.addEventListener('DOMContentLoaded', fitToScreen);
 
 // ===========================================================================
 // "Feeling Lucky": small perturbations around the working example
