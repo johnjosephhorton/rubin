@@ -139,20 +139,20 @@
     display: flex; flex-direction: column;
     flex: 1 1 0; min-height: 0;
   }
-  /* Layout within each stage-section: title + hints at the top, ribbon
-     pushed down to sit close to its legend, and a generous gap below
-     the legend (which separates Stage 1 from Stage 2's title). The
-     ribbon-to-legend spacing is small (6px) so the legend is clearly
-     attached to its ribbon; the auto margin below the legend absorbs
-     the rest of the section's spare height. */
-  .design-col .panel .ribbon {
-    margin-top: auto;
-    margin-bottom: 6px;
-  }
+  /* Layout within each stage-section: title + hints at the top, then
+     three flex-grow spacers (1 : 1 : 2) that distribute the remaining
+     vertical space — one above the ribbon, one between the ribbon and
+     legend (equal sizes, so the ribbon is centered between its
+     description and its legend), and a bigger one below the legend
+     (so Stage 1's legend and Stage 2's title stay clearly separated). */
+  .design-col .panel .ribbon,
   .design-col .panel .legend {
     margin-top: 0;
-    margin-bottom: auto;
+    margin-bottom: 0;
   }
+  .design-col .panel > .stage-section > .ss-spacer { flex-shrink: 1; flex-basis: 0; }
+  .design-col .panel > .stage-section > .ss-spacer-mid  { flex-grow: 1; }
+  .design-col .panel > .stage-section > .ss-spacer-tail { flex-grow: 2; }
   @media (max-width: 980px) {
     .design-grid { grid-template-columns: 1fr; }
   }
@@ -494,7 +494,9 @@
     <p class="hint">
       A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; consecutive Automated→Augmented steps form one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
     </p>
+    <div class="ss-spacer ss-spacer-mid"></div>
     <div class="ribbon" id="stage1-ribbon"></div>
+    <div class="ss-spacer ss-spacer-mid"></div>
     <div class="legend">
       <div class="legend-item"><span class="legend-swatch swatch-step-man"></span>Manual step</div>
       <div class="legend-item"><span class="legend-swatch swatch-step-auto"></span>Automated step</div>
@@ -513,6 +515,7 @@
         Job hand-off
       </div>
     </div>
+    <div class="ss-spacer ss-spacer-tail"></div>
   </div>
 
   <div class="stage-section" id="stage2-section">
@@ -521,7 +524,9 @@
       Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).
       Each job boundary incurs a <span style="color:var(--handoff-stroke)">hand-off cost</span> determined by the final step of that job.
     </p>
+    <div class="ss-spacer ss-spacer-mid"></div>
     <div class="ribbon" id="stage2-ribbon"></div>
+    <div class="ss-spacer ss-spacer-mid"></div>
     <div class="legend">
       <div class="legend-item"><span class="legend-swatch swatch-task-man-solid"></span>Manual task</div>
       <div class="legend-item"><span class="legend-swatch swatch-task-chain-solid"></span>AI chain task</div>
@@ -538,6 +543,7 @@
         Job hand-off
       </div>
     </div>
+    <div class="ss-spacer ss-spacer-tail"></div>
   </div>
 </div>
 </div><!-- /#inner-tab-ribbons -->
