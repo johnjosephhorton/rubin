@@ -1428,9 +1428,10 @@ function renderGeomView(svg, geom, view) {
     svg.appendChild(bbox);
   });
 
-  // 3b) In job view, draw the hand-offs NOW so they're visible on top of
-  //     the solid cyan job rectangles.
-  if (view === 'job') drawHandoffs();
+  // Job view intentionally skips the pink hand-off overlay: each job's
+  // bbox already spans (job_totalT + tH), so the hand-off region is
+  // already inside the solid cyan rectangle. Not drawing the pink layer
+  // keeps the view fully cyan, with nothing standing out.
 
   // 4) Job titles above each job's bbox.
   jobBoxes.forEach(jb => {
