@@ -50,13 +50,13 @@
     align-items: flex-start;
     justify-content: center;
   }
-  /* Fixed design width — every device sees the same starting layout.
-     The .container is scaled (uniformly) via JS so it always fits the
-     viewport, with transform-origin: top center keeping it centered.
-     Initial transform: scale(0) avoids a one-frame flash of the
-     un-scaled (overflowing) container before fitToScreen() lands. */
+  /* Fill the page window's full width, whatever its size — no fixed
+     1320px cap, no side margins. fitToScreen() (JS) still applies a
+     uniform CSS scale ONLY when needed to keep the content inside the
+     viewport's height. Initial transform: scale(0) avoids a one-frame
+     flash before fitToScreen() lands. */
   .container {
-    width: 1320px;
+    width: 100%;
     flex-shrink: 0;
     padding: 14px 22px 20px;
     transform-origin: top center;
