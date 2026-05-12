@@ -398,7 +398,14 @@
   }
   .geom-tab-panel { display: none; }
   .geom-tab-panel.active { display: block; }
-  .geom-hint { margin: 4px 2px 8px 2px !important; }
+  /* Reserve enough vertical space for the longest hint (the Step View,
+     which has three lines) so the SVG below it starts at the same y
+     coordinate in every view — switching tabs only changes the
+     contents, not where the graph begins. */
+  .geom-hint {
+    margin: 4px 2px 8px 2px !important;
+    min-height: calc(3 * 1.45em);
+  }
   svg.geom { display: block; width: 100%; height: auto; }
 
   /* === Cost summary & breakdown === */
@@ -580,21 +587,22 @@
     </div>
     <div class="geom-tab-panel active" id="geom-tab-step">
       <p class="hint geom-hint">
-        Each step is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
-        Hand-off rectangles (pink) appear between non-final jobs. Automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill to mark their zero direct cost — the chain's cost is carried by the augmented step at the end.
+        Each step is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
+        Hand-off rectangles (pink) appear between non-final jobs.<br>
+        Automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill — they contribute zero direct cost.
       </p>
       <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="geom-tab-panel" id="geom-tab-task">
       <p class="hint geom-hint">
-        Each task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
+        Each task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
         Hand-off rectangles (pink) appear between non-final jobs.
       </p>
       <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="geom-tab-panel" id="geom-tab-job">
       <p class="hint geom-hint">
-        Each job is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
+        Each job is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
         Hand-off rectangles (pink) appear between non-final jobs.
       </p>
       <svg class="geom" id="geom-svg-jobs" xmlns="http://www.w3.org/2000/svg"></svg>
