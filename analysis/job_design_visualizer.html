@@ -378,6 +378,7 @@
      occupy the full right-column width and read much larger. */
   .geom-tab-bar {
     display: flex; gap: 6px; margin-bottom: 8px;
+    justify-content: center;
   }
   .geom-tab-button {
     padding: 6px 14px;
@@ -397,6 +398,7 @@
   }
   .geom-tab-panel { display: none; }
   .geom-tab-panel.active { display: block; }
+  .geom-hint { margin: 4px 2px 8px 2px !important; }
   svg.geom { display: block; width: 100%; height: auto; }
 
   /* === Cost summary & breakdown === */
@@ -570,10 +572,6 @@
 <!-- ============================================ -->
 <div class="panel">
   <h2>Geometric View of the Optimal Design</h2>
-  <p class="hint">
-    Each step/task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
-    Hand-off rectangles (pink) appear between non-final jobs. In the Step View, automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill to mark their zero direct cost — the chain's cost is carried by the augmented step at the end.
-  </p>
   <div class="geom-container">
     <div class="geom-tab-bar">
       <button class="geom-tab-button active" data-geom-tab="step">Step View</button>
@@ -581,12 +579,24 @@
       <button class="geom-tab-button" data-geom-tab="job">Job View</button>
     </div>
     <div class="geom-tab-panel active" id="geom-tab-step">
+      <p class="hint geom-hint">
+        Each step is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
+        Hand-off rectangles (pink) appear between non-final jobs. Automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill to mark their zero direct cost — the chain's cost is carried by the augmented step at the end.
+      </p>
       <svg class="geom" id="geom-svg-steps" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="geom-tab-panel" id="geom-tab-task">
+      <p class="hint geom-hint">
+        Each task is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
+        Hand-off rectangles (pink) appear between non-final jobs.
+      </p>
       <svg class="geom" id="geom-svg-tasks" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div class="geom-tab-panel" id="geom-tab-job">
+      <p class="hint geom-hint">
+        Each job is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.
+        Hand-off rectangles (pink) appear between non-final jobs.
+      </p>
       <svg class="geom" id="geom-svg-jobs" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
@@ -1389,19 +1399,6 @@ function renderGeomView(svg, geom, view) {
       txt.appendChild(tspanMeta);
       svg.appendChild(txt);
 
-      if (b.type === 'chain' && b.stepIdxs.length > 1) {
-        const seg = (b.w * GEOM.unitX) / b.stepIdxs.length;
-        for (let k = 1; k < b.stepIdxs.length; k++) {
-          const xLine = MX(b.x) + seg * k;
-          const ln = svgEl('line');
-          setAttrs(ln, {
-            x1: xLine, x2: xLine, y1: MY(b.y + b.h), y2: MY(b.y),
-            stroke: taskColors.stroke, 'stroke-width': '0.8',
-            'stroke-dasharray': '3 2', opacity: '0.6',
-          });
-          svg.appendChild(ln);
-        }
-      }
       const ttl = svgEl('title');
       const stepNames = b.stepIdxs.map(i => steps[i].name).join(', ');
       const taskTypeForTitle = b.type === 'chain' ? 'AI Chain'
