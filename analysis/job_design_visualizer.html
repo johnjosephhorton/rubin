@@ -109,6 +109,49 @@
   }
   .subtitle { color: var(--muted); text-align: center; margin-bottom: 14px; font-size: 16px; }
 
+  /* Configuration name bar: a single-line, full-width-but-capped input that
+     lets the user label this URL ("Default", "Tweaked: high q", etc.) so
+     shared links carry a human-readable handle alongside the parameters. */
+  .config-name-row {
+    display: flex; justify-content: center;
+    margin: 0 0 12px 0;
+  }
+  .config-name-row input {
+    width: min(560px, 90%);
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 15px;
+    text-align: center;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.12s, background 0.12s;
+  }
+  .config-name-row input::placeholder { color: var(--muted); font-style: italic; }
+  .config-name-row input:hover  { border-color: var(--accent); }
+  .config-name-row input:focus  { outline: none; border-color: var(--accent); background: #fafcff; }
+
+  /* Global AI-quality slider for α. q_i = α^{d_i}, so dragging α to 1
+     drives every step's success probability toward 1 (perfect AI), and
+     dragging it toward 0 collapses every q_i toward 0 (useless AI). */
+  .alpha-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin: 0 0 14px 0;
+    font-size: 14px; color: var(--text);
+  }
+  .alpha-row label { font-weight: 600; }
+  .alpha-row label .var { font-style: italic; }
+  .alpha-row input[type="range"] {
+    width: min(360px, 60%);
+    accent-color: var(--accent);
+  }
+  .alpha-row .alpha-value {
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    font-weight: 600;
+    min-width: 3.5em; text-align: left;
+  }
+
   /* Inline black arrow between consecutive steps/tasks within the same job. */
   .flow-arrow {
     display: flex; align-items: center; justify-content: center;
@@ -297,6 +340,26 @@
     padding: 7px 14px; border-radius: 5px; cursor: pointer; font-size: 15px;
   }
   .btn-light:hover { background: #eef4ff; }
+  .btn-dark {
+    background: #111827; color: white; border: none;
+    padding: 7px 16px; border-radius: 5px; cursor: pointer; font-size: 15px;
+    font-weight: 600;
+  }
+  .btn-dark:hover { background: #000; }
+  /* "+ Add step" row at the bottom of the parameters table: button spans
+     the full row so it reads as a clear add-another-row affordance. */
+  .add-step-row td {
+    text-align: center;
+    padding: 6px 4px;
+    border-top: 1px dashed var(--border);
+  }
+  .add-step-row .btn-add-step {
+    background: transparent; color: var(--accent); border: 1px dashed var(--accent);
+    padding: 6px 14px; border-radius: 5px; cursor: pointer; font-size: 14px;
+  }
+  .add-step-row .btn-add-step:hover {
+    background: #eef4ff;
+  }
   .btn-success {
     background: #1f7a3a; color: white; border: none;
     padding: 7px 16px; border-radius: 5px; cursor: pointer; font-size: 15px;
@@ -630,6 +693,22 @@
 </div>
 <p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (job design).</p>
 
+<!-- Optional label for this configuration. Persists in the URL as
+     'title', so a shared link carries a human-readable handle alongside
+     the cost parameters and slider position. -->
+<div class="config-name-row">
+  <input id="config-name-input" type="text" maxlength="120" placeholder="Name this configuration (optional)" />
+</div>
+
+<!-- Global AI-quality slider. q_i = α^{d_i}; each step's success
+     probability is derived from the per-step difficulty d_i (set in the
+     Cost Parameters table) and this single α. -->
+<div class="alpha-row">
+  <label for="alpha-slider">AI quality <span class="var">α</span></label>
+  <input type="range" id="alpha-slider" min="0.01" max="1" step="0.01" />
+  <span class="alpha-value" id="alpha-value"></span>
+</div>
+
 <!-- ============================================ -->
 <!-- Single-page layout. The left column has a    -->
 <!-- mini tab switcher that flips between the     -->
@@ -721,14 +800,13 @@
   <div class="inner-tab-panel" id="inner-tab-params">
     <div class="panel-header">
       <div class="actions">
-        <button class="btn-light" id="reset-btn">Reset</button>
-        <button class="btn-light" id="add-step-btn">+ Add step</button>
+        <button class="btn-dark" id="reset-btn">Reset</button>
         <button class="btn-lucky" id="lucky-btn">🍀 Feeling Lucky</button>
         <button class="btn-success" id="solve-btn">▶ Solve</button>
       </div>
     </div>
     <p class="hint">
-      Each step has a skill cost and a time cost for each mode of human (<i>c</i><span class="superscript">M</span><span class="subscript">i</span>, <i>t</i><span class="superscript">M</span><span class="subscript">i</span>) or AI-assisted (<i>c</i><span class="superscript">A</span><span class="subscript">i</span>, <i>t</i><span class="superscript">A</span><span class="subscript">i</span>) execution. These costs for AI-automated execution are zero. <i>q</i><span class="subscript">i</span> and <i>t</i><span class="superscript">H</span><span class="subscript">i</span> denote the AI's success probability and the (potential) hand-off time cost between workers.
+      Each step has a skill cost and a time cost for each mode of human (<i>c</i><span class="superscript">M</span><span class="subscript">i</span>, <i>t</i><span class="superscript">M</span><span class="subscript">i</span>) or AI-assisted (<i>c</i><span class="superscript">A</span><span class="subscript">i</span>, <i>t</i><span class="superscript">A</span><span class="subscript">i</span>) execution. These costs for AI-automated execution are zero. <i>d</i><span class="subscript">i</span> is the step's difficulty for AI; combined with the global AI quality <i>α</i>, it yields the success probability <i>q</i><span class="subscript">i</span>&nbsp;=&nbsp;<i>α</i><sup><i>d</i><span class="subscript">i</span></sup>. <i>t</i><span class="superscript">H</span><span class="subscript">i</span> is the (potential) hand-off time cost between workers.
     </p>
     <p class="hint">
       The solver minimizes the firm's cost minimization problem, denoted in Equation 3 in the paper.
@@ -741,7 +819,7 @@
           <th class="col-num">t<span class="superscript">M</span><span class="subscript">i</span></th>
           <th class="col-num">c<span class="superscript">A</span><span class="subscript">i</span> <span class="unit">($)</span></th>
           <th class="col-num">t<span class="superscript">A</span><span class="subscript">i</span></th>
-          <th class="col-num">q<span class="subscript">i</span></th>
+          <th class="col-num">d<span class="subscript">i</span></th>
           <th class="col-num">t<span class="superscript">H</span><span class="subscript">i</span></th>
           <th class="col-mode">Mode</th>
           <th class="col-x"></th>
@@ -871,26 +949,44 @@
 // undercuts the singleton sum (Aug_2 + Man_3 + Aug_4). Step 3 gets absorbed
 // despite no change in its own parameters — the headline insight of the paper.
 // ===========================================================================
+// In the paper, q_i = α^{d_i} where α ∈ (0,1] is the AI's quality and
+// d_i ≥ 0 is step i's difficulty for AI. We store d directly and cache the
+// derived q on each step so the solver and the ribbon renderers (which read
+// step.q) keep working unchanged. d values below are chosen so that at
+// α = DEFAULT_ALPHA, q_i recovers the prior baseline (0.20, 0.95, 0.30,
+// 0.95, 0.20) — preserving the M, C, C, A, M optimum on first load.
+const DEFAULT_ALPHA = 0.5;
 const WORKING_EXAMPLE = [
-  // Step 1: cheap Manual. AI singleton is expensive (cA·tA/q = 50); low q
-  //   also prevents the chain from extending leftward.
-  { name: 'Step 1', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, q: 0.20, tH: 20.0 },
-  // Step 2: expensive Manual (5), cheap AI. Augmented in default; here, with
-  //   q=0.95, it joins the chain as an Automated step inside it.
-  { name: 'Step 2', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, q: 0.95, tH: 20.0 },
-  // Step 3: classic human comparative advantage. Cheap Manual (1), expensive
-  //   AI singleton (33). Manual alone, but absorbed into the chain here.
-  { name: 'Step 3', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, q: 0.30, tH: 20.0 },
-  // Step 4: mirror of Step 2. The chain's Augmented endpoint.
-  { name: 'Step 4', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, q: 0.95, tH: 20.0 },
-  // Step 5: mirror of Step 1. Stays Manual; tH=0 because no hand-off after.
-  { name: 'Step 5', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, q: 0.20, tH: 0.0 },
+  // Step 1: cheap Manual. AI singleton is expensive; high difficulty (d≈2.32
+  //   → q=0.20 at α=0.5) also keeps the chain from extending leftward.
+  { name: 'Step 1', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.32, tH: 20.0 },
+  // Step 2: expensive Manual (5), cheap AI. Very low difficulty (d≈0.07 →
+  //   q=0.95 at α=0.5) makes the chain economical here.
+  { name: 'Step 2', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.07, tH: 20.0 },
+  // Step 3: human comparative advantage. Cheap Manual (1), expensive AI
+  //   singleton; moderate difficulty (d≈1.74 → q=0.30 at α=0.5).
+  { name: 'Step 3', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 1.74, tH: 20.0 },
+  // Step 4: mirror of Step 2. Chain's Augmented endpoint.
+  { name: 'Step 4', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.07, tH: 20.0 },
+  // Step 5: mirror of Step 1. Stays Manual; tH=0 (no hand-off after the last).
+  { name: 'Step 5', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.32, tH: 0.0 },
 ];
 
 let state = {
   steps: WORKING_EXAMPLE.map(s => ({ ...s })),
+  alpha: DEFAULT_ALPHA,
   solution: null, // {modes, tasks, levels, jobs, cost, jobInfos} after Solve
 };
+
+// Recompute cached q on every step from current α and per-step d. Call this
+// whenever α or any d changes, before the solver/renderers read step.q.
+function recomputeStepQ(step) {
+  const a = Math.min(1, Math.max(0.0001, Number(state.alpha) || DEFAULT_ALPHA));
+  const d = Math.max(0, Number(step.d) || 0);
+  step.q = Math.pow(a, d);
+}
+function recomputeAllStepQ() { state.steps.forEach(recomputeStepQ); }
+recomputeAllStepQ();
 
 // ===========================================================================
 // Model: derive tasks from step modes; compute (c, t) for each task
@@ -1071,14 +1167,18 @@ function renderStepsTable() {
     nameTd.appendChild(nameInp);
     tr.appendChild(nameTd);
 
-    ['cM','tM','cA','tA','q','tH'].forEach(field => {
+    ['cM','tM','cA','tA','d','tH'].forEach(field => {
       const td = document.createElement('td');
       const inp = document.createElement('input');
       inp.type = 'number'; inp.step = '0.01'; inp.value = step[field];
-      if (field === 'q') { inp.min = '0.01'; inp.max = '1'; }
+      if (field === 'd') { inp.min = '0'; }     // difficulty ≥ 0
+      if (field === 'tH') { inp.min = '0'; }
       inp.addEventListener('input', e => {
         const v = parseFloat(e.target.value);
         step[field] = isNaN(v) ? 0 : v;
+        // If d changed, keep the cached q in sync so anything reading
+        // step.q (e.g., the Stage 1 ribbon) sees the new value immediately.
+        if (field === 'd') recomputeStepQ(step);
         serializeStateToURL();
       });
       td.appendChild(inp);
@@ -1112,6 +1212,26 @@ function renderStepsTable() {
 
     tbody.appendChild(tr);
   });
+
+  // Trailing row: "+ Add step" affordance at the bottom of the table.
+  const addTr = document.createElement('tr');
+  addTr.className = 'add-step-row';
+  const addTd = document.createElement('td');
+  addTd.colSpan = 10;
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn-add-step';
+  addBtn.textContent = '+ Add step';
+  addBtn.title = 'Append a new step with default values';
+  addBtn.addEventListener('click', () => {
+    state.steps.push({
+      name: `Step ${state.steps.length + 1}`,
+      tM: 1.0, cM: 1.0, tA: 0.5, cA: 1.0, d: 0.5, tH: 0.0,
+    });
+    solveQuiet();
+  });
+  addTd.appendChild(addBtn);
+  addTr.appendChild(addTd);
+  tbody.appendChild(addTr);
 }
 
 // ===========================================================================
@@ -1842,7 +1962,8 @@ function feelingLucky() {
   // or fields they edited), instead of snapping back to the fixed baseline.
   const fresh = state.steps.map(s => ({ ...s }));
 
-  // Perturbation 1: bump q on 1–2 randomly-chosen steps by ±[0.05, 0.15]
+  // Perturbation 1: bump d (AI difficulty) on 1–2 randomly-chosen steps by
+  // ±[0.1, 0.5]. d ≥ 0; the cached q is recomputed from d and α later.
   const nQ = 1 + Math.floor(rng() * 2);
   const idxs = [];
   while (idxs.length < nQ) {
@@ -1850,8 +1971,8 @@ function feelingLucky() {
     if (!idxs.includes(i)) idxs.push(i);
   }
   idxs.forEach(i => {
-    const delta = (0.05 + rng() * 0.10) * (rng() < 0.5 ? -1 : 1);
-    fresh[i].q = round2(clamp(fresh[i].q + delta, 0.55, 0.99));
+    const delta = (0.1 + rng() * 0.4) * (rng() < 0.5 ? -1 : 1);
+    fresh[i].d = round2(clamp((fresh[i].d || 0) + delta, 0, 5));
   });
 
   // Perturbation 2: ±20% bump on one cM
@@ -1926,11 +2047,13 @@ document.querySelectorAll('.geom-tab-button').forEach(btn => {
 // URL state: serialize the current parameter set into the query string so
 // any configuration can be linked to (e.g., from a paper, slide deck, or
 // tweet). Format: six parallel comma-separated arrays — one per field —
-// plus an optional pipe-separated 'n' list when any step name differs from
-// the default 'Step <i>'. Number of steps is implicit (array length).
-//   ?cM=3,5,4,2&tM=1,2,2,2&cA=3,2,1,3&tA=2,1,0.5,2&q=0.1,0.5,0.5,0.5&tH=3,1,0.5,0
+// plus a global α, plus an optional pipe-separated 'n' list when any step
+// name differs from the default 'Step <i>'. Number of steps is implicit
+// (array length).
+//   ?cM=3,5,4,2&tM=1,2,2,2&cA=3,2,1,3&tA=2,1,0.5,2&d=2.3,0.07,1.7,0.07&tH=3,1,0.5,0&alpha=0.5
+// Legacy URLs using q (=α^d directly) are still accepted and migrated on load.
 // ===========================================================================
-const URL_FIELDS = ['cM','tM','cA','tA','q','tH'];
+const URL_FIELDS = ['cM','tM','cA','tA','d','tH'];
 
 // Read the current column split (fraction of usable width given to the
 // left column) from the live grid. Returns null if the grid hasn't been
@@ -1953,6 +2076,7 @@ function serializeStateToURL() {
   for (const f of URL_FIELDS) {
     params.set(f, steps.map(s => +(+s[f]).toFixed(4)).join(','));
   }
+  params.set('alpha', (+state.alpha).toFixed(4));
   if (steps.some((s, i) => s.name !== `Step ${i+1}`)) {
     params.set('n', steps.map(s => s.name).join('|'));
   }
@@ -1960,6 +2084,11 @@ function serializeStateToURL() {
   // exact layout the sharer was looking at, not just the cost params.
   const split = readCurrentSplit();
   if (split !== null) params.set('split', split.toFixed(4));
+  // Optional human-readable label for this configuration.
+  const nameInp = document.getElementById('config-name-input');
+  if (nameInp && nameInp.value.trim()) {
+    params.set('title', nameInp.value.trim());
+  }
   const url = window.location.pathname + '?' + params.toString();
   try { history.replaceState(null, '', url); } catch (e) { /* about:blank, etc. */ }
 }
@@ -1984,8 +2113,23 @@ function applyURLSplit() {
 
 function loadStateFromURL() {
   const params = new URLSearchParams(window.location.search);
-  if (!URL_FIELDS.every(f => params.has(f))) return false;
-  const arrs = URL_FIELDS.map(f =>
+
+  // α (global AI quality). Default if absent or malformed.
+  if (params.has('alpha')) {
+    const a = parseFloat(params.get('alpha'));
+    if (!isNaN(a) && a > 0 && a <= 1) state.alpha = a;
+  }
+
+  // Step arrays. Modern shape: cM,tM,cA,tA,d,tH. Legacy fallback: cM,tM,
+  // cA,tA,q,tH — we back out d = log(q) / log(α) so the resulting q matches.
+  const reqModern = ['cM','tM','cA','tA','d','tH'];
+  const reqLegacy = ['cM','tM','cA','tA','q','tH'];
+  const useModern = reqModern.every(f => params.has(f));
+  const useLegacy = !useModern && reqLegacy.every(f => params.has(f));
+  if (!useModern && !useLegacy) return false;
+
+  const fields = useModern ? reqModern : reqLegacy;
+  const arrs = fields.map(f =>
     params.get(f).split(',').map(v => parseFloat(v)));
   const n = arrs[0].length;
   if (n === 0 || !arrs.every(a => a.length === n && a.every(v => !isNaN(v)))) {
@@ -1994,11 +2138,20 @@ function loadStateFromURL() {
   const names = params.has('n') ? params.get('n').split('|') : [];
   state.steps = [];
   for (let i = 0; i < n; i++) {
+    let d;
+    if (useModern) {
+      d = arrs[4][i];
+    } else {
+      const q = Math.min(1, Math.max(0.0001, arrs[4][i]));
+      const a = state.alpha;
+      // q = α^d  →  d = ln(q) / ln(α). For α=1 (no degradation), use d=0.
+      d = (a === 1) ? 0 : Math.log(q) / Math.log(a);
+    }
     state.steps.push({
       name: names[i] || `Step ${i+1}`,
       cM: arrs[0][i], tM: arrs[1][i],
       cA: arrs[2][i], tA: arrs[3][i],
-      q:  arrs[4][i], tH: arrs[5][i],
+      d:  d,         tH: arrs[5][i],
     });
   }
   return true;
@@ -2010,8 +2163,14 @@ function loadStateFromURL() {
 // Quiet solve: recompute and render but DO NOT switch tabs. Used by Reset,
 // Add Step, Feeling Lucky, and the initial page load.
 function solveQuiet() {
+  // Make sure cached q values are in sync with the current α and per-step d
+  // before the solver and renderers read them.
+  recomputeAllStepQ();
   state.solution = solveOptimal(state.steps);
   renderAll();
+  // Keep the visible α slider in sync with state.alpha (covers the case
+  // where state.alpha was just set by loadStateFromURL or Reset).
+  if (typeof syncAlphaSliderToState === 'function') syncAlphaSliderToState();
   serializeStateToURL();
 }
 // User-initiated Solve: also flip the LEFT column back to the ribbons so
@@ -2068,15 +2227,38 @@ const BIBTEX_ENTRY = `@techreport{NBERw34859,
 })();
 document.getElementById('reset-btn').addEventListener('click', () => {
   state.steps = WORKING_EXAMPLE.map(s => ({ ...s }));
+  state.alpha = DEFAULT_ALPHA;
+  syncAlphaSliderToState();
   solveQuiet();
 });
-document.getElementById('add-step-btn').addEventListener('click', () => {
-  state.steps.push({
-    name: `Step ${state.steps.length + 1}`,
-    tM: 1.0, cM: 1.0, tA: 0.5, cA: 1.0, q: 0.85, tH: 0.0,
+
+// α slider: a global AI-quality control. Any change recomputes the
+// derived q for every step and re-solves. The numeric readout next to the
+// slider tracks the current value.
+function syncAlphaSliderToState() {
+  const sl = document.getElementById('alpha-slider');
+  const lbl = document.getElementById('alpha-value');
+  if (sl) sl.value = state.alpha;
+  if (lbl) lbl.textContent = (+state.alpha).toFixed(2);
+}
+(function bindAlphaSlider() {
+  const sl = document.getElementById('alpha-slider');
+  if (!sl) return;
+  syncAlphaSliderToState();
+  sl.addEventListener('input', () => {
+    const v = parseFloat(sl.value);
+    if (!isNaN(v) && v > 0 && v <= 1) {
+      state.alpha = v;
+      syncAlphaSliderToState();
+      // Solve re-renders the ribbons + geom view + Derived Tasks table
+      // so the user sees the new q's everywhere, not just in the input.
+      solveQuiet();
+    }
   });
-  solveQuiet();
-});
+})();
+// (The "+ Add step" button now lives at the bottom of the parameters table
+//  and is wired up inside renderStepsTable, since it is recreated on every
+//  re-render.)
 
 // Draggable resizer between the left (Setup) and right (Geometric View)
 // columns. Click-and-drag the thin handle to give either column more
@@ -2146,6 +2328,18 @@ document.getElementById('add-step-btn').addEventListener('click', () => {
 // load it into state first so shared/permalinks resume their exact config.
 // Then solve and render so the visualizations match.
 loadStateFromURL();
+
+// Hydrate the optional configuration-name input from the URL, then wire it
+// up to persist on every keystroke. Doing this before the first solveQuiet
+// means the title is already present when serializeStateToURL runs.
+(function bindConfigNameInput() {
+  const inp = document.getElementById('config-name-input');
+  if (!inp) return;
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('title')) inp.value = params.get('title');
+  inp.addEventListener('input', serializeStateToURL);
+})();
+
 solveQuiet();
 
 // (Page loads at the CSS default 50/50 column split — the resizer in
