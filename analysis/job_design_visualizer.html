@@ -664,13 +664,13 @@
   .geom-hint-stack > .geom-hint.active {
     visibility: visible;
   }
-  /* Render the SVG at its intrinsic pixel size (set by the renderer's
-     W/H attributes, where 1 cost-unit = GEOM.unitX = GEOM.unitY pixels),
-     so absolute scale is visible: as α rises and the production shrinks,
-     the figure itself gets smaller on screen instead of being stretched
-     to fill the column. The auto-fit only kicks in when the figure would
-     overflow — max-width caps the width at the column, and height: auto
-     keeps the aspect ratio. The 100vh cap protects the tallest case. */
+  /* Always fill the column width — height auto-derived from the SVG's
+     intrinsic aspect (set by the renderer's W/H attributes, which now
+     use the worst-case max-W/max-H across all α for a fixed frame).
+     This means examples with small absolute cost/time values still
+     render at a readable visual size: the boxes are positioned in
+     viewBox units, and preserveAspectRatio scales them up to fill the
+     SVG. max-height: 100vh keeps very tall figures in check. */
   svg.geom {
     display: block;
     margin-left: auto; margin-right: auto;
@@ -1038,7 +1038,9 @@
     .bibtex-row { gap: 4px; }
     .bibtex-btn { font-size: 12px; padding: 4px 8px; }
     .config-name-row input { font-size: 13px; }
-    .alpha-row label { font-size: 13px; }
+    .alpha-row label { font-size: 13px; padding-right: 8px; }
+    .alpha-row input[type="range"] { width: 50vw; }
+    .alpha-row .alpha-value { font-size: 13px; padding-left: 8px; min-width: 2.6em; }
     /* Panel chrome */
     .panel h2 { font-size: 16px; }
     .inner-tab-button { font-size: 12px; padding: 4px 10px; }
@@ -1232,7 +1234,7 @@
 
     <h3 class="subsection-title">Derived Tasks</h3>
     <p class="hint">
-      Each Manual step becomes a manual task with its (c<span class="superscript">M</span>, t<span class="superscript">M</span>); an Augmented step, alone or preceded by Automated steps, forms one AI chain task whose skill and time costs are the augmented step's (c<span class="superscript">A</span>, t<span class="superscript">A</span>) and whose success probability q is the product of the constituent steps' q values. t<span class="superscript">H</span> is inherited from the task's last step.
+      Each Manual step becomes a manual task with its (c<span class="superscript">M</span>, t<span class="superscript">M</span>); an Augmented step, alone or preceded by Automated steps, forms one AI chain task whose skill and time costs are the augmented step's (c<span class="superscript">A</span>, t<span class="superscript">A</span>) and whose success probability q is the product of the constituent steps' q values. the hand-off cost t<span class="superscript">H</span> is inherited from the task's last step.
     </p>
     <table class="steps task-table">
       <thead>
@@ -1317,7 +1319,7 @@
     <div class="geom-container zoomable cost-curves-environment" data-zoom-group="geom" data-zoom-label="Visualization of Production" title="Click to zoom in">
       <div class="geom-hint-stack">
         <p class="hint geom-hint active">
-          Gains from improving AI quality parameter are non-linear. Each time a re-design threshold is passed the optimal configuration of production, and subsequently the cost curve, changes.
+          Gains from improving AI quality &alpha; are non-linear. Each time a re-design threshold is passed the optimal configuration of production changes.
         </p>
       </div>
       <div class="cost-curves-plots-row">
@@ -1966,18 +1968,17 @@ function renderGeomView(svg, geom, view) {
     svg.appendChild(t);
     return;
   }
+  // Use a FIXED frame (the worst-case W, H across α) so the SVG outer box
+  // doesn't change size as α changes. The boxes inside are positioned with
+  // the geom's plotLeft/plotBottom adjusted for the fixed frame, so the
+  // visualization sits at a consistent place in the frame across α.
   const { taskBoxes, handoffBoxes, jobBoxes,
           totalWidthUnits, totalHeightUnits, steps } = geom;
-  // Use a FIXED frame sized to the worst-case (max W, H) across all α
-  // values. The content (boxes, axes) is still positioned with the
-  // current α's coordinates, so as α grows and the production shrinks,
-  // the boxes occupy a smaller portion of the same fixed viewBox — i.e.
-  // only the graph itself changes size, not the frame around it.
   const maxDims = computeGeomWorstCaseSize() || { W: geom.W, H: geom.H };
   const W = maxDims.W;
   const H = maxDims.H;
   const plotLeft = geom.plotLeft;
-  const padBottom = geom.H - geom.plotBottom;   // recover padBottom
+  const padBottom = geom.H - geom.plotBottom;
   const plotBottom = H - padBottom;
   const MX = (x) => plotLeft + x * GEOM.unitX;
   const MY = (y) => plotBottom - y * GEOM.unitY;
@@ -2837,7 +2838,7 @@ function setupCostPlotInModal() {
   const desc = document.createElement('p');
   desc.className = 'hint geom-hint active';
   desc.textContent =
-    'Gains from improving AI quality parameter are non-linear. Each time a re-design threshold is passed the optimal configuration of production, and subsequently the cost curve, changes.';
+    'Gains from improving AI quality α are non-linear. Each time a re-design threshold is passed the optimal configuration of production changes.';
   hintStack.appendChild(desc);
   section.appendChild(hintStack);
 
@@ -3192,8 +3193,13 @@ function ensureInlineCostCurves() {
 // modal opens (in setupZoomModal) so all α values share the same px-per-
 // cost-unit factor; the figure visibly shrinks/grows as α changes.
 // ===========================================================================
-let geomModalScale = null;  // null = modal closed (or stages-group open)
+let geomModalScale = null;  // legacy flag — non-null when modal is open
 
+// Apply the fixed scale (computed once at modal open from the worst-case
+// figure size across α) to every modal geom SVG. Since the SVG outer W,H
+// is the fixed frame across α (from renderGeomView), scaling that frame
+// by a fixed ratio keeps the modal figure at a stable on-screen size at
+// every α — no jitter as the user drags the slider.
 function applyGeomModalScale() {
   if (geomModalScale === null) return;
   document.querySelectorAll('.geom-modal svg.geom').forEach(s => {
@@ -3619,6 +3625,29 @@ function fitGridToViewport() {
 fitGridToViewport();
 window.addEventListener('resize', fitGridToViewport);
 window.addEventListener('load', fitGridToViewport);
+
+// When the viewport crosses the mobile/desktop breakpoint (700px) or the
+// stacked/two-column breakpoint (980px), layout-dependent state (column
+// widths, ribbon zoom, sticky panel toggle, SVG dimensions) doesn't fully
+// reset on its own — inline styles and cached calculations linger. Reload
+// the page on a crossing so the layout reflects the new size.
+(function () {
+  let lastW = window.innerWidth;
+  let timer = null;
+  const BREAKPOINTS = [700, 980];
+  const bucket = (w) => BREAKPOINTS.map(bp => w <= bp).join(',');
+  window.addEventListener('resize', () => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      const w = window.innerWidth;
+      if (bucket(w) !== bucket(lastW)) {
+        location.reload();
+        return;
+      }
+      lastW = w;
+    }, 250);
+  });
+})();
 
 // On initial load, size the right column so the active SVG's natural
 // height (column-width × intrinsic aspect ratio) fills all the way down
