@@ -935,6 +935,60 @@
   @media (max-width: 720px) {
     .ribbon { gap: 8px; }
   }
+
+  /* ====================================================================
+     Mobile breakpoint (≤ 700px). The desktop layout is built around a
+     wide two-column design with a draggable resizer and zoom modals —
+     none of which work on a phone. On mobile we:
+     - stack the two design-grid columns vertically (already triggered
+       at ≤ 980px; reinforced here);
+     - hide the column resizer entirely;
+     - drop the zoom-in affordance (the modal needs more space than a
+       phone can give);
+     - shrink the top chrome (title, authors, panel h2s);
+     - keep both Cost Curves plots stacked (already stacked).
+     ==================================================================== */
+  @media (max-width: 700px) {
+    body { font-size: 14px; }
+    .container { padding: 6px; }
+    .design-grid {
+      grid-template-columns: 1fr !important;
+      min-height: 0 !important;
+    }
+    .design-resizer { display: none; }
+    /* Zoom modal isn't usable on mobile; suppress its hover affordance
+       and disable the click trigger via CSS pointer-events. */
+    .zoomable {
+      cursor: default;
+      outline: none !important;
+    }
+    .zoomable:hover {
+      outline: none !important;
+      background: transparent !important;
+    }
+    .zoomable::after { display: none !important; }
+    /* Top chrome */
+    .title-row { font-size: 18px; column-gap: 6px; }
+    .paper-authors { font-size: 14px; }
+    .bibtex-row { gap: 4px; }
+    .bibtex-btn { font-size: 12px; padding: 4px 8px; }
+    .config-name-row input { font-size: 13px; }
+    .alpha-row label { font-size: 13px; }
+    /* Panel chrome */
+    .panel h2 { font-size: 16px; }
+    .inner-tab-button { font-size: 12px; padding: 4px 10px; }
+    .geom-tab-button { font-size: 12px; padding: 4px 10px; }
+    /* Stage ribbons: smaller box text and tighter gaps so the row fits. */
+    .step-box { padding: 4px 6px; font-size: 10px; min-width: 44px; }
+    .step-box .meta { font-size: 8px; }
+    .task-group { padding: 4px 6px; }
+    .task-group .tg-label { font-size: 9px; }
+    .ribbon { gap: 6px; padding: 4px 2px; }
+    .legend { font-size: 11px; gap: 6px; }
+    /* Cost-parameters table is too wide for mobile; let it scroll. */
+    table.steps { font-size: 12px; }
+    .inner-tab-panel { overflow-x: auto; }
+  }
 </style>
 </head>
 <body>
@@ -3463,36 +3517,21 @@ function fitRightColumnToViewport() {
   document.querySelectorAll('svg.geom').forEach(s => { s.style.height = ''; });
   grid.style.gridTemplateColumns = '';
 
-  // If the URL specifies a slider position, honor it instead of auto-fitting.
-  // This makes shared links reproduce the exact layout the sharer was using.
+  // If the URL specifies a slider position, honor it instead of using
+  // the default. This makes shared links reproduce the exact layout the
+  // sharer was using.
   if (applyURLSplit()) return;
 
-  // Wait one frame so the browser computes the natural layout (hint
-  // height etc.) before we measure where the SVG sits.
+  // Default split: left column gets 58% of the usable width. Wait one
+  // frame so the design-grid has its width before we set columns.
   requestAnimationFrame(() => {
-    const svgRect = svg.getBoundingClientRect();
     const gridRect = grid.getBoundingClientRect();
-    const bottomPad = 12;
-    const availableHeight = Math.max(150,
-      window.innerHeight - svgRect.top - bottomPad);
-
-    // Intrinsic aspect ratio from the SVG's width/height attributes.
-    const W = parseFloat(svg.getAttribute('width')) || svgRect.width;
-    const H = parseFloat(svg.getAttribute('height')) || svgRect.height;
-    const aspect = W / H;
-
-    // Right-column width that makes the SVG's natural height = available.
-    const colChrome = 22;  // .geom-container padding + border
-    const targetSvgWidth = availableHeight * aspect;
-    const targetRightW = targetSvgWidth + colChrome;
-
     const RESIZER_W = 6;
     const MIN_COL_W = 220;
     const totalWidth = gridRect.width - RESIZER_W;
-    const rightW = Math.max(MIN_COL_W,
-      Math.min(totalWidth - MIN_COL_W, targetRightW));
-    const leftW = totalWidth - rightW;
-
+    const leftW = Math.max(MIN_COL_W,
+      Math.min(totalWidth - MIN_COL_W, totalWidth * 0.58));
+    const rightW = totalWidth - leftW;
     grid.style.gridTemplateColumns = `${leftW}px ${RESIZER_W}px ${rightW}px`;
   });
 }
