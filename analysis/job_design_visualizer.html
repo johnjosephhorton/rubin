@@ -134,22 +134,35 @@
   /* Global AI-quality slider for α. q_i = α^{d_i}, so dragging α to 1
      drives every step's success probability toward 1 (perfect AI), and
      dragging it toward 0 collapses every q_i toward 0 (useless AI). */
+  /* Three-column grid keeps the slider perfectly centered in the row
+     regardless of how wide the label or value end up — important because
+     the modal title sits above this row and we want it lined up with the
+     slider's middle, not the (asymmetric) middle of label + slider + value. */
   .alpha-row {
-    display: flex; align-items: center; justify-content: center;
-    gap: 12px; margin: 0 0 14px 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin: 0 0 14px 0;
     font-size: 14px; color: var(--text);
   }
-  .alpha-row label { font-weight: 600; }
+  .alpha-row label {
+    font-weight: 600;
+    justify-self: end;
+    padding-right: 12px;
+  }
   .alpha-row label .var { font-style: italic; }
   .alpha-row input[type="range"] {
-    width: min(360px, 60%);
+    width: min(360px, 60vw);
     accent-color: var(--accent);
   }
   .alpha-row .alpha-value {
     font-variant-numeric: tabular-nums;
     color: var(--accent);
     font-weight: 600;
-    min-width: 3.5em; text-align: left;
+    justify-self: start;
+    padding-left: 12px;
+    min-width: 3.5em;
+    text-align: left;
   }
 
   /* Inline black arrow between consecutive steps/tasks within the same job. */
@@ -628,12 +641,240 @@
   .geom-hint-stack > .geom-hint.active {
     visibility: visible;
   }
-  /* The SVG can grow up to 100vh (full viewport height) — but in
-     practice it's the column width that drives the figure's size,
-     so the cap rarely binds. On initial load, JS sets the column
-     split so the SVG renders at ~55vh tall; from there the divider
-     smoothly scales the figure up or down. */
-  svg.geom { display: block; width: 100%; height: 100%; max-height: 100vh; }
+  /* Render the SVG at its intrinsic pixel size (set by the renderer's
+     W/H attributes, where 1 cost-unit = GEOM.unitX = GEOM.unitY pixels),
+     so absolute scale is visible: as α rises and the production shrinks,
+     the figure itself gets smaller on screen instead of being stretched
+     to fill the column. The auto-fit only kicks in when the figure would
+     overflow — max-width caps the width at the column, and height: auto
+     keeps the aspect ratio. The 100vh cap protects the tallest case. */
+  svg.geom {
+    display: block;
+    margin-left: auto; margin-right: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100vh;
+  }
+
+  /* Zoom-on-hover affordance: each of the three visualization areas
+     (Stage 1 ribbon, Stage 2 ribbon, Geometric View) becomes a clickable
+     zoom target. Hovering it switches the cursor to zoom-in, draws a soft
+     dashed outline, and surfaces a small "⤢" glyph in the upper-right.
+     Clicking opens the zoom modal with that area's content moved in. */
+  .zoomable {
+    cursor: zoom-in;
+    position: relative;
+    transition: outline-color 0.15s, background-color 0.15s;
+    outline: 1px dashed transparent;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+  .zoomable:hover {
+    outline-color: var(--accent);
+    background-color: rgba(34, 86, 219, 0.03);
+  }
+  .zoomable::after {
+    content: '⤢';
+    position: absolute;
+    top: 2px; right: 4px;
+    font-size: 16px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+    line-height: 1;
+  }
+  .zoomable:hover::after { opacity: 0.8; }
+
+  /* === Zoom modal ===
+     Click the "Geometric View..." heading to lift the entire geom-container
+     into a centered overlay. The rest of the page is dimmed via a fixed
+     backdrop. The geom-container is *moved* (not cloned) into the modal so
+     all its event listeners and the live SVGs keep working unchanged. */
+  .geom-modal {
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.50);
+    z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .geom-modal[hidden] { display: none; }
+  .geom-modal-frame {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    width: min(1500px, 96vw);
+    height: min(95vh, 95vh);
+    padding: 14px 20px 20px;
+    display: flex; flex-direction: column;
+  }
+  .geom-modal-close {
+    position: absolute; top: 8px; right: 12px;
+    background: transparent; border: none;
+    font-size: 26px; line-height: 1; cursor: pointer;
+    color: #6b7280;
+    padding: 4px 10px;
+    border-radius: 6px;
+    z-index: 1;
+  }
+  .geom-modal-close:hover { background: #f3f4f6; color: #111; }
+  .geom-modal-body {
+    flex: 1 1 auto; min-height: 0;
+    display: flex; flex-direction: column;
+  }
+  /* Inside the modal, we set an EXPLICIT width/height on the SVG via JS
+     (computed from a fixed "px per cost-unit" scale, chosen so the worst-
+     case figure at α≈0 fills the modal). max-width/max-height are unset
+     so the JS-applied size is honored; we let the modal-body scroll if
+     the figure overflows (it shouldn't in practice). */
+  .geom-modal svg.geom {
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    margin: 0 auto;
+    display: block;
+  }
+  /* Anchor the SVG to the BOTTOM of its tab-panel so the graph's y=0
+     (its x-axis line) stays pinned at the same screen position across
+     all α values. Smaller figures (higher α) sit at the bottom with
+     empty space above them; the worst-case figure (α≈0) fills the
+     panel from top to bottom. */
+  .geom-modal .geom-tab-panel.active > svg.geom { margin-top: auto; }
+  .geom-modal .geom-container { padding: 4px 4px 0 4px; border: none; }
+
+  /* In the Geometric View modal we lay the geom-container and the cost
+     plot side-by-side. modal-body still flex-column for title + α slider
+     + tab bar; the viewport row sits at the bottom and takes remaining
+     height. */
+  .geom-modal-viewport {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 18px;
+  }
+  .geom-modal-viewport > .geom-container { flex: 1 1 48%; min-width: 0; }
+  /* The cost-curves section to the right of the geom view in the modal.
+     It uses the .geom-container scaffold (same as the geom view) so the
+     description + chrome match visually; we layer on a left divider so
+     the geom view and cost section read as two halves of one panel. */
+  .geom-modal-viewport > .geom-modal-cost-section {
+    flex: 0 0 48%;
+    min-width: 0;
+    border-left: 1px solid #d1d5db;
+    padding-left: 14px;
+  }
+  /* Shared plot row used inline and in the modal: side-by-side cost and
+     marginal plots, no internal divider. */
+  .cost-curves-plots-row {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 18px;
+  }
+  .cost-curves-plots-row > .geom-cost-plot,
+  .cost-curves-plots-row > .geom-marginal-plot {
+    flex: 1 1 50%;
+    min-width: 0;
+    display: flex; flex-direction: column;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  /* Push each plot's SVG to the BOTTOM of its container so it lines up
+     vertically with the geom-container's SVG (which is also bottom-pinned
+     via margin-top: auto). That way all three figures share a baseline. */
+  .geom-cost-plot svg, .geom-marginal-plot svg {
+    display: block;
+    width: 100%;
+    margin-top: auto;
+  }
+
+  /* Inline Cost Curves tab: the wrapper uses .geom-container (so it shares
+     all the scaffolding with the Step/Task/Job views), and the two plots
+     sit in a shared .cost-curves-plots-row. Same SVG sizing/fonts as the
+     geom view, no boxes, no inter-plot divider. */
+  .cost-curves-environment .cost-curves-plots-row svg {
+    width: 100%; height: 100%; display: block;
+  }
+  /* Stage-ribbon zoom in the modal. We use CSS `zoom` (not transform:
+     scale) so the ribbon's layout box actually grows — that way the
+     stage h2 above it and the legend below it reflow around the bigger
+     ribbon, instead of staying behind it. --stages-scale is set by JS at
+     modal open (and never changes for the session). */
+  .geom-modal .ribbon {
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    zoom: var(--stages-scale, 1);
+  }
+  .geom-modal .stage-section {
+    flex: 0 0 auto;   /* size to content; both sections stack naturally */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .geom-modal .stage-section h2 {
+    text-align: center;
+    margin: 0 0 14px 0;
+    flex: 0 0 auto;
+  }
+  .geom-modal .stage-section .ss-spacer { display: none; }
+  /* Keep the description hints visible in the modal so the user still
+     sees what each stage represents; just center them and tighten the
+     spacing relative to the column layout. */
+  .geom-modal .stage-section .hint {
+    text-align: center;
+    margin: 0 auto 8px auto;
+    max-width: min(900px, 80%);
+  }
+  .geom-modal .stage-section .legend {
+    justify-content: center;
+    margin: 14px 0 0 0;
+    flex: 0 0 auto;
+  }
+  /* Whitespace between Stage 1's legend and Stage 2's title. Kept
+     modest so Stage 2's legend doesn't run off the bottom of the modal. */
+  .geom-modal .stage-section + .stage-section { margin-top: 32px; }
+  /* Space between the α slider (at the top of the modal) and the first
+     stage's title, so the slider doesn't sit on top of the ribbons. */
+  .geom-modal .alpha-row { margin-bottom: 56px; }
+  /* Modal-body keeps title + α slider pinned at the top; the stage-
+     section stack is vertically centered in the leftover space via auto
+     margins on the first and last sections (they share the free space
+     equally above and below). */
+  .geom-modal-body {
+    overflow: hidden;
+  }
+  .geom-modal .stage-section:first-of-type { margin-top: auto; }
+  .geom-modal .stage-section:last-of-type  { margin-bottom: auto; }
+  /* Outline/hover effects on the zoomable element get suppressed inside
+     the modal — the element is already foregrounded. */
+  .geom-modal .zoomable {
+    cursor: default;
+    outline: none !important;
+    background: transparent !important;
+  }
+  .geom-modal .zoomable::after { display: none; }
+  /* Small label strip at the top of the modal body, set per-target.
+     The close × is absolutely positioned so it doesn't share flow with
+     the title — keep horizontal padding symmetric so the text's center
+     lines up with the centered α slider below it. */
+  .geom-modal-title {
+    font-size: 16px; font-weight: 600;
+    color: #374151;
+    text-align: center;
+    margin: 0 0 8px 0;
+    padding: 0 40px;
+  }
+  /* While the modal is open the background page becomes a passive backdrop. */
+  body.modal-open { overflow: hidden; }
 
   /* Container query on .geom-container so the description hint can
      scale with the column width too: bigger right column → bigger
@@ -733,7 +974,7 @@
 
   <!-- Tab #1 — Stage 1 + Stage 2 ribbons -->
   <div class="inner-tab-panel active" id="inner-tab-ribbons">
-  <div class="stage-section" id="stage1-section">
+  <div class="stage-section zoomable" id="stage1-section" data-zoom-group="stages" data-zoom-label="Steps → Tasks → Jobs" title="Click to zoom in (both stages)">
     <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
     <p class="hint">
       Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
@@ -741,7 +982,7 @@
       <span style="color:var(--step-aug-stroke)">Augmented</span>.
     </p>
     <p class="hint">
-      A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; an Augmented step, alone or preceded by Automated steps, forms one <span style="color:var(--task-chain-stroke)">AI chain task</span> (length ≥ 1).
+      A Manual step becomes a <span style="color:var(--task-man-stroke)">manual task</span>; an Augmented step, alone or preceded by Automated steps, forms one <span style="color:var(--task-chain-stroke)">AI chain task</span>.
     </p>
     <div class="ss-spacer ss-spacer-mid"></div>
     <div class="ribbon" id="stage1-ribbon"></div>
@@ -767,7 +1008,7 @@
     <div class="ss-spacer ss-spacer-tail"></div>
   </div>
 
-  <div class="stage-section" id="stage2-section">
+  <div class="stage-section zoomable" id="stage2-section" data-zoom-group="stages" data-zoom-label="Steps → Tasks → Jobs" title="Click to zoom in (both stages)">
     <h2><span class="stage-label">Stage 2</span>Job Design: Tasks → Jobs</h2>
     <p class="hint">
       Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).<br>
@@ -806,10 +1047,10 @@
       </div>
     </div>
     <p class="hint">
-      Each step has a skill cost and a time cost for each mode of human (<i>c</i><span class="superscript">M</span><span class="subscript">i</span>, <i>t</i><span class="superscript">M</span><span class="subscript">i</span>) or AI-assisted (<i>c</i><span class="superscript">A</span><span class="subscript">i</span>, <i>t</i><span class="superscript">A</span><span class="subscript">i</span>) execution. These costs for AI-automated execution are zero. <i>d</i><span class="subscript">i</span> is the step's difficulty for AI; combined with the global AI quality <i>α</i>, it yields the success probability <i>q</i><span class="subscript">i</span>&nbsp;=&nbsp;<i>α</i><sup><i>d</i><span class="subscript">i</span></sup>. <i>t</i><span class="superscript">H</span><span class="subscript">i</span> is the (potential) hand-off time cost between workers.
+      Each step has a skill cost and a time cost for each mode of human (<i>c</i><span class="superscript">M</span><span class="subscript">i</span>, <i>t</i><span class="superscript">M</span><span class="subscript">i</span>) or AI-assisted (<i>c</i><span class="superscript">A</span><span class="subscript">i</span>, <i>t</i><span class="superscript">A</span><span class="subscript">i</span>) execution. These costs for AI-automated execution are zero. <i>d</i><span class="subscript">i</span> is the step's difficulty for AI; combined with the global AI quality <i>α</i>, it yields the success probability <i>q</i><span class="subscript">i</span>&nbsp;=&nbsp;<i>α</i><sup><i>d</i><span class="subscript">i</span></sup>. Finally, <i>t</i><span class="superscript">H</span><span class="subscript">i</span> is the (potential) hand-off time cost between workers.
     </p>
     <p class="hint">
-      The solver minimizes the firm's cost minimization problem, denoted in Equation 3 in the paper.
+      The solver minimizes the firm's cost minimization problem, denoted in Equation (3) in the paper.
     </p>
     <table class="steps">
       <thead>
@@ -830,7 +1071,7 @@
 
     <h3 class="subsection-title">Derived Tasks</h3>
     <p class="hint">
-      Each Manual step becomes a manual task with its (c<span class="superscript">M</span>, t<span class="superscript">M</span>); consecutive Automated steps followed by an Augmented step form one AI chain task whose skill and time costs are the augmented step's (c<span class="superscript">A</span>, t<span class="superscript">A</span>) and whose success probability q is the product of the constituent steps' q values. t<span class="superscript">H</span> is inherited from the task's last step.
+      Each Manual step becomes a manual task with its (c<span class="superscript">M</span>, t<span class="superscript">M</span>); an Augmented step, alone or preceded by Automated steps, forms one AI chain task whose skill and time costs are the augmented step's (c<span class="superscript">A</span>, t<span class="superscript">A</span>) and whose success probability q is the product of the constituent steps' q values. t<span class="superscript">H</span> is inherited from the task's last step.
     </p>
     <table class="steps task-table">
       <thead>
@@ -855,23 +1096,36 @@
 
 <div class="design-col">
 <!-- ============================================ -->
-<!-- Geometric View (right column, always visible) -->
+<!-- Production Visualization (right column).      -->
+<!-- Mirrors the left column's Setup panel: a      -->
+<!-- single 'Production Visualization' panel with  -->
+<!-- two inner tabs — the geometric view of the    -->
+<!-- optimal design, and the cost curves (total    -->
+<!-- cost + marginal benefit of α).                -->
 <!-- ============================================ -->
-<div class="panel">
-  <h2>Geometric View of the Optimal Design</h2>
-  <div class="geom-container">
-    <div class="geom-tab-bar">
-      <button class="geom-tab-button active" data-geom-tab="step">Step View</button>
-      <button class="geom-tab-button" data-geom-tab="task">Task View</button>
-      <button class="geom-tab-button" data-geom-tab="job">Job View</button>
-    </div>
+<div class="panel" id="production-panel">
+  <h2>Production Visualization</h2>
+  <div class="inner-tab-bar">
+    <button class="inner-tab-button active" data-inner-tab="geom-view">Geometric View of Optimal Design</button>
+    <button class="inner-tab-button" data-inner-tab="cost-curves">Cost Curves</button>
+  </div>
+  <!-- Tab #1 — Geometric View -->
+  <div class="inner-tab-panel active" id="inner-tab-geom-view">
+  <!-- Tab bar sits OUTSIDE the zoomable container so the user can switch
+       Step/Task/Job views without triggering the zoom modal. -->
+  <div class="geom-tab-bar">
+    <button class="geom-tab-button active" data-geom-tab="step">Step View</button>
+    <button class="geom-tab-button" data-geom-tab="task">Task View</button>
+    <button class="geom-tab-button" data-geom-tab="job">Job View</button>
+  </div>
+  <div class="geom-container zoomable" data-zoom-group="geom" data-zoom-label="Geometric View" title="Click to zoom in">
     <!-- All three hints share one grid cell so the tallest one defines
          the height; only the active hint is visible. This pins the SVG
          top to the same Y across Step/Task/Job tabs at any column width. -->
     <div class="geom-hint-stack">
       <p class="hint geom-hint active" data-view="step">
         Each step is a rectangle: width = time, height = skill. Each job's bounding box has area = wage bill.<br>
-        Hand-off rectangles <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:var(--handoff-fill);border:1px dashed var(--handoff-stroke);"></span> appear between non-final jobs.
+        Hand-off rectangles <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:var(--handoff-fill);border:1px dashed var(--handoff-stroke);"></span> appear between non-final jobs.<br>
         Automated cells use a <span style="display:inline-block;width:14px;height:10px;vertical-align:middle;background:repeating-linear-gradient(45deg,var(--step-auto-fill) 0 3px,var(--step-auto-stroke) 3px 4px);border:1px solid var(--step-auto-stroke);"></span> diagonal-stripe fill — they contribute zero direct cost.
       </p>
       <p class="hint geom-hint" data-view="task">
@@ -892,8 +1146,27 @@
       <svg class="geom" id="geom-svg-jobs" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
   </div>
+  </div><!-- /#inner-tab-geom-view -->
+  <!-- Tab #2 — Cost Curves -->
+  <div class="inner-tab-panel" id="inner-tab-cost-curves">
+    <!-- Cost Curves use the same container + hint-stack scaffolding as
+         the Step/Task/Job views in the Geometric View tab. That way the
+         description font/sizing and the container chrome are identical
+         to the geom view's environment. -->
+    <div class="geom-container zoomable cost-curves-environment" data-zoom-group="geom" data-zoom-label="Geometric View" title="Click to zoom in">
+      <div class="geom-hint-stack">
+        <p class="hint geom-hint active">
+          Gains from improving AI quality parameter are non-linear. Each time a re-design threshold is passed the optimal configuration of production, and subsequently the cost curve, changes.
+        </p>
+      </div>
+      <div class="cost-curves-plots-row">
+        <div class="geom-cost-plot" id="cost-plot-inline"></div>
+        <div class="geom-marginal-plot" id="marginal-plot-inline"></div>
+      </div>
+    </div>
+  </div>
 </div>
-</div><!-- /.design-col (right: Geometric View) -->
+</div><!-- /.design-col (right: Production Visualization) -->
 </div><!-- /.design-grid -->
 
 <!-- ============================================ -->
@@ -931,6 +1204,16 @@
 </div>
 
 <p class="footer">Edit parameters then click <strong>Solve</strong>. Use <strong>Feeling Lucky</strong> for small perturbations around the working example.</p>
+</div>
+
+<!-- Zoom modal for the Geometric View. The .geom-container is moved into
+     #geom-modal-body when the user clicks the heading, and restored to its
+     original location when the modal is closed. Empty by default. -->
+<div class="geom-modal" id="geom-modal" hidden>
+  <div class="geom-modal-frame">
+    <button class="geom-modal-close" id="geom-modal-close" type="button" title="Close (Esc)" aria-label="Close zoomed view">&times;</button>
+    <div class="geom-modal-body" id="geom-modal-body"></div>
+  </div>
 </div>
 
 <script>
@@ -1205,6 +1488,7 @@ function renderStepsTable() {
     xBtn.addEventListener('click', () => {
       if (state.steps.length <= 1) return;
       state.steps.splice(i, 1);
+      invalidateCostCurves();
       solveQuiet();
     });
     xTd.appendChild(xBtn);
@@ -1227,6 +1511,7 @@ function renderStepsTable() {
       name: `Step ${state.steps.length + 1}`,
       tM: 1.0, cM: 1.0, tA: 0.5, cA: 1.0, d: 0.5, tH: 0.0,
     });
+    invalidateCostCurves();
     solveQuiet();
   });
   addTd.appendChild(addBtn);
@@ -2003,6 +2288,7 @@ function feelingLucky() {
   state.steps = fresh;
   state.solution = null;
   renderStepsTable();
+  invalidateCostCurves();
   // Re-solve so the visualizations update with the perturbed values, but
   // stay on the Cost Parameters tab so the user can see what changed in
   // the inputs and tweak further.
@@ -2014,16 +2300,33 @@ function feelingLucky() {
 // ribbons (default) and the Cost Parameters editor. The right column
 // (Geometric View) stays visible regardless of which inner tab is active.
 // ===========================================================================
-function switchInnerTab(name) {
-  document.querySelectorAll('.inner-tab-button').forEach(b => {
+// Scope the tab toggle to the .panel that contains the (button-or-named)
+// target — so the left column's tabs and the right column's tabs operate
+// independently, even though they share the same .inner-tab-button class.
+function switchInnerTab(btnOrName) {
+  let panel, name;
+  if (typeof btnOrName === 'string') {
+    name = btnOrName;
+    const seed = document.querySelector(
+      `.inner-tab-button[data-inner-tab="${name}"]`);
+    if (seed) panel = seed.closest('.panel');
+  } else {
+    panel = btnOrName.closest('.panel');
+    name = btnOrName.dataset.innerTab;
+  }
+  if (!panel || !name) return;
+  panel.querySelectorAll('.inner-tab-button').forEach(b => {
     b.classList.toggle('active', b.dataset.innerTab === name);
   });
-  document.querySelectorAll('.inner-tab-panel').forEach(p => {
+  panel.querySelectorAll('.inner-tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === `inner-tab-${name}`);
   });
+  // When the user reveals the Cost Curves tab in the right column,
+  // ensure the inline plots are rendered (they're built lazily).
+  if (name === 'cost-curves') ensureInlineCostCurves();
 }
 document.querySelectorAll('.inner-tab-button').forEach(btn => {
-  btn.addEventListener('click', () => switchInnerTab(btn.dataset.innerTab));
+  btn.addEventListener('click', () => switchInnerTab(btn));
 });
 
 // Geometric View tab switcher (Step View ↔ Task View). Only one panel
@@ -2171,11 +2474,504 @@ function solveQuiet() {
   // Keep the visible α slider in sync with state.alpha (covers the case
   // where state.alpha was just set by loadStateFromURL or Reset).
   if (typeof syncAlphaSliderToState === 'function') syncAlphaSliderToState();
+  // If the Geometric View modal is open with a fixed scale, re-apply it
+  // every render so the SVG keeps the same px-per-cost-unit ratio across
+  // α changes (the SVG's width/height attributes are reset on each render).
+  applyGeomModalScale();
+  // Move the markers on the cost-vs-α and marginal plots, and redraw the
+  // bold solid overlay (the α-range whose optimal modes match the live
+  // configuration) on top of the dashed full curves.
+  updatePlotMarkers();
+  // If the inline Cost Curves tab is visible and curves need re-computing
+  // (after Reset/Add/Lucky/Solve), do it now. α drags just hit the
+  // marker-update path inside ensureInlineCostCurves.
+  ensureInlineCostCurves();
+  // (The Stages modal scales its ribbons via static CSS, so no
+  // per-render JS hook is required here.)
   serializeStateToURL();
+}
+
+// ===========================================================================
+// Stage-ribbon modal scale. We pick ONE scale at modal-open time, write it
+// into a CSS variable on the modal element, and never recompute it after.
+// Formula: max(2, scale-that-makes-Stage-1-fill-page-width) capped by the
+// vertical room each ribbon has — so as α rises and the optimal design
+// simplifies, the ribbons visibly shrink within the same fixed frame.
+// ===========================================================================
+const STAGES_MODAL_MIN_SCALE = 2;
+
+function applyStagesModalScale(scale) {
+  const modal = document.getElementById('geom-modal');
+  if (!modal) return;
+  modal.style.setProperty('--stages-scale', scale);
+}
+function clearStagesModalScale() {
+  const modal = document.getElementById('geom-modal');
+  if (!modal) return;
+  modal.style.removeProperty('--stages-scale');
+}
+
+function computeStagesModalScale() {
+  const body = document.getElementById('geom-modal-body');
+  if (!body) return;
+  const s1 = document.getElementById('stage1-ribbon');
+  const s2 = document.getElementById('stage2-ribbon');
+  if (!s1 || !s2) return;
+
+  // Render at α=0.01 to use the "widest" design as the size reference.
+  const savedAlpha = state.alpha;
+  const savedSolution = state.solution;
+  state.alpha = 0.01;
+  recomputeAllStepQ();
+  state.solution = solveOptimal(state.steps);
+  // Clear any transform so the natural sizes measure correctly.
+  applyStagesModalScale(1);
+  renderStage1();
+  renderStage2();
+
+  // Worst-case natural sizes of both ribbons at α=0.01.
+  const w1 = s1.scrollWidth;
+  const h1 = s1.scrollHeight;
+  const h2 = s2.scrollHeight;
+  // Visible page-width / page-height for the stack of [Stage 1 section]
+  // [gap] [Stage 2 section]. Subtract some side margin so the boxes never
+  // touch the modal frame's edge, and subtract chrome (modal title, α
+  // slider, the two stage h2s, the two legends, the inter-section gap)
+  // from the height budget.
+  const sideMargin = Math.max(40, body.clientWidth * 0.05);
+  const availW = body.clientWidth - 2 * sideMargin;
+  const verticalChrome = 420;   // title + α-row + 2×h2 + 2×hint + 2×legend + gaps
+  const availH = body.clientHeight - verticalChrome;
+  const totalNaturalH = (h1 || 0) + (h2 || 0);
+
+  let scale = 1;
+  if (w1 > 0 && availW > 0) {
+    const scaleW = availW / w1;
+    const scaleH = totalNaturalH > 0 ? availH / totalNaturalH : Infinity;
+    // Always fit in both dimensions. Never shrink below 1× (natural size).
+    scale = Math.max(1, Math.min(scaleW, scaleH));
+  }
+
+  // Restore live state and re-render under the actual α.
+  state.alpha = savedAlpha;
+  recomputeAllStepQ();
+  state.solution = savedSolution;
+  renderStage1();
+  renderStage2();
+  applyStagesModalScale(scale);
+}
+
+// ===========================================================================
+// Cost-vs-α plot inside the Geometric View modal. We sample α uniformly
+// from 0.01 to 1.00 (50 points), solve at each, and draw the resulting
+// curve. A black circle tracks the current (α, cost) and is repositioned
+// on every re-render so the user sees exactly where the slider sits.
+// ===========================================================================
+// Sample (α, cost, modes) across α ∈ [0.01, 1]. Storing the optimal-modes
+// signature at each sample lets us highlight the α-range over which the
+// current design is the optimum (a solid bold overlay on the dashed curve).
+// Sample the curve in fine increments (Δα = 0.001 by default) so the
+// plotted lines look smooth, independent of how coarsely the user can
+// move the α slider.
+function computeCostCurve(step = 0.001) {
+  const samples = [];
+  const savedAlpha = state.alpha;
+  const savedSolution = state.solution;
+  const minA = 0.01, maxA = 1.0;
+  const n = Math.round((maxA - minA) / step) + 1;
+  for (let i = 0; i < n; i++) {
+    const a = minA + i * step;
+    state.alpha = a;
+    recomputeAllStepQ();
+    const sol = solveOptimal(state.steps);
+    samples.push({
+      alpha: a,
+      cost: sol ? sol.cost : 0,
+      modes: sol ? sol.modes.join('') : '',
+    });
+  }
+  state.alpha = savedAlpha;
+  recomputeAllStepQ();
+  state.solution = savedSolution;
+  return samples;
+}
+
+// Numerical derivative for the marginal-benefit plot. We compute dC/dα
+// via central differences, then plot max(0, −dC/dα): a non-negative
+// "marginal benefit" quantity that's positive in regions where cost
+// rises sharply as α is reduced, and clamped to zero where it would
+// otherwise dip below.
+function computeMarginalCurve(samples) {
+  const out = [];
+  for (let i = 0; i < samples.length; i++) {
+    let dC, dA;
+    if (i === 0) {
+      dC = samples[i + 1].cost - samples[i].cost;
+      dA = samples[i + 1].alpha - samples[i].alpha;
+    } else if (i === samples.length - 1) {
+      dC = samples[i].cost - samples[i - 1].cost;
+      dA = samples[i].alpha - samples[i - 1].alpha;
+    } else {
+      dC = samples[i + 1].cost - samples[i - 1].cost;
+      dA = samples[i + 1].alpha - samples[i - 1].alpha;
+    }
+    const raw = dA ? dC / dA : 0;
+    out.push({
+      alpha: samples[i].alpha,
+      value: Math.max(0, -raw),
+      modes: samples[i].modes,
+    });
+  }
+  return out;
+}
+
+function setupCostPlotInModal() {
+  const body = document.getElementById('geom-modal-body');
+  const geomContainer = body && body.querySelector('.geom-container');
+  if (!body || !geomContainer) return;
+
+  // viewport row: [geom-container] + [cost section with description + plots]
+  const viewport = document.createElement('div');
+  viewport.className = 'geom-modal-viewport';
+  geomContainer.parentNode.insertBefore(viewport, geomContainer);
+  viewport.appendChild(geomContainer);
+
+  // Cost-curves section: uses the same geom-container + hint-stack
+  // scaffolding as the geom view, so the description and chrome look
+  // visually identical to the geom view's environment next to it.
+  const section = document.createElement('div');
+  section.className = 'geom-container geom-modal-cost-section cost-curves-environment';
+
+  const hintStack = document.createElement('div');
+  hintStack.className = 'geom-hint-stack';
+  const desc = document.createElement('p');
+  desc.className = 'hint geom-hint active';
+  desc.textContent =
+    'Gains from improving AI quality parameter are non-linear. Each time a re-design threshold is passed the optimal configuration of production, and subsequently the cost curve, changes.';
+  hintStack.appendChild(desc);
+  section.appendChild(hintStack);
+
+  const plotsRow = document.createElement('div');
+  plotsRow.className = 'cost-curves-plots-row';
+  section.appendChild(plotsRow);
+
+  const costPlot = document.createElement('div');
+  costPlot.className = 'geom-cost-plot';
+  costPlot.id = 'geom-cost-plot-modal';
+  plotsRow.appendChild(costPlot);
+
+  const marginalPlot = document.createElement('div');
+  marginalPlot.className = 'geom-marginal-plot';
+  marginalPlot.id = 'geom-marginal-plot-modal';
+  plotsRow.appendChild(marginalPlot);
+
+  viewport.appendChild(section);
+
+  const samples = computeCostCurve();
+  const marginal = computeMarginalCurve(samples);
+  renderSeriesPlot(costPlot, samples, 'cost',
+    'Total Cost', 'Total Cost');
+  renderSeriesPlot(marginalPlot, marginal, 'value',
+    'Marginal Benefit of Increasing α', '-dCost / dα');
+  updatePlotMarkers();
+}
+
+// Render a series plot: dashed black curve over the whole range, with a
+// bold solid overlay covering the α-range whose `modes` signature matches
+// the current solution. A black circle marker tracks the live (α, value).
+// `key` is which sample field to plot on Y ('cost' or 'value').
+function renderSeriesPlot(container, samples, key, title, yLabel) {
+  container.innerHTML = '';
+  if (!samples.length) return;
+
+  const W = 460, H = 460;
+  const padL = 52, padR = 14, padT = 30, padB = 46;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const minA = samples[0].alpha;
+  const maxA = samples[samples.length - 1].alpha;
+  let minV = Infinity, maxV = -Infinity;
+  samples.forEach(s => {
+    if (s[key] < minV) minV = s[key];
+    if (s[key] > maxV) maxV = s[key];
+  });
+  const valueRange = (maxV - minV) || 1;
+  const minVp = minV - 0.05 * valueRange;
+  const maxVp = maxV + 0.05 * valueRange;
+  const range = maxVp - minVp;
+  const xOf = a => padL + ((a - minA) / (maxA - minA)) * plotW;
+  const yOf = v => padT + plotH - ((v - minVp) / range) * plotH;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+  // Lock the font on every text node so both plots render identically —
+  // otherwise different ancestor stacks (inline panel vs modal) can pick
+  // slightly different default font fallbacks, making the same px size
+  // look like different sizes.
+  const make = (tag, attrs, text) => {
+    const el = document.createElementNS(NS, tag);
+    for (const k in attrs) el.setAttribute(k, attrs[k]);
+    if (text !== undefined) el.textContent = text;
+    if (tag === 'text') {
+      el.setAttribute('font-family',
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+    }
+    return el;
+  };
+
+  // Title — same weight/size as the geom view's panel titles.
+  svg.appendChild(make('text', {
+    x: W / 2, y: 18, 'text-anchor': 'middle',
+    'font-size': 16, 'font-weight': 600, fill: '#374151',
+  }, title));
+
+  // Axes
+  svg.appendChild(make('line', {
+    x1: padL, x2: W - padR, y1: H - padB, y2: H - padB,
+    stroke: '#374151', 'stroke-width': 1,
+  }));
+  svg.appendChild(make('line', {
+    x1: padL, x2: padL, y1: padT, y2: H - padB,
+    stroke: '#374151', 'stroke-width': 1,
+  }));
+
+  // X ticks
+  [0, 0.25, 0.5, 0.75, 1].forEach(a => {
+    const x = xOf(a);
+    svg.appendChild(make('line', {
+      x1: x, x2: x, y1: H - padB, y2: H - padB + 4,
+      stroke: '#374151', 'stroke-width': 1,
+    }));
+    svg.appendChild(make('text', {
+      x, y: H - padB + 15, 'text-anchor': 'middle',
+      'font-size': 10, fill: '#6b7280',
+    }, a.toFixed(2)));
+  });
+
+  // Y ticks
+  for (let i = 0; i <= 4; i++) {
+    const v = minVp + (range * i) / 4;
+    const y = yOf(v);
+    svg.appendChild(make('line', {
+      x1: padL - 4, x2: padL, y1: y, y2: y,
+      stroke: '#374151', 'stroke-width': 1,
+    }));
+    svg.appendChild(make('text', {
+      x: padL - 8, y, 'text-anchor': 'end', 'dominant-baseline': 'central',
+      'font-size': 10, fill: '#6b7280',
+    }, Math.abs(v) < 1 ? v.toFixed(2) : v.toFixed(1)));
+  }
+
+  // Axis titles — same size/weight as "Time" / "Skill" in the geom view.
+  svg.appendChild(make('text', {
+    x: padL + plotW / 2, y: H - 6, 'text-anchor': 'middle',
+    'font-size': 15, 'font-weight': 500, fill: '#374151',
+  }, 'AI quality α'));
+  const yLx = 16, yLy = padT + plotH / 2;
+  svg.appendChild(make('text', {
+    x: yLx, y: yLy, 'text-anchor': 'middle',
+    'font-size': 15, 'font-weight': 500, fill: '#374151',
+    transform: `rotate(-90 ${yLx} ${yLy})`,
+  }, yLabel));
+
+  // Full dashed curve (black).
+  let dFull = '';
+  samples.forEach((s, i) => {
+    dFull += (i ? 'L' : 'M') + xOf(s.alpha) + ' ' + yOf(s[key]) + ' ';
+  });
+  svg.appendChild(make('path', {
+    d: dFull, stroke: '#000', 'stroke-width': 1.5, fill: 'none',
+    'stroke-dasharray': '4 3', class: 'series-dashed',
+  }));
+
+  // Bold solid overlay for the current-modes range; d set later.
+  svg.appendChild(make('path', {
+    d: '', stroke: '#000', 'stroke-width': 3.2, fill: 'none',
+    class: 'series-bold',
+  }));
+
+  // Marker.
+  svg.appendChild(make('circle', {
+    r: 7, fill: '#000', stroke: '#fff', 'stroke-width': 2,
+    class: 'series-marker',
+  }));
+
+  container.appendChild(svg);
+  container._coords = { xOf, yOf, samples, key };
+}
+
+// Find the contiguous index range [start..end] around `currentAlpha`
+// where samples' `modes` equal the current optimal-modes signature.
+function findCurrentModesRange(samples, currentAlpha, currentModes) {
+  if (!samples.length || !currentModes) return null;
+  // Locate the sample nearest the live α.
+  let closest = 0, best = Infinity;
+  for (let i = 0; i < samples.length; i++) {
+    const d = Math.abs(samples[i].alpha - currentAlpha);
+    if (d < best) { best = d; closest = i; }
+  }
+  // The bold range is the contiguous run of samples whose modes match.
+  // If the closest sample doesn't itself match (rare, but possible at
+  // a regime boundary), search outward for the nearest matching sample.
+  let anchor = closest;
+  if (samples[anchor].modes !== currentModes) {
+    let found = -1;
+    for (let off = 1; off < samples.length; off++) {
+      if (closest - off >= 0 && samples[closest - off].modes === currentModes) {
+        found = closest - off; break;
+      }
+      if (closest + off < samples.length && samples[closest + off].modes === currentModes) {
+        found = closest + off; break;
+      }
+    }
+    if (found < 0) return null;
+    anchor = found;
+  }
+  let s = anchor, e = anchor;
+  while (s > 0 && samples[s - 1].modes === currentModes) s--;
+  while (e < samples.length - 1 && samples[e + 1].modes === currentModes) e++;
+  return { start: s, end: e };
+}
+
+// Reposition the marker AND redraw the bold overlay for a single plot.
+function updatePlotForCurrentState(container) {
+  if (!container || !container._coords) return;
+  const { xOf, yOf, samples, key } = container._coords;
+  // Marker at (live α, value-interpolated-at-live-α).
+  // For a clean look, just take the value of the closest sample.
+  let closest = 0, best = Infinity;
+  for (let i = 0; i < samples.length; i++) {
+    const d = Math.abs(samples[i].alpha - state.alpha);
+    if (d < best) { best = d; closest = i; }
+  }
+  const marker = container.querySelector('.series-marker');
+  if (marker) {
+    marker.setAttribute('cx', xOf(state.alpha));
+    marker.setAttribute('cy', yOf(samples[closest][key]));
+  }
+  // Bold overlay over the current-modes range.
+  const bold = container.querySelector('.series-bold');
+  if (bold) {
+    const currentModes = state.solution ? state.solution.modes.join('') : '';
+    const range = findCurrentModesRange(samples, state.alpha, currentModes);
+    let d = '';
+    if (range) {
+      for (let i = range.start; i <= range.end; i++) {
+        d += (i === range.start ? 'M' : 'L') + xOf(samples[i].alpha) + ' ' + yOf(samples[i][key]) + ' ';
+      }
+    }
+    bold.setAttribute('d', d);
+  }
+}
+
+function updatePlotMarkers() {
+  // Both the modal plots and the inline (right-column) plots share the
+  // same updatePlotForCurrentState logic.
+  document.querySelectorAll(
+    '.geom-cost-plot, .geom-marginal-plot').forEach(c => {
+    updatePlotForCurrentState(c);
+  });
+}
+
+// ===========================================================================
+// Inline Cost Curves tab in the right column. The curve samples (cost +
+// marginal) are computed once and reused; we re-compute only when a step
+// param changes (a Solve / Reset / Add Step / Remove Step / Feeling Lucky
+// is treated as a step-param change). α slider drags don't trigger a
+// re-compute — they just move the markers.
+// ===========================================================================
+let _costSamplesCache = null;
+let _marginalSamplesCache = null;
+let _curvesDirty = true;
+
+function invalidateCostCurves() {
+  _curvesDirty = true;
+}
+
+function ensureInlineCostCurves() {
+  const tab = document.getElementById('inner-tab-cost-curves');
+  if (!tab || !tab.classList.contains('active')) return;
+  const cost = document.getElementById('cost-plot-inline');
+  const marginal = document.getElementById('marginal-plot-inline');
+  if (!cost || !marginal) return;
+  if (_curvesDirty || !_costSamplesCache) {
+    _costSamplesCache = computeCostCurve();
+    _marginalSamplesCache = computeMarginalCurve(_costSamplesCache);
+    _curvesDirty = false;
+    renderSeriesPlot(cost, _costSamplesCache, 'cost',
+      'Total Cost', 'Total Cost');
+    renderSeriesPlot(marginal, _marginalSamplesCache, 'value',
+      'Marginal Benefit of Increasing α', '-dCost / dα');
+  }
+  updatePlotForCurrentState(cost);
+  updatePlotForCurrentState(marginal);
+}
+
+// ===========================================================================
+// Geometric View modal: fixed-scale helpers. The scale is set once when the
+// modal opens (in setupZoomModal) so all α values share the same px-per-
+// cost-unit factor; the figure visibly shrinks/grows as α changes.
+// ===========================================================================
+let geomModalScale = null;  // null = modal closed (or stages-group open)
+
+function applyGeomModalScale() {
+  if (geomModalScale === null) return;
+  document.querySelectorAll('.geom-modal svg.geom').forEach(s => {
+    const W = parseFloat(s.getAttribute('width'));
+    const H = parseFloat(s.getAttribute('height'));
+    if (W && H && geomModalScale > 0) {
+      s.style.width = (geomModalScale * W) + 'px';
+      s.style.height = (geomModalScale * H) + 'px';
+    }
+  });
+}
+
+// Called ONCE on modal open. Captures the geom SVG's current pixel height
+// and pins the cost/marginal plot SVGs to that height. After this they
+// stay at that fixed size as α changes — only the markers move.
+function fixCostPlotHeights() {
+  const activeGeom = document.querySelector(
+    '.geom-modal .geom-tab-panel.active svg.geom');
+  if (!activeGeom) return;
+  const h = parseFloat(activeGeom.style.height) || 0;
+  if (h <= 0) return;
+  document.querySelectorAll(
+    '.geom-cost-plot svg, .geom-marginal-plot svg').forEach(s => {
+    s.style.height = h + 'px';
+    s.style.width = '100%';
+  });
+}
+function clearGeomModalScale() {
+  geomModalScale = null;
+  document.querySelectorAll('svg.geom').forEach(s => {
+    s.style.width = '';
+    s.style.height = '';
+  });
+}
+// Compute the SVG's intrinsic pixel dimensions if α were at its slider
+// minimum, WITHOUT disturbing the live on-screen render. We solve and
+// build a temporary geometry at α=0.01 and then restore.
+function computeGeomWorstCaseSize() {
+  const ALPHA_MIN_FOR_WORST = 0.01;
+  const savedAlpha = state.alpha;
+  const savedSolution = state.solution;
+  state.alpha = ALPHA_MIN_FOR_WORST;
+  recomputeAllStepQ();
+  state.solution = solveOptimal(state.steps);
+  const geom = computeGeom();
+  // Restore.
+  state.alpha = savedAlpha;
+  recomputeAllStepQ();
+  state.solution = savedSolution;
+  return geom ? { W: geom.W, H: geom.H } : null;
 }
 // User-initiated Solve: also flip the LEFT column back to the ribbons so
 // the user immediately sees the optimal design they just solved for.
 function solve() {
+  invalidateCostCurves();
   solveQuiet();
   switchInnerTab('ribbons');
 }
@@ -2229,6 +3025,7 @@ document.getElementById('reset-btn').addEventListener('click', () => {
   state.steps = WORKING_EXAMPLE.map(s => ({ ...s }));
   state.alpha = DEFAULT_ALPHA;
   syncAlphaSliderToState();
+  invalidateCostCurves();
   solveQuiet();
 });
 
@@ -2341,6 +3138,156 @@ loadStateFromURL();
 })();
 
 solveQuiet();
+
+// Zoom modal: each .zoomable element (Stage 1 ribbon, Stage 2 ribbon,
+// Geometric View) is clickable. On click, that element and the global
+// α slider are MOVED into the modal so the user can both inspect the
+// figure at full size AND adjust α in place. On close, both are
+// restored to their original spots. Moving (vs cloning) keeps every
+// existing event listener attached, so tab switching, slider input,
+// re-renders, etc. continue to work seamlessly across open/close.
+(function setupZoomModal() {
+  const modal = document.getElementById('geom-modal');
+  const body = document.getElementById('geom-modal-body');
+  const closeBtn = document.getElementById('geom-modal-close');
+  if (!modal || !body || !closeBtn) return;
+
+  // Track what was moved so we can restore exactly.
+  const moved = [];
+
+  function moveInto(el, container) {
+    if (!el) return;
+    moved.push({ el, parent: el.parentElement, next: el.nextElementSibling });
+    container.appendChild(el);
+  }
+  function restoreAll() {
+    // Restore in reverse so siblings end up in their original order.
+    while (moved.length) {
+      const { el, parent, next } = moved.pop();
+      if (next && next.parentElement === parent) parent.insertBefore(el, next);
+      else parent.appendChild(el);
+    }
+  }
+
+  // Optional title strip at the top of the modal body, set per-target.
+  const titleEl = document.createElement('div');
+  titleEl.className = 'geom-modal-title';
+
+  // Resolve the set of elements to lift based on the clicked target's
+  // zoom group. "stages" lifts both whole stage-sections so the user can
+  // watch Stage 1 *and* Stage 2 update together as α moves. "geom" lifts
+  // the geometric view. Any other value (or none) lifts just the clicked
+  // element by itself.
+  function resolveTargets(clicked) {
+    const group = clicked.dataset.zoomGroup;
+    if (group === 'stages') {
+      return [
+        document.getElementById('stage1-section'),
+        document.getElementById('stage2-section'),
+      ].filter(Boolean);
+    }
+    if (group === 'geom') {
+      // Include the tab bar alongside the container so the user can still
+      // switch between Step/Task/Job views while zoomed in.
+      const out = [];
+      const tabs = document.querySelector('.geom-tab-bar');
+      if (tabs) out.push(tabs);
+      const c = document.querySelector('.geom-container');
+      if (c) out.push(c);
+      return out;
+    }
+    return [clicked];
+  }
+
+  function open(clicked) {
+    if (moved.length) return; // already open
+    body.innerHTML = '';
+    titleEl.textContent = clicked.dataset.zoomLabel || 'Zoomed view';
+    body.appendChild(titleEl);
+    // 1) α slider first so it sits at the top of the modal regardless of target.
+    moveInto(document.querySelector('.alpha-row'), body);
+    // 2) Then the resolved targets, in order.
+    resolveTargets(clicked).forEach(t => moveInto(t, body));
+    // For the geom group, nest the Step/Task/Job tab-bar INSIDE the
+    // geom-container so it sits above the geom view (centered over the
+    // LEFT half of the modal) instead of stretching across the full
+    // modal width. It snaps back to its original spot in the main page
+    // when the modal closes — see restoreAll.
+    if (clicked.dataset.zoomGroup === 'geom') {
+      const tb = body.querySelector('.geom-tab-bar');
+      const gc = body.querySelector('.geom-container');
+      if (tb && gc) gc.insertBefore(tb, gc.firstChild);
+    }
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    // For the Geometric View, set a fixed px-per-cost-unit scale equal
+    // to "make the worst-case (α=0.01) figure fill the modal." Two
+    // rAFs let layout settle (modal-body, alpha-row, title, tabs, hint)
+    // before we measure where the SVG sits in the modal viewport.
+    if (clicked.dataset.zoomGroup === 'geom') {
+      // Build the cost-vs-α plot to the right of the geom-container BEFORE
+      // computing the scale, since the plot takes width away from the
+      // geom-container's flex allocation.
+      requestAnimationFrame(() => {
+        setupCostPlotInModal();
+        requestAnimationFrame(() => {
+          const worst = computeGeomWorstCaseSize();
+          const tabPanel = document.querySelector(
+            '.geom-modal .geom-tab-panel.active');
+          if (!worst || !tabPanel) return;
+          const padInset = 12;
+          const availableH = tabPanel.clientHeight - padInset;
+          const availableW = tabPanel.clientWidth - padInset;
+          const scaleH = availableH / worst.H;
+          const scaleW = availableW / worst.W;
+          geomModalScale = Math.max(0.1, Math.min(scaleH, scaleW));
+          applyGeomModalScale();
+          // Pin the two right plots to the geom SVG's height now and
+          // leave them alone — only the markers move as α changes.
+          fixCostPlotHeights();
+        });
+      });
+    }
+    // For the Stages group, compute the fixed scale once (max of 2× and
+    // whatever fits Stage 1's worst-case width). Two rAFs ensure layout
+    // has settled before we measure clientWidth/clientHeight.
+    if (clicked.dataset.zoomGroup === 'stages') {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        computeStagesModalScale();
+      }));
+    }
+  }
+  function close() {
+    // Clear modal-scale BEFORE restoring so the inline width/height on
+    // every SVG (including the geom-container's) are wiped — otherwise
+    // they'd persist back in the main column at the modal scale.
+    clearGeomModalScale();
+    // Drop the modal's --stages-scale so the ribbons revert to natural
+    // size as they return to the main column.
+    clearStagesModalScale();
+    restoreAll();
+    body.innerHTML = '';
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+  }
+
+  // Bind every .zoomable to open(self) on click.
+  document.querySelectorAll('.zoomable').forEach(el => {
+    el.addEventListener('click', (e) => {
+      // Don't trigger on clicks inside form controls (e.g., a future
+      // chart with interactive inputs); for now, all clicks bubble freely.
+      open(el);
+    });
+  });
+
+  closeBtn.addEventListener('click', close);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close();   // backdrop only
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!modal.hidden && e.key === 'Escape') close();
+  });
+})();
 
 // (Page loads at the CSS default 50/50 column split — the resizer in
 //  the middle scales both sides smoothly from there.)
