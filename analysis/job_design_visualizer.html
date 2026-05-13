@@ -416,7 +416,19 @@
     background: white; font-size: 15px; width: 100%;
   }
   table.steps input[type="text"] { text-align: left; }
-  table.steps input[type="number"] { text-align: right; }
+  table.steps input[type="number"] {
+    text-align: right;
+    -moz-appearance: textfield;          /* Firefox: hide spinner arrows */
+  }
+  /* WebKit (Chrome, Safari, Edge): hide the up/down spinner arrows that
+     show up on number inputs. They eat horizontal space in narrow cells
+     and aren't useful for editing the cost parameters. */
+  table.steps input[type="number"]::-webkit-inner-spin-button,
+  table.steps input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
   table.steps .col-name { width: 90px; }
   table.steps .col-num { width: 72px; }
   table.steps .col-mode { width: 110px; }
@@ -936,6 +948,24 @@
     .ribbon { gap: 8px; }
   }
 
+  /* Mobile-only panel toggle: hidden on desktop, shown on mobile. */
+  .mobile-panel-toggle { display: none; }
+  .mobile-toggle-btn {
+    padding: 6px 14px;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .mobile-toggle-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
   /* ====================================================================
      Mobile breakpoint (≤ 700px). The desktop layout is built around a
      wide two-column design with a draggable resizer and zoom modals —
@@ -946,9 +976,44 @@
      - drop the zoom-in affordance (the modal needs more space than a
        phone can give);
      - shrink the top chrome (title, authors, panel h2s);
-     - keep both Cost Curves plots stacked (already stacked).
+     - keep both Cost Curves plots stacked (already stacked);
+     - show ONE column at a time (toggled via the mobile-panel-toggle).
      ==================================================================== */
   @media (max-width: 700px) {
+    /* Show the panel toggle below the α slider. Both the α slider AND
+       this toggle are STICKY at the top of the viewport on mobile, so
+       the user can adjust α and switch panels even while scrolled deep
+       into a long figure. */
+    .alpha-row {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg, #ffffff);
+      margin: 0 0 0 0;
+      padding: 6px 0 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-panel-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      position: sticky;
+      top: 52px;   /* sits directly below the sticky α row */
+      z-index: 19;
+      background: var(--bg, #ffffff);
+      margin: 0 0 14px 0;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    /* Hide whichever column isn't the active mobile panel. */
+    body[data-mobile-panel="setup"] #viz-col { display: none; }
+    body[data-mobile-panel="viz"]   #setup-col { display: none; }
+    /* Cost-breakdown table — squeeze rows so all columns fit. */
+    .cost-table { font-size: 12px; }
+    .cost-table th, .cost-table td { padding: 5px 4px; }
+    .cost-table th { font-size: 11px; }
+    .cost-summary { font-size: 14px; }
+    .formula { font-size: 12px; }
     body { font-size: 14px; }
     .container { padding: 6px; }
     .design-grid {
@@ -978,12 +1043,25 @@
     .panel h2 { font-size: 16px; }
     .inner-tab-button { font-size: 12px; padding: 4px 10px; }
     .geom-tab-button { font-size: 12px; padding: 4px 10px; }
+    /* On mobile the design-cols are sized by content (no fixed height
+       propagating down the flex chain), so stage-section's `flex: 1 1 0`
+       was collapsing them to zero height. Switch to content-based sizing
+       and drop the empty spacers used for desktop vertical distribution. */
+    .design-col .stage-section { flex: 0 0 auto; min-height: 0; }
+    .stage-section > .ss-spacer { display: none; }
+    .stages-wrapper { flex: 0 0 auto; gap: 18px; }
     /* Stage ribbons: smaller box text and tighter gaps so the row fits. */
     .step-box { padding: 4px 6px; font-size: 10px; min-width: 44px; }
     .step-box .meta { font-size: 8px; }
     .task-group { padding: 4px 6px; }
     .task-group .tg-label { font-size: 9px; }
-    .ribbon { gap: 6px; padding: 4px 2px; }
+    .ribbon {
+      gap: 6px; padding: 4px 2px;
+      /* Scale the ribbon down so 5 task-groups fit in the viewport
+         width without horizontal scrolling. CSS `zoom` reflows layout
+         so the surrounding labels/legend stay aligned. */
+      zoom: 0.72;
+    }
     .legend { font-size: 11px; gap: 6px; }
     /* Cost-parameters table is too wide for mobile; let it scroll. */
     table.steps { font-size: 12px; }
@@ -991,7 +1069,7 @@
   }
 </style>
 </head>
-<body>
+<body data-mobile-panel="setup">
 <div class="container">
 
 <div class="title-row">
@@ -1021,6 +1099,13 @@
   <span class="alpha-value" id="alpha-value"></span>
 </div>
 
+<!-- Mobile-only toggle between the two main columns (hidden on desktop
+     via CSS). The visible column is controlled by body[data-mobile-panel]. -->
+<div class="mobile-panel-toggle">
+  <button class="mobile-toggle-btn active" data-mobile-panel="setup">Production Setup</button>
+  <button class="mobile-toggle-btn" data-mobile-panel="viz">Production Visualization</button>
+</div>
+
 <!-- ============================================ -->
 <!-- Single-page layout. The left column has a    -->
 <!-- mini tab switcher that flips between the     -->
@@ -1029,7 +1114,7 @@
 <!-- column always shows the Geometric View.      -->
 <!-- ============================================ -->
 <div class="design-grid">
-<div class="design-col">
+<div class="design-col" id="setup-col">
 
 <!-- One 'Setup' panel containing two tabs (Optimization Visualization /
      Cost Parameters), mirroring the three-tab Geometric View on the
@@ -1170,7 +1255,7 @@
 <!-- Drag handle between the two columns. -->
 <div class="design-resizer" id="design-resizer" role="separator" aria-orientation="vertical" aria-label="Resize columns"></div>
 
-<div class="design-col">
+<div class="design-col" id="viz-col">
 <!-- ============================================ -->
 <!-- Production Visualization (right column).      -->
 <!-- Mirrors the left column's Setup panel: a      -->
@@ -1881,8 +1966,21 @@ function renderGeomView(svg, geom, view) {
     svg.appendChild(t);
     return;
   }
-  const { taskBoxes, handoffBoxes, jobBoxes, W, H, MX, MY,
-          plotLeft, plotBottom, totalWidthUnits, totalHeightUnits, steps } = geom;
+  const { taskBoxes, handoffBoxes, jobBoxes,
+          totalWidthUnits, totalHeightUnits, steps } = geom;
+  // Use a FIXED frame sized to the worst-case (max W, H) across all α
+  // values. The content (boxes, axes) is still positioned with the
+  // current α's coordinates, so as α grows and the production shrinks,
+  // the boxes occupy a smaller portion of the same fixed viewBox — i.e.
+  // only the graph itself changes size, not the frame around it.
+  const maxDims = computeGeomWorstCaseSize() || { W: geom.W, H: geom.H };
+  const W = maxDims.W;
+  const H = maxDims.H;
+  const plotLeft = geom.plotLeft;
+  const padBottom = geom.H - geom.plotBottom;   // recover padBottom
+  const plotBottom = H - padBottom;
+  const MX = (x) => plotLeft + x * GEOM.unitX;
+  const MY = (y) => plotBottom - y * GEOM.unitY;
   setAttrs(svg, { width: W, height: H, viewBox: `0 0 ${W} ${H}`,
                   preserveAspectRatio: 'xMidYMid meet' });
 
@@ -2402,6 +2500,19 @@ function switchInnerTab(btnOrName) {
 }
 document.querySelectorAll('.inner-tab-button').forEach(btn => {
   btn.addEventListener('click', () => switchInnerTab(btn));
+});
+
+// Mobile-only toggle between the Production Setup and Production
+// Visualization columns. Sets body[data-mobile-panel] which the CSS
+// media query uses to hide the inactive column.
+document.querySelectorAll('.mobile-toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.mobilePanel;
+    document.body.dataset.mobilePanel = target;
+    document.querySelectorAll('.mobile-toggle-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.mobilePanel === target);
+    });
+  });
 });
 
 // Geometric View tab switcher (Step View ↔ Task View). Only one panel
@@ -3054,6 +3165,7 @@ let _curvesDirty = true;
 
 function invalidateCostCurves() {
   _curvesDirty = true;
+  invalidateGeomMaxSize();
 }
 
 function ensureInlineCostCurves() {
@@ -3133,7 +3245,10 @@ function clearGeomModalScale() {
 // a chain is just barely cheaper than singletons, blowing up Σ t).
 // Iterating over α catches that and gives us a scale that's safe for
 // every slider position.
+let _geomMaxSizeCache = null;
+function invalidateGeomMaxSize() { _geomMaxSizeCache = null; }
 function computeGeomWorstCaseSize() {
+  if (_geomMaxSizeCache) return _geomMaxSizeCache;
   const savedAlpha = state.alpha;
   const savedSolution = state.solution;
   const minA = 0.01, maxA = 1.0;
@@ -3155,7 +3270,8 @@ function computeGeomWorstCaseSize() {
   state.alpha = savedAlpha;
   recomputeAllStepQ();
   state.solution = savedSolution;
-  return (maxW > 0 && maxH > 0) ? { W: maxW, H: maxH } : null;
+  _geomMaxSizeCache = (maxW > 0 && maxH > 0) ? { W: maxW, H: maxH } : null;
+  return _geomMaxSizeCache;
 }
 // User-initiated Solve: also flip the LEFT column back to the ribbons so
 // the user immediately sees the optimal design they just solved for.
