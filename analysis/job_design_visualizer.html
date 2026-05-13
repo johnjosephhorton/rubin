@@ -1260,21 +1260,20 @@
 // step.q) keep working unchanged. d values below are chosen so that at
 // α = DEFAULT_ALPHA, q_i recovers the prior baseline (0.20, 0.95, 0.30,
 // 0.95, 0.20) — preserving the M, C, C, A, M optimum on first load.
-const DEFAULT_ALPHA = 0.5;
+const DEFAULT_ALPHA = 0.35;
 const WORKING_EXAMPLE = [
-  // Step 1: cheap Manual. AI singleton is expensive; high difficulty (d≈2.32
-  //   → q=0.20 at α=0.5) also keeps the chain from extending leftward.
-  { name: 'Step 1', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.32, tH: 20.0 },
-  // Step 2: expensive Manual (5), cheap AI. Very low difficulty (d≈0.07 →
-  //   q=0.95 at α=0.5) makes the chain economical here.
-  { name: 'Step 2', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.07, tH: 20.0 },
+  // Step 1: cheap Manual. High difficulty (d≈2.3219) → q is low at α=0.35,
+  //   keeping the chain from extending leftward.
+  { name: 'Step 1', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.3219, tH: 20.0 },
+  // Step 2: expensive Manual (5), cheap AI. Very low difficulty (d≈0.074).
+  { name: 'Step 2', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.074, tH: 20.0 },
   // Step 3: human comparative advantage. Cheap Manual (1), expensive AI
-  //   singleton; moderate difficulty (d≈1.74 → q=0.30 at α=0.5).
-  { name: 'Step 3', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 1.74, tH: 20.0 },
-  // Step 4: mirror of Step 2. Chain's Augmented endpoint.
-  { name: 'Step 4', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.07, tH: 20.0 },
-  // Step 5: mirror of Step 1. Stays Manual; tH=0 (no hand-off after the last).
-  { name: 'Step 5', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.32, tH: 0.0 },
+  //   singleton; moderate difficulty (d≈1.737).
+  { name: 'Step 3', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 1.737, tH: 20.0 },
+  // Step 4: mirror of Step 2.
+  { name: 'Step 4', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.074, tH: 20.0 },
+  // Step 5: mirror of Step 1. tH=0 (no hand-off after the last step).
+  { name: 'Step 5', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.3219, tH: 0.0 },
 ];
 
 let state = {
