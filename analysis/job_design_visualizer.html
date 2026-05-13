@@ -212,6 +212,17 @@
      Stage 2's title are visually well separated. (Cost Parameters tab
      keeps the tighter 12px default.) */
   #inner-tab-ribbons.active { gap: 13px; }
+  /* Single zoomable wrapper around both stage-sections in the main view.
+     Mirrors the flex column behavior of #inner-tab-ribbons so the visual
+     spacing/layout is unchanged — it just makes hover/click treat both
+     stages as one unified zoom target. */
+  .stages-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 13px;
+  }
 
   /* Optimal Design tab uses a 2-column grid: Stage 1 + Stage 2 stack
      in the left column, Geometric View occupies the right column.
@@ -763,6 +774,12 @@
   .geom-modal-viewport > .geom-modal-cost-section {
     flex: 0 0 48%;
     min-width: 0;
+    /* Strip the .geom-container card appearance in the modal: no white
+       background, no rounded corners, no scrollbox — just a clean
+       vertical divider down the left edge. */
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
     border-left: 1px solid #d1d5db;
     padding-left: 14px;
   }
@@ -974,7 +991,11 @@
 
   <!-- Tab #1 — Stage 1 + Stage 2 ribbons -->
   <div class="inner-tab-panel active" id="inner-tab-ribbons">
-  <div class="stage-section zoomable" id="stage1-section" data-zoom-group="stages" data-zoom-label="Steps → Tasks → Jobs" title="Click to zoom in (both stages)">
+  <!-- Both stages are wrapped in a single zoomable container so hover/
+       click treats them as one unified element, instead of two separate
+       per-stage zoomable boxes. -->
+  <div class="stages-wrapper zoomable" data-zoom-group="stages" data-zoom-label="Steps → Tasks → Jobs" title="Click to zoom in (both stages)">
+  <div class="stage-section" id="stage1-section">
     <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
     <p class="hint">
       Each step is executed as <span style="color:var(--step-man-stroke)">Manual</span>,
@@ -1008,7 +1029,7 @@
     <div class="ss-spacer ss-spacer-tail"></div>
   </div>
 
-  <div class="stage-section zoomable" id="stage2-section" data-zoom-group="stages" data-zoom-label="Steps → Tasks → Jobs" title="Click to zoom in (both stages)">
+  <div class="stage-section" id="stage2-section">
     <h2><span class="stage-label">Stage 2</span>Job Design: Tasks → Jobs</h2>
     <p class="hint">
       Given the task sequence from Stage 1, tasks are partitioned into <span style="color:var(--job-stroke)">jobs</span> (one worker per job).<br>
@@ -1035,6 +1056,7 @@
     </div>
     <div class="ss-spacer ss-spacer-tail"></div>
   </div>
+  </div><!-- /.stages-wrapper -->
   </div><!-- /#inner-tab-ribbons -->
 
   <!-- Tab #2 — Cost Parameters editor -->
@@ -2338,7 +2360,11 @@ function switchGeomTab(name) {
   document.querySelectorAll('.geom-tab-panel').forEach(p => {
     p.classList.toggle('active', p.id === `geom-tab-${name}`);
   });
-  document.querySelectorAll('.geom-hint-stack > .geom-hint').forEach(h => {
+  // Only touch hints that opt into the view-switcher via data-view. The
+  // cost-curves description sits in a similar .geom-hint-stack scaffold
+  // but doesn't have a data-view, so it should keep its 'active' class
+  // regardless of which Step/Task/Job tab is selected.
+  document.querySelectorAll('.geom-hint-stack > .geom-hint[data-view]').forEach(h => {
     h.classList.toggle('active', h.dataset.view === name);
   });
 }
@@ -2672,20 +2698,22 @@ function setupCostPlotInModal() {
   renderSeriesPlot(costPlot, samples, 'cost',
     'Total Cost', 'Total Cost');
   renderSeriesPlot(marginalPlot, marginal, 'value',
-    'Marginal Benefit of Increasing α', '-dCost / dα');
+    'Marginal Benefit of Increasing α', '-dCost / dα', 0);
   updatePlotMarkers();
 }
 
 // Render a series plot: dashed black curve over the whole range, with a
 // bold solid overlay covering the α-range whose `modes` signature matches
 // the current solution. A black circle marker tracks the live (α, value).
-// `key` is which sample field to plot on Y ('cost' or 'value').
-function renderSeriesPlot(container, samples, key, title, yLabel) {
+// `key` is which sample field to plot on Y ('cost' or 'value'). Optional
+// `yMin` clamps the y-axis lower bound (used by the marginal plot to pin
+// the bottom at 0).
+function renderSeriesPlot(container, samples, key, title, yLabel, yMin) {
   container.innerHTML = '';
   if (!samples.length) return;
 
   const W = 460, H = 460;
-  const padL = 52, padR = 14, padT = 30, padB = 46;
+  const padL = 86, padR = 20, padT = 50, padB = 78;
   const plotW = W - padL - padR;
   const plotH = H - padT - padB;
   const minA = samples[0].alpha;
@@ -2696,7 +2724,7 @@ function renderSeriesPlot(container, samples, key, title, yLabel) {
     if (s[key] > maxV) maxV = s[key];
   });
   const valueRange = (maxV - minV) || 1;
-  const minVp = minV - 0.05 * valueRange;
+  const minVp = (yMin !== undefined) ? yMin : (minV - 0.05 * valueRange);
   const maxVp = maxV + 0.05 * valueRange;
   const range = maxVp - minVp;
   const xOf = a => padL + ((a - minA) / (maxA - minA)) * plotW;
@@ -2722,10 +2750,12 @@ function renderSeriesPlot(container, samples, key, title, yLabel) {
     return el;
   };
 
-  // Title — same weight/size as the geom view's panel titles.
+  // Title — sized so the longest title ("Marginal Benefit of Increasing α")
+  // fits to the right of the y-axis (centered above the plot area, not
+  // the SVG, so it never overflows past padL on the left).
   svg.appendChild(make('text', {
-    x: W / 2, y: 18, 'text-anchor': 'middle',
-    'font-size': 16, 'font-weight': 600, fill: '#374151',
+    x: padL + plotW / 2, y: 30, 'text-anchor': 'middle',
+    'font-size': 24, 'font-weight': 600, fill: '#374151',
   }, title));
 
   // Axes
@@ -2746,8 +2776,8 @@ function renderSeriesPlot(container, samples, key, title, yLabel) {
       stroke: '#374151', 'stroke-width': 1,
     }));
     svg.appendChild(make('text', {
-      x, y: H - padB + 15, 'text-anchor': 'middle',
-      'font-size': 10, fill: '#6b7280',
+      x, y: H - padB + 26, 'text-anchor': 'middle',
+      'font-size': 18, fill: '#6b7280',
     }, a.toFixed(2)));
   });
 
@@ -2760,20 +2790,21 @@ function renderSeriesPlot(container, samples, key, title, yLabel) {
       stroke: '#374151', 'stroke-width': 1,
     }));
     svg.appendChild(make('text', {
-      x: padL - 8, y, 'text-anchor': 'end', 'dominant-baseline': 'central',
-      'font-size': 10, fill: '#6b7280',
+      x: padL - 12, y, 'text-anchor': 'end', 'dominant-baseline': 'central',
+      'font-size': 18, fill: '#6b7280',
     }, Math.abs(v) < 1 ? v.toFixed(2) : v.toFixed(1)));
   }
 
-  // Axis titles — same size/weight as "Time" / "Skill" in the geom view.
+  // Axis titles — bumped ~1.8× so they read at the same on-screen size
+  // as the geom view's "Time" / "Skill" labels.
   svg.appendChild(make('text', {
-    x: padL + plotW / 2, y: H - 6, 'text-anchor': 'middle',
-    'font-size': 15, 'font-weight': 500, fill: '#374151',
+    x: padL + plotW / 2, y: H - 10, 'text-anchor': 'middle',
+    'font-size': 27, 'font-weight': 500, fill: '#374151',
   }, 'AI quality α'));
-  const yLx = 16, yLy = padT + plotH / 2;
+  const yLx = 22, yLy = padT + plotH / 2;
   svg.appendChild(make('text', {
     x: yLx, y: yLy, 'text-anchor': 'middle',
-    'font-size': 15, 'font-weight': 500, fill: '#374151',
+    'font-size': 27, 'font-weight': 500, fill: '#374151',
     transform: `rotate(-90 ${yLx} ${yLy})`,
   }, yLabel));
 
@@ -2793,9 +2824,9 @@ function renderSeriesPlot(container, samples, key, title, yLabel) {
     class: 'series-bold',
   }));
 
-  // Marker.
+  // Marker — sized 1.25× the original radius (7 → 9) for visibility.
   svg.appendChild(make('circle', {
-    r: 7, fill: '#000', stroke: '#fff', 'stroke-width': 2,
+    r: 9, fill: '#000', stroke: '#fff', 'stroke-width': 2,
     class: 'series-marker',
   }));
 
@@ -2904,7 +2935,7 @@ function ensureInlineCostCurves() {
     renderSeriesPlot(cost, _costSamplesCache, 'cost',
       'Total Cost', 'Total Cost');
     renderSeriesPlot(marginal, _marginalSamplesCache, 'value',
-      'Marginal Benefit of Increasing α', '-dCost / dα');
+      'Marginal Benefit of Increasing α', '-dCost / dα', 0);
   }
   updatePlotForCurrentState(cost);
   updatePlotForCurrentState(marginal);
@@ -2929,6 +2960,23 @@ function applyGeomModalScale() {
   });
 }
 
+// Push the cost-section's content down so its description starts at the
+// same Y as the geom-container's description (which sits below the
+// Step/Task/Job tab-bar). Called once after modal layout settles.
+function alignCostSectionToGeomTabBar() {
+  const section = document.querySelector(
+    '.geom-modal-viewport > .geom-modal-cost-section');
+  const tabBar = document.querySelector('.geom-modal .geom-tab-bar');
+  if (!section || !tabBar || !tabBar.parentElement) return;
+  const tbRect = tabBar.getBoundingClientRect();
+  const containerRect = tabBar.parentElement.getBoundingClientRect();
+  const tbMarginBottom = parseFloat(getComputedStyle(tabBar).marginBottom) || 0;
+  // Distance from the geom-container's top edge to the start of its
+  // first post-tab-bar child (the hint-stack).
+  const offset = (tbRect.bottom - containerRect.top) + tbMarginBottom;
+  if (offset > 0) section.style.paddingTop = offset + 'px';
+}
+
 // Called ONCE on modal open. Captures the geom SVG's current pixel height
 // and pins the cost/marginal plot SVGs to that height. After this they
 // stay at that fixed size as α changes — only the markers move.
@@ -2951,22 +2999,36 @@ function clearGeomModalScale() {
     s.style.height = '';
   });
 }
-// Compute the SVG's intrinsic pixel dimensions if α were at its slider
-// minimum, WITHOUT disturbing the live on-screen render. We solve and
-// build a temporary geometry at α=0.01 and then restore.
+// Sweep α across the full range and return the MAX (W, H) the geom
+// figure can reach. Earlier we assumed the worst case was at α=0.01,
+// but the figure's time/skill extents depend on the optimal modes/
+// tasks/jobs at each α — these can peak at a mid-range α (e.g., when
+// a chain is just barely cheaper than singletons, blowing up Σ t).
+// Iterating over α catches that and gives us a scale that's safe for
+// every slider position.
 function computeGeomWorstCaseSize() {
-  const ALPHA_MIN_FOR_WORST = 0.01;
   const savedAlpha = state.alpha;
   const savedSolution = state.solution;
-  state.alpha = ALPHA_MIN_FOR_WORST;
-  recomputeAllStepQ();
-  state.solution = solveOptimal(state.steps);
-  const geom = computeGeom();
-  // Restore.
+  const minA = 0.01, maxA = 1.0;
+  const step = 0.01;  // 100 samples is more than enough to find the max
+  const n = Math.round((maxA - minA) / step) + 1;
+  let maxW = 0, maxH = 0;
+  for (let i = 0; i < n; i++) {
+    const a = minA + i * step;
+    state.alpha = a;
+    recomputeAllStepQ();
+    state.solution = solveOptimal(state.steps);
+    const geom = computeGeom();
+    if (geom) {
+      if (geom.W > maxW) maxW = geom.W;
+      if (geom.H > maxH) maxH = geom.H;
+    }
+  }
+  // Restore live state.
   state.alpha = savedAlpha;
   recomputeAllStepQ();
   state.solution = savedSolution;
-  return geom ? { W: geom.W, H: geom.H } : null;
+  return (maxW > 0 && maxH > 0) ? { W: maxW, H: maxH } : null;
 }
 // User-initiated Solve: also flip the LEFT column back to the ribbons so
 // the user immediately sees the optimal design they just solved for.
@@ -3245,6 +3307,9 @@ solveQuiet();
           // Pin the two right plots to the geom SVG's height now and
           // leave them alone — only the markers move as α changes.
           fixCostPlotHeights();
+          // Push the cost section's description down so it lines up
+          // with the geom view's description (below the tab bar).
+          alignCostSectionToGeomTabBar();
         });
       });
     }
