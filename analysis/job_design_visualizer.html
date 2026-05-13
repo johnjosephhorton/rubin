@@ -69,7 +69,7 @@
     align-items: baseline; justify-content: center;
     column-gap: 12px; row-gap: 2px;
     margin: 0 0 6px 0;
-    font-size: 24px;
+    font-size: 32px;
   }
   .title-row h1 { font-size: inherit; font-weight: 700; margin: 0; text-align: center; }
   .title-row .paper-link {
@@ -82,7 +82,7 @@
   }
   .title-row .paper-link a:hover { text-decoration: underline; }
   .paper-authors {
-    text-align: center; font-size: 18px; color: var(--muted);
+    text-align: center; font-size: 25px; color: var(--muted);
     margin: 0 0 6px 0;
   }
   /* View Paper + Copy BibTeX buttons, centered under the author line. */
@@ -783,19 +783,20 @@
     border-left: 1px solid #d1d5db;
     padding-left: 14px;
   }
-  /* Shared plot row used inline and in the modal: side-by-side cost and
-     marginal plots, no internal divider. */
+  /* Shared plot row used inline and in the modal: cost (top) and
+     marginal (bottom) stacked vertically, sharing the x-axis at the
+     bottom of the marginal plot. No internal divider. */
   .cost-curves-plots-row {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
-    gap: 18px;
+    gap: 0;
   }
   .cost-curves-plots-row > .geom-cost-plot,
   .cost-curves-plots-row > .geom-marginal-plot {
     flex: 1 1 50%;
-    min-width: 0;
+    min-height: 0;
     display: flex; flex-direction: column;
     background: transparent;
     border: none;
@@ -949,7 +950,6 @@
   <a class="bibtex-btn" id="paper-btn" href="https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf" target="_blank" rel="noopener">View Paper</a>
   <button class="bibtex-btn" id="bibtex-btn" type="button">Copy BibTeX</button>
 </div>
-<p class="subtitle">Two-stage cost-minimization: <strong>steps&nbsp;→&nbsp;tasks</strong> (AI strategy), then <strong>tasks&nbsp;→&nbsp;jobs</strong> (job design).</p>
 
 <!-- Optional label for this configuration. Persists in the URL as
      'title', so a shared link carries a human-readable handle alongside
@@ -983,7 +983,7 @@
      the corresponding content (Stage 1+2 ribbons or the parameters
      table) with no extra .panel wrappers. -->
 <div class="panel" id="setup-panel">
-  <h2>Setup</h2>
+  <h2>Production Setup</h2>
   <div class="inner-tab-bar">
     <button class="inner-tab-button active" data-inner-tab="ribbons">Optimization Visualization</button>
     <button class="inner-tab-button" data-inner-tab="params">Cost Parameters</button>
@@ -994,7 +994,7 @@
   <!-- Both stages are wrapped in a single zoomable container so hover/
        click treats them as one unified element, instead of two separate
        per-stage zoomable boxes. -->
-  <div class="stages-wrapper zoomable" data-zoom-group="stages" data-zoom-label="Steps → Tasks → Jobs" title="Click to zoom in (both stages)">
+  <div class="stages-wrapper zoomable" data-zoom-group="stages" data-zoom-label="Optimization: Steps → Tasks → Jobs" title="Click to zoom in (both stages)">
   <div class="stage-section" id="stage1-section">
     <h2><span class="stage-label">Stage 1</span>AI Strategy: Steps → Tasks</h2>
     <p class="hint">
@@ -1128,7 +1128,7 @@
 <div class="panel" id="production-panel">
   <h2>Production Visualization</h2>
   <div class="inner-tab-bar">
-    <button class="inner-tab-button active" data-inner-tab="geom-view">Geometric View of Optimal Design</button>
+    <button class="inner-tab-button active" data-inner-tab="geom-view">Geometric View of Production</button>
     <button class="inner-tab-button" data-inner-tab="cost-curves">Cost Curves</button>
   </div>
   <!-- Tab #1 — Geometric View -->
@@ -1140,7 +1140,7 @@
     <button class="geom-tab-button" data-geom-tab="task">Task View</button>
     <button class="geom-tab-button" data-geom-tab="job">Job View</button>
   </div>
-  <div class="geom-container zoomable" data-zoom-group="geom" data-zoom-label="Geometric View" title="Click to zoom in">
+  <div class="geom-container zoomable" data-zoom-group="geom" data-zoom-label="Visualization of Production" title="Click to zoom in">
     <!-- All three hints share one grid cell so the tallest one defines
          the height; only the active hint is visible. This pins the SVG
          top to the same Y across Step/Task/Job tabs at any column width. -->
@@ -1175,15 +1175,15 @@
          the Step/Task/Job views in the Geometric View tab. That way the
          description font/sizing and the container chrome are identical
          to the geom view's environment. -->
-    <div class="geom-container zoomable cost-curves-environment" data-zoom-group="geom" data-zoom-label="Geometric View" title="Click to zoom in">
+    <div class="geom-container zoomable cost-curves-environment" data-zoom-group="geom" data-zoom-label="Visualization of Production" title="Click to zoom in">
       <div class="geom-hint-stack">
         <p class="hint geom-hint active">
           Gains from improving AI quality parameter are non-linear. Each time a re-design threshold is passed the optimal configuration of production, and subsequently the cost curve, changes.
         </p>
       </div>
       <div class="cost-curves-plots-row">
-        <div class="geom-cost-plot" id="cost-plot-inline"></div>
         <div class="geom-marginal-plot" id="marginal-plot-inline"></div>
+        <div class="geom-cost-plot" id="cost-plot-inline"></div>
       </div>
     </div>
   </div>
@@ -2681,24 +2681,27 @@ function setupCostPlotInModal() {
   plotsRow.className = 'cost-curves-plots-row';
   section.appendChild(plotsRow);
 
-  const costPlot = document.createElement('div');
-  costPlot.className = 'geom-cost-plot';
-  costPlot.id = 'geom-cost-plot-modal';
-  plotsRow.appendChild(costPlot);
-
+  // Order in the plotsRow: Marginal Benefit (top), Total Cost (bottom).
   const marginalPlot = document.createElement('div');
   marginalPlot.className = 'geom-marginal-plot';
   marginalPlot.id = 'geom-marginal-plot-modal';
   plotsRow.appendChild(marginalPlot);
 
+  const costPlot = document.createElement('div');
+  costPlot.className = 'geom-cost-plot';
+  costPlot.id = 'geom-cost-plot-modal';
+  plotsRow.appendChild(costPlot);
+
   viewport.appendChild(section);
 
   const samples = computeCostCurve();
   const marginal = computeMarginalCurve(samples);
-  renderSeriesPlot(costPlot, samples, 'cost',
-    'Total Cost', 'Total Cost');
+  // Stacked: top plot (marginal) skips x-tick labels and x-axis title;
+  // the bottom plot (cost) renders them so the two share an x-axis.
   renderSeriesPlot(marginalPlot, marginal, 'value',
-    'Marginal Benefit of Increasing α', '-dCost / dα', 0);
+    'Marginal Benefit of Increasing α', '-dCost / dα', 0, /*showXLabels=*/false);
+  renderSeriesPlot(costPlot, samples, 'cost',
+    'Total Cost', 'Total Cost', undefined, /*showXLabels=*/true);
   updatePlotMarkers();
 }
 
@@ -2707,13 +2710,21 @@ function setupCostPlotInModal() {
 // the current solution. A black circle marker tracks the live (α, value).
 // `key` is which sample field to plot on Y ('cost' or 'value'). Optional
 // `yMin` clamps the y-axis lower bound (used by the marginal plot to pin
-// the bottom at 0).
-function renderSeriesPlot(container, samples, key, title, yLabel, yMin) {
+// the bottom at 0). `showXLabels` (default true) controls whether to
+// draw the x-tick labels and "AI quality α" title — the top of a stacked
+// pair sets it false so the two plots share the bottom x-axis.
+function renderSeriesPlot(container, samples, key, title, yLabel, yMin, showXLabels) {
   container.innerHTML = '';
   if (!samples.length) return;
+  if (showXLabels === undefined) showXLabels = true;
 
-  const W = 460, H = 460;
-  const padL = 86, padR = 20, padT = 50, padB = 78;
+  // Wider viewBox (2.78:1) so the plot area visually spans most of the
+  // cost-section's width instead of being letterboxed into a square.
+  const W = 1280, H = 460;
+  const padL = 100, padR = 20, padT = 50;
+  // Shrink the bottom padding when the x-tick labels/title aren't being
+  // drawn so the top plot in a stacked pair doesn't waste vertical space.
+  const padB = showXLabels ? 90 : 28;
   const plotW = W - padL - padR;
   const plotH = H - padT - padB;
   const minA = samples[0].alpha;
@@ -2733,6 +2744,10 @@ function renderSeriesPlot(container, samples, key, title, yLabel, yMin) {
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  // Preserve aspect ratio. With 'meet', content scales uniformly to fit
+  // inside the SVG dimensions — no anisotropic stretching of text/lines,
+  // which would otherwise distort the curves and axis labels when the
+  // container is wider than the viewBox aspect.
   svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
   // Lock the font on every text node so both plots render identically —
@@ -2750,12 +2765,12 @@ function renderSeriesPlot(container, samples, key, title, yLabel, yMin) {
     return el;
   };
 
-  // Title — sized so the longest title ("Marginal Benefit of Increasing α")
-  // fits to the right of the y-axis (centered above the plot area, not
-  // the SVG, so it never overflows past padL on the left).
+  // Title — bumped after switching to the wider 1280×460 viewBox so it
+  // reads at a size proportional to the now-larger plot area. Centered
+  // above the plot area (not the SVG), so it never overflows past padL.
   svg.appendChild(make('text', {
-    x: padL + plotW / 2, y: 30, 'text-anchor': 'middle',
-    'font-size': 24, 'font-weight': 600, fill: '#374151',
+    x: padL + plotW / 2, y: 36, 'text-anchor': 'middle',
+    'font-size': 40, 'font-weight': 600, fill: '#374151',
   }, title));
 
   // Axes
@@ -2768,17 +2783,20 @@ function renderSeriesPlot(container, samples, key, title, yLabel, yMin) {
     stroke: '#374151', 'stroke-width': 1,
   }));
 
-  // X ticks
+  // X ticks. Tick marks always drawn; labels skipped on the top plot of
+  // a stacked pair so the two plots share the bottom x-axis labels.
   [0, 0.25, 0.5, 0.75, 1].forEach(a => {
     const x = xOf(a);
     svg.appendChild(make('line', {
       x1: x, x2: x, y1: H - padB, y2: H - padB + 4,
       stroke: '#374151', 'stroke-width': 1,
     }));
-    svg.appendChild(make('text', {
-      x, y: H - padB + 26, 'text-anchor': 'middle',
-      'font-size': 18, fill: '#6b7280',
-    }, a.toFixed(2)));
+    if (showXLabels) {
+      svg.appendChild(make('text', {
+        x, y: H - padB + 30, 'text-anchor': 'middle',
+        'font-size': 22, fill: '#6b7280',
+      }, a.toFixed(2)));
+    }
   });
 
   // Y ticks
@@ -2790,48 +2808,63 @@ function renderSeriesPlot(container, samples, key, title, yLabel, yMin) {
       stroke: '#374151', 'stroke-width': 1,
     }));
     svg.appendChild(make('text', {
-      x: padL - 12, y, 'text-anchor': 'end', 'dominant-baseline': 'central',
-      'font-size': 18, fill: '#6b7280',
+      x: padL - 14, y, 'text-anchor': 'end', 'dominant-baseline': 'central',
+      'font-size': 22, fill: '#6b7280',
     }, Math.abs(v) < 1 ? v.toFixed(2) : v.toFixed(1)));
   }
 
-  // Axis titles — bumped ~1.8× so they read at the same on-screen size
-  // as the geom view's "Time" / "Skill" labels.
-  svg.appendChild(make('text', {
-    x: padL + plotW / 2, y: H - 10, 'text-anchor': 'middle',
-    'font-size': 27, 'font-weight': 500, fill: '#374151',
-  }, 'AI quality α'));
-  const yLx = 22, yLy = padT + plotH / 2;
+  // Axis titles — bumped for legibility. The x-axis title is shared
+  // between stacked plots, so it's only drawn when showXLabels.
+  if (showXLabels) {
+    svg.appendChild(make('text', {
+      x: padL + plotW / 2, y: H - 12, 'text-anchor': 'middle',
+      'font-size': 32, 'font-weight': 500, fill: '#374151',
+    }, 'AI quality α'));
+  }
+  const yLx = 26, yLy = padT + plotH / 2;
   svg.appendChild(make('text', {
     x: yLx, y: yLy, 'text-anchor': 'middle',
-    'font-size': 27, 'font-weight': 500, fill: '#374151',
+    'font-size': 32, 'font-weight': 500, fill: '#374151',
     transform: `rotate(-90 ${yLx} ${yLy})`,
   }, yLabel));
 
-  // Full dashed curve (black).
+  // Full dashed curve (black). Thicker stroke for legibility.
   let dFull = '';
   samples.forEach((s, i) => {
     dFull += (i ? 'L' : 'M') + xOf(s.alpha) + ' ' + yOf(s[key]) + ' ';
   });
   svg.appendChild(make('path', {
-    d: dFull, stroke: '#000', 'stroke-width': 1.5, fill: 'none',
-    'stroke-dasharray': '4 3', class: 'series-dashed',
+    d: dFull, stroke: '#000', 'stroke-width': 2.5, fill: 'none',
+    'stroke-dasharray': '5 3', class: 'series-dashed',
   }));
 
   // Bold solid overlay for the current-modes range; d set later.
   svg.appendChild(make('path', {
-    d: '', stroke: '#000', 'stroke-width': 3.2, fill: 'none',
+    d: '', stroke: '#000', 'stroke-width': 5, fill: 'none',
     class: 'series-bold',
   }));
 
-  // Marker — sized 1.25× the original radius (7 → 9) for visibility.
+  // Marker — sized 1.5× the previous radius (9 → 14) for visibility.
   svg.appendChild(make('circle', {
-    r: 9, fill: '#000', stroke: '#fff', 'stroke-width': 2,
+    r: 14, fill: '#000', stroke: '#fff', 'stroke-width': 2.5,
     class: 'series-marker',
   }));
 
+  // Live numeric value label that sits next to the marker. Position is
+  // computed each render in updatePlotForCurrentState (it depends on the
+  // curve's slope at the marker so the label doesn't sit on top of the
+  // curve continuation).
+  svg.appendChild(make('text', {
+    class: 'series-marker-label',
+    'font-size': 26, 'font-weight': 700, fill: '#000',
+    'text-anchor': 'start', 'dominant-baseline': 'central',
+  }));
+
   container.appendChild(svg);
-  container._coords = { xOf, yOf, samples, key };
+  container._coords = {
+    xOf, yOf, samples, key,
+    W, H, padL, padR, padT, padB, plotW, plotH,
+  };
 }
 
 // Find the contiguous index range [start..end] around `currentAlpha`
@@ -2870,7 +2903,8 @@ function findCurrentModesRange(samples, currentAlpha, currentModes) {
 // Reposition the marker AND redraw the bold overlay for a single plot.
 function updatePlotForCurrentState(container) {
   if (!container || !container._coords) return;
-  const { xOf, yOf, samples, key } = container._coords;
+  const c = container._coords;
+  const { xOf, yOf, samples, key } = c;
   // Marker at (live α, value-interpolated-at-live-α).
   // For a clean look, just take the value of the closest sample.
   let closest = 0, best = Infinity;
@@ -2878,10 +2912,57 @@ function updatePlotForCurrentState(container) {
     const d = Math.abs(samples[i].alpha - state.alpha);
     if (d < best) { best = d; closest = i; }
   }
+  const value = samples[closest][key];
+  const mx = xOf(state.alpha);
+  const my = yOf(value);
   const marker = container.querySelector('.series-marker');
   if (marker) {
-    marker.setAttribute('cx', xOf(state.alpha));
-    marker.setAttribute('cy', yOf(samples[closest][key]));
+    marker.setAttribute('cx', mx);
+    marker.setAttribute('cy', my);
+  }
+  // Place the live value label so it (a) doesn't sit on top of the
+  // curve continuation (decided by the slope sign) and (b) stays within
+  // the plot bounds (clamped).
+  const label = container.querySelector('.series-marker-label');
+  if (label) {
+    label.textContent = '$' + (Math.abs(value) < 1 ? value.toFixed(3) : value.toFixed(2));
+    // Slope (next - prev) tells us where the curve is going right of marker.
+    let slope = 0;
+    if (closest > 0 && closest < samples.length - 1) {
+      const da = samples[closest+1].alpha - samples[closest-1].alpha;
+      const dv = samples[closest+1][key] - samples[closest-1][key];
+      if (da !== 0) slope = dv / da;
+    }
+    // The curve continues to the lower-right when slope < 0 (value
+    // decreasing → drawn lower on the SVG since Y is inverted), so the
+    // safe corner is upper-right or upper-left. For slope > 0 the safe
+    // side is lower. Default to placing the label to the RIGHT of the
+    // marker; flip to the LEFT if the marker is close to the right edge.
+    // Larger offsets push the label well clear of the marker so it sits
+    // comfortably in the chosen quadrant.
+    const offsetX = 20, offsetY = 25;
+    const plotRight = c.W - c.padR;
+    const plotLeft  = c.padL;
+    const plotTop   = c.padT;
+    const plotBot   = c.H - c.padB;
+    // Approx label width (rough heuristic for clamping).
+    const labelW = 80;  // generous for "27.20" at font 26
+    const labelH = 24;
+    // Pick side.
+    let labelX, anchor;
+    if (mx + offsetX + labelW < plotRight) {
+      labelX = mx + offsetX; anchor = 'start';
+    } else {
+      labelX = mx - offsetX; anchor = 'end';
+    }
+    // Pick above/below based on slope.
+    let labelY = slope < 0 ? (my - offsetY) : (my + offsetY);
+    // Clamp to plot bounds vertically. If clamp forces a flip, do it.
+    if (labelY - labelH/2 < plotTop) labelY = my + offsetY;
+    if (labelY + labelH/2 > plotBot) labelY = my - offsetY;
+    label.setAttribute('x', labelX);
+    label.setAttribute('y', labelY);
+    label.setAttribute('text-anchor', anchor);
   }
   // Bold overlay over the current-modes range.
   const bold = container.querySelector('.series-bold');
@@ -2932,10 +3013,10 @@ function ensureInlineCostCurves() {
     _costSamplesCache = computeCostCurve();
     _marginalSamplesCache = computeMarginalCurve(_costSamplesCache);
     _curvesDirty = false;
-    renderSeriesPlot(cost, _costSamplesCache, 'cost',
-      'Total Cost', 'Total Cost');
     renderSeriesPlot(marginal, _marginalSamplesCache, 'value',
-      'Marginal Benefit of Increasing α', '-dCost / dα', 0);
+      'Marginal Benefit of Increasing α', '-dCost / dα', 0, /*showXLabels=*/false);
+    renderSeriesPlot(cost, _costSamplesCache, 'cost',
+      'Total Cost', 'Total Cost', undefined, /*showXLabels=*/true);
   }
   updatePlotForCurrentState(cost);
   updatePlotForCurrentState(marginal);
@@ -2977,20 +3058,13 @@ function alignCostSectionToGeomTabBar() {
   if (offset > 0) section.style.paddingTop = offset + 'px';
 }
 
-// Called ONCE on modal open. Captures the geom SVG's current pixel height
-// and pins the cost/marginal plot SVGs to that height. After this they
-// stay at that fixed size as α changes — only the markers move.
+// (Previously this pinned the modal cost-plot SVGs to half the geom-SVG
+// height, which made them smaller than their available space. Now we
+// rely on CSS `height: 100%` so each plot SVG fills its allocated div,
+// and preserveAspectRatio: meet scales the content diagonally until it
+// hits a side or top boundary — the largest possible size that fits.)
 function fixCostPlotHeights() {
-  const activeGeom = document.querySelector(
-    '.geom-modal .geom-tab-panel.active svg.geom');
-  if (!activeGeom) return;
-  const h = parseFloat(activeGeom.style.height) || 0;
-  if (h <= 0) return;
-  document.querySelectorAll(
-    '.geom-cost-plot svg, .geom-marginal-plot svg').forEach(s => {
-    s.style.height = h + 'px';
-    s.style.width = '100%';
-  });
+  // Intentionally a no-op now; left in place so existing call sites work.
 }
 function clearGeomModalScale() {
   geomModalScale = null;
