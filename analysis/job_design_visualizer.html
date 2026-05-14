@@ -483,10 +483,33 @@
     appearance: none;
     margin: 0;
   }
+  table.steps .col-grip { width: 22px; padding-left: 0; padding-right: 0; text-align: center; }
   table.steps .col-name { width: 90px; }
   table.steps .col-num { width: 72px; }
   table.steps .col-mode { width: 110px; }
   table.steps .col-x { width: 30px; }
+
+  /* Drag-to-reorder affordance on each step row.
+     - The .drag-handle is the only draggable element in the row, so
+       clicking inputs doesn't accidentally start a drag.
+     - During drag, the source row dims; the row currently hovered as
+       a drop target gets a colored top or bottom border (depending
+       on which half of the row the cursor is over) to preview where
+       the dropped step will land. */
+  .drag-handle {
+    display: inline-block;
+    cursor: grab;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1;
+    padding: 2px 4px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .drag-handle:active { cursor: grabbing; }
+  table.steps tr.dragging { opacity: 0.4; }
+  table.steps tr.drag-over-top    { box-shadow: inset 0 2px 0 0 var(--accent); }
+  table.steps tr.drag-over-bottom { box-shadow: inset 0 -2px 0 0 var(--accent); }
 
   /* Faint row tint that mirrors the chosen execution mode for each step. */
   table.steps tr.row-man  { background: rgba(154, 160, 166, 0.10); }
@@ -810,7 +833,13 @@
     height: auto;
     max-width: none;
     max-height: none;
-    margin: 0 auto;
+    /* Anchor to the LEFT of the panel (no auto-centering) so the
+       graph's x=0 (its y-axis line) sits at a fixed screen X across
+       all α values. Combined with margin-top: auto below, this pins
+       the (0,0) origin to a fixed bottom-left point — letting users
+       compare wage-bill rectangle areas across configurations. */
+    margin-left: 0;
+    margin-right: auto;
     display: block;
   }
   /* Anchor the SVG to the BOTTOM of its tab-panel so the graph's y=0
@@ -1310,6 +1339,7 @@
     <table class="steps">
       <thead>
         <tr>
+          <th class="col-grip"></th>
           <th class="col-name">Step</th>
           <th class="col-num">c<span class="superscript">M</span><span class="subscript">i</span> <span class="unit">($)</span></th>
           <th class="col-num">t<span class="superscript">M</span><span class="subscript">i</span></th>
@@ -1691,10 +1721,96 @@ function renderStepsTable() {
   const solvedModes = (state.solution && state.solution.modes) || null;
   state.steps.forEach((step, i) => {
     const tr = document.createElement('tr');
+    tr.dataset.stepIdx = String(i);
     // Tint the row with a faint shade of the chosen execution mode so the
     // optimal AI strategy is visible right inside the parameters table.
     const m = solvedModes ? solvedModes[i] : null;
     if (m) tr.classList.add('row-' + modeClass(m));
+
+    // Drag handle: only the handle is draggable=true (not the row), so
+    // clicking inputs in the row doesn't accidentally start a drag.
+    const gripTd = document.createElement('td');
+    gripTd.className = 'col-grip';
+    const grip = document.createElement('span');
+    grip.className = 'drag-handle';
+    grip.textContent = '⠇';  // ⠇ braille pattern — looks like a grip dots glyph
+    grip.title = 'Drag to reorder this step';
+    grip.setAttribute('draggable', 'true');
+    grip.addEventListener('dragstart', (e) => {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', String(i));
+
+      // The default drag image would just be the tiny grip glyph (since
+      // the grip is what's draggable). Build a ghost: a one-row clone of
+      // this step's row inside a stub <table> positioned off-screen, then
+      // hand that to setDragImage. The browser snapshots it once and
+      // floats the snapshot under the cursor for the duration of the drag.
+      const trRect = tr.getBoundingClientRect();
+      const ghostTable = document.createElement('table');
+      ghostTable.className = 'steps';
+      const ghostBody = document.createElement('tbody');
+      const ghostRow = tr.cloneNode(true);
+      ghostRow.classList.remove('drag-over-top', 'drag-over-bottom', 'dragging');
+      ghostBody.appendChild(ghostRow);
+      ghostTable.appendChild(ghostBody);
+      ghostTable.style.position = 'absolute';
+      ghostTable.style.top = '-10000px';
+      ghostTable.style.left = '0';
+      ghostTable.style.width = trRect.width + 'px';
+      ghostTable.style.opacity = '0.6';
+      ghostTable.style.background = 'white';
+      ghostTable.style.boxShadow = '0 4px 12px rgba(0,0,0,0.18)';
+      ghostTable.style.borderRadius = '6px';
+      ghostTable.style.pointerEvents = 'none';
+      document.body.appendChild(ghostTable);
+      e.dataTransfer.setDragImage(ghostTable, 20, trRect.height / 2);
+      // The snapshot is captured synchronously above; the live element is
+      // no longer needed and can be removed once the current event loop
+      // tick yields.
+      setTimeout(() => ghostTable.remove(), 0);
+
+      tr.classList.add('dragging');
+    });
+    grip.addEventListener('dragend', () => {
+      tr.classList.remove('dragging');
+      document.querySelectorAll('table.steps tr.drag-over-top, table.steps tr.drag-over-bottom')
+        .forEach(r => r.classList.remove('drag-over-top', 'drag-over-bottom'));
+    });
+    gripTd.appendChild(grip);
+    tr.appendChild(gripTd);
+
+    // Row-level drop target: highlight top/bottom edge based on cursor
+    // half so the user can preview where the dropped step will land.
+    tr.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      const rect = tr.getBoundingClientRect();
+      const above = e.clientY < rect.top + rect.height / 2;
+      tr.classList.toggle('drag-over-top', above);
+      tr.classList.toggle('drag-over-bottom', !above);
+    });
+    tr.addEventListener('dragleave', (e) => {
+      // Only clear when leaving the row entirely (not when crossing into
+      // a child element of this row).
+      if (e.currentTarget.contains(e.relatedTarget)) return;
+      tr.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+    tr.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const fromIdx = parseInt(e.dataTransfer.getData('text/plain'), 10);
+      const targetIdx = parseInt(tr.dataset.stepIdx, 10);
+      tr.classList.remove('drag-over-top', 'drag-over-bottom');
+      if (isNaN(fromIdx) || isNaN(targetIdx) || fromIdx === targetIdx) return;
+      const rect = tr.getBoundingClientRect();
+      const above = e.clientY < rect.top + rect.height / 2;
+      let insertIdx = above ? targetIdx : targetIdx + 1;
+      // Splicing the source out shifts subsequent indices down by one.
+      const moved = state.steps.splice(fromIdx, 1)[0];
+      if (insertIdx > fromIdx) insertIdx -= 1;
+      state.steps.splice(insertIdx, 0, moved);
+      invalidateCostCurves();
+      solveQuiet();
+    });
 
     const nameTd = document.createElement('td');
     const nameInp = document.createElement('input');
@@ -2835,6 +2951,9 @@ function computeStagesModalScale() {
     const scaleH = totalNaturalH > 0 ? availH / totalNaturalH : Infinity;
     // Always fit in both dimensions. Never shrink below 1× (natural size).
     scale = Math.max(1, Math.min(scaleW, scaleH));
+    // Pull back by 5% so the ribbons leave a slight breathing margin
+    // around the modal frame instead of pressing against the edges.
+    scale *= 0.95;
   }
 
   // Restore live state and re-render under the actual α.
