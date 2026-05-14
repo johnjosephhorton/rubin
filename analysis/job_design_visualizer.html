@@ -151,9 +151,63 @@
     padding-right: 12px;
   }
   .alpha-row label .var { font-style: italic; }
+  /* Custom slider styling. `accent-color` is honored by Chrome/Firefox
+     but Safari falls back to its native gray oval thumb. To get the
+     same blue-circle thumb + accent-colored track everywhere, we
+     fully custom-style the track and thumb (per-browser pseudo-elements). */
   .alpha-row input[type="range"] {
     width: min(360px, 60vw);
-    accent-color: var(--accent);
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 22px;
+    cursor: pointer;
+    accent-color: var(--accent);  /* harmless fallback */
+  }
+  /* Track: blue (filled) to the left of the thumb, gray (unexplored) to
+     the right. Webkit doesn't have a separate "progress" pseudo-element,
+     so we drive a linear-gradient via the --alpha-pct CSS variable
+     (set in JS on each input event). Firefox has ::-moz-range-progress
+     so the split is native there. */
+  .alpha-row input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+      to right,
+      var(--accent) 0 var(--alpha-pct, 0%),
+      #d0d0d0 var(--alpha-pct, 0%) 100%
+    );
+  }
+  .alpha-row input[type="range"]::-moz-range-track {
+    height: 4px;
+    background: #d0d0d0;
+    border-radius: 2px;
+    border: none;
+  }
+  .alpha-row input[type="range"]::-moz-range-progress {
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  /* Thumb */
+  .alpha-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    margin-top: -6px;  /* center on 4px track */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .alpha-row input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
   }
   .alpha-row .alpha-value {
     font-variant-numeric: tabular-nums;
@@ -1165,7 +1219,7 @@
   <h2>Production Setup</h2>
   <div class="inner-tab-bar">
     <button class="inner-tab-button active" data-inner-tab="ribbons">Optimization Visualization</button>
-    <button class="inner-tab-button" data-inner-tab="params">Cost Parameters</button>
+    <button class="inner-tab-button" data-inner-tab="params">Parameters</button>
   </div>
 
   <!-- Tab #1 — Stage 1 + Stage 2 ribbons -->
@@ -3386,7 +3440,16 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 function syncAlphaSliderToState() {
   const sl = document.getElementById('alpha-slider');
   const lbl = document.getElementById('alpha-value');
-  if (sl) sl.value = state.alpha;
+  if (sl) {
+    sl.value = state.alpha;
+    // Drive the split-color track on Webkit (no native ::-moz-range-progress
+    // equivalent in Webkit). Firefox uses its own pseudo-element and
+    // ignores this variable.
+    const min = parseFloat(sl.min) || 0;
+    const max = parseFloat(sl.max) || 1;
+    const pct = ((+state.alpha - min) / (max - min)) * 100;
+    sl.style.setProperty('--alpha-pct', pct + '%');
+  }
   if (lbl) lbl.textContent = (+state.alpha).toFixed(2);
 }
 (function bindAlphaSlider() {
