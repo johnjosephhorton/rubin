@@ -1205,6 +1205,7 @@
 <div class="bibtex-row">
   <a class="bibtex-btn" id="paper-btn" href="https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf" target="_blank" rel="noopener">View Paper</a>
   <button class="bibtex-btn" id="bibtex-btn" type="button">Copy BibTeX</button>
+  <button class="bibtex-btn" id="copy-url-btn" type="button">Copy Example URL</button>
 </div>
 
 <!-- Optional label for this configuration. Persists in the URL as
@@ -2796,6 +2797,7 @@ function serializeStateToURL() {
   }
   const url = window.location.pathname + '?' + params.toString();
   try { history.replaceState(null, '', url); } catch (e) { /* about:blank, etc. */ }
+  try { return new URL(url, window.location.href).href; } catch (e) { return url; }
 }
 
 // Apply a `split` value from the URL (a fraction in (0, 1)) to the
@@ -3543,6 +3545,35 @@ const BIBTEX_ENTRY = `@techreport{NBERw34859,
       }, 1500);
     } catch (e) {
       console.error('BibTeX copy failed:', e);
+    }
+  });
+})();
+(function bindCopyUrlButton() {
+  const btn = document.getElementById('copy-url-btn');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    try {
+      const url = serializeStateToURL() || window.location.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      const original = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1500);
+    } catch (e) {
+      console.error('URL copy failed:', e);
     }
   });
 })();
