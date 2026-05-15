@@ -2788,8 +2788,19 @@ function serializeStateToURL() {
   }
   // Persist the current slider position so shared URLs reproduce the
   // exact layout the sharer was looking at, not just the cost params.
-  const split = readCurrentSplit();
-  if (split !== null) params.set('split', split.toFixed(4));
+  // Guard: only overwrite the URL's split when the grid has been
+  // intentionally sized (drag or applyURLSplit). Otherwise readCurrentSplit
+  // would report the CSS default (~0.5) during initial solveQuiet — before
+  // applyURLSplit has run — and clobber the split a freshly-loaded share
+  // link is carrying.
+  const grid = document.querySelector('.design-grid');
+  if (grid && grid.style.gridTemplateColumns) {
+    const split = readCurrentSplit();
+    if (split !== null) params.set('split', split.toFixed(4));
+  } else {
+    const existing = new URLSearchParams(window.location.search).get('split');
+    if (existing) params.set('split', existing);
+  }
   // Optional human-readable label for this configuration.
   const nameInp = document.getElementById('config-name-input');
   if (nameInp && nameInp.value.trim()) {
