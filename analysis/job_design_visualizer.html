@@ -1327,9 +1327,9 @@
   <div class="inner-tab-panel" id="inner-tab-params">
     <div class="panel-header">
       <div class="actions">
-        <button class="btn-dark" id="reset-btn">Reset</button>
-        <button class="btn-lucky" id="lucky-btn">🍀 Feeling Lucky</button>
         <button class="btn-success" id="solve-btn">▶ Solve</button>
+        <button class="btn-lucky" id="lucky-btn">🍀 Feeling Lucky</button>
+        <button class="btn-dark" id="reset-btn">Reset</button>
       </div>
     </div>
     <p class="hint">
@@ -1524,23 +1524,25 @@
 // In the paper, q_i = α^{d_i} where α ∈ (0,1] is the AI's quality and
 // d_i ≥ 0 is step i's difficulty for AI. We store d directly and cache the
 // derived q on each step so the solver and the ribbon renderers (which read
-// step.q) keep working unchanged. d values below are chosen so that at
-// α = DEFAULT_ALPHA, q_i recovers the prior baseline (0.20, 0.95, 0.30,
-// 0.95, 0.20) — preserving the M, C, C, A, M optimum on first load.
-const DEFAULT_ALPHA = 0.35;
+// step.q) keep working unchanged. The default workflow below depicts a data
+// scientist: bookend steps (Define Problem, Present Findings) have d=100
+// so AI essentially never executes them, while the middle three (Find Data,
+// Write Code, Prepare Report) are progressively easier for AI to handle.
+const DEFAULT_ALPHA = 0.50;
+const DEFAULT_TITLE = 'Data Scientist Workflow';
 const WORKING_EXAMPLE = [
-  // Step 1: cheap Manual. High difficulty (d≈2.3219) → q is low at α=0.35,
-  //   keeping the chain from extending leftward.
-  { name: 'Step 1', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.3219, tH: 20.0 },
-  // Step 2: expensive Manual (5), cheap AI. Very low difficulty (d≈0.074).
-  { name: 'Step 2', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.074, tH: 20.0 },
-  // Step 3: human comparative advantage. Cheap Manual (1), expensive AI
-  //   singleton; moderate difficulty (d≈1.737).
-  { name: 'Step 3', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 1.737, tH: 20.0 },
-  // Step 4: mirror of Step 2.
-  { name: 'Step 4', cM: 5.0, tM: 1.0, cA: 1.0, tA: 0.8, d: 0.074, tH: 20.0 },
-  // Step 5: mirror of Step 1. tH=0 (no hand-off after the last step).
-  { name: 'Step 5', cM: 1.0, tM: 1.0, cA: 5.0, tA: 2.0, d: 2.3219, tH: 0.0 },
+  // Step 1: Define Problem — bookend, kept Manual via huge difficulty.
+  { name: 'Define Problem',    cM: 2.0, tM: 1.5, cA: 5.0, tA: 3.0, d: 100, tH: 100.0 },
+  // Step 2: Find Data — moderate difficulty; AI can help but high tH keeps
+  //   the chain from spilling across step boundaries.
+  { name: 'Find Data',         cM: 1.0, tM: 1.5, cA: 1.0, tA: 1.0, d: 5,   tH: 100.0 },
+  // Step 3: Write Code — the long expensive step; lower difficulty so AI
+  //   automation kicks in as α rises.
+  { name: 'Write Code',        cM: 2.0, tM: 3.0, cA: 2.0, tA: 1.0, d: 2.5, tH: 100.0 },
+  // Step 4: Prepare Report — easiest for AI (d=1) so it flips to AI early.
+  { name: 'Prepare Report',    cM: 1.0, tM: 1.5, cA: 1.0, tA: 0.5, d: 1,   tH: 100.0 },
+  // Step 5: Present Findings — bookend, kept Manual. tH=0 (last step).
+  { name: 'Present Findings',  cM: 2.0, tM: 2.0, cA: 4.0, tA: 2.0, d: 100, tH: 0.0 },
 ];
 
 let state = {
@@ -3710,6 +3712,7 @@ loadStateFromURL();
   if (!inp) return;
   const params = new URLSearchParams(window.location.search);
   if (params.has('title')) inp.value = params.get('title');
+  else inp.value = DEFAULT_TITLE;
   inp.addEventListener('input', serializeStateToURL);
 })();
 
@@ -3932,15 +3935,16 @@ function fitRightColumnToViewport() {
   // sharer was using.
   if (applyURLSplit()) return;
 
-  // Default split: left column gets 58% of the usable width. Wait one
-  // frame so the design-grid has its width before we set columns.
+  // Default split: left column gets ~65.65% of the usable width (matches
+  // the data-scientist preset). Wait one frame so the design-grid has its
+  // width before we set columns.
   requestAnimationFrame(() => {
     const gridRect = grid.getBoundingClientRect();
     const RESIZER_W = 6;
     const MIN_COL_W = 220;
     const totalWidth = gridRect.width - RESIZER_W;
     const leftW = Math.max(MIN_COL_W,
-      Math.min(totalWidth - MIN_COL_W, totalWidth * 0.58));
+      Math.min(totalWidth - MIN_COL_W, totalWidth * 0.6565));
     const rightW = totalWidth - leftW;
     grid.style.gridTemplateColumns = `${leftW}px ${RESIZER_W}px ${rightW}px`;
   });
