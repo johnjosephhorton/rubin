@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connect the Dots — Chaining Demo</title>
+<style>
+  :root {
+    --bg: #efe7d2;
+    --panel: #faf5e4;
+    --text: #1f1f1f;
+    --muted: #8a8273;
+    --rule: #cfc6ad;
+    --accent: #c14d3e;
+    --good: #2a9d54;
+    --warn: #c79030;
+    --bad: #c0392b;
+    --teal: #0a8a8a;
+    --dot: #1f1f1f;
+    --line-ink: #2a2a2a;
+
+    /* Paper's step-mode palette (matches hierarchical_production_illustration.tex
+       / job_design_visualizer.html: gray for manual, orange for augmented,
+       green for automated). */
+    --man-fill:   #e8eaed;
+    --man-stroke: #9aa0a6;
+    --man-text:   #3f4347;
+    --aug-fill:   #fbdcb1;
+    --aug-stroke: #d28319;
+    --aug-text:   #7a4711;
+    --auto-fill:  #c8ebd1;
+    --auto-stroke:#2f9b5b;
+    --auto-text:  #1e5e36;
+
+    /* Chain color: purple. Used for both the CHAIN button and the dashed
+       outline wrapping multi-step chain blocks. */
+    --chain:        #7e57c2;
+    --chain-soft:   rgba(126, 87, 194, 0.08);
+    --chain-stroke: rgba(126, 87, 194, 0.55);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Iowan Old Style", "Charter", Georgia, serif;
+    min-height: 100vh;
+  }
+  .container { max-width: 920px; margin: 0 auto; padding: 56px 64px 80px; }
+
+  /* Header */
+  header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-bottom: 1px solid var(--rule); padding-bottom: 14px;
+  }
+  h1.title { font-size: 42px; font-weight: 600; margin: 0; letter-spacing: -0.5px; }
+  h1.title .dot { color: var(--accent); }
+  .status {
+    display: grid; grid-template-columns: repeat(3, auto);
+    column-gap: 30px; row-gap: 2px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 10px; letter-spacing: 1px;
+    color: var(--muted); text-transform: uppercase;
+    text-align: center;
+  }
+  .status .value {
+    font-size: 22px; color: var(--text); text-transform: none;
+    font-family: "SF Mono", "Menlo", monospace; letter-spacing: 0;
+  }
+
+  /* Description */
+  .description {
+    margin: 36px 0 0;
+  }
+  .description p {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px; line-height: 1.75;
+    margin: 0 0 12px;
+    color: #2a2a2a;
+  }
+  .description p:last-child { margin-bottom: 0; }
+  .description em { font-style: italic; color: #1f1f1f; }
+  .description .accent { color: var(--accent); font-style: normal; }
+
+  /* Example tabs */
+  .example-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin: 28px 0 0;
+    font-family: "SF Mono", "Menlo", monospace;
+  }
+  .example-tab {
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--rule); border-radius: 20px;
+    padding: 6px 14px;
+    font-family: inherit; font-size: 11px; letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  .example-tab:hover { border-color: var(--text); color: var(--text); }
+  .example-tab.active {
+    background: var(--text); color: var(--bg);
+    border-color: var(--text);
+  }
+
+  /* Puzzle layout */
+  .puzzle {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 36px;
+    margin-top: 20px;
+    align-items: start;
+  }
+  .canvas-wrap {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 420px;
+  }
+  svg#canvas { display: block; width: 100%; height: auto; max-height: 420px; }
+
+  /* Canvas elements */
+  .cluster-bg { fill: rgba(193, 77, 62, 0.05); }
+  .cluster-bg.sparse { fill: rgba(42, 157, 84, 0.05); }
+  .dot-circle { fill: var(--dot); transition: r 120ms ease, fill 120ms ease; }
+  .dot-circle.current {
+    fill: var(--accent);
+    r: 5;
+  }
+  .dot-circle.clickable { cursor: pointer; }
+  .dot-circle.clickable:hover { fill: var(--accent); r: 5; }
+  .dot-circle.misclick { fill: var(--bad); }
+  @keyframes pulse {
+    0%, 100% { r: 4; }
+    50%      { r: 6; }
+  }
+  .dot-circle.current { animation: pulse 1.4s ease-in-out infinite; }
+  .dot-num {
+    font-family: "SF Mono", monospace; font-size: 11px;
+    fill: var(--text); user-select: none; pointer-events: none;
+  }
+  .drawn-line { stroke-width: 1.8; fill: none; }
+  .drawn-line.pending  { stroke: var(--line-ink); }
+  .drawn-line.manual   { stroke: var(--line-ink); }
+  .drawn-line.correct  { stroke: var(--good); }
+  .drawn-line.wrong    { stroke: var(--bad); stroke-dasharray: 4 3; }
+
+  /* Step list */
+  .step-list { font-family: "SF Mono", "Menlo", monospace; font-size: 12px; }
+  .step-row {
+    display: grid; grid-template-columns: 12px 50px 1fr 135px;
+    align-items: center; padding: 7px 4px; gap: 10px;
+    border-radius: 3px;
+  }
+  .step-row .bullet { color: var(--muted); }
+  .step-row .lbl { color: var(--muted); font-size: 10px; letter-spacing: 0.5px; }
+  .step-row .name { font-weight: 600; letter-spacing: 0.3px; }
+  .step-row .name .arrow { color: var(--muted); font-weight: 400; padding: 0 4px; }
+  .step-row.active { background: rgba(193, 77, 62, 0.08); }
+  .step-row.done   { opacity: 0.45; }
+
+  .mode-toggle {
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 5px 0;
+    font-family: inherit; font-size: 10px; letter-spacing: 0.6px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--text);
+    transition: background 100ms, border-color 100ms, color 100ms;
+  }
+  .mode-toggle:hover { filter: brightness(0.96); }
+  .mode-toggle.manual {
+    background: var(--man-fill);
+    border-color: var(--man-stroke);
+    color: var(--man-text);
+  }
+  .mode-toggle.augmented {
+    background: var(--aug-fill);
+    border-color: var(--aug-stroke);
+    color: var(--aug-text);
+  }
+  .mode-toggle.automated {
+    background: var(--auto-fill);
+    border-color: var(--auto-stroke);
+    color: var(--auto-text);
+  }
+  .mode-toggle .prob { margin-left: 4px; opacity: 0.85; }
+  .step-row.active.execution .mode-toggle,
+  .step-row.done .mode-toggle { cursor: default; opacity: 0.85; }
+  .step-row.execution .mode-toggle { pointer-events: none; }
+
+  .chain-row {
+    display: grid; grid-template-columns: 12px 50px 1fr 135px;
+    align-items: center; padding: 0 4px; gap: 10px; min-height: 26px;
+  }
+  .chain-row .arrow-down { color: var(--muted); font-size: 12px; opacity: 0.7; }
+  .chain-row .gap { color: var(--muted); font-size: 11px; opacity: 0.4; }
+  .chain-btn {
+    border: 1px dashed #b8b09a;
+    background: transparent; color: var(--muted);
+    font-family: inherit; font-size: 9px; letter-spacing: 1px;
+    padding: 4px 6px; border-radius: 3px; cursor: pointer;
+    text-align: center;
+  }
+  .chain-btn:hover { border-color: var(--chain); color: var(--chain); }
+  .chain-row.chained .chain-btn {
+    background: var(--chain); color: white;
+    border-style: solid; border-color: var(--chain);
+  }
+  .chain-row.disabled .chain-btn,
+  .chain-row.locked .chain-btn { cursor: default; opacity: 0.35; }
+  .chain-row.disabled .chain-btn:hover { border-color: #b8b09a; color: var(--muted); }
+
+  /* Visual grouping for multi-step AI chain blocks: dashed purple frame
+     around the steps + chain-buttons that belong to one block. */
+  .chain-group {
+    border: 1px dashed var(--chain-stroke);
+    background: var(--chain-soft);
+    border-radius: 6px;
+    padding: 2px 4px 4px;
+    margin: 6px 0;
+  }
+  .chain-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 3px 6px 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 9px; letter-spacing: 0.8px;
+    color: var(--chain); text-transform: uppercase;
+  }
+  .chain-meta .val {
+    font-size: 12px; font-weight: 600; letter-spacing: 0;
+  }
+
+  /* Action panel (instruction + buttons) */
+  .action-panel {
+    margin-top: 24px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    min-height: 44px;
+  }
+  .instruction {
+    font-family: "SF Mono", monospace; font-size: 13px;
+    color: var(--text); flex: 1; min-width: 200px;
+  }
+  .instruction.muted { color: var(--muted); }
+  .instruction .em { color: var(--accent); font-style: normal; }
+  .btn-primary {
+    background: #1f1f1f; color: white;
+    font-family: "SF Mono", monospace; font-size: 12px;
+    letter-spacing: 1.5px;
+    padding: 12px 22px;
+    border: none; border-radius: 2px;
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: #000; }
+  .btn-primary:disabled { opacity: 0.4; cursor: default; }
+  .btn-sec {
+    background: transparent; color: var(--text);
+    border: 1px solid #b8b09a;
+    font-family: "SF Mono", monospace; font-size: 11px;
+    letter-spacing: 0.8px; padding: 9px 14px;
+    border-radius: 2px; cursor: pointer;
+  }
+  .btn-sec:hover { border-color: var(--text); background: rgba(0,0,0,0.03); }
+  .btn-sec.accept { color: var(--good); border-color: #a8c8b0; }
+  .btn-sec.accept:hover { border-color: var(--good); background: rgba(42,157,84,0.05); }
+  .btn-sec.retry { color: var(--accent); border-color: #d8b0a8; }
+  .btn-sec.retry:hover { border-color: var(--accent); background: rgba(193,77,62,0.05); }
+
+  /* Leaderboard */
+  .leaderboard {
+    margin-top: 24px;
+    padding: 14px 20px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+  }
+  .leaderboard h3 {
+    font-family: inherit; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--muted);
+    margin: 0 0 8px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .leaderboard h3 .sub { font-size: 9px; color: var(--muted); opacity: 0.7; }
+  .leaderboard ol {
+    list-style: none; padding: 0; margin: 0;
+    font-size: 12px;
+  }
+  .leaderboard li {
+    display: grid;
+    grid-template-columns: 22px 1fr 60px 64px;
+    gap: 12px;
+    padding: 5px 0;
+    align-items: baseline;
+    border-bottom: 1px dotted rgba(0,0,0,0.05);
+  }
+  .leaderboard li:last-child { border-bottom: none; }
+  .leaderboard li .rank { color: var(--muted); font-size: 10px; letter-spacing: 0.5px; }
+  .leaderboard li .when { color: var(--muted); font-size: 10px; }
+  .leaderboard li .run-name {
+    color: var(--text); font-size: 11px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .leaderboard li.empty-slot .run-name { color: var(--muted); }
+  .leaderboard li .score { color: var(--text); text-align: right; }
+  .leaderboard li .time { color: var(--text); text-align: right; font-weight: 600; }
+  .leaderboard li.empty-slot { opacity: 0.35; }
+  .leaderboard li.best .score,
+  .leaderboard li.best .time { color: var(--good); }
+  .leaderboard li.new-entry { background: rgba(126, 87, 194, 0.10); border-radius: 3px; padding-left: 6px; padding-right: 6px; margin: 0 -6px; }
+
+  /* Name-this-run editor inside the final panel */
+  .name-row {
+    display: flex; align-items: center; gap: 12px;
+    margin: 18px 0 0;
+    font-family: "SF Mono", "Menlo", monospace;
+  }
+  .name-row label {
+    color: var(--muted); font-size: 10px;
+    letter-spacing: 1px; text-transform: uppercase;
+    flex: 0 0 auto;
+  }
+  .name-row input {
+    flex: 1 1 auto;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 7px 10px;
+    font-family: inherit; font-size: 12px;
+    color: var(--text);
+  }
+  .name-row input:focus { outline: none; border-color: var(--chain); }
+
+  /* Final */
+  .final-panel {
+    margin-top: 28px; padding: 22px 24px;
+    background: var(--panel); border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .final-panel h3 {
+    font-family: "SF Mono", monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .final-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    font-family: "SF Mono", monospace; font-size: 12px;
+  }
+  .final-grid .cell .lbl {
+    color: var(--muted); font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .final-grid .cell .v {
+    font-size: 24px; color: var(--text); display: block; margin-top: 4px;
+  }
+
+  @media (max-width: 760px) {
+    .container { padding: 32px 24px; }
+    .puzzle { grid-template-columns: 1fr; }
+    h1.title { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1 class="title">Connect the dots<span class="dot">.</span></h1>
+    <div class="status">
+      <span>Round</span><span>Lines</span><span>Time</span>
+      <span class="value" id="round">1</span>
+      <span class="value" id="score">—</span>
+      <span class="value" id="time">0.0s</span>
+    </div>
+  </header>
+
+  <div class="description">
+    <p>Connect the numbered dots from <em>1</em> to <em id="n-label">10</em>.</p>
+    <p>You can choose to connect the dots in each step
+      <em style="color:var(--man-text)">manually</em> (you click the next dot
+      yourself), or with the help of <em>AI</em> (the agent draws the line for
+      you). AI can <span class="accent">chain</span> consecutive steps and draw
+      all their lines in a single attempt, but the chain's overall success
+      probability is the product of each constituent step's individual success.</p>
+    <p>The clock starts on <em>BEGIN</em> and runs continuously. Your total
+      time is the cost.</p>
+  </div>
+
+  <div class="example-tabs" id="example-tabs">
+    <button class="example-tab active" data-idx="0">Uniform Spacing</button>
+    <button class="example-tab" data-idx="1">Sparse + Dense</button>
+    <button class="example-tab" data-idx="2">Dense in the Middle</button>
+  </div>
+
+  <div class="puzzle">
+    <div class="canvas-wrap">
+      <svg id="canvas" viewBox="0 0 500 400"></svg>
+    </div>
+    <div class="step-list" id="step-list"></div>
+  </div>
+
+  <div class="action-panel" id="action-panel">
+    <div class="instruction muted" id="instruction">
+      Cycle each step's mode (Manual / AI-augmented / AI-automated), then click BEGIN.
+    </div>
+    <div id="action-buttons">
+      <button class="btn-primary" id="begin">BEGIN →</button>
+    </div>
+  </div>
+
+  <div class="leaderboard" id="leaderboard">
+    <h3><span>Top 5 · this puzzle</span><span class="sub">best correctness, then fastest</span></h3>
+    <ol id="leaderboard-list"></ol>
+  </div>
+
+  <div class="final-panel" id="final-panel" style="display:none">
+    <h3>Round complete</h3>
+    <div class="final-grid">
+      <div class="cell"><span class="lbl">Lines correct</span><span class="v" id="f-correct">—</span></div>
+      <div class="cell"><span class="lbl">Total time</span><span class="v" id="f-time">—</span></div>
+      <div class="cell"><span class="lbl">Blocks</span><span class="v" id="f-blocks">—</span></div>
+    </div>
+    <div class="name-row" id="name-row" style="display:none">
+      <label for="run-name">Name this run</label>
+      <input type="text" id="run-name" maxlength="80" autocomplete="off" />
+    </div>
+    <div class="action-panel" style="margin-top:18px">
+      <button class="btn-primary" id="restart">PLAY AGAIN →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =========================================================================
+// Puzzle examples. Each example defines its dot positions, per-step
+// agent success rates, and optional visual cluster groupings (drawn as
+// faint background tints). Rates are stipulated; geometry just hints
+// at *why* a step is hard.
+// =========================================================================
+const EXAMPLES = [
+  {
+    id: 'uniform',
+    name: 'Uniform Spacing',
+    dots: [
+      { id: 1, x:  80, y: 100 },
+      { id: 2, x: 250, y:  70 },
+      { id: 3, x: 400, y: 160 },
+      { id: 4, x: 290, y: 300 },
+      { id: 5, x: 110, y: 320 },
+    ],
+    probs: [0.85, 0.85, 0.85, 0.85],
+    clusters: [],
+  },
+  {
+    id: 'two',
+    name: 'Sparse + Dense',
+    dots: [
+      // Sparse left (1-4)
+      { id: 1,  x:  70, y: 100 },
+      { id: 2,  x: 220, y:  80 },
+      { id: 3,  x: 100, y: 260 },
+      { id: 4,  x: 230, y: 330 },
+      // Dense right (5-8)
+      { id: 5,  x: 380, y: 180 },
+      { id: 6,  x: 410, y: 195 },
+      { id: 7,  x: 385, y: 220 },
+      { id: 8,  x: 420, y: 210 },
+    ],
+    probs: [0.95, 0.95, 0.95, 0.80, 0.55, 0.55, 0.55],
+    clusters: [
+      { type: 'sparse', dotIds: [1, 2, 3, 4] },
+      { type: 'dense',  dotIds: [5, 6, 7, 8] },
+    ],
+  },
+  {
+    id: 'three',
+    name: 'Dense in the Middle',
+    dots: [
+      // Sparse left (1-4)
+      { id: 1,  x:  50, y:  90 },
+      { id: 2,  x: 140, y: 170 },
+      { id: 3,  x:  60, y: 270 },
+      { id: 4,  x: 150, y: 360 },
+      // Dense middle (5-8)
+      { id: 5,  x: 240, y: 180 },
+      { id: 6,  x: 268, y: 200 },
+      { id: 7,  x: 250, y: 230 },
+      { id: 8,  x: 282, y: 170 },
+      // Sparse right (9-12)
+      { id: 9,  x: 380, y:  90 },
+      { id:10,  x: 450, y: 180 },
+      { id:11,  x: 380, y: 270 },
+      { id:12,  x: 450, y: 360 },
+    ],
+    probs: [
+      0.95, 0.95, 0.95,
+      0.80,
+      0.55, 0.55, 0.55,
+      0.80,
+      0.95, 0.95, 0.95,
+    ],
+    clusters: [
+      { type: 'sparse', dotIds: [1, 2, 3, 4] },
+      { type: 'dense',  dotIds: [5, 6, 7, 8] },
+      { type: 'sparse', dotIds: [9, 10, 11, 12] },
+    ],
+  },
+];
+
+// Visual pacing for agent line-draw animation (per line; currently unused —
+// AI execution is instant — kept in case we want a tunable knob back).
+const AGENT_DRAW_MS = 400;
+
+// Top-N leaderboard, persisted per-example in localStorage.
+const LEADERBOARD_KEY = 'chain_demo_top_';
+const TOP_N = 5;
+let newEntryRank = -1;     // highlight the just-set row briefly
+
+let DOTS, STEP_PROBS, CLUSTERS;
+let DOTS_TEMPLATE;          // pristine positions; shuffled into DOTS each round
+let currentExampleIdx = 0;
+
+const state = {
+  phase: 'planning',                // planning | manual | agent-drawing | agent-await | done
+  // User's per-step choice: 'manual' or 'ai'. The augmented/automated split
+  // is derived from chain structure: in any AI block of length N, the first
+  // N-1 steps are AUTOMATED and the last one is AUGMENTED. A standalone AI
+  // step (chain of length 1) is therefore AUGMENTED.
+  modes: [],
+  chains: [],                       // chains[i]=true → step i & i+1 in same block
+  drawn: [],                        // committed lines: {stepIdx, fromDot, toDot, correctTarget, correct, source}
+  blocks: [],                       // [{start, end, mode}]
+  currentBlock: 0,
+  pendingLines: [],                 // agent's current draft (not yet accepted)
+  startTime: null,
+  timerInterval: null,
+};
+
+// Derived role for a step, based on user's mode choice and chain context.
+// Returns 'manual' | 'augmented' | 'automated'. Augmented = last step of an
+// AI chain (where the human reviews the chain output). Automated = an earlier
+// step in an AI chain (no individual review).
+function derivedRole(stepIdx) {
+  if (state.modes[stepIdx] === 'manual') return 'manual';
+  const lastStep = (stepIdx === STEP_PROBS.length - 1);
+  const noChainForward = lastStep || !state.chains[stepIdx];
+  return noChainForward ? 'augmented' : 'automated';
+}
+
+// =========================================================================
+// Helpers
+// =========================================================================
+function dotById(id) { return DOTS.find(d => d.id === id); }
+function probClass(p) { return p >= 0.9 ? 'high' : (p >= 0.7 ? 'mid' : 'low'); }
+function probLabel(p) { return Math.round(p * 100) + '%'; }
+
+function computeBlocks() {
+  const blocks = [];
+  let start = 0;
+  for (let i = 0; i < STEP_PROBS.length; i++) {
+    const isLast = i === STEP_PROBS.length - 1;
+    // A block ends if: last step, OR no chain link to next, OR adjacent modes
+    // differ, OR current step is manual (manual steps don't chain).
+    const blockBreaks =
+      isLast ||
+      !state.chains[i] ||
+      state.modes[i] !== state.modes[i + 1] ||
+      state.modes[i] === 'manual';
+    if (blockBreaks) {
+      blocks.push({ start, end: i, mode: state.modes[start] });
+      start = i + 1;
+    }
+  }
+  return blocks;
+}
+
+// Pick a "plausible wrong" target: a non-target dot, weighted by proximity
+// to the true target (close dots are more likely confused with it).
+function pickWrongDot(stepIdx) {
+  const truth = DOTS[stepIdx + 1];
+  const fromId = DOTS[stepIdx].id;
+  const candidates = DOTS.filter(d => d.id !== truth.id && d.id !== fromId);
+  const weights = candidates.map(d => {
+    const dist = Math.hypot(d.x - truth.x, d.y - truth.y);
+    return 1 / (10 + dist);
+  });
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < candidates.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return candidates[i].id;
+  }
+  return candidates[0].id;
+}
+
+function currentStepIdx() {
+  // The next step to be drawn = however many we've committed
+  return state.drawn.length;
+}
+
+// Shuffle dot positions within each cluster so each round looks different —
+// participants can't reuse spatial memory from a previous attempt. Cluster
+// membership and the path's logical sequence (1→2→…) are preserved; only
+// the (x,y) of each id within its cluster is permuted. Uniform examples
+// (no clusters defined) shuffle across all dots as one group.
+function shuffleDotPositions() {
+  const groups = CLUSTERS.length > 0
+    ? CLUSTERS.map(c => c.dotIds)
+    : [DOTS.map(d => d.id)];
+
+  groups.forEach(group => {
+    const groupDots = group.map(id => DOTS.find(d => d.id === id));
+    const positions = groupDots.map(d => ({ x: d.x, y: d.y }));
+    for (let i = positions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [positions[i], positions[j]] = [positions[j], positions[i]];
+    }
+    groupDots.forEach((d, i) => {
+      d.x = positions[i].x;
+      d.y = positions[i].y;
+    });
+  });
+}
+
+// =========================================================================
+// Rendering
+// =========================================================================
+function renderCanvas() {
+  const svg = document.getElementById('canvas');
+  let html = '';
+
+  // Cluster backgrounds — computed from each cluster's dot bounding box
+  CLUSTERS.forEach(c => {
+    const pts = c.dotIds.map(dotById);
+    const xs = pts.map(d => d.x), ys = pts.map(d => d.y);
+    const pad = 22;
+    const x = Math.min(...xs) - pad;
+    const y = Math.min(...ys) - pad;
+    const w = (Math.max(...xs) - Math.min(...xs)) + pad * 2;
+    const h = (Math.max(...ys) - Math.min(...ys)) + pad * 2;
+    html += `<rect class="cluster-bg ${c.type}" x="${x}" y="${y}" width="${w}" height="${h}" rx="10"/>`;
+  });
+
+  // Committed lines
+  state.drawn.forEach(line => {
+    const a = dotById(line.fromDot), b = dotById(line.toDot);
+    html += `<line class="drawn-line ${line.statusClass || 'pending'}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;
+  });
+  // Pending (agent draft) lines on top
+  state.pendingLines.forEach(line => {
+    const a = dotById(line.fromDot), b = dotById(line.toDot);
+    html += `<line class="drawn-line pending" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;
+  });
+
+  // Dots + labels
+  const curStep = currentStepIdx();
+  const curDotId = (state.phase === 'manual' && curStep < DOTS.length - 1) ? DOTS[curStep].id : null;
+  const clickable = (state.phase === 'manual');
+  DOTS.forEach(d => {
+    const classes = ['dot-circle'];
+    if (clickable) classes.push('clickable');
+    if (d.id === curDotId) classes.push('current');
+    html += `<circle class="${classes.join(' ')}" data-id="${d.id}" cx="${d.x}" cy="${d.y}" r="3"/>`;
+    html += `<text class="dot-num" x="${d.x + 7}" y="${d.y - 5}">${d.id}</text>`;
+  });
+
+  svg.innerHTML = html;
+
+  if (clickable) {
+    svg.querySelectorAll('.dot-circle.clickable').forEach(el => {
+      el.addEventListener('click', () => onDotClick(parseInt(el.dataset.id)));
+    });
+  }
+}
+
+function renderStepList() {
+  const list = document.getElementById('step-list');
+  list.innerHTML = '';
+  const executing = state.phase !== 'planning';
+
+  // Compute blocks so we can wrap multi-step AI chains in a dashed-purple
+  // group container. Each step gets a pointer to its block.
+  const blocks = computeBlocks();
+  const stepBlock = new Array(STEP_PROBS.length);
+  blocks.forEach((b, idx) => {
+    for (let i = b.start; i <= b.end; i++) stepBlock[i] = idx;
+  });
+
+  function buildStepRow(i) {
+    const row = document.createElement('div');
+    row.className = 'step-row';
+    if (executing) row.classList.add('execution');
+
+    // Highlight the currently-running block; dim done steps.
+    if (executing && state.blocks.length) {
+      const runBlock = state.blocks[state.currentBlock];
+      if (runBlock && i >= runBlock.start && i <= runBlock.end) row.classList.add('active');
+      else if (runBlock && i < runBlock.start) row.classList.add('done');
+      else if (state.phase === 'done') row.classList.add('done');
+    }
+
+    const p = STEP_PROBS[i];
+    const from = DOTS[i].id, to = DOTS[i + 1].id;
+    const role = derivedRole(i);
+
+    // Individual step probability stays on the step button regardless of
+    // whether it's in a chain; the chain's overall success rate is shown
+    // separately on the chain-group header.
+    const probHtml = role === 'manual'
+      ? ''
+      : `<span class="prob">${probLabel(p)}</span>`;
+    const roleLabel = role === 'manual' ? 'MANUAL'
+      : role === 'augmented' ? 'AI-AUGMENTED'
+      : 'AI-AUTOMATED';
+
+    row.innerHTML = `
+      <span class="bullet">•</span>
+      <span class="lbl">STEP ${i + 1}</span>
+      <span class="name">${from}<span class="arrow">→</span>${to}</span>
+      <button class="mode-toggle ${role}" data-i="${i}" ${executing ? 'disabled' : ''}>${roleLabel}${probHtml}</button>
+    `;
+    return row;
+  }
+
+  function buildChainRow(i) {
+    const canChain = state.modes[i] === 'ai' && state.modes[i + 1] === 'ai';
+    const chainRow = document.createElement('div');
+    chainRow.className = 'chain-row'
+      + (state.chains[i] ? ' chained' : '')
+      + (!canChain ? ' disabled' : '')
+      + (executing ? ' locked' : '');
+    chainRow.innerHTML = `
+      <span class="arrow-down">↓</span>
+      <span class="gap">···</span>
+      <span></span>
+      <button class="chain-btn" data-i="${i}" ${(!canChain || executing) ? 'disabled' : ''}>
+        ${state.chains[i] ? '↻ CHAINED' : '+ CHAIN'}
+      </button>
+    `;
+    return chainRow;
+  }
+
+  // Walk through steps; open a .chain-group wrapper whenever we enter a
+  // multi-step block, close it before any chain row that crosses block
+  // boundaries, and close it again at end of the block.
+  let groupEl = null;
+  for (let i = 0; i < STEP_PROBS.length; i++) {
+    const block = blocks[stepBlock[i]];
+    const isMultiStep = block.end > block.start;
+
+    // Entering a new block: maybe open a group container + header showing
+    // the chain's overall success probability (product of all step probs).
+    if (i === block.start && isMultiStep) {
+      groupEl = document.createElement('div');
+      groupEl.className = 'chain-group';
+      list.appendChild(groupEl);
+
+      let prod = 1;
+      for (let j = block.start; j <= block.end; j++) prod *= STEP_PROBS[j];
+      const meta = document.createElement('div');
+      meta.className = 'chain-meta';
+      meta.innerHTML = `<span>Chain success</span><span class="val">${probLabel(prod)}</span>`;
+      groupEl.appendChild(meta);
+    }
+
+    const target = (isMultiStep && groupEl) ? groupEl : list;
+    target.appendChild(buildStepRow(i));
+
+    // Render the chain row that sits *after* step i, if any
+    if (i < STEP_PROBS.length - 1) {
+      const chainRow = buildChainRow(i);
+      if (i < block.end) {
+        // Interior chain link inside a multi-step block → stays in group
+        target.appendChild(chainRow);
+      } else {
+        // Inter-block chain row → outside any group
+        groupEl = null;
+        list.appendChild(chainRow);
+      }
+    } else if (i === block.end) {
+      // End of last block, no trailing chain row
+      groupEl = null;
+    }
+  }
+
+  list.querySelectorAll('.mode-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      if (state.phase !== 'planning') return;
+      toggleMode(parseInt(e.currentTarget.dataset.i));
+    });
+  });
+  list.querySelectorAll('.chain-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      if (state.phase !== 'planning') return;
+      const i = parseInt(e.currentTarget.dataset.i);
+      const canChain = state.modes[i] === 'ai' && state.modes[i + 1] === 'ai';
+      if (!canChain) return;
+      state.chains[i] = !state.chains[i];
+      renderStepList();
+    });
+  });
+}
+
+// Flip a step between MANUAL and AI. Switching to manual breaks both
+// neighboring chains (manual steps can't participate in AI chains).
+function toggleMode(i) {
+  state.modes[i] = state.modes[i] === 'manual' ? 'ai' : 'manual';
+  if (state.modes[i] === 'manual') {
+    if (i > 0) state.chains[i - 1] = false;
+    if (i < state.chains.length) state.chains[i] = false;
+  }
+  renderStepList();
+}
+
+function setInstruction(text, opts = {}) {
+  const el = document.getElementById('instruction');
+  el.innerHTML = text;
+  el.classList.toggle('muted', !!opts.muted);
+}
+
+function setActionButtons(html) {
+  document.getElementById('action-buttons').innerHTML = html;
+}
+
+// =========================================================================
+// Timer
+// =========================================================================
+function startTimer() {
+  state.startTime = Date.now();
+  state.timerInterval = setInterval(updateTimer, 100);
+}
+function stopTimer() {
+  if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+  updateTimer();
+}
+function updateTimer() {
+  const t = state.startTime ? (Date.now() - state.startTime) / 1000 : 0;
+  document.getElementById('time').textContent = t.toFixed(1) + 's';
+}
+
+// =========================================================================
+// Execution flow
+// =========================================================================
+function begin() {
+  state.phase = 'running';
+  state.blocks = computeBlocks();
+  state.currentBlock = 0;
+  state.drawn = [];
+  state.pendingLines = [];
+  document.getElementById('score').textContent = '—';
+  document.getElementById('final-panel').style.display = 'none';
+  startTimer();
+  renderStepList();
+  renderCanvas();
+  runBlock(0);
+}
+
+function runBlock(idx) {
+  if (idx >= state.blocks.length) { finish(); return; }
+  state.currentBlock = idx;
+  const block = state.blocks[idx];
+  renderStepList();
+
+  if (block.mode === 'manual') {
+    runManualBlock(block);
+  } else {
+    // AI block: agent draws all lines; user reviews at the end (augmented step).
+    // Earlier steps in the chain are automated (no individual review).
+    runAgentBlock(block);
+  }
+}
+
+// --- Manual block: wait for user to click the next dot ---
+function runManualBlock(block) {
+  state.phase = 'manual';
+  const targetId = DOTS[block.end + 1].id;
+  setInstruction(`Find and click dot <span class="em">${targetId}</span>.`);
+  setActionButtons('');
+  renderCanvas();
+}
+
+function onDotClick(dotId) {
+  if (state.phase !== 'manual') return;
+  const block = state.blocks[state.currentBlock];
+  const targetId = DOTS[block.end + 1].id;
+  if (dotId === targetId) {
+    // Correct manual step
+    state.drawn.push({
+      stepIdx: block.start,
+      fromDot: DOTS[block.start].id,
+      toDot: targetId,
+      correctTarget: targetId,
+      correct: true,
+      source: 'manual',
+      statusClass: 'manual',
+    });
+    nextBlock();
+  } else {
+    // Wrong click: brief red flash, ignore
+    const svg = document.getElementById('canvas');
+    const el = svg.querySelector(`.dot-circle[data-id="${dotId}"]`);
+    if (el) {
+      el.classList.add('misclick');
+      setTimeout(() => el.classList.remove('misclick'), 220);
+    }
+  }
+}
+
+// --- AI block: agent rolls and draws every line in the block instantly,
+//     then waits for ACCEPT / RETRY at the end (the augmented final step
+//     of the chain). AI execution is cheap — all of the time cost lives
+//     in the user's review step. ---
+function runAgentBlock(block) {
+  // Clear leftover manual-phase visuals (pulsing "current" dot, clickable
+  // cursors) BEFORE rendering, otherwise the new pending line gets drawn
+  // underneath them and the user can't tell the AI ran.
+  state.phase = 'agent-await';
+  const draft = [];
+  for (let i = block.start; i <= block.end; i++) {
+    const correct = Math.random() < STEP_PROBS[i];
+    draft.push({
+      stepIdx: i,
+      fromDot: DOTS[i].id,
+      toDot: correct ? DOTS[i + 1].id : pickWrongDot(i),
+      correctTarget: DOTS[i + 1].id,
+      correct,
+      source: (i === block.end) ? 'augmented' : 'automated',
+      statusClass: 'pending',
+    });
+  }
+  state.pendingLines = draft.slice();
+  renderCanvas();
+  agentAwait(draft);
+}
+
+function agentAwait(draft) {
+  state.phase = 'agent-await';
+  const block = state.blocks[state.currentBlock];
+  const range = block.start === block.end
+    ? `step ${block.start + 1}`
+    : `steps ${block.start + 1}–${block.end + 1}`;
+  setInstruction(`Agent finished <span class="em">${range}</span>. Does it look right?`);
+  setActionButtons(`
+    <button class="btn-sec accept" id="btn-accept">ACCEPT</button>
+    <button class="btn-sec retry"  id="btn-retry">RETRY</button>
+  `);
+  document.getElementById('btn-accept').onclick = () => acceptAgent(draft);
+  document.getElementById('btn-retry').onclick  = () => retryAgent();
+}
+
+function acceptAgent(draft) {
+  // Commit pending lines as the final lines for those steps.
+  draft.forEach(line => state.drawn.push(line));
+  state.pendingLines = [];
+  renderCanvas();
+  nextBlock();
+}
+
+function retryAgent() {
+  // Discard current draft, re-run the agent on the same block (re-rolls).
+  state.pendingLines = [];
+  renderCanvas();
+  runAgentBlock(state.blocks[state.currentBlock]);
+}
+
+function nextBlock() {
+  runBlock(state.currentBlock + 1);
+}
+
+function finish() {
+  state.phase = 'done';
+  stopTimer();
+  // Reveal: color committed lines by correctness so the user sees where they
+  // accepted wrong agent output.
+  state.drawn.forEach(s => {
+    if (s.source === 'manual') s.statusClass = 'manual';
+    else s.statusClass = s.correct ? 'correct' : 'wrong';
+  });
+  renderCanvas();
+  renderStepList();
+
+  const correctCount = state.drawn.filter(s => s.correct).length;
+  const total = state.drawn.length;
+  const elapsed = (Date.now() - state.startTime) / 1000;
+  document.getElementById('score').textContent = `${correctCount}/${total}`;
+  document.getElementById('f-correct').textContent = `${correctCount}/${total}`;
+  document.getElementById('f-time').textContent = elapsed.toFixed(1) + 's';
+  document.getElementById('f-blocks').textContent = state.blocks.length;
+  document.getElementById('final-panel').style.display = 'block';
+  setInstruction(`Round complete — <span class="em">${correctCount}/${total}</span> correct in <span class="em">${elapsed.toFixed(1)}s</span>.`);
+  setActionButtons('');
+
+  // Record this run on the leaderboard for the active example; highlight
+  // the new entry (if it cracked the top 5) until the next render.
+  const runName = defaultRunName();
+  const exId = EXAMPLES[currentExampleIdx].id;
+  newEntryRank = recordScore(exId, runName, correctCount, total, elapsed);
+  renderLeaderboard();
+  // If the run made the top 5, expose a name editor pre-filled with the
+  // default. Edits update the saved entry live.
+  const nameRow = document.getElementById('name-row');
+  if (newEntryRank >= 0) {
+    nameRow.style.display = 'flex';
+    const input = document.getElementById('run-name');
+    input.value = runName;
+    input.oninput = () => updateScoreName(exId, newEntryRank, input.value);
+  } else {
+    nameRow.style.display = 'none';
+  }
+}
+
+function restart() {
+  stopTimer();
+  // Re-clone dot positions from the template and reshuffle within clusters
+  // so each new round permutes the layout (no spatial memory carryover).
+  DOTS = DOTS_TEMPLATE.map(d => ({ ...d }));
+  shuffleDotPositions();
+  state.phase = 'planning';
+  // Use each example's declared starting setup if present; otherwise default
+  // to all-manual with no chains (the user picks what to delegate to AI).
+  const ex = EXAMPLES[currentExampleIdx];
+  state.modes = (ex.defaultModes && ex.defaultModes.length === STEP_PROBS.length)
+    ? [...ex.defaultModes]
+    : new Array(STEP_PROBS.length).fill('manual');
+  state.chains = (ex.defaultChains && ex.defaultChains.length === STEP_PROBS.length - 1)
+    ? [...ex.defaultChains]
+    : new Array(STEP_PROBS.length - 1).fill(false);
+  state.drawn = [];
+  state.pendingLines = [];
+  state.blocks = [];
+  state.currentBlock = 0;
+  state.startTime = null;
+  document.getElementById('time').textContent = '0.0s';
+  document.getElementById('score').textContent = '—';
+  document.getElementById('final-panel').style.display = 'none';
+  document.getElementById('name-row').style.display = 'none';
+  setInstruction('Cycle each step\'s mode (Manual / AI-augmented / AI-automated), then click BEGIN.', { muted: true });
+  setActionButtons('<button class="btn-primary" id="begin">BEGIN →</button>');
+  document.getElementById('begin').addEventListener('click', begin);
+  renderCanvas();
+  renderStepList();
+}
+
+// =========================================================================
+// Leaderboard (top 5 per example, persisted in localStorage)
+// =========================================================================
+function loadScores(exampleId) {
+  try {
+    const raw = localStorage.getItem(LEADERBOARD_KEY + exampleId);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function saveScores(exampleId, scores) {
+  try { localStorage.setItem(LEADERBOARD_KEY + exampleId, JSON.stringify(scores)); }
+  catch { /* quota / private mode — silently ignore */ }
+}
+// Insert a new run into the leaderboard, sort by (% correct desc, time asc),
+// trim to TOP_N. Returns the new rank (0-indexed) of this run, or -1 if it
+// didn't make the cut.
+function recordScore(exampleId, name, correct, total, time) {
+  const entry = { name, correct, total, time, ts: Date.now() };
+  const scores = loadScores(exampleId);
+  scores.push(entry);
+  scores.sort((a, b) => {
+    const pa = a.correct / a.total, pb = b.correct / b.total;
+    if (pa !== pb) return pb - pa;
+    return a.time - b.time;
+  });
+  const top = scores.slice(0, TOP_N);
+  saveScores(exampleId, top);
+  return top.indexOf(entry);
+}
+// Update the name of an existing leaderboard entry (by rank) in place.
+function updateScoreName(exampleId, rank, name) {
+  const scores = loadScores(exampleId);
+  if (rank >= 0 && rank < scores.length) {
+    scores[rank].name = name;
+    saveScores(exampleId, scores);
+    renderLeaderboard();
+  }
+}
+// Derive a default human-readable run name from the current planning state
+// by concatenating each step's role short-label ("Man", "Aug", "Aut").
+function defaultRunName() {
+  const labels = [];
+  for (let i = 0; i < STEP_PROBS.length; i++) {
+    const role = derivedRole(i);
+    labels.push(role === 'manual' ? 'Man'
+              : role === 'augmented' ? 'Aug'
+              : 'Aut');
+  }
+  return labels.join(' - ');
+}
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function renderLeaderboard() {
+  const ex = EXAMPLES[currentExampleIdx];
+  const scores = loadScores(ex.id);
+  const list = document.getElementById('leaderboard-list');
+  let html = '';
+  for (let i = 0; i < TOP_N; i++) {
+    const s = scores[i];
+    const cls = [];
+    if (!s) cls.push('empty-slot');
+    if (i === 0 && s) cls.push('best');
+    if (i === newEntryRank) cls.push('new-entry');
+    const nameTxt = s ? (s.name || formatWhen(s.ts)) : '';
+    html += `<li${cls.length ? ` class="${cls.join(' ')}"` : ''}>
+      <span class="rank">#${i + 1}</span>
+      <span class="run-name" title="${escapeHtml(nameTxt)}">${escapeHtml(nameTxt)}</span>
+      <span class="score">${s ? `${s.correct}/${s.total}` : '—'}</span>
+      <span class="time">${s ? s.time.toFixed(1) + 's' : '—'}</span>
+    </li>`;
+  }
+  list.innerHTML = html;
+}
+function formatWhen(ts) {
+  const now = Date.now();
+  const diff = (now - ts) / 1000;
+  if (diff < 60)     return 'just now';
+  if (diff < 3600)   return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400)  return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+// =========================================================================
+// Example switching
+// =========================================================================
+function loadExample(idx) {
+  currentExampleIdx = idx;
+  const ex = EXAMPLES[idx];
+  // Keep the template pristine; restart() clones from it and shuffles in place.
+  DOTS_TEMPLATE = ex.dots.map(d => ({ ...d }));
+  STEP_PROBS = ex.probs;
+  CLUSTERS = ex.clusters;
+  document.getElementById('n-label').textContent = DOTS_TEMPLATE.length;
+  document.querySelectorAll('.example-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  newEntryRank = -1;     // clear the just-set highlight when switching puzzles
+  restart();
+  renderLeaderboard();
+}
+
+// =========================================================================
+// Boot
+// =========================================================================
+document.querySelectorAll('.example-tab').forEach(tab => {
+  tab.addEventListener('click', e => loadExample(parseInt(e.currentTarget.dataset.idx)));
+});
+document.getElementById('restart').addEventListener('click', restart);
+loadExample(0);
+</script>
+</body>
+</html>
+
