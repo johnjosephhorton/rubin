@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connect the Dots — Chaining Demo</title>
+<style>
+  :root {
+    --bg: #efe7d2;
+    --panel: #faf5e4;
+    --text: #1f1f1f;
+    --muted: #8a8273;
+    --rule: #cfc6ad;
+    --accent: #c14d3e;
+    --good: #2a9d54;
+    --warn: #c79030;
+    --bad: #c0392b;
+    --teal: #0a8a8a;
+    --dot: #1f1f1f;
+    --line-ink: #2a2a2a;
+
+    /* Paper's step-mode palette (matches hierarchical_production_illustration.tex
+       / job_design_visualizer.html: gray for manual, orange for augmented,
+       green for automated). */
+    --man-fill:   #e8eaed;
+    --man-stroke: #9aa0a6;
+    --man-text:   #3f4347;
+    --aug-fill:   #fbdcb1;
+    --aug-stroke: #d28319;
+    --aug-text:   #7a4711;
+    --auto-fill:  #c8ebd1;
+    --auto-stroke:#2f9b5b;
+    --auto-text:  #1e5e36;
+
+    /* Chain color: purple. Used for both the CHAIN button and the dashed
+       outline wrapping multi-step chain blocks. */
+    --chain:        #7e57c2;
+    --chain-soft:   rgba(126, 87, 194, 0.08);
+    --chain-stroke: rgba(126, 87, 194, 0.55);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Iowan Old Style", "Charter", Georgia, serif;
+    min-height: 100vh;
+  }
+  .container { max-width: 920px; margin: 0 auto; padding: 56px 64px 80px; }
+
+  /* Header */
+  header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    border-bottom: 1px solid var(--rule); padding-bottom: 14px;
+  }
+  h1.title { font-size: 42px; font-weight: 600; margin: 0; letter-spacing: -0.5px; }
+  h1.title .dot { color: var(--accent); }
+  .status {
+    display: grid; grid-template-columns: repeat(3, auto);
+    column-gap: 30px; row-gap: 2px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 10px; letter-spacing: 1px;
+    color: var(--muted); text-transform: uppercase;
+    text-align: center;
+  }
+  .status .value {
+    font-size: 22px; color: var(--text); text-transform: none;
+    font-family: "SF Mono", "Menlo", monospace; letter-spacing: 0;
+  }
+
+  /* Description */
+  .description {
+    margin: 36px 0 0;
+  }
+  .description p {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px; line-height: 1.75;
+    margin: 0 0 12px;
+    color: #2a2a2a;
+  }
+  .description p:last-child { margin-bottom: 0; }
+  .description em { font-style: italic; color: #1f1f1f; }
+  .description .accent { color: var(--accent); font-style: normal; }
+
+  /* AI-quality (α) slider — sits above the example tabs. */
+  .settings {
+    display: flex; align-items: center; gap: 14px;
+    margin: 22px 0 0;
+    padding: 10px 14px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+  }
+  .settings label {
+    color: var(--muted); font-size: 10px;
+    letter-spacing: 1px; text-transform: uppercase;
+    flex: 0 0 auto;
+  }
+  .settings .alpha-readout {
+    color: var(--text); font-weight: 600; min-width: 50px;
+  }
+  .settings input[type="range"] {
+    flex: 1 1 auto; accent-color: var(--chain);
+  }
+  .settings.locked { opacity: 0.55; pointer-events: none; }
+
+  /* Example tabs */
+  .example-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin: 28px 0 0;
+    font-family: "SF Mono", "Menlo", monospace;
+  }
+  .example-tab {
+    background: transparent; color: var(--muted);
+    border: 1px solid var(--rule); border-radius: 20px;
+    padding: 6px 14px;
+    font-family: inherit; font-size: 11px; letter-spacing: 0.5px;
+    cursor: pointer;
+  }
+  .example-tab:hover { border-color: var(--text); color: var(--text); }
+  .example-tab.active {
+    background: var(--text); color: var(--bg);
+    border-color: var(--text);
+  }
+
+  /* Puzzle layout */
+  .puzzle {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 36px;
+    margin-top: 20px;
+    align-items: start;
+  }
+  .canvas-col {
+    display: flex; flex-direction: column;
+    gap: 14px;
+  }
+  .canvas-wrap {
+    position: relative;       /* anchor for the overlay */
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 420px;
+  }
+  svg#canvas { display: block; width: 100%; height: auto; max-height: 420px; }
+  /* Floating overlay anchored to the bottom of the canvas — used for the
+     ACCEPT / RETRY review buttons so the player doesn't have to scroll
+     past the figure to act. */
+  .canvas-overlay {
+    position: absolute;
+    bottom: 14px; left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 10px; flex-wrap: wrap;
+    padding: 10px 14px;
+    background: rgba(250, 245, 228, 0.96);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+  }
+  .canvas-overlay.active { display: flex; }
+  /* BEGIN / similar primary action sits right below the canvas so it's
+     visible without scrolling. */
+  .canvas-actions {
+    display: flex; justify-content: center;
+  }
+
+  /* Canvas elements */
+  .cluster-bg { fill: rgba(193, 77, 62, 0.05); }
+  .cluster-bg.sparse { fill: rgba(42, 157, 84, 0.05); }
+  .dot-circle { fill: var(--dot); transition: r 120ms ease, fill 120ms ease; }
+  .dot-circle.current {
+    fill: var(--accent);
+    r: 5;
+  }
+  .dot-circle.clickable { cursor: pointer; }
+  .dot-circle.clickable:hover { fill: var(--accent); r: 5; }
+  .dot-circle.misclick { fill: var(--bad); }
+  @keyframes pulse {
+    0%, 100% { r: 4; }
+    50%      { r: 6; }
+  }
+  .dot-circle.current { animation: pulse 1.4s ease-in-out infinite; }
+  .dot-num {
+    font-family: "SF Mono", monospace; font-size: 11px;
+    fill: var(--text); user-select: none; pointer-events: none;
+  }
+  .drawn-line { stroke-width: 1.8; fill: none; }
+  .drawn-line.pending  { stroke: var(--line-ink); }
+  .drawn-line.manual   { stroke: var(--line-ink); }
+  .drawn-line.correct  { stroke: var(--good); }
+  .drawn-line.wrong    { stroke: var(--bad); stroke-dasharray: 4 3; }
+
+  /* Step list */
+  .step-list { font-family: "SF Mono", "Menlo", monospace; font-size: 12px; }
+  .step-row {
+    display: grid; grid-template-columns: 12px 50px 1fr 135px;
+    align-items: center; padding: 7px 4px; gap: 10px;
+    border-radius: 3px;
+  }
+  .step-row .bullet { color: var(--muted); }
+  .step-row .lbl { color: var(--muted); font-size: 10px; letter-spacing: 0.5px; }
+  .step-row .name { font-weight: 600; letter-spacing: 0.3px; }
+  .step-row .name .arrow { color: var(--muted); font-weight: 400; padding: 0 4px; }
+  .step-row.active { background: rgba(193, 77, 62, 0.08); }
+  .step-row.done   { opacity: 0.45; }
+
+  .mode-toggle {
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 5px 0;
+    font-family: inherit; font-size: 10px; letter-spacing: 0.6px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--text);
+    transition: background 100ms, border-color 100ms, color 100ms;
+  }
+  .mode-toggle:hover { filter: brightness(0.96); }
+  .mode-toggle.manual {
+    background: var(--man-fill);
+    border-color: var(--man-stroke);
+    color: var(--man-text);
+  }
+  .mode-toggle.augmented {
+    background: var(--aug-fill);
+    border-color: var(--aug-stroke);
+    color: var(--aug-text);
+  }
+  .mode-toggle.automated {
+    background: var(--auto-fill);
+    border-color: var(--auto-stroke);
+    color: var(--auto-text);
+  }
+  .mode-toggle .prob { margin-left: 4px; opacity: 0.85; }
+  .step-row.active.execution .mode-toggle,
+  .step-row.done .mode-toggle { cursor: default; opacity: 0.85; }
+  .step-row.execution .mode-toggle { pointer-events: none; }
+
+  .chain-row {
+    display: grid; grid-template-columns: 12px 50px 1fr 135px;
+    align-items: center; padding: 0 4px; gap: 10px; min-height: 26px;
+  }
+  .chain-row .arrow-down { color: var(--muted); font-size: 12px; opacity: 0.7; }
+  .chain-row .gap { color: var(--muted); font-size: 11px; opacity: 0.4; }
+  .chain-btn {
+    border: 1px dashed #b8b09a;
+    background: transparent; color: var(--muted);
+    font-family: inherit; font-size: 9px; letter-spacing: 1px;
+    padding: 4px 6px; border-radius: 3px; cursor: pointer;
+    text-align: center;
+  }
+  .chain-btn:hover { border-color: var(--chain); color: var(--chain); }
+  .chain-row.chained .chain-btn {
+    background: var(--chain); color: white;
+    border-style: solid; border-color: var(--chain);
+  }
+  .chain-row.disabled .chain-btn,
+  .chain-row.locked .chain-btn { cursor: default; opacity: 0.35; }
+  .chain-row.disabled .chain-btn:hover { border-color: #b8b09a; color: var(--muted); }
+
+  /* Visual grouping for multi-step AI chain blocks: dashed purple frame
+     around the steps + chain-buttons that belong to one block. */
+  .chain-group {
+    border: 1px dashed var(--chain-stroke);
+    background: var(--chain-soft);
+    border-radius: 6px;
+    padding: 2px 4px 4px;
+    margin: 6px 0;
+  }
+  .chain-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 3px 6px 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 9px; letter-spacing: 0.8px;
+    color: var(--chain); text-transform: uppercase;
+  }
+  .chain-meta .val {
+    font-size: 12px; font-weight: 600; letter-spacing: 0;
+  }
+
+  /* Action panel (instruction + buttons) */
+  .action-panel {
+    margin-top: 24px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    min-height: 44px;
+  }
+  .instruction {
+    font-family: "SF Mono", monospace; font-size: 13px;
+    color: var(--text); flex: 1; min-width: 200px;
+  }
+  .instruction.muted { color: var(--muted); }
+  .instruction .em { color: var(--accent); font-style: normal; }
+  .btn-primary {
+    background: #1f1f1f; color: white;
+    font-family: "SF Mono", monospace; font-size: 12px;
+    letter-spacing: 1.5px;
+    padding: 12px 22px;
+    border: none; border-radius: 2px;
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: #000; }
+  .btn-primary:disabled { opacity: 0.4; cursor: default; }
+  .btn-sec {
+    background: transparent; color: var(--text);
+    border: 1px solid #b8b09a;
+    font-family: "SF Mono", monospace; font-size: 11px;
+    letter-spacing: 0.8px; padding: 9px 14px;
+    border-radius: 2px; cursor: pointer;
+  }
+  .btn-sec:hover { border-color: var(--text); background: rgba(0,0,0,0.03); }
+  .btn-sec.accept { color: var(--good); border-color: #a8c8b0; }
+  .btn-sec.accept:hover { border-color: var(--good); background: rgba(42,157,84,0.05); }
+  .btn-sec.retry { color: var(--accent); border-color: #d8b0a8; }
+  .btn-sec.retry:hover { border-color: var(--accent); background: rgba(193,77,62,0.05); }
+
+  /* Leaderboard */
+  .leaderboard {
+    margin-top: 24px;
+    padding: 14px 20px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+  }
+  .leaderboard h3 {
+    font-family: inherit; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--muted);
+    margin: 0 0 8px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .leaderboard h3 .sub { font-size: 9px; color: var(--muted); opacity: 0.7; }
+  .leaderboard ol {
+    list-style: none; padding: 0; margin: 0;
+    font-size: 12px;
+  }
+  .leaderboard li {
+    display: grid;
+    grid-template-columns: 22px 1fr 60px 22px 60px;
+    gap: 12px;
+    padding: 5px 0;
+    align-items: baseline;
+    border-bottom: 1px dotted rgba(0,0,0,0.05);
+  }
+  .leaderboard li:last-child { border-bottom: none; }
+  .leaderboard li .rank { color: var(--muted); font-size: 10px; letter-spacing: 0.5px; }
+  .leaderboard li .when { color: var(--muted); font-size: 10px; }
+  .leaderboard li .run-name {
+    color: var(--text); font-size: 11px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .leaderboard li.empty-slot .run-name { color: var(--muted); }
+  .leaderboard li .progress { color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+  .leaderboard li .result { text-align: center; font-weight: 600; }
+  .leaderboard li .result.good { color: var(--good); }
+  .leaderboard li .result.bad  { color: var(--bad); }
+  .leaderboard li .time { color: var(--text); text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .leaderboard li.empty-slot { opacity: 0.35; }
+  .leaderboard li.best .result,
+  .leaderboard li.best .time { color: var(--good); }
+  .leaderboard li.new-entry { background: rgba(126, 87, 194, 0.10); border-radius: 3px; padding-left: 6px; padding-right: 6px; margin: 0 -6px; }
+
+  /* Guess affordance (always visible during play) and the multiple-choice
+     answer panel that appears when GUESS is clicked. */
+  .guess-panel {
+    margin-top: 16px;
+    display: none; justify-content: center;
+  }
+  .btn-guess {
+    background: var(--chain); color: white;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px; letter-spacing: 1.5px;
+    padding: 12px 28px;
+    border: none; border-radius: 2px;
+    cursor: pointer;
+  }
+  .btn-guess:hover { filter: brightness(1.08); }
+
+  .answer-panel {
+    margin-top: 22px;
+    padding: 20px 22px;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .answer-panel h3 {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 1.2px; color: var(--muted);
+    margin: 0 0 14px;
+  }
+  .answer-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  .answer-options button {
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .answer-options button:hover {
+    border-color: var(--chain);
+    color: var(--chain);
+  }
+
+  /* Name-this-run editor inside the final panel */
+  .name-row {
+    display: flex; align-items: center; gap: 12px;
+    margin: 18px 0 0;
+    font-family: "SF Mono", "Menlo", monospace;
+  }
+  .name-row label {
+    color: var(--muted); font-size: 10px;
+    letter-spacing: 1px; text-transform: uppercase;
+    flex: 0 0 auto;
+  }
+  .name-row input {
+    flex: 1 1 auto;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 7px 10px;
+    font-family: inherit; font-size: 12px;
+    color: var(--text);
+  }
+  .name-row input:focus { outline: none; border-color: var(--chain); }
+
+  /* Final */
+  .final-panel {
+    margin-top: 28px; padding: 22px 24px;
+    background: var(--panel); border: 1px solid var(--rule);
+    border-radius: 4px;
+  }
+  .final-panel h3 {
+    font-family: "SF Mono", monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted);
+    margin: 0 0 12px;
+  }
+  .final-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    font-family: "SF Mono", monospace; font-size: 12px;
+  }
+  .final-grid .cell .lbl {
+    color: var(--muted); font-size: 10px; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .final-grid .cell .v {
+    font-size: 24px; color: var(--text); display: block; margin-top: 4px;
+  }
+
+  @media (max-width: 760px) {
+    .container { padding: 32px 24px; }
+    .puzzle { grid-template-columns: 1fr; }
+    h1.title { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1 class="title">Connect the dots<span class="dot">.</span></h1>
+    <div class="status">
+      <span>Round</span><span>Guess</span><span>Time</span>
+      <span class="value" id="round">1</span>
+      <span class="value" id="score">—</span>
+      <span class="value" id="time">0.0s</span>
+    </div>
+  </header>
+
+  <div class="description">
+    <p>Connect the numbered dots (1 to <em id="n-label">10</em>) to reveal a
+      picture, then <em style="color:var(--chain)">guess what it is</em>.</p>
+    <p>For each step you can connect the dots
+      <em style="color:var(--man-text)">manually</em> (click the next dot
+      yourself), or with the help of <em>AI</em> (the agent draws the line for
+      you). AI can <span class="accent">chain</span> consecutive steps and draw
+      all their lines in a single attempt, but the chain's overall success
+      probability is the product of each constituent step's individual success.</p>
+    <p>The clock starts on <em>BEGIN</em> and stops when you commit a guess.
+      Faster correct guesses win. To collect all points, you need to connect All
+    dots correctly and guess the right.</p>
+  </div>
+
+  <div class="settings" id="settings">
+    <label for="alpha-slider">AI quality (α)</label>
+    <input type="range" id="alpha-slider" min="0" max="100" step="1" value="50" />
+    <span class="alpha-readout" id="alpha-readout">0.50</span>
+  </div>
+
+  <div class="example-tabs" id="example-tabs">
+    <!-- Tab labels are generic "Puzzle N" so the player has to guess what
+         the figure actually is. The underlying answer (Star / Fish / etc.)
+         is still set in each example's `answer` field. -->
+    <button class="example-tab active" data-idx="0">Puzzle 1</button>
+    <button class="example-tab" data-idx="1">Puzzle 2</button>
+    <button class="example-tab" data-idx="2">Puzzle 3</button>
+    <button class="example-tab" data-idx="3">Puzzle 4</button>
+    <button class="example-tab" data-idx="4">Puzzle 5</button>
+    <button class="example-tab" data-idx="5">Puzzle 6</button>
+  </div>
+
+  <div class="puzzle">
+    <div class="canvas-col">
+      <div class="canvas-wrap">
+        <svg id="canvas" viewBox="0 0 500 400"></svg>
+        <!-- Floating accept/retry buttons appear here during AI review -->
+        <div class="canvas-overlay" id="canvas-overlay"></div>
+      </div>
+      <!-- Primary action right below the canvas. BEGIN during planning;
+           RESET takes its place once a round starts so the player can
+           abort and tweak the configuration without losing it. -->
+      <div class="canvas-actions" id="canvas-actions">
+        <button class="btn-primary" id="begin">BEGIN →</button>
+        <button class="btn-primary" id="reset" style="display:none">↻ RESET</button>
+      </div>
+      <!-- Guess affordance + multiple-choice answer panel live RIGHT under
+           the figure so the player can see the picture and commit a guess
+           without scrolling. -->
+      <div class="guess-panel" id="guess-panel">
+        <button class="btn-guess" id="btn-guess">GUESS WHAT THIS IS →</button>
+      </div>
+      <div class="answer-panel" id="answer-panel" style="display:none">
+        <h3>What do you see?</h3>
+        <div class="answer-options" id="answer-options"></div>
+      </div>
+    </div>
+    <div class="step-list" id="step-list"></div>
+  </div>
+
+  <div class="action-panel" id="action-panel">
+    <div class="instruction muted" id="instruction">
+      Cycle each step's mode (Manual / AI-augmented / AI-automated), then click BEGIN.
+    </div>
+  </div>
+
+  <div class="leaderboard" id="leaderboard">
+    <h3><span>Top 5 · this puzzle</span><span class="sub">correct guesses first, fastest wins</span></h3>
+    <ol id="leaderboard-list"></ol>
+  </div>
+
+  <div class="final-panel" id="final-panel" style="display:none">
+    <h3>Round complete</h3>
+    <div class="final-grid">
+      <div class="cell"><span class="lbl">Your guess</span><span class="v" id="f-correct">—</span></div>
+      <div class="cell"><span class="lbl">Total time</span><span class="v" id="f-time">—</span></div>
+      <div class="cell"><span class="lbl">Dots drawn</span><span class="v" id="f-blocks">—</span></div>
+    </div>
+    <div class="name-row" id="name-row" style="display:none">
+      <label for="run-name">Name this run</label>
+      <input type="text" id="run-name" maxlength="80" autocomplete="off" />
+    </div>
+    <div class="action-panel" style="margin-top:18px">
+      <button class="btn-primary" id="restart">PLAY AGAIN →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// =========================================================================
+// Puzzle examples. Each example defines its dot positions, per-step
+// agent success rates, and optional visual cluster groupings (drawn as
+// faint background tints). Rates are stipulated; geometry just hints
+// at *why* a step is hard.
+// =========================================================================
+const EXAMPLES = [
+  {
+    // STAR — six-pointed star outline (12 vertices: 6 outer tips + 6 inner
+    // valleys). Path 1→…→12 alternates tip → valley → tip → valley around
+    // the perimeter; difficulty is uniform across the whole shape (no
+    // clusters), so the tradeoff at every step is the same.
+    id: 'star',
+    name: 'Star',
+    answer: 'Star',
+    dots: [
+      { id: 1,  x: 250, y:  70 },   // T1 (top)
+      { id: 2,  x: 282, y: 144 },   // V1 (upper-right inner)
+      { id: 3,  x: 363, y: 135 },   // T2 (upper-right outer)
+      { id: 4,  x: 315, y: 200 },   // V2 (right inner)
+      { id: 5,  x: 363, y: 265 },   // T3 (lower-right outer)
+      { id: 6,  x: 282, y: 256 },   // V3 (lower-right inner)
+      { id: 7,  x: 250, y: 330 },   // T4 (bottom)
+      { id: 8,  x: 218, y: 256 },   // V4 (lower-left inner)
+      { id: 9,  x: 137, y: 265 },   // T5 (lower-left outer)
+      { id:10,  x: 185, y: 200 },   // V5 (left inner)
+      { id:11,  x: 137, y: 135 },   // T6 (upper-left outer)
+      { id:12,  x: 218, y: 144 },   // V6 (upper-left inner)
+    ],
+    // Uniform difficulty 1 everywhere — every step shares the same AI
+    // success probability (α^1 = α). 12 values for the closed 12-dot shape.
+    difficulties: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    clusters: [],
+  },
+  {
+    // FISH — detailed 20-dot silhouette: dense face details (eye / nostril /
+    // mouth / gill, all packed on the right) → chin transition → sparse body
+    // outline tracing belly, ventral fin, tail fork, dorsal fin, back to head.
+    id: 'fish',
+    name: 'Fish',
+    answer: 'Fish',
+    dots: [
+      // Dense face cluster (right side, near head)
+      { id: 1,  x: 385, y: 175 },   // eye
+      { id: 2,  x: 395, y: 195 },   // nostril
+      { id: 3,  x: 398, y: 215 },   // mouth corner
+      { id: 4,  x: 368, y: 215 },   // gill flap
+      // Sparse body outline (15 dots tracing the rest of the silhouette)
+      { id: 5,  x: 340, y: 245 },   // chin / under-jaw (transition)
+      { id: 6,  x: 305, y: 250 },   // throat
+      { id: 7,  x: 260, y: 270 },   // belly forward of ventral fin
+      { id: 8,  x: 235, y: 300 },   // ventral fin tip (small fin under belly)
+      { id: 9,  x: 215, y: 270 },   // ventral fin back, back on body line
+      { id:10,  x: 180, y: 270 },   // belly midpoint
+      { id:11,  x: 140, y: 255 },   // where belly meets tail
+      { id:12,  x:  95, y: 285 },   // tail fork bottom tip
+      { id:13,  x: 110, y: 240 },   // tail fork notch (middle)
+      { id:14,  x:  95, y: 175 },   // tail fork top tip
+      { id:15,  x: 140, y: 200 },   // where top of body meets tail
+      { id:16,  x: 185, y: 175 },   // top of back, mid
+      { id:17,  x: 210, y: 175 },   // base of dorsal fin (back side)
+      { id:18,  x: 235, y: 145 },   // tip of dorsal fin
+      { id:19,  x: 260, y: 175 },   // base of dorsal fin (front side)
+      { id:20,  x: 310, y: 175 },   // top of head, close to face
+    ],
+    // Uniform difficulty 1 everywhere (20 values, closed 20-dot shape).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [
+      { type: 'dense',  dotIds: [1, 2, 3, 4] },
+      { type: 'sparse', dotIds: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] },
+    ],
+  },
+  {
+    // BUTTERFLY — slim version with an abdomen + Π-shaped antennae.
+    // Path: left wing (1-10) → abdomen left column up (10→11→12) →
+    // top bridge (12→13) → abdomen right column down (13→14) → down-
+    // right to right wing inner-bottom (14→15) → right wing in reverse
+    // (15→24) → up to right antenna tip → down to right antenna base
+    // → across bridge to left antenna base → up to left antenna tip →
+    // close down-left to the left-wing inner-top.
+    id: 'butterfly',
+    name: 'Butterfly',
+    answer: 'Butterfly',
+    dots: [
+      // Left wing (10 dots, unchanged)
+      { id: 1,  x: 200, y: 130 },   // inner-top
+      { id: 2,  x: 160, y:  90 },   // outer-top curve
+      { id: 3,  x: 115, y:  70 },   // outer-top corner
+      { id: 4,  x:  75, y:  95 },   // upper bulge
+      { id: 5,  x:  45, y: 140 },   // outer upper
+      { id: 6,  x:  25, y: 200 },   // outer tip (leftmost)
+      { id: 7,  x:  45, y: 260 },   // outer lower
+      { id: 8,  x:  75, y: 300 },   // lower bulge
+      { id: 9,  x: 115, y: 320 },   // outer-bottom corner
+      { id:10,  x: 200, y: 290 },   // inner-bottom
+
+      // Abdomen — two columns 15px apart, ~70px tall. Path goes UP the
+      // left column, RIGHT across the top, DOWN the right column.
+      { id:11,  x: 245, y: 290 },   // abdomen left-bottom
+      { id:12,  x: 245, y: 150 },   // abdomen left-top (UP)
+      { id:13,  x: 260, y: 150 },   // abdomen right-top (RIGHT)
+      { id:14,  x: 260, y: 290 },   // abdomen right-bottom (DOWN)
+
+      // Right wing (10 dots, traced reverse: inner-bottom → outer edge
+      // → inner-top)
+      { id:15,  x: 300, y: 290 },   // inner-bottom (DOWN-right from 14)
+      { id:16,  x: 385, y: 320 },   // outer-bottom corner
+      { id:17,  x: 425, y: 300 },   // lower bulge
+      { id:18,  x: 455, y: 260 },   // outer lower
+      { id:19,  x: 475, y: 200 },   // outer tip (rightmost)
+      { id:20,  x: 455, y: 140 },   // outer upper
+      { id:21,  x: 425, y:  95 },   // upper bulge
+      { id:22,  x: 385, y:  70 },   // outer-top corner
+      { id:23,  x: 340, y:  90 },   // outer-top curve
+      { id:24,  x: 300, y: 130 },   // inner-top
+
+      // Antennae — Π-shape: two parallel rods with a base bridge at y=125.
+      { id:25,  x: 282, y:  50 },   // right antenna tip
+      { id:26,  x: 280, y: 125 },   // right antenna base
+      { id:27,  x: 230, y: 125 },   // left antenna base (bridge across)
+      { id:28,  x: 228, y:  50 },   // left antenna tip
+    ],
+    // Uniform difficulty 1 (28 values, closed 28-dot shape — closing
+    // step 28→1 goes from the left antenna tip down-left to the
+    // left-wing inner-top).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [
+      { type: 'sparse', dotIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
+      { type: 'dense',  dotIds: [11, 12, 13, 14] },
+      { type: 'sparse', dotIds: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24] },
+      { type: 'dense',  dotIds: [25, 26, 27, 28] },
+    ],
+  },
+  {
+    // COW — detailed side-view silhouette, head on the left, body extending
+    // right. ~30 dots tracing nose → face/horns/ear (dense face cluster) →
+    // back of head → spine → tail → back leg → belly → front leg → throat.
+    id: 'donkey',
+    name: 'Donkey',
+    answer: 'Donkey',
+    dots: [
+      // Dense head cluster (12 dots: muzzle, horns, ear)
+      { id: 1,  x:  95, y: 215 },   // nose tip (front of muzzle)
+      { id: 2,  x: 105, y: 185 },   // top of muzzle
+      { id: 3,  x: 135, y:  95 },   // base of left horn
+      { id: 4,  x: 125, y:  65 },   // top of left horn
+      { id: 5,  x: 145, y:  85 },   // inside base of left horn
+      { id: 6,  x: 160, y:  80 },   // forehead (between horns)
+      { id: 7,  x: 175, y:  85 },   // inside base of right horn
+      { id: 8,  x: 185, y:  65 },   // top of right horn
+      { id: 9,  x: 175, y:  95 },   // base of right horn
+      { id:10,  x: 210, y: 125 },   // right ear tip
+      { id:11,  x: 200, y: 155 },   // right ear base (back)
+      { id:12,  x: 210, y: 185 },   // top of neck
+
+      // Sparse body outline (18 dots: back → tail → legs → belly → chest)
+      { id:13,  x: 250, y: 175 },   // withers / shoulders
+      { id:14,  x: 315, y: 175 },   // middle of back
+      { id:15,  x: 370, y: 185 },   // hip top
+      { id:16,  x: 395, y: 195 },   // tail base
+      { id:17,  x: 450, y: 215 },   // tail tip
+      { id:18,  x: 405, y: 250 },   // tail tassle end
+      { id:19,  x: 400, y: 275 },   // rump
+      { id:20,  x: 395, y: 295 },   // back-leg back top
+      { id:21,  x: 395, y: 365 },   // back-leg back foot
+      { id:22,  x: 375, y: 365 },   // back-leg front foot
+      { id:23,  x: 370, y: 290 },   // back-leg front top
+      { id:24,  x: 310, y: 305 },   // belly back
+      { id:25,  x: 245, y: 305 },   // belly front
+      { id:26,  x: 225, y: 285 },   // front-leg back top
+      { id:27,  x: 225, y: 365 },   // front-leg back foot
+      { id:28,  x: 205, y: 365 },   // front-leg front foot
+      { id:29,  x: 200, y: 280 },   // front-leg front top / chest
+      { id:30,  x: 175, y: 240 },   // throat / under-jaw
+    ],
+    // Uniform difficulty 1 (30 values, closed 30-dot shape).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [
+      { type: 'dense',  dotIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
+      { type: 'sparse', dotIds: [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] },
+    ],
+  },
+  /* Elephant — commented out for now (revisit the shape). Re-enable by
+     removing this block comment AND restoring the tab in the HTML.
+  {
+    // ELEPHANT — redesign based on a cartoon reference. Head + giant
+    // floppy ear take roughly the upper-left half of the canvas. Trunk
+    // hangs down from the front of the face with a clear upward curl at
+    // the tip. Body is smaller, sitting behind the head, with four short
+    // chunky legs underneath and a tail at the rear.
+    id: 'elephant',
+    name: 'Elephant',
+    answer: 'Elephant',
+    dots: [
+      // Head + big floppy ear (8 dots wrapping the ear)
+      { id: 1,  x: 260, y: 100 },   // top of head, behind ear
+      { id: 2,  x: 220, y:  70 },   // ear top front (where ear meets head)
+      { id: 3,  x: 170, y:  55 },   // ear top tip (highest)
+      { id: 4,  x: 110, y:  75 },   // ear outer-top corner
+      { id: 5,  x:  75, y: 140 },   // ear outer middle (far left edge)
+      { id: 6,  x:  90, y: 210 },   // ear outer bottom (curving in)
+      { id: 7,  x: 140, y: 225 },   // ear bottom (where it meets head)
+      { id: 8,  x: 170, y: 245 },   // cheek under ear
+      // Trunk hanging down with a tip that curls up toward the body
+      { id: 9,  x: 150, y: 270 },   // trunk top base
+      { id:10,  x: 130, y: 295 },   // trunk going down 1
+      { id:11,  x: 115, y: 325 },   // trunk going down 2
+      { id:12,  x: 115, y: 360 },   // trunk near tip (bottoming out)
+      { id:13,  x: 145, y: 375 },   // trunk tip outer (curl bottom)
+      { id:14,  x: 175, y: 360 },   // trunk tip curling up
+      { id:15,  x: 185, y: 330 },   // trunk inner curl going up-right
+      { id:16,  x: 200, y: 305 },   // chin / mouth above trunk base
+      // Body + legs
+      { id:17,  x: 220, y: 325 },   // chest going down to front leg
+      { id:18,  x: 225, y: 380 },   // front foot front
+      { id:19,  x: 255, y: 380 },   // front foot back
+      { id:20,  x: 260, y: 325 },   // back of front leg
+      { id:21,  x: 310, y: 330 },   // belly mid
+      { id:22,  x: 345, y: 380 },   // back leg front foot
+      { id:23,  x: 375, y: 380 },   // back foot back
+      { id:24,  x: 380, y: 325 },   // back of back leg
+      // Tail and back rising up to head
+      { id:25,  x: 415, y: 300 },   // rump
+      { id:26,  x: 430, y: 260 },   // tail tip
+      { id:27,  x: 410, y: 220 },   // tail base
+      { id:28,  x: 340, y: 175 },   // back top
+      { id:29,  x: 290, y: 130 },   // upper back rising up to head
+    ],
+    // Uniform difficulty 1 (29 values, closed 29-dot shape).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [
+      { type: 'dense',  dotIds: [1, 2, 3, 4, 5, 6, 7, 8] },
+      { type: 'sparse', dotIds: [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29] },
+    ],
+  },
+  */
+  {
+    // HEDGEHOG — side view facing left. Pointed nose, small eye, round
+    // body with a zigzag of spikes along the top, two visible feet.
+    id: 'hedgehog',
+    name: 'Hedgehog',
+    answer: 'Hedgehog',
+    dots: [
+      // Face (dense)
+      { id: 1,  x:  75, y: 230 },   // nose tip
+      { id: 2,  x:  90, y: 215 },   // top of nose
+      { id: 3,  x: 115, y: 200 },   // eye / forehead
+      // Spiky back (sparse, alternating tip / valley)
+      { id: 4,  x: 140, y: 195 },   // base of spikes (front)
+      { id: 5,  x: 155, y: 165 },   // spike 1 tip
+      { id: 6,  x: 180, y: 195 },   // valley 1
+      { id: 7,  x: 210, y: 145 },   // spike 2 tip
+      { id: 8,  x: 240, y: 195 },   // valley 2
+      { id: 9,  x: 270, y: 130 },   // spike 3 tip
+      { id:10,  x: 300, y: 195 },   // valley 3
+      { id:11,  x: 330, y: 140 },   // spike 4 tip
+      { id:12,  x: 360, y: 195 },   // valley 4
+      { id:13,  x: 390, y: 165 },   // spike 5 tip (back)
+      // Back / rump
+      { id:14,  x: 415, y: 215 },   // back rump going down
+      { id:15,  x: 425, y: 245 },   // rump back
+      { id:16,  x: 405, y: 265 },   // rump bottom
+      { id:17,  x: 365, y: 280 },   // belly back (above back foot)
+      // Back foot — two toes (path: top-right → toe1 → notch → toe2 → top-left)
+      { id:18,  x: 340, y: 290 },   // back foot top-right
+      { id:19,  x: 340, y: 320 },   // back foot toe 1 tip
+      { id:20,  x: 320, y: 300 },   // notch between back-foot toes
+      { id:21,  x: 300, y: 320 },   // back foot toe 2 tip
+      { id:22,  x: 300, y: 290 },   // back foot top-left
+      // Belly mid (between the two feet)
+      { id:23,  x: 235, y: 290 },
+      // Front foot — two toes (same pattern)
+      { id:24,  x: 190, y: 290 },   // front foot top-right
+      { id:25,  x: 190, y: 320 },   // front foot toe 1 tip
+      { id:26,  x: 170, y: 300 },   // notch between front-foot toes
+      { id:27,  x: 150, y: 320 },   // front foot toe 2 tip
+      { id:28,  x: 150, y: 290 },   // front foot top-left
+      // Belly forward back to the face
+      { id:29,  x: 110, y: 275 },   // belly forward
+      { id:30,  x:  90, y: 255 },   // chin / under nose
+    ],
+    // Uniform difficulty 1 (30 values, closed 30-dot shape).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [
+      { type: 'dense',  dotIds: [1, 2, 3] },
+      { type: 'sparse', dotIds: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30] },
+    ],
+  },
+  {
+    // PIG — side view facing left. Round snout sticking out at the front
+    // (dot 1 = snout tip), small triangular ear on top of head, chubby
+    // body, 4 short legs, and an iconic curly tail at the rear.
+    id: 'dog',
+    name: 'Dog',
+    answer: 'Dog',
+    dots: [
+      // Snout + head + ear (dense, 6 dots)
+      { id: 1,  x:  95, y: 200 },   // snout tip (front)
+      { id: 2,  x: 110, y: 180 },   // snout top
+      { id: 3,  x: 140, y: 165 },   // forehead / above snout
+      { id: 4,  x: 175, y: 130 },   // top of head
+      { id: 5,  x: 165, y: 100 },   // ear tip (small triangle up)
+      { id: 6,  x: 200, y: 135 },   // ear back / top of neck
+      // Body, tail, legs (sparse)
+      { id: 7,  x: 225, y: 155 },   // top of neck transitioning to back
+      { id: 8,  x: 295, y: 165 },   // top of back
+      { id: 9,  x: 345, y: 175 },   // mid-back
+      { id:10,  x: 380, y: 185 },   // back near tail
+      { id:11,  x: 400, y: 185 },   // tail base
+      { id:12,  x: 435, y: 180 },   // tail curl outer
+      { id:13,  x: 425, y: 195 },   // tail curl loop bottom
+      { id:14,  x: 405, y: 205 },   // tail tip (closing curl)
+      { id:15,  x: 390, y: 225 },   // rump back
+      { id:16,  x: 385, y: 275 },   // back leg top
+      { id:17,  x: 390, y: 365 },   // back foot front
+      { id:18,  x: 360, y: 365 },   // back foot back
+      { id:19,  x: 355, y: 285 },   // back of back leg
+      { id:20,  x: 295, y: 310 },   // belly mid
+      { id:21,  x: 240, y: 285 },   // front leg top
+      { id:22,  x: 245, y: 365 },   // front foot front
+      { id:23,  x: 215, y: 365 },   // front foot back
+      { id:24,  x: 215, y: 290 },   // back of front leg
+      { id:25,  x: 195, y: 255 },   // chest
+      { id:26,  x: 180, y: 220 },   // throat / under jaw
+      { id:27,  x: 135, y: 215 },   // under snout (back to face)
+    ],
+    // Uniform difficulty 1 (27 values, closed 27-dot shape).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [
+      { type: 'dense',  dotIds: [1, 2, 3, 4, 5, 6] },
+      { type: 'sparse', dotIds: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27] },
+    ],
+  },
+  /* Duck + Soccer Ball commented out for now. Re-enable by removing this
+     block comment and restoring the tabs in the HTML.
+  {
+    // DUCK — side view facing right. Round body with a small round head
+    // on top, pointed bill sticking out on the right, single visible
+    // webbed foot, short tail at the back.
+    id: 'duck',
+    name: 'Duck',
+    answer: 'Duck',
+    dots: [
+      // Head + bill (dense, 6 dots)
+      { id: 1,  x: 290, y: 140 },   // top of head
+      { id: 2,  x: 300, y: 155 },   // eye / forehead
+      { id: 3,  x: 335, y: 170 },   // bill top
+      { id: 4,  x: 365, y: 185 },   // bill tip (pointed)
+      { id: 5,  x: 335, y: 200 },   // bill bottom edge
+      { id: 6,  x: 305, y: 195 },   // mouth / chin under bill
+      // Body, foot, tail (sparse)
+      { id: 7,  x: 280, y: 220 },   // neck back
+      { id: 8,  x: 260, y: 250 },   // chest going down
+      { id: 9,  x: 240, y: 290 },   // belly forward
+      { id:10,  x: 245, y: 325 },   // leg top
+      { id:11,  x: 265, y: 365 },   // foot toe (front, webbed)
+      { id:12,  x: 240, y: 370 },   // foot mid (webbing)
+      { id:13,  x: 215, y: 365 },   // foot toe (back, webbed)
+      { id:14,  x: 215, y: 320 },   // back of leg
+      { id:15,  x: 185, y: 305 },   // belly back
+      { id:16,  x: 140, y: 290 },   // tail back
+      { id:17,  x: 105, y: 275 },   // tail tip
+      { id:18,  x: 125, y: 240 },   // rump / back lower
+      { id:19,  x: 190, y: 195 },   // back upper
+      { id:20,  x: 250, y: 160 },   // back of head / neck top
+    ],
+    // Uniform difficulty 1 (20 values, closed 20-dot shape).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [
+      { type: 'dense',  dotIds: [1, 2, 3, 4, 5, 6] },
+      { type: 'sparse', dotIds: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] },
+    ],
+  },
+  {
+    // SOCCER BALL — round outline with 4 patch indentations. 16 outer dots
+    // trace the periphery; at four evenly-spaced points the path dips
+    // inward to a single "patch center" dot, then back out, creating a
+    // triangular notch suggestive of a hexagonal panel.
+    id: 'soccer',
+    name: 'Soccer Ball',
+    answer: 'Soccer Ball',
+    dots: [
+      // Path: outer x2 → inner (dip) → outer x3 → inner → outer x3 → inner
+      // → outer x3 → inner → outer x3 (then closes back to dot 1).
+      { id: 1,  x: 390, y: 200 },   // outer  0° (right)
+      { id: 2,  x: 379, y: 146 },   // outer 22.5°
+      { id: 3,  x: 349, y: 101 },   // outer 45°
+      { id: 4,  x: 310, y: 130 },   // INNER (patch 1, upper-right)
+      { id: 5,  x: 304, y:  71 },   // outer 67.5°
+      { id: 6,  x: 250, y:  60 },   // outer 90° (top)
+      { id: 7,  x: 196, y:  71 },   // outer 112.5°
+      { id: 8,  x: 190, y: 130 },   // INNER (patch 2, upper-left)
+      { id: 9,  x: 151, y: 101 },   // outer 135°
+      { id:10,  x: 121, y: 146 },   // outer 157.5°
+      { id:11,  x: 110, y: 200 },   // outer 180° (left)
+      { id:12,  x: 175, y: 235 },   // INNER (patch 3, lower-left)
+      { id:13,  x: 121, y: 254 },   // outer 202.5°
+      { id:14,  x: 151, y: 299 },   // outer 225°
+      { id:15,  x: 196, y: 329 },   // outer 247.5°
+      { id:16,  x: 230, y: 275 },   // INNER (patch 4, lower-right)
+      { id:17,  x: 250, y: 340 },   // outer 270° (bottom)
+      { id:18,  x: 304, y: 329 },   // outer 292.5°
+      { id:19,  x: 349, y: 299 },   // outer 315°
+      { id:20,  x: 379, y: 254 },   // outer 337.5°
+    ],
+    // Uniform difficulty 1 everywhere (20 values, closed 20-dot shape).
+    difficulties: [
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    ],
+    clusters: [],
+  },
+  */
+];
+
+// Visual pacing for agent line-draw animation (per line; currently unused —
+// AI execution is instant — kept in case we want a tunable knob back).
+const AGENT_DRAW_MS = 400;
+
+// Top-N leaderboard, persisted per-example in localStorage. Key bumped to
+// _v3 when the schema gained per-entry dots-drawn progress + the displayed
+// guess answer was hidden — older v2 entries (without progress) are ignored.
+const LEADERBOARD_KEY = 'chain_demo_top_v3_';
+const TOP_N = 5;
+let newEntryRank = -1;     // highlight the just-set row briefly
+
+// Multiple-choice options shown when the player clicks GUESS. Includes
+// every real answer plus a few plausible distractors so the choice isn't
+// trivial. Sorted alphabetically.
+const ANSWER_OPTIONS = [
+  'Bird', 'Butterfly', 'Dog', 'Donkey', 'Fish',
+  'Hedgehog', 'Horse', 'Sheep', 'Star',
+];
+
+// AI quality model: each step has an integer DIFFICULTY (≥1); the agent's
+// success probability for that step is interpolated between P_FLOOR (the
+// "random AI" baseline) and 1 by ALPHA ** difficulty:
+//   P = P_FLOOR + (1 - P_FLOOR) * ALPHA ** difficulty
+// So at α = 0 every step succeeds with rate P_FLOOR (default 0.5 = coin
+// flip — even a useless AI is no worse than chance), and at α = 1 every
+// step succeeds with rate 1. ALPHA is the single global knob; difficulties
+// are per-step puzzle properties. STEP_PROBS is derived — never set directly.
+const P_FLOOR = 0.5;
+let ALPHA = 0.5;     // fixed for now; slider hidden in HTML
+let STEP_DIFFICULTIES = [];
+let DOTS, STEP_PROBS, CLUSTERS;
+let DOTS_TEMPLATE;          // pristine positions; shuffled into DOTS each round
+let currentExampleIdx = 0;
+
+function recomputeProbs() {
+  STEP_PROBS = STEP_DIFFICULTIES.map(d => P_FLOOR + (1 - P_FLOOR) * Math.pow(ALPHA, d));
+}
+
+const state = {
+  phase: 'planning',                // planning | manual | agent-drawing | agent-await | done
+  // User's per-step choice: 'manual' or 'ai'. The augmented/automated split
+  // is derived from chain structure: in any AI block of length N, the first
+  // N-1 steps are AUTOMATED and the last one is AUGMENTED. A standalone AI
+  // step (chain of length 1) is therefore AUGMENTED.
+  modes: [],
+  chains: [],                       // chains[i]=true → step i & i+1 in same block
+  drawn: [],                        // committed lines: {stepIdx, fromDot, toDot, correctTarget, correct, source}
+  blocks: [],                       // [{start, end, mode}]
+  currentBlock: 0,
+  pendingLines: [],                 // agent's current draft (not yet accepted)
+  startTime: null,
+  timerInterval: null,
+};
+
+// Derived role for a step, based on user's mode choice and chain context.
+// Returns 'manual' | 'augmented' | 'automated'. Augmented = last step of an
+// AI chain (where the human reviews the chain output). Automated = an earlier
+// step in an AI chain (no individual review).
+function derivedRole(stepIdx) {
+  if (state.modes[stepIdx] === 'manual') return 'manual';
+  const lastStep = (stepIdx === STEP_PROBS.length - 1);
+  const noChainForward = lastStep || !state.chains[stepIdx];
+  return noChainForward ? 'augmented' : 'automated';
+}
+
+// =========================================================================
+// Helpers
+// =========================================================================
+function dotById(id) { return DOTS.find(d => d.id === id); }
+// The next dot for step i, wrapping around so the final step closes back
+// to dot 1 (every shape is a closed loop).
+function nextDot(stepIdx) { return DOTS[(stepIdx + 1) % DOTS.length]; }
+function probClass(p) { return p >= 0.9 ? 'high' : (p >= 0.7 ? 'mid' : 'low'); }
+function probLabel(p) { return Math.round(p * 100) + '%'; }
+
+function computeBlocks() {
+  const blocks = [];
+  let start = 0;
+  for (let i = 0; i < STEP_PROBS.length; i++) {
+    const isLast = i === STEP_PROBS.length - 1;
+    // A block ends if: last step, OR no chain link to next, OR adjacent modes
+    // differ, OR current step is manual (manual steps don't chain).
+    const blockBreaks =
+      isLast ||
+      !state.chains[i] ||
+      state.modes[i] !== state.modes[i + 1] ||
+      state.modes[i] === 'manual';
+    if (blockBreaks) {
+      blocks.push({ start, end: i, mode: state.modes[start] });
+      start = i + 1;
+    }
+  }
+  return blocks;
+}
+
+// Pick a "plausible wrong" target: a non-target dot, weighted by proximity
+// to the true target (close dots are more likely confused with it).
+function pickWrongDot(stepIdx) {
+  const truth = nextDot(stepIdx);
+  const fromId = DOTS[stepIdx].id;
+  const candidates = DOTS.filter(d => d.id !== truth.id && d.id !== fromId);
+  const weights = candidates.map(d => {
+    const dist = Math.hypot(d.x - truth.x, d.y - truth.y);
+    return 1 / (10 + dist);
+  });
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < candidates.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return candidates[i].id;
+  }
+  return candidates[0].id;
+}
+
+function currentStepIdx() {
+  // The next step to be drawn = however many we've committed
+  return state.drawn.length;
+}
+
+// Shuffle dot positions within each cluster so each round looks different —
+// participants can't reuse spatial memory from a previous attempt. Cluster
+// membership and the path's logical sequence (1→2→…) are preserved; only
+// the (x,y) of each id within its cluster is permuted. Uniform examples
+// (no clusters defined) shuffle across all dots as one group.
+function shuffleDotPositions() {
+  const groups = CLUSTERS.length > 0
+    ? CLUSTERS.map(c => c.dotIds)
+    : [DOTS.map(d => d.id)];
+
+  groups.forEach(group => {
+    const groupDots = group.map(id => DOTS.find(d => d.id === id));
+    const positions = groupDots.map(d => ({ x: d.x, y: d.y }));
+    for (let i = positions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [positions[i], positions[j]] = [positions[j], positions[i]];
+    }
+    groupDots.forEach((d, i) => {
+      d.x = positions[i].x;
+      d.y = positions[i].y;
+    });
+  });
+}
+
+// =========================================================================
+// Rendering
+// =========================================================================
+function renderCanvas() {
+  const svg = document.getElementById('canvas');
+  let html = '';
+
+  // Cluster background rectangles intentionally not rendered — difficulty
+  // is encoded per-step in the model, not visually telegraphed on the canvas.
+  // The cluster definitions in EXAMPLES are left in place in case we want
+  // to re-enable region tints later.
+
+  // Committed lines
+  state.drawn.forEach(line => {
+    const a = dotById(line.fromDot), b = dotById(line.toDot);
+    html += `<line class="drawn-line ${line.statusClass || 'pending'}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;
+  });
+  // Pending (agent draft) lines on top
+  state.pendingLines.forEach(line => {
+    const a = dotById(line.fromDot), b = dotById(line.toDot);
+    html += `<line class="drawn-line pending" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`;
+  });
+
+  // Dots + labels
+  const curStep = currentStepIdx();
+  const curDotId = (state.phase === 'manual' && curStep < DOTS.length) ? DOTS[curStep].id : null;
+  const clickable = (state.phase === 'manual');
+  DOTS.forEach(d => {
+    const classes = ['dot-circle'];
+    if (clickable) classes.push('clickable');
+    if (d.id === curDotId) classes.push('current');
+    html += `<circle class="${classes.join(' ')}" data-id="${d.id}" cx="${d.x}" cy="${d.y}" r="3"/>`;
+    html += `<text class="dot-num" x="${d.x + 7}" y="${d.y - 5}">${d.id}</text>`;
+  });
+
+  svg.innerHTML = html;
+
+  if (clickable) {
+    svg.querySelectorAll('.dot-circle.clickable').forEach(el => {
+      el.addEventListener('click', () => onDotClick(parseInt(el.dataset.id)));
+    });
+  }
+}
+
+function renderStepList() {
+  const list = document.getElementById('step-list');
+  list.innerHTML = '';
+  const executing = state.phase !== 'planning';
+
+  // Compute blocks so we can wrap multi-step AI chains in a dashed-purple
+  // group container. Each step gets a pointer to its block.
+  const blocks = computeBlocks();
+  const stepBlock = new Array(STEP_PROBS.length);
+  blocks.forEach((b, idx) => {
+    for (let i = b.start; i <= b.end; i++) stepBlock[i] = idx;
+  });
+
+  function buildStepRow(i) {
+    const row = document.createElement('div');
+    row.className = 'step-row';
+    if (executing) row.classList.add('execution');
+
+    // Highlight the currently-running block; dim done steps.
+    if (executing && state.blocks.length) {
+      const runBlock = state.blocks[state.currentBlock];
+      if (runBlock && i >= runBlock.start && i <= runBlock.end) row.classList.add('active');
+      else if (runBlock && i < runBlock.start) row.classList.add('done');
+      else if (state.phase === 'done') row.classList.add('done');
+    }
+
+    const p = STEP_PROBS[i];
+    const from = DOTS[i].id, to = nextDot(i).id;
+    const role = derivedRole(i);
+
+    // Individual step probability stays on the step button regardless of
+    // whether it's in a chain; the chain's overall success rate is shown
+    // separately on the chain-group header.
+    const probHtml = role === 'manual'
+      ? ''
+      : `<span class="prob">${probLabel(p)}</span>`;
+    const roleLabel = role === 'manual' ? 'MANUAL'
+      : role === 'augmented' ? 'AI-AUGMENTED'
+      : 'AI-AUTOMATED';
+
+    row.innerHTML = `
+      <span class="bullet">•</span>
+      <span class="lbl">STEP ${i + 1}</span>
+      <span class="name">${from}<span class="arrow">→</span>${to}</span>
+      <button class="mode-toggle ${role}" data-i="${i}" ${executing ? 'disabled' : ''}>${roleLabel}${probHtml}</button>
+    `;
+    return row;
+  }
+
+  function buildChainRow(i) {
+    const canChain = state.modes[i] === 'ai' && state.modes[i + 1] === 'ai';
+    const chainRow = document.createElement('div');
+    chainRow.className = 'chain-row'
+      + (state.chains[i] ? ' chained' : '')
+      + (!canChain ? ' disabled' : '')
+      + (executing ? ' locked' : '');
+    chainRow.innerHTML = `
+      <span class="arrow-down">↓</span>
+      <span class="gap">···</span>
+      <span></span>
+      <button class="chain-btn" data-i="${i}" ${(!canChain || executing) ? 'disabled' : ''}>
+        ${state.chains[i] ? '↻ CHAINED' : '+ CHAIN'}
+      </button>
+    `;
+    return chainRow;
+  }
+
+  // Walk through steps; open a .chain-group wrapper whenever we enter a
+  // multi-step block, close it before any chain row that crosses block
+  // boundaries, and close it again at end of the block.
+  let groupEl = null;
+  for (let i = 0; i < STEP_PROBS.length; i++) {
+    const block = blocks[stepBlock[i]];
+    const isMultiStep = block.end > block.start;
+
+    // Entering a new block: maybe open a group container + header showing
+    // the chain's overall success probability (product of all step probs).
+    if (i === block.start && isMultiStep) {
+      groupEl = document.createElement('div');
+      groupEl.className = 'chain-group';
+      list.appendChild(groupEl);
+
+      let prod = 1;
+      for (let j = block.start; j <= block.end; j++) prod *= STEP_PROBS[j];
+      const meta = document.createElement('div');
+      meta.className = 'chain-meta';
+      meta.innerHTML = `<span>Chain success</span><span class="val">${probLabel(prod)}</span>`;
+      groupEl.appendChild(meta);
+    }
+
+    const target = (isMultiStep && groupEl) ? groupEl : list;
+    target.appendChild(buildStepRow(i));
+
+    // Render the chain row that sits *after* step i, if any
+    if (i < STEP_PROBS.length - 1) {
+      const chainRow = buildChainRow(i);
+      if (i < block.end) {
+        // Interior chain link inside a multi-step block → stays in group
+        target.appendChild(chainRow);
+      } else {
+        // Inter-block chain row → outside any group
+        groupEl = null;
+        list.appendChild(chainRow);
+      }
+    } else if (i === block.end) {
+      // End of last block, no trailing chain row
+      groupEl = null;
+    }
+  }
+
+  list.querySelectorAll('.mode-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      if (state.phase !== 'planning') return;
+      toggleMode(parseInt(e.currentTarget.dataset.i));
+    });
+  });
+  list.querySelectorAll('.chain-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      if (state.phase !== 'planning') return;
+      const i = parseInt(e.currentTarget.dataset.i);
+      const canChain = state.modes[i] === 'ai' && state.modes[i + 1] === 'ai';
+      if (!canChain) return;
+      state.chains[i] = !state.chains[i];
+      renderStepList();
+    });
+  });
+}
+
+// Flip a step between MANUAL and AI. Switching to manual breaks both
+// neighboring chains (manual steps can't participate in AI chains).
+function toggleMode(i) {
+  state.modes[i] = state.modes[i] === 'manual' ? 'ai' : 'manual';
+  if (state.modes[i] === 'manual') {
+    if (i > 0) state.chains[i - 1] = false;
+    if (i < state.chains.length) state.chains[i] = false;
+  }
+  renderStepList();
+}
+
+function setInstruction(text, opts = {}) {
+  const el = document.getElementById('instruction');
+  el.innerHTML = text;
+  el.classList.toggle('muted', !!opts.muted);
+}
+
+// Overlay buttons (ACCEPT / RETRY during AI review) float on top of the
+// canvas so the player can verify and act without scrolling. Setting an
+// empty string hides the overlay.
+function setOverlayButtons(html) {
+  const ov = document.getElementById('canvas-overlay');
+  ov.innerHTML = html;
+  ov.classList.toggle('active', !!html.trim());
+}
+// BEGIN / RESET share the canvas-actions row directly below the canvas.
+// Only one is visible at a time; both hide together when the round is done.
+function showBeginButton() {
+  document.getElementById('canvas-actions').style.display = 'flex';
+  document.getElementById('begin').style.display = '';
+  document.getElementById('reset').style.display = 'none';
+}
+function showResetButton() {
+  document.getElementById('canvas-actions').style.display = 'flex';
+  document.getElementById('begin').style.display = 'none';
+  document.getElementById('reset').style.display = '';
+}
+function hideCanvasActions() {
+  document.getElementById('canvas-actions').style.display = 'none';
+}
+
+// =========================================================================
+// Timer
+// =========================================================================
+function startTimer() {
+  state.startTime = Date.now();
+  state.timerInterval = setInterval(updateTimer, 100);
+}
+function stopTimer() {
+  if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+  updateTimer();
+}
+function updateTimer() {
+  const t = state.startTime ? (Date.now() - state.startTime) / 1000 : 0;
+  document.getElementById('time').textContent = t.toFixed(1) + 's';
+}
+
+// =========================================================================
+// Execution flow
+// =========================================================================
+function begin() {
+  state.phase = 'running';
+  state.blocks = computeBlocks();
+  state.currentBlock = 0;
+  state.drawn = [];
+  state.pendingLines = [];
+  document.getElementById('score').textContent = '—';
+  document.getElementById('final-panel').style.display = 'none';
+  // RESET takes BEGIN's spot during play; persistent GUESS button appears.
+  showResetButton();
+  document.getElementById('guess-panel').style.display = 'flex';
+  document.getElementById('answer-panel').style.display = 'none';
+  document.getElementById('settings').classList.add('locked');
+  startTimer();
+  renderStepList();
+  renderCanvas();
+  runBlock(0);
+}
+
+function runBlock(idx) {
+  if (idx >= state.blocks.length) {
+    // All dots drawn — but the round doesn't end automatically anymore.
+    // The player still has to commit a guess; surface a nudge in the
+    // action panel until they do. Re-render canvas so the most-recently
+    // pushed closing line actually shows up (the previous render still
+    // had the manual-mode pulse + clickable cursors, and didn't yet
+    // include the line we just appended in onDotClick / acceptAgent).
+    state.phase = 'all-drawn';
+    setInstruction('All dots drawn. Click <em class="em">GUESS WHAT THIS IS</em> when you\'re ready.');
+    setOverlayButtons('');
+    renderCanvas();
+    renderStepList();
+    return;
+  }
+  state.currentBlock = idx;
+  const block = state.blocks[idx];
+  renderStepList();
+
+  if (block.mode === 'manual') {
+    runManualBlock(block);
+  } else {
+    // AI block: agent draws all lines; user reviews at the end (augmented step).
+    // Earlier steps in the chain are automated (no individual review).
+    runAgentBlock(block);
+  }
+}
+
+// --- Manual block: wait for user to click the next dot ---
+function runManualBlock(block) {
+  state.phase = 'manual';
+  const targetId = nextDot(block.end).id;
+  setInstruction(`Find and click dot <span class="em">${targetId}</span>.`);
+  setOverlayButtons('');
+  renderCanvas();
+}
+
+function onDotClick(dotId) {
+  if (state.phase !== 'manual') return;
+  const block = state.blocks[state.currentBlock];
+  const targetId = nextDot(block.end).id;
+  if (dotId === targetId) {
+    // Correct manual step
+    state.drawn.push({
+      stepIdx: block.start,
+      fromDot: DOTS[block.start].id,
+      toDot: targetId,
+      correctTarget: targetId,
+      correct: true,
+      source: 'manual',
+      statusClass: 'manual',
+    });
+    nextBlock();
+  } else {
+    // Wrong click: brief red flash, ignore
+    const svg = document.getElementById('canvas');
+    const el = svg.querySelector(`.dot-circle[data-id="${dotId}"]`);
+    if (el) {
+      el.classList.add('misclick');
+      setTimeout(() => el.classList.remove('misclick'), 220);
+    }
+  }
+}
+
+// --- AI block: agent rolls and draws every line in the block instantly,
+//     then waits for ACCEPT / RETRY at the end (the augmented final step
+//     of the chain). AI execution is cheap — all of the time cost lives
+//     in the user's review step. ---
+function runAgentBlock(block) {
+  // Clear leftover manual-phase visuals (pulsing "current" dot, clickable
+  // cursors) BEFORE rendering, otherwise the new pending line gets drawn
+  // underneath them and the user can't tell the AI ran.
+  state.phase = 'agent-await';
+  const draft = [];
+  for (let i = block.start; i <= block.end; i++) {
+    const correct = Math.random() < STEP_PROBS[i];
+    draft.push({
+      stepIdx: i,
+      fromDot: DOTS[i].id,
+      toDot: correct ? nextDot(i).id : pickWrongDot(i),
+      correctTarget: nextDot(i).id,
+      correct,
+      source: (i === block.end) ? 'augmented' : 'automated',
+      statusClass: 'pending',
+    });
+  }
+  state.pendingLines = draft.slice();
+  renderCanvas();
+  agentAwait(draft);
+}
+
+function agentAwait(draft) {
+  state.phase = 'agent-await';
+  const block = state.blocks[state.currentBlock];
+  const range = block.start === block.end
+    ? `step ${block.start + 1}`
+    : `steps ${block.start + 1}–${block.end + 1}`;
+  setInstruction(`Agent finished <span class="em">${range}</span>. Does it look right?`);
+  setOverlayButtons(`
+    <button class="btn-sec accept" id="btn-accept">ACCEPT</button>
+    <button class="btn-sec retry"  id="btn-retry">RETRY</button>
+  `);
+  document.getElementById('btn-accept').onclick = () => acceptAgent(draft);
+  document.getElementById('btn-retry').onclick  = () => retryAgent();
+}
+
+function acceptAgent(draft) {
+  // Commit pending lines as the final lines for those steps.
+  draft.forEach(line => state.drawn.push(line));
+  state.pendingLines = [];
+  renderCanvas();
+  nextBlock();
+}
+
+function retryAgent() {
+  // Discard current draft, re-run the agent on the same block (re-rolls).
+  state.pendingLines = [];
+  renderCanvas();
+  runAgentBlock(state.blocks[state.currentBlock]);
+}
+
+function nextBlock() {
+  runBlock(state.currentBlock + 1);
+}
+
+// Show the multiple-choice answer panel. Stops the timer because the round's
+// "thinking time" ends when the player commits to guessing.
+function showAnswerPanel() {
+  if (state.phase === 'planning' || state.phase === 'done') return;
+  stopTimer();
+  state.phase = 'guessing';
+  document.getElementById('guess-panel').style.display = 'none';
+  const panel = document.getElementById('answer-panel');
+  const opts = document.getElementById('answer-options');
+  opts.innerHTML = ANSWER_OPTIONS
+    .map(a => `<button data-answer="${escapeHtml(a)}">${escapeHtml(a)}</button>`)
+    .join('');
+  panel.style.display = 'block';
+  opts.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', e => finishWithGuess(e.currentTarget.dataset.answer));
+  });
+}
+
+// Round ends here with the player's committed guess. Records the run on the
+// leaderboard (sorted by correct-guess first, then time), reveals which lines
+// the AI got right/wrong, and exposes the name editor.
+function finishWithGuess(guess) {
+  state.phase = 'done';
+  stopTimer();
+  document.getElementById('answer-panel').style.display = 'none';
+  document.getElementById('guess-panel').style.display = 'none';
+
+  const truth = EXAMPLES[currentExampleIdx].answer;
+  const correctGuess = (guess.toLowerCase() === truth.toLowerCase());
+
+  // Reveal: color committed lines by correctness so the user can see what
+  // misled them (or what the AI got right).
+  state.drawn.forEach(s => {
+    if (s.source === 'manual') s.statusClass = 'manual';
+    else s.statusClass = s.correct ? 'correct' : 'wrong';
+  });
+  renderCanvas();
+  renderStepList();
+
+  const elapsed = (Date.now() - state.startTime) / 1000;
+  const dotsDrawn = state.drawn.length;
+  const totalDots = STEP_PROBS.length;
+  const verdict = correctGuess
+    ? `<span class="em" style="color:var(--good)">✓ ${escapeHtml(guess)}</span>`
+    : `<span class="em" style="color:var(--bad)">✗ ${escapeHtml(guess)}</span> (it was <em>${escapeHtml(truth)}</em>)`;
+  setInstruction(`Round complete — ${verdict} in <span class="em">${elapsed.toFixed(1)}s</span>.`);
+  setOverlayButtons('');
+  // Round's over — neither BEGIN nor RESET applies; final-panel's PLAY
+  // AGAIN button takes over.
+  hideCanvasActions();
+
+  document.getElementById('score').textContent = correctGuess ? '✓' : '✗';
+  document.getElementById('f-correct').textContent = correctGuess ? `✓ ${guess}` : `✗ ${guess}`;
+  document.getElementById('f-time').textContent = elapsed.toFixed(1) + 's';
+  document.getElementById('f-blocks').textContent = `${dotsDrawn}/${totalDots}`;
+  document.getElementById('final-panel').style.display = 'block';
+
+  // Persist on the leaderboard.
+  const runName = defaultRunName();
+  const exId = EXAMPLES[currentExampleIdx].id;
+  newEntryRank = recordScore(exId, runName, guess, correctGuess, dotsDrawn, totalDots, elapsed);
+  renderLeaderboard();
+  const nameRow = document.getElementById('name-row');
+  if (newEntryRank >= 0) {
+    nameRow.style.display = 'flex';
+    const input = document.getElementById('run-name');
+    input.value = runName;
+    input.oninput = () => updateScoreName(exId, newEntryRank, input.value);
+  } else {
+    nameRow.style.display = 'none';
+  }
+}
+
+// Return to the planning phase. When keepConfig is true (RESET mid-round),
+// the player's mode/chain selections are preserved so they can tweak; when
+// false (PLAY AGAIN, example switch), the configuration is reset to the
+// example's default ("longest possible AI chain").
+function resetToPlanning(keepConfig) {
+  stopTimer();
+  // Re-clone dot positions from the template so we never mutate it.
+  DOTS = DOTS_TEMPLATE.map(d => ({ ...d }));
+  state.phase = 'planning';
+  if (!keepConfig) {
+    const ex = EXAMPLES[currentExampleIdx];
+    state.modes = (ex.defaultModes && ex.defaultModes.length === STEP_PROBS.length)
+      ? [...ex.defaultModes]
+      : new Array(STEP_PROBS.length).fill('ai');
+    state.chains = (ex.defaultChains && ex.defaultChains.length === STEP_PROBS.length - 1)
+      ? [...ex.defaultChains]
+      : new Array(STEP_PROBS.length - 1).fill(true);
+  }
+  state.drawn = [];
+  state.pendingLines = [];
+  state.blocks = [];
+  state.currentBlock = 0;
+  state.startTime = null;
+  document.getElementById('time').textContent = '0.0s';
+  document.getElementById('score').textContent = '—';
+  document.getElementById('final-panel').style.display = 'none';
+  document.getElementById('name-row').style.display = 'none';
+  document.getElementById('guess-panel').style.display = 'none';
+  document.getElementById('answer-panel').style.display = 'none';
+  document.getElementById('settings').classList.remove('locked');
+  setInstruction('Cycle each step\'s mode (Manual / AI-augmented / AI-automated), then click BEGIN.', { muted: true });
+  setOverlayButtons('');
+  showBeginButton();
+  renderCanvas();
+  renderStepList();
+}
+function restart()     { resetToPlanning(/*keepConfig=*/ false); }
+function resetRound()  { resetToPlanning(/*keepConfig=*/ true); }
+
+// =========================================================================
+// Leaderboard (top 5 per example, persisted in localStorage)
+// =========================================================================
+function loadScores(exampleId) {
+  try {
+    const raw = localStorage.getItem(LEADERBOARD_KEY + exampleId);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function saveScores(exampleId, scores) {
+  try { localStorage.setItem(LEADERBOARD_KEY + exampleId, JSON.stringify(scores)); }
+  catch { /* quota / private mode — silently ignore */ }
+}
+// Insert a new run into the leaderboard, sort by (correct-guess desc,
+// time asc), trim to TOP_N. Returns the new rank (0-indexed) of this run,
+// or -1 if it didn't make the cut.
+function recordScore(exampleId, name, guess, correctGuess, dotsDrawn, totalDots, time) {
+  const entry = { name, guess, correctGuess, dotsDrawn, totalDots, time, ts: Date.now() };
+  const scores = loadScores(exampleId);
+  scores.push(entry);
+  scores.sort((a, b) => {
+    if (a.correctGuess !== b.correctGuess) return (b.correctGuess ? 1 : 0) - (a.correctGuess ? 1 : 0);
+    return a.time - b.time;
+  });
+  const top = scores.slice(0, TOP_N);
+  saveScores(exampleId, top);
+  return top.indexOf(entry);
+}
+// Update the name of an existing leaderboard entry (by rank) in place.
+function updateScoreName(exampleId, rank, name) {
+  const scores = loadScores(exampleId);
+  if (rank >= 0 && rank < scores.length) {
+    scores[rank].name = name;
+    saveScores(exampleId, scores);
+    renderLeaderboard();
+  }
+}
+// Default name for a leaderboard entry. The player can rename in the final
+// panel input. Kept generic ("Player 1") so the leaderboard doesn't reveal
+// anything about the underlying configuration.
+function defaultRunName() {
+  return 'Player 1';
+}
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function renderLeaderboard() {
+  const ex = EXAMPLES[currentExampleIdx];
+  const scores = loadScores(ex.id);
+  const list = document.getElementById('leaderboard-list');
+  let html = '';
+  for (let i = 0; i < TOP_N; i++) {
+    const s = scores[i];
+    const cls = [];
+    if (!s) cls.push('empty-slot');
+    if (i === 0 && s) cls.push('best');
+    if (i === newEntryRank) cls.push('new-entry');
+    const nameTxt = s ? (s.name || formatWhen(s.ts)) : '';
+    // Show only progress (edges drawn / total) and ✓ / ✗ — never the
+    // guess answer itself, which would spoil the puzzle for other players.
+    const progressTxt = s
+      ? (typeof s.dotsDrawn === 'number' ? `${s.dotsDrawn}/${s.totalDots}` : '—')
+      : '—';
+    const resultTxt = s ? (s.correctGuess ? '✓' : '✗') : '';
+    const resultCls = s ? (s.correctGuess ? 'good' : 'bad') : '';
+    html += `<li${cls.length ? ` class="${cls.join(' ')}"` : ''}>
+      <span class="rank">#${i + 1}</span>
+      <span class="run-name" title="${escapeHtml(nameTxt)}">${escapeHtml(nameTxt)}</span>
+      <span class="progress">${progressTxt}</span>
+      <span class="result ${resultCls}">${resultTxt}</span>
+      <span class="time">${s ? s.time.toFixed(1) + 's' : '—'}</span>
+    </li>`;
+  }
+  list.innerHTML = html;
+}
+function formatWhen(ts) {
+  const now = Date.now();
+  const diff = (now - ts) / 1000;
+  if (diff < 60)     return 'just now';
+  if (diff < 3600)   return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400)  return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+// =========================================================================
+// Example switching
+// =========================================================================
+function loadExample(idx) {
+  currentExampleIdx = idx;
+  const ex = EXAMPLES[idx];
+  // Keep the template pristine; restart() clones from it and shuffles in place.
+  DOTS_TEMPLATE = ex.dots.map(d => ({ ...d }));
+  STEP_DIFFICULTIES = ex.difficulties.slice();
+  recomputeProbs();
+  CLUSTERS = ex.clusters;
+  document.getElementById('n-label').textContent = DOTS_TEMPLATE.length;
+  document.querySelectorAll('.example-tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  newEntryRank = -1;     // clear the just-set highlight when switching puzzles
+  restart();
+  renderLeaderboard();
+}
+
+// =========================================================================
+// Boot
+// =========================================================================
+document.querySelectorAll('.example-tab').forEach(tab => {
+  tab.addEventListener('click', e => loadExample(parseInt(e.currentTarget.dataset.idx)));
+});
+document.getElementById('restart').addEventListener('click', restart);
+document.getElementById('btn-guess').addEventListener('click', showAnswerPanel);
+// BEGIN button is a static element now (not recreated each round); bind once.
+document.getElementById('begin').addEventListener('click', begin);
+// RESET (visible during play in BEGIN's spot) — abort the round and return
+// to planning while preserving the player's mode/chain configuration.
+document.getElementById('reset').addEventListener('click', resetRound);
+
+// α slider — recompute step probs and re-render whenever the experimenter
+// drags it (planning phase only; locked once a round begins).
+const alphaSlider = document.getElementById('alpha-slider');
+const alphaReadout = document.getElementById('alpha-readout');
+alphaSlider.addEventListener('input', e => {
+  ALPHA = parseInt(e.target.value, 10) / 100;
+  alphaReadout.textContent = ALPHA.toFixed(2);
+  recomputeProbs();
+  if (state.phase === 'planning') renderStepList();
+});
+
+loadExample(0);
+</script>
+</body>
+</html>
+
