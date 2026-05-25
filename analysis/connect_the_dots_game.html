@@ -342,13 +342,29 @@
   }
   .leaderboard li {
     display: grid;
-    grid-template-columns: 22px 1fr 60px 22px 60px;
+    grid-template-columns: 22px 1fr 40px 60px 50px;
     gap: 12px;
     padding: 5px 0;
     align-items: baseline;
     border-bottom: 1px dotted rgba(0,0,0,0.05);
   }
   .leaderboard li:last-child { border-bottom: none; }
+  .leaderboard li.header {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    padding: 0 0 6px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .leaderboard li.header .rank,
+  .leaderboard li.header .run-name,
+  .leaderboard li.header .result,
+  .leaderboard li.header .progress,
+  .leaderboard li.header .time { color: var(--muted); font-weight: 500; }
+  .leaderboard li.header .result { text-align: center; }
+  .leaderboard li.header .progress,
+  .leaderboard li.header .time { text-align: right; }
   .leaderboard li .rank { color: var(--muted); font-size: 10px; letter-spacing: 0.5px; }
   .leaderboard li .when { color: var(--muted); font-size: 10px; }
   .leaderboard li .run-name {
@@ -485,9 +501,11 @@
     <p>For each step you can connect the dots
       <em style="color:var(--man-text)">manually</em> (click the next dot
       yourself), or with the help of <em>AI</em> (the agent draws the line for
-      you). AI can <span class="accent">chain</span> consecutive steps and draw
-      all their lines in a single attempt, but the chain's overall success
-      probability is the product of each constituent step's individual success.</p>
+      you and you verify it is correct). AI can <span class="accent">chain</span> 
+      consecutive steps and draw all their lines in a single attempt, but the 
+      chain's overall success probability is the product of each constituent 
+      step's individual success. So, AI chains save up on verification costs 
+      at the expense of lower chance of successful end-to-end execution.</p>
     <p>The clock starts on <em>BEGIN</em> and stops when you commit a guess.
       Faster correct guesses win. To collect all points, you need to connect All
     dots correctly and guess the right.</p>
@@ -546,7 +564,7 @@
   </div>
 
   <div class="leaderboard" id="leaderboard">
-    <h3><span>Top 5 · this puzzle</span><span class="sub">correct guesses first, fastest wins</span></h3>
+    <h3><span>Top 5 · this puzzle</span><span class="sub">guess → correct steps → time</span></h3>
     <ol id="leaderboard-list"></ol>
   </div>
 
@@ -583,6 +601,9 @@ const EXAMPLES = [
     id: 'star',
     name: 'Star',
     answer: 'Star',
+    // Geometric shapes — picking the right shape from a set of common
+    // polygons / symbols means the dot layout alone can't give it away.
+    options: ['Circle', 'Diamond', 'Heart', 'Hexagon', 'Pentagon', 'Square', 'Star', 'Triangle'],
     dots: [
       { id: 1,  x: 250, y:  70 },   // T1 (top)
       { id: 2,  x: 282, y: 144 },   // V1 (upper-right inner)
@@ -609,6 +630,9 @@ const EXAMPLES = [
     id: 'fish',
     name: 'Fish',
     answer: 'Fish',
+    // Aquatic creatures — all share watery silhouettes, so the player
+    // can't shortcut by ruling out "not a sea animal".
+    options: ['Crab', 'Dolphin', 'Fish', 'Jellyfish', 'Octopus', 'Seahorse', 'Shark', 'Whale'],
     dots: [
       // Dense face cluster (right side, near head)
       { id: 1,  x: 385, y: 175 },   // eye
@@ -653,6 +677,9 @@ const EXAMPLES = [
     id: 'butterfly',
     name: 'Butterfly',
     answer: 'Butterfly',
+    // Insects / arthropods — all six-legged or eight-legged silhouettes
+    // with body + appendages, so wings alone don't give it away.
+    options: ['Ant', 'Bee', 'Beetle', 'Butterfly', 'Dragonfly', 'Ladybug', 'Moth', 'Spider'],
     dots: [
       // Left wing (10 dots, unchanged)
       { id: 1,  x: 200, y: 130 },   // inner-top
@@ -714,6 +741,9 @@ const EXAMPLES = [
     id: 'donkey',
     name: 'Donkey',
     answer: 'Donkey',
+    // Farm / hoofed mammals — all four-legged with similar body proportions,
+    // so the silhouette can't be guessed from genre alone.
+    options: ['Camel', 'Cow', 'Donkey', 'Goat', 'Horse', 'Llama', 'Pig', 'Sheep'],
     dots: [
       // Dense head cluster (12 dots: muzzle, horns, ear)
       { id: 1,  x:  95, y: 215 },   // nose tip (front of muzzle)
@@ -822,6 +852,9 @@ const EXAMPLES = [
     id: 'hedgehog',
     name: 'Hedgehog',
     answer: 'Hedgehog',
+    // Small mammals / rodents — all similar low-slung body shapes, so
+    // "spiky-back" cluster is the only real differentiator.
+    options: ['Beaver', 'Hamster', 'Hedgehog', 'Mole', 'Mouse', 'Porcupine', 'Rabbit', 'Squirrel'],
     dots: [
       // Face (dense)
       { id: 1,  x:  75, y: 230 },   // nose tip
@@ -878,6 +911,9 @@ const EXAMPLES = [
     id: 'dog',
     name: 'Dog',
     answer: 'Dog',
+    // Canids / dog-like carnivores — all share the four-legged predator
+    // body plan, so the curly tail isn't a giveaway against the set.
+    options: ['Bear', 'Cat', 'Coyote', 'Dog', 'Fox', 'Hyena', 'Jackal', 'Wolf'],
     dots: [
       // Snout + head + ear (dense, 6 dots)
       { id: 1,  x:  95, y: 200 },   // snout tip (front)
@@ -1007,15 +1043,17 @@ const EXAMPLES = [
 const AGENT_DRAW_MS = 400;
 
 // Top-N leaderboard, persisted per-example in localStorage. Key bumped to
-// _v3 when the schema gained per-entry dots-drawn progress + the displayed
-// guess answer was hidden — older v2 entries (without progress) are ignored.
-const LEADERBOARD_KEY = 'chain_demo_top_v3_';
+// _v4 when sort order changed (correctGuess → correctSteps → time) and
+// the per-entry progress field switched from dotsDrawn to correctSteps —
+// older v3 entries (which only stored dotsDrawn) are ignored.
+const LEADERBOARD_KEY = 'chain_demo_top_v4_';
 const TOP_N = 5;
 let newEntryRank = -1;     // highlight the just-set row briefly
 
-// Multiple-choice options shown when the player clicks GUESS. Includes
-// every real answer plus a few plausible distractors so the choice isn't
-// trivial. Sorted alphabetically.
+// Fallback multiple-choice options if a puzzle doesn't provide its own.
+// Normally each EXAMPLES entry defines a puzzle-specific `options` list of
+// same-category alternatives, so the player can't guess by elimination
+// across puzzles or by ruling out the obvious genre.
 const ANSWER_OPTIONS = [
   'Bird', 'Butterfly', 'Dog', 'Donkey', 'Fish',
   'Hedgehog', 'Horse', 'Sheep', 'Star',
@@ -1530,7 +1568,8 @@ function showAnswerPanel() {
   document.getElementById('guess-panel').style.display = 'none';
   const panel = document.getElementById('answer-panel');
   const opts = document.getElementById('answer-options');
-  opts.innerHTML = ANSWER_OPTIONS
+  const choices = EXAMPLES[currentExampleIdx].options || ANSWER_OPTIONS;
+  opts.innerHTML = choices
     .map(a => `<button data-answer="${escapeHtml(a)}">${escapeHtml(a)}</button>`)
     .join('');
   panel.style.display = 'block';
@@ -1540,8 +1579,8 @@ function showAnswerPanel() {
 }
 
 // Round ends here with the player's committed guess. Records the run on the
-// leaderboard (sorted by correct-guess first, then time), reveals which lines
-// the AI got right/wrong, and exposes the name editor.
+// leaderboard (sorted by correct-guess → correct-steps → time), reveals
+// which lines the AI got right/wrong, and exposes the name editor.
 function finishWithGuess(guess) {
   state.phase = 'done';
   stopTimer();
@@ -1563,6 +1602,9 @@ function finishWithGuess(guess) {
   const elapsed = (Date.now() - state.startTime) / 1000;
   const dotsDrawn = state.drawn.length;
   const totalDots = STEP_PROBS.length;
+  // Steps that hit their correct target — manual steps are always correct
+  // (only fire on the right click); AI steps depend on the random roll.
+  const correctSteps = state.drawn.filter(s => s.correct).length;
   const verdict = correctGuess
     ? `<span class="em" style="color:var(--good)">✓ ${escapeHtml(guess)}</span>`
     : `<span class="em" style="color:var(--bad)">✗ ${escapeHtml(guess)}</span> (it was <em>${escapeHtml(truth)}</em>)`;
@@ -1581,7 +1623,7 @@ function finishWithGuess(guess) {
   // Persist on the leaderboard.
   const runName = defaultRunName();
   const exId = EXAMPLES[currentExampleIdx].id;
-  newEntryRank = recordScore(exId, runName, guess, correctGuess, dotsDrawn, totalDots, elapsed);
+  newEntryRank = recordScore(exId, runName, guess, correctGuess, correctSteps, totalDots, elapsed);
   renderLeaderboard();
   const nameRow = document.getElementById('name-row');
   if (newEntryRank >= 0) {
@@ -1647,14 +1689,15 @@ function saveScores(exampleId, scores) {
   catch { /* quota / private mode — silently ignore */ }
 }
 // Insert a new run into the leaderboard, sort by (correct-guess desc,
-// time asc), trim to TOP_N. Returns the new rank (0-indexed) of this run,
-// or -1 if it didn't make the cut.
-function recordScore(exampleId, name, guess, correctGuess, dotsDrawn, totalDots, time) {
-  const entry = { name, guess, correctGuess, dotsDrawn, totalDots, time, ts: Date.now() };
+// correct-steps desc, time asc), trim to TOP_N. Returns the new rank
+// (0-indexed) of this run, or -1 if it didn't make the cut.
+function recordScore(exampleId, name, guess, correctGuess, correctSteps, totalSteps, time) {
+  const entry = { name, guess, correctGuess, correctSteps, totalSteps, time, ts: Date.now() };
   const scores = loadScores(exampleId);
   scores.push(entry);
   scores.sort((a, b) => {
     if (a.correctGuess !== b.correctGuess) return (b.correctGuess ? 1 : 0) - (a.correctGuess ? 1 : 0);
+    if ((a.correctSteps || 0) !== (b.correctSteps || 0)) return (b.correctSteps || 0) - (a.correctSteps || 0);
     return a.time - b.time;
   });
   const top = scores.slice(0, TOP_N);
@@ -1685,7 +1728,14 @@ function renderLeaderboard() {
   const ex = EXAMPLES[currentExampleIdx];
   const scores = loadScores(ex.id);
   const list = document.getElementById('leaderboard-list');
-  let html = '';
+  // Header row: column labels in the same grid as the score rows.
+  let html = `<li class="header">
+    <span class="rank">#</span>
+    <span class="run-name">Name</span>
+    <span class="result">Guess</span>
+    <span class="progress">Correct</span>
+    <span class="time">Time</span>
+  </li>`;
   for (let i = 0; i < TOP_N; i++) {
     const s = scores[i];
     const cls = [];
@@ -1693,18 +1743,18 @@ function renderLeaderboard() {
     if (i === 0 && s) cls.push('best');
     if (i === newEntryRank) cls.push('new-entry');
     const nameTxt = s ? (s.name || formatWhen(s.ts)) : '';
-    // Show only progress (edges drawn / total) and ✓ / ✗ — never the
-    // guess answer itself, which would spoil the puzzle for other players.
-    const progressTxt = s
-      ? (typeof s.dotsDrawn === 'number' ? `${s.dotsDrawn}/${s.totalDots}` : '—')
+    // Show correct-steps / total-steps and ✓ / ✗ — never the guess
+    // answer itself, which would spoil the puzzle for other players.
+    const correctTxt = s
+      ? (typeof s.correctSteps === 'number' ? `${s.correctSteps}/${s.totalSteps}` : '—')
       : '—';
     const resultTxt = s ? (s.correctGuess ? '✓' : '✗') : '';
     const resultCls = s ? (s.correctGuess ? 'good' : 'bad') : '';
     html += `<li${cls.length ? ` class="${cls.join(' ')}"` : ''}>
       <span class="rank">#${i + 1}</span>
       <span class="run-name" title="${escapeHtml(nameTxt)}">${escapeHtml(nameTxt)}</span>
-      <span class="progress">${progressTxt}</span>
       <span class="result ${resultCls}">${resultTxt}</span>
+      <span class="progress">${correctTxt}</span>
       <span class="time">${s ? s.time.toFixed(1) + 's' : '—'}</span>
     </li>`;
   }
