@@ -5,10 +5,22 @@ Redefining Work: A Theory of AI Automation"), imported 2026-06-12 from the
 submitted version. This folder is the working copy for the camera-ready and
 is kept separate from the main draft in `writeup/`.
 
-Binary figures (PNGs) are intentionally not tracked, per repo convention.
-TikZ figure sources (`plots/*.tex`) and tables (`tables/`) are included.
-To compile the full paper locally, copy the PNGs from `writeup/plots/` into
-`plots/` or add `\graphicspath{{../writeup/plots/}}` to `main.tex`.
+The folder holds the complete submission source, including figure PNGs.
+Per the repo-wide gitignore policy (`*png`, `*pdf`, aux files), figures and
+build artifacts live here locally (synced via Dropbox) but stay out of git.
+
+## Build
+
+```sh
+latexmk -f -pdf -interaction=nonstopmode main.tex
+```
+
+The `-f` is required: the submitted source carries two benign LaTeX errors
+that Overleaf tolerated the same way — a `geometry` option clash (acmart
+already loads `geometry`, so the `margin=0.86in` override in `main.tex`
+never takes effect, in the submitted PDF either) and a `\Bbbk` redefinition
+(`amssymb` after acmart's newtxmath). Last verified build: 58 pages, all
+references and citations resolved.
 
 ## Deadlines (from EC'26 chairs)
 
