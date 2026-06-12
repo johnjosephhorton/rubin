@@ -1,0 +1,79 @@
+\section{Supplementary Numerical Examples for the Discussion Section}
+\label{app:discussion_examples}
+
+\renewcommand{\theexample}{E.\arabic{example}}
+\setcounter{example}{0}
+
+\subsection{Worker Re-Skilling Examples}
+\label{app:discussion_examples_reskilling}
+
+Here we provide three numerical examples to show that, in contrast to the short run, productivity gains from AI in the long run do not necessarily come in the form of reduced time savings, and that our framework supports both upskilling and deskilling of workers.
+
+The first example shows that when skills are allowed to change in the long run, a single step might require lower human skill while taking longer to complete (in expectation).
+\begin{example}
+    Consider a job consisting of a single step.  
+    This step has manual time and skill requirements $(\manualTime{},\manualSkill{}) = (5,5)$.  
+    Suppose that, under AI augmentation, this step has an AI management time of $1$ (per attempt), an AI management skill requirement $1$, and probability $1/8$ of successful completion. 
+    That is, $(\AItime{},\AIskill{}) = (1,1)$ and $q=1/8$.
+    Despite the task taking longer to complete with AI (due to the low likelihood of success on any individual attempt), the reduced skill requirement of managing the AI process means that it is firm-optimal to employ AI augmentation.
+\end{example}
+
+As AI deployment strategy influences the time and skill profile of tasks in the long run, the incentive to specialize workers likewise changes.
+To predict the direction of this effect, one hypothesis is that AI deployment will tend to have a normalizing effect on tasks, reverting both skill requirements and time requirements toward the mean and making tasks more ``square-like'' (in terms of our geometric interpretation of job design costs in Appendix~\ref{app:model_handoff_discussion}).  
+If so, and if hand-off time costs remain unaffected, then (roughly speaking) inefficiencies due to grouping tasks together into the same job would be reduced.  
+This suggests that AI deployment may reduce worker specialization.
+The second example illustrates this idea.
+
+\begin{example}
+   Consider a two-step production process, with manual skill and time costs $(\manualSkill{1}, \manualTime{1}) = (2,4)$ and $(\manualSkill{2}, \manualTime{2}) = (4,2)$ and hand-off cost $\handofftime{1} = 5$.
+   That is, the first step is low-skill but time-intensive and the second step is high-skill but can be completed quickly.
+   In this example, combining both steps into a single job (at a labor cost of $(2+4)(4+2) = 36$) is strictly worse than separating into two specialized jobs with a hand-off (at a total cost of $(2)(4+5) + (4)(2) = 26$).
+   However, if each step of production could be augmented separately via AI to yield effective skill and time costs of $(2,2)$ for each, then the optimal design combines both augmented steps into a single job at a total cost of $(2+2)(2+2) = 16$, which is better than separating into two distinct jobs (incurring cost $(2)(2+5) + (2)(2) = 18$).
+\end{example}
+
+It is also technically possible in our model for AI to increase the amount of specialization in an optimal job design.  
+This could happen if AI-augmented steps have higher skill requirements than the corresponding manual steps, leading to an increased need for high-skill workers.  
+Even if AI management is assumed to require no more skill than manual completion, an increased deployment of AI can lead to more responsibilities being combined into a single job, leading to a higher worker skill requirement, as the following example shows. 
+
+\begin{example}
+   Consider a different two-step production process, with manual skill and time costs $(\manualSkill{1}, \manualTime{1}) = (\manualSkill{2}, \manualTime{2}) = (3,3)$ and hand-off cost $\handofftime{1} = 5$.
+   The optimal job design separates these into two separate jobs at a total cost of $(3)(3+5) + (3)(3) = 33$, with each job requiring a worker of skill $3$.
+   Suppose AI augmentation can allow each step to be completed with an AI management skill of $2$, a management time of $1/4$, and an AI success probability of $1/8$, for a total expected execution time of $(1/4) \times (1/8)^{-1} = 2$.
+   In this case, the optimal design employs AI augmentation in each step and combines the two steps into a single job, resulting in a total cost of $(2+2)(2+2) = 16$ and requiring a worker of skill $4$.
+   Note that this is preferable to combining the two steps into a single AI chain, which would result in a total cost of $(2)( (1/4) \times (1/8)^{-1} \times (1/8)^{-1} ) = 32$.
+\end{example}
+
+
+
+\subsection{Non-Linear Returns to AI Quality Example}
+\label{app:discussion_examples_nonlinear_impact}
+
+Here we describe the production setup, cost parameters, and the determination of the optimal organizational structure of the example discussed at the end of Subsection~\ref{sec:nonlinear_impact} and in Figure~\ref{fig:Jcurve_example} in the main text.  
+
+\begin{example}[Non-Linear Returns to AI Quality]
+Consider a production process with two steps.  
+The first step is short but high-skill and difficult for AI tools to perform correctly.  
+Specifically, its manual skill cost is $\manualSkill{1} = 5$, its manual time cost is $\manualTime{1} = 1$, and its hand-off time is $1$.  
+Its AI difficulty score, $d_1$, is $6$, meaning that an AI can successfully complete the step with probability $q_1 = \alpha^6$.  
+The AI management skill and time requirements are the same as the manual execution requirements: $(\AIskill{1}, \AItime{1}) = (5,1)$.
+
+The second step is low-skill and time-consuming to execute manually, but easy for AI.  
+It has $(\manualSkill{2}, \manualTime{2}) = (2,4)$ and AI difficulty score $1$.  
+The skill needed to manage the AI is also $2$, but the time needed to manage the AI is reduced to $1$: $(\AIskill{2}, \AItime{2}) = (2,1)$.
+
+Consider the optimal AI strategy and job design for this example as a function of $\alpha$, the general AI quality metric.  
+The costs of different AI strategies are plotted in Panel (a) of Figure~\ref{fig:Jcurve_example}.  
+For $\alpha < 0.25$, it is optimal to complete each step manually as a separate task, and to separate the two tasks into separate specialized jobs. 
+This incurs a total cost of $(5)(1+1) + (2)(4) = 18$.  
+As this strategy does not employ AI, the cost is not affected by improvements to $\alpha$ in this range, which is evident in Panel (b) of the figure.
+
+For $\alpha \in (0.25, 0.77)$, the optimal AI strategy changes: it is better to use AI augmentation for the second step, reducing that step's total completion cost from $(2)(4)$ to $(2)(1/\alpha)$.  
+As $\alpha$ increases, the total execution cost drops gradually from $18$ (at $\alpha = 0.25$) to $10 + 2/\alpha \approx 12.5$ (at $\alpha \approx 0.77$). 
+This gradual improvement is visible as a modest slope in Panel (b).
+
+However, once $\alpha$ grows larger than $0.77$, the optimal AI strategy and job design change more dramatically.  
+At this point, it is better to combine both steps into a single AI chain, automating step $1$, and to assign the resulting aggregate task to a single low-skill worker. 
+The completion cost of this strategy is $(2)(1/\alpha^7)$. 
+This cost starts at approximately $12.5$ at $\alpha = 0.77$ but drops sharply, eventually converging to a total cost of $2$ at $\alpha = 1$. 
+This sharp drop indicates substantial marginal benefits from incremental improvements in AI quality in this region, illustrated by the pronounced jump in the slope in Panel (b) at $\alpha \approx 0.77$.
+\end{example}

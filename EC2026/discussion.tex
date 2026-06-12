@@ -1,0 +1,227 @@
+
+\section{Job-level AI Exposure and the Fragmentation Index}
+\label{sec:fragmentation}
+
+%\pscomment{BL and NSI to manage the FI subsection}
+For a single step in isolation, the decision whether or not to deploy AI augmentation depends 
+only on the AI exposure of the step in question. 
+%simply on whether the manual execution cost exceeds the AI management cost.  
+%That is, the optimal choice of whether to use AI assistance depends only on the AI exposure of the step in question. 
+%For two or more steps, however, the optimal deployment of AI depends on more than the exposure of each step in isolation.  
+%This can arise because of the benefits of automating multiple steps together in an AI chain.  
+More generally, even if a step can be completed more effectively through manual work, it may be preferable to automate it as part of a larger AI chain that can be jointly delegated to AI.  
+Whether this occurs in the optimal AI strategy depends on the relationship between other nearby steps in the production process.
+
+%Returning to the short-run optimization problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:optimization.short}, we can interpret job-level AI exposure as the extent to which an optimal AI strategy employs AI automation and augmentation.  
+Intuitively, a run of \emph{consecutive} steps in the production process that an AI can perform effectively is a natural candidate for an AI chain.  
+A job that contains such runs of consecutive steps is therefore likely to benefit most from AI automation.  
+On the other hand, a job for which AI-friendly steps are separated by intermediate steps that an AI is likely to fail is less exposed to large-scale automation, even though its task-level exposure to AI may appear high. See Appendix~\ref{app:examples.task.order} for numerical examples.
+
+\iffalse
+\begin{example}
+    Consider a job consisting of $m$ steps, where $m$ is even.  
+    Each step takes time $5$ to complete manually and has an AI management time of $1$, but the steps vary in how difficult they are for an AI to complete: odd-numbered steps can be successfully completed by an AI with probability $1$, whereas even-numbered steps will be successfully completed with probability only $0.1$, as shown below:\\~\\
+    \input{plots/example1_visualization.tex}
+    In this scenario, it is suboptimal to attempt to use AI on any of the even-numbered steps, even as part of a chain.  
+    The optimal AI deployment strategy is to employ AI-augmentation on the odd-numbered steps (for a cost of $1$ each) and perform even-numbered steps manually (for a cost of $5$ each), resulting in an overall time cost of $3m$.
+\end{example}
+\begin{example}
+    Next suppose that easy and hard steps are not interleaved, but rather the first $m/2$ steps can each be completed by AI with probability $1$ and the last $m/2$ steps can each be completed with probability $0.1$, as follows:\\~\\
+    \input{plots/example2_visualization.tex}
+    In this case, the optimal AI strategy chains together the first $m/2$ steps into a single automated AI chain, for a combined cost of $1$. 
+    The remaining $m/2$ steps are then performed manually.  
+    This results in an overall time cost of $1 + 5m/2$, which is strictly less than $3m$ as long as there are four or more steps.
+\end{example}
+\fi
+
+To make this intuition more precise, consider the short-run optimization problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:optimization.short} where the goal is to design an AI strategy that optimizes the time cost of production for a single job assigned to a single worker with fixed wage.
+%Recall that in this short-run problem we are fixing a single job assigned to a worker with a fixed wage, so our focus is on optimizing the time cost of production.  
+We'll focus on the case where AI management costs are normalized to $\AItime{i} = 1$, meaning that, while steps can differ in their task-level exposure to AI, the time needed to manage an AI process is identical across steps.
+Under this assumption, we will define a measure of the dispersion of AI-exposed tasks in a production process, which we refer to as the \emph{fragmentation index} of a job.  
+We then show that the fragmentation index of a job approximates (up to constant factors) the time cost of an optimal AI strategy for that job.  
+In other words, jobs for which the fragmentation index is high will tend to yield less benefit from AI automation in the short-term where worker wages and job boundaries are fixed.
+Notably, this intuition makes heavy use of the short-run assumption that worker wages are fixed and independent of task skill requirements; we discuss examples where this intuition fails when describing long-run effects in Section~\ref{sec:discussion.skills}.
+
+Our definition of fragmentation index is motivated by the following hypothetical scenario. The AI strategy is being designed by a prophet who can ``see the future'' to determine which tasks would be completed successfully by AI on the very first attempt and which would not. Armed with this foresight, the prophet could chain together all contiguous sequences of tasks that would succeed and perform all other tasks manually. The fragmentation index is then the expected cost of this AI strategy, under the assumption that the prophet's foresight is correct. 
+
+Notably, this AI strategy isn't necessarily optimal even with the benefit of foresight: a long AI chain with a good probability of success might be optimal even if the prophet knows that it will fail on the first attempt, due to its likelihood to succeed on a second or third attempt. However, what we will show is that the fragmentation index approximates the cost of the optimal strategy even without foresight. Furthermore, it is a measure of the dispersion of highly automatable tasks: when the tasks most likely to succeed are contiguous, the prophet's foresight allows it to safely construct larger chains on average and thereby achieve lower cost.
+
+To define the fragmentation index more formally, fix the step sequence $\mathcal{S}$ and consider a random process in which each step $s_i$ succeeds independently with probability $q_i$. Any task that does not succeed is said to fail.  
+Write $F$ for the set of steps that fail, and $\mathcal{C} = \{C_1, \dotsc, C_k\}$ for the random variable representing the collection of maximal connected components of non-failed steps.
+The weight of each $C_j \in \mathcal{C}$ is defined to be $\omega(C_j) = \min\{ 1, \sum_{i \in C_j} \manualTime{i} \}$.  
+That is, each $C_j$ has weight $1$ unless the sum of the manual time costs for each of its steps is less than $1$ (motivated by the normalization of AI management costs to $1$).
+As a final piece of notation, for each $s_i$, write $\minTime{i} = \min\left\{\manualTime{i}, \frac{\AItime{i}}{q_i}\right\}$.  That is, $\minTime{i}$ is the minimum cost to implement step $s_i$ individually (whether manually or through AI augmentation).  
+
+\begin{definition}
+Given a step sequence $\mathcal{S}$, its \emph{fragmentation index} $FI(\mathcal{S})$ is 
+\[ E\left[\sum_{s_i \in F}\minTime{i} + \sum_{C_j \in \mathcal{C}} \omega(C_j) \right] \]
+where the expectation is over the realization of failed steps $F$ and collection $\mathcal{C}$ of maximal contiguous runs of non-failed steps, as described above.
+\end{definition}
+
+%We now fix the sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, write $FI$ for the fragmentation index of $\mathcal{S}$, and let $OPT$ be the cost of the optimal (short-term) AI strategy for those steps.  
+%
+We show that the fragmentation index for a given step sequence is a constant approximation to the cost of the optimal (short-term) AI strategy for those steps.  Full proof details appear in Appendix~\ref{app:FI}.
+
+%$OPT$.
+%of the cost of the optimal (short-term) AI strategy for a given fixed job's step sequence.
+
+\begin{proposition}
+\label{prop:fragmentation}
+   Fix a single job with a sequence of $m$ steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, each with $\AItime{i} = 1$.
+   Let $FI$ denote its fragmentation index and let $OPT$ denote the minimum time cost over all AI strategies.
+   Then $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+   If we further assume $\manualTime{i} \geq 1$ for all $i$, then $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+\end{proposition}
+
+The key take-away from Proposition~\ref{prop:fragmentation} is that jobs with high fragmentation index---i.e., those for which the expected number of \emph{consecutive} successful step executions by an AI is low---will tend to have higher time costs even under optimal use of AI chaining.  
+A key driver of efficiency gains via AI automation is not simply the expected number of steps that can be automated effectively, but the number of \emph{adjacent} steps in the production process that have high exposure to AI.
+
+A further implication of our proof of Proposition~\ref{prop:fragmentation} is a natural and approximately optimal greedy algorithm for constructing AI strategies. The algorithm groups steps into chains as long as the probability of success is sufficiently high; if the success probability falls too low then the chain is terminated and a new chain is started (with chains of length 1 converted to manual execution when appropriate). We find this greedy algorithm interesting not because of its computational implications --- since we already know from Proposition~\ref{prop:short_run_optimization} how to compute the optimal AI strategy --- but rather as a practical heuristic and source of intuition for what makes step sequences more or less exposed to large-scale AI automation.
+
+We now highlight some key ideas and intuition from the proof of  Proposition~\ref{prop:fragmentation}.  The first step of the proof is to show that the fragmentation index is not much larger than $OPT$.  As noted earlier, this is not immediate: even though our prophet has the extra benefit of foresight in our motivating interpretation, they are restricted to using an AI strategy in which every AI chain completes successfully on its first attempt.  Indeed, the following simple example shows that the fragmentation index could be as high as $\tfrac{5}{4}OPT$.
+
+\begin{example}
+Suppose a job has 3 steps, $\mathcal{S} = \{s_1, s_2, s_3\}$. The first and last always succeed, $q_1 = q_3 = 1$, and the second step succeeds with probability $q_2 = 0.5$ and has a manual cost of $\manualTime{2} = 2$.
+The optimal AI strategy automates all three steps into a single AI chain for an expected cost of $1/q_2 = 2$. The fragmentation index realizes to $1+2+1=4$ if the middle step fails, or $1$ if the middle step succeeds, yielding $FI = q_2 \times 1 + (1-q_2) \times (1+2+1) = 5/2$.
+\end{example}
+
+As it turns out, the bound of $5/4$ from this example is tight: for all task sequences,
+\begin{equation}
+    \label{eq:FI.upperbound}
+    FI \leq \tfrac{5}{4}OPT.
+\end{equation}
+The proof of \eqref{eq:FI.upperbound} employs a charging argument.  Consider the optimal AI strategy and an arbitrary AI chain within that strategy.  Using independence of failure events, we can relate the failure probability of the AI chain to the expected number of steps within the chain that would fail for the prophet.  This lets us approximate the expected cost of an AI chain (i.e., the expected number of repetitions needed for success) by the expected number of failed steps within it, the latter of which contributes to the number of components in $\mathcal{C}$ and hence to the fragmentation index. See Appendix~\ref{app:FI} for further details.
+
+The next step in the proof of Proposition~\ref{prop:fragmentation} is to argue that $FI$ is not much smaller than $OPT$. We begin with an analysis under the assumption that $\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$. That is, for each step $s_i$, completing the step manually is at least as costly as managing an AI tool to complete the step in a single attempt (with guaranteed success).  Under this assumption, we can show that
+
+\begin{equation}
+\label{eq:FI.lowerbound.4}
+    FI \geq \tfrac{1}{4}OPT.
+\end{equation}
+
+%\begin{lemma}
+%\label{lem:FI.lower.bound.4}
+%    Suppose $\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$. 
+ %   Then $FI \geq \tfrac{1}{4}OPT$.
+%\end{lemma}
+
+To give intuition for \eqref{eq:FI.lowerbound.4}, note that one way to design an AI strategy is to use the following greedy strategy: chain steps together until the failure probability of the resulting AI chain would exceed $1/2$, at which point we terminate the chain and begin anew. Each such chain requires, in expectation, at most $2$ executions to complete successfully. The steps in each such chain also contribute a constant amount to the fragmentation index, as there is a constant probability that at least one step in the chain or immediately following the chain would fail. Since the optimal AI strategy is only better than this greedy strategy, we conclude (after taking care to avoid double-counting errors on the boundary between two chains) that the fragmentation index cannot be much less than OPT.
+
+We also provide a bound on how much further this analysis could be improved: Example~\ref{ex:FI.approx.not.2} in Appendix~\ref{app:FI} describes a problem instance where $FI$ is strictly less than half of $OPT$, even under our assumption that $\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$.
+
+%A subtlety that this intuition glosses over is the potential to double-count failures that occur at the boundary between chains.  This potential for double-counting is precisely why we end up with an approximation factor of $4$ rather than the factor $2$ that our proof sketch might suggest.  It turns out that this is not just a quirk of our analysis: in Appendix~\ref{app:FI} we provide an example showing that $FI$ can be strictly less than half of $OPT$ even under our assumption that $\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$.
+
+%Can the approximation factor in Proposition~\ref{prop:FI.lower.bound.4} be improved? 
+%While we do not have a matching lower bound of $4$, we do know that the approximation factor is at least $\tfrac{2}{3}(2+\sqrt{2}) \approx 2.276$.  
+%Here is an example. 
+%Suppose the problem instance is a sequence of $m$ steps, each with success probability $1/\sqrt{2}$ and manual cost $\sqrt{2}$.  
+%The task sequence described in the proof of Proposition~\ref{prop:FI.lower.bound.4} then handles each task separately, for a total cost of $m \sqrt{2}$.  
+%The optimal task sequence must therefore perform at least this well.  
+%The fragmentation index is such that each task contributes $\sqrt{2}$ if it fails, plus $1$ if the preceding task did not fail, for a total contribution of $(1-1/\sqrt{2})(\sqrt{2} + 1(1/\sqrt{2}) = \tfrac{3}{2}(\sqrt{2}-1) \approx 0.6213$.  
+%As $m$ grows large, the ratio between $m\sqrt{2}$ and $1 + m \times 0.6213$ approaches $\tfrac{2}{3}(2+\sqrt{2}) \approx 2.276$.
+
+%\bigskip
+
+The final step of the proof of Proposition~\ref{prop:fragmentation} is to relax the assumption that $\manualTime{i} \geq 1$ for all $s_i$, used to prove \eqref{eq:FI.lowerbound.4}.
+%
+%Lemma~\ref{lem:FI.lower.bound.4} that $\manualTime{i} \geq 1$ for all $s_i$.  
+This involves some technical changes to the proof that change the bound on $FI$ from $OPT/4$ to $OPT/8$.  While we expect that this factor of $8$ could be improved, we show that some such degradation to the approximation factor is necessary: Example~\ref{ex:FI.approx.not.4} in Appendix~\ref{app:FI} gives an instance of a step sequence --- with $\manualTime{i} < 1$ for some steps --- in which $FI$ is strictly less than $OPT/4$.
+
+%\begin{proposition}
+%\label{prop:FI.lower.bound.8}
+%    For general $\manualTime{i}$ (i.e., allowing $\manualTime{i} < 1$ for some steps $s_i$), $FI \geq \frac{1}{8}OPT$.
+%\end{proposition}
+
+%We suspect the factor of $8$ in Proposition~\ref{prop:FI.lower.bound.8} is not tight. 
+%But, as we now show, the factor is strictly greater than the factor $4$ from Proposition~\ref{prop:FI.lower.bound.4}, so the assumption that $\manualTime{i} \geq 1$ for all $s_i$ is necessary for Proposition~\ref{prop:FI.lower.bound.4} to hold.
+
+%Consider a step sequence $\mathcal{S}$ that alternates between (a) steps of manual cost $0$ and success probability $1/\sqrt{2} - \epsilon$ where $\epsilon$ is vanishingly small, and (b) steps of manual cost $1$ and success probability $1$.  
+%Suppose there are $K > 1$ such pairs.  
+%The task sequence described in the proof of Proposition~\ref{prop:FI.lower.bound.8} above groups the steps into pairs of two-step tasks, for a total cost of $K \sqrt{2}$ (ignoring $\epsilon$).  
+%The fragmentation index is $1$ plus $1$ for each task that fails, which is $1 + K(1 - 1/\sqrt{2})$ (again ignoring the impact of $\epsilon$).  
+%As $K$ grows large, the ratio tends to $2(\sqrt{2}+1)$ which is strictly greater than $4$.
+
+%Given a realization of $\mathcal{C}$ and $F$, we define the realized fragmentation to be 
+%\begin{equation}
+%    \sum_{i \in F}\min\left\{\manualTime{i}, \frac{\AItime{i}}{q_i}\right\} + \sum_{C_j \in \mathcal{C}} \omega(C_j).\label{eq:fragmentation}
+%\end{equation}
+%The \emph{fragmentation index} is the expected value of the realized fragmentation.
+
+%Intuitively, we expect the fragmentation index to be lower when highly automatable steps (that is, those for which the AI are likely to succeed) are clustered together, since a large cluster of highly automatable steps are more likely to realize as a single connected component when failures are realized.
+
+%We will show that the fragmentation index is within a constant factor of the cost of the optimal (short-term) AI strategy for a given fixed job's step sequence.
+
+%\begin{proposition}
+%\label{prop:fragmentation}
+%   Fix a single job with a sequence of $m$ steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, each with $\AItime{i} = 1$.
+%   Let $FI$ denote its fragmentation index and let $OPT$ denote the minimum time cost over all AI strategies.
+%   Then $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+%   If we further assume $\manualTime{i} \geq 1$ for all $i$, then $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+%\end{proposition}
+
+%We prove Proposition~\ref{prop:fragmentation} in Appendix~\ref{app:FI}.  
+
+
+\section{Discussion: Worker Specialization and Non-Linearity of AI Benefits}
+
+\subsection{Impact of AI Deployment on Worker Skill and Specialization}
+\label{sec:discussion.skills}
+
+While the fragmentation index captures the short-run impact of AI deployment on step execution time, in the long run the firm can also adjust worker skill requirements and workforce specialization alongside its AI strategy to lower costs. 
+That is, the long-run wage bill combines an (expected) time requirement with a worker skill requirement, where skill reflects manual execution or AI management. 
+Long-run gains from AI therefore need not necessarily come from time savings. 
+The wage bill can fall through lower completion time, lower required skill, or both. 
+These mechanisms are not mutually exclusive, and neither is necessary on its own.
+In particular, AI may increase effective completion time for a subset of tasks while reducing the skill required to perform them, and still lower the wage bill. 
+% For example, a firm may replace manual execution by a high-skill worker with AI management by a lower-skill worker, even if repeated attempts and monitoring lengthen expected completion time, because the reduction in required skill and wage rate dominates.%\footnote{
+% In the geometric representation discussed in Appendix~\ref{app:model_handoff_discussion}, the wage bill associated with a task is the area of a rectangle with width equal to the time requirement and height equal to the skill requirement. 
+% The area can fall when one dimension declines even if the other rises.
+% } 
+
+More generally, sectors and occupations may lie in different regions of this time--skill tradeoff. 
+When AI mainly reduces time requirements while holding skill requirements fixed or raising them, our framework predicts worker upskilling. 
+When AI mainly reduces skill requirements with limited time savings, or even higher completion time, our framework predicts worker deskilling. 
+Importantly, both forces can operate simultaneously and the direction of net skill change depends on which effect dominates in equilibrium. 
+Appendix~\ref{app:discussion_examples_reskilling} gives three numerical examples showing that productivity gains from AI in the long run do not necessarily come in the form of reduced time savings, and that our framework supports both upskilling and deskilling of workers.
+
+
+
+
+
+\subsection{Non-Linear Impacts of AI Improvements}
+\label{sec:nonlinear_impact}
+
+The full economic impact of AI can take substantial time and investment to materialize, because its benefits may not be realized until large-scale reorganization of production becomes feasible. 
+This implies that the marginal value of improvements in AI quality need not be monotone, and that adoption of AI may follow a J-curve pattern \citep{brynjolfsson2021productivity}. 
+In our model, this pattern arises endogenously because the firm optimizes jointly over AI deployment and job design strategies. 
+One can think of parameter $\alpha \in (0,1]$ in our model as a metric of the quality of a general-purpose AI technology, taken to be the probability that a task of normalized difficulty $1$ is completed successfully.  
+We can then model general technology improvements as increasing the value of $\alpha$.  
+For a given \emph{fixed} AI strategy $\T$ and job design $\J$, the total cost can be expressed as a polynomial in $(1/\alpha)$.  
+As a result, the cost of $\T$ and $\J$ shifts in a continuous and smooth manner as $\alpha$ increases, with monotone marginal gains to technology improvements.  
+However, the optimal choice of design involves taking the minimum-cost solution over many possible AI strategies and job designs in \eqref{eq:totalcost_with_handoff}.  
+AI strategies with a higher degree of AI chaining will naturally involve higher powers of $1/\alpha$ in their cost expressions, meaning that they are more sensitive to changes in $\alpha$ and become preferable only at higher values of $\alpha$ (i.e., as AI becomes more effective as a tool). 
+This naturally leads to scenarios where the productivity improvements of AI integration are modest at low levels of quality but can grow sharply past a certain inflection point.
+
+Figure~\ref{fig:Jcurve_example} shows an example production chain consisting of two steps in which, for modest values of $\alpha$, the firm optimally does not deploy AI (left graph), so marginal improvements in AI quality have zero value (right graph). 
+Once AI quality reaches the threshold at which the minimum-cost way of production requires workflow reorganization and assigning a step to AI, the marginal return to further quality improvements jumps discontinuously. 
+As AI quality rises further, additional organizational adjustments make longer AI chains optimal at higher values of $\alpha$, which makes the effect even more pronounced. 
+Appendix~\ref{app:discussion_examples_nonlinear_impact} reports the cost parameters for this example and details how the firm's optimal choices are computed. 
+\begin{figure}[htbp]
+  \begin{center}
+  \caption{Visualization of Non-Linear Impacts of AI Improvements} 
+  \label{fig:Jcurve_example}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \caption{Total Cost by AI Strategy}
+    \includegraphics[width=\textwidth]{plots/example5_costs.png}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.49\textwidth}
+    \caption{Marginal Benefit of Improving AI Quality}
+    \includegraphics[width=\textwidth]{plots/example5_marginalBenefit.png}
+  \end{subfigure}
+  \end{center}
+  \raggedright \footnotesize{\emph{Notes:} Panel (a) shows total execution costs under various AI strategies as AI quality $\alpha$ improves. 
+  Panel (b) illustrates the marginal reduction in production cost from increased AI quality. 
+  Dashed vertical lines indicate thresholds where optimal AI deployment strategies change.
+  Appendix~\ref{app:discussion_examples_nonlinear_impact} describes the cost parameters and calculation of the optimal AI strategies.
+  }
+\end{figure}

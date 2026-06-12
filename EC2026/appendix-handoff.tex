@@ -1,0 +1,98 @@
+\section{Model Section Supplementary Materials \textendash \ Hand-off Costs and the Limits of Worker Specialization}
+\label{app:model_handoff_discussion}
+
+\renewcommand{\thetable}{B.\arabic{table}}
+\renewcommand{\thefigure}{B.\arabic{figure}}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+
+
+In this appendix we discuss how hand-off costs determine the optimal organization of production and limit full worker specialization in the firm's long-run problem \eqref{eq:totalcost_with_handoff}.
+We leverage insights from a numerical example as well as a geometric illustration, which together show how task aggregation balances higher wages against lower coordination costs.
+
+Consider a production process that, under a fixed AI deployment strategy $\T$, has $n=3$ tasks with the following cost parameters:
+\[
+\begin{array}{c|ccc}
+\textbf{Task} & \skillcost{b} & \timecost{b} & \handofftime{b} \\ \hline
+1 & 3  & 1   & 3 \\
+2 & 1  & 2   & 0.5 \\
+3 & 2  & 2   & 0 \\
+\end{array}
+\]
+
+With three tasks, there are four ways the firm can design jobs.\footnote{
+More generally, a production process with $n$ tasks has $2^{(n-1)}$ unique job designs.
+} 
+Denoting jobs by square brackets, with three tasks the four possible job designs are 
+$\{[1][2][3], \quad [1,2][3], \quad [1][2,3], \quad [1,2,3]\}$.
+The cost of these job designs for the example above is given in Table~\ref{tab:job_design}.
+\begin{table}[ht!]
+    \caption{Role of Hand-off Costs in Organizational Structure}
+    \begin{center}
+    \hspace{-1.4cm}
+    \resizebox{0.85\textwidth}{!}{%
+    \begin{tabular}{c}
+    \begin{minipage}{\textwidth}
+    \centering
+    Panel (a): Job Design Without Hand-off Costs \\[1ex]
+    \input{tables/job_design_example_no_handoff.tex}
+    \end{minipage} \\[21ex]
+    
+    \begin{minipage}{\textwidth}
+    \centering
+    Panel (b): Job Design Including Hand-off Costs \\[1ex]
+    \input{tables/job_design_example_with_handoff.tex}
+    \end{minipage}
+    \end{tabular}
+    }
+    \label{tab:job_design}
+    \end{center}
+    \raggedright \footnotesize{\emph{Notes:} This table reports total production costs for each possible job design in an example production process with a fixed automation strategy and $n = 3$ tasks. 
+    The cost parameters of the tasks are given by $(\skillcost{b},\timecost{b},\handofftime{b})=\{(3,1,3),(1,2,0.5),(2,2,0)\}$.
+    In the absence of hand-off frictions, full specialization, corresponding to job design [1][2][3], is cost-minimizing. 
+    Once hand-off costs are taken into account, the optimal organizational structure changes to job design [1,2][3], which avoids the large coordination cost between tasks 1 and 2 at the expense of employing a higher-cost (more skilled) worker to complete those tasks.
+    }
+\end{table}
+In the absence of hand-off costs in Panel (a), the optimal job design corresponds to full specialization: each task forms a separate job assigned to a different worker.
+When hand-off costs are introduced in Panel (b), however, the optimal design changes to one in which tasks 1 and 2 are combined into a single job, while task 3 remains separate.
+This structure is optimal because it avoids the large hand-off cost that would otherwise arise between tasks 1 and 2 due to the large hand-off time value $\handofftime{1}=3$.
+By aggregating tasks 1 and 2, the firm pays a higher wage to a more skilled and more versatile worker but eliminates the costly coordination between the two tasks, lowering total production cost.
+Equation~\eqref{eq:wagebill} captures this trade-off explicitly: 
+adding more tasks to a worker's job raises the wage rate through the skill term $\sum_{T_b \in J_j} \skillcost{b}$, 
+while keeping tasks separate raises total cost through additional hand-offs $\handofftime{}(J_j)$.
+These two effects jointly determine the optimal degree of task aggregation.
+
+The cost of different job designs admits a geometric interpretation as well.  
+Figure~\ref{fig:job_design} visualizes the production process of the example in Table~\ref{tab:job_design} as stacked rectangles, where each rectangle's height corresponds to $\skillcost{b}$ and its width to $\timecost{b}$.
+\begin{figure}[ht!]
+\begin{center}
+\caption{Geometric Interpretation of Job Designs} \label{fig:job_design}
+\begin{subfigure}[b]{0.49\textwidth}
+\caption{Job Design Without Hand-off Costs}
+  \includegraphics[width=\textwidth]{plots/combined_grid_no_handoff.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.49\textwidth}
+\caption{Job Design With Hand-off Costs}
+  \includegraphics[width=\textwidth]{plots/combined_grid_with_handoff.png}
+\end{subfigure}
+\end{center}
+\raggedright \footnotesize{\emph{Notes:} Each panel visualizes the production process as stacked rectangles, where the area of each job's bounding box represents its wage bill.  
+Panel (a) sets hand-off costs to zero, in which case it is optimal to assign one task per job.
+Panel (b) introduces hand-off costs, which alters the cost structure and makes the [1,2][3] design cost-minimizing.
+}
+\end{figure}
+Panel~(a) depicts the job design when hand-off costs are zero, Panel~(b) shows the same process with hand-off costs.  
+Visually, optimal job design balances two opposing forces.  
+Combining tasks into a single job eliminates the pink rectangles representing additional hand-off costs between tasks, but creates inefficiencies due to the higher skill level of the worker required to do the job. 
+Conversely, splitting tasks into separate jobs eliminates the intra-job inefficiencies but incurs hand-off time costs at each job boundary.
+These boundary costs scale with the cumulative human capital of the switching worker, so the height of the pink hand-off rectangle in Panel (b) equals the sum of human capital heights for that job. 
+Cost-effective job design must balance these effects.
+
+We have modeled hand-off costs as fixed and not influenced by the introduction of AI. 
+In reality, AI may reduce the cost of hand-offs between workers as well. 
+This might occur because the communication burden of handing off tasks could be partially automated through AI assistance. 
+While we do not model this explicitly, we expect that such a force would reduce the impact of hand-off costs and result in a higher degree of worker specialization.\footnote{
+A useful interpretation of hand-off costs is that they consist of two components: (i) peripheral coordination work that can be facilitated by AI (e.g., drafting messages, summarizing prior work, formatting documentation), and (ii) a purely manual remainder that relies on tacit, interpersonal, or social knowledge and is not easily executable by AI \citep{deming2017growing}. 
+For tractability, we abstract from the first component in our framework and treat its benefits as absorbed into execution and AI management time costs. 
+The hand-off cost in the model should therefore be read as capturing the second, irreducibly human component, even though AI-facilitated reductions in the peripheral component may matter in practice.
+}

@@ -1,0 +1,157 @@
+\section{Additional Robustness Tests for the Empirical Section}
+\label{app:additional_robustness}
+
+
+\renewcommand{\thetable}{G.\arabic{table}}
+\renewcommand{\thefigure}{G.\arabic{figure}}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+
+
+\subsection{Additional Tests for Prediction \#2}
+\label{app:additional_robustness_pred2}
+To ensure that our results for the second prediction are not driven by how fragmentation is measured using the AI exposure classifications of \citet{eloundou2023gpts}, we re-estimate \eqref{eq:fragmentation_index_regression} using two additional measures of task fragmentation constructed directly from realized AI execution outcomes, rather than from AI-exposed tasks.  
+The corresponding regression results are reported in Table~\ref{tab:fragmentation_index_regression_execution}.
+
+By construction, the execution-based EFI measures are mechanically related to the share of tasks executed by AI.  
+Holding the task sequence fixed, an additional AI-executed task necessarily increases the occupation's AI execution share while weakly reducing its EFI.\footnote{The reduction is weak because adding an isolated AI-executed task does not change fragmentation, whereas adding a task adjacent to an existing AI-executed task extends an AI chain and reduces fragmentation.
+}
+As a result, these measures mechanically amplify the negative relationship between AI execution and fragmentation in the regression, as reflected in the estimated coefficients on the EFI.
+Accordingly, they are not intended to provide an independent characterization of the relationship between task fragmentation and AI execution.  
+
+Instead, these measures serve as a diagnostic of the \emph{form} that AI adoption takes within occupations.  
+The model predicts not only that greater clustering of AI-able tasks facilitates higher overall AI execution, but also that realized AI adoption should occur disproportionately through the extension of contiguous AI chains rather than through scattered, isolated task substitutions.  
+If AI execution were independent across steps, then conditional on AI exposure, increases in execution would primarily appear as isolated events and would not substantially reduce fragmentation.  
+The strong negative relationship observed between execution-based EFI and AI execution therefore indicates that AI adoption follows the clustered, chain-based pattern implied by the model.
+In this sense, the execution-based EFI measures function as a falsification-style check on the model's underlying mechanism rather than as a separate test of its predictions.  
+
+
+
+\subsection{Additional Tests for Prediction \#3}
+\label{app:additional_robustness_pred3}
+Although DWAs are intended to group conceptually similar tasks, one might argue that even within a given DWA tasks may still somewhat differ in their objectives, execution nature, or required skills.  
+To address this concern, we re-estimate regression~\eqref{eq:DWA_regression_ai} using a more restrictive definition of task similarity within DWAs. 
+Specifically, for each DWA, we ask GPT-5-mini to select the subset of tasks that are most similar in terms of skill requirements and execution complexity.\footnote{The prompt used to identify similar DWA tasks is provided in Appendix~\ref{app:prompts}.}  
+This procedure yields, for each DWA, a set of highly comparable tasks that appear across different occupational contexts.
+Panel~(A) of Table~\ref{tab:DWA_tasks} presents example DWAs and their associated O*NET tasks across occupations, along with execution modes.  
+Panel~(B) reports the subset of tasks retained after applying the similarity filter.
+
+In this robustness test we treat these tasks as instances of the same underlying step appearing across occupations and re-estimate regression~\eqref{eq:DWA_regression_ai} on this restricted sample.  
+The resulting estimates, reported in Table~\ref{tab:DWA_regression_aiExecution_GPTsample} and  Figure~\ref{fig:DWA_regression_aiExecution_GPTsample}, closely mirror the baseline patterns of the main specification in both sign and magnitude.  
+
+
+
+\newpage
+\begin{table}[h!]
+    \caption{Role of AI-able Task Fragmentation in Determining AI Execution Outcomes (Using Execution-Based Empirical Fragmentation Measures)}
+    \label{tab:fragmentation_index_regression_execution}
+    \begin{center}
+    \input{tables/fragmentation_index_regression_execution.tex}
+    \end{center}
+    \raggedright \footnotesize{\emph{Notes:}} This table shows that occupation-level AI execution outcomes depend not only on the overall exposure of tasks to AI, but also on where AI-able steps are situated within the production sequence.
+    The table reports results from estimating regression~\eqref{eq:fragmentation_index_regression}.
+    The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\text{ai\_execution}$).
+    The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation, while the ``Empirical Fragmentation Index'' captures how dispersed AI-able steps are across the occupation’s workflow.
+    Definition~3 measures fragmentation based on realized AI chains per the model's definition (given in Definition~\ref{def:ai_chain} of the model section), whereas Definition~4 expands the definition of AI chains by treating both automated and augmented tasks contributing equally to the formation of AI chains in measuring task fragmentation.
+\end{table}
+
+
+
+\newpage
+\begin{landscape}
+\begin{table}[p]
+\caption{Example DWAs with Tasks in Multiple Occupations and the Tasks Surviving the ``Finding Similar Tasks'' Procedure}
+\label{tab:DWA_tasks}
+\hspace{-13cm}
+\resizebox{0.545\textheight}{!}{%
+\begin{minipage}{\textheight}
+
+\begin{center}
+
+\vspace{-0.5cm}
+
+\captionsetup{labelformat=empty}
+\caption{\hfill \Large{Panel (A)}}
+\input{tables/DWA_tasks_before_filter.tex}
+
+\vspace{0.3cm}
+
+\captionsetup{labelformat=empty}
+\caption{\hfill \Large{Panel (B)}}
+\input{tables/DWA_tasks_after_filter.tex}
+\end{center}
+\end{minipage}
+}
+
+\vspace{0.3cm}
+
+\raggedright \footnotesize{\emph{Notes:} Panel (A) shows three example detailed work activities (DWAs) and tasks associated with them in the O*NET dataset. 
+Entries highlighted with a red font are those that are dropped in the ``finding similar tasks'' procedure described in text. 
+Panel (B) shows the set of tasks for DWAs of Panel (A) that successfully survive the procedure.}
+\end{table}
+\end{landscape}
+
+
+
+\newpage
+\setcounter{table}{2}
+\begin{table}[ht!]
+\begin{center}
+\caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution Likelihood (GPT-filtered Sample)}
+\label{tab:DWA_regression_aiExecution_GPTsample}
+\resizebox{\textwidth}{!}{
+\input{tables/noTasksWithRepetitiveDWAs/GPT_ai.tex}
+}
+\end{center}
+\raggedright \footnotesize{\emph{Notes:}} 
+This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai}.  
+The dependent variable in all specifications is an indicator for whether task $t$ is AI-executed ($\text{is\_ai}_{t}$).  
+The sample is restricted to similar tasks across occupations, identified by GPT-5-mini as tasks belonging to the same DWA with similar execution nature and skill characteristics.  
+All specifications control for the AI exposure status of task $t$ and for the total number of tasks in task $t$'s occupation.
+Standard errors are bootstrapped using $B=200$ replications and clustered at the DWA level.  
+\end{table}
+
+
+
+\newpage
+\begin{figure}[ht!]
+  \begin{center}
+  \caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution Likelihood (GPT-filtered Sample)} 
+  \label{fig:DWA_regression_aiExecution_GPTsample}
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): No Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_filtered_is_ai_no_fe_no_dwa.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): SOC Major Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_filtered_is_ai_major_fe_no_dwa.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (C): SOC Minor Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_filtered_is_ai_minor_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (D): Detailed Work Activity Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_filtered_is_ai_no_fe_with_dwa.png}
+  \end{subfigure}
+  \end{center}
+  \raggedright \footnotesize{\emph{Notes:} These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being executed by AI, while more distant neighbors have little to no effect on a task's AI execution likelihood.
+  The red dashed line in each graph indicates the observed average marginal effect of the corresponding variable in the original dataset reported in Appendix Table~\ref{tab:DWA_regression_aiExecution_GPTsample}.
+  The red shaded area marks the 90\% confidence interval around the observed point estimates in the GPT-filtered sample.
+  The histograms plot the distribution of average marginal effects across 1{,}000 randomized reshuffles of task positions within occupations.
+  Panel~(A) reports results from specification~\eqref{eq:DWA_regression_ai}, while Panels~(B), (C), and (D) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.
+}
+\end{figure}

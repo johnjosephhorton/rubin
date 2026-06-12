@@ -1,0 +1,45 @@
+\begin{tikzpicture}[scale=0.88, transform shape,
+    node distance=0.5cm and 1.2cm,
+    every node/.style={rectangle, rounded corners, draw, align=center, minimum width=2cm, minimum height=1cm},
+    manual/.style={fill=gray!10},
+    automated/.style={fill=green!30},
+    augmented/.style={fill=orange!30},
+    labelbox/.style={draw, rectangle, rounded corners, font=\bfseries, minimum width=2.25cm, minimum height=1cm},
+    dashedbox/.style={draw, rectangle, rounded corners, dashed, inner sep=0.3cm, line width=1pt},
+    >=latex
+  ]
+
+    % Top layer (Steps)
+    \node[manual] (S1) {Step 1\\(Manual)};
+    \node[automated, right=of S1] (S2) {Step 2\\(Automated)};
+    \node[automated, right=of S2] (S3) {Step 3\\(Automated)};
+    \node[augmented, right=of S3] (S4) {Step 4\\(Augmented)};
+    \node[manual, right=of S4] (S5) {Step 5\\(Manual)};
+
+    % Arrows between steps
+    \draw[->, thick] (S1) -- (S2);
+    \draw[->, thick] (S2) -- (S3);
+    \draw[->, thick] (S3) -- (S4);
+    \draw[->, thick] (S4) -- (S5);
+
+    % Dashed boxes around steps
+    \node[dashedbox, draw=olive, fit=(S1)] (DS1) {};
+    \node[dashedbox, draw=blue, fit=(S2)(S3)(S4)] (DS2-4) {};
+    \node[dashedbox, draw=olive, fit=(S5)] (DS5) {};
+
+    % AI box top center aligned with Step 3
+    \node[labelbox, fill=blue!20, above=1.25cm of S3] (AI) {AI};
+
+    % Human box bottom center aligned with Step 3
+    \node[labelbox, fill=olive!20, below=1.5cm of S3] (Human) {Human};
+
+    % Lines from AI box to AI steps
+    \draw[thin, blue!80] (AI.south) -- (S2.north);
+    \draw[thin, blue!80] (AI.south) -- (S3.north);
+    \draw[thin, blue] (AI.south) -- (S4.north);
+
+    % Lines from Human box to Human steps
+    \draw[thin, olive!80] (S1.south) -- (Human.north);
+    \draw[thin, olive] (S4.south) -- (Human.north);
+    \draw[thin, olive!80] (S5.south) -- (Human.north);
+  \end{tikzpicture}

@@ -1,0 +1,75 @@
+\section{Additional Figures}
+\label{app:figures}
+
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\setcounter{figure}{0}
+
+% This figure illustrates an example production function of a firm.
+% The firm aggregates the $m=7$ steps in the top layer to $n=5$ tasks in the middle layer, and then aggregates those tasks into $p=3$ jobs in the bottom layer.
+% Each job is assigned to a single worker. 
+% Notice that the worker's job can contain both human tasks and AI tasks.
+\begin{figure}[h!]
+  \begin{center}
+  \caption{Illustrative Example of a Firm's Production}
+  \label{fig:hierarchical_production}
+  
+  \vspace{0.4cm}
+  \input{plots/hierarchical_production_illustration.tex}
+  \end{center}
+  
+  \vspace{0.4cm}
+  \raggedright \footnotesize{\emph{Notes:} 
+  This figure illustrates how a firm aggregates steps into tasks and tasks into jobs. 
+  The top layer shows $m=7$ steps executed in manual (gray), automated (green), or augmented (orange) modes, with dashed boxes indicating task groupings. 
+  The middle layer aggregates steps into $n=5$ tasks, classified as human-executed tasks (olive) or AI chains (purple), with cyan dashed boxes indicating job groupings. 
+  The bottom layer aggregates tasks into $p=3$ jobs (cyan), each assigned to a separate worker. 
+  Vertical colored arrows show aggregation across layers, and horizontal arrows show production flow within each layer. 
+  Red curly arrows mark hand-off costs incurred at job boundaries, and can be traced from the bottom layer to the corresponding tasks and steps above. 
+  }
+\end{figure}
+
+
+
+
+\newpage
+\begin{figure}[p]
+  \begin{center}
+  \caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution Likelihood} 
+  \label{fig:DWA_regression_aiExecution_mainSample}
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): No Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_full_is_ai_no_fe_no_dwa.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): SOC Major Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_full_is_ai_major_fe_no_dwa.png}
+  \end{subfigure}
+  
+  \vspace{1em}
+  
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (C): SOC Minor Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_full_is_ai_minor_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \captionsetup{labelformat=empty}
+    \caption{Panel (D): Detailed Work Activity Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/noTasksWithRepetitiveDWAs/AME_full_is_ai_no_fe_with_dwa.png}
+  \end{subfigure}
+  \end{center}
+  \raggedright \footnotesize{\emph{Notes:} These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being executed by AI, while more distant neighbors have little to no effect on a task's AI execution likelihood.
+  The red dashed line in each graph indicates the observed average marginal effect of the corresponding variable in the original dataset reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+  The red shaded area marks the 90\% confidence interval around the observed point estimates in the main sample.
+  The histograms plot the distribution of average marginal effects across 1{,}000 randomized reshuffles of task positions within occupations.
+  Panel~(A) reports results from specification~\eqref{eq:DWA_regression_ai}, while Panels~(B), (C), and (D) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.
+}
+\end{figure}

@@ -1,0 +1,41 @@
+\section{Optimization}
+
+In this section we study the firm’s short-run and long-run optimization problems for integrating AI into production. 
+We first solve for the optimal short-run AI deployment holding job design and wages fixed. 
+We then move on to the joint long-run optimization of AI deployment and job design with endogenous wages. 
+All proofs and algorithmic details are delegated to Appendix~\ref{app:optimization_details}. 
+
+\subsection{Short-Term Optimization: AI Deployment Design}
+\label{sec:optimization.short}
+
+We begin with the short-term optimization problem: the job design and worker wages are assumed to be fixed, so the goal is to find the choice of AI strategy for a single job that minimizes the total time cost through some combination of augmentation and automation.
+
+Since the job design and worker wage are fixed, it suffices to optimize for the amount of time spent to complete a unit of work for each job separately.  
+So, we assume that there is a single job $J$ with $m$ steps $\mathcal{S} = (s_1, \dotsc, s_m)$, and our goal is to find the sequence of tasks $\T$ that minimizes total completion time.  
+This problem admits a dynamic program because the optimal strategy for the first $k$ steps can be written recursively in terms of optimal strategies for earlier steps, together with a choice of where the final AI chain begins. 
+The following proposition shows that the short-run time-optimal production strategy can be calculated via dynamic programming in $O(m^2)$ time.
+
+\begin{proposition}
+\label{prop:short_run_optimization}
+Given $m$ steps organized into a single job, the time-optimal AI strategy can be calculated in time $O(m^2)$ via dynamic programming.    
+\end{proposition}
+See Appendix~\ref{app:short_run_optimization} for the recursive formulation of the problem and proof. 
+
+
+
+\subsection{Long-Term Optimization: Joint Job Design and AI Deployment}
+\label{sec:optimization.long}
+
+Next, we consider the joint optimization of job design and AI deployment in the long run, accounting for both the time and skill costs of workers assigned to the resulting jobs. 
+The firm chooses how to design AI chains, which pins down the time and skill requirements of tasks, and it simultaneously chooses how tasks are bundled into jobs and assigned across workers. 
+Equivalently, the firm determines not only the optimal chaining strategy, but also which subsets of steps are grouped into tasks and which tasks are assigned to the same worker, while accounting for hand-off costs implied by job boundaries. 
+
+Computing the solution to this joint optimization problem is demanding because it entails searching over a large space of feasible designs. 
+To overcome this, we discretize time and skill requirements to a grid and solve the resulting approximate dynamic program, which yields a polynomial-time approximation with the guarantee stated below. 
+
+\begin{proposition}
+\label{prop:totalcost_optimization_dp}
+Fix any sequence of $m$ steps $\mathcal{S} = (s_1, \dotsc, s_m)$ for which all skill costs, time costs, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.  
+Then for any $\epsilon > 0$, an approximately cost-minimizing pair of AI strategy $\T$ and job design $\J$ minimizing expression \eqref{eq:totalcost_with_handoff} to within a factor of $(1+\epsilon)$ can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB) )$ by dynamic programming. 
+\end{proposition}
+See Appendix~\ref{app:long_run_optimization} for the recursive formulation of the problem, discretization scheme, and proof.
