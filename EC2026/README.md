@@ -29,10 +29,13 @@ references and citations resolved.
   above; de-anonymizing added a third benign error ("No country present"),
   which is spurious — it fires in acmart's PDF-metadata pass even though
   every affiliation carries `\country`.
-- `camera_ready.tex` — the 1-page abstract for the ACM Digital Library
-  (`latexmk -pdf camera_ready.tex`, compiles clean, exactly 1 page).
-  Search for `TODO` before uploading: eRights values (license/ISBN/DOI),
-  John's ORCID, CCS code and keyword sign-off with coauthors.
+- `camera_ready/` — self-contained folder for the 1-page ACM Digital
+  Library abstract, kept separate so submission and camera-ready outputs
+  don't mix. Holds `camera_ready.tex` plus a pinned copy of `acmart.cls`;
+  build from inside the folder with `latexmk -pdf camera_ready.tex`
+  (compiles clean, exactly 1 page). Search for `TODO` before uploading:
+  eRights values (license/ISBN/DOI), John's ORCID, CCS code and keyword
+  sign-off with coauthors.
 
 ## Deadlines (from EC'26 chairs)
 
