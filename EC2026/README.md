@@ -22,6 +22,18 @@ never takes effect, in the submitted PDF either) and a `\Bbbk` redefinition
 (`amssymb` after acmart's newtxmath). Last verified build: 58 pages, all
 references and citations resolved.
 
+## Files
+
+- `main.tex` — full paper, de-anonymized for the camera-ready (real author
+  block with ORCIDs, acknowledgments restored). Builds with the command
+  above; de-anonymizing added a third benign error ("No country present"),
+  which is spurious — it fires in acmart's PDF-metadata pass even though
+  every affiliation carries `\country`.
+- `camera_ready.tex` — the 1-page abstract for the ACM Digital Library
+  (`latexmk -pdf camera_ready.tex`, compiles clean, exactly 1 page).
+  Search for `TODO` before uploading: eRights values (license/ISBN/DOI),
+  John's ORCID, CCS code and keyword sign-off with coauthors.
+
 ## Deadlines (from EC'26 chairs)
 
 - **June 15, 2026** — last day to edit title/authors on HotCRP; all authors
