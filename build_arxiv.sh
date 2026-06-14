@@ -30,6 +30,11 @@ mkdir -p "$DST/plots"
 cp "$SRC"/*.tex "$DST"/
 cp "$SRC"/rubin.bib "$SRC"/main.bbl "$DST"/
 
+# Strip the self-referential "most recent version" website link from the title
+# page -- inappropriate on arXiv, which is itself versioned. The writeup/ source
+# keeps it (the hosted PDF wants it so stale copies can find the latest).
+sed '/for the most recent version/d' "$DST/main.tex" > "$DST/main.tex.tmp" && mv "$DST/main.tex.tmp" "$DST/main.tex"
+
 # 2) Small asset dirs, wholesale.
 rsync -a --exclude='.DS_Store' "$SRC"/tables "$DST"/ 2>/dev/null
 rsync -a --exclude='.DS_Store' "$SRC"/images "$DST"/ 2>/dev/null

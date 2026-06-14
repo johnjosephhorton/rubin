@@ -53,5 +53,6 @@ with the EC venue. — TODO: confirm with coauthors.
   `arxiv.org/abs/...` URL is live before the EC'26 final upload (June 22).
 - Once the abs URL exists, swap it into the EC one-pager link
   (the TODO in `EC2026/camera_ready/camera_ready.tex`).
-- The title page still carries the "most recent version" website link; harmless
-  on arXiv, but remove or repoint it if you'd rather not self-reference.
+- The build script strips the title-page "most recent version" website link from
+  the arXiv copy (inappropriate on arXiv, which is versioned). The `writeup/`
+  source keeps it for the hosted PDF.
