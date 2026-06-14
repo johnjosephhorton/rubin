@@ -56,16 +56,21 @@ grep -rhoE '\\input\{plots/[^}]+\}' "$DST"/*.tex \
     if [ -f "$SRC/$p" ]; then mkdir -p "$DST/$(dirname "$p")"; cp "$SRC/$p" "$DST/$(dirname "$p")/"; fi
   done
 
-# 5) Downsample any image above arXiv's 34-megapixel warning threshold to ~20 MP
-#    (still well beyond what the PDF renders). Source figures in writeup/ are
-#    untouched. Uses macOS `sips`.
+# 5) Cap every figure at 1500px on its longest side. arXiv re-embeds all PNGs on
+#    each of its ~5 latex passes, so oversized figures (some were 6000-10000px,
+#    ~1000 dpi) blow past arXiv's compile-time limit even though the doc builds
+#    fine locally. 1500px is ~250 dpi at text width -- ample for plots. This also
+#    clears arXiv's 34-megapixel warning. Source figures in writeup/ are
+#    untouched; uses macOS `sips`.
+CAP=1500
 find "$DST" -type f -name '*.png' | while IFS= read -r f; do
   w="$(sips -g pixelWidth "$f" 2>/dev/null | awk '/pixelWidth/{print $2}')"
   h="$(sips -g pixelHeight "$f" 2>/dev/null | awk '/pixelHeight/{print $2}')"
-  if [ -n "$w" ] && [ -n "$h" ] && [ "$((w * h))" -gt 33000000 ]; then
-    neww="$(awk -v w="$w" -v h="$h" 'BEGIN{print int(w*sqrt(20000000/(w*h)))}')"
-    sips --resampleWidth "$neww" "$f" >/dev/null 2>&1
-    echo ">> downsampled $(basename "$f"): ${w}x${h} -> ${neww}px wide"
+  if [ -z "$w" ] || [ -z "$h" ]; then continue; fi
+  maxd=$(( w > h ? w : h ))
+  if [ "$maxd" -gt "$CAP" ]; then
+    sips -Z "$CAP" "$f" >/dev/null 2>&1
+    echo ">> capped $(basename "$f"): ${w}x${h} -> longest side ${CAP}px"
   fi
 done
 

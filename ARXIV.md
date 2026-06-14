@@ -56,5 +56,8 @@ with the EC venue. — TODO: confirm with coauthors.
 - The build script strips the title-page "most recent version" website link from
   the arXiv copy (inappropriate on arXiv, which is versioned). The `writeup/`
   source keeps it for the hosted PDF.
-- arXiv warns on images larger than 34 megapixels; the build script auto-downsamples
-  any such figure to ~20 MP (source untouched). Four robustness plots hit this.
+- The build script caps every figure at 1500px on its longest side (~250 dpi at
+  text width). The source plots were 6000-10000px (~1000 dpi); at that size arXiv
+  re-embeds them on each of its ~5 latex passes and the compile times out, even
+  though it builds in ~46s locally. Capping (to ~23s) also clears arXiv's
+  34-megapixel image warning. Source figures in `writeup/` are untouched.
