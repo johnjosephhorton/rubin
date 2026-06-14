@@ -56,3 +56,5 @@ with the EC venue. — TODO: confirm with coauthors.
 - The build script strips the title-page "most recent version" website link from
   the arXiv copy (inappropriate on arXiv, which is versioned). The `writeup/`
   source keeps it for the hosted PDF.
+- arXiv warns on images larger than 34 megapixels; the build script auto-downsamples
+  any such figure to ~20 MP (source untouched). Four robustness plots hit this.

@@ -56,11 +56,24 @@ grep -rhoE '\\input\{plots/[^}]+\}' "$DST"/*.tex \
     if [ -f "$SRC/$p" ]; then mkdir -p "$DST/$(dirname "$p")"; cp "$SRC/$p" "$DST/$(dirname "$p")/"; fi
   done
 
-# 5) Bundle the one non-guaranteed package so arXiv's TeX Live compiles it.
+# 5) Downsample any image above arXiv's 34-megapixel warning threshold to ~20 MP
+#    (still well beyond what the PDF renders). Source figures in writeup/ are
+#    untouched. Uses macOS `sips`.
+find "$DST" -type f -name '*.png' | while IFS= read -r f; do
+  w="$(sips -g pixelWidth "$f" 2>/dev/null | awk '/pixelWidth/{print $2}')"
+  h="$(sips -g pixelHeight "$f" 2>/dev/null | awk '/pixelHeight/{print $2}')"
+  if [ -n "$w" ] && [ -n "$h" ] && [ "$((w * h))" -gt 33000000 ]; then
+    neww="$(awk -v w="$w" -v h="$h" 'BEGIN{print int(w*sqrt(20000000/(w*h)))}')"
+    sips --resampleWidth "$neww" "$f" >/dev/null 2>&1
+    echo ">> downsampled $(basename "$f"): ${w}x${h} -> ${neww}px wide"
+  fi
+done
+
+# 6) Bundle the one non-guaranteed package so arXiv's TeX Live compiles it.
 CESTY="$(find /usr/local/texlive -name color-edits.sty 2>/dev/null | head -1)"
 if [ -n "$CESTY" ]; then cp "$CESTY" "$DST"/; fi
 
-# 6) Verify it compiles standalone -- exactly what arXiv will do.
+# 7) Verify it compiles standalone -- exactly what arXiv will do.
 echo ">> compiling to verify"
 ( cd "$DST" && latexmk -pdf -interaction=nonstopmode main.tex >/tmp/arxiv_build.log 2>&1 )
 if [ ! -f "$DST/main.pdf" ]; then
@@ -69,7 +82,7 @@ fi
 PAGES="$(grep -oE 'Output written on main\.pdf \([0-9]+ page' "$DST/main.log" | grep -oE '[0-9]+' | head -1)"
 echo ">> compiled OK: ${PAGES:-?} pages"
 
-# 7) Strip build artifacts, then tar with source at the archive's top level
+# 8) Strip build artifacts, then tar with source at the archive's top level
 #    (arXiv expects main.tex at the root, not nested in a folder).
 ( cd "$DST" && find . \( -name '*.aux' -o -name '*.log' -o -name '*.out' \
     -o -name '*.fls' -o -name '*.fdb_latexmk' -o -name '*.blg' -o -name '*.toc' \
