@@ -105,7 +105,7 @@ Formally, we can write $\mathcal{P}(X)$ for the set of partitions of a sequence 
 where recall that, for each $T_b \in \T$, $\timecost{b}$ and $\skillcost{b}$ are as described in Section~\ref{sec:model.tasks} and can depend on the selected mode of operation for individual steps.
 
 We refer to \eqref{eq:totalcost_with_handoff} as the firm's \emph{long-term} optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
-This contrasts with the short-run problem of Section~\ref{sec:optimization.short}, in which jobs and worker wages are fixed and the firm optimizes only AI deployment to minimize completion time within each job.
+This contrasts with the deployment problem of Section~\ref{sec:optimization.short}, which minimizes the skill-weighted cost of production $\sum_b \skillcost{b}\timecost{b}$ while treating each task as separately staffed; the long-run problem additionally optimizes how tasks are bundled into jobs.
 
 
 \subsection{Hand-off Costs and the Limits of Worker Specialization}
@@ -348,8 +348,8 @@ An appropriate change of variables (scaling $\epsilon$ by a constant) yields a $
 \subsection{Impact of AI Deployment on Worker Skill and Specialization}
 \label{sec:discussion.skills}
 
-While the fragmentation index captures the short-run impact of AI deployment on task completion time, in the long run AI strategy also alters the skill requirements of workers and the degree of specialization within the workforce.  
-This can dampen or even reverse the short-run intuition that gains from AI derive primarily from time savings, as the following example shows.
+Because the firm minimizes the skill-weighted cost of production, AI lowers cost by reducing the time required for a task, the skill required to perform it, or both.
+The skill channel can dampen or even reverse the intuition that gains from AI derive primarily from faster execution: AI may be worth deploying on a step even when it takes longer, provided it sufficiently lowers the skill required, as the following example shows.
 
 \begin{example}
     Consider a job consisting of a single step.  
