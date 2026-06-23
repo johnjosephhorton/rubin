@@ -1,23 +1,23 @@
 \section{Technical Details \textendash \ Fragmentation Index}
 \label{app:FI}
 
-In this appendix we prove Proposition~\ref{prop:fragmentation}, which relates the cost of the optimal short-term AI deployment strategy for a fixed job to the fragmentation index of that job.
+In this appendix we prove Proposition~\ref{prop:fragmentation}, which relates the cost of the optimal AI deployment strategy for a step sequence to its fragmentation index.
 Intuitively, we expect a production process in which automatable tasks are clustered together will benefit more from AI deployment than one where steps with high and low levels of automation susceptibility are interspersed.  
 This is due to the potential benefits from AI chains.
 
 First recall the definition of fragmentation index for a given step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$.  
-As a reminder, we assume for Proposition~\ref{prop:fragmentation} that $\AItime{i} = 1$ for all $s_i$.  
+As a reminder, we assume for Proposition~\ref{prop:fragmentation} that $\AIskill{i}\AItime{i} = 1$ for all $s_i$.  
 Consider a random process in which each step $s_i$ succeeds independently with probability $q_i$; any step that does not succeed is said to fail.  
 Write $F$ for the set of steps that fail, and $\mathcal{C} = \{C_1, \dotsc, C_k\}$ for the random variable representing the collection of maximal connected components of non-failed steps.  
-The weight of each $C_j \in \mathcal{C}$ is defined to be $\omega(C_j) = \min\{ 1, \sum_{s_i \in C_j} \manualTime{i} \}$.  
-That is, each $C_j$ has weight $1$ unless the sum of the manual time costs for each of its steps is less than $1$ (due to our assumption that AI management costs are normalized to $1$).
+The weight of each $C_j \in \mathcal{C}$ is defined to be $\omega(C_j) = \min\{ 1, \sum_{s_i \in C_j} \manualSkill{i}\manualTime{i} \}$.  
+That is, each $C_j$ has weight $1$ unless the sum of the manual costs of its steps is less than $1$ (due to our assumption that AI management costs are normalized to $1$).
 
-We now introduce some notation: for each $s_i$, write $\minTime{i} = \min\left\{\manualTime{i}, \frac{\AItime{i}}{q_i}\right\}$.  That is, $\minTime{i}$ is the minimum cost to implement step $s_i$ individually (whether manually or through AI augmentation).  
+We now introduce some notation: for each $s_i$, write $\minTime{i} = \min\left\{\manualSkill{i}\manualTime{i}, \frac{\AIskill{i}\AItime{i}}{q_i}\right\}$.  That is, $\minTime{i}$ is the minimum cost to implement step $s_i$ individually (whether manually or through AI augmentation).  
 Given a realization of $\mathcal{C}$ and $F$, we define the realized fragmentation to be 
 \[ \sum_{s_i \in F}\minTime{i} + \sum_{C_j \in \mathcal{C}} \omega(C_j).\]
 The \emph{fragmentation index} is defined to be the expected value of the realized fragmentation.
 
-We now fix the sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, write $FI$ for the fragmentation index of $\mathcal{S}$, and let $OPT$ be the cost of the optimal (i.e., time-minimizing) task structure for those steps.  
+We now fix the sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, write $FI$ for the fragmentation index of $\mathcal{S}$, and let $OPT$ be the cost of the optimal (i.e., cost-minimizing) task structure for those steps.
 
 We begin by showing that $FI$ is not much larger than $OPT$.
 
@@ -29,9 +29,9 @@ We begin by showing that $FI$ is not much larger than $OPT$.
 Fix an arbitrary task sequence $\T = (T_1, \dotsc, T_n)$.  
 Partition this into two sets of tasks: $\T_{\manualLetter}$ containing all (singleton) tasks that are completed manually, and $\T_{\AIletter}$ containing all other tasks (consisting of AI-augmented singletons and AI chains).  
 We first claim that 
-\[ FI \leq \sum_{T_j \in \T_{\AIletter}}\left(1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i})\right) + \sum_{(s_i) \in \T_{\manualLetter}}\manualTime{i}. \]
+\[ FI \leq \sum_{T_j \in \T_{\AIletter}}\left(1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i})\right) + \sum_{(s_i) \in \T_{\manualLetter}}\manualSkill{i}\manualTime{i}. \]
 
-To see why, first note that for any human-executed task $(s_i) \in \T_{\manualLetter}$, either the task fails in the realization of $F$ (in which case it contributes $\minTime{i} \leq \manualTime{i}$ to $FI$), or it succeeds (in which case it appears in some connected component $C_j$, contributing at most $\manualTime{i}$ to the component's weight $\omega(C_j)$).
+To see why, first note that for any human-executed task $(s_i) \in \T_{\manualLetter}$, either the task fails in the realization of $F$ (in which case it contributes $\minTime{i} \leq \manualSkill{i}\manualTime{i}$ to $FI$), or it succeeds (in which case it appears in some connected component $C_j$, contributing at most $\manualSkill{i}\manualTime{i}$ to the component's weight $\omega(C_j)$).
 
 Next consider the AI-assisted tasks.  
 For any $T_j \in \T_{\AIletter}$, consider the set of steps in $T_j$ that fail in any given realization of $F$. 
@@ -40,7 +40,7 @@ Otherwise, each failed task $s_i \in T_j$ contributes $\minTime{i}$ to the reali
 As each task $s_i \in T_j$ fails independently with probability $(1-\alpha^{d_i})$, we get that the contribution of tasks in $T_j$ to the fragmentation index is at most $1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i})$ as claimed.
 
 On the other hand, recall that if we take $\T$ to be the cost-minimizing task sequence, then
-\[ OPT = \sum_{T_j \in \T_{\AIletter}} \alpha^{-d(T_j)} + \sum_{(s_i) \in \T_{\manualLetter}} \manualTime{i} \] 
+\[ OPT = \sum_{T_j \in \T_{\AIletter}} \alpha^{-d(T_j)} + \sum_{(s_i) \in \T_{\manualLetter}} \manualSkill{i}\manualTime{i} \] 
 by definition, where we write $d(T_j) = \sum_{s_i \in T_j}d_i$ for the total difficulty of steps in task $T_j$.
 
 Comparing our expression for $OPT$ with our bound on $FI$, we see that each task in $\T_{\manualLetter}$ contributes the same amount to each, whereas each $T_j \in \T_{\AIletter}$ contributes $1+\sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i})$ to the former and $\alpha^{-d(T_j)}$ to the latter.  
@@ -62,12 +62,12 @@ Then the optimal policy automates all three together for an expected cost of $2$
 \medskip
 
 We next argue that $F$ is not much smaller than $OPT$.  
-We begin with an analysis under the assumption that $\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$.  
+We begin with an analysis under the assumption that $\manualSkill{i}\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$.  
 That is, for each step $s_i$, completing the step manually is at least as costly as managing an AI tool to complete the step in a single attempt (with guaranteed success).
 
 \begin{proposition}
 \label{prop:FI.lower.bound.4}
-    Suppose $\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$. 
+    Suppose $\manualSkill{i}\manualTime{i} \geq 1$ for all $s_i \in \mathcal{S}$. 
     Then $FI \geq \tfrac{1}{4}OPT$.
 \end{proposition}
 \begin{proof}
@@ -111,7 +111,7 @@ That is, for each step $s_i$, completing the step manually is at least as costly
     \medskip
 
     Next we bound $FI$.  
-    Note that the assumption $\manualTime{i} \geq 1$ implies that, in any realization of the connected components of non-failed steps $\mathcal{C} = (C_1, \dotsc, C_\ell)$, $\omega(C_j) = 1$ for all $j$. 
+    Note that the assumption $\manualSkill{i}\manualTime{i} \geq 1$ implies that, in any realization of the connected components of non-failed steps $\mathcal{C} = (C_1, \dotsc, C_\ell)$, $\omega(C_j) = 1$ for all $j$. 
     This implies that the realized fragmentation is equal to $1$ plus, for each $s_i \in F$ (i.e., each step $s_i$ that fails), a contribution of $\minTime{i}$ plus an additional $1$ in the event that $i > 1$ and the task immediately preceding $s_i$ did not fail.  
     (This additional cost of $1$ accounts for creating a new connected component of non-failed steps ending with $s_{i-1}$.)
     
@@ -142,24 +142,24 @@ As $m$ grows large, the ratio between $m\sqrt{2}$ and $1 + m \times 0.6213$ appr
 
 \bigskip
 
-We can relax the assumption in Proposition~\ref{prop:FI.lower.bound.4} that $\manualTime{i} \geq 1$ for all $s_i$, but at the cost of a worse approximation factor.
+We can relax the assumption in Proposition~\ref{prop:FI.lower.bound.4} that $\manualSkill{i}\manualTime{i} \geq 1$ for all $s_i$, but at the cost of a worse approximation factor.
 
 \begin{proposition}
 \label{prop:FI.lower.bound.8}
-    For general $\manualTime{i}$ (i.e., allowing $\manualTime{i} < 1$ for some steps $s_i$), $FI \geq \frac{1}{8}OPT$.
+    For general $\manualSkill{i}\manualTime{i}$ (i.e., allowing $\manualSkill{i}\manualTime{i} < 1$ for some steps $s_i$), $FI \geq \frac{1}{8}OPT$.
 \end{proposition}
 \begin{proof}
     The argument follows the proof of Proposition~\ref{prop:FI.lower.bound.4}, with the following changes.
 
     First we make a slight change in the definition of the task sequence $\T$ that defines $ALG$.  
-    If a constructed task $T_j$ has the property that $\sum_{s_i \in T_j} \manualTime{i} < 1$ (which implies it is cheaper to run all steps of $T_j$ manually than as an AI chain that is guaranteed to succeed), we switch to running the tasks of $T_j$ manually in the task sequence.  
-    In our analysis, we still consider $T_j$ to be a set in $\T_{NI}$; but its cost is taken to be $\sum_{s_i \in T_j} \manualTime{i}$.
+    If a constructed task $T_j$ has the property that $\sum_{s_i \in T_j} \manualSkill{i}\manualTime{i} < 1$ (which implies it is cheaper to run all steps of $T_j$ manually than as an AI chain that is guaranteed to succeed), we switch to running the tasks of $T_j$ manually in the task sequence.  
+    In our analysis, we still consider $T_j$ to be a set in $\T_{NI}$; but its cost is taken to be $\sum_{s_i \in T_j} \manualSkill{i}\manualTime{i}$.
 
     This modification changes our upper bound on the total cost of $ALG$ to the following:
-    \[ ALG \leq 2 \sum_{T_j \in \T_{NI}} \min\left\{1, \sum_{s_i \in T_j} \manualTime{i} \right\} + \sum_{ (s_i) \in \T_I} \minTime{i}. \]
+    \[ ALG \leq 2 \sum_{T_j \in \T_{NI}} \min\left\{1, \sum_{s_i \in T_j} \manualSkill{i}\manualTime{i} \right\} + \sum_{ (s_i) \in \T_I} \minTime{i}. \]
 
     Then, to bound $FI$, we claim that 
-    \[ FI \geq \frac{1}{4}\sum_{T_j \in \T_{NI}} \min\left\{1, \sum_{s_i \in T_j} \manualTime{i} \right\} + \frac{1}{2}\sum_{(s_i) \in \T_I} \minTime{i} \]
+    \[ FI \geq \frac{1}{4}\sum_{T_j \in \T_{NI}} \min\left\{1, \sum_{s_i \in T_j} \manualSkill{i}\manualTime{i} \right\} + \frac{1}{2}\sum_{(s_i) \in \T_I} \minTime{i} \]
     which would prove the claim.
 
     To see why this bound on $FI$ holds, we employ a charging argument as before.  
@@ -169,8 +169,8 @@ We can relax the assumption in Proposition~\ref{prop:FI.lower.bound.4} that $\ma
     Crucially, the contribution from each $C_\ell$ can be charged to at most two different tasks $T_j$ in this way: once for the leftmost $T_j$ that it intersects, and once for the rightmost $T_j$ that it intersects.  
     (The reason is that if some $T_j$ is a subset of $C_\ell$, then by definition no step of $T_j$ fails and hence $E_j$ did not occur.  
     So this charging can only occur for a task $T_j$ that intersects $C_\ell$ but is not a subset of $C_\ell$, of which there are at most two.)  
-    Moreover, this charging to $T_j$ adds up to a  total value of at least $\min\left\{1, \sum_{s_i \in T_j} \manualTime{i} \right\}$.  
-    Since the charging occurs with probability $1/2$ for each $T_j \in \T_{NI}$, and we are at most double-counting each $\omega(C_\ell)$, we conclude that the expected sum of all $\omega(C_\ell)$, plus $\minTime{i}$ for all failed tasks $s_i$ that lie in some $T_j \in \T_{NI}$, is at least $1/4$ of $\sum_{T_j \in \T_{NI}}\min\left\{1, \sum_{s_i \in T_j} \manualTime{i} \right\}$.
+    Moreover, this charging to $T_j$ adds up to a  total value of at least $\min\left\{1, \sum_{s_i \in T_j} \manualSkill{i}\manualTime{i} \right\}$.  
+    Since the charging occurs with probability $1/2$ for each $T_j \in \T_{NI}$, and we are at most double-counting each $\omega(C_\ell)$, we conclude that the expected sum of all $\omega(C_\ell)$, plus $\minTime{i}$ for all failed tasks $s_i$ that lie in some $T_j \in \T_{NI}$, is at least $1/4$ of $\sum_{T_j \in \T_{NI}}\min\left\{1, \sum_{s_i \in T_j} \manualSkill{i}\manualTime{i} \right\}$.
 
     The charging for $(s_i) \in \T_I$ remains unchanged: the value $\minTime{i}$ is charged in the event that step $s_i$ fails, which occurs with probability at least $1/2$.
 
@@ -178,7 +178,7 @@ We can relax the assumption in Proposition~\ref{prop:FI.lower.bound.4} that $\ma
 \end{proof}
 
 We suspect the factor of $8$ in Proposition~\ref{prop:FI.lower.bound.8} is not tight. 
-But, as we now show, the factor is strictly greater than the factor $4$ from Proposition~\ref{prop:FI.lower.bound.4}, so the assumption that $\manualTime{i} \geq 1$ for all $s_i$ is necessary for Proposition~\ref{prop:FI.lower.bound.4} to hold.
+But, as we now show, the factor is strictly greater than the factor $4$ from Proposition~\ref{prop:FI.lower.bound.4}, so the assumption that $\manualSkill{i}\manualTime{i} \geq 1$ for all $s_i$ is necessary for Proposition~\ref{prop:FI.lower.bound.4} to hold.
 
 Consider a step sequence $\mathcal{S}$ that alternates between (a) steps of manual cost $0$ and success probability $1/\sqrt{2} - \epsilon$ where $\epsilon$ is vanishingly small, and (b) steps of manual cost $1$ and success probability $1$.  
 Suppose there are $K > 1$ such pairs.  

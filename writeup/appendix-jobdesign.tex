@@ -1,0 +1,426 @@
+\section{Job Design and the Long Run}
+\label{app:jobdesign}
+
+The main text studies the firm's AI deployment problem: choosing how to chain and automate steps so as to minimize the cost of production, $\sum_b \skillcost{b}\,\timecost{b}$, where each task is staffed by a dedicated worker possessing the skill it requires (Section~\ref{sec:optimization.short}).
+This appendix develops the firm's long-run problem, in which it additionally bundles tasks into shared \emph{jobs}.
+A single worker may perform several tasks, but must then hold all of their skills throughout, so the cost of a job is its total skill requirement times its total time.
+Bundling economizes on the hand-off (coordination) costs incurred when work passes from one worker to another, at the expense of these broader skill requirements; the firm chooses the AI deployment and the job design jointly to trade these forces off.
+Figure~\ref{fig:hierarchical_production} illustrates the resulting three-layer structure of steps, tasks, and jobs.
+
+\begin{figure}[ht!]
+  \begin{center}
+  \caption{Illustrative Example of a Firm's Production}
+  \label{fig:hierarchical_production}
+
+  \vspace{0.4cm}
+  \input{plots/TikZ_visualization/hierarchical_production_illustration.tex}
+  \end{center}
+
+  \vspace{0.4cm}
+  \footnotesize{\emph{Notes:}
+  This figure illustrates how a firm aggregates steps into tasks and tasks into jobs.
+  The top layer shows $m=7$ steps executed in manual (gray), automated (green), or augmented (orange) modes, with dashed boxes indicating task groupings.
+  The middle layer aggregates steps into $n=5$ tasks, classified as human-executed tasks (olive) or AI chains (purple), with cyan dashed boxes indicating job groupings.
+  The bottom layer aggregates tasks into $p=3$ jobs (cyan), each assigned to a separate worker.
+  Vertical colored arrows show aggregation across layers, and horizontal arrows show production flow within each layer.
+  Red curly arrows mark hand-off costs incurred at job boundaries, and can be traced from the bottom layer to the corresponding tasks and steps above.
+  }
+\end{figure}
+
+
+\subsection{Jobs, Wages, and Hand-off Costs}
+\label{sec:app.jobs}
+
+A job is a subsequence of tasks that are assigned to a single human worker.
+Each task $T_b$ in the task sequence $\T = \{T_1, \dotsc, T_n\}$ has a skill cost $\skillcost{b}$ and a time cost $\timecost{b}$ that depend on whether the task is completed manually or with the aid of AI (Sections~\ref{sec:model.steps}--\ref{sec:model.tasks}).
+A job $J$ is a contiguous subsequence of tasks, say $J = (T_b, \dotsc, T_{b+\ell})$ for some $b$ and $\ell$.
+We say that a partition $\mathcal{J} = (J_1, \dotsc, J_p)$ of all tasks into jobs is a \emph{job design}.
+
+The firm hires one worker for each job in its job design $\mathcal{J}$.
+The worker for job $J_j$ completes all tasks associated with their job.
+The total time needed to complete all tasks in job $J_j$ is $\sum_{T_b \in J_j} \timecost{b}$.
+
+A worker's wage is determined by the total skill required to complete their job.
+The total skill required to complete the tasks in job $J_j$ is $\sum_{T_b \in J_j} \skillcost{b}$.
+We then assume that a worker's wage is proportional to the skill level of their job.\footnote{
+One motivation for this formulation is workers paying a human capital investment to acquire the skills necessary for a job. 
+This investment must be offset by wages, and we express skill levels in units of their corresponding requisite wage. 
+Rather than formalizing such a wage model here, we impose this as an assumption and provide a more detailed wage formulation in  Section~\ref{sec:aggregation}.
+}
+That is,
+\begin{align}
+\label{eq:wage}
+\text{Wage}_j = \sum_{T_b \in J_j} \skillcost{b}.
+\end{align}
+
+The firm must pay workers their wage per unit of time regardless of which tasks they are assigned to complete at any given moment.\footnote{
+This derivation implicitly assumes a common base wage rate; i.e., all wage differentiation is driven by the human capital cost of acquiring skills.
+More generally, different tasks $T_b$ within job $J_j$ could have different base wage rates $w_b$ that could be influenced, for example, by the supply of and demand for labor of the corresponding type.
+One special case, explicitly motivated and discussed in Section \ref{sec:aggregation}, assumes manual tasks are executed by human labor at base wage rate $w_{\manualLetter}$, and AI-assisted tasks are executed by AI management labor at base wage rate $w_{\AIletter}$.
+The formulation in Equation~\ref{eq:wage} implicitly normalizes these base wage rates to 1, incorporating them into skill costs $\skillcost{b}$ for notational simplicity.
+We maintain this normalization throughout subsequent sections until we explicitly distinguish human labor and AI management labor base wage rates in Section
+\ref{sec:aggregation}.
+\label{foot:wage}
+}
+While we allow the firm to specialize its job design and partition its production process into distinct jobs, we acknowledge that there are inherent inefficiencies and frictions that are introduced when splitting work among multiple workers.
+Absent such frictions in our model, it would always be optimal for a firm to specialize its workers as much as possible, assigning a distinct worker to each task of its production process. 
+We therefore introduce \emph{hand-off costs} to a job design, as follows.
+In addition to the time required completing tasks, a worker may need to spend time handing off their work to another worker if $J_j$ is not the final job in the job design $\mathcal{J}$.
+We will assume throughout that the hand-off time of a worker assigned to job $J_j$ depends only on the final step of job $J_j$ (see red curly arrows in Figure \ref{fig:hierarchical_production}).
+That is, conditional on where the hand-off occurs in the production process, its cost does not otherwise depend on previous hand-off events.
+Given step $s_i$, we write $\handofftime{i}$ to denote the additional hand-off time spent by a worker for whom the last step of their job is $s_i$.
+For notational convenience we define the hand-off time for the final step $s_m$ to be zero: $\handofftime{m} = 0$.
+Also for notational convenience, we will write $\handofftime{}(J_j)$ to denote the hand-off time of job $J_j$, which recall is equal to $\handofftime{i}$ if $s_i$ is the final step in job $J_j$.
+Thus the total time needed to complete job $J_j$, including hand-off costs, is
+\[
+\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}.
+\]
+
+Taking into account both time and skill requirements, the total wage bill paid to a worker assigned to job $J_j$, per unit of output, is
+\begin{align}
+\label{eq:wagebill}
+\text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr).
+\end{align}
+Equation~\eqref{eq:wagebill} highlights two opposing forces that shape a job's boundaries.  
+Adding more tasks to a worker's job increases the cumulative skill requirement and thus the wage rate for that worker.  
+However, if tasks are kept separate, workers must incur additional hand-off costs at each job boundary.  
+These two effects---higher wages from combining tasks versus higher hand-off costs from keeping them separate---jointly determine the optimal degree of task aggregation.  
+We explore this trade-off in greater detail in Section~\ref{sec:model_discussion}.
+
+
+\subsection{The Long-Run Optimization Problem}
+
+Given the sequence of steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, the firm can design both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs.
+The choice of $\T$ determines the time and skill requirements of each task.
+Given $\T$, the choice of $\mathcal{J}$ then determines worker wage rates and time needed per unit of output (including hand-off costs).
+Formally, we can write $\mathcal{P}(X)$ for the set of partitions of a sequence $X$ into contiguous subsequences.  Then the full optimization problem faced by the firm can be expressed as
+\begin{align}
+\label{eq:totalcost_with_handoff}
+\min_{\T \in \mathcal{P}(\mathcal{S})} \
+\min_{\mathcal{J} \in \mathcal{P}(\T)} \ 
+\text{TotalCost}(\mathcal{J}; \T) 
+= \sum_{J_j \in \mathcal{J}} \text{WageBill}_j = 
+\sum_{J_j \in \mathcal{J}} \Biggl[\Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr)\Biggr]
+\end{align}
+where recall that, for each $T_b \in \T$, $\timecost{b}$ and $\skillcost{b}$ are as described in Section~\ref{sec:model.tasks} and can depend on the selected mode of operation for individual steps.
+
+We refer to \eqref{eq:totalcost_with_handoff} as the firm's \emph{long-term} optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
+This contrasts with the short-run problem of Section~\ref{sec:optimization.short}, in which jobs and worker wages are fixed and the firm optimizes only AI deployment to minimize completion time within each job.
+
+
+\subsection{Hand-off Costs and the Limits of Worker Specialization}
+\label{sec:model_discussion}
+
+Here we discuss how hand-off costs determine the optimal organization of production and limit full worker specialization in the firm's long-run problem \eqref{eq:totalcost_with_handoff}.
+We leverage insights from a numerical example as well as a geometric illustration, which together show how task aggregation balances higher wages against lower coordination costs.
+
+Consider a production process that, under a fixed AI deployment strategy $\T$, has $n=3$ tasks with the following cost parameters:
+\[
+\begin{array}{c|ccc}
+\textbf{Task} & \skillcost{b} & \timecost{b} & \handofftime{b} \\ \hline
+1 & 3  & 1   & 3 \\
+2 & 1  & 2   & 0.5 \\
+3 & 2  & 2   & 0 \\
+\end{array}
+\]
+
+With three tasks, there are four ways the firm can design jobs.\footnote{
+More generally, a production process with $n$ tasks has $2^{(n-1)}$ unique job designs.
+} 
+Denoting jobs by square brackets, with three tasks the four possible job designs are 
+$\{[1][2][3], \quad [1,2][3], \quad [1][2,3], \quad [1,2,3]\}$.
+The cost of these job designs for the example above is given in Table~\ref{tab:job_design}.
+\begin{table}[ht!]
+    \caption{Role of Hand-off Costs in Organizational Structure}
+    \vspace{-0.4cm}
+    \begin{center}
+    \resizebox{0.9\textwidth}{!}{%
+    \begin{tabular}{c}
+    \begin{minipage}{\textwidth}
+    \centering
+    Panel (a): Without Hand-off Costs \\[1ex]
+    \input{tables/job_design_example_no_handoff.tex}
+    \end{minipage} \\[21ex]
+    
+    \begin{minipage}{\textwidth}
+    \centering
+    Panel (b): Including Hand-off Costs \\[1ex]
+    \input{tables/job_design_example_with_handoff.tex}
+    \end{minipage}
+    \end{tabular}
+    }
+    \label{tab:job_design}
+    \end{center}
+    \footnotesize{\emph{Notes:} This table reports total production costs for each possible job design in an example production process with a fixed automation strategy and $n = 3$ tasks. 
+    The cost parameters of the tasks are given by $(\skillcost{b},\timecost{b},\handofftime{b})=\{(3,1,3),(1,2,0.5),(2,2,0)\}$.
+    In the absence of hand-off frictions, full specialization, corresponding to job design [1][2][3], is cost-minimizing. 
+    Once hand-off costs are taken into account, the optimal organizational structure changes to job design [1,2][3], which avoids the large coordination cost between tasks 1 and 2 at the expense of employing a higher-cost (more skilled) worker to complete those tasks.
+    }
+\end{table}
+In the absence of hand-off costs in Panel (a), the optimal job design corresponds to full specialization: each task forms a separate job assigned to a different worker.
+When hand-off costs are introduced in Panel (b), however, the optimal design changes to one in which tasks 1 and 2 are combined into a single job, while task 3 remains separate.
+This structure is optimal because it avoids the large hand-off cost that would otherwise arise between tasks 1 and 2 due to the large hand-off time value $\handofftime{1}=3$.
+By aggregating tasks 1 and 2, the firm pays a higher wage to a more skilled and more versatile worker but eliminates the costly coordination between the two tasks, lowering total production cost.
+Equation~\eqref{eq:wagebill} captures this trade-off explicitly: 
+adding more tasks to a worker's job raises the wage rate through the skill term $\sum_{T_b \in J_j} \skillcost{b}$, 
+while keeping tasks separate raises total cost through additional hand-offs $\handofftime{}(J_j)$.
+These two effects jointly determine the optimal degree of task aggregation.
+
+The cost of different job designs admits a geometric interpretation as well.  
+Figure~\ref{fig:job_design} visualizes the production process of the example in Table~\ref{tab:job_design} as stacked rectangles, where each rectangle's height corresponds to $\skillcost{b}$ and its width to $\timecost{b}$.
+\begin{figure}[ht!]
+\begin{center}
+\caption{Geometric Interpretation of Job Designs} \label{fig:job_design}
+\begin{subfigure}[b]{0.49\textwidth}
+    \caption{Job Design Without Hand-off Costs}
+    \includegraphics[width=\textwidth]{plots/combined_grid_no_handoff.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.49\textwidth}
+    \caption{Job Design With Hand-off Costs}
+    \includegraphics[width=\textwidth]{plots/combined_grid_with_handoff.png}
+\end{subfigure}
+\end{center}
+\footnotesize{\emph{Notes:} Each panel visualizes the production process as stacked rectangles, where the area of each job's bounding box represents its wage bill.  
+Panel (a) sets hand-off costs to zero, in which case it is optimal to assign one task per job.
+Panel (b) introduces hand-off costs, which alters the cost structure and makes the [1,2][3] design cost-minimizing.
+}
+\end{figure}
+Panel~(a) depicts the job design when hand-off costs are zero, Panel~(b) shows the same process with hand-off costs.  
+Visually, optimal job design balances two opposing forces.  
+Combining tasks into a single job eliminates the pink rectangles representing additional hand-off costs between tasks, but creates inefficiencies due to the higher skill level of the worker required to do the job. 
+Conversely, splitting tasks into separate jobs eliminates the intra-job inefficiencies but incurs hand-off time costs at each job boundary.
+These boundary costs scale with the cumulative human capital of the switching worker, so the height of the pink hand-off rectangle in Panel (b) equals the sum of human capital heights for that job. 
+Cost-effective job design must balance these effects.
+
+We have modeled hand-off costs as fixed and not influenced by the introduction of AI. 
+In reality, AI may reduce the cost of hand-offs between workers as well. 
+This might occur because the communication burden of handing off tasks could be partially automated through AI assistance. 
+While we do not model this explicitly, we expect that such a force would reduce the impact of hand-off costs and result in a higher degree of worker specialization.\footnote{
+A useful interpretation of hand-off costs is that they consist of two components: (i) peripheral coordination work that can be facilitated by AI (e.g., drafting messages, summarizing prior work, formatting documentation), and (ii) a purely manual remainder that relies on tacit, interpersonal, or social knowledge and is not easily executable by AI \citep{deming2017growing}. 
+For tractability, we abstract from the first component in our framework and treat its benefits as absorbed into execution and AI management time costs. 
+The hand-off cost in the model should therefore be read as capturing the second, irreducibly human component, even though AI-facilitated reductions in the peripheral component may matter in practice.
+}
+
+\subsection{Job Design without AI}
+
+Having stated the long-run problem, we now turn to solving it, beginning with a special case in which the firm can reorganize job requirements and the assignment of tasks to workers.
+As a warm-up to the full joint optimization of jobs and AI deployment, we first show how to optimize the design of jobs for a fixed task structure.
+We can interpret this as a labor optimization problem without AI deployment, where each step has only a single (i.e., manual) mode of completion and hence the task structure is fully determined.
+
+\begin{proposition}
+    Given a fixed sequence of tasks $\T = (T_1, \dotsc, T_n)$ with skill and time costs $\skillcost{} = (\skillcost{1}, \dotsc, \skillcost{n})$ and $\timecost{} = (\timecost{1}, \dotsc, \timecost{n})$, the cost-minimizing job design $\J$ can be computed in time $O(n^2)$ by dynamic programming.
+\end{proposition}
+\begin{proof}
+    We first note the following recursive formulation of the optimization problem. 
+    For all $k \leq n$, let $C[k]$ denote the minimum cost of a job design for tasks $1$ through $k$, \emph{including hand-off costs for task $k$}.  
+    Note then that $C[n]$ is the cost of the optimal job design for all tasks, recalling that the hand-off cost for the final job (i.e., the job that includes task $n$) is always $0$.
+    
+    We now show how to calculate $C[k]$ recursively.  
+    As a base case we have $C[0] = 0$.  
+    For $k \geq 1$ we have
+    \[ 
+    C[k] = \min_{s < k} \Biggl\{ C[s] + \Biggl[\Biggl(\sum_{i = s+1}^k \skillcost{i} \Biggr) \Biggl(\handofftime{k} + \sum_{i = s+1}^k \timecost{i} \Biggr)\Biggr] \Biggr\}.
+    \]
+    In other words, we optimize over the choice of the final job $\{s+1, \dotsc, k\}$, accounting recursively for the optimal job design for remaining jobs.  
+    Note that we make implicit use of the assumption that the hand-off cost $\handofftime{k}$ depends on the final task $T_k$ of this final job but is otherwise independent of the job design.  
+    Using this formulation, we can calculate each $C[k]$ in time $O(k)$ by considering each potential choice of $s$.  
+    Doing so for each $k = 1, 2, \dotsc, n$ yields the value of $C[n]$ (and the corresponding optimal job design) in total time $O(n^2)$.
+\end{proof}
+
+
+
+\subsection{Full Long-Term Optimization}
+
+We now consider full joint optimization of job design and AI deployment strategy, accounting for both time and skill costs of workers assigned to the resulting jobs.  
+In other words, the firm's goal is to choose both the set of AI chains to implement---yielding a vector of skill and time costs---along with a job design for the resulting tasks.
+
+
+\subsubsection{Recursive Formulation of Optimization Problem}
+\label{sec:recursive_formulation}
+
+Here we present a recursive formulation of the firm's cost minimization problem. 
+In Section \ref{sec:DP_approximation} we propose an approach to calculate an approximation of the optimal solution via dynamic programming.
+
+Consider a production process with $m$ steps $\mathcal{S} = \{s_1, s_2, \ldots, s_m\}$.
+For $0 \leq i \leq m$, let $V(i)$ denote the minimum cost required to complete steps $1$ through $i$ using one or more jobs, including any hand-off costs to a subsequent worker.  
+Note then that $V(m)$ is the solution to the desired optimization problem, recalling that the hand-off time for the final job will always be $0$.  
+Note also that it is implicitly assumed in the definition of $V(i)$ that it optimizes over job designs for steps $1$ through $i$ in which the final job terminates after the completion of step $i$.
+
+It will also be helpful to consider optimal designs for steps $1$ through $i$ in which the final job doesn't necessarily terminate after the completion of step $i$, but rather continues onward to subsequent steps.  
+To that end, we introduce an auxiliary function $W(i,\; \skillcost{},\; \timecost{})$.
+This function denotes the minimum cost of completing steps $1$ through $i$, as well as some additional (but unspecified) set of tasks that have already been assigned as a single job to a single worker (referred to as the ``active worker'').  
+It is assumed that the tasks assigned to the active worker have total time cost $\timecost{}$ and total skill cost $\skillcost{}$.  
+The time cost $\timecost{}$ is assumed to already include any hand-off cost for this active worker (which recall depends only on the final step of the worker's final task). 
+Crucially, the minimum is taken over all AI deployment strategies and job designs, including those that expand the number of tasks assigned to the active worker (e.g., by including step $i$ in the active worker's job).
+In this sense, $W(i,\; \skillcost{},\; \timecost{})$ captures the minimum cost across all feasible job designs and AI strategies that may potentially expand the active worker's task assignment.
+
+Note that, for all $i \leq n$, we have 
+\[ V(i) = W(i,\; 0,\; \handofftime{i}). \]
+This is because, in $V(i)$, all job designs must end with a job that completes at step $i$ and hands off to the following worker.  
+Consequently, the hand-off cost associated with step $i$ must be incurred by the final worker.
+Equivalently, this can be thought of as assigning the active worker an additional task with zero skill requirement but a time cost equal to the hand-off cost of step $i$ right after step $i$ itself.
+This scenario is represented explicitly by $W(i,\; 0,\; \handofftime{i})$.
+
+Also note that, for the base case $i=0$, we have 
+\[
+W(0,\; \skillcost{},\; \timecost{}) 
+= 
+\skillcost{}\,\timecost{}, 
+\quad
+\text{for all $\skillcost{}, \timecost{}$}.
+\]
+This is because, if $i=0$, then there are no further steps to add to the job of the active worker.  
+The active worker's skill and time requirements are therefore determined entirely by the steps they have already been assigned.
+
+We are now ready to describe a recursive formulation of the function $W(i,\; \skillcost{},\; \timecost{})$ for $i \geq 1$.  
+We emphasize that in the definition of $W(i,\; \skillcost{},\; \timecost{})$, the active worker has not been assigned step $i$; we can think of step $i$ as the highest-indexed step that has not yet been assigned to a worker.
+
+\begin{proposition}[Recursive Formulation of Job Design Problem]
+\label{prop:recursive_optimality}
+For each $i \geq 1$, the minimum cost function $W(i,\; \skillcost{},\; \timecost{})$ satisfies the following recursive relation:
+\begin{align*}
+W(i,\; \skillcost{},\; \timecost{})
+= \min\Biggl\{ 
+& \skillcost{}\,\timecost{} \; + \; V(i), \\
+& \ W(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i}), \\
+& \ \min_{r < i} \ W\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)
+\Biggr\}.
+\end{align*}
+The cost of the optimal joint AI strategy and job design for a given sequence of $m$ steps is then $V(m) = W(m,\; 0,\; 0)$.
+\end{proposition}
+
+The recursive formulation in Proposition~\ref{prop:recursive_optimality} evaluates the minimum cost among three distinct alternatives at each step:
+\begin{itemize}
+    \item \textbf{Option (1):} The term $\skillcost{}\,\timecost{} \; + \; V(i)$ corresponds to not adding any further steps to the job of the active worker.  
+    All steps $1$ through $i$ will be completed by other workers. 
+    The active worker's total cost is then $\skillcost{}\,\timecost{}$, and $V(i)$ is the total cost of completing steps $1$ through $i$ (including hand-off costs to the active worker).
+
+    \item \textbf{Option (2):} The term $W(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i})$ corresponds to designating step $i$ for manual completion, and adding the corresponding (singleton) task.
+    In this case, the manual execution costs $(\manualSkill{i}, \manualTime{i})$ of step $i$ are added to the accumulated costs of tasks already assigned to the active worker, extending their job to include step $i$ as well.
+
+    \item \textbf{Option (3):} The term $\min_{r < i} \ W\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)$ corresponds to creating an AI chain task for steps $r+1$ through $i$, with step $i$ being augmented and steps $r+1$ through $i-1$ automated, and assigning the resulting task to the job of the active worker. 
+    Step $i$ is thus chained with zero or more preceding (automated) steps, and the associated AI management costs are added to the active worker's skill and time costs. 
+    The index $r$ corresponds to the highest-index step that is not added to this AI chain, which can be any value between $0$ and $i-1$.
+\end{itemize}
+Note that in evaluating option (3) of the recursive step for $W(i,\; \skillcost{},\; \timecost{})$, step $i$ can only be augmented (rather than automated) as each step of the recursion adds a full AI chain to an active worker's job.
+AI strategies in which step $i$ is automated are considered when performing task calculations $W(r, \skillcost{}, \timecost{})$ with $r > i$.
+
+
+
+\subsubsection{Calculating an Approximately Optimal Solution}
+\label{sec:DP_approximation}
+
+Given our recursive formulation, we wish to use dynamic programming to solve for the jointly optimal job design and AI strategy by filling in the values of $W(i,\; \skillcost{},\; \timecost{})$ for all $i$, $\skillcost{}$, and $\timecost{}$.  
+Since $\skillcost{}$ and $\timecost{}$ take on continuous values, we will discretize all skill costs $\skillcost{}$ and time costs $\timecost{}$ to appropriate powers of $(1+\epsilon)$, where $\epsilon > 0$ is an arbitrarily small error term.  
+We obtain the following result.
+
+\begin{proposition}
+\label{prop:totalcost_optimization_dp}
+    Fix any sequence of $m$ steps $\mathcal{S} = (s_1, \dotsc, s_m)$ for which all skill costs, time costs, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.  Then for any $\epsilon > 0$, an approximately cost-minimizing pair of AI strategy $\T$ and job design $\J$ minimizing expression \eqref{eq:totalcost_with_handoff} to within a factor of $(1+\epsilon)$ can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB) )$ by dynamic programming.
+\end{proposition}
+
+\begin{proof}
+The first step of proving Proposition~\ref{prop:totalcost_optimization_dp} is to determine the range of powers of $(1+\epsilon)$ that we must consider in our discretization. 
+Suppose that all manual and augmented skill and time costs, as well as all hand-off costs, lie in $[1/B, B]$ for some $B > 0$.  
+%That is, these parameters require $O(\log B)$ bits to represent.  
+In this case, note that any subsequence of steps could be completed at a total cost of at most $2mB^2$ by performing them all manually by different workers, incurring a  time and hand-off cost of at most $B$ each for a total time of $2B$, and a skill cost of at most $B$ for a total cost of $2B^2$ for each of the $m$ tasks. 
+We therefore need not consider any solution containing a job with total cost greater than $2mB^2$.  
+In particular, since any non-zero skill cost for any job is at least $1/B$, we need not consider any job design in which a job has total time cost greater than $2mB^3$.
+Furthermore, each job has total skill cost lying between $1/B$ and $mB$ (as skill costs combine additively) and time cost at least $1/B$ (as each step's manual cost is at least $1/B$, and any AI chain's time cost is at least the management cost of its final step which is also at least $1/B$).
+
+We conclude that when filling table $W(i, \skillcost{}, \timecost{})$, it suffices to consider skill costs $\skillcost{}$ lying in the range $[1/B, mB]$ and time costs $\timecost{}$ lying in the range $[1/B, 2mB^3]$.  There are $O(\epsilon^{-1} \log(mB))$ powers of $(1+\epsilon)$ in each of these ranges, so our table will have $O(m \epsilon^{-2} \log^2(mB))$ total entries. 
+Each entry can be filled in time $O(m)$ by considering the recursive formulation in Proposition~\ref{prop:recursive_optimality}, for a total runtime of $O(m^2 \epsilon^{-2} \log^2(mB))$.
+
+Note that while the table formally describes only the cost of a solution and not the solution itself, one can also read off the corresponding task and job design as well.  
+Indeed, by recording which of the options described in Proposition~\ref{prop:recursive_optimality} achieves the minimum for each table entry $W(i, \skillcost{}, \timecost{})$, one can trace out the corresponding task and job designs starting with $V(m) = W(m, 0 , 0)$.  
+The pair of AI strategy $\T$ and job design $\J$ can therefore be computed in time $O(m^2 \epsilon^{-2} \log(mB) )$, the same as the time required to fill the table.
+
+It remains to bound the error introduced by our discretization.  
+Consider the recursive formulation in Proposition~\ref{prop:recursive_optimality} and suppose that $\skillcost{}$ and $\timecost{}$ are rounded down to the nearest power of $(1+\epsilon)$.  
+Since time and skill costs are multiplied together to calculate the total cost of a proposed job, this discretization introduces a multiplicative error of at most $(1+\epsilon)^2$ into our cost calculation for the first option when minimizing in the recursive definition of $W(i, \skillcost{}, \timecost{})$. 
+For the other two options, note that we accumulate time and skill costs additively when chaining tasks together for a single worker.  
+As $\skillcost{}$ and $\timecost{}$ are rounded to a power of $(1+\epsilon)$, adding additional (accurate) skill and time costs and subsequently rounding maintains a multiplicative error of at most $(1+\epsilon)$ on the total time and skill costs.  
+
+We conclude that if we fill in our table for all $W(i,\; \skillcost{},\; \timecost{})$ where $i \leq m$ and $\skillcost{}$ and $\timecost{}$ are discretized into powers of $(1+\epsilon)$, rounding down to nearest values of $(1+\epsilon)$ on recursive calls into the table, we obtain a $1 + O(\epsilon)$ approximation to the optimal solution.  
+An appropriate change of variables (scaling $\epsilon$ by a constant) yields a $(1+\epsilon)$ approximation factor in total runtime $O(m^2 \epsilon^{-2} \log^2(mB))$, as claimed in Proposition~\ref{prop:totalcost_optimization_dp}.
+\end{proof}
+
+\subsection{Impact of AI Deployment on Worker Skill and Specialization}
+\label{sec:discussion.skills}
+
+While the fragmentation index captures the short-run impact of AI deployment on task completion time, in the long run AI strategy also alters the skill requirements of workers and the degree of specialization within the workforce.  
+This can dampen or even reverse the short-run intuition that gains from AI derive primarily from time savings, as the following example shows.
+
+\begin{example}
+    Consider a job consisting of a single step.  
+    This step has manual time and skill requirements $(\manualTime{},\manualSkill{}) = (5,5)$.  
+    Suppose that, under AI augmentation, this step has an AI management time of $1$ (per attempt), an AI management skill requirement $1$, and probability $1/8$ of successful completion. 
+    That is, $(\AItime{},\AIskill{}) = (1,1)$ and $q=1/8$.
+    Despite the task taking longer to complete with AI (due to the low likelihood of success on any individual attempt), the reduced skill requirement of managing the AI process means that it is firm-optimal to employ AI augmentation.
+\end{example}
+
+The impact of AI on worker skill reflects two common narratives about the impact of AI on work: first, that AI can automate mundane or repetitive tasks and allow high-skill workers to concentrate more of their time on meaningful high-skill tasks; second, that AI could lead to deskilling as high-skilled labor for manual task completion is replaced with low-skill AI management. 
+Our framework unifies these two perspectives by endogenizing (a) the nature (i.e., time and skill requirements) of work to be automated and (b) how the AI strategy impacts requisite worker skill.  
+If replacing a given sequence of production steps in given job with an AI chain is beneficial, in the long term, then either the total time needed to complete the steps is shortened, the total skill needed to manage the AI automation is reduced relative to completing the steps manually, or both.  
+For an example of the latter, a step with low skill requirement but high time requirement (such as Step 2 in Figure~\ref{fig:job_design}) may be optimally augmented by AI even when doing so increases the skill needed for AI management, if the time savings are substantial enough.  
+In this case, the skill required to complete the same job might increase: AI augmentation can be viewed as complementing worker capabilities.  
+Alternatively, it may also be beneficial to employ AI on production steps with high skill requirements (such as Step 1 in Figure~\ref{fig:job_design}) even if this results in an AI-assisted task that takes longer to complete, as long as it requires substantially less worker skill to manage the AI.  
+This can ultimately lead to a deskilling of the labor force assigned to the job as AI capital substitutes for high-skilled human work.  
+
+This discussion has so far focused on impacts within a single job. 
+Our framework likewise captures how AI deployment strategy shapes job design and, in particular, patterns of worker specialization across tasks. 
+Consider again the example from Figure~\ref{fig:job_design}, which highlights how hand-off costs and the structure of what we refer to as \emph{tent-pole tasks} can influence how production steps are bundled into specialized jobs. 
+A tent-pole task is a short but high-skill task that sits immediately next to time-consuming, low-skill ones.\footnote{
+This juxtaposition creates a classic friction: if a single highly skilled worker performs all adjacent tasks, a substantial share of their time is spent on low-skill work, whereas assigning the surrounding low-skill tasks to different workers raises hand-off costs when work passes between them. 
+Historically, this tension has been an important driver of the division of labor. 
+As AI automation alters the time and skill profiles of individual tasks in the production sequence, it changes exactly this trade-off, shifting when it is efficient to have a single worker perform a cluster of tasks versus when specialization across workers remains optimal.
+}
+The second task in Figure~\ref{fig:tent_pole} is an example of a tent-pole task.
+\begin{figure}[ht!]
+ \caption{Illustration of Tent‐Pole Tasks} 
+ \label{fig:tent_pole}
+ \begin{center}
+   \includegraphics[width=0.4\textwidth]{plots/tent_pole.png}
+ \end{center}
+ \begin{footnotesize}
+   \emph{Notes:} This figure illustrates tent‐pole tasks.  
+   The width and height of each rectangle specify the time ($\timecost{}$) and human capital ($\skillcost{}$) requirements of the task, respectively.
+   Tasks 1 and 3 have a high time cost and low human capital requirement (wide and short) whereas Task 2, which is the tent-pole task, exhibits a low time cost and high human capital requirement (narrow and tall).
+   The hand-off time costs (\handofftime{}) are assumed to be zero for simplicity.
+ \end{footnotesize}
+\end{figure}
+
+As AI deployment strategy influences the time and skill profile of tasks, the incentive to specialize workers likewise changes.
+To predict the direction of this effect, one hypothesis is that AI deployment will tend to have a normalizing effect on tasks, reverting both skill requirements and time requirements toward the mean and making tasks more ``square-like'' (in terms of our geometric interpretation of job design costs).  
+If so, and if hand-off time costs remain unaffected, then (roughly speaking) tent-pole inefficiencies due to grouping tasks together into the same job would be reduced.  
+This suggests that AI deployment may reduce worker specialization.
+
+\begin{example}
+   Consider a two-step production process, with manual skill and time costs $(\manualSkill{1}, \manualTime{1}) = (2,4)$ and $(\manualSkill{2}, \manualTime{2}) = (4,2)$ and hand-off cost $\handofftime{1} = 5$.
+   That is, the first step is low-skill but time-intensive and the second step is high-skill but can be completed quickly.
+   In this example, combining both steps into a single job (at a labor cost of $(2+4)(4+2) = 36$) is strictly worse than separating into two specialized jobs with a hand-off (at a total cost of $(2)(4+5) + (4)(2) = 26$).
+   However, if each step of production could be augmented separately via AI to yield effective skill and time costs of $(2,2)$ for each, then the optimal design combines both augmented steps into a single job at a total cost of $(2+2)(2+2) = 16$, which is better than separating into two distinct jobs (incurring cost $(2)(2+5) + (2)(2) = 18$).
+\end{example}
+
+It is also technically possible in our model for AI to increase the amount of specialization in an optimal job design.  
+This could happen if AI-augmented steps have higher skill requirements than the corresponding manual steps, leading to an increased need for high-skill workers.  
+Even if AI management is assumed to require no more skill than manual completion, an increased deployment of AI can lead to more responsibilities being combined into a single job, leading to a higher worker skill requirement, as the following example shows. 
+
+\begin{example}
+   Consider a different two-step production process, with manual skill and time costs $(\manualSkill{1}, \manualTime{1}) = (\manualSkill{2}, \manualTime{2}) = (3,3)$ and hand-off cost $\handofftime{1} = 5$.
+   The optimal job design separates these into two separate jobs at a total cost of $(3)(3+5) + (3)(3) = 33$, with each job requiring a worker of skill $3$.
+   Suppose AI augmentation can allow each step to be completed with an AI management skill of $2$, a management time of $1/4$, and an AI success probability of $1/8$, for a total expected execution time of $(1/4) \times (1/8)^{-1} = 2$.
+   In this case, the optimal design employs AI augmentation in each step and combines the two steps into a single job, resulting in a total cost of $(2+2)(2+2) = 16$ and requiring a worker of skill $4$.
+   Note that this is preferable to combining the two steps into a single AI chain, which would result in a total cost of $(2)( (1/4) \times (1/8)^{-1} \times (1/8)^{-1} ) = 32$.
+\end{example}
+
+
+
+\subsection{Connection to the Division of Labor Literature}
+
+The job-design problem developed above connects to the literature on the division of labor within a firm.
+Applying the Coase--Williamson logic that firm boundaries are shaped by coordination, transaction, and governance costs \citep{coase1937nature, williamson1971vertical, williamson1979transaction} to the ``boundary of the job,'' the firm chooses how many and which tasks to bundle into a worker's role, determining the degree of worker specialization endogenously \citep{murphy1986specialization, becker1992division, dessein2006adaptive}.
+The hand-off costs in our model are an intra-firm analogue of transaction costs that AI does not directly reduce, since they capture coordination frictions arising from tacit or social knowledge that is not easily executable by AI \citep{deming2017growing}.\footnote{
+\cite{ide2025ai} provides a related view on how AI affects the structure of work, embedding AI as an autonomous problem solver in a knowledge hierarchy model \citep{garicano2000hierarchies, garicano2006organization} and studying how it reshapes spans of control within the firm.
+}
+Even so, AI chaining restructures the division of labor on two margins: on the intensive margin, by pulling previously manual steps ``under the hood'' of a single AI-executed task; and on the extensive margin, by lowering the cost of linking adjacent steps across a job boundary and thereby making it optimal to redraw that boundary \citep{autor2025expertise}.
