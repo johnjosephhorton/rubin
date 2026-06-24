@@ -40,6 +40,33 @@ Automating step~1 inside the chain removes its verification cost---paid once, at
 The human's comparative advantage on step~1 is thus overturned: in the optimal configuration the step is automated, at zero direct cost.
 \end{example}
 
+We can state precisely when this reversal occurs, as a threshold on how AI-suitable the neighboring step is.
+
+\begin{proposition}[Chaining can overturn comparative advantage]
+\label{prop:ca_threshold}
+Consider a two-step process in which, in isolation, step~1 is cheaper for the human and step~2 is cheaper for AI:
+\[
+\manualSkill{1}\manualTime{1} < \frac{\AIskill{1}\AItime{1}}{q_1},
+\qquad
+\frac{\AIskill{2}\AItime{2}}{q_2} < \manualSkill{2}\manualTime{2}.
+\]
+Then the cost-minimizing strategy automates the human-advantaged step~1 inside an AI chain ending at step~2 if and only if its neighbor is sufficiently AI-suitable:
+\[
+q_2 \;>\; \frac{\AIskill{2}\AItime{2}\,(1-q_1)}{q_1\,\manualSkill{1}\manualTime{1}}.
+\]
+\end{proposition}
+
+\begin{proof}
+Write $M_i = \manualSkill{i}\manualTime{i}$ and $a_i = \AIskill{i}\AItime{i}$ for the manual and AI-management costs of step~$i$. A two-step process admits five strategies. In the four non-chain strategies the two steps are performed independently, so the cheapest assigns each step its lower-cost mode: step~1 manual (as $M_1 < a_1/q_1$) and step~2 augmented (as $a_2/q_2 < M_2$), at cost $M_1 + a_2/q_2$. The remaining strategy chains the steps, automating step~1 and augmenting step~2, at cost $a_2/(q_1 q_2)$. Chaining is therefore optimal if and only if it undercuts the best non-chain strategy:
+\[
+\frac{a_2}{q_1 q_2} < M_1 + \frac{a_2}{q_2}
+\;\Longleftrightarrow\;
+\frac{a_2}{q_2}\Big(\frac{1}{q_1}-1\Big) < M_1
+\;\Longleftrightarrow\;
+q_2 > \frac{a_2\,(1-q_1)}{q_1\,M_1}. \qedhere
+\]
+\end{proof}
+
 Whether step~1 is automated depends on its neighbors.
 Had step~1 instead sat beside a step that AI completes only with low probability, the chain's joint success probability would be small, inflating its cost, and step~1 would revert to manual execution.
 The same step, with identical characteristics, can therefore be automated in one workflow yet performed manually in another, depending only on the AI-suitability of its neighbors.
@@ -56,8 +83,17 @@ A job that contains such runs of consecutive steps is therefore likely to benefi
 On the other hand, a job for which AI-friendly steps are separated by intermediate steps that an AI is likely to fail is less exposed to large-scale automation, even though its task-level exposure to AI may appear high.
 
 \begin{example}
-    Consider a job consisting of $m$ steps, where $m$ is even.
-    Each step has a manual cost of $5$ and an AI management cost of $1$ per attempt, but the steps vary in how difficult they are for an AI to complete: odd-numbered steps can be successfully completed by an AI with probability $1$, whereas even-numbered steps will be successfully completed with probability only $0.1$, as shown below:\\~\\~\\
+    Consider a job consisting of $m$ steps (with $m$ even) whose steps alternate between easy and hard for an AI to complete: odd-numbered steps succeed with probability $1$, while even-numbered steps succeed with probability only $0.1$.
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Step ($i$) & \makecell{Manual\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI mgmt.\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success\\prob.\ ($q_i$)} \\
+\midrule
+Odd $i$ (easy) & $(1, 5)$ & $(1, 1)$ & $1$ \\
+Even $i$ (hard) & $(1, 5)$ & $(1, 1)$ & $0.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
     \input{plots/TikZ_visualization/example1_visualization.tex}
     In this scenario, it is suboptimal to attempt to use AI on any of the even-numbered steps, even as part of a chain.
     The optimal AI deployment strategy is to employ AI-augmentation on the $m/2$ odd-numbered steps (for a cost of $1$ each) and perform the $m/2$ even-numbered steps manually (for a cost of $5$ each), for an overall cost of
@@ -66,7 +102,17 @@ On the other hand, a job for which AI-friendly steps are separated by intermedia
     \]
 \end{example}
 \begin{example}
-    Next suppose that easy and hard steps are not interleaved, but rather the first $m/2$ steps can each be completed by AI with probability $1$ and the last $m/2$ steps can each be completed with probability $0.1$, as follows:\\~\\~\\
+    Next suppose that easy and hard steps are not interleaved but clustered: the first $m/2$ steps each succeed with probability $1$ and the last $m/2$ steps each succeed with probability $0.1$.
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Step ($i$) & \makecell{Manual\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI mgmt.\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success\\prob.\ ($q_i$)} \\
+\midrule
+$i \le m/2$ (easy) & $(1, 5)$ & $(1, 1)$ & $1$ \\
+$i > m/2$ (hard) & $(1, 5)$ & $(1, 1)$ & $0.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
     \input{plots/TikZ_visualization/example2_visualization.tex}
     In this case, the optimal AI strategy chains together the first $m/2$ steps into a single automated AI chain, for a combined cost of $1$, and performs the remaining $m/2$ steps manually (for a cost of $5$ each), for an overall cost of
     \[
@@ -137,12 +183,12 @@ This naturally leads to scenarios where the productivity improvements of AI inte
 \begin{example}
 Consider a two-step process with unit skill, with the following step parameters:
 \begin{center}
-\begin{tabular}{cccc}
+\begin{tabular}{ccccc}
 \toprule
-Step ($i$) & \makecell{Manual\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI mgmt.\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success\\prob.\ ($q_i$)} \\
+Step ($i$) & \makecell{Manual\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI mgmt.\\$(\AIskill{i}, \AItime{i})$} & \makecell{Step\\difficulty ($d_i$)} & \makecell{AI success\\prob.\ ($q_i$)} \\
 \midrule
-1 & $(1, 1)$ & $(1, 1)$ & $\alpha^{6}$ \\
-2 & $(1, 2)$ & $(1, 1)$ & $\alpha^{1}$ \\
+1 & $(1, 1)$ & $(1, 1)$ & $6$ & $\alpha^{6}$ \\
+2 & $(1, 2)$ & $(1, 1)$ & $1$ & $\alpha^{1}$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -170,3 +216,28 @@ Below $\alpha = 0.50$ both steps are manual; between $0.50$ and $0.90$ the firm 
 \end{align*}
 The marginal benefit of better AI jumps at each threshold, and---crucially---the jump at $\alpha \approx 0.90$ \emph{exceeds} the one at $\alpha \approx 0.50$ (panel~b): once chaining draws an additional step under AI, cost falls more steeply, so the returns to AI investment can rise as more of the workflow is automated.
 \end{example}
+
+Proposition~\ref{prop:reorg_threshold} formalizes this pattern: a reorganization into a longer chain is triggered at a single AI-quality threshold, set by the fixed manual cost it displaces, and because chain difficulties add linearly the firm moves to a higher power of $1/\alpha$, so the marginal return to AI jumps up as it crosses the threshold.
+
+\begin{proposition}[Reorganization thresholds and increasing returns to AI quality]
+\label{prop:reorg_threshold}
+For any fixed AI strategy, total cost is a polynomial in $1/\alpha$ whose constant term is the strategy's fixed manual cost and in which each AI chain contributes a term $\AIskill{r}\AItime{r}\,\alpha^{-D}$ of degree equal to the chain's total difficulty $D = \sum_{i} d_i$. Consider an incumbent strategy and a more-chained reorganization, with costs
+\[
+C_B(\alpha) = K_B + b\,\alpha^{-D}, \qquad
+C_R(\alpha) = K_R + b'\,\alpha^{-D'},
+\]
+where the reorganization chains more difficulty together, $D' > D \ge 0$, and removes fixed manual cost, $0 \le K_R < K_B$ (with $b, b' > 0$). Then:
+\emph{(i)} there is a unique threshold $\alpha^\ast$ with $C_B < C_R$ for $\alpha < \alpha^\ast$ and $C_R < C_B$ for $\alpha > \alpha^\ast$, so the firm reorganizes into the longer chain only once AI quality crosses $\alpha^\ast$;
+\emph{(ii)} the marginal benefit of AI quality $g(\alpha) = -\,\mathrm{d}C^\ast/\mathrm{d}\alpha$, with $C^\ast = \min\{C_B, C_R\}$, is nonnegative and jumps upward at the threshold, $g(\alpha^{\ast+}) > g(\alpha^{\ast-})$; and
+\emph{(iii)} the threshold is pinned down by the fixed manual cost the reorganization removes---$\alpha^\ast$ is decreasing in the manual saving $K_B - K_R$ and increasing in the added difficulty $D' - D$.
+\end{proposition}
+
+\begin{proof}
+Substitute $x = 1/\alpha \in [1, \infty)$, so better AI means smaller $x$. Both costs are polynomials in $x$ with positive coefficients, hence strictly increasing in $x$ and strictly decreasing in $\alpha$; so is $C^\ast = \min\{C_B, C_R\}$, giving $g \ge 0$.
+
+\emph{(i)} The difference $h(x) = C_R(x) - C_B(x) = b'x^{D'} - b\,x^{D} - (K_B - K_R)$ has coefficients, read from degree $D'$ down to $0$, with sign pattern $(+, -, -)$---a single sign change. By Descartes' rule of signs $h$ has exactly one positive root $x^\ast$; as its leading coefficient is positive, $h < 0$ for $x < x^\ast$ and $h > 0$ for $x > x^\ast$. Setting $\alpha^\ast = 1/x^\ast$ and translating back gives $C_R < C_B$ for $\alpha > \alpha^\ast$ and $C_B < C_R$ for $\alpha < \alpha^\ast$.
+
+\emph{(ii)} Since $h$ crosses zero from below as $x$ increases through $x^\ast$---equivalently $C_R - C_B$ crosses zero from above as $\alpha$ increases through $\alpha^\ast$---we have $C_R'(\alpha^\ast) < C_B'(\alpha^\ast)$. The active branch switches from $B$ to $R$ there, so $g$ jumps from $-C_B'(\alpha^\ast)$ up to $-C_R'(\alpha^\ast)$.
+
+\emph{(iii)} At the root, $b'(x^\ast)^{D'} - b\,(x^\ast)^{D} = K_B - K_R$: the chain's added expected cost just offsets the manual cost removed. The left-hand side is increasing in $x^\ast$ (as $h$ crosses upward) and, for $x^\ast \ge 1$, increasing in $D'$; implicit differentiation then gives $x^\ast$ increasing in $K_B - K_R$ and decreasing in $D'$, so $\alpha^\ast = 1/x^\ast$ moves oppositely.
+\end{proof}
