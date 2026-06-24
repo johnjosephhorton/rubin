@@ -1,21 +1,39 @@
+% Example 1: comparative-advantage vs. cost-minimizing assignment.
+% Step 1 flips from manual to automated, joining Step 2 in a single AI chain.
+% Colors and the blue dashed task box follow Figures 1-2 (manual=gray, automated=green,
+% augmented=orange; an AI chain is grouped by a blue dashed box).
 \begin{center}
-\begin{tikzpicture}[>=stealth,
-  cbox/.style={rectangle, rounded corners, draw, minimum width=2.7cm, minimum height=0.95cm, align=center, font=\small}]
-  % row labels
-  \node[font=\footnotesize\itshape, anchor=east] at (1.4, 0)    {Comparative advantage:};
-  \node[font=\footnotesize\itshape, anchor=east] at (1.4, -2.3) {Cost-minimizing:};
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[>=latex,
+  cbox/.style={rectangle, rounded corners, draw, minimum width=2.6cm, minimum height=0.95cm, align=center, font=\small},
+  manual/.style={fill=gray!10},
+  automated/.style={fill=green!30},
+  augmented/.style={fill=orange!30},
+  rowlab/.style={font=\footnotesize, align=right, text width=3.6cm, anchor=east},
+  chainbox/.style={draw=blue, rectangle, rounded corners, dashed, inner sep=0.28cm, line width=1pt}]
+
+  % row labels (to the left of the steps)
+  \node[rowlab] at (2.3, 0)    {Comparative Advantage\\Assignment Logic};
+  \node[rowlab] at (2.3, -2.6) {Cost-minimizing\\Assignment Logic};
+
   % row 1: assign each step to its cheaper factor in isolation
-  \node[cbox, fill=gray!20]   (a1) at (3.2, 0) {Step 1\\[-3pt]{\scriptsize manual}};
-  \node[cbox, fill=orange!30] (a2) at (6.4, 0) {Step 2\\[-3pt]{\scriptsize augmented}};
-  \node[font=\footnotesize, anchor=west] at (8.0, 0) {total $\approx 2.11$};
-  % row 2: optimal -- both chained, step 1 automated
-  \node[cbox, fill=green!25]  (b1) at (3.2, -2.3) {Step 1\\[-3pt]{\scriptsize automated}};
-  \node[cbox, fill=orange!30] (b2) at (6.4, -2.3) {Step 2\\[-3pt]{\scriptsize augmented}};
-  \draw[thick, decorate, decoration={brace, amplitude=5pt, mirror}] (1.75, -2.95) -- (7.85, -2.95);
-  \node[font=\footnotesize] at (4.8, -3.5) {single AI chain};
-  \node[font=\footnotesize, anchor=west] at (8.0, -2.3) {total $\approx 1.23$};
-  % step 1 flips from manual to automated
-  \draw[->, very thick, red!75!black] (3.2, -0.55) -- (3.2, -1.75);
-  \node[font=\scriptsize, text=red!75!black, anchor=west] at (3.4, -1.15) {flips to AI};
+  \node[cbox, manual]    (a1) at (4.3, 0) {Step 1\\[-3pt]{\scriptsize manual}};
+  \node[cbox, augmented] (a2) at (7.3, 0) {Step 2\\[-3pt]{\scriptsize augmented}};
+  \draw[->, thick] (a1) -- (a2);
+  \node[font=\footnotesize, anchor=west] at (9.0, 0) {total $\approx 2.11$};
+
+  % row 2: cost-minimizing -- both steps chained, step 1 automated
+  \node[cbox, automated] (b1) at (4.3, -2.6) {Step 1\\[-3pt]{\scriptsize automated}};
+  \node[cbox, augmented] (b2) at (7.3, -2.6) {Step 2\\[-3pt]{\scriptsize augmented}};
+  \draw[->, thick] (b1) -- (b2);
+  % blue dashed box: the two steps form a single AI-chain task (cf. Figures 1-2)
+  \node[chainbox, fit=(b1)(b2)] (chain) {};
+  \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.32)$) {single task (AI chain)};
+  \node[font=\footnotesize, anchor=west] at (9.0, -2.6) {total $\approx 1.23$};
+
+  % step 1 flips from manual to automated, joining the chain
+  \draw[->, very thick, red!75!black] (a1.south) -- (chain.north -| a1);
+  \node[font=\scriptsize, text=red!75!black, anchor=west] at (4.5, -1.3) {flips to AI};
 \end{tikzpicture}
+\end{adjustbox}
 \end{center}
