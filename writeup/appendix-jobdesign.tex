@@ -103,6 +103,29 @@ We explore this trade-off in greater detail in Section~\ref{sec:model_discussion
 \end{figure}
 
 
+Table~\ref{tab:jobdesign_parameters} collects the additional parameters introduced for job design.
+
+\begin{table}[ht!]
+\centering
+\caption{Additional Parameters for Job Design}
+\label{tab:jobdesign_parameters}
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+$J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
+$\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
+\addlinespace
+$\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
+$\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
+$\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
+$\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+
 \subsection{The Long-Run Optimization Problem}
 
 Given the sequence of steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, the firm can design both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs.

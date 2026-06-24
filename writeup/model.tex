@@ -72,6 +72,31 @@ We can therefore think of $\sum_{i=\ell}^r d_i$ as the total difficulty of the c
 
 To summarize, a task is either a manually-performed step, an AI-augmented step, or an AI chain.
 We define an \emph{AI deployment strategy} (or \emph{AI strategy} for short) as a sequence of tasks $\mathcal{T}$ that partitions the step sequence $\mathcal{S}$ into contiguous subsequences, with each singleton task designated for either manual or AI-augmented execution and non-singleton tasks being AI chains.
+Table~\ref{tab:model_parameters} summarizes the cost parameters introduced for steps and tasks.
+
+\begin{table}[ht!]
+\centering
+\caption{Cost Parameters of Steps and Tasks}
+\label{tab:model_parameters}
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+$s_i$ & Production step $i$ \\
+$\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
+$T_b$ & Task $b$: a manual step, an augmented step, or an AI chain \\
+$\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
+\addlinespace
+$\manualSkill{i},\ \manualTime{i}$ & Skill and time cost of completing step $i$ manually \\
+$\AIskill{i},\ \AItime{i}$ & Skill and time cost of managing one AI attempt at step $i$ \\
+$\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
+$d_i$ & Difficulty of step $i$ for AI \\
+$q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
+\addlinespace
+$\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\manualSkill{i},\, \manualTime{i})$ if a manual step, $(\AIskill{i},\, \AItime{i}/q_i)$ if augmented, and $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$ if an AI chain over steps $\ell, \dotsc, r$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 
 
