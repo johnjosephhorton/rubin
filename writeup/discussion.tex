@@ -2,13 +2,13 @@
 
 In this section we draw out three implications of the model.
 First, we show that AI chaining can overturn comparative-advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be automated in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
-Second, we introduce a \emph{fragmentation index} that captures how dispersed a job's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy---so that the gains from AI depend on the arrangement of steps, not merely on how many are AI-suitable (Section~\ref{sec:fragmentation}).
+Second, we introduce a \emph{fragmentation index} that captures how dispersed a job's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of steps, not merely on how many are AI-suitable (Section~\ref{sec:fragmentation}).
 Third, we show that improvements in AI quality can affect production cost non-linearly, with marginal gains that rise once better AI makes longer chains worthwhile (Section~\ref{sec:nonlinear}).
 
 \subsection{Comparative Advantage and AI Chaining}
 \label{sec:comparative_advantage}
 
-For a single step in isolation, the decision whether or not to deploy AI depends simply on whether the manual execution cost exceeds the AI management cost---that is, on the step's AI exposure alone.
+For a single step in isolation, the decision whether or not to deploy AI depends simply on whether the manual execution cost exceeds the AI management cost: that is, on the step's AI exposure alone.
 For two or more steps, however, the optimal deployment of AI depends on more than each step's exposure in isolation, because of the benefits of automating multiple steps together in an AI chain.
 As a result, a step that is more cost-effective to perform manually \emph{in isolation} may nonetheless be automated as part of a chain: the factor of production holding the comparative advantage on a step in isolation need not be the one that performs it in the optimal configuration of production.
 The following example illustrates this breakdown of comparative-advantage logic.
@@ -25,22 +25,22 @@ Consider a two-step process with unit skill, so a task's cost equals its expecte
 \bottomrule
 \end{tabular}
 \end{center}
-In isolation, step~1 is cheaper \emph{manually}---its manual cost $\manualSkill{1}\manualTime{1} = (1)(1) = 1$ is below its augmentation cost $\AIskill{1}\AItime{1}/q_1 = (1)(2)/0.9 \approx 2.2$---while step~2 is cheaper with \emph{AI}, since $\AIskill{2}\AItime{2}/q_2 = (1)(1)/0.9 \approx 1.1$ is below its manual cost $\manualSkill{2}\manualTime{2} = (1)(4) = 4$.
+In isolation, step~1 is cheaper \emph{manually} (its manual cost $\manualSkill{1}\manualTime{1} = (1)(1) = 1$ is below its augmentation cost $\AIskill{1}\AItime{1}/q_1 = (1)(2)/0.9 \approx 2.2$), while step~2 is cheaper with \emph{AI}, since $\AIskill{2}\AItime{2}/q_2 = (1)(1)/0.9 \approx 1.1$ is below its manual cost $\manualSkill{2}\manualTime{2} = (1)(4) = 4$.
 \input{plots/TikZ_visualization/comparative_advantage_visualization.tex}
 Yet the cost-minimizing strategy chains both steps and automates step~1. The chain's cost,
 \[
 \frac{\AIskill{2}\,\AItime{2}}{q_1\, q_2} = \frac{(1)(1)}{(0.9)(0.9)} = \frac{1}{0.81} \approx 1.23,
 \]
-falls below the comparative-advantage assignment---step~1 manual and step~2 augmented---which costs
+falls below the comparative-advantage assignment (step~1 manual and step~2 augmented), which costs
 \[
 \manualSkill{1}\manualTime{1} + \frac{\AIskill{2}\,\AItime{2}}{q_2} = (1)(1) + \frac{(1)(1)}{0.9} \approx 1 + 1.11 = 2.11,
 \]
 and below every other strategy.
-Automating step~1 inside the chain removes its verification cost---paid once, at the chain's augmented endpoint---leaving only the joint-success penalty ($q_1 q_2 = 0.81$).
+Automating step~1 inside the chain removes its verification cost, paid once, at the chain's augmented endpoint, leaving only the joint-success penalty ($q_1 q_2 = 0.81$).
 The human's comparative advantage on step~1 is thus overturned: in the optimal configuration the step is automated, at zero direct cost.
 \end{example}
 
-More generally, two results sharpen the picture. The first shows the reversal is easy to come by: wherever a human-advantaged step sits just before an AI chain, automating it lowers cost as soon as its \emph{incremental} cost falls short of its manual cost. The second is a primitive condition that \emph{guarantees}, with no reference to the rest of the sequence, that the human-advantaged step is automated in every cost-minimizing strategy.
+More generally, two results sharpen the picture. The first, Proposition~\ref{prop:ca_local}, shows the reversal is easy to come by: wherever a human-advantaged step sits just before an AI chain, automating it lowers cost as soon as its \emph{marginal} cost falls short of its manual cost. The second, Proposition~\ref{prop:ca_threshold}, gives a primitive condition that \emph{guarantees}, with no reference to the rest of the sequence, that the human-advantaged step is automated in every cost-minimizing strategy.
 
 \begin{proposition}[Comparative advantage is readily overturned]
 \label{prop:ca_local}
@@ -49,7 +49,7 @@ Consider a step $k$ on which the human holds the comparative advantage in isolat
 \label{eq:ca_local}
 \frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i} \;<\; \manualSkill{k}\manualTime{k},
 \end{equation}
-then that strategy is not cost-minimizing: extending the chain to $(k, \dotsc, r)$---which automates step $k$---is strictly cheaper. The human-advantaged step is thus automated in the cheaper arrangement, overturning comparative-advantage logic for this configuration.
+then the strategy in which step $k$ is executed manually is not cost-minimizing: extending the chain to $(k, \dotsc, r)$, which automates step $k$, is strictly cheaper. The human-advantaged step is thus automated in the cheaper arrangement, overturning comparative-advantage logic for this configuration.
 \end{proposition}
 
 \begin{proof}
@@ -59,7 +59,7 @@ The two strategies agree on every step outside the block $k, \dotsc, r$; there, 
 \qquad\text{and}\qquad
 \underbrace{\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i}}_{\text{chain } k,\dotsc,r}.
 \]
-The second is the smaller exactly when the difference of the two chain terms---the \emph{incremental} cost of folding step $k$ in---falls below $\manualSkill{k}\manualTime{k}$:
+The second is the smaller exactly when the difference of the two chain terms, the \emph{marginal} cost of folding step $k$ in, falls below $\manualSkill{k}\manualTime{k}$:
 \[
 \frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i} - \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}
 \;=\; \frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i} \;<\; \manualSkill{k}\manualTime{k},
@@ -67,7 +67,7 @@ The second is the smaller exactly when the difference of the two chain terms---t
 which is \eqref{eq:ca_local}.
 \end{proof}
 
-Because \eqref{eq:ca_local} charges step $k$ only its marginal failure risk $(1-q_k)$---the verification at the chain's endpoint $r$ is already paid for---such configurations are common. The two-step example is one: the chain there is the single augmented step~$2$, and \eqref{eq:ca_local} reads $\AIskill{2}\AItime{2}(1-q_1)/(q_1 q_2) = (1)(0.1)/[(0.9)(0.9)] \approx 0.12 < 1 = \manualSkill{1}\manualTime{1}$. Proposition~\ref{prop:ca_local} concerns a \emph{given} configuration, though: it shows chaining dominates whenever a chain abuts step $k$, but does not on its own pin down the cost-minimizing arrangement, whose downstream chain may end elsewhere. The next result supplies a primitive condition under which step $k$ is automated in \emph{every} optimum.
+Because \eqref{eq:ca_local} charges step $k$ only its marginal failure risk $(1-q_k)$ (the verification at the chain's endpoint $r$ is already paid for), such configurations are common. The two-step example is one: the chain there is the single augmented step~$2$, and \eqref{eq:ca_local} reads $\AIskill{2}\AItime{2}(1-q_1)/(q_1 q_2) = (1)(0.1)/[(0.9)(0.9)] \approx 0.12 < 1 = \manualSkill{1}\manualTime{1}$. Proposition~\ref{prop:ca_local} concerns a \emph{given} configuration, though: it shows chaining dominates whenever a chain abuts step $k$, but does not on its own pin down the cost-minimizing arrangement, whose downstream chain may end elsewhere. The next result supplies a primitive condition under which step $k$ is automated in \emph{every} optimum.
 
 \begin{proposition}[Guaranteed overturning of comparative advantage]
 \label{prop:ca_threshold}
@@ -84,22 +84,28 @@ then no cost-minimizing strategy assigns step $k$ by comparative advantage: perf
 \end{proposition}
 
 \begin{proof}
-For a block of consecutive steps $I$, let $\mathrm{OPT}(I)$ denote its minimum execution cost in isolation. Suppose, toward a contradiction, that a cost-minimizing strategy performs step $k$ manually. A manual step is a task that no chain crosses, so the sequence separates at $k$ and the strategy costs $\mathrm{OPT}(1{:}k{-}1) + \manualSkill{k}\manualTime{k} + \mathrm{OPT}(k{+}1{:}m)$. Executing steps $1{:}k{-}1$ optimally and the entire block $k, \dotsc, m$ as a single AI chain (augmented at the terminal step $m$) is a feasible alternative, of cost $\mathrm{OPT}(1{:}k{-}1) + \AIskill{m}\AItime{m}/\prod_{i=k}^{m} q_i$. Cost-minimality of the manual strategy gives
+We argue by contradiction: suppose some cost-minimizing strategy performs step $k$ manually, and exhibit a strictly cheaper one. The cheaper strategy keeps everything outside the block $k, \dotsc, m$ unchanged and replaces that block by a single AI chain running all the way to the terminal step $m$; condition~\eqref{eq:ca_sufficient} is exactly what makes the replacement pay. Throughout, write $\mathrm{OPT}(I)$ for the minimum cost of executing a block of consecutive steps $I$ on its own.
+
+\emph{Cost of the manual strategy.} Because step $k$ is performed manually, it is a task of its own that no chain crosses, so the sequence splits into three pieces that are costed independently: steps $1, \dotsc, k{-}1$, the manual step $k$, and steps $k{+}1, \dotsc, m$. The strategy's cost is therefore $\mathrm{OPT}(1{:}k{-}1) + \manualSkill{k}\manualTime{k} + \mathrm{OPT}(k{+}1{:}m)$.
+
+\emph{Cost of the candidate.} Execute steps $1, \dotsc, k{-}1$ optimally and run the whole block $k, \dotsc, m$ as one AI chain augmented at $m$, at cost $\AIskill{m}\AItime{m}/\prod_{i=k}^{m} q_i$; the candidate's total cost is $\mathrm{OPT}(1{:}k{-}1) + \AIskill{m}\AItime{m}/\prod_{i=k}^{m} q_i$. It is feasible, so the cost-minimizing manual strategy is no more expensive than it; cancelling the shared $\mathrm{OPT}(1{:}k{-}1)$,
 \[
 \manualSkill{k}\manualTime{k} + \mathrm{OPT}(k{+}1{:}m) \;\le\; \frac{\AIskill{m}\AItime{m}}{\prod_{i=k}^{m} q_i}.
 \]
-It remains to bound $\mathrm{OPT}(k{+}1{:}m)$ from below. In any strategy, the task covering the terminal step $m$ must end at $m$, since no chain can cross the boundary past the last step. Such a task is a single step done manually or augmented, of cost $\min\{\manualSkill{m}\manualTime{m},\, \AIskill{m}\AItime{m}/q_m\}$, or an AI chain $(\ell, \dotsc, m)$, of cost $\AIskill{m}\AItime{m}/\prod_{i=\ell}^{m} q_i \ge \AIskill{m}\AItime{m}/q_m$. With every other task adding nonnegative cost,
+
+\emph{Bounding $\mathrm{OPT}(k{+}1{:}m)$ from below.} The cost of executing the block $k{+}1, \dotsc, m$ is at least the cost of the task that covers its final step $m$. That task must end at $m$, since no chain can extend past the last step, so it is either step $m$ on its own, manual or augmented, at cost $\min\{\manualSkill{m}\manualTime{m},\, \AIskill{m}\AItime{m}/q_m\}$, or a chain ending at $m$, at cost $\AIskill{m}\AItime{m}/\prod_{i=\ell}^{m} q_i \ge \AIskill{m}\AItime{m}/q_m$. Either way, and with every other task adding nonnegative cost,
 \[
 \mathrm{OPT}(k{+}1{:}m) \;\ge\; \min\!\left\{\manualSkill{m}\manualTime{m},\ \frac{\AIskill{m}\AItime{m}}{q_m}\right\}.
 \]
-Substituting this bound into the previous inequality gives
+
+\emph{Contradiction.} Substituting this lower bound into the inequality from the candidate step and rearranging gives
 \[
 \manualSkill{k}\manualTime{k} \;\le\; \frac{\AIskill{m}\AItime{m}}{\prod_{i=k}^{m} q_i} - \min\!\left\{\manualSkill{m}\manualTime{m},\ \frac{\AIskill{m}\AItime{m}}{q_m}\right\},
 \]
-contradicting \eqref{eq:ca_sufficient}. Hence no cost-minimizing strategy performs step $k$ manually.
+which contradicts~\eqref{eq:ca_sufficient}. Hence no cost-minimizing strategy performs step $k$ manually.
 \end{proof}
 
-Unlike Proposition~\ref{prop:ca_local}, condition~\eqref{eq:ca_sufficient} makes no assumption about how the rest of the sequence is organized---the price of that generality being its strength. It chains the whole tail $k, \dotsc, m$ but credits back $\min\{\manualSkill{m}\manualTime{m},\, \AIskill{m}\AItime{m}/q_m\}$, the cost the terminal step must incur under any strategy: a chain reaching step $m$ pays for the verification at its endpoint regardless of step $k$, so this is not a true extra burden of folding step $k$ in. On the two-step example $m = 2$ and the credited-back floor is exactly $\AIskill{2}\AItime{2}/q_2$, so \eqref{eq:ca_sufficient} collapses to the local margin~\eqref{eq:ca_local} and the reversal is guaranteed---even though the raw chain cost $1/0.81 \approx 1.23$ exceeds $\manualSkill{1}\manualTime{1} = 1$. The one price of the unconditional form is that the chain is anchored to the terminal step $m$, so it can miss reversals an interior endpoint $r < m$ would deliver---for instance when a low-success step late in the process inflates $\prod_{i=k}^{m} q_i$; the conclusion also holds whenever the full-chain cost at some interior $r > k$ already undercuts $\manualSkill{k}\manualTime{k}$.
+Unlike Proposition~\ref{prop:ca_local}, condition~\eqref{eq:ca_sufficient} makes no assumption about how the rest of the sequence is organized; the price of that generality being its strength. It chains the whole tail $k, \dotsc, m$ but credits back $\min\{\manualSkill{m}\manualTime{m},\, \AIskill{m}\AItime{m}/q_m\}$, the cost the terminal step must incur under any strategy: a chain reaching step $m$ pays for the verification at its endpoint regardless of step $k$, so this is not a true extra burden of folding step $k$ in. On the two-step example $m = 2$ and the credited-back floor is exactly $\AIskill{2}\AItime{2}/q_2$, so \eqref{eq:ca_sufficient} collapses to the local margin~\eqref{eq:ca_local} and the reversal is guaranteed, even though the raw chain cost $1/0.81 \approx 1.23$ exceeds $\manualSkill{1}\manualTime{1} = 1$. The one price of the unconditional form is that the chain is anchored to the terminal step $m$, so it can miss reversals an interior endpoint $r < m$ would deliver, for instance when a low-success step late in the process inflates $\prod_{i=k}^{m} q_i$; the conclusion also holds whenever the full-chain cost at some interior $r > k$ already undercuts $\manualSkill{k}\manualTime{k}$.
 
 Whether step~1 is automated depends on its neighbors.
 Had step~1 instead sat beside a step that AI completes only with low probability, the chain's joint success probability would be small, inflating its cost, and step~1 would revert to manual execution.
@@ -189,7 +195,7 @@ We will show that the fragmentation index is within a constant factor of the cos
 \end{proposition}
 
 We prove Proposition~\ref{prop:fragmentation} in Appendix~\ref{app:FI}.  
-The key take-away from Proposition~\ref{prop:fragmentation} is that jobs with high fragmentation index---i.e., those for which the expected number of \emph{consecutive} successful step executions by an AI is low---will tend to have higher costs even under optimal use of AI chaining.
+The key take-away from Proposition~\ref{prop:fragmentation} is that jobs with high fragmentation index (i.e., those for which the expected number of \emph{consecutive} successful step executions by an AI is low) will tend to have higher costs even under optimal use of AI chaining.
 A key driver of efficiency gains via AI automation is therefore not simply the expected number of steps that can be automated effectively, but the number of \emph{adjacent} steps in the production process that have high exposure to AI.
 
 An implication of our proof of Proposition~\ref{prop:fragmentation} is a natural and approximately optimal greedy algorithm for constructing AI strategies. The algorithm groups tasks into chains as long as the probability of success is sufficiently high; if the success probability falls too low then the chain is terminated and a new chain is started (with chains of length 1 converted to manual execution when appropriate).
@@ -242,10 +248,10 @@ Below $\alpha = 0.50$ both steps are manual; between $0.50$ and $0.90$ the firm 
 \text{augment step 2:} \quad & \manualSkill{1}\manualTime{1} + \frac{\AIskill{2}\,\AItime{2}}{q_2} = (1)(1) + \frac{(1)(1)}{\alpha} = 1 + \tfrac{1}{\alpha}, \\
 \text{chain (steps 1--2):} \quad & \frac{\AIskill{2}\,\AItime{2}}{q_1 q_2} = \frac{(1)(1)}{\alpha^{6}\,\alpha^{1}} = \alpha^{-7}.
 \end{align*}
-The marginal benefit of better AI jumps at each threshold, and---crucially---the jump at $\alpha \approx 0.90$ \emph{exceeds} the one at $\alpha \approx 0.50$ (panel~b): once chaining draws an additional step under AI, cost falls more steeply, so the returns to AI investment can rise as more of the workflow is automated.
+The marginal benefit of better AI jumps at each threshold, and, crucially, the jump at $\alpha \approx 0.90$ \emph{exceeds} the one at $\alpha \approx 0.50$ (panel~b): once chaining draws an additional step under AI, cost falls more steeply, so the returns to AI investment can rise as more of the workflow is automated.
 \end{example}
 
-Proposition~\ref{prop:reorg_threshold} formalizes this pattern for a production process with any number of steps and chains. The firm's cost is the lower envelope of the cost curves of all AI strategies---each curve a fixed manual cost plus a sum of chain terms $\AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c}$, one per chain---and the returns to AI quality diminish within any fixed configuration but jump upward at each threshold where the firm reorganizes its chains.
+Proposition~\ref{prop:reorg_threshold} formalizes this pattern for a production process with any number of steps and chains. The firm's cost is the lower envelope of the cost curves of all AI strategies (each curve a fixed manual cost plus a sum of chain terms $\AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c}$, one per chain), and the returns to AI quality diminish within any fixed configuration but jump upward at each threshold where the firm reorganizes its chains.
 
 \begin{proposition}[Returns to AI quality jump up at reorganization thresholds]
 \label{prop:reorg_threshold}
@@ -253,7 +259,7 @@ For any AI strategy $\T$, total cost is the polynomial in $1/\alpha$
 \[
 C_\T(\alpha) = K_\T + \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c},
 \]
-where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed manual cost and the sum runs over the AI chains of $\T$, each chain $c$ (augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \sum_{i \in c} d_i \ge 1$. Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost and $g(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ the marginal benefit of AI quality. As $\alpha$ rises the optimal strategy changes at finitely many thresholds; between consecutive thresholds $g$ is strictly decreasing---diminishing returns to a fixed configuration---but at every threshold $g$ \emph{jumps strictly upward}. The returns to improving AI are thus non-monotone: each reorganization toward longer chains discretely raises the marginal value of further progress in AI.
+where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed manual cost and the sum runs over the AI chains of $\T$, each chain $c$ (augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \sum_{i \in c} d_i \ge 1$. Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost and $g(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ the marginal benefit of AI quality. As $\alpha$ rises the optimal strategy changes at finitely many thresholds; between consecutive thresholds $g$ is strictly decreasing (diminishing returns to a fixed configuration) but at every threshold $g$ \emph{jumps strictly upward}. The returns to improving AI are thus non-monotone: each reorganization toward longer chains discretely raises the marginal value of further progress in AI.
 \end{proposition}
 
 \begin{proof}
@@ -268,4 +274,4 @@ each cost curve is non-increasing and convex (constant when $\T$ uses no chain).
 Within a regime where $\T$ is optimal, $g(\alpha) = -C_\T'(\alpha) = \sum_{c} \AIskill{r_c}\AItime{r_c}\,D_c\,\alpha^{-D_c-1}$ is nonnegative and strictly decreasing in $\alpha$ (zero if $\T$ uses no chain), so returns to a fixed configuration diminish. At a threshold $\alpha_0$ the optimum switches from $\T$ (optimal just below) to $\T'$ (just above); the two costs are equal at $\alpha_0$ with $C_{\T'} \le C_\T$ above and $C_\T \le C_{\T'}$ below, so $\phi = C_{\T'} - C_\T$ satisfies $\phi(\alpha_0) = 0$, $\phi \le 0$ above and $\phi \ge 0$ below. Hence $\phi'(\alpha_0) \le 0$, i.e.\ $-C_{\T'}'(\alpha_0) \ge -C_\T'(\alpha_0)$: the marginal benefit jumps strictly upward as $\alpha$ crosses $\alpha_0$.
 \end{proof}
 
-Two features drive the non-linearity. Within a fixed configuration the returns to AI quality diminish, as a given set of chains is simply run with fewer retries as $\alpha$ rises. The accelerations come at the reorganization thresholds, where the firm folds more steps into longer chains; because difficulties add linearly a longer chain carries a higher power of $1/\alpha$, hence a strictly steeper cost curve, and the marginal return jumps up as the firm moves onto it. Each threshold is gatekept by the fixed manual cost the reorganization displaces---a longer chain becomes worthwhile only once AI is reliable enough for its $\alpha^{-D}$ cost to fall below the manual work it removes. The two-step example traces out two such thresholds: augmenting step~2 begins at $\alpha \approx 0.50$ and chaining both steps takes over at $\alpha \approx 0.90$, with the marginal return jumping up at each.
+Two features drive the non-linearity. Within a fixed configuration the returns to AI quality diminish, as a given set of chains is simply run with fewer retries as $\alpha$ rises. The accelerations come at the reorganization thresholds, where the firm folds more steps into longer chains; because difficulties add linearly a longer chain carries a higher power of $1/\alpha$, hence a strictly steeper cost curve, and the marginal return jumps up as the firm moves onto it. Each threshold is gatekept by the fixed manual cost the reorganization displaces: a longer chain becomes worthwhile only once AI is reliable enough for its $\alpha^{-D}$ cost to fall below the manual work it removes. The two-step example traces out two such thresholds: augmenting step~2 begins at $\alpha \approx 0.50$ and chaining both steps takes over at $\alpha \approx 0.90$, with the marginal return jumping up at each.
