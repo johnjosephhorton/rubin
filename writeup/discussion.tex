@@ -14,8 +14,18 @@ As a result, a step that is more cost-effective to perform manually \emph{in iso
 The following example illustrates this breakdown of comparative-advantage logic.
 
 \begin{example}
-Consider a two-step process with unit skill, so a task's cost equals its expected completion time; the AI succeeds at either step with probability $q_1 = q_2 = 0.9$.
-In isolation, step~1 is cheaper \emph{manually} ($\manualTime{1} = 1$ versus an augmentation cost of $\AItime{1}/q_1 = 2/0.9 \approx 2.2$), while step~2 is cheaper with \emph{AI} ($\AItime{2}/q_2 = 1/0.9 \approx 1.1$ versus $\manualTime{2} = 4$).
+Consider a two-step process with unit skill, so a task's cost equals its expected completion time, with the following step parameters:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Step & \makecell{Manual cost\\ $\manualTime{i}$} & \makecell{AI mgmt.\ cost\\ $\AItime{i}$} & \makecell{AI success\\ prob.\ $q_i$} \\
+\midrule
+1 & 1 & 2 & 0.9 \\
+2 & 4 & 1 & 0.9 \\
+\bottomrule
+\end{tabular}
+\end{center}
+In isolation, step~1 is cheaper \emph{manually} (its manual cost $1$ is below its augmentation cost $\AItime{1}/q_1 = 2/0.9 \approx 2.2$), while step~2 is cheaper with \emph{AI} ($\AItime{2}/q_2 = 1/0.9 \approx 1.1$ below its manual cost $4$).
 \input{plots/TikZ_visualization/comparative_advantage_visualization.tex}
 Yet the cost-minimizing strategy chains both steps and automates step~1: the chain costs $\AItime{2}/(q_1 q_2) = 1/0.81 \approx 1.23$, below the comparative-advantage assignment ($\approx 2.11$) and every other option.
 Automating step~1 inside the chain removes its verification cost---paid once, at the chain's augmented endpoint---leaving only the joint-success penalty ($q_1 q_2 = 0.81$).
@@ -112,8 +122,18 @@ AI strategies with a higher degree of AI chaining will naturally involve higher 
 This naturally leads to scenarios where the productivity improvements of AI integration are modest at low levels of quality but can grow sharply past a certain inflection point, as we describe in the following example illustrated in Figure~\ref{fig:example_5_graph} below.
 
 \begin{example}
-Consider a two-step process with unit skill.
-Step~1 is short but hard for AI ($\manualTime{1} = 1$, difficulty $d_1 = 6$); step~2 is more time-consuming but easy for AI ($\manualTime{2} = 2$, $d_2 = 1$); managing one AI attempt at either step costs unit time.
+Consider a two-step process with unit skill, with the following step parameters:
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Step & \makecell{Manual cost\\ $\manualTime{i}$} & \makecell{AI mgmt.\ cost\\ $\AItime{i}$} & \makecell{AI difficulty\\ $d_i$} \\
+\midrule
+1 & 1 & 1 & 6 \\
+2 & 2 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+Step~1 is short but hard for AI, while step~2 is more time-consuming but easy; the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$.
 Figure~\ref{fig:example_5_graph} traces the optimal cost and its marginal benefit as AI quality $\alpha$ rises.
 Below $\alpha = 0.50$ both steps are manual (cost $3$); between $0.50$ and $0.90$ the firm augments step~2 (cost $1 + 1/\alpha$); above $0.90$ it chains both steps, automating step~1 (cost $\alpha^{-7}$).
 The marginal benefit of better AI jumps at each threshold, and---crucially---the jump at $\alpha \approx 0.90$ \emph{exceeds} the one at $\alpha \approx 0.50$: once chaining draws an additional step under AI, cost falls more steeply, so the returns to AI investment can rise as more of the workflow is automated.
