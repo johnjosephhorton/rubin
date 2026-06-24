@@ -94,24 +94,24 @@ For simplicity, suppose every step requires unit skill, so that a task's cost eq
 The first step is short but difficult for AI tools to perform correctly.
 Specifically, its manual time cost is $\manualTime{1} = 1$, and its AI difficulty score, $d_1$, is $6$, meaning that an AI can successfully complete the step with probability $q_1 = \alpha^6$.
 
-The second step is time-consuming to execute manually, but easy for AI.
-Its manual time cost is $\manualTime{2} = 4$ and its AI difficulty score is $d_2 = 1$.
+The second step is moderately time-consuming to execute manually, but easy for AI.
+Its manual time cost is $\manualTime{2} = 2$ and its AI difficulty score is $d_2 = 1$.
 Managing one AI attempt at either step takes unit time, $\AItime{1} = \AItime{2} = 1$.
 
 Consider the optimal AI strategy for this job as a function of $\alpha$, the general AI quality metric.
 The costs of the leading strategies are plotted in Panel (a) of Figure~\ref{fig:example_5_graph}.
-For $\alpha < 0.25$, it is optimal to complete both steps manually, for a total cost of $\manualTime{1} + \manualTime{2} = 5$.
+For $\alpha < 0.50$, it is optimal to complete both steps manually, for a total cost of $\manualTime{1} + \manualTime{2} = 3$.
 Because this strategy does not employ AI, its cost is not affected by improvements to $\alpha$ in this range, which is evident in Panel (b) of the figure.
 
-For $\alpha \in (0.25, 0.90)$, the optimal AI strategy changes: it is better to augment the second step while keeping the first manual, reducing the second step's completion time from $\manualTime{2} = 4$ to $\AItime{2}/q_2 = 1/\alpha$.
-As $\alpha$ increases, the total cost drops gradually from $5$ (at $\alpha = 0.25$) to $1 + 1/\alpha \approx 2.1$ (at $\alpha \approx 0.90$).
-This gradual improvement is visible as a modest slope in Panel (b).
+For $\alpha \in (0.50, 0.90)$, the optimal AI strategy changes: it is better to augment the second step while keeping the first manual, reducing the second step's completion cost from $\manualTime{2} = 2$ to $\AItime{2}/q_2 = 1/\alpha$.
+As $\alpha$ increases, the total cost drops gradually from $3$ (at $\alpha = 0.50$) to $1 + 1/\alpha \approx 2.1$ (at $\alpha \approx 0.90$), a modest slope in Panel (b).
 
-However, once $\alpha$ grows larger than approximately $0.90$, the optimal AI strategy changes more dramatically.
+Once $\alpha$ grows larger than approximately $0.90$, the optimal AI strategy changes more dramatically.
 At this point, it is better to chain the two steps into a single AI chain, automating step $1$ and augmenting step $2$, so that the worker manages a single AI-executed task spanning both steps.
-The cost of this chain is $\AItime{2}/(q_1 q_2) = \alpha^{-7}$.
-This cost starts at approximately $2.1$ at $\alpha \approx 0.90$ but drops sharply, eventually converging to a total cost of $1$ at $\alpha = 1$.
-This sharp drop indicates substantial marginal benefits from incremental improvements in AI quality in this region, illustrated by the pronounced jump in the slope in Panel (b) at $\alpha \approx 0.90$.
+The cost of this chain is $\AItime{2}/(q_1 q_2) = \alpha^{-7}$, which starts at approximately $2.1$ at $\alpha \approx 0.90$ but drops sharply, converging to $1$ at $\alpha = 1$.
+Crucially, the marginal benefit of improving AI quality is \emph{larger} at this second threshold than at the first: because chaining now brings the first step under AI as well, the cost falls as $\alpha^{-7}$ rather than $\alpha^{-1}$, so further improvements in $\alpha$ yield greater cost reductions.
+Panel (b) shows this directly---the jump in the marginal benefit at $\alpha \approx 0.90$ exceeds the jump at $\alpha \approx 0.50$.
+This illustrates how the returns to AI investment can \emph{increase} as more steps are drawn into AI execution.
 \end{example}
 
 \begin{figure}[htbp]
