@@ -1,18 +1,42 @@
 \section{Discussion}
 
-In this section we draw out two implications of the model.
-First, we introduce a \emph{fragmentation index} that captures how dispersed a job's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy---so that the gains from AI depend on the arrangement of steps, not merely on how many are AI-suitable (Section~\ref{sec:fragmentation}).
-Second, we show that improvements in AI quality can affect production cost non-linearly, with marginal gains that rise once better AI makes longer chains worthwhile (Section~\ref{sec:nonlinear}).
+In this section we draw out three implications of the model.
+First, we show that AI chaining can overturn comparative-advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be automated in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
+Second, we introduce a \emph{fragmentation index} that captures how dispersed a job's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy---so that the gains from AI depend on the arrangement of steps, not merely on how many are AI-suitable (Section~\ref{sec:fragmentation}).
+Third, we show that improvements in AI quality can affect production cost non-linearly, with marginal gains that rise once better AI makes longer chains worthwhile (Section~\ref{sec:nonlinear}).
+
+\subsection{Comparative Advantage and AI Chaining}
+\label{sec:comparative_advantage}
+
+For a single step in isolation, the decision whether or not to deploy AI depends simply on whether the manual execution cost exceeds the AI management cost---that is, on the step's AI exposure alone.
+For two or more steps, however, the optimal deployment of AI depends on more than each step's exposure in isolation, because of the benefits of automating multiple steps together in an AI chain.
+As a result, a step that is more cost-effective to perform manually \emph{in isolation} may nonetheless be automated as part of a chain: the factor of production holding the comparative advantage on a step in isolation need not be the one that performs it in the optimal configuration of production.
+The following example illustrates this breakdown of comparative-advantage logic.
+
+\begin{example}
+Consider a two-step production process; suppose every step requires unit skill, so that a task's cost equals its (expected) completion time.
+Step~1 has a manual cost of $\manualTime{1} = 1$ and, under AI augmentation, a management cost of $\AItime{1} = 2$ per attempt with success probability $q_1 = 0.9$.
+In isolation, step~1 is cheaper to perform manually: its manual cost, $1$, is below its AI-augmentation cost, $\AItime{1}/q_1 = 2/0.9 \approx 2.2$.
+The human thus holds a comparative advantage on step~1.
+Step~2 has a manual cost of $\manualTime{2} = 4$ and an AI management cost of $\AItime{2} = 1$ per attempt with success probability $q_2 = 0.9$, so AI holds the advantage on step~2 (since $1/0.9 \approx 1.1 < 4$).
+
+The cost-minimizing strategy, however, chains the two steps: it automates step~1 and augments step~2, so that a single worker manages one AI-executed task spanning both.
+This chain costs $\AItime{2}/(q_1 q_2) = 1/(0.9 \times 0.9) \approx 1.23$, below every alternative---in particular below performing step~1 manually and augmenting step~2, which costs $\manualTime{1} + \AItime{2}/q_2 = 1 + 1/0.9 \approx 2.11$.
+In the optimal configuration, step~1 is therefore automated and executed at zero direct cost, even though the human has a comparative advantage on it in isolation.
+
+The reason is that augmenting step~1 on its own requires a human to prompt and verify it, incurring its management cost; folding it into the chain instead places it ``under the hood,'' so the only cost of including step~1 is the lower joint success probability---the chain succeeds with probability $q_1 q_2 = 0.81$ rather than $q_2 = 0.9$.
+Verification is a fixed cost of the chain, paid once at its augmented endpoint, rather than a cost levied on each step.
+\end{example}
+
+Whether step~1 is automated depends on its neighbors.
+Had step~1 instead sat beside a step that AI completes only with low probability, the chain's joint success probability would be small, inflating its cost, and step~1 would revert to manual execution.
+The same step, with identical characteristics, can therefore be automated in one workflow yet performed manually in another, depending only on the AI-suitability of its neighbors.
+This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction}, where we compare the realized execution of conceptually identical steps across occupations whose neighboring steps differ in AI-suitability.
+
+
 
 \subsection{Job-level AI Exposure and the Fragmentation Index}
 \label{sec:fragmentation}
-
-For a single step in isolation, the decision whether or not to deploy AI augmentation depends simply on whether the manual execution cost exceeds the AI management cost.  
-That is, the optimal choice of whether to use AI assistance depends only on the AI exposure of the step in question. 
-For two or more steps, however, the optimal deployment of AI depends on more than the exposure of each step in isolation.  
-This can arise because of the benefits of automating multiple steps together in an AI chain.  
-Even if one step can be completed more effectively through manual work, it may be preferable to automate it as part of a larger collection of steps that can be jointly delegated to AI.  
-Whether this occurs in the optimal AI strategy depends on the relationship between other nearby steps in the production process.
 
 Returning to the firm's deployment problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:optimization.short}, we can interpret job-level AI exposure as the extent to which an optimal AI strategy employs AI automation and augmentation.
 Intuitively, a run of \emph{consecutive} steps in the production process that an AI can perform effectively is a natural candidate for an AI chain.  
