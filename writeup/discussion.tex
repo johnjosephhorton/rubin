@@ -42,9 +42,9 @@ The human's comparative advantage on step~1 is thus overturned: in the optimal c
 
 More generally, the same reversal can be guaranteed in \emph{any} production process---not only the two-step example---by a sufficient condition relating step $k$ to its AI-executed neighbors.
 
-\begin{proposition}[A sufficient condition for overturning comparative advantage]
+\begin{proposition}[Comparative advantage is overturned in the optimal sequence]
 \label{prop:ca_threshold}
-Consider any production process and a step $k$ on which the human holds the comparative advantage in isolation, $\manualSkill{k}\manualTime{k} < \AIskill{k}\AItime{k}/q_k$. Suppose that in the cost-minimizing strategy steps $k+1, \dotsc, r$ form an AI chain with augmented endpoint $r$, and that the \emph{incremental} cost of drawing step $k$ into that chain is below its manual cost:
+Consider any production process and a step $k$ on which the human holds the comparative advantage in isolation, $\manualSkill{k}\manualTime{k} < \AIskill{k}\AItime{k}/q_k$. Suppose the cost-minimizing strategy executes the following steps $k+1, \dotsc, r$ as an AI chain ending (augmented) at $r$, and that the \emph{incremental} cost of drawing step $k$ into that chain is below its manual cost:
 \begin{equation}
 \label{eq:ca_sufficient}
 \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}\left(\frac{1}{q_k}-1\right)
@@ -53,7 +53,7 @@ Consider any production process and a step $k$ on which the human holds the comp
 \;<\;
 \manualSkill{k}\manualTime{k}.
 \end{equation}
-Then that strategy does not perform step $k$ manually: folding step $k$ into the chain---automating it---is strictly cheaper, so the human's isolated comparative advantage on step $k$ is not exercised.
+Then the cost-minimizing production sequence does not assign step $k$ by comparative advantage: it automates step $k$ within that chain, and executing step $k$ manually is strictly suboptimal.
 \end{proposition}
 
 \begin{proof}
@@ -69,7 +69,7 @@ Suppose a strategy runs $(k+1, \dotsc, r)$ as an AI chain but performs step $k$ 
 by \eqref{eq:ca_sufficient}. Every other task is untouched, so the strategy that performs step $k$ manually is not cost-minimizing.
 \end{proof}
 
-The condition is sufficient, not necessary, and the same reversal arises in many other configurations. It is slack for two reasons. First, automating step $k$ is charged only the \emph{incremental} failure risk $(1-q_k)$ rather than the full chain cost: the human checkpoint at the chain's endpoint $r$ is already paid for, so appending step $k$ adds no new verification. Second, the firm needs only \emph{one} favorable downstream endpoint $r$ to satisfy \eqref{eq:ca_sufficient}. The reversal therefore occurs more readily the more AI-suitable step $k$'s neighbors are---a higher joint success $\prod_{i=k+1}^{r} q_i$ along the adjacent chain---and the costlier step $k$ is to perform manually. For the two-step process of the example, \eqref{eq:ca_sufficient} reduces to $q_2 > \AIskill{2}\AItime{2}(1-q_1)/(q_1\,\manualSkill{1}\manualTime{1})$, which there is also necessary; in longer processes step $k$ can be drawn into AI execution through chain arrangements that \eqref{eq:ca_sufficient} does not capture, so the condition only \emph{understates} when the reversal occurs.
+Two qualifications complete the picture. First, the hypothesis that the optimum already chains steps $k+1, \dotsc, r$ is essential and cannot be replaced by \eqref{eq:ca_sufficient} alone: whether step $k$ is drawn in depends on the chain that actually abuts it. If the cost-minimizing downstream configuration is instead a \emph{longer} chain $(k+1, \dotsc, R)$ with $R > r$, folding step $k$ in costs $\AIskill{R}\AItime{R}(1-q_k)/\prod_{i=k}^{R} q_i$ rather than the left-hand side of \eqref{eq:ca_sufficient}; because a longer chain has lower joint success this can exceed $\manualSkill{k}\manualTime{k}$, leaving step $k$ manual even though \eqref{eq:ca_sufficient} holds at $r$. The reversal is a property of step $k$ relative to its realized neighboring chain, not of its parameters in isolation. Second, when the hypothesis does hold the condition is mild: automating step $k$ is charged only the \emph{incremental} failure risk $(1-q_k)$---the verification at endpoint $r$ is already paid for---and only one favorable endpoint is needed, so the reversal occurs more readily the more AI-suitable step $k$'s neighbors are and the costlier step $k$ is to perform manually. For the two-step example, where $r = 2$ is the only possible endpoint, \eqref{eq:ca_sufficient} reduces to $q_2 > \AIskill{2}\AItime{2}(1-q_1)/(q_1\,\manualSkill{1}\manualTime{1})$ and characterizes the reversal exactly.
 
 Whether step~1 is automated depends on its neighbors.
 Had step~1 instead sat beside a step that AI completes only with low probability, the chain's joint success probability would be small, inflating its cost, and step~1 would revert to manual execution.
