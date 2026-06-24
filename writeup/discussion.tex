@@ -247,38 +247,25 @@ The marginal benefit of better AI jumps at each threshold, and---crucially---the
 
 Proposition~\ref{prop:reorg_threshold} formalizes this pattern for a production process with any number of steps and chains. The firm's cost is the lower envelope of the cost curves of all AI strategies---each curve a fixed manual cost plus a sum of chain terms $\AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c}$, one per chain---and the returns to AI quality diminish within any fixed configuration but jump upward at each threshold where the firm reorganizes its chains.
 
-\begin{proposition}[Reorganization thresholds and increasing returns to AI quality]
+\begin{proposition}[Returns to AI quality jump up at reorganization thresholds]
 \label{prop:reorg_threshold}
-For any AI strategy $\T$, total cost is
+For any AI strategy $\T$, total cost is the polynomial in $1/\alpha$
 \[
 C_\T(\alpha) = K_\T + \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c},
 \]
-where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed manual cost, $\mathcal{C}(\T)$ is the set of AI chains in $\T$, and chain $c$ has augmented endpoint $r_c$ and total difficulty $D_c = \sum_{i \in c} d_i \ge 1$. Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost over $\alpha \in (0,1]$. Then:
-\begin{enumerate}
-\setlength{\itemsep}{0.5em}
-\item[(i)] each $C_\T$ is convex and non-increasing in $\alpha$, so $C^*$---their lower envelope---is continuous and non-increasing, equal on each of finitely many maximal intervals to a single strategy's cost, with the all-manual strategy optimal as $\alpha \to 0^+$;
-\item[(ii)] the marginal benefit of AI quality $g(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ is strictly decreasing within each regime---diminishing returns to a fixed configuration, with $g \equiv 0$ while no AI is used---yet jumps upward at every threshold where the optimal strategy changes.
-\end{enumerate}
+where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed manual cost and the sum runs over the AI chains of $\T$, each chain $c$ (augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \sum_{i \in c} d_i \ge 1$. Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost and $g(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ the marginal benefit of AI quality. As $\alpha$ rises the optimal strategy changes at finitely many thresholds; between consecutive thresholds $g$ is strictly decreasing---diminishing returns to a fixed configuration---but at every threshold $g$ \emph{jumps strictly upward}. The returns to improving AI are thus non-monotone: each reorganization toward longer chains discretely raises the marginal value of further progress in AI.
 \end{proposition}
 
 \begin{proof}
-Differentiating a fixed strategy's cost term by term,
+Each $C_\T$ is a constant plus terms $\AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c}$ with $D_c \ge 1$, so
 \[
-\begin{aligned}
-C_\T'(\alpha) &= -\sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c\,\alpha^{-D_c-1} \;\le\; 0, \\[0.3em]
-C_\T''(\alpha) &= \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c(D_c+1)\,\alpha^{-D_c-2} \;\ge\; 0,
-\end{aligned}
+C_\T'(\alpha) = -\sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c\,\alpha^{-D_c-1} \;\le\; 0,
+\qquad
+C_\T''(\alpha) \;\ge\; 0:
 \]
-so each $C_\T$ is non-increasing and convex, and is constant exactly when $\T$ uses no chain.
-\begin{enumerate}
-\setlength{\itemsep}{0.6em}
-\item[(i)] There are finitely many strategies, so $C^*$ is the minimum of finitely many continuous curves, hence continuous and non-increasing. Any two distinct cost curves are polynomials in $1/\alpha$ and so agree at only finitely many points; thus the optimal strategy changes at finitely many values of $\alpha$. As $\alpha \to 0^+$, every chain term $\AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c} \to \infty$ while the all-manual cost stays fixed, so the all-manual strategy is optimal near $0$.
-\item[(ii)] Within a regime where $\T$ is optimal,
-\[
-g(\alpha) = -C_\T'(\alpha) = \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c\,\alpha^{-D_c-1} \;\ge\; 0
-\]
-is strictly decreasing in $\alpha$, and is zero when $\T$ uses no chain. Let $\alpha_0$ be a threshold at which the optimum switches from $\T$ (optimal just below) to $\T'$ (optimal just above). The costs are equal at $\alpha_0$, with $C_{\T'} \le C_\T$ for $\alpha > \alpha_0$ and $C_\T \le C_{\T'}$ for $\alpha < \alpha_0$, so $\phi = C_{\T'} - C_\T$ satisfies $\phi(\alpha_0) = 0$ with $\phi \le 0$ above and $\phi \ge 0$ below. Hence $\phi'(\alpha_0) \le 0$, i.e.\ $-C_{\T'}'(\alpha_0) \ge -C_\T'(\alpha_0)$: the marginal benefit jumps up as $\alpha$ crosses $\alpha_0$.
-\end{enumerate}
+each cost curve is non-increasing and convex (constant when $\T$ uses no chain). In passing, this fixes the shape of the firm's cost: $C^*$, the minimum of these finitely many curves, is continuous and non-increasing, equals a single strategy's cost on each of finitely many intervals (distinct curves, being polynomials in $1/\alpha$, cross finitely often), and coincides with the all-manual strategy as $\alpha \to 0^+$, where every chain term blows up. These facts only delimit the thresholds; the substance is how $g$ behaves across them.
+
+Within a regime where $\T$ is optimal, $g(\alpha) = -C_\T'(\alpha) = \sum_{c} \AIskill{r_c}\AItime{r_c}\,D_c\,\alpha^{-D_c-1}$ is nonnegative and strictly decreasing in $\alpha$ (zero if $\T$ uses no chain), so returns to a fixed configuration diminish. At a threshold $\alpha_0$ the optimum switches from $\T$ (optimal just below) to $\T'$ (just above); the two costs are equal at $\alpha_0$ with $C_{\T'} \le C_\T$ above and $C_\T \le C_{\T'}$ below, so $\phi = C_{\T'} - C_\T$ satisfies $\phi(\alpha_0) = 0$, $\phi \le 0$ above and $\phi \ge 0$ below. Hence $\phi'(\alpha_0) \le 0$, i.e.\ $-C_{\T'}'(\alpha_0) \ge -C_\T'(\alpha_0)$: the marginal benefit jumps strictly upward as $\alpha$ crosses $\alpha_0$.
 \end{proof}
 
 Two features drive the non-linearity. Within a fixed configuration the returns to AI quality diminish, as a given set of chains is simply run with fewer retries as $\alpha$ rises. The accelerations come at the reorganization thresholds, where the firm folds more steps into longer chains; because difficulties add linearly a longer chain carries a higher power of $1/\alpha$, hence a strictly steeper cost curve, and the marginal return jumps up as the firm moves onto it. Each threshold is gatekept by the fixed manual cost the reorganization displaces---a longer chain becomes worthwhile only once AI is reliable enough for its $\alpha^{-D}$ cost to fall below the manual work it removes. The two-step example traces out two such thresholds: augmenting step~2 begins at $\alpha \approx 0.50$ and chaining both steps takes over at $\alpha \approx 0.90$, with the marginal return jumping up at each.
