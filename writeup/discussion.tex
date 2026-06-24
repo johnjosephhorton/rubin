@@ -40,9 +40,36 @@ Automating step~1 inside the chain removes its verification cost---paid once, at
 The human's comparative advantage on step~1 is thus overturned: in the optimal configuration the step is automated, at zero direct cost.
 \end{example}
 
-More generally, a sufficient condition guarantees this reversal in \emph{any} production process---not only the two-step example---with no reference to how the rest of the sequence is organized.
+More generally, two results sharpen the picture. The first shows the reversal is easy to come by: wherever a human-advantaged step sits just before an AI chain, automating it lowers cost as soon as its \emph{incremental} cost falls short of its manual cost. The second is a primitive condition that \emph{guarantees}, with no reference to the rest of the sequence, that the human-advantaged step is automated in every cost-minimizing strategy.
 
-\begin{proposition}[Possible Overturning of Comparative Advantage Logic]
+\begin{proposition}[Comparative advantage is readily overturned]
+\label{prop:ca_local}
+Consider a step $k$ on which the human holds the comparative advantage in isolation, $\manualSkill{k}\manualTime{k} < \AIskill{k}\AItime{k}/q_k$, and any strategy in which the following steps $k+1, \dotsc, r$ are executed as an AI chain ending (augmented) at $r$ while step $k$ is performed manually. If
+\begin{equation}
+\label{eq:ca_local}
+\frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i} \;<\; \manualSkill{k}\manualTime{k},
+\end{equation}
+then that strategy is not cost-minimizing: extending the chain to $(k, \dotsc, r)$---which automates step $k$---is strictly cheaper. The human-advantaged step is thus automated in the cheaper arrangement, overturning comparative-advantage logic for this configuration.
+\end{proposition}
+
+\begin{proof}
+The two strategies agree on every step outside the block $k, \dotsc, r$; there, their costs are
+\[
+\underbrace{\manualSkill{k}\manualTime{k} + \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}}_{\text{step } k \text{ manual},\ \text{chain } k{+}1,\dotsc,r}
+\qquad\text{and}\qquad
+\underbrace{\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i}}_{\text{chain } k,\dotsc,r}.
+\]
+The second is the smaller exactly when the difference of the two chain terms---the \emph{incremental} cost of folding step $k$ in---falls below $\manualSkill{k}\manualTime{k}$:
+\[
+\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i} - \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}
+\;=\; \frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i} \;<\; \manualSkill{k}\manualTime{k},
+\]
+which is \eqref{eq:ca_local}.
+\end{proof}
+
+Because \eqref{eq:ca_local} charges step $k$ only its marginal failure risk $(1-q_k)$---the verification at the chain's endpoint $r$ is already paid for---such configurations are common. The two-step example is one: the chain there is the single augmented step~$2$, and \eqref{eq:ca_local} reads $\AIskill{2}\AItime{2}(1-q_1)/(q_1 q_2) = (1)(0.1)/[(0.9)(0.9)] \approx 0.12 < 1 = \manualSkill{1}\manualTime{1}$. Proposition~\ref{prop:ca_local} concerns a \emph{given} configuration, though: it shows chaining dominates whenever a chain abuts step $k$, but does not on its own pin down the cost-minimizing arrangement, whose downstream chain may end elsewhere. The next result supplies a primitive condition under which step $k$ is automated in \emph{every} optimum.
+
+\begin{proposition}[Guaranteed overturning of comparative advantage]
 \label{prop:ca_threshold}
 Consider any production process with steps $s_1, \dotsc, s_m$ and a step $k < m$ on which the human holds the comparative advantage in isolation, $\manualSkill{k}\manualTime{k} < \AIskill{k}\AItime{k}/q_k$. If
 \begin{equation}
@@ -72,7 +99,7 @@ Substituting this bound into the previous inequality gives
 contradicting \eqref{eq:ca_sufficient}. Hence no cost-minimizing strategy performs step $k$ manually.
 \end{proof}
 
-Condition~\eqref{eq:ca_sufficient} makes no assumption about how the rest of the sequence is organized, which is what lets it hold in full generality. It sharpens the naive comparison---the whole chain against performing step $k$ manually \emph{alone}---by crediting back the cost $\min\{\manualSkill{m}\manualTime{m},\, \AIskill{m}\AItime{m}/q_m\}$ that the terminal step must incur under \emph{any} strategy: a chain reaching step $m$ pays for the human verification at its endpoint regardless of step $k$, so that cost is not a true extra burden of folding step $k$ in. On the two-step example the chain runs to the terminal step ($m = 2$) and the credited-back floor is exactly the augmented endpoint cost $\AIskill{2}\AItime{2}/q_2$, so the left-hand side collapses to the \emph{incremental} margin $\AIskill{2}\AItime{2}(1-q_1)/(q_1 q_2) = (1)(0.1)/[(0.9)(0.9)] \approx 0.12$, well below $\manualSkill{1}\manualTime{1} = 1$---the reversal is captured even though the raw chain cost $1/0.81 \approx 1.23$ exceeds $1$. The single price of this unconditional, primitive form is that the chain is anchored to the terminal step $m$: the condition tests only the chain running all the way to the end, and can miss reversals that an interior endpoint $r < m$ would deliver---for instance when a low-success step late in the process inflates $\prod_{i=k}^{m} q_i$. The conclusion also holds whenever the full-chain cost at some interior $r > k$ already undercuts $\manualSkill{k}\manualTime{k}$, so a reversal is guaranteed whenever either margin fires. As before, the reversal is easier the costlier step $k$ is to perform manually and the higher the joint success $\prod_{i=k}^{m} q_i$ of the chain that absorbs it.
+Unlike Proposition~\ref{prop:ca_local}, condition~\eqref{eq:ca_sufficient} makes no assumption about how the rest of the sequence is organized---the price of that generality being its strength. It chains the whole tail $k, \dotsc, m$ but credits back $\min\{\manualSkill{m}\manualTime{m},\, \AIskill{m}\AItime{m}/q_m\}$, the cost the terminal step must incur under any strategy: a chain reaching step $m$ pays for the verification at its endpoint regardless of step $k$, so this is not a true extra burden of folding step $k$ in. On the two-step example $m = 2$ and the credited-back floor is exactly $\AIskill{2}\AItime{2}/q_2$, so \eqref{eq:ca_sufficient} collapses to the local margin~\eqref{eq:ca_local} and the reversal is guaranteed---even though the raw chain cost $1/0.81 \approx 1.23$ exceeds $\manualSkill{1}\manualTime{1} = 1$. The one price of the unconditional form is that the chain is anchored to the terminal step $m$, so it can miss reversals an interior endpoint $r < m$ would deliver---for instance when a low-success step late in the process inflates $\prod_{i=k}^{m} q_i$; the conclusion also holds whenever the full-chain cost at some interior $r > k$ already undercuts $\manualSkill{k}\manualTime{k}$.
 
 Whether step~1 is automated depends on its neighbors.
 Had step~1 instead sat beside a step that AI completes only with low probability, the chain's joint success probability would be small, inflating its cost, and step~1 would revert to manual execution.
