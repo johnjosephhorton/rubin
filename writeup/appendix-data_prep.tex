@@ -1,0 +1,93 @@
+\section{Construction Details of the Dataset}
+\label{app:data_prep}
+
+This appendix describes how the dataset used in our analyses is constructed from the four sources listed in Section~\ref{sec:empirics}:
+\begin{enumerate}
+    \item The O*NET 27.3 Database \citep{onet27_3},
+    \item Human-generated labels for AI exposure of O*NET tasks from \cite{eloundou2023gpts},
+    \item Realized AI execution mode of O*NET tasks from the Anthropic Economic Index \citep{handa2025economictasksperformedai},
+    \item A GPT-generated task ordering for each O*NET occupation.
+\end{enumerate}
+In what follows, we use the terms step, task, and O*NET task interchangeably, as in the main text; likewise, we use job and occupation interchangeably.
+
+We use the May 2023 release of O*NET. 
+This version contains roughly 18{,}000 tasks assigned to more than 850 U.S. occupations.
+For AI exposure measures, we use human-generated labels from \cite{eloundou2023gpts}.
+Unless explicitly mentioned otherwise, in all analyses we treat tasks with a human-assigned E1 label as exposed to AI and those with E0 or E2 labels as unexposed to AI.\footnote{
+\cite{eloundou2023gpts} define E1 tasks as those that an AI can perform in at least half the time required by a human while preserving human-level output quality.
+E2 tasks meet the same time-saving and quality thresholds but require additional software or tools to fully leverage AI capabilities.
+Any task that is neither E1 nor E2 is labeled E0.
+}
+This gives a conservative measure of exposure to AI for all O*NET tasks.
+
+To obtain AI execution labels, we draw on Anthropic's Economic Index dataset \citep{handa2025economictasksperformedai}, which classifies millions of Claude conversations into six categories: \textit{``Validation'', ``Task Iteration'', ``Learning'', ``Directive'', ``Feedback Loop''}, and \textit{``Filtered.''}
+Conversations in the first three categories (Validation, Task Iteration, Learning) are treated by Anthropic as AI-augmenting activities, whereas those in Directive and Feedback Loop are recognized as AI-automating activities.
+The sixth category, Filtered, corresponds to conversations that either could not be classified or whose actual category could not be disclosed for privacy reasons.
+
+Anthropic reports the share of matched conversations falling into each of the six categories for a subset of O*NET tasks.
+In total, conversations are linked to 3{,}364 tasks, of which 1{,}017 have 100\% of their conversations filtered, leaving 2{,}347 tasks with at least one non-filtered conversation.
+Following Anthropic's definitions of AI-augmenting and AI-automating activities, we assign each of these 2{,}347 tasks an AI execution label based on the majority share of its non-filtered conversations across the augmenting versus automating categories.
+Appendix Table~\ref{tab:example_anthropic_AI_tasks} provides several example tasks labeled using this procedure. 
+
+Finally, we treat tasks that do not appear in the Anthropic dataset, as well as those with 100\% filtered conversations, as manual tasks.
+Figure \ref{fig:task_execution_dist} shows the distribution of task execution modes in our dataset. 
+Of the 872 occupations, 605 (69\%) contain at least one AI-exposed task and 555 (64\%) contain at least one AI-executed task.
+Figure \ref{fig:occupation_ai_share} shows the distribution of occupations by the fraction of their tasks that are exposed to AI (left) and executed by AI (right).
+\begin{figure}[h!]
+    \caption{Distribution of Modes of Task Execution in the Dataset}
+    \label{fig:task_execution_dist}
+    \begin{center}
+    \resizebox{0.6\textwidth}{!}{
+    \includegraphics[width=.8\textwidth]{plots/ONET_Eloundou_Anthropic_GPT/all_labels_histogram.png}
+    }
+    \end{center}
+    \footnotesize{\emph{Notes:} The automation and augmentation labels are drawn from Anthropic's Economic Index dataset, and the universe of tasks comes from the May~2023 O*NET release.}
+\end{figure}
+\begin{figure}[h!]
+    \caption{Distribution of Share of Occupation Tasks Exposed to and Executed by AI}
+    \label{fig:occupation_ai_share}
+    \begin{center}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \captionsetup{labelformat=empty}
+        \caption{(a) AI Exposure}
+        \includegraphics[width=\textwidth]{plots/ONET_Eloundou_Anthropic_GPT/ai_exposed_task_share_distribution.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \captionsetup{labelformat=empty}
+        \caption{(b) AI Execution}
+        \includegraphics[width=\textwidth]{plots/ONET_Eloundou_Anthropic_GPT/ai_executed_task_share_distribution.png}
+    \end{subfigure}
+    \end{center}
+    \footnotesize{\emph{Notes:} Percentages above bars denote fraction of observations corresponding to that bar out of all 872 occupations.}
+\end{figure}
+
+As the final input into our analyses, we generate a workflow sequence for every O*NET occupation. 
+Specifically, we prompt GPT-5-mini through Expected Parrot \citep{Horton2024EDSL} with the complete set of tasks within each occupation and ask it to determine the most reasonable sequential ordering in which these tasks would be performed in practice.\footnote{The prompt used to generate task sequences is given in Appendix \ref{app:prompts}.
+}
+Appendix Figures \ref{fig:computer_programmers}, \ref{fig:public_relations}, and \ref{fig:electronic_equipments} show the resulting task sequences for three occupations: \textit{Computer Programmers} with a high share of its tasks executed by AI, \textit{Public Relations Specialists} with a moderate share, and \textit{Electronic Equipment Installers and Repairers, Motor Vehicles} with no tasks executed by AI.
+
+We validate these GPT-generated sequences in two ways. 
+First, throughout our empirical analyses, we benchmark the outcomes of interest against those generated by placebo datasets obtained by randomly reshuffling task positions within each occupation. 
+We find that patterns in the GPT-generated data differ sharply from those in the placebo datasets, indicating that GPT captures meaningful workflow structure rather than producing arbitrary task orderings. 
+Second, in Data Appendix~\ref{app:gptPrompts_robustness}, we show that our headline results are robust to the choice of prompt. 
+Specifically, we evaluate ten deliberately different alternative prompt formulations and find substantial, though not perfect, overlap in pairwise task orderings across prompts.\footnote{%
+Across all occupations and task pairs, the average Kendall's $\tau$ is 0.6.%
+} 
+We also find no evidence that prompt choice induces systematic differences in task orderings across the occupation groupings and measures used in our later analyses, suggesting that our results are unlikely to be driven by prompt-specific bias toward particular groups in the main prompt.
+Finally, we re-run all our headline analyses using task orderings from these alternative prompts and find patterns that closely mirror those under the main prompt. 
+
+Before discussing the findings, it is worth emphasizing two points about the relevance of our results.
+First, note that we use a conservative measure of AI involvement in task execution.
+Recall that we label tasks with fully filtered conversations as manual, even though we know that all of them were executed in some way using Claude.
+These tasks account for roughly one third of all Anthropic-mapped tasks, and excluding them limits our statistical power.
+Nevertheless, the remaining two thirds prove sufficient for revealing the patterns predicted by our framework, suggesting that what we report should be viewed as a conservative signal of potentially much stronger effects.
+
+A second concern is that workers may use different AI tools for different purposes, for example Claude for writing and ChatGPT for coding, which could potentially undermine our results.
+While we cannot directly rule out such heterogeneous tool use given that we only observe Claude usage, our analyses are not tied to particular industries, occupations, or tasks, which makes them less vulnerable to missing isolated pockets of tool-specific usage.\footnote{
+For our results to be entirely spurious, one would have to believe not only that no one used Claude for a large subset of tasks during Anthropic's sample period but also that this missing class of tasks has distinctive characteristics, such as workflow position or AI-suitability, that differ from other tasks for which Claude is used across the economy.
+We do not have a reason to believe this is the case.
+If anything, specialization across tools would imply that Anthropic's data might understate the true set of AI-executed tasks in the economy, which would primarily reduce our statistical power rather than generate artificial patterns.
+}
+Nevertheless, wherever applicable, we verify that our results are not driven by any narrow subset of occupations or tasks.
+The patterns we document appear consistently across broad occupation groups, even if somewhat stronger in some groups than others, reflecting heterogeneous impacts of AI.
+Finally, while we do not claim that these relationships are causal, taken together they provide strong suggestive evidence that the mechanisms highlighted by our model are relevant in practice and that our findings reflect broad patterns of AI execution rather than Claude-specific usage.
