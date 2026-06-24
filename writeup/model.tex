@@ -85,27 +85,26 @@ Figure~\ref{fig:steps_tasks} illustrates such a strategy, grouping seven steps i
   \footnotesize{\emph{Notes:} The top layer shows seven production steps, each completed in manual (gray), automated (green), or augmented (orange) mode; dashed boxes group contiguous steps into tasks. The bottom layer shows the resulting tasks: a run of automated steps ending in an augmented step forms an AI chain (blue; here steps 2--4 become Task~2), while a step performed on its own is a human task (olive). Black arrows show the production flow within each layer and the grouping of step blocks into tasks.}
 \end{figure}
 
-Table~\ref{tab:model_parameters} summarizes the cost parameters introduced for steps and tasks.
+Table~\ref{tab:model_parameters} summarizes the notation introduced for steps and tasks.
 
 \begin{table}[ht!]
 \centering
-\caption{Cost Parameters of Steps and Tasks}
+\caption{Summary of Model Notations}
 \label{tab:model_parameters}
 \begin{tabularx}{\textwidth}{l X}
 \toprule
 \textbf{Symbol} & \textbf{Description} \\
 \midrule
+$\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
 $s_i$ & Production step $i$ \\
-$\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
-$T_b$ & Task $b$: a manual step, an augmented step, or an AI chain \\
-$\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
-\addlinespace
 $\manualSkill{i},\ \manualTime{i}$ & Skill and time cost of completing step $i$ manually \\
 $\AIskill{i},\ \AItime{i}$ & Skill and time cost of managing one AI attempt at step $i$ \\
-$\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
 $d_i$ & Difficulty of step $i$ for AI \\
 $q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
+$\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
 \addlinespace
+$T_b$ & Task $b$: a manual step, an augmented step, or an AI chain \\
+$\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
 $\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\manualSkill{i},\, \manualTime{i})$ if a manual step, $(\AIskill{i},\, \AItime{i}/q_i)$ if augmented, and $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$ if an AI chain over steps $\ell, \dotsc, r$ \\
 \bottomrule
 \end{tabularx}
