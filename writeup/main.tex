@@ -17,6 +17,7 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
 
 \usepackage{color-edits}
 
@@ -68,6 +69,19 @@
 \newtheorem{proposition}{Proposition}
 \newtheorem{observation}{Observation}
 \newtheorem{example}{Example}
+
+% Render examples in a light, rounded box so they stand out from the body text.
+% (The visualizations inside Examples 1 and 2 are enclosed automatically.)
+\tcolorboxenvironment{example}{
+  breakable,
+  boxrule=0.5pt,
+  arc=2pt,
+  colback=blue!5,
+  colframe=blue!50!black,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+}
+
 \DeclareMathOperator{\minCost}{minCost}
 
 \begin{document}
