@@ -264,12 +264,12 @@ C_\T(\alpha) = K_\T + \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,\a
 \end{equation}
 where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed cost of manually-executed steps and the sum runs over the AI chains of $\T$, denoted $\mathcal{C}(\T)$, with each chain $c$ (with augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \sum_{i \in c} d_i \ge 1$. The firm's optimal cost is the lower envelope $C^*(\alpha) = \min_{\T} C_\T(\alpha)$.
 
-We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the latter equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal. As $\alpha$ rises the firm switches between strategies at finitely many \emph{thresholds}. The next result shows that, although $g$ diminishes within each regime, it jumps upward at every such threshold, so the returns to improving AI are non-monotone.
+We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the latter equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal. As $\alpha$ rises the firm switches between strategies at finitely many \emph{thresholds}. The next result shows that, although $g^*$ diminishes within each regime, it jumps upward at every such threshold, so the returns to improving AI are non-monotone.
 
 \begin{propbox}
 \begin{proposition}[Returns to AI quality jump up at reorganization thresholds]
 \label{prop:reorg_threshold}
-Within each regime the marginal benefit $g$ is non-increasing, but at every threshold $g$ \emph{jumps upward}.
+Within each regime the marginal benefit $g^*$ is non-increasing, but at every threshold $g^*$ \emph{jumps upward}.
 \end{proposition}
 
 \begin{proof}
@@ -282,11 +282,11 @@ C_\T''(\alpha) &= \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c(D_
 \]
 so each cost curve is non-increasing and convex (constant when $\T$ uses no chain). This fixes the shape of the firm's production cost $C^*$. Since $C^*$ is the minimum of finitely many $C_\T(\alpha)$ curves, it is continuous and non-increasing, and coincides with the all-manual strategy as $\alpha \to 0^+$, where every chain term blows up to $+\infty$. 
 
-We next study how the marginal benefit $g$ behaves across these finitely many strategies. Within a regime where $\T$ is optimal, $g(\alpha) = g_\T(\alpha) = -C_\T'(\alpha)$ is nonnegative and decreasing in $\alpha$ (zero if $\T$ uses no chain, strictly decreasing otherwise), so returns to a fixed configuration weakly diminish. Suppose there exists a threshold $\alpha_0$ at which the optimum switches from $\T$ (optimal just below) to $\T'$ (just above). Define
+We next study how the marginal benefit $g^*$ behaves across these finitely many strategies. Within a regime where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha)$ is nonnegative and decreasing in $\alpha$ (zero if $\T$ uses no chain, strictly decreasing otherwise), so returns to a fixed configuration weakly diminish. Suppose there exists a threshold $\alpha_0$ at which the optimum switches from $\T$ (optimal just below) to $\T'$ (just above). Define
 \[
 \phi(\alpha) = C_{\T'}(\alpha) - C_\T(\alpha),
 \]
-a difference of two finite sums of powers of $\alpha$ and hence smooth on $(0,1]$. The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below. Therefore, by definition $\phi$ satisfies:
+a difference of two finite sums of powers of $\alpha$ and hence continuous and differentiable on $(0,1]$. The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below. Therefore, by definition $\phi$ satisfies:
 \[
 \phi(\alpha_0) = 0,
 \qquad
@@ -298,7 +298,7 @@ A differentiable function with such a sign change has nonpositive derivative the
 \[
 g_{\T'}(\alpha_0) \;=\; -C_{\T'}'(\alpha_0) \;\ge\; -C_\T'(\alpha_0) \;=\; g_\T(\alpha_0).
 \]
-Since $g$ coincides with $g_\T$ just below $\alpha_0$ and with $g_{\T'}$ just above, the firm's marginal benefit jumps upward as $\alpha$ crosses $\alpha_0$.
+Since $g^*$ coincides with $g_\T$ just below $\alpha_0$ and with $g_{\T'}$ just above, the firm's marginal benefit jumps upward as $\alpha$ crosses $\alpha_0$.
 \end{proof}
 \end{propbox}
 
