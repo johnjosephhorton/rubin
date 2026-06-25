@@ -11,6 +11,7 @@ The broader long-run problem, in which the firm additionally redesigns jobs by b
 The firm chooses the AI strategy $\T$ for its $m$ steps $\mathcal{S} = (s_1, \dotsc, s_m)$ to minimize the total production cost $\sum_{T_b \in \T} \skillcost{b}\,\timecost{b}$ in \eqref{eq:totalcost_shortterm}.
 Although the number of possible strategies grows exponentially in $m$, the cost-optimal strategy can be calculated via dynamic programming in $O(m^2)$ time.
 
+\begin{propbox}
 \begin{proposition}
 \label{prop:shortrun_dp}
 Given a production process with $m$ steps, the cost-minimizing AI strategy can be calculated in time $O(m^2)$ via dynamic programming.
@@ -36,3 +37,4 @@ Given a production process with $m$ steps, the cost-minimizing AI strategy can b
     Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
     Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
 \end{proof}
+\end{propbox}
