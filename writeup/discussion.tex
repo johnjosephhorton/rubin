@@ -254,13 +254,13 @@ The panels below trace the optimal cost (panel~a) and its marginal benefit (pane
 \end{minipage}
 \end{center}
 
-Below $\alpha = 0.50$ both steps are manual; between $0.50$ and $0.90$ the firm augments step~2; and above $0.90$ it chains both steps, automating step~1:
+Below $\alpha = 0.50$ both steps are manual; between $\alpha = 0.50$ and $\alpha \approx 0.90$ the firm augments step~2; and above $\alpha \approx 0.90$ it chains both steps, automating step~1:
 \begin{align*}
 \text{both manual:} \quad & \manualSkill{1}\manualTime{1} + \manualSkill{2}\manualTime{2} = (1)(1) + (1)(2) = 3, \\
 \text{augment step 2:} \quad & \manualSkill{1}\manualTime{1} + \frac{\AIskill{2}\,\AItime{2}}{q_2} = (1)(1) + \frac{(1)(1)}{\alpha} = 1 + \tfrac{1}{\alpha}, \\
 \text{chain (steps 1--2):} \quad & \frac{\AIskill{2}\,\AItime{2}}{q_1 q_2} = \frac{(1)(1)}{\alpha^{6}\,\alpha^{1}} = \alpha^{-7}.
 \end{align*}
-The marginal benefit of better AI jumps at each threshold, and, crucially, the jump at $\alpha \approx 0.90$ \emph{exceeds} the one at $\alpha \approx 0.50$ (panel~b): once chaining draws an additional step under AI, cost falls more steeply, so the returns to AI investment can rise as more of the workflow is automated.
+The marginal benefit of better AI jumps at each threshold, and, crucially, the jump at $\alpha \approx 0.90$ \emph{exceeds} the one at $\alpha = 0.50$ (panel~b): once chaining draws an additional step under AI, cost falls more steeply, so the returns to AI investment can rise as more of the workflow is automated.
 \end{example}
 
 To make this precise, consider a production process with any number of steps and chains. For any AI strategy $\T$, total cost is a fixed manual term plus a polynomial in $1/\alpha$,
@@ -312,4 +312,4 @@ Since $g^*$ coincides with $g_\T$ just below $\alpha_0$ and with $g_{\T'}$ just 
 \end{proof}
 \end{propbox}
 
-Two features drive the non-linearity. Within a fixed configuration the returns to AI quality diminish, as a given set of chains is simply run with fewer retries as $\alpha$ rises. The accelerations come at the reorganization thresholds: at each one the firm switches to a configuration whose cost is more sensitive to $\alpha$, that is, a strictly steeper curve, and moving onto a steeper curve is what makes the marginal return jump up. This need not take the form of a single longer chain. Better AI may instead bring more steps under AI or rearrange the chains, and the firm's longest chain can even shorten across a threshold; what is guaranteed is the steepening. Each threshold is still gatekept by the fixed manual cost the reorganization displaces, becoming worthwhile only once AI is reliable enough for the new configuration's $\alpha^{-D}$ terms to fall below the manual work it removes. The two-step example traces out two such thresholds: augmenting step~2 begins at $\alpha \approx 0.50$ and chaining both steps takes over at $\alpha \approx 0.90$, with the marginal return jumping up at each.
+Two features drive the non-linearity. Within a fixed configuration the returns to AI quality diminish, as a given set of chains is simply run with fewer retries as $\alpha$ rises. The accelerations come at the reorganization thresholds: at each one the firm switches to a configuration whose cost is more sensitive to $\alpha$, that is, a strictly steeper curve, and moving onto a steeper curve is what makes the marginal return jump up. This need not take the form of a single longer chain. Better AI may instead bring more steps under AI or rearrange the chains, and the firm's longest chain can even shorten across a threshold; what is guaranteed is the steepening. Each threshold is still gatekept by the fixed manual cost the reorganization displaces, becoming worthwhile only once AI is reliable enough for the new configuration's $\alpha^{-D}$ terms to fall below the manual work it removes. The two-step example traces out two such thresholds: augmenting step~2 begins at $\alpha = 0.50$ and chaining both steps takes over at $\alpha \approx 0.90$, with the marginal return jumping up at each.
