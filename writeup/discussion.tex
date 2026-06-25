@@ -260,7 +260,7 @@ where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixe
 
 \begin{proposition}[Returns to AI quality jump up at reorganization thresholds]
 \label{prop:reorg_threshold}
-Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost, with $C_\T$ the strategy cost in \eqref{eq:strategy_cost}, and let $g(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ be the marginal benefit of improving AI quality. As $\alpha$ rises the optimal strategy changes at finitely many thresholds; between consecutive thresholds $g$ is strictly decreasing (diminishing returns to a fixed configuration) but at every threshold $g$ \emph{jumps strictly upward}. The returns to improving AI are thus non-monotone: at each reorganization the firm moves onto a configuration whose cost falls more steeply with $\alpha$, which discretely raises the marginal value of further progress.
+Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost, with $C_\T$ the strategy cost in \eqref{eq:strategy_cost}, and let $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ be the marginal benefit of improving AI quality under strategy $\T$. The firm's marginal benefit at the optimum is $g(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$, equal to $g_\T(\alpha)$ on the regime where $\T$ is optimal. As $\alpha$ rises the optimal strategy changes at finitely many thresholds; between consecutive thresholds $g$ is strictly decreasing (diminishing returns to a fixed configuration) but at every threshold $g$ \emph{jumps upward}. The returns to improving AI are thus non-monotone: at each reorganization the firm moves onto a configuration whose cost falls more steeply with $\alpha$, which discretely raises the marginal value of further progress.
 \end{proposition}
 
 \begin{proof}
@@ -271,13 +271,25 @@ C_\T'(\alpha) &= -\sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c\,\
 C_\T''(\alpha) &= \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c(D_c+1)\,\alpha^{-D_c-2} \;\ge\; 0,
 \end{aligned}
 \]
-so each cost curve is non-increasing and convex (constant when $\T$ uses no chain). This fixes the shape of the firm's production cost $C^*$. Since $C^*$ is the minimum of finitely many $C_\T(\alpha)$ curves, it is continuous and non-increasing, and coincides with the all-manual strategy as $\alpha \to 0^+$, where every chain term blows up to $+\infty$. We next turn to the behavior of the marginal benefit $g$ of increasing AI quality across these finitely many strategies.
+so each cost curve is non-increasing and convex (constant when $\T$ uses no chain). This fixes the shape of the firm's production cost $C^*$. Since $C^*$ is the minimum of finitely many $C_\T(\alpha)$ curves, it is continuous and non-increasing, and coincides with the all-manual strategy as $\alpha \to 0^+$, where every chain term blows up to $+\infty$. 
 
-Within a regime where $\T$ is optimal, $g(\alpha) = -C_\T'(\alpha) = \sum_{c} \AIskill{r_c}\AItime{r_c}\,D_c\,\alpha^{-D_c-1}$ is nonnegative and strictly decreasing in $\alpha$ (zero if $\T$ uses no chain), so returns to a fixed configuration diminish. At a threshold $\alpha_0$ the optimum switches from $\T$ (optimal just below) to $\T'$ (just above). Define
+We next study how the marginal benefit $g$ behaves across these finitely many strategies. Within a regime where $\T$ is optimal, $g(\alpha) = g_\T(\alpha) = -C_\T'(\alpha)$ is nonnegative and decreasing in $\alpha$ (zero if $\T$ uses no chain, strictly decreasing otherwise), so returns to a fixed configuration weakly diminish. Suppose there exists a threshold $\alpha_0$ at which the optimum switches from $\T$ (optimal just below) to $\T'$ (just above). Define
 \[
 \phi(\alpha) = C_{\T'}(\alpha) - C_\T(\alpha),
 \]
-a difference of two finite sums of powers of $\alpha$ and hence smooth on $(0,1]$. The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below, so $\phi$ satisfies $\phi(\alpha_0) = 0$, $\phi(\alpha_0^{+}) \le 0$ and $\phi(\alpha_0^{-}) \ge 0$. A differentiable function with such a sign change has nonpositive derivative there, so $\phi'(\alpha_0) \le 0$, i.e.\ $-C_{\T'}'(\alpha_0) \ge -C_\T'(\alpha_0)$: the marginal benefit jumps strictly upward as $\alpha$ crosses $\alpha_0$.
+a difference of two finite sums of powers of $\alpha$ and hence smooth on $(0,1]$. The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below. Therefore, by definition $\phi$ satisfies:
+\[
+\phi(\alpha_0) = 0,
+\qquad
+\phi(\alpha_0^{+}) \le 0,
+\qquad
+\phi(\alpha_0^{-}) \ge 0.
+\]
+A differentiable function with such a sign change has nonpositive derivative there, so $\phi'(\alpha_0) \le 0$, that is, $C_{\T'}'(\alpha_0) \le C_\T'(\alpha_0)$. By the definition $g_\T = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$, this is
+\[
+g_{\T'}(\alpha_0) \;=\; -C_{\T'}'(\alpha_0) \;\ge\; -C_\T'(\alpha_0) \;=\; g_\T(\alpha_0).
+\]
+Since $g$ coincides with $g_\T$ just below $\alpha_0$ and with $g_{\T'}$ just above, the firm's marginal benefit jumps upward as $\alpha$ crosses $\alpha_0$.
 \end{proof}
 
 Two features drive the non-linearity. Within a fixed configuration the returns to AI quality diminish, as a given set of chains is simply run with fewer retries as $\alpha$ rises. The accelerations come at the reorganization thresholds: at each one the firm switches to a configuration whose cost is more sensitive to $\alpha$, that is, a strictly steeper curve, and moving onto a steeper curve is what makes the marginal return jump up. This need not take the form of a single longer chain. Better AI may instead bring more steps under AI or rearrange the chains, and the firm's longest chain can even shorten across a threshold; what is guaranteed is the steepening. Each threshold is still gatekept by the fixed manual cost the reorganization displaces, becoming worthwhile only once AI is reliable enough for the new configuration's $\alpha^{-D}$ terms to fall below the manual work it removes. The two-step example traces out two such thresholds: augmenting step~2 begins at $\alpha \approx 0.50$ and chaining both steps takes over at $\alpha \approx 0.90$, with the marginal return jumping up at each.
