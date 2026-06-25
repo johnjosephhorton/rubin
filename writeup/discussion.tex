@@ -242,10 +242,16 @@ Step~1 is short but hard for AI, while step~2 is more time-consuming but easy; t
 The panels below trace the optimal cost (panel~a) and its marginal benefit (panel~b) as AI quality $\alpha$ rises.
 
 \begin{center}
-\includegraphics[width=0.72\linewidth]{plots/example5_costs.png}\\
-{\footnotesize (a) Total cost by AI strategy}\\[0.9em]
-\includegraphics[width=0.72\linewidth]{plots/example5_marginalBenefit.png}\\
+\begin{minipage}{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth]{plots/example5_costs.png}\\
+{\footnotesize (a) Total cost by AI strategy}
+\end{minipage}\hfill
+\begin{minipage}{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth]{plots/example5_marginalBenefit.png}\\
 {\footnotesize (b) Marginal benefit of improving $\alpha$}
+\end{minipage}
 \end{center}
 
 Below $\alpha = 0.50$ both steps are manual; between $0.50$ and $0.90$ the firm augments step~2; and above $0.90$ it chains both steps, automating step~1:
@@ -267,9 +273,9 @@ where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixe
 We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the latter equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal. As $\alpha$ rises, the optimal strategy changes at finitely many values of $\alpha$, the \emph{reorganization thresholds} that separate one regime from the next. The next result shows that, although $g^*$ diminishes within each regime, it jumps upward at every reorganization threshold, so the returns to improving AI quality are non-monotone. Proposition~\ref{prop:reorg_threshold} below formalizes this.
 
 \begin{propbox}
-\begin{proposition}[Returns to AI quality jump up at reorganization thresholds]
+\begin{proposition}[Non-monotone Returns to AI Quality Improvements]
 \label{prop:reorg_threshold}
-Let $C^*$ be the firm's optimal cost and $g^*$ its marginal benefit of improving AI quality. Within each regime (an interval of $\alpha$ on which a single strategy is optimal), $g^*$ is non-increasing; at every reorganization threshold (where the optimal strategy changes), $g^*$ jumps upward.
+Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha$ its marginal benefit of improving AI quality. Within each regime (an interval of $\alpha$ on which a single strategy is optimal), $g^*$ is non-increasing. Moreover, at every reorganization threshold (where the optimal strategy changes), $g^*$ jumps upward.
 \end{proposition}
 
 \begin{proof}
@@ -282,23 +288,25 @@ C_\T''(\alpha) &= \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c(D_
 \]
 so each $C_\T$ is non-increasing and convex. 
 
-Within a regime where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha) \ge 0$, and the convexity of $C_\T$ makes it non-increasing in $\alpha$ (it is identically $0$ when $\T$ uses no chain); the returns to a fixed configuration thus weakly diminish.
+Within a regime where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha) \ge 0$, and the convexity of $C_\T$ makes it non-increasing in $\alpha$ (when $\T$ uses no chain $g^*(\alpha) = 0$ but is otherwise strictly decreasing). The returns to a fixed configuration in a regime thus weakly diminish.
 
-\emph{At a threshold.} At $\alpha_0$ the optimum switches from $\T$ (optimal just below) to $\T'$ (just above). Define
+Let $\alpha_0 \in (0,1)$ be a threshold where the optimum switches from $\T$ (optimal just below $\alpha_0$) to $\T'$ (just above $\alpha_0$).\footnote{We assume this threshold exists. The only scenario where no such threshold exists is the case in which all steps are executed manually for all $\alpha \in (0,1)$. This is the trivial, uninteresting case and is assumed away.} Define
 \[
 \phi(\alpha) = C_{\T'}(\alpha) - C_\T(\alpha),
 \]
-a difference of two finite sums of powers of $\alpha$ and hence continuous and differentiable on $(0,1]$. The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below. Therefore, by definition $\phi$ satisfies:
+a difference of two finite sums of powers of $\alpha$ and hence continuous and differentiable on $(0,1)$. The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below. Therefore, by definition $\phi$ satisfies:
 \[
+\phi(\alpha_0^{-}) \ge 0,
+\qquad
 \phi(\alpha_0) = 0,
 \qquad
-\phi(\alpha_0^{+}) \le 0,
-\qquad
-\phi(\alpha_0^{-}) \ge 0.
+\phi(\alpha_0^{+}) \le 0.
 \]
 A differentiable function with such a sign change has nonpositive derivative there, so $\phi'(\alpha_0) \le 0$, that is, $C_{\T'}'(\alpha_0) \le C_\T'(\alpha_0)$. By the definition $g_\T = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$, this is
 \[
-g_{\T'}(\alpha_0) \;=\; -C_{\T'}'(\alpha_0) \;\ge\; -C_\T'(\alpha_0) \;=\; g_\T(\alpha_0).
+g_\T(\alpha_0) \;=\; -C_\T'(\alpha_0)
+\;\le\;
+-C_{\T'}'(\alpha_0) \;=\; g_{\T'}(\alpha_0).
 \]
 Since $g^*$ coincides with $g_\T$ just below $\alpha_0$ and with $g_{\T'}$ just above, the firm's marginal benefit jumps upward as $\alpha$ crosses $\alpha_0$.
 \end{proof}
