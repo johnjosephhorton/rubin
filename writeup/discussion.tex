@@ -264,12 +264,12 @@ C_\T(\alpha) = K_\T + \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,\a
 \end{equation}
 where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed cost of manually-executed steps and the sum runs over the AI chains of $\T$, denoted $\mathcal{C}(\T)$, with each chain $c$ (with augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \sum_{i \in c} d_i \ge 1$. The firm's optimal cost is the lower envelope $C^*(\alpha) = \min_{\T} C_\T(\alpha)$.
 
-We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the latter equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal. As $\alpha$ rises the firm switches between strategies at finitely many production reconfiguration thresholds. The next result shows that, although $g^*$ is diminishing within each regime, it jumps upward at every such threshold, so the returns to improving AI quality are non-monotone. Proposition~\ref{prop:reorg_threshold} below formalizes this result.
+We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the latter equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal. As $\alpha$ rises, the optimal strategy changes at finitely many values of $\alpha$, the \emph{reorganization thresholds} that separate one regime from the next. The next result shows that, although $g^*$ diminishes within each regime, it jumps upward at every reorganization threshold, so the returns to improving AI quality are non-monotone. Proposition~\ref{prop:reorg_threshold} below formalizes this.
 
 \begin{propbox}
 \begin{proposition}[Returns to AI quality jump up at reorganization thresholds]
 \label{prop:reorg_threshold}
-Let $C^*$ be the firm's optimal cost and $g^*$ its marginal benefit of improving AI quality. Within each regime $g^*$ is non-increasing, but at every threshold $g^*$ \emph{jumps upward}.
+Let $C^*$ be the firm's optimal cost and $g^*$ its marginal benefit of improving AI quality. Within each regime (an interval of $\alpha$ on which a single strategy is optimal), $g^*$ is non-increasing; at every reorganization threshold (where the optimal strategy changes), $g^*$ jumps upward.
 \end{proposition}
 
 \begin{proof}
@@ -282,7 +282,7 @@ C_\T''(\alpha) &= \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c(D_
 \]
 so each $C_\T$ is non-increasing and convex. 
 
-\emph{Within a regime.} Where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha) \ge 0$, and the convexity of $C_\T$ makes it non-increasing in $\alpha$ (it is identically $0$ when $\T$ uses no chain); the returns to a fixed configuration thus weakly diminish.
+Within a regime where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha) \ge 0$, and the convexity of $C_\T$ makes it non-increasing in $\alpha$ (it is identically $0$ when $\T$ uses no chain); the returns to a fixed configuration thus weakly diminish.
 
 \emph{At a threshold.} At $\alpha_0$ the optimum switches from $\T$ (optimal just below) to $\T'$ (just above). Define
 \[
