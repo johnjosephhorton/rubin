@@ -83,14 +83,42 @@
   before skip=12pt, after skip=12pt,
 }
 
-% A proposition together with its proof (when one immediately follows) goes in a
-% single light-blue box: wrap them in \begin{propbox} ... \end{propbox}.
-\newtcolorbox{propbox}{
-  breakable,
-  boxrule=0.5pt,
-  arc=2pt,
-  colback=blue!5,
-  colframe=blue!50!black,
+% Box all result-type environments (propositions, theorems, lemmas, corollaries,
+% observations) in light blue and definitions in teal, for consistent color
+% coding alongside the red example boxes above.
+\tcolorboxenvironment{proposition}{
+  breakable, boxrule=0.5pt, arc=2pt,
+  colback=blue!5, colframe=blue!50!black,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+}
+\tcolorboxenvironment{theorem}{
+  breakable, boxrule=0.5pt, arc=2pt,
+  colback=blue!5, colframe=blue!50!black,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+}
+\tcolorboxenvironment{lem}{
+  breakable, boxrule=0.5pt, arc=2pt,
+  colback=blue!5, colframe=blue!50!black,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+}
+\tcolorboxenvironment{cor}{
+  breakable, boxrule=0.5pt, arc=2pt,
+  colback=blue!5, colframe=blue!50!black,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+}
+\tcolorboxenvironment{observation}{
+  breakable, boxrule=0.5pt, arc=2pt,
+  colback=blue!5, colframe=blue!50!black,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  before skip=12pt, after skip=12pt,
+}
+\tcolorboxenvironment{definition}{
+  breakable, boxrule=0.5pt, arc=2pt,
+  colback=teal!5, colframe=teal!50!black,
   left=10pt, right=10pt, top=8pt, bottom=8pt,
   before skip=12pt, after skip=12pt,
 }
@@ -164,8 +192,8 @@ Peyman Shahidi\thanks{peymansh@mit.edu} \\ MIT
 \maketitle
 \begin{abstract}
 \noindent Production is a sequence of steps that can be executed (1) manually, (2) augmented with AI, or (3) fully automated within contiguous AI-executed steps called ``chains.''
-We characterize how a firm optimally assigns humans and AI across the steps of its production process, and show that AI chaining can overturn comparative-advantage logic: a step at which humans hold an advantage in isolation may still be automated when it sits beside strong AI-performing steps, because chaining removes the human verification checkpoint between them.
-The model implies that the productivity gains from AI depend not only on which steps are exposed to AI but on where those steps sit in the workflow, and that marginal improvements in AI quality can generate non-linear productivity gains as longer chains become viable.
+We characterize how a firm optimally assigns humans and AI across the steps of its workflow, and show that AI chaining can overturn comparative-advantage logic: a step at which humans hold an advantage in isolation may still be automated when it sits beside strong AI-performing steps, because chaining removes the human verification checkpoint between them.
+The model implies that the productivity gains from AI depend not only on which steps are exposed to AI but on where those steps sit in the workflow, and that marginal improvements in AI quality can generate non-monotone productivity gains as longer chains become viable.
 Empirical evidence supports the model's key predictions that (1) AI-executed steps co-occur in chains, (2) dispersion of AI-exposed steps lowers AI execution at the job level, and (3) adjacency to AI-executed steps increases the likelihood that a step is AI-executed.
 In extensions developed in the appendix, we embed this chaining problem in the firm's longer-run redesign of jobs around AI and aggregate firm-level production into a macroeconomic CES production function.
 
@@ -177,7 +205,7 @@ In extensions developed in the appendix, we embed this chaining problem in the f
 % A key implication of chaining is that it can overturn simple comparative advantage logic: a step where a human has an advantage over AI in isolation may nonetheless be optimally automated as part of an AI chain if it sits next to strong AI performing steps.
 % Productivity gains therefore depend not only on AI-ability of individual steps but also on where these steps are positioned in the workflow.
 % We characterize how firms optimally allocate steps between humans and AI in both the short run, when job boundaries are fixed, and the long run, when AI deployment strategy and job design are jointly chosen.
-% This framework yields predictions about task- versus job-level exposure to AI, worker specialization, and the non-linear productivity gains when marginal improvements in AI quality trigger discrete reorganizations of work.
+% This framework yields predictions about task- versus job-level exposure to AI, worker specialization, and the non-monotone productivity gains when marginal improvements in AI quality trigger discrete reorganizations of work.
 % Finally, we show how production functions obtained from firm-level cost minimization can map into an aggregate CES production function to study the macroeconomic implications of improvements in AI quality.
 \end{abstract}
 
@@ -186,29 +214,24 @@ In extensions developed in the appendix, we embed this chaining problem in the f
 \newpage 
 \clearpage
 \pagenumbering{arabic}
-% Temporarily focusing on the discussion section; the other body sections are
-% commented out. Re-enable by removing the leading % on each line.
-%\input{intro.tex}
-%\input{literature.tex}
-%\input{model.tex}
-%\input{optimization.tex}
+\input{intro.tex}
+\input{literature.tex}
+\input{model.tex}
+\input{optimization.tex}
 \input{discussion.tex}
-%\input{empirics.tex}
-%\input{conclusion.tex}
+\input{empirics.tex}
+\input{conclusion.tex}
 
 \bibliographystyle{aer}
 \bibliography{rubin}
 
-% Appendices temporarily commented out to focus on the main body.
-% Re-enable by removing the \begin{comment}/\end{comment} wrapper below.
-\begin{comment}
 \newpage
 \appendix
 % Number appendix figures/tables by their section letter (A.1, B.1, ...), resetting per section.
 \counterwithin{figure}{section}
 \counterwithin{table}{section}
+\include{appendix-omitted-proofs.tex}
 \input{appendix-jobdesign.tex}
-\include{appendix-FI.tex}
 \input{aggregation.tex}
 \include{appendix-aggregation.tex}
 \include{appendix-data_prep.tex}
@@ -216,6 +239,5 @@ In extensions developed in the appendix, we embed this chaining problem in the f
 \include{appendix-figures.tex}
 \include{appendix-prompts.tex}
 \include{appendix-GPTprompts_robustness.tex}
-\end{comment}
 
 \end{document}

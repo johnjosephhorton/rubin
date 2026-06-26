@@ -16,7 +16,7 @@ In the absence of AI, tasks optimally collapse to single-step blocks so that ste
 
 Firms seek to minimize production costs by choosing which steps of the sequence to delegate to AI, which to assign to human workers, and how to group tasks into jobs with different skill requirements.
 These choices trade off the benefits of specializing work among multiple workers against the coordination costs created by finer divisions of labor.
-In the absence of an effective AI technology, a firm might hire multiple high-skill workers in different job roles to accomplish distinct steps of its production process, incurring ``hand-off'' costs whenever work passes from one worker to another.
+In the absence of an effective AI technology, a firm might hire multiple high-skill workers in different job roles to accomplish distinct steps of its workflow, incurring ``hand-off'' costs whenever work passes from one worker to another.
 As the AI technology improves, the firm might instead choose to automate many of these steps, lumping them together into one logical task, and then hire a single, potentially lower-skill worker to oversee this automation and validate the production outcome.
 Whether this strategy is optimal depends not only on the effectiveness of the AI technology at accomplishing individual production steps, but also on the sequential relationship between steps, the relative ease of verification versus manual execution, wages, and coordination costs between workers.
 
@@ -91,7 +91,7 @@ When AI is sufficiently reliable on the marginal step, avoiding this additional 
 In the data scientist workflow example, the worker verifies the report once at Step~4, so verifying a report produced after AI executes Steps~3--4 requires the same effort as verifying a report produced after AI executes Steps~2--4; the only difference is that the AI is less likely to succeed at the latter on any given try.
 If AI's success probability at finding and fetching data is sufficiently high, Step~2 is appended to the AI chain to avoid creating an additional human checkpoint, even if the data scientist has comparative advantage in data collection in isolation.
 
-More generally, we should expect the gains from AI automation to be greatest when automatable steps co-occur in the production process.
+More generally, we should expect the gains from AI automation to be greatest when automatable steps co-occur in the workflow.
 For example, consider lecture-based teaching versus tutoring.
 In lecture-based teaching, many AI-suitable activities (e.g., background research, drafting slides, generating examples) are clustered in a ``preparation'' block, making it feasible to delegate them to AI in a single chain and verify only the final output.
 In tutoring, by contrast, these activities are interleaved with diagnosis and rapid back-and-forth with a student, so automatable steps are more dispersed and delegating preparation activities to AI is less valuable.\footnote{Rather, we might expect AI exposure in tutoring to take the form of fully automated end-to-end AI tutors, once they become effective enough that it is feasible to chain all tutoring activities.} 
@@ -110,12 +110,12 @@ We develop it in Appendix~\ref{app:jobdesign}, where Appendix Figure~\ref{fig:in
 
 \paragraph{Optimizing Automation and its Implications.}
 Assigning steps to production factors is not a completely trivial optimization problem, even computationally. 
-For a firm with $m$ steps in its production process, the number of possible production arrangements grows exponentially in $m$. 
-For the firm's AI deployment problem, we show how to compute the cost-minimizing strategy for an $m$-step production process in time $O(m^2)$ using dynamic programming.
+For a firm with $m$ steps in its workflow, the number of possible production arrangements grows exponentially in $m$. 
+For the firm's AI deployment problem, we show how to compute the cost-minimizing strategy for an $m$-step workflow in time $O(m^2)$ using dynamic programming.
 The firm's longer-run optimization, which jointly chooses AI deployment and the allocation of tasks to worker jobs, can also be solved in polynomial time subject to an arbitrarily small error term; we develop it in Appendix~\ref{app:jobdesign}.
 Although we do not do it in this paper, this algorithmic approach could be combined with micro-details of task content to create rich estimates of how technological change in various tasks would impact workers.
 
-The AI chaining feature of the model implies that improvements in AI quality can generate non-linear effects on labor demand and wages.
+The AI chaining feature of the model implies that improvements in AI quality can generate non-monotone effects on labor demand and wages.
 For any fixed production arrangement, better AI reduces costs smoothly by raising AI success probabilities and lowering expected execution times.
 However, firms optimize costs over a discrete set of AI deployment strategies and job designs, so the cost-minimizing arrangement can switch at particular AI quality thresholds.
 As a result, marginal improvements in AI may have little or no effect when they do not change the optimal production arrangement, which is especially likely in the early days of adoption when AI quality is low.

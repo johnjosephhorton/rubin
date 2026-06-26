@@ -1,6 +1,6 @@
 \section{Optimization}
 
-In this section we study the firm's AI deployment problem: choosing how to integrate the AI technology into its production process, that is, choosing the AI strategy $\T$, so as to minimize the cost of production in \eqref{eq:totalcost_shortterm}.
+In this section we study the firm's AI deployment problem: choosing how to integrate the AI technology into its workflow, that is, choosing the AI strategy $\T$, so as to minimize the cost of production in \eqref{eq:totalcost_shortterm}.
 The broader long-run problem, in which the firm additionally redesigns jobs by bundling tasks into roles and trading specialization against coordination costs, is developed in Appendix~\ref{app:jobdesign}.
 
 
@@ -11,30 +11,9 @@ The broader long-run problem, in which the firm additionally redesigns jobs by b
 The firm chooses the AI strategy $\T$ for its $m$ steps $\mathcal{S} = (s_1, \dotsc, s_m)$ to minimize the total production cost $\sum_{T_b \in \T} \skillcost{b}\,\timecost{b}$ in \eqref{eq:totalcost_shortterm}.
 Although the number of possible strategies grows exponentially in $m$, the cost-optimal strategy can be calculated via dynamic programming in $O(m^2)$ time.
 
-\begin{propbox}
 \begin{proposition}
 \label{prop:shortrun_dp}
-Given a production process with $m$ steps, the cost-minimizing AI strategy can be calculated in time $O(m^2)$ via dynamic programming.
+Given a workflow with $m$ steps, the cost-minimizing AI strategy can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
-\begin{proof}
-    We first note the following recursive formulation of the optimization problem.
-    For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical production process that only includes steps $1$ through $k$.
-    Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
-    Note also that $C[m]$ is the cost of our desired optimal solution.
 
-    We now show how to calculate $C[k]$ recursively.
-    As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
-    For $k \geq 1$, $C[k]$ is the lesser of
-    \[ C[k-1] + \manualSkill{k}\,\manualTime{k} \]
-    and
-    \[ \min_{\ell < k} \Biggl\{ C[\ell] + \AIskill{k}\,\frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
-    \]
-    In other words, we either complete step $k$ manually (at cost $\manualSkill{k}\,\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at AI management cost $\AIskill{k}\,\AItime{k}/\prod_{i=\ell+1}^k q_i$.
-    In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
-    This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
-    For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
-
-    Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
-    Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
-\end{proof}
-\end{propbox}
+The proof, a dynamic program over prefixes of the step sequence, is given in Appendix~\ref{app:omitted_proofs}.

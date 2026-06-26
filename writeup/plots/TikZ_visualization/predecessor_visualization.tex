@@ -1,0 +1,41 @@
+% Predecessor example: with only steps 1-2, the focal step (step 1) is performed
+% manually; introducing the AI-friendly predecessor (step 0) pulls step 1 into a
+% single AI chain. Colors follow Figures 1-2 (manual=gray, automated=green,
+% augmented=orange; an AI chain is grouped by a blue dashed box).
+\begin{center}
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[>=latex,
+  cbox/.style={rectangle, rounded corners, draw, minimum width=2.6cm, minimum height=0.95cm, align=center, font=\small},
+  manual/.style={fill=gray!10},
+  automated/.style={fill=green!30},
+  augmented/.style={fill=orange!30},
+  rowlab/.style={font=\footnotesize, align=right, text width=3.4cm, anchor=east},
+  chainbox/.style={draw=blue, rectangle, rounded corners, dashed, inner sep=0.28cm, line width=1pt}]
+
+  % row labels (to the left of the steps)
+  \node[rowlab] at (2.6, 0)    {Steps 1--2 alone:};
+  \node[rowlab] at (2.6, -2.8) {Adding Step~0:};
+
+  % row (a): steps 1 and 2 only -- step 1 manual, step 2 augmented (separate tasks)
+  \node[cbox, manual]    (a1) at (7.5, 0)  {Step 1\\(Manual)};
+  \node[cbox, augmented] (a2) at (10.5, 0) {Step 2\\(Augmented)};
+  \draw[->, thick] (a1) -- (a2);
+  \node[font=\footnotesize, anchor=west] at (12.3, 0) {Total cost $\approx 2.25$};
+
+  % row (b): introduce step 0 -- all three chained, steps 0 and 1 automated
+  \node[cbox, automated] (b0) at (4.5, -2.8)  {Step 0\\(Automated)};
+  \node[cbox, automated] (b1) at (7.5, -2.8)  {Step 1\\(Automated)};
+  \node[cbox, augmented] (b2) at (10.5, -2.8) {Step 2\\(Augmented)};
+  \draw[->, thick] (b0) -- (b1);
+  \draw[->, thick] (b1) -- (b2);
+  % blue dashed box: the three steps form a single AI-chain task (cf. Figures 1-2)
+  \node[chainbox, fit=(b0)(b1)(b2)] (chain) {};
+  \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.32)$) {single task (AI chain)};
+  \node[font=\footnotesize, anchor=west] at (12.3, -2.8) {Total cost $\approx 2.63$};
+
+  % step 1 flips from manual to automated once the predecessor is introduced
+  \draw[->, very thick, red!75!black] (a1.south) -- (b1.north);
+  \node[font=\scriptsize, text=red!75!black, anchor=west] at (7.7, -1.4) {flips to AI-automated};
+\end{tikzpicture}
+\end{adjustbox}
+\end{center}
