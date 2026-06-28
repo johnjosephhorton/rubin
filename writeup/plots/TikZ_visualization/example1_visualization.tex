@@ -1,47 +1,34 @@
-\begin{adjustbox}{center}
-\begin{tikzpicture}[
-    scale=0.8,
-    node distance=0.6cm,
-    every node/.style={
-        rectangle, rounded corners, draw,
-        minimum width=1.5cm, minimum height=0.85cm,
-        align=center
-    },
-    easy/.style={fill=teal!40},
-    hard/.style={fill=red!40},
-    idx/.style={draw=none, font=\scriptsize},
-    >=latex,
-    thick
-]
+% Example 3 (fragmentation, interleaved): easy and hard steps alternate, so AI-friendly
+% steps are never adjacent and no multi-step chain can form. Each easy step is augmented
+% on its own (a length-1 chain) and each hard step is performed manually. Colors follow
+% Figures 1-2 (manual=gray, automated=green, augmented=orange).
+\begin{center}
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[>=latex,
+  cbox/.style={rectangle, rounded corners, draw, minimum width=2.0cm, minimum height=0.95cm, align=center, font=\small},
+  manual/.style={fill=gray!10},
+  automated/.style={fill=green!30},
+  augmented/.style={fill=orange!30},
+  sub/.style={draw=none, font=\scriptsize, text=black!70}]
 
-% Nodes
-\node[easy] (E1) {Easy};
-\node[idx, below=1pt of E1] {1};
+  \node[cbox, augmented] (s1) {Step 1\\(Augmented)};
+  \node[cbox, manual, right=0.7cm of s1] (s2) {Step 2\\(Manual)};
+  \node[cbox, augmented, right=0.7cm of s2] (s3) {Step 3\\(Augmented)};
+  \node[draw=none, right=0.45cm of s3] (dots) {$\cdots$};
+  \node[cbox, augmented, right=0.45cm of dots] (sm1) {Step $m{-}1$\\(Augmented)};
+  \node[cbox, manual, right=0.7cm of sm1] (sm) {Step $m$\\(Manual)};
 
-\node[hard, right=of E1] (H2) {Hard};
-\node[idx, below=1pt of H2] {2};
+  \node[sub, below=1pt of s1] {easy};
+  \node[sub, below=1pt of s2] {hard};
+  \node[sub, below=1pt of s3] {easy};
+  \node[sub, below=1pt of sm1] {easy};
+  \node[sub, below=1pt of sm] {hard};
 
-\node[easy, right=of H2] (E3) {Easy};
-\node[idx, below=1pt of E3] {3};
-
-\node[draw=none, right=of E3] (Dots) {$\cdots \cdots$};
-
-\node[hard, right=of Dots] (Hk) {Hard};
-\node[idx, below=1pt of Hk] {m--2};
-
-\node[easy, right=of Hk] (Ek1) {Easy};
-\node[idx, below=1pt of Ek1] {m--1};
-
-\node[hard, right=of Ek1] (Hm) {Hard};
-\node[idx, below=1pt of Hm] {m};
-
-% Arrows
-\draw[->] (E1) -- (H2);
-\draw[->] (H2) -- (E3);
-\draw[->] (E3) -- (Dots);
-\draw[->] (Dots) -- (Hk);
-\draw[->] (Hk) -- (Ek1);
-\draw[->] (Ek1) -- (Hm);
-
+  \draw[->,thick] (s1)--(s2);
+  \draw[->,thick] (s2)--(s3);
+  \draw[->,thick] (s3)--(dots);
+  \draw[->,thick] (dots)--(sm1);
+  \draw[->,thick] (sm1)--(sm);
 \end{tikzpicture}
 \end{adjustbox}
+\end{center}

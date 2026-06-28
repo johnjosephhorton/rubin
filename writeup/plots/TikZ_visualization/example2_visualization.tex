@@ -1,51 +1,40 @@
-\begin{adjustbox}{center}
-\begin{tikzpicture}[
-    scale=0.8,
-    node distance=0.6cm,
-    every node/.style={
-        rectangle, rounded corners, draw,
-        minimum width=1.5cm, minimum height=0.85cm,
-        align=center
-    },
-    easy/.style={fill=teal!40},
-    hard/.style={fill=red!40},
-    idx/.style={draw=none, font=\scriptsize},
-    >=latex,
-    thick
-]
+% Example 4 (fragmentation, clustered): the easy steps form a contiguous run and are
+% chained -- automated up to the endpoint, which is augmented -- and the box groups them
+% into a single AI-chain task. The hard steps that follow are performed manually. Colors
+% follow Figures 1-2 (manual=gray, automated=green, augmented=orange; AI chain = blue box).
+\begin{center}
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[>=latex,
+  cbox/.style={rectangle, rounded corners, draw, minimum width=2.0cm, minimum height=0.95cm, align=center, font=\small},
+  manual/.style={fill=gray!10},
+  automated/.style={fill=green!30},
+  augmented/.style={fill=orange!30},
+  sub/.style={draw=none, font=\scriptsize, text=black!70},
+  chainbox/.style={draw=blue, rectangle, rounded corners, dashed, inner sep=0.22cm, line width=1pt}]
 
-% ----- Easy segment -----
-\node[easy] (E1) {Easy};
-\node[idx, below=1pt of E1] {1};
+  \node[cbox, automated] (s1) {Step 1\\(Automated)};
+  \node[cbox, automated, right=0.7cm of s1] (s2) {Step 2\\(Automated)};
+  \node[draw=none, right=0.45cm of s2] (dots1) {$\cdots$};
+  \node[cbox, augmented, right=0.45cm of dots1] (sk) {Step $\tfrac{m}{2}$\\(Augmented)};
+  \node[cbox, manual, right=0.95cm of sk] (sk1) {Step $\tfrac{m}{2}{+}1$\\(Manual)};
+  \node[draw=none, right=0.45cm of sk1] (dots2) {$\cdots$};
+  \node[cbox, manual, right=0.45cm of dots2] (sm) {Step $m$\\(Manual)};
 
-\node[easy, right=of E1] (E2) {Easy};
-\node[idx, below=1pt of E2] {2};
+  \node[sub, below=1pt of s1] {easy};
+  \node[sub, below=1pt of s2] {easy};
+  \node[sub, below=1pt of sk] {easy};
+  \node[sub, below=1pt of sk1] {hard};
+  \node[sub, below=1pt of sm] {hard};
 
-\node[draw=none, right=of E2] (Dots1) {$\cdots \cdots$};
+  \draw[->,thick] (s1)--(s2);
+  \draw[->,thick] (s2)--(dots1);
+  \draw[->,thick] (dots1)--(sk);
+  \draw[->,thick] (sk)--(sk1);
+  \draw[->,thick] (sk1)--(dots2);
+  \draw[->,thick] (dots2)--(sm);
 
-\node[easy, right=of Dots1] (Ek) {Easy};
-\node[idx, below=1pt of Ek] {$\tfrac{m}{2}$};
-
-% ----- Hard segment -----
-\node[hard, right=of Ek] (H1) {Hard};
-\node[idx, below=1pt of H1] {$\tfrac{m}{2}+1$};
-
-\node[draw=none, right=of H1] (Dots2) {$\cdots \cdots$};
-
-\node[hard, right=of Dots2] (Hm1) {Hard};
-\node[idx, below=1pt of Hm1] {$m-1$};
-
-\node[hard, right=of Hm1] (Hm) {Hard};
-\node[idx, below=1pt of Hm] {$m$};
-
-% Arrows
-\draw[->] (E1) -- (E2);
-\draw[->] (E2) -- (Dots1);
-\draw[->] (Dots1) -- (Ek);
-\draw[->] (Ek) -- (H1);
-\draw[->] (H1) -- (Dots2);
-\draw[->] (Dots2) -- (Hm1);
-\draw[->] (Hm1) -- (Hm);
-
+  \node[chainbox, fit=(s1)(s2)(dots1)(sk)] (chain) {};
+  \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.34)$) {single task (AI chain)};
 \end{tikzpicture}
 \end{adjustbox}
+\end{center}
