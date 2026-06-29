@@ -5,6 +5,7 @@ This appendix collects the proofs of all propositions stated in the main body of
 
 \subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
 
+\begin{proof}
 We first note the following recursive formulation of the optimization problem.
 For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
 Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
@@ -24,10 +25,13 @@ For any such choice of $\ell$, we then separately optimize the production strate
 
 Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
 Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
+\end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:ca_local}}
 
-The two strategies agree on every step outside the block $k, \dotsc, r$. In the $k, \dotsc, r$ block, their costs are
+\begin{proof}
+The two strategies agree on every step outside the block $k, \dotsc, r$.
+In the $k, \dotsc, r$ block, their costs are
 \[
 \underbrace{\manualSkill{k}\manualTime{k} + \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}}_{\text{step } k \text{ manual},\ \text{chain } k{+}1,\dotsc,r}
 \qquad\text{and}\qquad
@@ -39,14 +43,20 @@ The second is the smaller exactly when the \emph{marginal} cost of folding step 
 \;=\; \frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i} \;<\; \manualSkill{k}\manualTime{k},
 \]
 which is \eqref{eq:ca_local}.
+\end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:ca_predecessor}}
 
-The proof is fairly mechanical. The two strategies agree on every step outside the block $k-1, k, k+1$, and both reach the endpoint $k+1$ as an augmented step, paying $\AIskill{k+1}\AItime{k+1}/q_{k+1}$ for its management. Within the block, the described strategy costs
+\begin{proof}
+The proof is fairly mechanical.
+The two strategies agree on every step outside the block $k-1, k, k+1$, and both reach the endpoint $k+1$ as an augmented step, paying $\AIskill{k+1}\AItime{k+1}/q_{k+1}$ for its management.
+Within the block, the described strategy costs
 \[
 \underbrace{\min\!\left\{\manualSkill{k-1}\manualTime{k-1},\ \frac{\AIskill{k-1}\AItime{k-1}}{q_{k-1}}\right\} + \manualSkill{k}\manualTime{k} + \frac{\AIskill{k+1}\AItime{k+1}}{q_{k+1}}}_{k-1\text{ on its own},\ k\text{ manual},\ k+1\text{ augmented}},
 \]
-while running the three steps as one AI chain augmented at $k+1$ costs $\AIskill{k+1}\AItime{k+1}/(q_{k-1}q_k q_{k+1})$, paying nothing to manage the predecessor or step $k$. The chain is cheaper exactly when the \emph{marginal} cost of folding the pair $\{k-1, k\}$ in, the difference of the two chain terms, falls below the cost of doing that pair the old way. Crediting back the common endpoint term $\AIskill{k+1}\AItime{k+1}/q_{k+1}$ from both sides,
+while running the three steps as one AI chain augmented at $k+1$ costs $\AIskill{k+1}\AItime{k+1}/(q_{k-1}q_k q_{k+1})$, paying nothing to manage the predecessor or step $k$.
+The chain is cheaper exactly when the \emph{marginal} cost of folding the pair $\{k-1, k\}$ in, the difference of the two chain terms, falls below the cost of doing that pair the old way.
+Crediting back the common endpoint term $\AIskill{k+1}\AItime{k+1}/q_{k+1}$ from both sides,
 \[
 \frac{\AIskill{k+1}\AItime{k+1}}{q_{k-1}q_k q_{k+1}} - \frac{\AIskill{k+1}\AItime{k+1}}{q_{k+1}}
 \;=\;
@@ -54,37 +64,41 @@ while running the three steps as one AI chain augmented at $k+1$ costs $\AIskill
 \;<\;
 \min\!\left\{\manualSkill{k-1}\manualTime{k-1},\ \frac{\AIskill{k-1}\AItime{k-1}}{q_{k-1}}\right\} + \manualSkill{k}\manualTime{k},
 \]
-which is~\eqref{eq:pred_chain}. This is the marginal test of Proposition~\ref{prop:ca_local} with the single step $k$ replaced by the contiguous pair $\{k-1, k\}$, carrying joint success probability $q_{k-1}q_k$: the failure risk $1-q_k$ becomes the pair's joint failure risk $1-q_{k-1}q_k$. By~\eqref{eq:pred_chain} the chain is strictly cheaper, so the described strategy is not cost-minimizing.
-
-Splitting the pair's failure risk along the chain isolates the predecessor's role,
-\[
-1 - q_{k-1}q_k \;=\; \underbrace{(1-q_{k-1})}_{\text{predecessor's share}} \;+\; \underbrace{q_{k-1}(1-q_k)}_{\text{step }k\text{'s share}},
-\]
-so the pair's marginal cost splits into a predecessor term $\AIskill{k+1}\AItime{k+1}(1-q_{k-1})/(q_{k-1}q_k q_{k+1})$ and step $k$'s own term $\AIskill{k+1}\AItime{k+1}(1-q_k)/(q_k q_{k+1})$, the latter being exactly the left-hand side of the second inequality in~\eqref{eq:pred_local}. Conditions~\eqref{eq:pred_local}, together with $\manualSkill{k}\manualTime{k} < \AIskill{k}\AItime{k}/q_k$, make this a reversal rather than a routine substitution: absent the predecessor, the two-step workflow $\{k, k+1\}$ is solved with step $k$ manual, since step $k$'s own term already exceeds its manual cost. The predecessor's term is the only new ingredient, and it is small precisely when the predecessor is AI-reliable; that the cheap standalone predecessor cost it displaces still covers it is what tips step $k$ into the chain.
+which is~\eqref{eq:pred_chain}.
+This is the marginal test of Proposition~\ref{prop:ca_local} with the single step $k$ replaced by the contiguous pair $\{k-1, k\}$, carrying joint success probability $q_{k-1}q_k$: the failure risk $1-q_k$ becomes the pair's joint failure risk $1-q_{k-1}q_k$.
+By~\eqref{eq:pred_chain} the chain is strictly cheaper, so the described strategy is not cost-minimizing.
+\end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:ca_threshold}}
 
-We prove the proposition by contradiction. Suppose that some cost-minimizing strategy performs step $k$ manually. We construct a feasible alternative, chaining the whole tail $k, \dotsc, m$, that condition~\eqref{eq:ca_sufficient} makes strictly cheaper, contradicting optimality. Throughout, write $\mathrm{OPT}(I)$ for the minimum cost of executing a block of consecutive steps $I$ in isolation.
+\begin{proof}
+We prove the proposition by contradiction.
+Suppose that some cost-minimizing strategy performs step $k$ manually.
+We construct a feasible alternative, chaining the whole tail $k, \dotsc, m$, that condition~\eqref{eq:ca_sufficient} makes strictly cheaper, contradicting optimality.
+Throughout, write $\mathrm{OPT}(I)$ for the minimum cost of executing a block of consecutive steps $I$ in isolation.
 
-\emph{Cost of the manual strategy.} Because step $k$ is performed manually, no chain crosses it, so the sequence splits into three independently costed pieces: steps $1, \dotsc, k{-}1$, the manual step $k$, and steps $k{+}1, \dotsc, m$. The strategy's total cost is
-\[
+\emph{Cost of the manual strategy.} Because step $k$ is performed manually, no chain crosses it, so the sequence splits into three independently costed pieces: steps $1, \dotsc, k{-}1$, the manual step $k$, and steps $k{+}1, \dotsc, m$.
+The strategy's total cost is
+\begin{equation}\label{eq:ct_manual}
 \mathrm{OPT}(1{:}k{-}1) \;+\; \manualSkill{k}\manualTime{k} \;+\; \mathrm{OPT}(k{+}1{:}m).
-\]
+\end{equation}
 
 \emph{Cost of the candidate.} As an alternative, execute steps $1, \dotsc, k{-}1$ optimally and run the whole block $k, \dotsc, m$ as a single AI chain augmented at $m$, for a total cost of
-\[
+\begin{equation}\label{eq:ct_candidate}
 \mathrm{OPT}(1{:}k{-}1) \;+\; \frac{\AIskill{m}\AItime{m}}{\prod_{i=k}^{m} q_i}.
-\]
-This candidate is feasible, so the assumed-optimal manual strategy is no more expensive than it. Cancelling the shared term $\mathrm{OPT}(1{:}k{-}1)$,
+\end{equation}
+This candidate is feasible, so the assumed-optimal manual strategy is no more expensive than it; the manual cost~\eqref{eq:ct_manual} is therefore at most the candidate cost~\eqref{eq:ct_candidate}.
+Taking the difference between~\eqref{eq:ct_candidate} and~\eqref{eq:ct_manual} and cancelling the shared term $\mathrm{OPT}(1{:}k{-}1)$,
 \begin{equation*}
 \frac{\AIskill{m}\AItime{m}}{\prod_{i=k}^{m} q_i} \;\ge\; \manualSkill{k}\manualTime{k} + \mathrm{OPT}(k{+}1{:}m). \tag{$\ast$}
 \end{equation*}
 
-\emph{Bounding $\mathrm{OPT}(k{+}1{:}m)$.} Executing the block $k{+}1, \dotsc, m$ costs at least as much as the single task that covers its final step $m$. That task must end at $m$, since no chain extends past the last step, so it is either step $m$ on its own (manual or augmented) or a chain ending at $m$:
+\emph{Bounding $\mathrm{OPT}(k{+}1{:}m)$.} Executing the block $k{+}1, \dotsc, m$ costs at least as much as the single task that covers its final step $m$.
+That task must end at $m$, since no chain extends past the last step, so it is either step $m$ on its own (manual or augmented) or a chain ending at $m$:
 \[
 \underbrace{\min\!\left\{\manualSkill{m}\manualTime{m},\ \frac{\AIskill{m}\AItime{m}}{q_m}\right\}}_{\text{step } m \text{ alone}}
 \qquad\text{or}\qquad
-\underbrace{\frac{\AIskill{m}\AItime{m}}{\prod_{i=\ell}^{m} q_i} \;\ge\; \frac{\AIskill{m}\AItime{m}}{q_m}}_{\text{chain ending at } m}.
+\underbrace{\frac{\AIskill{m}\AItime{m}}{q_m} \;\le\; \frac{\AIskill{m}\AItime{m}}{\prod_{i=\ell}^{m} q_i}}_{\text{chain ending at } m}.
 \]
 In either case, and since every other task in the block adds nonnegative cost, the minimum-cost way of performing steps $k+1, \cdots, m$ will be weakly greater than optimally executing the last step alone,
 \[
@@ -97,7 +111,9 @@ In either case, and since every other task in the block adds nonnegative cost, t
 \;\ge\;
 \manualSkill{k}\manualTime{k} \;+\; \min\!\left\{\manualSkill{m}\manualTime{m},\ \frac{\AIskill{m}\AItime{m}}{q_m}\right\},
 \]
-which contradicts~\eqref{eq:ca_sufficient}. Hence no cost-minimizing strategy performs step $k$ manually: in every optimum, step $k$ is automated.
+which contradicts~\eqref{eq:ca_sufficient}.
+Hence no cost-minimizing strategy performs step $k$ manually: in every optimum, step $k$ is automated.
+\end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:fragmentation}}
 
@@ -112,7 +128,8 @@ Write $F$ for the set of steps that fail, and $\mathcal{C} = \{C_1, \dotsc, C_k\
 The weight of each $C_j \in \mathcal{C}$ is defined to be $\omega(C_j) = \min\{ 1, \sum_{s_i \in C_j} \manualSkill{i}\manualTime{i} \}$.
 That is, each $C_j$ has weight $1$ unless the sum of the manual costs of its steps is less than $1$ (due to our assumption that AI management costs are normalized to $1$).
 
-We now introduce some notation: for each $s_i$, write $\minTime{i} = \min\left\{\manualSkill{i}\manualTime{i}, \frac{\AIskill{i}\AItime{i}}{q_i}\right\}$.  That is, $\minTime{i}$ is the minimum cost to implement step $s_i$ individually (whether manually or through AI augmentation).
+We now introduce some notation: for each $s_i$, write $\minTime{i} = \min\left\{\manualSkill{i}\manualTime{i}, \frac{\AIskill{i}\AItime{i}}{q_i}\right\}$.
+That is, $\minTime{i}$ is the minimum cost to implement step $s_i$ individually (whether manually or through AI augmentation).
 Given a realization of $\mathcal{C}$ and $F$, we define the realized fragmentation to be
 \[ \sum_{s_i \in F}\minTime{i} + \sum_{C_j \in \mathcal{C}} \omega(C_j).\]
 The \emph{fragmentation index} is defined to be the expected value of the realized fragmentation.
@@ -146,8 +163,7 @@ by definition, where we write $d(T_j) = \sum_{s_i \in T_j}d_i$ for the total dif
 Comparing our expression for $OPT$ with our bound on $FI$, we see that each task in $\T_{\manualLetter}$ contributes the same amount to each, whereas each $T_j \in \T_{\AIletter}$ contributes $1+\sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i})$ to the former and $\alpha^{-d(T_j)}$ to the latter.
 We will show that, for each $T_j \in \T_{\AIletter}$, $1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i}) \leq \frac{5}{4} \alpha^{-d(T_j)}$, which will complete the proof.
 
-First, since $\minTime{i} \leq \alpha^{-d_i}$ for each $s_i \in \mathcal{S}$, we have
-$1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i}) \leq 1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\alpha^{-d_i})$.
+First, since $\minTime{i} \leq \alpha^{-d_i}$ for each $s_i \in \mathcal{S}$, we have $1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\minTime{i}) \leq 1 + \sum_{s_i \in T_j}(1-\alpha^{d_i})(1+\alpha^{-d_i})$.
 
 Next note that for any $x,y\in [0,1]$, $(1-xy)(1+\tfrac{1}{xy}) \geq (1-x)(1+\tfrac{1}{x}) + (1-y)(1+\tfrac{1}{y})$.
 (This can be checked by expanding and taking derivatives.)
@@ -172,7 +188,8 @@ Consider a three-step workflow (recall that $\AIskill{i}\AItime{i} = 1$ for all 
 \end{tabular}
 \end{center}
 The first and last steps always succeed, while the second succeeds with probability $1/2$ and has a manual cost of $2$.
-The optimal policy automates all three together for an expected cost of $\AIskill{3}\AItime{3}/(q_1 q_2 q_3) = 1/(1 \cdot \tfrac12 \cdot 1) = 2$, whereas the fragmentation index is $\tfrac12 \times 1 + \tfrac12 \times (1+2+1) = \tfrac52$. The ratio $FI/OPT$ is therefore $\tfrac54$.
+The optimal policy automates all three together for an expected cost of $\AIskill{3}\AItime{3}/(q_1 q_2 q_3) = 1/(1 \cdot \tfrac12 \cdot 1) = 2$, whereas the fragmentation index is $\tfrac12 \times 1 + \tfrac12 \times (1+2+1) = \tfrac52$.
+The ratio $FI/OPT$ is therefore $\tfrac54$.
 \end{example}
 
 We next argue that $FI$ is not much smaller than $OPT$.
@@ -209,7 +226,8 @@ That is, for each step $s_i$, completing the step manually is at least as costly
     We emphasize that $\T_{NI}$ may still include singleton tasks, but any singleton task $(s_i) \in \T_{NI}$ must have the property that $\alpha^{d_i} \geq 1/2$.
 
     If the final task $s_m$ from $\mathcal{S}$ is contained in some $T_j \in \T_{NI}$, we say that $T_j$ is the \emph{terminal} task.
-    All other tasks in $\T_{NI}$ are non-terminal tasks.  Note that if the final step is a singleton task in $\T_I$ then no task is terminal.
+    All other tasks in $\T_{NI}$ are non-terminal tasks.
+Note that if the final step is a singleton task in $\T_I$ then no task is terminal.
     For each non-terminal task $T_j \in \T_{NI}$, we'll write $\overline{T}_j$ to denote $T_j$ plus the first step that follows $T_j$.
     For example, if $T_j = (s_i, \dotsc, s_\ell)$, then $\overline{T}_j = (s_i, \dotsc, s_\ell, s_{\ell+1})$.
     The set $\T_{NI}$ then has the property that for each task $T_j \in \T_{NI}$ we have $\alpha^{d(T_j)} \geq 1/2$, and for each non-terminal $T_j \in \T_{NI}$ we have $\alpha^{(d(\overline{T}_j))} < 1/2$.
@@ -320,10 +338,13 @@ The fragmentation index is $1$ plus $1$ for each task that fails, which is $1 + 
 As $K$ grows large, the ratio tends to $2(\sqrt{2}+1)$, which is strictly greater than $4$.
 \end{example}
 
+\begin{proof}[Proof of Proposition~\ref{prop:fragmentation}]
 Combining Lemmas~\ref{lem:FI.upper.bound}, \ref{lem:FI.lower.bound.4}, and~\ref{lem:FI.lower.bound.8} yields Proposition~\ref{prop:fragmentation}: in general $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$, and under the additional assumption $\manualSkill{i}\manualTime{i} \geq 1$ for all $i$, $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+\end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:reorg_threshold}}
 
+\begin{proof}
 Each $C_\T$ is a constant plus terms $\AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c}$ with $D_c \ge 1$, with derivatives
 \[
 \begin{aligned}
@@ -333,13 +354,18 @@ C_\T''(\alpha) &= \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,D_c(D_
 \]
 so each $C_\T$ is non-increasing and convex.
 
-Within a regime where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha) \ge 0$, and the convexity of $C_\T$ makes it non-increasing in $\alpha$ (when $\T$ uses no chain $g^*(\alpha) = 0$ but is otherwise strictly decreasing). The returns to a fixed configuration in a regime thus weakly diminish. This proves the first claim of the proposition.
+Within a regime where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha) \ge 0$, and the convexity of $C_\T$ makes it non-increasing in $\alpha$ (when $\T$ uses no chain $g^*(\alpha) = 0$ but is otherwise strictly decreasing).
+The returns to a fixed configuration in a regime thus weakly diminish.
+This proves the first claim of the proposition.
 
-Next, let $\alpha_0 \in (0,1)$ be a threshold where the optimum switches from $\T$ (optimal just below $\alpha_0$) to $\T'$ (just above $\alpha_0$).\footnote{We assume this threshold exists. The only scenario where no such threshold exists is the case in which all steps are executed manually for all $\alpha \in (0,1)$. This is the trivial, uninteresting case and is assumed away.} Define
+Next, let $\alpha_0 \in (0,1)$ be a threshold where the optimum switches from $\T$ (optimal just below $\alpha_0$) to $\T'$ (just above $\alpha_0$).\footnote{We assume this threshold exists. The only scenario where no such threshold exists is the case in which all steps are executed manually for all $\alpha \in (0,1)$. This is the trivial, uninteresting case and is assumed away.}
+Define
 \[
-\phi(\alpha) = C_{\T'}(\alpha) - C_\T(\alpha),
+\phi(\alpha) = C_{\T'}(\alpha) - C_\T(\alpha).
 \]
-a difference of two finite sums of powers of $\alpha$ and hence continuous and differentiable on $(0,1)$. The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below. Therefore, by definition $\phi$ satisfies:
+The function $\phi(\alpha)$ is the difference of two finite sums of powers of $\alpha$ and hence continuous and differentiable on $(0,1)$. 
+The two costs are equal at $\alpha_0$, with $C_{\T'}$ the cheaper just above and $C_\T$ the cheaper just below.
+Therefore, by definition $\phi$ satisfies:
 \[
 \phi(\alpha_0^{-}) \ge 0,
 \qquad
@@ -347,10 +373,13 @@ a difference of two finite sums of powers of $\alpha$ and hence continuous and d
 \qquad
 \phi(\alpha_0^{+}) \le 0.
 \]
-A differentiable function with such a sign change has nonpositive derivative in the local neighborhood of $\alpha_0$. So $\phi'(\alpha_0) \le 0$, or equivalently, $C_{\T'}'(\alpha_0) \le C_\T'(\alpha_0)$. By the definition $g_\T = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$, this is
+A differentiable function with such a sign change has nonpositive derivative in the local neighborhood of $\alpha_0$.
+So $\phi'(\alpha_0) \le 0$, or equivalently, $C_{\T'}'(\alpha_0) \le C_\T'(\alpha_0)$.
+By the definition $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$, this is
 \[
 g_\T(\alpha_0) \;=\; -C_\T'(\alpha_0)
 \;\le\;
 -C_{\T'}'(\alpha_0) \;=\; g_{\T'}(\alpha_0).
 \]
-Since $g^*$ coincides with $g_\T$ just below $\alpha_0$ and with $g_{\T'}$ just above, the firm's marginal benefit jumps upward as $\alpha$ crosses $\alpha_0$.
+Since $g^*(\alpha)$ coincides with $g_\T(\alpha)$ just below $\alpha_0$ and with $g_{\T'}(\alpha)$ just above, the firm's marginal benefit function $g^*(\alpha)$ jumps upward as $\alpha$ crosses $\alpha_0$.
+\end{proof}
