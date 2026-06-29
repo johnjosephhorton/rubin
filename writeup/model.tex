@@ -11,7 +11,7 @@ We formally characterize the components of the figure below in turn, and then in
 
 \begin{figure}[ht!]
   \begin{center}
-  \caption{Grouping Steps into Tasks}
+  \caption{Bundling Steps into Tasks via AI Strategy}
   \label{fig:steps_tasks}
   \vspace{0.2cm}
   \input{plots/TikZ_visualization/steps_tasks_illustration.tex}
@@ -59,7 +59,7 @@ A step performed on its own, whether manually or with AI augmentation, constitut
 Steps can also be executed in an \emph{automated} mode in which AI performs the step end-to-end with no direct human involvement, and hence at zero direct human cost.\footnote{That execution of automated steps do not incur any cost to the firm is consistent with the AI subscription business model, where the firm pays an upfront fixed cost to an AI provider and uses AI tools at zero marginal cost afterward. The mechanisms discussed in the model remain unaffected even if we assume each time the firm deploys AI on a step it has to incur a marginal cost, but we abstract away from considering this to avoid complicating the model.}
 Automation, however, arises only within an \emph{AI chain}: a contiguous run of AI-executed steps in which each step's output feeds directly into the next and a human verifies only the final output.
 Every step of such a chain but the last is automated while the last step is augmented, since its output is the one the worker reviews.
-The AI chain as a whole can be thought as a single ``composite'' task delegated by the human to AI for execution.
+The AI chain as a whole can be thought as a single \emph{composite} task delegated by the human to AI for execution.
 
 Consider an AI chain spanning steps $(s_\ell, \dotsc, s_r)$.
 The worker manages the chain by prompting for and evaluating only its final step $s_r$, since all earlier steps run automatically ``under the hood'' and remain beneath the worker's awareness.
@@ -85,15 +85,13 @@ An AI chain is a contiguous block of one or more sequential steps executed by AI
 An AI chain spanning steps $(s_\ell,\dots,s_r)$ has steps $(s_\ell,\dots,s_{r-1})$ automated and step $s_r$ augmented, with skill and (expected) time costs $\left(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i\right)$.
 \end{definition}
 
-To summarize, a task is either a manually-performed step or an AI chain.
-We define an \emph{AI deployment strategy} (or \emph{AI strategy} for short) as a partition of the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\mathcal{T}$, each of which is either a manual step or an AI chain.
+Finally, we define an \emph{AI deployment strategy} (or \emph{AI strategy} for short) as a partition of the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\mathcal{T}$, each of which is either a manual step or an AI chain.
 The strategy in Figure~\ref{fig:steps_tasks}, for instance, groups seven steps into five tasks: two AI chains (a three-step chain over Steps 2--4 and a length-one chain at Step~6) and three manual steps.
-
 Table~\ref{tab:model_parameters} summarizes the notation introduced for steps and tasks.
 
 \begin{table}[ht!]
 \centering
-\caption{Summary of Model Notations}
+\caption{Notation Summary}
 \label{tab:model_parameters}
 \begin{tabularx}{\textwidth}{l X}
 \toprule
@@ -102,15 +100,15 @@ Table~\ref{tab:model_parameters} summarizes the notation introduced for steps an
 $\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
 \addlinespace
 $s_i$ & Production step $i$ \\
+$\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
 $\manualSkill{i},\ \manualTime{i}$ & Skill and time cost of completing step $i$ manually \\
 $\AIskill{i},\ \AItime{i}$ & Skill and time cost of managing one AI attempt at step $i$ \\
 $d_i$ & Difficulty of step $i$ for AI \\
 $q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
-$\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
 \addlinespace
-$T_b$ & Task $b$: a manual step or an AI chain (a length-one chain is an augmented step) \\
+$T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
 $\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
-$\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\manualSkill{i},\, \manualTime{i})$ if a manual step, $(\AIskill{i},\, \AItime{i}/q_i)$ if augmented, and $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$ if an AI chain over steps $\ell, \dotsc, r$ \\
+$\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\manualSkill{i},\, \manualTime{i})$ if a manual step, $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$ if an AI chain over steps $\ell, \dotsc, r$ \\
 \bottomrule
 \end{tabularx}
 \end{table}
