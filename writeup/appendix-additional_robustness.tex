@@ -1,0 +1,40 @@
+\section{Additional Robustness Tests for the Empirical Section}
+\label{app:additional_robustness}
+
+This appendix collects supplementary robustness results for Predictions \#2 and \#3 of Section~\ref{sec:empirics}. The tables and figures referenced below are reported in Appendices~\ref{app:tables} and~\ref{app:figures}.
+
+
+\subsection{Additional Tests for Prediction \#2}
+\label{app:additional_robustness_pred2}
+To ensure that our results for the second prediction are not driven by how fragmentation is measured using the AI exposure classifications of \citet{eloundou2023gpts}, we re-estimate \eqref{eq:fragmentation_index_regression} using two additional measures of task fragmentation constructed directly from realized AI execution outcomes, rather than from AI-exposed tasks.
+The corresponding regression results are reported in Table~\ref{tab:fragmentation_index_regression_execution}, with complementary visual evidence provided in Figure~\ref{fig:fragmentation_index_regression_execution}.
+
+By construction, the execution-based EFI measures are mechanically related to the share of tasks executed by AI.
+Holding the task sequence fixed, an additional AI-executed task necessarily increases the occupation's AI execution share while weakly reducing its EFI.\footnote{The reduction is weak because adding an isolated AI-executed task does not change fragmentation, whereas adding a task adjacent to an existing AI-executed task extends an AI chain and reduces fragmentation.}
+As a result, these measures mechanically amplify the negative relationship between AI execution and fragmentation in the regression, as reflected in the estimated coefficients on the EFI.
+Accordingly, they are not intended to provide an independent characterization of the relationship between task fragmentation and AI execution.
+
+Instead, these measures serve as a diagnostic of the \emph{form} that AI adoption takes within occupations.
+The model predicts not only that greater clustering of AI-able tasks facilitates higher overall AI execution, but also that realized AI adoption should occur disproportionately through the extension of contiguous AI chains rather than through scattered, isolated task substitutions.
+If AI execution were independent across steps, then conditional on AI exposure, increases in execution would primarily appear as isolated events and would not substantially reduce fragmentation.
+The strong negative relationship observed between execution-based EFI and AI execution therefore indicates that AI adoption follows the clustered, chain-based pattern implied by the model.
+In this sense, the execution-based EFI measures function as a falsification-style check on the model's underlying mechanism rather than as a separate test of its predictions.
+
+
+\subsection{Additional Tests for Prediction \#3}
+\label{app:additional_robustness_pred3}
+Although DWAs are intended to group conceptually similar tasks, one might argue that even within a given DWA tasks may still somewhat differ in their objectives, execution nature, or required skills.
+To address this concern, we re-estimate regression~\eqref{eq:DWA_regression_ai} using a more restrictive definition of task similarity within DWAs.
+Specifically, for each DWA, we ask GPT-5-mini to select the subset of tasks that are most similar in terms of skill requirements and execution complexity.\footnote{The prompt used to identify similar DWA tasks is provided in Appendix~\ref{app:prompts}.}
+This procedure yields, for each DWA, a set of highly comparable tasks that appear across different occupational contexts.
+Panel~(A) of Table~\ref{tab:DWA_tasks} presents example DWAs and their associated O*NET tasks across occupations, along with execution modes, while Panel~(B) reports the subset of tasks retained after applying the similarity filter.
+
+In this robustness test we treat these tasks as instances of the same underlying step appearing across occupations and re-estimate regression~\eqref{eq:DWA_regression_ai} on this restricted sample.
+The resulting estimates, reported in Table~\ref{tab:DWA_regression_aiExecution_GPTsample} and Figure~\ref{fig:DWA_regression_aiExecution_GPTsample}, closely mirror the baseline patterns of the main specification in both sign and magnitude.
+
+Finally, we examine a stricter notion of AI execution that is directly implied by our model, under which automated steps can only precede other AI-executed steps, whether automated or augmented.
+Accordingly, we repeat the analysis focusing specifically on AI automation rather than AI execution more broadly, replacing the dependent variable in equation~\eqref{eq:DWA_regression_ai} with an indicator for whether step $t$ is AI-automated ($\text{is\_automated}_{t}$) instead of AI-executed ($\text{is\_ai}_{t}$).
+The corresponding estimates for the main sample are reported in Table~\ref{tab:DWA_regression_aiAutomation_mainSample} and Figure~\ref{fig:DWA_regression_aiAutomation_mainSample}, while results for the GPT-filtered sample are reported in Table~\ref{tab:DWA_regression_aiAutomation_GPTsample} and Figure~\ref{fig:DWA_regression_aiAutomation_GPTsample}.\footnote{
+Because relatively few tasks in the data are AI-automated, and because we further restrict attention to highly similar tasks across occupations, we retain tasks associated with multiple DWAs in the original O*NET dataset and randomly assign each such task to one of its associated DWAs for these exercises.
+}
+Under this stricter specification, the estimated effects are smaller in magnitude and often statistically insignificant, reflecting the more limited prevalence of AI automation in the data. Nevertheless, the signs and qualitative patterns of the estimates remain consistent with those obtained for AI execution.
