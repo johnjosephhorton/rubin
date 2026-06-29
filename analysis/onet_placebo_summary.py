@@ -1,10 +1,10 @@
 """
 Placebo summary: combined forest plots + table for the neighbor and fragmentation-index
 position-reshuffle placebos. Reads the saved placebo null/observed CSVs and renders, per cut,
-a 2-row forest plot (t-1 | t+1 on top, FI v4 centered below). "Consistent with null" = observed
+a 2-row forest plot (t-1 | t+1 on top, EFI Definition 2 (preferred exposure measure) centered below). "Consistent with null" = observed
 within the placebo 10-90% band. Panel headers show sample size (occupations, and observations for
-the task-level neighbor regression). Fragmentation is restricted to the neighbor occupation set, so
-the occupation counts match across the two analyses.
+the task-level neighbor regression). Both predictions share the >=5-step frequency-pruned-workflow universe;
+fragmentation uses all such occupations while the neighbor regression uses their DWA-eligible neighbored subset.
 
 Run:  python analysis/onet_placebo_summary.py   (from the repo root)
 """
@@ -51,7 +51,13 @@ def nbr_counts(tag):
     return int(keep['O*NET-SOC Code'].nunique()), int(len(keep))
 _nb = {t: nbr_counts(t) for t, _ in CUTS}
 NOCC_N = {t: v[0] for t, v in _nb.items()}; NOBS_N = {t: v[1] for t, v in _nb.items()}
-NOCC_F = dict(NOCC_N)   # fragmentation restricted to the neighbor occupation set -> same occupation count
+# Shared >=5 universe: both predictions run on occupations whose frequency-pruned workflow keeps >=5 steps.
+# Fragmentation regresses on all such occupations; the neighbor regression uses the DWA-eligible neighbored
+# subset of them (so NOCC_N <= NOCC_F). Read the fragmentation N from the heatmap sweep so the forest panel
+# header matches the heatmap cell exactly.
+_fsw = pd.read_csv(f"{fd}/frag_logic_threshold_sweep.csv"); _fsw = _fsw[(_fsw.FI_def == 'v2') & (_fsw.FE == 'none')]
+NOCC_F = {('all' if r['family'] == 'all' else f"{r['family']}{int(r['threshold'])}"): int(r['N_occ'])
+          for _, r in _fsw.iterrows()}
 
 def stats(v, o):
     v = np.asarray([x for x in v if not np.isnan(x)], float)
@@ -70,7 +76,7 @@ for ct, cl in CUTS:
             if not len(o) or pd.isna(o.iloc[0]): continue
             o = float(o.iloc[0]); v = nn[(nn.cut_tag == ct) & (nn.spec == sp) & (nn.term == tm)]['ame'].values
             rows.append(dict(Exercise='Neighbor', cut_tag=ct, Cut=cl, Effect=TERM_N[tm], Spec=SPEC_N[sp], Observed=o, **stats(v, o)))
-    for d_ in ['v4', 'v3']:
+    for d_ in ['v2', 'v1']:
         for fe in SPEC_F:
             o = fo[(fo.cut_tag == ct) & (fo.FI_def == d_) & (fo.FE == fe)]['coef']
             if not len(o) or pd.isna(o.iloc[0]): continue
@@ -111,16 +117,73 @@ for ct, cl in CUTS:
     d = df[df.cut_tag == ct]
     def get(exr, eff):
         s = d[(d.Exercise == exr) & (d.Effect == eff)].copy(); s['k'] = s.Spec.map(ospec); return s.sort_values('k')
-    t1 = get('Neighbor', '(t-1)'); t2 = get('Neighbor', '(t+1)'); fi = get('Fragmentation', 'FI v4')
+    t1 = get('Neighbor', '(t-1)'); t2 = get('Neighbor', '(t+1)'); fi = get('Fragmentation', 'FI v2')
     fig = plt.figure(figsize=(12.5, 7.6))
     gs = fig.add_gridspec(2, 4, hspace=0.7, wspace=0.85, top=0.88, bottom=0.12, left=0.09, right=0.95)
     ax1 = fig.add_subplot(gs[0, 0:2]); ax2 = fig.add_subplot(gs[0, 2:4]); ax3 = fig.add_subplot(gs[1, 1:3])
     panel(ax1, t1, AME_UNIT, 'Previous task (t-1) is AI', NOCC_N[ct], NOBS_N[ct])
     panel(ax2, t2, AME_UNIT, 'Next task (t+1) is AI', NOCC_N[ct], NOBS_N[ct])
-    panel(ax3, fi, FI_UNIT, 'Fragmentation index (FI v4)', NOCC_F[ct])
+    panel(ax3, fi, FI_UNIT, 'Fragmentation index (EFI Definition 2)', NOCC_F[ct])
     fig.legend(handles=leg, loc='lower center', ncol=4, fontsize=9, frameon=False, bbox_to_anchor=(0.5, 0.01))
     fig.suptitle(f"Placebo summary — observed effect vs its null distribution  —  {cl}\n"
                  f"(N={N} reshuffles; panel header = sample size (occ. / obs.); right margin = observed percentile in null)",
                  fontsize=12, fontweight='bold')
     fig.savefig(f"{outd}/placebo_summary_forest_{ct}.png", dpi=125, bbox_inches='tight'); plt.close(fig)
-print(f"Saved placebo_summary.csv and {len(CUTS)} forest plots (fragmentation restricted to neighbor occupations) to {outd}")
+# ===================== PER-EFFECT FORESTS (rows = cuts; columns = specifications) =====================
+# One graph per effect, showing the same effect across every frequency cut (rows) under each of the three
+# regression specifications (columns): no FE, SOC major-group FE, SOC minor-group FE.
+BYCUT_SPECS = ['No FE', 'Major FE', 'Minor FE']
+SPEC_TITLE  = {'No FE': 'No fixed effects', 'Major FE': 'SOC major-group FE', 'Minor FE': 'SOC minor-group FE'}
+
+def by_cut(exr, eff, spec):
+    res = []
+    for ct, cl in CUTS:
+        r = df[(df.cut_tag == ct) & (df.Exercise == exr) & (df.Effect == eff) & (df.Spec == spec)]
+        nocc = NOCC_N[ct] if exr == 'Neighbor' else NOCC_F[ct]
+        res.append((cl, (r.iloc[0].to_dict() if len(r) else None), nocc))
+    return res
+
+def panel_bycut(ax, data, unit, title, ylabels):
+    n = len(data); ys = list(range(n))[::-1]   # first cut (All tasks) at top
+    for (clab, r, nocc), y in zip(data, ys):
+        if r is None or np.isnan(r['Observed']):
+            continue
+        ax.plot([r['p10'], r['p90']], [y, y], color='0.55', lw=5, alpha=0.5, solid_capstyle='round', zorder=1)
+        ax.plot(r['mean'], y, marker='|', ms=14, mew=2, color='0.35', zorder=2)
+        sig = (not np.isnan(r['p10'])) and (r['Observed'] < r['p10'] or r['Observed'] > r['p90'])
+        ax.plot(r['Observed'], y, 'o', ms=9, color=('crimson' if sig else 'steelblue'), markeredgecolor='k', mew=0.6, zorder=3)
+        ax.text(1.015, y, ordi(r['pct']), transform=ax.get_yaxis_transform(), clip_on=False,
+                va='center', ha='left', fontsize=7, color='dimgray')
+    ax.axvline(0, color='k', lw=1, alpha=0.5)
+    ax.axhline(n - 1.5, color='black', lw=1)   # separate the All-tasks baseline row
+    ax.set_yticks(ys)
+    if ylabels:
+        ax.set_yticklabels([f"{clab}  (N={nocc})" for clab, _, nocc in data], fontsize=8.5)
+    else:
+        ax.tick_params(labelleft=False)   # hide without clearing the shared-axis labels
+    ax.set_xlabel(unit, fontsize=9); ax.grid(axis='x', ls=':', alpha=0.5); ax.margins(x=0.22)
+    ax.set_title(title, fontsize=10.5, fontweight='bold')
+
+def forest_3col(exr, eff, unit, suptitle, fname):
+    fig, axes = plt.subplots(1, 3, figsize=(15.5, 7.4), sharey=True)
+    for j, (ax, sp) in enumerate(zip(axes, BYCUT_SPECS)):
+        panel_bycut(ax, by_cut(exr, eff, sp), unit, SPEC_TITLE[sp], ylabels=(j == 0))
+    fig.tight_layout(rect=[0, 0.06, 1, 0.88], w_pad=2.5)
+    fig.legend(handles=leg, loc='lower center', ncol=4, fontsize=9, frameon=False, bbox_to_anchor=(0.5, 0.01))
+    fig.suptitle(suptitle, fontsize=12, fontweight='bold')
+    fig.savefig(f"{outd}/{fname}", dpi=190, bbox_inches='tight'); plt.close(fig)
+
+forest_3col('Fragmentation', 'FI v2', FI_UNIT,
+            "Fragmentation index (EFI Definition 2): observed coefficient vs position-reshuffle null\n"
+            f"across frequency cuts (rows) and specifications (columns)   (N={N} reshuffles; right margin = observed percentile in null)",
+            "placebo_summary_forest_fragmentation_byCut.png")
+forest_3col('Neighbor', '(t-1)', AME_UNIT,
+            "Previous task (t-1) is AI: observed average marginal effect vs position-reshuffle null\n"
+            f"across frequency cuts (rows) and specifications (columns)   (N={N} reshuffles; right margin = observed percentile in null)",
+            "placebo_summary_forest_neighbor_t1_byCut.png")
+forest_3col('Neighbor', '(t+1)', AME_UNIT,
+            "Next task (t+1) is AI: observed average marginal effect vs position-reshuffle null\n"
+            f"across frequency cuts (rows) and specifications (columns)   (N={N} reshuffles; right margin = observed percentile in null)",
+            "placebo_summary_forest_neighbor_t2_byCut.png")
+
+print(f"Saved placebo_summary.csv, {len(CUTS)} per-cut forests, and 3 per-effect (by-cut x spec) forests to {outd}")
