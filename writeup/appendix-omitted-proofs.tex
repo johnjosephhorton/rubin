@@ -1,30 +1,77 @@
 \section{Omitted Proofs}
 \label{app:omitted_proofs}
 
-This appendix collects the proofs of all propositions stated in the main body of the paper.
+This appendix collects the proofs omitted from the main body of the paper.
 
-\subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
+\subsection{Proof of Proposition~\ref{prop:mediumrun_dp}}
 
 \begin{proof}
-We first note the following recursive formulation of the optimization problem.
-For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
-Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
-Note also that $C[m]$ is the cost of our desired optimal solution.
+In the medium run a single worker performs the entire workflow, so the firm chooses only the AI strategy and pays the wage bill $\bigl(\sum_{T_b \in \T} \skillcost{b}\bigr)\bigl(\sum_{T_b \in \T} \timecost{b}\bigr)$, the product of the worker's total skill and total time.
+Because the wage bill multiplies these two totals, the running value of one alone never reveals how an added task changes it, so the dynamic program carries both and optimizes the worker's job one task at a time.
+For the proof we first show that the firm's medium-run optimization problem can be stated as a recursive problem.
+Then proceed to use dynamic programming to approximate the optimal solution.
 
-We now show how to calculate $C[k]$ recursively.
-As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
-For $k \geq 1$, $C[k]$ is the lesser of
-\[ C[k-1] + \manualSkill{k}\,\manualTime{k} \]
-and
-\[ \min_{\ell < k} \Biggl\{ C[\ell] + \AIskill{k}\,\frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
+\emph{Recursive formulation.}
+For $0 \le i \le m$ and skill and time levels $\skillcost{}$ and $\timecost{}$, let $R(i,\, \skillcost{},\, \timecost{})$ denote the minimum wage bill of a strategy for the whole workflow in which the worker has already been assigned a set of tasks, over steps $i+1, \dotsc, m$, with total skill $\skillcost{}$ and total time $\timecost{}$.
+Here step $i$ is the highest-indexed step not yet assigned, so $R(i,\, \skillcost{},\, \timecost{})$ optimizes over all ways of covering steps $1, \dotsc, i$ and optimizing them within the same job.
+
+In the base case $i = 0$ no steps remain to assign, the worker's totals are exactly $(\skillcost{}, \timecost{})$, and the wage bill is their product,
+\[
+R(0,\, \skillcost{},\, \timecost{}) = \skillcost{}\,\timecost{}, \qquad \text{for all } \skillcost{}, \timecost{}.
 \]
-In other words, we either complete step $k$ manually (at cost $\manualSkill{k}\,\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at AI management cost $\AIskill{k}\,\AItime{k}/\prod_{i=\ell+1}^k q_i$.
-In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
-This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
-For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
+The medium-run optimum is $R(m,\, 0,\, 0)$, the cheapest way to execute all $m$ steps within a job that starts with no tasks.
 
-Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
-Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
+For $i \ge 1$ the firm chooses how step $i$ is assigned optimally, with $R(i,\, \skillcost{},\, \timecost{})$ taking the form
+\begin{align*}
+R(i,\, \skillcost{},\, \timecost{}) = \min\Biggl\{
+& \ \underbrace{R\bigl(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i}\bigr)}_{\text{Step $i$ is manual}}, \ \underbrace{\min_{0 \le r < i}\ R\!\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)}_{\text{Step $i$ optimally chained}}
+\Biggr\}.
+\end{align*}
+In words, when assigning step $i$, the two options the firm considers are:
+\begin{itemize}
+\item \textbf{Manual step.}
+Step $i$ is performed manually as its own task, contributing skill $\manualSkill{i}$ and time $\manualTime{i}$ to the cost and leaving steps $1, \dotsc, i-1$ to be assigned optimally:
+\[
+R\bigl(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i}\bigr).
+\]
+\item \textbf{AI chain.}
+Step $i$ is the augmented end of an AI chain over steps $r+1, \dotsc, i$ for some $r < i$, which automates steps $r+1, \dotsc, i-1$ and adds skill $\AIskill{i}$ and time $\AItime{i}/\prod_{s=r+1}^{i} q_s$ to the job, leaving steps $1, \dotsc, r$ to assign:
+\[
+\min_{0 \le r < i}\ R\!\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right).
+\]
+The cut $r$ is the highest-indexed step left out of the chain.
+The special case where $r = i-1$ gives a length-one chain that merely augments step $i$.
+\end{itemize}
+
+
+\emph{Discretization and Computation Time.}
+Given our recursive formulation, we wish to use dynamic programming to solve for the optimal AI strategy by filling in the values of $R(i,\; \skillcost{},\; \timecost{})$ for all $i$, $\skillcost{}$, and $\timecost{}$.
+Since $\skillcost{}$ and $\timecost{}$ take on continuous values, we will discretize all skill costs $\skillcost{}$ and time costs $\timecost{}$ to appropriate powers of $(1+\epsilon)$, where $\epsilon > 0$ is an arbitrarily small error term.
+
+Suppose that all manual and augmented skill and time costs lie in $[1/B, B]$ for some $B > 0$.
+Performing every step manually is feasible at a wage bill of at most $(mB)(mB) = m^2 B^2$, so no strategy with a larger wage bill need be considered.
+A worker's total skill combines additively and lies in $[1/B,\, mB]$.
+Since this skill is at least $1/B$, and since no strategy with wage bill above $m^2 B^2$ need be considered, the total time of any strategy worth considering is at most $m^2 B^2/(1/B) = m^2 B^3$, so time cost of optimal strategy lies in $[1/B,\, m^2 B^3]$.
+
+
+We conclude that when filling table $R(i, \skillcost{}, \timecost{})$, it suffices to consider skill costs $\skillcost{}$ lying in the range $[1/B, mB]$ and time costs $\timecost{}$ lying in the range $[1/B, m^2 B^3]$.
+Each of these two ranges contains $O\bigl(\epsilon^{-1}\log(mB)\bigr)$ powers of $(1+\epsilon)$.
+The table $R(i,\, \skillcost{},\, \timecost{})$ is indexed by the step $i$, which takes $m+1$ values, together with the discretized skill and time levels $\skillcost{}$ and $\timecost{}$, each taking $O\bigl(\epsilon^{-1}\log(mB)\bigr)$ values, so it holds
+\[
+(m+1)\,\cdot\,O\bigl(\epsilon^{-1}\log(mB)\bigr)\,\cdot\,O\bigl(\epsilon^{-1}\log(mB)\bigr) \;=\; O\bigl(m\,\epsilon^{-2}\log^2(mB)\bigr)
+\]
+entries in total.
+Each entry is filled in $O(m)$ time by taking the minimum over the manual option and the at most $m$ chain cuts $r$ in the recursion above, so filling the whole table takes
+\[
+O\bigl(m\,\epsilon^{-2}\log^2(mB)\bigr)\,\cdot\,O(m) \;=\; O\bigl(m^2\,\epsilon^{-2}\log^2(mB)\bigr)
+\]
+time.
+Recording which option attains each minimum lets the firm read the optimal AI strategy off $R(m,\, 0,\, 0)$.
+
+It remains to bound the discretization error.
+The wage bill is evaluated only at the base case, where it multiplies the worker's total skill and total time; rounding each of these down to a power of $(1+\epsilon)$ moves it by a factor of at most $(1+\epsilon)$, so the product is computed to within $(1+\epsilon)^2$.
+Along the recursion the manual and chain options accumulate skill and time additively, and rounding the running totals to powers of $(1+\epsilon)$ keeps a multiplicative error of at most $(1+\epsilon)$ in each.
+Rescaling $\epsilon$ by a constant therefore yields the stated $(1+\epsilon)$ approximation.
 \end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:ca_local}}

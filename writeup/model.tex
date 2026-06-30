@@ -7,7 +7,7 @@ Each step can be performed manually, performed with AI assistance (augmentation)
 Completing a step requires worker time and skill, and these requirements differ across the modes of execution.
 The firm groups contiguous subsequences of steps into \emph{tasks}, choosing how to deploy AI across the workflow to minimize production costs.
 Figure~\ref{fig:steps_tasks} illustrates this procedure.
-We formally characterize the components of the figure below in turn, and then introduce the firm's optimal AI deployment strategy and show that it can be computed efficiently in polynomial time.
+We formally characterize the components of the figure below in turn. %, and then introduce the firm's optimal AI deployment strategy and show that it can be computed efficiently in polynomial time.
 
 \begin{figure}[ht!]
   \begin{center}
@@ -105,6 +105,7 @@ $\AIskill{i},\ \AItime{i}$ & Skill and time cost of managing one AI attempt at s
 $d_i$ & Difficulty of step $i$ for AI \\
 $q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
 \addlinespace
+\addlinespace
 $T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
 $\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
 $\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\manualSkill{i},\, \manualTime{i})$ if a manual step, $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$ if an AI chain over steps $\ell, \dotsc, r$ \\
@@ -114,19 +115,22 @@ $\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\
 
 
 
-\subsection{Jobs and Wages}
+\subsection{Production}
 \label{sec:jobs_wages}
 
-A \emph{job} is the set of tasks assigned to a single worker, that is, a contiguous block of the task sequence $\T$.
+The firm employs human workers to performs tasks and produce the final output.
+Labor is the only input used in production.
+Each worker is assigned a contiguous group of tasks in the production sequence, which we call a \emph{job}.
 The firm can in principle split its workflow into several jobs and hire a separate worker for each, and it is free to choose where one job ends and the next begins.
 This choice trades the gains from specializing workers on narrower sets of tasks against the coordination costs of splitting work across more of them, and it is what reallocates tasks across workers.
-We delegate the full characterization of this job-design problem, including what pins down the boundary of a job, to Appendix~\ref{app:jobdesign}.
-In the body we instead hold the boundary of a job fixed and exogenous, and treat the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, as a single worker's job.
-This job is the unit whose cost the firm minimizes.
+We delegate the full characterization of this job design problem, including what pins down the boundary of a job, to Appendix~\ref{app:jobdesign}.
+Here we instead hold the boundary of a job fixed and exogenous, and, without loss, treat the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, as a single worker's job.
 
+Workers are ex-ante identical, and are hired and trained by the firm to be employed in designated jobs.
 A worker is paid for the entire time their job takes to complete, at a rate equal to the skill the job requires.\footnote{
-One motivation for this formulation is that workers make a human-capital investment to acquire the skills their job demands, an investment that must be recovered through wages; we express skill levels directly in units of the wage they command.
-\pscomment{Give a brief intuition here as the aggregation stuff don't exist anymore.} Rather than formalize such a wage model here, we impose it as an assumption and develop a more detailed formulation in Section~\ref{sec:aggregation}.
+One motivation for this formulation is that workers make a human capital investment to acquire the skills their job demands, an investment that must be recovered through wages; we express skill levels directly in units of the wage they command.
+Intuitively, since workers are ex-ante identical, one will train for a more skill-demanding job only if the wage compensates the extra investment, so competition for workers ties the wage a job pays to the total skill it requires.
+Rather than formalize such a wage model here, we impose it as an assumption and develop a more detailed formulation in Section~\ref{sec:aggregation}.
 }
 The skill a job requires is the total skill of its tasks, so the worker's wage rate is
 \begin{align}
@@ -134,7 +138,7 @@ The skill a job requires is the total skill of its tasks, so the worker's wage r
 \text{Wage} = \sum_{T_b \in \T} \skillcost{b},
 \end{align}
 and the firm pays this rate for as long as the job takes, regardless of which task the worker is performing at any given moment.\footnote{
-This implicitly assumes a common base wage rate, so that all wage differences are driven by the human-capital cost of acquiring skills.
+This implicitly assumes a common base wage rate, so that all wage differences are driven by the human capital cost of acquiring skills.
 More generally, manual and AI-assisted tasks could carry different base wage rates $w_{\manualLetter}$ and $w_{\AIletter}$, reflecting the supply of and demand for each type of labor; Equation~\eqref{eq:wage} normalizes these rates to $1$ and folds them into the skill costs $\skillcost{b}$.
 We maintain this normalization for notational simplicity but it can be relaxed to more general cases.
 \label{foot:wage}
@@ -149,11 +153,13 @@ The labor cost (i.e., wage bill) of a job is therefore its wage rate times the t
 \end{align*}
 
 
-\subsection{The Firm's Problem}
+
+
+\subsection{Firm's Cost Minimization Problem}
 \label{sec:model.jobs}
 
 The firm deploys AI across its workflow to minimize production costs.
-We assume labor is the only cost of production and thus the firm minimizes its wage bill paid to workers it hires.
+Since labor is the only cost of production, the firm's objective is to minimizes its wage bill paid to workers.
 What the firm can adjust to lower its labor cost depends on the time horizon of optimization, and we distinguish three.
 
 In the \emph{short run}, the boundary of the job and wages are fixed as the firm has already hired a worker to do a designated set of tasks.
@@ -164,11 +170,10 @@ The firm therefore chooses its AI deployment strategy $\T$ to minimize the total
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
 AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
-%This short-run problem is the one we solve in the remainder of the body.
 
-In the \emph{medium run}, the boundary of the job remains fixed as plausibly reorganizing production and reassigning workers to tasks is implausible to take place, but free entry into jobs lets the firm adjust the wage it pays to the skill the job actually requires if AI lowers the cost executing the set of tasks in the job.
-Deploying AI can then lower cost on two margins at once, since an augmented or automated step may demand both less skill and less time than manual execution.
-Because the worker is paid in proportion to the job's skill for the entire time the job takes, the firm minimizes the product of the job's total skill and its total time,
+In the \emph{medium run}, the boundary of the job remains fixed, but competitive pressure on the worker side and free entry into jobs let the firm do two things at once: optimize the job's time cost \emph{and} adjust the wage to the skill the job actually requires once AI potentially lowers the cost of executing its tasks.
+Deploying AI lowers cost on both margins, since an augmented or automated step may demand both less skill and less time than manual execution.
+Because the worker is paid in proportion to the job's skill for the entire time the job takes, the firm minimizes the product of the job's total skill and its total time.
 \begin{align}
 \label{eq:totalcost_mediumrun}
 \min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
@@ -180,15 +185,51 @@ We develop this long-run problem, which nests the medium run as the special case
 
 
 
-\subsection{Optimal AI Deployment}
+\subsection{Solution to the Firm's Problem and Optimal AI Deployment}
 \label{sec:optimization.short}
 
-We now turn to solving the firm's short-run problem in \eqref{eq:totalcost_shortterm}.
+We now turn to solving the firm's short-run problem~\eqref{eq:totalcost_shortterm}.
 Although the number of possible AI strategies over the $m$ steps grows exponentially in $m$, the cost-minimizing strategy can be computed via dynamic programming in $O(m^2)$ time.
 
-\begin{proposition}
+\begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
-Given a workflow with $m$ steps, the cost-minimizing AI strategy can be calculated in time $O(m^2)$ via dynamic programming.
+Given a workflow with $m$ steps, the short-run cost-minimizing AI strategy can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
 
-The proof, a dynamic program over prefixes of the step sequence, is given in Appendix~\ref{app:omitted_proofs}.
+\begin{proof}
+We first note the following recursive formulation of the optimization problem.
+For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
+Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
+Note also that $C[m]$ is the cost of our desired optimal solution.
+
+We now show how to calculate $C[k]$ recursively.
+As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
+For $k \geq 1$, $C[k]$ is the lesser of
+\[ C[k-1] + \manualTime{k} \]
+and
+\[ \min_{\ell < k} \Biggl\{ C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
+\]
+In other words, we either complete step $k$ manually (at time $\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at expected time $\AItime{k}/\prod_{i=\ell+1}^k q_i$.
+In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
+This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
+For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
+
+Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
+Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
+\end{proof}
+
+We turn next to the medium-run problem~\eqref{eq:totalcost_mediumrun}, in which the firm minimizes the wage bill of the job, the product of the job's total skill and its total time.
+Because this objective is a product of two sums rather than a single sum, it is not additive across tasks, and the short-run dynamic program no longer applies.
+Proposition~\ref{prop:mediumrun_dp} shows that the medium-run problem admits a polynomial-time approximation scheme.
+
+\begin{proposition}[Medium-run AI Deployment]
+\label{prop:mediumrun_dp}
+Fix a workflow with $m$ steps whose skill and time costs lie in $[1/B, B]$ for some $B > 0$.
+For any $\epsilon > 0$, an AI strategy whose medium-run cost~\eqref{eq:totalcost_mediumrun} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+\end{proposition}
+
+The proof of Proposition~\ref{prop:mediumrun_dp} is more involved than that of the short run, and we delegate it to Appendix~\ref{app:omitted_proofs}.
+The idea is to track both the worker's accumulated skill and accumulated time as the firm decides on how to execute each step one at a time, discretizing each to a geometric grid so that the dynamic program runs in polynomial time; because the wage bill is the product of the two totals, it is evaluated only once every step has been assigned.
+Finally, the long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to a the worker it also chooses how tasks are allocated across different workers. 
+The full characterization of the problem and polynomial-time approximation of its solution are given in the job design appendix (Appendix~\ref{app:jobdesign}).
+
