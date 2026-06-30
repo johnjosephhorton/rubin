@@ -1,11 +1,11 @@
 \section{Model}
 
-A firm's workflow consists of a sequence of steps $\mathcal{S}=(s_1,\ldots,s_m)$.\footnote{
+A firm's production consists of a sequence of steps $\mathcal{S}=(s_1,\ldots,s_m)$.\footnote{
 We hold the set of production steps fixed and abstract from the creation or disappearance of steps in our model.
 }
 Each step can be performed manually, performed with AI assistance (augmentation), or, when chained with neighboring steps, executed by AI with no direct human involvement (automation).
 Completing a step requires worker time and skill, and these requirements differ across the modes of execution.
-The firm groups contiguous subsequences of steps into \emph{tasks}, choosing how to deploy AI across the steps of a worker's job to minimize production costs.
+The firm groups contiguous subsequences of steps into \emph{tasks}, choosing how to deploy AI across the workflow to minimize production costs.
 Figure~\ref{fig:steps_tasks} illustrates this procedure.
 We formally characterize the components of the figure below in turn, and then introduce the firm's optimal AI deployment strategy and show that it can be computed efficiently in polynomial time.
 
@@ -67,8 +67,7 @@ Managing one attempt at the chain therefore costs the same as augmenting step $s
 An attempt succeeds only if AI completes every step of the chain, which, assuming independent failures, occurs with probability $\prod_{i=\ell}^{r} q_i$; the chain is retried until it succeeds, for a total expected time of $\AItime{r}/\prod_{i=\ell}^{r} q_i$.
 The chain's skill and (expected) time costs are therefore $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$.
 Since $q_i = \alpha^{d_i}$, the chain succeeds with probability $\alpha^{\sum_{i=\ell}^{r} d_i}$, so $\sum_{i=\ell}^{r} d_i$ is the chain's total difficulty, aggregating additively over its constituent steps.
-
-An AI chain may consist of a single step, with $\ell = r$: having no automated predecessors, it is simply an augmented step.
+Finally, an AI chain may consist of a single step, with $\ell = r$: having no automated predecessors, it is simply an augmented step.
 An AI-augmented step is thus an AI chain of length one, a convention we adopt throughout the paper.
 
 Definitions~\ref{def:automated_task} and~\ref{def:ai_chain} formalize the automated execution mode and the AI chain.
@@ -115,38 +114,69 @@ $\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\
 
 
 
+\subsection{Jobs and Wages}
+\label{sec:jobs_wages}
+
+A \emph{job} is the set of tasks assigned to a single worker, that is, a contiguous block of the task sequence $\T$.
+The firm can in principle split its workflow into several jobs and hire a separate worker for each, and it is free to choose where one job ends and the next begins.
+This choice trades the gains from specializing workers on narrower sets of tasks against the coordination costs of splitting work across more of them, and it is what reallocates tasks across workers.
+We delegate the full characterization of this job-design problem, including what pins down the boundary of a job, to Appendix~\ref{app:jobdesign}.
+In the body we instead hold the boundary of a job fixed and exogenous, and treat the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, as a single worker's job.
+This job is the unit whose cost the firm minimizes.
+
+A worker is paid for the entire time their job takes to complete, at a rate equal to the skill the job requires.\footnote{
+One motivation for this formulation is that workers make a human-capital investment to acquire the skills their job demands, an investment that must be recovered through wages; we express skill levels directly in units of the wage they command.
+\pscomment{Give a brief intuition here as the aggregation stuff don't exist anymore.} Rather than formalize such a wage model here, we impose it as an assumption and develop a more detailed formulation in Section~\ref{sec:aggregation}.
+}
+The skill a job requires is the total skill of its tasks, so the worker's wage rate is
+\begin{align}
+\label{eq:wage}
+\text{Wage} = \sum_{T_b \in \T} \skillcost{b},
+\end{align}
+and the firm pays this rate for as long as the job takes, regardless of which task the worker is performing at any given moment.\footnote{
+This implicitly assumes a common base wage rate, so that all wage differences are driven by the human-capital cost of acquiring skills.
+More generally, manual and AI-assisted tasks could carry different base wage rates $w_{\manualLetter}$ and $w_{\AIletter}$, reflecting the supply of and demand for each type of labor; Equation~\eqref{eq:wage} normalizes these rates to $1$ and folds them into the skill costs $\skillcost{b}$.
+We maintain this normalization for notational simplicity but it can be relaxed to more general cases.
+\label{foot:wage}
+}
+The duration of a job is the total (expected) time requirement of its tasks,
+\begin{align*}
+\sum_{T_b \in \T} \timecost{b},
+\end{align*}
+The labor cost (i.e., wage bill) of a job is therefore its wage rate times the time it takes,
+\begin{align*}
+\text{Wage Bill} = \bigl(\sum_{T_b \in \T} \skillcost{b}\bigr)\bigl(\sum_{T_b \in \T} \timecost{b}\bigr).
+\end{align*}
+
+
 \subsection{The Firm's Problem}
 \label{sec:model.jobs}
 
-Executing a task requires a worker who possesses the skills it demands, for as long as the task takes to complete.
-A worker's wage is proportional to the skills they hold, and the firm pays that wage for the entire time the worker is at work.
-What the firm can adjust to lower its labor cost depends on the horizon, and we distinguish three.
+The firm deploys AI across its workflow to minimize production costs.
+We assume labor is the only cost of production and thus the firm minimizes its wage bill paid to workers it hires.
+What the firm can adjust to lower its labor cost depends on the time horizon of optimization, and we distinguish three.
 
-In the \emph{short run}, the firm has already hired its workers and fixed both the boundaries of their jobs and the skills they hold.
-These skill costs are sunk, since each worker is paid for the skills they hold regardless of how AI is deployed, so the only margin AI deployment can move is the time workers spend.
-The firm therefore chooses its AI deployment strategy $\T$ to minimize the total (expected) time of completing the workflow,
+In the \emph{short run}, the boundary of the job and wages are fixed as the firm has already hired a worker to do a designated set of tasks.
+The wage is then sunk, since the firm owes it for as long as the job takes no matter how AI is deployed, so the only margin AI can move is the time the job takes.
+The firm therefore chooses its AI deployment strategy $\T$ to minimize the total expected time of completing the workflow,
 \begin{align}
 \label{eq:totalcost_shortterm}
-\min_{\T} \
-\sum_{T_b \in \T} \timecost{b},
+\min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
-where $\timecost{b}$ is the (expected) time cost of task $T_b$ from Section~\ref{sec:model.tasks} and Table~\ref{tab:model_parameters}.
-AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers the expected time of production.
-This short-run problem is the one we solve in the remainder of the body.
+AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
+%This short-run problem is the one we solve in the remainder of the body.
 
-In the \emph{medium run}, job boundaries remain fixed, but the firm can also adjust the skills it hires: it can staff a job with a worker trained to exactly the skills its tasks require, performing the same set of tasks at a potentially lower wage.
-Deploying AI can then lower cost on two margins at once, since an augmented or automated step may demand less skill, and less time, than manual execution.
-Because the worker is paid in proportion to their skill for the whole time they spend on the job, the firm minimizes the product of the job's total skill and its total time,
+In the \emph{medium run}, the boundary of the job remains fixed as plausibly reorganizing production and reassigning workers to tasks is implausible to take place, but free entry into jobs lets the firm adjust the wage it pays to the skill the job actually requires if AI lowers the cost executing the set of tasks in the job.
+Deploying AI can then lower cost on two margins at once, since an augmented or automated step may demand both less skill and less time than manual execution.
+Because the worker is paid in proportion to the job's skill for the entire time the job takes, the firm minimizes the product of the job's total skill and its total time,
 \begin{align}
 \label{eq:totalcost_mediumrun}
-\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr),
+\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
 \end{align}
-the product of the sum of skill costs and the sum of (expected) time costs across the job's tasks.
 
-In the \emph{long run}, the firm additionally chooses the job boundaries themselves, partitioning the workflow into jobs.
-Designing a job around fewer tasks lets the firm hire a less skilled, and so lower-paid, worker for it, but splitting the work across more workers introduces coordination (hand-off) costs between them.
-The firm trades these two forces off, choosing the AI deployment and the job design jointly.
-We develop this long-run problem, which nests the medium-run problem as the special case of fixed job boundaries, in Appendix~\ref{app:jobdesign}.
+In the \emph{long run}, the firm additionally redraws the boundaries of jobs, reallocating tasks across workers in addition to optimizing the AI strategy in production.
+Narrowing a job lets the firm staff it with workers specializing to do specific tasks (thus requiring lower wages for fewer tasks), but splitting the workflow across more workers introduces coordination costs between them, and the firm chooses the AI deployment and the job design jointly to balance the two.
+We develop this long-run problem, which nests the medium run as the special case of fixed job boundaries, in Appendix~\ref{app:jobdesign}.
 
 
 
