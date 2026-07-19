@@ -172,7 +172,7 @@ The firm therefore chooses its AI deployment strategy $\T$ to minimize the total
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
 AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this (expected) time.
-Although the number of possible AI strategies over the $m$ steps grows exponentially in $m$, the cost-minimizing strategy can be computed via dynamic programming in $O(m^2)$ time, as shown in Proposition~\ref{prop:shortrun_dp} below.
+Although the number of possible AI strategies over the $m$ steps grows exponentially in $m$, the cost-minimizing strategy can be computed via dynamic programming in $O(m^2)$ time, as indicated in Proposition~\ref{prop:shortrun_dp}.
 
 \begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
@@ -206,7 +206,9 @@ Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corr
 \subsubsection{Medium Run: Fixed Job Boundaries, Adjustable Wages and Execution Times}
 \label{sec:model.mediumrun}
 In the medium run, the boundary of the job remains fixed, but competitive pressure on the worker side and free entry into jobs let the firm do two things at once: optimize the job's time cost \emph{and} adjust the wage to the skill the job actually requires once AI potentially lowers the cost of executing its tasks.
-Deploying AI lowers cost on both margins, since an augmented or automated step may demand both less skill and less time than manual execution.
+Deploying AI can potentially lower costs on both margins, since an augmented or automated step may demand both less skill and less time than manual execution.
+The firm thus minimizes the wage bill of jobs, taking the set of tasks in each as given.
+Minimizing total wage bill of all jobs when jobs are independent of one another can be simplified to minimizing the cost of each job independently, which is what we do below.
 Because the worker is paid in proportion to the job's skill for the entire time the job takes, the firm minimizes the product of the job's total skill and its total time.
 \begin{align}
 \label{eq:totalcost_mediumrun}
