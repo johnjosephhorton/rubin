@@ -156,10 +156,14 @@ In Example~\ref{ex:ca_predecessor}, the marginal cost of folding the pair $\{0, 
 \]
 of which the predecessor's share, $\AIskill{2}\AItime{2}(1-q_0)/(q_0 q_1 q_2) \approx 0.13$, is dwarfed by the $\approx 4.21$ its cheapest standalone execution would cost.
 
+We emphasize that both the marginal-cost test \eqref{eq:ca_test} and Lemma~\ref{lem:ca_predecessor} are \emph{local} statements: they compare rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence.
+That determination depends not just on a step's own characteristics and those of its neighbors but on the whole workflow at once, and is therefore hard to characterize in general.
+Nonetheless, the forces determining execution modes in the optimum are the ones identified here.
+
 The broader takeaway is that whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors.
 The pressure to fold a human-advantaged step into a chain can come from either an AI-reliable predecessor \emph{upstream} (Lemma~\ref{lem:ca_predecessor}) or a cheap chain endpoint \emph{downstream} (the marginal-cost test in \eqref{eq:ca_test}).
 Either way, a human-advantaged step sitting beside an AI-suitable run might be drawn into a chain and automated due to cost savings available in its local work context, whereas the same step sitting beside steps that AI completes only with low probability is likely to remain manual.
-A step with identical characteristics can therefore be automated in one workflow yet performed manually in another, depending only on the AI-suitability of its neighbors.
+A step with identical characteristics can therefore be automated in one workflow yet performed manually in another, depending on the AI-suitability of the workflow around it.
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that AI execution likelihood of a step depends on its local work context in different occupations.
 
 
