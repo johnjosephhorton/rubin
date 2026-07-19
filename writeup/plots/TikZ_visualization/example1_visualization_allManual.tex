@@ -1,0 +1,45 @@
+% Fragmentation example (interleaved, all-manual parameterization). Two layers:
+%  - top: each step's difficulty for AI (easy=teal, hard=red), alternating;
+%  - bottom: the optimal execution of each step (all manual=gray).
+% Standalone augmentation does not pay (management cost exceeds manual cost) and
+% no two easy steps are adjacent, so no chain forms: every step is manual and the
+% workflow uses no AI at all. Colors follow Figures 1-2.
+\begin{center}
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[>=latex,
+    box/.style={rectangle, rounded corners, draw, minimum width=1.8cm, minimum height=0.8cm, align=center, font=\small},
+    easy/.style={fill=teal!40},
+    hard/.style={fill=red!40},
+    manual/.style={fill=gray!10},
+    idx/.style={draw=none, font=\scriptsize},
+    rowlab/.style={draw=none, font=\footnotesize\itshape}]
+
+  % ---- top layer: step difficulty ----
+  \node[box, easy] (d1) {Easy};
+  \node[box, hard, right=0.6cm of d1] (d2) {Hard};
+  \node[box, easy, right=0.6cm of d2] (d3) {Easy};
+  \node[draw=none, right=0.45cm of d3] (dd) {$\cdots$};
+  \node[box, easy, right=0.45cm of dd] (d5) {Easy};
+  \node[box, hard, right=0.6cm of d5] (d6) {Hard};
+
+  \node[idx, above=1pt of d1] {Step 1};
+  \node[idx, above=1pt of d2] {Step 2};
+  \node[idx, above=1pt of d3] {Step 3};
+  \node[idx, above=1pt of d5] {Step $m{-}1$};
+  \node[idx, above=1pt of d6] {Step $m$};
+
+  % ---- bottom layer: optimal execution (tasks) ----
+  \node[box, manual, below=1.4cm of d1] (e1) {Manual};
+  \node[box, manual, below=1.4cm of d2] (e2) {Manual};
+  \node[box, manual, below=1.4cm of d3] (e3) {Manual};
+  \node[draw=none] (ed) at (dd |- e3) {$\cdots$};
+  \node[box, manual, below=1.4cm of d5] (e5) {Manual};
+  \node[box, manual, below=1.4cm of d6] (e6) {Manual};
+
+  \foreach \a/\b in {d1/e1,d2/e2,d3/e3,d5/e5,d6/e6} \draw[->,thick] (\a)--(\b);
+
+  \node[rowlab, left=0.5cm of d1] {Difficulty:};
+  \node[rowlab, left=0.5cm of e1] {Execution:};
+\end{tikzpicture}
+\end{adjustbox}
+\end{center}

@@ -176,20 +176,20 @@ They compare rearrangements of a step and its immediate neighbors while holding 
 That determination is more demanding and harder to characterize in general as it depends not just on a step's own characteristics and those of its neighbors but on the whole workflow at once.
 Nonetheless, the forces determining execution modes in the optimum are the ones outlined here.
 
-Even though characterizing the execution mode of each individual step in the optimal arrangement is hard, the overall gains from deploying AI in a job can still be studied without knowing precisely which steps end up automated.
-The next subsection shows that what governs these gains is not just how many of a workflow's steps are AI-friendly but how those steps are arranged relative to one another.
-
 
 \subsection{Job-level AI Exposure and the Fragmentation Index}
 \label{sec:fragmentation}
 
+Even though characterizing the execution mode of each individual step in the optimal arrangement is hard, the overall gains from deploying AI in a job can still be studied without knowing precisely which steps end up automated.
+% Here we show that what governs these gains is not just how many of a workflow's steps are AI-friendly but how those steps are arranged relative to one another.
 Returning to the firm's AI deployment problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:model.shortrun}, we can interpret job-level AI exposure as the extent to which an optimal AI strategy employs AI automation and augmentation.
 Intuitively, a run of consecutive steps in the workflow that an AI can perform effectively is a natural candidate for an AI chain.
 A job that contains such runs of consecutive steps is therefore likely to benefit most from AI automation.
 On the other hand, a job for which AI-friendly steps are separated by intermediate steps that an AI is likely to fail is less exposed to large-scale automation, even though its step-level exposure to AI may appear high. 
 The two examples below showcase this point.
+\textcolor{red}{[Draft note: two parameterizations of the example pair follow. Parameterization A uses integer costs; Parameterization B keeps every AI management cost at the normalized value $\AIskill{i}\AItime{i} = 1$ imposed for the fragmentation index below. We will keep one.]}
 
-\begin{example}
+\begin{example}[Parameterization A, interleaved]
 \label{ex:fragmentation_interleaved}
 Consider a job of $m$ steps (with $m$ even) with unit skill, so a task's cost equals its expected completion time.
 The steps alternate between \emph{easy} and \emph{hard} for AI: odd-numbered steps succeed with probability $q_i = 1$, while even-numbered steps succeed with probability only $q_i = 0.1$.
@@ -199,25 +199,24 @@ All steps share the costs below.
 \toprule
 \makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
 \midrule
-Odd $i$ (easy) & $(1, 5)$ & $(1, 1)$ & $1$ \\
-Even $i$ (hard) & $(1, 5)$ & $(1, 1)$ & $0.1$ \\
+Odd $i$ (easy) & $(1, 5)$ & $(1, 6)$ & $1$ \\
+Even $i$ (hard) & $(1, 5)$ & $(1, 6)$ & $0.1$ \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \vspace{0.25cm}
 
-\input{plots/TikZ_visualization/example1_visualization.tex}
+\input{plots/TikZ_visualization/example1_visualization_allManual.tex}
 
-Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes worthwhile.
-The firm therefore treats each step on its own.
-An easy step is cheaper augmented than performed manually, since $\AIskill{i}\AItime{i}/q_i = 1/1 = 1$ falls below $\manualSkill{i}\manualTime{i} = 5$, whereas a hard step is cheaper performed manually, since its manual cost $5$ falls below its augmentation cost $\AIskill{i}\AItime{i}/q_i = 1/0.1 = 10$.
-The optimal strategy thus augments the $m/2$ easy steps (cost $1$ each) and performs the $m/2$ hard steps manually (cost $5$ each), for a total cost of
+Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes an option.
+The firm therefore treats each step on its own, and on its own no step is worth executing with AI: managing a single AI attempt takes longer than doing the work manually, as even an easy step's augmentation cost $\AIskill{i}\AItime{i}/q_i = 6/1 = 6$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 5$ (for a hard step the gap widens to $6/0.1 = 60$ against $5$).
+The optimal strategy thus performs all $m$ steps manually and deploys no AI anywhere, for a total cost of
 \[
-\tfrac{m}{2}(1) + \tfrac{m}{2}(5) = 3m.
+m(5) = 5m.
 \]
 \end{example}
-\begin{example}
+\begin{example}[Parameterization A, clustered]
 \label{ex:fragmentation_clustered}
 Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly steps: the first $m/2$ steps are easy (each succeeds with probability $q_i = 1$) and the last $m/2$ are hard (each succeeds with probability $q_i = 0.1$).
 \begin{center}
@@ -225,8 +224,8 @@ Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved},
 \toprule
 \makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
 \midrule
-$i \le m/2$ (easy) & $(1, 5)$ & $(1, 1)$ & $1$ \\
-$i > m/2$ (hard) & $(1, 5)$ & $(1, 1)$ & $0.1$ \\
+$i \le m/2$ (easy) & $(1, 5)$ & $(1, 6)$ & $1$ \\
+$i > m/2$ (hard) & $(1, 5)$ & $(1, 6)$ & $0.1$ \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -238,15 +237,43 @@ $i > m/2$ (hard) & $(1, 5)$ & $(1, 1)$ & $0.1$ \\
 Now the easy steps form a contiguous run, so the firm can chain them: it automates the first $m/2 - 1$ at zero direct cost and verifies only once, at the end of the run.
 Because every easy step succeeds on the first attempt, the entire run of $m/2$ easy steps collapses to the single management cost of its augmented endpoint,
 \[
-\frac{\AIskill{m/2}\,\AItime{m/2}}{\prod_{i=1}^{m/2} q_i} = \frac{1}{1} = 1.
+\frac{\AIskill{m/2}\,\AItime{m/2}}{\prod_{i=1}^{m/2} q_i} = \frac{6}{1} = 6.
 \]
+Managing an AI attempt was too slow to pay at any single step, yet one verification covering the entire easy run pays easily, as the chain replaces the run's $m/2$ manual executions, costing $5m/2$ in total, with the single cost of $6$.
 The $m/2$ hard steps remain cheaper performed manually (cost $5$ each), for a total cost of
 \[
-1 + \tfrac{m}{2}(5) = 1 + \tfrac{5m}{2},
+6 + \tfrac{m}{2}(5) = 6 + \tfrac{5m}{2},
 \]
-strictly below the $3m$ of the interleaved arrangement whenever $m \geq 4$.
-The same steps thus yield very different automation outcomes depending only on whether the AI-friendly ones are clustered or dispersed.
+strictly below the $5m$ of the interleaved arrangement whenever $m \geq 4$.
 \end{example}
+
+\begin{example}[Parameterization B, interleaved]
+\label{ex:fragmentation_interleaved_norm}
+Consider the interleaved arrangement of Example~\ref{ex:fragmentation_interleaved} with the alternative costs below, which keep each step's AI management cost at the normalized value $\AIskill{i}\AItime{i} = 1$ and instead set the manual cost below it.
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+Odd $i$ (easy) & $(1, 0.9)$ & $(1, 1)$ & $1$ \\
+Even $i$ (hard) & $(1, 0.9)$ & $(1, 1)$ & $0.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The logic is unchanged: no two easy steps are adjacent, so no chain can form, and standalone augmentation does not pay, as even an easy step's augmentation cost $\AIskill{i}\AItime{i}/q_i = 1/1 = 1$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 0.9$ (a hard step's, $1/0.1 = 10$, all the more).
+Every step is again performed manually and no AI is deployed anywhere, for a total cost of $0.9m$; the execution pattern is that of the figure in Example~\ref{ex:fragmentation_interleaved}.
+\end{example}
+\begin{example}[Parameterization B, clustered]
+\label{ex:fragmentation_clustered_norm}
+Clustering the same steps as in Example~\ref{ex:fragmentation_clustered} again lets the firm chain the easy run, which collapses to its augmented endpoint's management cost $1/1 = 1$, while the hard half stays manual (cost $0.9$ each), for a total cost of
+\[
+1 + \tfrac{m}{2}(0.9) = 1 + 0.45m,
+\]
+strictly below the $0.9m$ of the interleaved arrangement whenever $m \geq 4$; the execution pattern is that of the figure in Example~\ref{ex:fragmentation_clustered}.
+\end{example}
+
+In either parameterization, the same steps yield very different automation outcomes depending only on whether the AI-friendly ones are clustered or dispersed.
+The contrast is, moreover, of a kind the data we bring to the model in Section~\ref{sec:empirics} can detect: augmented and automated execution are observationally equivalent there, so what distinguishes the two arrangements empirically is that the interleaved workflow uses no AI at all while the clustered workflow executes half its steps with AI.
 
 To make this intuition more precise, let us return to the firm's deployment problem in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:model.shortrun}.
 Consider the special case where AI management costs are normalized: $\AIskill{i}\AItime{i} = 1$ for all $i$.
