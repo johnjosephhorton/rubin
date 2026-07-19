@@ -14,7 +14,7 @@ With more than one step, however, the optimal deployment of AI depends on more t
 As a result, it is possible to have a step that is more cost-effective to perform manually be automated as part of a chain.
 In other words, the factor of production holding the comparative advantage on a step \emph{in isolation} need not be the one that performs it in the optimal production configuration.
 
-To see the forces determining the execution mode of a step, consider a step $k$ placed just before an AI chain that ends augmented at step $r$, and compare two ways of handling the block $k, \dotsc, r$ while leaving the rest of the workflow untouched: performing step $k$ manually alongside the chain over steps $k+1, \dotsc, r$, or extending the chain backward so that steps $k, \dotsc, r$ form a single chain.
+To see what determines the execution mode of a step, consider a step $k$ placed just before an AI chain that ends augmented at step $r$, and compare two ways of handling the block $k, \dotsc, r$ while leaving the rest of the workflow untouched: performing step $k$ manually alongside the chain over steps $k+1, \dotsc, r$, or extending the chain backward so that steps $k, \dotsc, r$ form a single chain.
 The two arrangements cost
 \begin{equation}
 \label{eq:ca_costs}
@@ -22,7 +22,7 @@ The two arrangements cost
 \qquad\text{and}\qquad
 \underbrace{\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i}}_{\text{single chain over $k, \dotsc, r$}}.
 \end{equation}
-Subtracting the two cost functions in \eqref{eq:ca_costs}, we find that the extended chain is the cheaper arrangement, so that step $k$ is appended to the chain, whenever
+Subtracting the two cost functions in \eqref{eq:ca_costs}, we see that the extended chain is the cheaper arrangement whenever
 \begin{equation}
 \label{eq:ca_test}
 \frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i} - \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}
@@ -30,7 +30,8 @@ Subtracting the two cost functions in \eqref{eq:ca_costs}, we find that the exte
 \manualSkill{k}\manualTime{k}.
 \end{equation}
 The left-hand side of \eqref{eq:ca_test} is the \emph{marginal cost} of appending step $k$ to the chain.
-Extending the chain automates step $k$ at zero direct cost: the worker still prompts for and verifies only the same endpoint $r$, so step $k$'s manual cost drops out, and the only new expense is that the chain now also fails, and must be retried, whenever AI fails at step $k$, which is why $q_k$ joins the denominator.
+Extending the chain automates step $k$ at zero direct cost: the worker still prompts for and verifies only the same endpoint $r$, so step $k$'s manual cost drops out. 
+The only new expense is that the chain now also fails whenever AI fails at step $k$, which is why $q_k$ appears in the denominator.
 Simplifying, the marginal cost is the endpoint's management cost inflated by the step's failure risk,
 \begin{equation}
 \label{eq:ca_margin}
@@ -42,7 +43,7 @@ Notably, step $k$'s own AI management cost $\AIskill{k}\AItime{k}$ appears nowhe
 What decides automation at the margin is thus not the step's standalone comparison of manual and augmentation costs, but the comparison of its manual cost with its marginal contribution to an adjacent chain, a quantity that shrinks toward zero as AI executes the step more reliably ($q_k \to 1$).
 
 Appending a step to a chain that follows it is not the only route into automation, however.
-Even when condition \eqref{eq:ca_test} fails, the step can still end up automated when an AI-friendly step precedes it, that is, when automation pressure arrives from upstream rather than downstream.
+Even when condition \eqref{eq:ca_test} fails, the step can still end up automated when an AI-friendly step precedes it.
 Consider a step at position $k-1$ that AI can execute very reliably (i.e., high $q_{k-1}$) but that is expensive to carry out on its own, whether manually or as a standalone augmented step.
 Because a chain pays only for the management of its augmented endpoint, such a step is cheapest to absorb at the start of a chain, where its own direct cost goes unpaid.
 And because chains are contiguous, the chain this step anchors must run forward through its successors to reach a cheap verification endpoint downstream.
@@ -147,12 +148,19 @@ To see why the pair nonetheless goes under AI together, decompose its joint fail
 \]
 Step $k$'s share is exactly the marginal cost of folding it in alone, which by the second condition in \eqref{eq:pred_local} already exceeds its manual cost.
 The predecessor's share is governed by $1 - q_{k-1}$ alone, which shrinks toward zero as the predecessor becomes reliable for AI, even as its standalone execution cost stays large.
-The reversal in \eqref{eq:pred_chain} therefore runs entirely through the predecessor: its near-zero marginal term, set against the large standalone cost it displaces, is what covers step $k$'s shortfall and pulls the human-advantaged step under AI.
-In Example~\ref{ex:ca_predecessor}, the marginal cost of folding the pair $\{0, 1\}$ into the chain ending at Step~2 is
+The reversal in \eqref{eq:pred_chain} therefore runs entirely through the predecessor: its small marginal cost term, set against the large standalone cost it displaces, is what covers step $k$'s shortfall and pulls the human-advantaged step under AI.
+In Example~\ref{ex:ca_predecessor}, condition \eqref{eq:pred_chain} for folding the pair $\{0, 1\}$ into the chain ending at Step~2 reads, component by component,
 \[
-\frac{\AIskill{2}\AItime{2}\,(1-q_0 q_1)}{q_0\, q_1\, q_2} = \frac{(1)\bigl(1 - (0.95)(0.5)\bigr)}{(0.95)(0.5)(0.8)} \approx 1.38 \;<\; 5.21 = \min\!\left\{\manualSkill{0}\manualTime{0},\ \frac{\AIskill{0}\AItime{0}}{q_0}\right\} + \manualSkill{1}\manualTime{1},
+\underbrace{\frac{\AIskill{2}\AItime{2}\,(1-q_0)}{q_0\, q_1\, q_2}}_{\substack{\text{Step 0's share} \\ \approx\, 0.13}}
+\;+\;
+\underbrace{\frac{\AIskill{2}\AItime{2}\,(1-q_1)}{q_1\, q_2}}_{\substack{\text{Step 1's share} \\ =\, 1.25}}
+\;<\;
+\underbrace{\min\!\left\{\manualSkill{0}\manualTime{0},\ \frac{\AIskill{0}\AItime{0}}{q_0}\right\}}_{\substack{\text{cheapest standalone Step 0} \\ \approx\, 4.21}}
+\;+\;
+\underbrace{\manualSkill{1}\manualTime{1}}_{\substack{\text{manual Step 1} \\ =\, 1}}.
 \]
-of which the predecessor's share, $\AIskill{2}\AItime{2}(1-q_0)/(q_0 q_1 q_2) \approx 0.13$, is dwarfed by the $\approx 4.21$ its cheapest standalone execution would cost.
+Totaling each side, the pair's marginal cost, $0.13 + 1.25 \approx 1.38$, falls well below the $4.21 + 1 \approx 5.21$ of running the pair on its own.
+The numbers also show where the reversal comes from: Step~1's share ($1.25$) exceeds the manual cost ($1$) it replaces, so Step~1 does not pay its own way; it is Step~0's nearly free share ($0.13$), set against the $4.21$ standalone execution it displaces, that tips the balance.
 
 The broader takeaway is that whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors.
 The pressure to fold a human-advantaged step into a chain can come from either an AI-reliable predecessor \emph{upstream} (Lemma~\ref{lem:ca_predecessor}) or a cheap chain endpoint \emph{downstream} (the marginal-cost test in \eqref{eq:ca_test}).
