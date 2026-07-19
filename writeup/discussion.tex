@@ -16,7 +16,7 @@ In other words, the factor of production holding the comparative advantage on a 
 
 In what follows we first describe the margin that governs whether an individual step is automated, then show in an example how this margin can overturn comparative advantage, and finally formalize the mechanism in Lemma~\ref{lem:ca_predecessor}.
 
-To see what determines the automation of a step, consider a step $k$ placed just before an AI chain that ends augmented at step $r$, and compare two ways of handling the block $k, \dotsc, r$ while leaving the rest of the workflow untouched: performing step $k$ manually alongside the chain over steps $k+1, \dotsc, r$, or extending the chain backward so that steps $k, \dotsc, r$ form a single chain.
+To see the forces determining execution mode a step, consider a step $k$ placed just before an AI chain that ends augmented at step $r$, and compare two ways of handling the block $k, \dotsc, r$ while leaving the rest of the workflow untouched: performing step $k$ manually alongside the chain over steps $k+1, \dotsc, r$, or extending the chain backward so that steps $k, \dotsc, r$ form a single chain.
 The two arrangements cost
 \begin{equation}
 \label{eq:ca_costs}
@@ -44,9 +44,9 @@ Notably, step $k$'s own AI management cost $\AIskill{k}\AItime{k}$ appears nowhe
 What decides automation at the margin is thus not the step's standalone comparison of manual and augmentation costs, but the comparison of its manual cost with its marginal contribution to an adjacent chain, a quantity that shrinks toward zero as AI executes the step more reliably ($q_k \to 1$).
 
 Appending a step to a chain that follows it is not the only route into automation, however.
-Even when condition \eqref{eq:ca_test} fails, so that folding step $k$ into a following chain does not pay on its own, the step can still end up automated when an AI-friendly step precedes it, that is, when the pressure arrives from upstream rather than downstream.
+Even when condition \eqref{eq:ca_test} fails, so that folding step $k$ into a following chain does not pay on its own, the step can still end up automated when an AI-friendly step precedes it, that is, when automation pressure arrives from upstream rather than downstream.
 Consider a step at position $k-1$ that AI can execute very reliably (i.e., high $q_{k-1}$) but that is expensive to carry out on its own, whether manually or as a standalone augmented step.
-Because a chain pays only for the management of its augmented endpoint, such a step would be cheaper if absorbed in a chain, where its own management cost goes unpaid.
+Because a chain pays only for the management of its augmented endpoint, such a step would be cheaper if absorbed in a chain, where its own direct cost goes unpaid.
 And because chains are contiguous, the chain this step anchors must run forward through its successors to reach a cheap verification endpoint downstream.
 A human-advantaged step that lies in between can therefore get pulled into the chain and automated, even though nothing about the step itself favors AI.
 Example~\ref{ex:ca_predecessor} shows this numerically.
@@ -136,9 +136,20 @@ then the strategy is not cost-minimizing: running $k-1$, $k$, $k+1$ as a single 
 The human-advantaged step $k$ is thus automated in the cheaper arrangement, drawn into a chain begun by the predecessor step $k-1$.
 \end{lem}
 
+The intuition behind the lemma is as follows.
 Because the chain ending augmented at $k+1$ pays only for its endpoint, absorbing the pair $\{k-1, k\}$ costs just the endpoint's management inflated by the pair's joint failure risk $1 - q_{k-1}q_k$, and nothing to manage either step inside it.
 The first condition in \eqref{eq:pred_local} makes the endpoint AI-attractive on its own, while the second is the marginal-cost test \eqref{eq:ca_test} with endpoint $r = k+1$ running the other way, ruling out step $k$ being pulled in on its own merits.
-The reversal in \eqref{eq:pred_chain} therefore runs entirely through the predecessor: its marginal contribution to the chain's failure risk, governed by $1 - q_{k-1}$, shrinks toward zero as the predecessor becomes reliable for AI, even as the standalone execution cost it displaces stays large.
+To see why the pair nonetheless goes under AI together, decompose its joint failure risk as $1 - q_{k-1}q_k = (1-q_{k-1}) + q_{k-1}(1-q_k)$, which splits the marginal cost of folding the pair into a separate contribution from each step,
+\[
+\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_{k-1}q_k)}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{marginal cost of folding the pair $\{k-1, k\}$}}
+\;=\;
+\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_{k-1})}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{step $k-1$'s share}}
+\;+\;
+\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_k)}{q_k\,q_{k+1}}}_{\text{step $k$'s share}}.
+\]
+Step $k$'s share is exactly the marginal cost of folding it in alone, which by the second condition in \eqref{eq:pred_local} already exceeds its manual cost.
+The predecessor's share is governed by $1 - q_{k-1}$ alone, which shrinks toward zero as the predecessor becomes reliable for AI, even as its standalone execution cost stays large.
+The reversal in \eqref{eq:pred_chain} therefore runs entirely through the predecessor: its near-zero marginal term, set against the large standalone cost it displaces, is what covers step $k$'s shortfall and pulls the human-advantaged step under AI.
 In Example~\ref{ex:ca_predecessor}, the marginal cost of folding the pair $\{0, 1\}$ into the chain ending at step~2 is
 \[
 \frac{\AIskill{2}\AItime{2}\,(1-q_0 q_1)}{q_0\, q_1\, q_2} = \frac{(1)\bigl(1 - (0.95)(0.5)\bigr)}{(0.95)(0.5)(0.8)} \approx 1.38 \;<\; 5.21 = \min\!\left\{\manualSkill{0}\manualTime{0},\ \frac{\AIskill{0}\AItime{0}}{q_0}\right\} + \manualSkill{1}\manualTime{1},
