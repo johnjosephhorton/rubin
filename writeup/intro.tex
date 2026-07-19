@@ -9,8 +9,8 @@ We argue that this sequencing is economically consequential and should be consid
 
 We model production as a Leontief technology over an ordered sequence of exogenously specified \emph{steps}, and treat the definition of tasks and their partitioning across jobs as endogenous outcomes.
 A \emph{step} is the primitive unit of work in our framework, corresponding to what classic models would call a ``task.''
-We instead reserve the term \emph{task} for a contiguous block of steps that the firm endogenously designates for joint execution by a human worker.
-In the absence of AI, tasks optimally collapse to single-step blocks so that steps and tasks coincide.
+We instead reserve the term \emph{task} for a contiguous block of steps that the firm endogenously designates for joint execution by a human worker, potentially in collaboration with AI.
+In the absence of AI, tasks optimally collapse to single-step blocks so that steps and tasks coincide.  In the presence of AI, some steps are chained together and automated, creating a meta-task whose output is validated by a human worker.
 % Relative to standard task-based formulations, we endogenize what constitutes a task and adopt a sequential Leontief structure to discipline the implied complementarities across production steps.
 
 Firms seek to minimize production costs by choosing which steps of the sequence to delegate to AI and which to assign to human workers.
@@ -21,12 +21,12 @@ Compared to earlier waves of automation, AI is different in two related ways.
 First, its capabilities are broad and potentially relevant across many points in production, but also highly jagged, with sharp variation in performance even across adjacent steps in a workflow \citep{dell2023navigating}. 
 Second, getting value from AI often requires engineering the right context and interfaces, so the costs of sequencing work and handing off intermediate outputs become central. 
 As a result, improvements in AI can shift deployment decisions at multiple points across the production chain at once, triggering discrete changes in overall production strategy. 
-By endogenizing task sequencing and the formation of AI chains, we capture these non-local effects of AI capability changes on task allocation. 
+By endogenizing task sequencing and the formation of AI chains, we capture these non-local effects of AI capability changes on the definition of a task and its allocation to manual or AI-augmented labor. 
 We further extend the framework to job design and internal reorganization of the firm in the long run (Appendix~\ref{app:jobdesign}).
 
 We distinguish three horizons in our framework by the degree of flexibility in organizational adjustment, and study how AI affects production in each.
-In the short run, the firm takes its workers, their job boundaries, and their already-set wages as given, and optimizes AI deployment to minimize the expected time of production.
-In the medium run, job boundaries remain fixed, but free entry lets the firm adjust each worker's wage to the skill their job actually requires, so AI deployment is chosen to minimize the wage bill.
+In the short run, the firm takes its workers, their job boundaries, and their already-set wages as given, and optimizes AI deployment to minimize the expected time to produce the product.
+In the medium run, job boundaries remain fixed, but free entry lets the firm adjust each worker's wage to the skill their job actually requires, so AI deployment may be chosen to further lower the wage bill.
 In the long run, the firm can also reorganize its workflow, adjusting job boundaries, skill requirements, and AI deployment in tandem: an extension we develop in Appendix~\ref{app:jobdesign}.
 Table~\ref{tab:short_long_run} summarizes the key distinctions across the three horizons.
 \begin{table}[htbp]
@@ -87,13 +87,13 @@ Output verification is therefore a fixed cost of the chain rather than a margina
 That is, appending a neighboring step to an existing AI chain adds no additional verification burden, while it may reduce the probability of AI's end-to-end successful completion of the extended chain.
 By contrast, assigning the neighboring step to a human terminates the chain and creates an additional human checkpoint, which entails another output verification (if the step is augmented with AI) or the cost of human execution (if the step is performed manually).
 When AI is sufficiently reliable on the marginal step, avoiding this additional human checkpoint can dominate, pulling the step into AI execution even if manual human execution is preferred for it in isolation.
-For example, in the data scientist workflow the worker verifies the report once at Step~4, so verifying a report produced after AI executes Steps~3--4 requires the same effort as verifying a report produced after AI executes Step 4; the only difference is that the AI is less likely to succeed at the latter on any given try.
+For example, in the data scientist workflow the worker verifies the report once at Step~4, so verifying a report produced after AI executes Steps~3--4 requires the same effort as verifying a report produced after AI executes only Step 4; the only difference is that the AI is less likely to succeed at the former on any given try.
 
 A second force can overturn comparative advantage from the opposite side of a step.
 AI performs some steps reliably, yet they remain costly to handle on their own, whether manually or as a standalone augmented task.
 A cheaper way to execute such cases is to absorb it in an AI chain, where, because a human checks only the chain's final output, the step itself carries no separate AI management cost.
 Because a chain is an unbroken run over consecutive steps, starting one at such a step carries it forward through other steps up to the verification endpoint, pulling a human-advantaged step that lies in between into automation even though nothing about it favors AI.
-In the data scientist's workflow example, if AI reliably finds and fetches the data (Step~2) but doing so on its own (or verifying it) is very costly, it is cheaper to begin a chain there, which then runs through the analysis (Step~3) to the report the worker checks (Step~4), automating the analysis step even though the worker might otherwise write that code manually.
+In the data scientist's workflow example, if AI reliably finds and fetches the data (Step~2) but verifying it is very costly, it is cheaper to begin a chain there, which then runs through the analysis (Step~3) to the report the worker checks (Step~4), automating the analysis step even though the worker might otherwise write that code manually.
 In both cases, what tips a step into automation is not its own characteristics alone but also those of its neighbors.
 
 More generally, we should expect the gains from AI automation to be greatest when automable steps co-occur in the workflow.
@@ -108,7 +108,8 @@ In Section~\ref{sec:empirics} we provide empirical evidence that jobs with highe
 Each step carries a time requirement and a skill requirement, which differ across its modes of execution.
 Assigning steps to production factors to optimize production costs is not a completely trivial optimization problem, even computationally. 
 For a firm with $m$ steps in its workflow, the number of possible production arrangements grows exponentially in $m$. 
-For the firm's short-run AI deployment problem, we show how to compute the cost-minimizing strategy for an $m$-step workflow in time $O(m^2)$ using dynamic programming.
+For the firm's short-run AI deployment problem, we show how to compute the cost-minimizing strategy for an $m$-step workflow in time $O(m^2)$ using dynamic programming.  To further develop intuition for the structure of the optimal solution, we introduce the fragmentation index, a measure of the expected cost of an optimal execution plan with foresight into AI's successes and failures.  We prove that this index approximates the value of the dynamic program.  The proof proceeds by arguing that both the exact and approximate plans drive down costs by chaining together easy tasks, suggesting that the fragmentation of easy tasks among hard ones controls the impact of AI on production.
+
 The medium- and long-run optimization problems are harder to solve directly, as AI deployment is determined jointly with worker wages (medium-run) and job boundaries (long-run), but nevertheless remain tractable.
 Indeed, we provide algorithms that approximate both optimal solutions in polynomial time subject to an error term that can be made arbitrarily small.
 Although we do not do it in this paper, this algorithmic approach could be combined with micro-details of task content to create rich estimates of how technological change in various tasks would impact workers.
