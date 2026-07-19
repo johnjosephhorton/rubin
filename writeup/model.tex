@@ -172,7 +172,7 @@ The firm therefore chooses its AI deployment strategy $\T$ to minimize the total
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
 AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this (expected) time.
-Although the number of possible AI strategies over the $m$ steps grows exponentially in $m$, the cost-minimizing strategy can be computed via dynamic programming in $O(m^2)$ time.
+Although the number of possible AI strategies over the $m$ steps grows exponentially in $m$, the cost-minimizing strategy can be computed via dynamic programming in $O(m^2)$ time, as shown in Proposition~\ref{prop:shortrun_dp} below.
 
 \begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
@@ -213,8 +213,7 @@ Because the worker is paid in proportion to the job's skill for the entire time 
 \min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
 \end{align}
 
-Next we turn to solving the medium-run problem.
-In \eqref{eq:totalcost_mediumrun} the firm minimizes the wage bill of the job, the product of the job's total skill and its total time.
+In \eqref{eq:totalcost_mediumrun} the firm minimizes the wage bill of the job.
 Because this objective is a product of two sums rather than a single sum, it is not additive across tasks, and the short-run dynamic program no longer applies.
 Proposition~\ref{prop:mediumrun_dp} shows that the medium-run problem admits a polynomial-time approximation scheme.
 
@@ -225,13 +224,16 @@ For any $\epsilon > 0$, an AI strategy whose medium-run cost~\eqref{eq:totalcost
 \end{proposition}
 
 The proof of Proposition~\ref{prop:mediumrun_dp} is more involved than that of the short run, and we delegate it to Appendix~\ref{app:omitted_proofs}.
-The idea is to track both the worker's accumulated skill and accumulated time as the firm decides on how to execute each step one at a time, discretizing each to a geometric grid so that the dynamic program runs in polynomial time; because the wage bill is the product of the two totals, it is evaluated only once every step has been assigned.
+The idea behind the optimization is to track both the worker's accumulated skill and accumulated time as the firm decides on how to execute each step one at a time in a dynamic program. 
+Because the wage bill is the product of the two totals, it is evaluated only once every step has been assigned.
+We then discretize each cost dimension to a geometric grid so that the dynamic program runs in polynomial time subject to an error term than can be arbitrarily small.
 
 
 \subsubsection{Long Run: Adjustable Job Boundaries, Wages, and Execution Times}
 \label{sec:model.longrun}
-In the long run, the firm additionally redraws the boundaries of jobs, reallocating tasks across workers in addition to optimizing the AI strategy in production.
+In the long run, the firm can also redraw the boundaries of jobs, reallocating tasks across workers in addition to optimizing wages and the AI strategy in production.
 Narrowing a job lets the firm staff it with workers specializing to do specific tasks (thus requiring lower wages for fewer tasks), but splitting the workflow across more workers introduces coordination costs between them, and the firm chooses the AI deployment and the job design jointly to balance the two.
+We introduce an additional ``hand-off'' time cost, to capture the coordination friction when worker pass intermediate outputs between them.
 We develop this long-run problem, which nests the medium run as the special case of fixed job boundaries, in Appendix~\ref{app:jobdesign}.
-The solution of the long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to the worker it also chooses how tasks are allocated across different workers.
+The cost minimization of the firm's long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to the worker it also chooses how tasks are allocated across different workers.
 The full characterization of the problem and polynomial-time approximation of its solution are given in the job design appendix (Appendix~\ref{app:jobdesign}).
