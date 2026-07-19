@@ -187,9 +187,8 @@ Intuitively, a run of consecutive steps in the workflow that an AI can perform e
 A job that contains such runs of consecutive steps is therefore likely to benefit most from AI automation.
 On the other hand, a job for which AI-friendly steps are separated by intermediate steps that an AI is likely to fail is less exposed to large-scale automation, even though its step-level exposure to AI may appear high. 
 The two examples below showcase this point.
-\textcolor{red}{[Draft note: two parameterizations of the example pair follow. Parameterization A uses integer costs; Parameterization B keeps every AI management cost at the normalized value $\AIskill{i}\AItime{i} = 1$ imposed for the fragmentation index below. We will keep one.]}
 
-\begin{example}[Parameterization A, interleaved]
+\begin{example}
 \label{ex:fragmentation_interleaved}
 Consider a job of $m$ steps (with $m$ even) with unit skill, so a task's cost equals its expected completion time.
 The steps alternate between \emph{easy} and \emph{hard} for AI: odd-numbered steps succeed with probability $q_i = 1$, while even-numbered steps succeed with probability only $q_i = 0.1$.
@@ -216,7 +215,7 @@ The optimal strategy thus performs all $m$ steps manually and deploys no AI anyw
 m(5) = 5m.
 \]
 \end{example}
-\begin{example}[Parameterization A, clustered]
+\begin{example}
 \label{ex:fragmentation_clustered}
 Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly steps: the first $m/2$ steps are easy (each succeeds with probability $q_i = 1$) and the last $m/2$ are hard (each succeeds with probability $q_i = 0.1$).
 \begin{center}
@@ -247,41 +246,7 @@ The $m/2$ hard steps remain cheaper performed manually (cost $5$ each), for a to
 strictly below the $5m$ of the interleaved arrangement whenever $m \geq 4$.
 \end{example}
 
-\begin{example}[Parameterization B, interleaved]
-\label{ex:fragmentation_interleaved_norm}
-Consider the interleaved arrangement of Example~\ref{ex:fragmentation_interleaved} with the alternative costs below, which keep each step's AI management cost at the normalized value $\AIskill{i}\AItime{i} = 1$ and instead set the manual cost below it.
-\begin{center}
-\begin{tabular}{c|ccc}
-\toprule
-\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
-\midrule
-Odd $i$ (easy) & $(1, 0.9)$ & $(1, 1)$ & $1$ \\
-Even $i$ (hard) & $(1, 0.9)$ & $(1, 1)$ & $0.1$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\vspace{0.25cm}
-
-\input{plots/TikZ_visualization/example1_visualization_allManual.tex}
-
-The logic is unchanged: no two easy steps are adjacent, so no chain can form, and standalone augmentation does not pay, as even an easy step's augmentation cost $\AIskill{i}\AItime{i}/q_i = 1/1 = 1$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 0.9$ (a hard step's, $1/0.1 = 10$, all the more).
-Every step is again performed manually and no AI is deployed anywhere, for a total cost of $0.9m$.
-\end{example}
-\begin{example}[Parameterization B, clustered]
-\label{ex:fragmentation_clustered_norm}
-Clustering the steps of Example~\ref{ex:fragmentation_interleaved_norm} again lets the firm chain the easy run, which collapses to its augmented endpoint's management cost $1/1 = 1$, while the hard half stays manual (cost $0.9$ each), for a total cost of
-\[
-1 + \tfrac{m}{2}(0.9) = 1 + 0.45m,
-\]
-strictly below the $0.9m$ of the interleaved arrangement whenever $m \geq 4$.
-
-\vspace{0.25cm}
-
-\input{plots/TikZ_visualization/example2_visualization.tex}
-\end{example}
-
-In either parameterization, the same steps yield very different automation outcomes depending only on whether the AI-friendly ones are clustered or dispersed.
+The same steps thus yield very different automation outcomes depending only on whether the AI-friendly ones are clustered or dispersed.
 The contrast is, moreover, of a kind the data we bring to the model in Section~\ref{sec:empirics} can detect: augmented and automated execution are observationally equivalent there, so what distinguishes the two arrangements empirically is that the interleaved workflow uses no AI at all while the clustered workflow executes half its steps with AI.
 
 To make this intuition more precise, let us return to the firm's deployment problem in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:model.shortrun}.
