@@ -160,35 +160,18 @@ The labor cost (i.e., wage bill) of a job is therefore its wage rate times the t
 
 The firm deploys AI across its workflow to minimize production costs.
 Since labor is the only cost of production, the firm's objective is to minimizes its wage bill paid to workers.
-What the firm can adjust to lower its labor cost depends on the time horizon of optimization, and we distinguish three.
+What the firm can adjust to lower its labor cost depends on the time horizon of optimization, and we distinguish three as outlined in Table~\ref{tab:short_long_run}.
 
-In the \emph{short run}, the boundary of the job and wages are fixed as the firm has already hired a worker to do a designated set of tasks.
+\subsubsection{Short Run}
+\label{sec:model.shortrun}
+In the short run, the boundary of the job and wages are fixed as the firm has already hired a worker to do a designated set of tasks.
 The wage is then sunk, since the firm owes it for as long as the job takes no matter how AI is deployed, so the only margin AI can move is the time the job takes.
 The firm therefore chooses its AI deployment strategy $\T$ to minimize the total expected time of completing the workflow,
 \begin{align}
 \label{eq:totalcost_shortterm}
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
-AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
-
-In the \emph{medium run}, the boundary of the job remains fixed, but competitive pressure on the worker side and free entry into jobs let the firm do two things at once: optimize the job's time cost \emph{and} adjust the wage to the skill the job actually requires once AI potentially lowers the cost of executing its tasks.
-Deploying AI lowers cost on both margins, since an augmented or automated step may demand both less skill and less time than manual execution.
-Because the worker is paid in proportion to the job's skill for the entire time the job takes, the firm minimizes the product of the job's total skill and its total time.
-\begin{align}
-\label{eq:totalcost_mediumrun}
-\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
-\end{align}
-
-In the \emph{long run}, the firm additionally redraws the boundaries of jobs, reallocating tasks across workers in addition to optimizing the AI strategy in production.
-Narrowing a job lets the firm staff it with workers specializing to do specific tasks (thus requiring lower wages for fewer tasks), but splitting the workflow across more workers introduces coordination costs between them, and the firm chooses the AI deployment and the job design jointly to balance the two.
-We develop this long-run problem, which nests the medium run as the special case of fixed job boundaries, in Appendix~\ref{app:jobdesign}.
-
-
-
-\subsection{Solution to the Firm's Problem and Optimal AI Deployment}
-\label{sec:optimization.short}
-
-We now turn to solving the firm's short-run problem~\eqref{eq:totalcost_shortterm}.
+AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this (expected) time.
 Although the number of possible AI strategies over the $m$ steps grows exponentially in $m$, the cost-minimizing strategy can be computed via dynamic programming in $O(m^2)$ time.
 
 \begin{proposition}[Short-run AI Deployment]
@@ -218,7 +201,20 @@ Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calcul
 Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
 \end{proof}
 
-We turn next to the medium-run problem~\eqref{eq:totalcost_mediumrun}, in which the firm minimizes the wage bill of the job, the product of the job's total skill and its total time.
+
+
+\subsubsection{Medium Run}
+\label{sec:model.mediumrun}
+In the medium run, the boundary of the job remains fixed, but competitive pressure on the worker side and free entry into jobs let the firm do two things at once: optimize the job's time cost \emph{and} adjust the wage to the skill the job actually requires once AI potentially lowers the cost of executing its tasks.
+Deploying AI lowers cost on both margins, since an augmented or automated step may demand both less skill and less time than manual execution.
+Because the worker is paid in proportion to the job's skill for the entire time the job takes, the firm minimizes the product of the job's total skill and its total time.
+\begin{align}
+\label{eq:totalcost_mediumrun}
+\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
+\end{align}
+
+Next we turn into solving the medium-run problem. 
+In \eqref{eq:totalcost_mediumrun} the firm minimizes the wage bill of the job, the product of the job's total skill and its total time.
 Because this objective is a product of two sums rather than a single sum, it is not additive across tasks, and the short-run dynamic program no longer applies.
 Proposition~\ref{prop:mediumrun_dp} shows that the medium-run problem admits a polynomial-time approximation scheme.
 
@@ -230,6 +226,12 @@ For any $\epsilon > 0$, an AI strategy whose medium-run cost~\eqref{eq:totalcost
 
 The proof of Proposition~\ref{prop:mediumrun_dp} is more involved than that of the short run, and we delegate it to Appendix~\ref{app:omitted_proofs}.
 The idea is to track both the worker's accumulated skill and accumulated time as the firm decides on how to execute each step one at a time, discretizing each to a geometric grid so that the dynamic program runs in polynomial time; because the wage bill is the product of the two totals, it is evaluated only once every step has been assigned.
-Finally, the long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to a the worker it also chooses how tasks are allocated across different workers. 
-The full characterization of the problem and polynomial-time approximation of its solution are given in the job design appendix (Appendix~\ref{app:jobdesign}).
 
+
+\subsubsection{Long Run}
+\label{sec:model.longrun}
+In the long run, the firm additionally redraws the boundaries of jobs, reallocating tasks across workers in addition to optimizing the AI strategy in production.
+Narrowing a job lets the firm staff it with workers specializing to do specific tasks (thus requiring lower wages for fewer tasks), but splitting the workflow across more workers introduces coordination costs between them, and the firm chooses the AI deployment and the job design jointly to balance the two.
+We develop this long-run problem, which nests the medium run as the special case of fixed job boundaries, in Appendix~\ref{app:jobdesign}.
+The solution of the long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to a the worker it also chooses how tasks are allocated across different workers. 
+The full characterization of the problem and polynomial-time approximation of its solution are given in the job design appendix (Appendix~\ref{app:jobdesign}).
