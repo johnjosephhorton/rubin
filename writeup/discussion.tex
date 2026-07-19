@@ -24,29 +24,32 @@ The two arrangements cost
 \qquad\text{and}\qquad
 \underbrace{\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i}}_{\text{single chain over $k, \dotsc, r$}}.
 \end{equation}
-Extending the chain automates step $k$ at zero direct cost: the worker still prompts for and verifies only the same endpoint $r$, so step $k$'s manual cost drops out of \eqref{eq:ca_costs}, and the only new expense is that the chain now also fails, and must be retried, whenever AI fails at step $k$, which is why $q_k$ joins the denominator.
-Subtracting the cost of the shorter chain from that of the extended one, the marginal cost of absorbing step $k$ is the endpoint's management cost inflated by the step's failure risk,
+Subtracting the two cost functions in \eqref{eq:ca_costs}, the extended chain is the cheaper arrangement, so that step $k$ is appended to the chain, whenever
+\begin{equation}
+\label{eq:ca_test}
+\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i} - \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}
+\;<\;
+\manualSkill{k}\manualTime{k}.
+\end{equation}
+The left-hand side of \eqref{eq:ca_test} is the \emph{marginal cost} of appending step $k$ to the chain.
+Extending the chain automates step $k$ at zero direct cost: the worker still prompts for and verifies only the same endpoint $r$, so step $k$'s manual cost drops out, and the only new expense is that the chain now also fails, and must be retried, whenever AI fails at step $k$, which is why $q_k$ joins the denominator.
+Simplifying, the marginal cost is the endpoint's management cost inflated by the step's failure risk,
 \begin{equation}
 \label{eq:ca_margin}
 \frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i} - \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}
 \;=\;
 \underbrace{\frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i}}_{\text{marginal cost of folding step $k$ into the chain}}.
 \end{equation}
-The extended chain is the cheaper arrangement in \eqref{eq:ca_costs} exactly when this marginal cost falls below the step's manual cost $\manualSkill{k}\manualTime{k}$.
-That is, step $k$ must be appended to the chain if
-\begin{equation}
-\label{eq:ca_test}
-\frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i} \;<\; \manualSkill{k}\manualTime{k}.
-\end{equation}
-Notably, step $k$'s own AI management cost $\AIskill{k}\AItime{k}$ appears nowhere in this comparison, since an automated step is never prompted or verified on its own.
+Notably, step $k$'s own AI management cost $\AIskill{k}\AItime{k}$ appears nowhere in comparison \eqref{eq:ca_test}, since an automated step is never prompted or verified on its own.
 What decides automation at the margin is thus not the step's standalone comparison of manual and augmentation costs, but the comparison of its manual cost with its marginal contribution to an adjacent chain, a quantity that shrinks toward zero as AI executes the step more reliably ($q_k \to 1$).
 
 Appending a step to a chain that follows it is not the only route into automation, however.
-Even when condition \eqref{eq:ca_test} fails, so that folding step $k$ into a following chain does not pay on its own, the step can still end up automated when an AI-friendly step precedes it: the pressure then arrives from upstream rather than downstream.
-Consider a step that AI can execute very reliably (i.e., high $q_i$) but that is expensive to carry out on its own, whether manually or as a standalone augmented step.
-Because a chain pays only for the management of its augmented endpoint, such a step is cheapest to be absorbed in a chain, where its own management cost goes unpaid.
-And because chains are contiguous, the chain this step anchors must run forward through its neighbors to reach a cheap verification endpoint downstream.
+Even when condition \eqref{eq:ca_test} fails, so that folding step $k$ into a following chain does not pay on its own, the step can still end up automated when an AI-friendly step precedes it, that is, when the pressure arrives from upstream rather than downstream.
+Consider a step at position $k-1$ that AI can execute very reliably (i.e., high $q_{k-1}$) but that is expensive to carry out on its own, whether manually or as a standalone augmented step.
+Because a chain pays only for the management of its augmented endpoint, such a step would be cheaper if absorbed in a chain, where its own management cost goes unpaid.
+And because chains are contiguous, the chain this step anchors must run forward through its successors to reach a cheap verification endpoint downstream.
 A human-advantaged step that lies in between can therefore get pulled into the chain and automated, even though nothing about the step itself favors AI.
+Example~\ref{ex:ca_predecessor} shows this numerically.
 
 \begin{example}
 \label{ex:ca_predecessor}
