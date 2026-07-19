@@ -4,7 +4,7 @@ In this section we draw out three implications of the model.
 First, we show that AI chaining can overturn comparative advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be automated in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
 Second, we introduce a \emph{fragmentation index} that captures how dispersed a job's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps, not merely on what fraction of job's steps suitable for AI execution (Section~\ref{sec:fragmentation}).
 Third, we show that the marginal gains from improving AI quality are non-monotone, abruptly rising whenever improvements in AI quality make redesigning workflows worthwhile (Section~\ref{sec:nonlinear}).
-We collect the proofs of all propositions in this section in Appendix~\ref{app:omitted_proofs}.
+We collect the proofs of all formal results in this section in Appendix~\ref{app:omitted_proofs}.
 
 \subsection{Comparative Advantage and AI Chaining}
 \label{sec:comparative_advantage}
@@ -14,13 +14,14 @@ With more than one step, however, the optimal deployment of AI depends on more t
 As a result, it is possible to have a step that is more cost-effective to perform manually be automated as part of a chain.
 In other words, the factor of production holding the comparative advantage on a step \emph{in isolation} need not be the one that performs it in the optimal production configuration.
 
-In what follows we show how comparative advantage can be overturned using a simple example.
+In what follows we show how comparative advantage can be overturned using a simple example, and then formalize the force at play.
 The force at work is easiest to see through a step that AI executes very reliably but that is expensive to carry out on its own, whether manually or as a standalone augmented step.
 Because a chain pays only for the management of its augmented endpoint, such a step is cheapest to absorb as the start of a chain, where its own management cost goes unpaid.
 And because chains are contiguous, the chain this step anchors must run forward through its neighbors to reach a cheap verification endpoint downstream.
 A human-advantaged step that lies in between is therefore pulled into the chain and automated, even though nothing about the step itself favors AI.
 
 \begin{example}
+\label{ex:ca_predecessor}
 Consider three consecutive steps with unit skill, so a task's cost equals its expected completion time, with the following step parameters:
 \begin{center}
 \begin{tabular}{c|ccc}
@@ -78,8 +79,43 @@ Step~1, which on its own would be performed manually, is automated only to bridg
 Its own success probability is just $q_1 = 0.5$, so the chain frequently fails and is retried; the firm accepts this because handling step~0 in any other way is far more costly.
 \end{example}
 
+Lemma~\ref{lem:ca_predecessor} formalizes this mechanism: an AI-reliable but individually expensive predecessor can pull a human-advantaged step into a chain by putting pressure on it from the other side.
+
+\begin{lem}[Overturning by an AI-Friendly Predecessor]
+\label{lem:ca_predecessor}
+Consider a step $k$ on which the human holds the comparative advantage in isolation, $\manualSkill{k}\manualTime{k} < \AIskill{k}\AItime{k}/q_k$, and any strategy in which step $k$ is performed manually, its predecessor $k-1$ is executed on its own (manually or as a standalone augmented step), and its successor $k+1$ is executed as a standalone augmented step.
+Suppose the successor is AI-attractive while chaining step $k$ with it alone does not pay,
+\begin{equation}
+\label{eq:pred_local}
+\frac{\AIskill{k+1}\AItime{k+1}}{q_{k+1}} < \manualSkill{k+1}\manualTime{k+1}
+\qquad\text{and}\qquad
+\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_k)}{q_k\, q_{k+1}}}_{\text{marginal cost of folding step $k$ in alone}} \ge \manualSkill{k}\manualTime{k},
+\end{equation}
+so that, were the predecessor absent, step $k$ would indeed be performed manually.
+If the marginal cost of folding the pair $\{k-1, k\}$ into the chain falls below the cost of running the pair on its own,
+\begin{equation}
+\label{eq:pred_chain}
+\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_{k-1}q_k)}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{marginal cost of folding the pair }\{k-1,k\}\text{ in}}
+\;<\;
+\underbrace{\min\!\left\{\manualSkill{k-1}\manualTime{k-1},\ \frac{\AIskill{k-1}\AItime{k-1}}{q_{k-1}}\right\}}_{\text{cheapest standalone }k-1}
+\;+\;
+\underbrace{\manualSkill{k}\manualTime{k}}_{\text{manual }k},
+\end{equation}
+then the strategy is not cost-minimizing: running $k-1$, $k$, $k+1$ as a single AI chain augmented at $k+1$ is strictly cheaper.
+The human-advantaged step $k$ is thus automated in the cheaper arrangement, drawn into a chain begun by the predecessor step $k-1$.
+\end{lem}
+
+Because the chain ending augmented at $k+1$ pays only for its endpoint, absorbing the pair $\{k-1, k\}$ costs just the endpoint's management inflated by the pair's joint failure risk $1 - q_{k-1}q_k$, and nothing to manage either step inside it.
+The first condition in \eqref{eq:pred_local} makes the endpoint AI-attractive on its own, while the second rules out step $k$ being pulled in on its own merits.
+The reversal in \eqref{eq:pred_chain} therefore runs entirely through the predecessor: its marginal contribution to the chain's failure risk, governed by $1 - q_{k-1}$, shrinks toward zero as the predecessor becomes reliable for AI, even as the standalone execution cost it displaces stays large.
+In Example~\ref{ex:ca_predecessor}, the marginal cost of folding the pair $\{0, 1\}$ into the chain ending at step~2 is
+\[
+\frac{\AIskill{2}\AItime{2}\,(1-q_0 q_1)}{q_0\, q_1\, q_2} = \frac{(1)\bigl(1 - (0.95)(0.5)\bigr)}{(0.95)(0.5)(0.8)} \approx 1.38 \;<\; 5.21 = \min\!\left\{\manualSkill{0}\manualTime{0},\ \frac{\AIskill{0}\AItime{0}}{q_0}\right\} + \manualSkill{1}\manualTime{1},
+\]
+of which the predecessor's share, $\AIskill{2}\AItime{2}(1-q_0)/(q_0 q_1 q_2) \approx 0.13$, is dwarfed by the $\approx 4.21$ its cheapest standalone execution would cost.
+
 The broader takeaway is that whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors.
-The pressure to fold a human-advantaged step into a chain can come from either an AI-reliable predecessor \emph{upstream} (as in the example above) or a cheap chain endpoint \emph{downstream}.
+The pressure to fold a human-advantaged step into a chain can come from either an AI-reliable predecessor \emph{upstream} (Lemma~\ref{lem:ca_predecessor}) or a cheap chain endpoint \emph{downstream}.
 Either way, a human-advantaged step sitting beside an AI-suitable run might be drawn into a chain and automated due to cost savings available in its local work context, whereas the same step sitting beside steps that AI completes only with low probability is likely to remain manual.
 A step with identical characteristics can therefore be automated in one workflow yet performed manually in another, depending only on the AI-suitability of its neighbors.
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that AI execution likelihood of a step depends on its local work context in different occupations.

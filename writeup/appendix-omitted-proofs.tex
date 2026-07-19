@@ -74,6 +74,28 @@ Along the recursion the manual and chain options accumulate skill and time addit
 Rescaling $\epsilon$ by a constant therefore yields the stated $(1+\epsilon)$ approximation.
 \end{proof}
 
+\subsection{Proof of Lemma~\ref{lem:ca_predecessor}}
+
+\begin{proof}
+The proof is fairly mechanical.
+The two strategies agree on every step outside the block $k-1, k, k+1$, and both reach the endpoint $k+1$ as an augmented step, paying $\AIskill{k+1}\AItime{k+1}/q_{k+1}$ for its management.
+Within the block, the described strategy costs
+\[
+\underbrace{\min\!\left\{\manualSkill{k-1}\manualTime{k-1},\ \frac{\AIskill{k-1}\AItime{k-1}}{q_{k-1}}\right\} + \manualSkill{k}\manualTime{k} + \frac{\AIskill{k+1}\AItime{k+1}}{q_{k+1}}}_{k-1\text{ on its own},\ k\text{ manual},\ k+1\text{ augmented}},
+\]
+while running the three steps as one AI chain augmented at $k+1$ costs $\AIskill{k+1}\AItime{k+1}/(q_{k-1}q_k q_{k+1})$, paying nothing to manage the predecessor or step $k$.
+The chain is cheaper exactly when the \emph{marginal} cost of folding the pair $\{k-1, k\}$ in, the difference of the two chain terms, falls below the cost of doing that pair the old way.
+Crediting back the common endpoint term $\AIskill{k+1}\AItime{k+1}/q_{k+1}$ from both sides,
+\[
+\frac{\AIskill{k+1}\AItime{k+1}}{q_{k-1}q_k q_{k+1}} - \frac{\AIskill{k+1}\AItime{k+1}}{q_{k+1}}
+\;=\;
+\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_{k-1}q_k)}{q_{k-1}q_k q_{k+1}}
+\;<\;
+\min\!\left\{\manualSkill{k-1}\manualTime{k-1},\ \frac{\AIskill{k-1}\AItime{k-1}}{q_{k-1}}\right\} + \manualSkill{k}\manualTime{k},
+\]
+which is exactly condition~\eqref{eq:pred_chain}; the chain is therefore strictly cheaper and the described strategy is not cost-minimizing.
+\end{proof}
+
 \subsection{Proof of Proposition~\ref{prop:fragmentation}}
 
 Recall that Proposition~\ref{prop:fragmentation} relates the cost of the optimal AI deployment strategy for a step sequence to its fragmentation index.
