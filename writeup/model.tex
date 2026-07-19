@@ -224,16 +224,16 @@ For any $\epsilon > 0$, an AI strategy whose medium-run cost~\eqref{eq:totalcost
 \end{proposition}
 
 The proof of Proposition~\ref{prop:mediumrun_dp} is more involved than that of the short run, and we delegate it to Appendix~\ref{app:omitted_proofs}.
-The idea behind the optimization is to track both the worker's accumulated skill and accumulated time as the firm decides on how to execute each step one at a time in a dynamic program. 
-Because the wage bill is the product of the two totals, it is evaluated only once every step has been assigned.
-We then discretize each cost dimension to a geometric grid so that the dynamic program runs in polynomial time subject to an error term than can be arbitrarily small.
+The solution still relies on dynamic programming: the firm decides how to execute the steps one at a time, and the program tracks the worker's accumulated skill and accumulated time along the way, evaluating the wage bill, the product of the two totals, only once every step has been assigned.
+What makes the problem computationally non-trivial is that each execution choice moves the skill and time costs simultaneously, so the program must carry a two-dimensional state that can take exponentially many values.
+We therefore discretize both cost dimensions to a geometric grid, which keeps the running time polynomial while approximating the optimum subject to an error term that can be made arbitrarily small.
 
 
 \subsubsection{Long Run: Adjustable Job Boundaries, Wages, and Execution Times}
 \label{sec:model.longrun}
 In the long run, the firm can also redraw the boundaries of jobs, reallocating tasks across workers in addition to optimizing wages and the AI strategy in production.
-Narrowing a job lets the firm staff it with workers specializing to do specific tasks (thus requiring lower wages for fewer tasks), but splitting the workflow across more workers introduces coordination costs between them, and the firm chooses the AI deployment and the job design jointly to balance the two.
-We introduce an additional ``hand-off'' time cost, to capture the coordination friction when worker pass intermediate outputs between them.
-We develop this long-run problem, which nests the medium run as the special case of fixed job boundaries, in Appendix~\ref{app:jobdesign}.
-The cost minimization of the firm's long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to the worker it also chooses how tasks are allocated across different workers.
-The full characterization of the problem and polynomial-time approximation of its solution are given in the job design appendix (Appendix~\ref{app:jobdesign}).
+Narrowing a job lets the firm staff it with workers specializing in fewer tasks, and thus commanding lower wages, but splitting the workflow across more workers introduces coordination costs between them.
+We capture this friction with a ``hand-off'' time cost incurred at each job boundary: when a worker's job ends, they spend additional time passing their intermediate output to the next worker, lengthening the job and hence raising its wage bill.
+The firm chooses AI deployment and job design jointly, trading the lower wages of narrower jobs against the hand-off costs of maintaining more of them.
+The resulting cost minimization has a similar flavor to the medium-run case, except that the firm also chooses how tasks are allocated across workers.
+We develop this long-run problem, which nests the medium run as the special case of fixed job boundaries, and provide a polynomial-time approximation of its solution, in Appendix~\ref{app:jobdesign}.
