@@ -323,7 +323,30 @@ As $K$ grows large, the ratio tends to $2(\sqrt{2}+1)$, which is strictly greate
 Combining Lemmas~\ref{lem:FI.upper.bound}, \ref{lem:FI.lower.bound.4}, and~\ref{lem:FI.lower.bound.8} yields Proposition~\ref{prop:fragmentation}: in general $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$, and under the additional assumption $\manualSkill{i}\manualTime{i} \geq 1$ for all $i$, $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
 \end{proof}
 
-\subsection{Proof of Observation~\ref{obs:reorg_threshold}}
+\subsection{Non-Monotone Gains from AI Improvements: Formal Statement and Proof}
+\label{app:nonmonotone}
+
+To make the argument of Section~\ref{sec:nonlinear} precise, consider a workflow with any number of steps and chains.
+For any AI strategy $\T$, total cost is a fixed manual term plus a polynomial in $1/\alpha$,
+\begin{equation}
+\label{eq:strategy_cost}
+C_\T(\alpha) = K_\T + \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c},
+\end{equation}
+where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed cost of manually-executed steps and the sum runs over the AI chains of $\T$, denoted $\mathcal{C}(\T)$, with each chain $c$ (with augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \sum_{i \in c} d_i \ge 1$.
+The cost of $\T$ thus shifts in a continuous and smooth manner as $\alpha$ increases, with monotone marginal gains to technology improvements.
+
+The firm optimizes costs over many possible AI strategies, expressed as the deployment problem \eqref{eq:totalcost_shortterm}.
+At each level of AI quality $\alpha$ the firm adopts the cheapest available strategy, so its optimal cost is the lower envelope of the strategy-specific cost curves, $C^*(\alpha) = \min_{\T} C_\T(\alpha)$.
+We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the function $g^*(\alpha)$ equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal.
+As $\alpha$ rises, the optimal strategy changes at finitely many values of $\alpha$, the reorganization thresholds of Section~\ref{sec:nonlinear}, which separate one regime from the next.
+Lemma~\ref{lem:reorg_threshold} shows that although $g^*$ diminishes within each regime it jumps upward at every reorganization threshold, so the returns to improving AI quality are non-monotone.
+
+\begin{lem}[Non-monotone Marginal Returns to AI Quality Improvements]
+\label{lem:reorg_threshold}
+Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost over all feasible AI strategies and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha$ its marginal benefit of improving AI quality.
+Within each regime (an interval of $\alpha$ on which a single AI strategy is optimal), $g^*$ is non-increasing.
+Moreover, at every reorganization threshold (where the optimal AI strategy changes), $g^*$ jumps upward.
+\end{lem}
 
 \begin{proof}
 Each $C_\T$ is a constant plus terms $\AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c}$ with $D_c \ge 1$, with derivatives
@@ -337,7 +360,7 @@ so each $C_\T$ is non-increasing and convex.
 
 Within a regime where $\T$ is optimal, $g^*(\alpha) = g_\T(\alpha) = -C_\T'(\alpha) \ge 0$, and the convexity of $C_\T$ makes it non-increasing in $\alpha$ (when $\T$ uses no chain $g^*(\alpha) = 0$ but is otherwise strictly decreasing).
 The returns to a fixed configuration in a regime thus weakly diminish.
-This proves the first claim of the proposition.
+This proves the first claim of the lemma.
 
 Next, let $\alpha_0 \in (0,1)$ be a threshold where the optimum switches from $\T$ (optimal just below $\alpha_0$) to $\T'$ (just above $\alpha_0$).\footnote{We assume this threshold exists. The only scenario where no such threshold exists is the case in which all steps are executed manually for all $\alpha \in (0,1)$. This is the trivial, uninteresting case and is assumed away.}
 Define

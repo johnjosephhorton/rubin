@@ -307,7 +307,11 @@ Our framework captures such non-monotonicities in the marginal value of technolo
 This arises in our model via optimization over different AI deployment strategies.
 One can think of parameter $\alpha \in (0,1]$ in our model as a measure of the quality of a general purpose AI technology, taken to be the probability that a task of normalized difficulty $1$ is completed successfully.
 We can then consider general technology improvements as increasing the value of $\alpha$.
-Example below shows why gains from increasing AI quality need not be monotone.
+When AI quality is so low that the firm deploys AI nowhere, marginal improvements in $\alpha$ offer no return at all: every step is performed manually, and production costs do not depend on AI quality.
+Once $\alpha$ passes the level at which deploying AI somewhere in the workflow becomes worthwhile, further improvements pay off, but at a diminishing rate, as a more reliable AI is being applied to a fixed set of AI-executed steps.
+And when $\alpha$ reaches a level at which the firm reorganizes its deployment strategy, extending a chain to automate steps that were previously manual, the marginal return to AI quality jumps up discontinuously, because quality improvements now compound over a longer stretch of the workflow.
+We refer to the values of $\alpha$ at which the optimal strategy changes as \emph{reorganization thresholds}: they partition the range of AI quality into \emph{regimes}, within which the returns to AI progress diminish, while at each threshold the returns jump upward.
+The example below shows this pattern at work in a two-step workflow.
 
 \begin{example}
 Consider a two-step workflow with unit skill, with the following step parameters:
@@ -354,24 +358,5 @@ It is also worth noting that the jump at $\alpha \approx 0.90$ is larger than th
 This ordering is specific to this example, however, since a later threshold need not introduce a longer chain than an earlier one.
 \end{example}
 
-To make the argument precise, consider a workflow with any number of steps and chains.
-For any AI strategy $\T$, total cost is a fixed manual term plus a polynomial in $1/\alpha$,
-\begin{equation}
-\label{eq:strategy_cost}
-C_\T(\alpha) = K_\T + \sum_{c \in \mathcal{C}(\T)} \AIskill{r_c}\AItime{r_c}\,\alpha^{-D_c},
-\end{equation}
-where $K_\T = \sum_{\text{manual } i} \manualSkill{i}\manualTime{i}$ is the fixed cost of manually-executed steps and the sum runs over the AI chains of $\T$, denoted $\mathcal{C}(\T)$, with each chain $c$ (with augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \sum_{i \in c} d_i \ge 1$.
-The cost of $\T$ thus shifts in a continuous and smooth manner as $\alpha$ increases, with monotone marginal gains to technology improvements.
-
-The firm optimizes costs over many possible AI strategies, expressed as the deployment problem \eqref{eq:totalcost_shortterm}. 
-At each level of AI quality $\alpha$ the firm adopts the cheapest available strategy, so its optimal cost is the lower envelope of the strategy-specific cost curves, $C^*(\alpha) = \min_{\T} C_\T(\alpha)$.
-We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the function $g^*(\alpha)$ equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal.
-As $\alpha$ rises, the optimal strategy changes at finitely many values of $\alpha$, which we refer to as \emph{reorganization thresholds}, that separate one regime from the next.
-Observation~\ref{obs:reorg_threshold} below records that although $g^*$ diminishes within each regime it jumps upward at every reorganization threshold, so the returns to improving AI quality are non-monotone.
-
-\begin{observation}[Non-monotone Marginal Returns to AI Quality Improvements]
-\label{obs:reorg_threshold}
-Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost over all feasible AI strategies and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha$ its marginal benefit of improving AI quality.
-Within each regime (an interval of $\alpha$ on which a single AI strategy is optimal), $g^*$ is non-increasing.
-Moreover, at every reorganization threshold (where the optimal AI strategy changes), $g^*$ jumps upward.
-\end{observation}
+This phenomenon is general, and we formalize it in Appendix~\ref{app:nonmonotone}.
+There we show that the cost of any fixed AI strategy varies smoothly with $\alpha$, so that the firm's optimal cost is the lower envelope of finitely many smooth cost curves, and prove in Lemma~\ref{lem:reorg_threshold} that the marginal gains from improving AI quality diminish within each regime where a single strategy remains optimal and jump upward at every reorganization threshold.
