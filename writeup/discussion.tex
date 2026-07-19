@@ -243,13 +243,13 @@ The $m/2$ hard steps remain cheaper performed manually (cost $5$ each), for a to
 \[
 6 + \tfrac{m}{2}(5) = 6 + \tfrac{5m}{2},
 \]
-strictly below the $5m$ of the interleaved arrangement whenever $m \geq 4$.
+strictly below the $5m$ of the interleaved arrangement whenever $m > 2$.
 \end{example}
 
 The same steps thus yield very different automation outcomes depending only on whether the AI-friendly ones are clustered or dispersed.
 The contrast is, moreover, of a kind the data we bring to the model in Section~\ref{sec:empirics} can detect: augmented and automated execution are observationally equivalent there, so what distinguishes the two arrangements empirically is that the interleaved workflow uses no AI at all while the clustered workflow executes half its steps with AI.
 
-To make this intuition more precise, let us return to the firm's deployment problem in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:model.shortrun}.
+To make this intuition more precise, let us return to the firm's short-run AI deployment problem in \eqref{eq:totalcost_shortterm}.
 Consider the special case where AI management costs are normalized: $\AIskill{i}\AItime{i} = 1$ for all $i$.
 That is, each step requires the same skill-weighted time to prompt and manage one attempt by the AI.
 Under this assumption, we will define a measure of the dispersion of AI-exposed steps in a workflow, which we refer to as the \emph{fragmentation index} of a job.
@@ -367,11 +367,11 @@ The firm optimizes costs over many possible AI strategies, expressed as the depl
 At each level of AI quality $\alpha$ the firm adopts the cheapest available strategy, so its optimal cost is the lower envelope of the strategy-specific cost curves, $C^*(\alpha) = \min_{\T} C_\T(\alpha)$.
 We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the function $g^*(\alpha)$ equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal.
 As $\alpha$ rises, the optimal strategy changes at finitely many values of $\alpha$, which we refer to as \emph{reorganization thresholds}, that separate one regime from the next.
-Proposition~\ref{prop:reorg_threshold} below formalizes that although $g^*$ diminishes within each regime it jumps upward at every reorganization threshold, so the returns to improving AI quality are non-monotone.
+Observation~\ref{obs:reorg_threshold} below records that although $g^*$ diminishes within each regime it jumps upward at every reorganization threshold, so the returns to improving AI quality are non-monotone.
 
-\begin{proposition}[Non-monotone Marginal Returns to AI Quality Improvements]
-\label{prop:reorg_threshold}
+\begin{observation}[Non-monotone Marginal Returns to AI Quality Improvements]
+\label{obs:reorg_threshold}
 Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost over all feasible AI strategies and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha$ its marginal benefit of improving AI quality.
 Within each regime (an interval of $\alpha$ on which a single AI strategy is optimal), $g^*$ is non-increasing.
 Moreover, at every reorganization threshold (where the optimal AI strategy changes), $g^*$ jumps upward.
-\end{proposition}
+\end{observation}
