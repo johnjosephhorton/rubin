@@ -16,14 +16,23 @@ In other words, the factor of production holding the comparative advantage on a 
 
 In what follows we first describe the margin that governs whether an individual step is automated, then show in an example how this margin can overturn comparative advantage, and finally formalize the mechanism in Lemma~\ref{lem:ca_predecessor}.
 
-To see what determines the automation of a step, consider a step $k$ placed just before an AI chain that ends augmented at step $r$.
-Folding step $k$ into the chain automates it at zero direct cost: the worker still prompts for and verifies only the same endpoint $r$, and the only new expense is that the chain now also fails, and must be retried, whenever AI fails at step $k$.
-The marginal cost of absorbing step $k$ is therefore the endpoint's management cost inflated by the step's failure risk,
+To see what determines the automation of a step, consider a step $k$ placed just before an AI chain that ends augmented at step $r$, and compare two ways of handling the block $k, \dotsc, r$ while leaving the rest of the workflow untouched: performing step $k$ manually alongside the chain over steps $k+1, \dotsc, r$, or extending the chain backward so that steps $k, \dotsc, r$ form a single chain.
+The two arrangements cost
+\begin{equation}
+\label{eq:ca_costs}
+\underbrace{\manualSkill{k}\manualTime{k} + \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}}_{\text{step $k$ manual, chain over $k+1, \dotsc, r$}}
+\qquad\text{and}\qquad
+\underbrace{\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i}}_{\text{single chain over $k, \dotsc, r$}}.
+\end{equation}
+Extending the chain automates step $k$ at zero direct cost: the worker still prompts for and verifies only the same endpoint $r$, so step $k$'s manual cost drops out of \eqref{eq:ca_costs}, and the only new expense is that the chain now also fails, and must be retried, whenever AI fails at step $k$, which is why $q_k$ joins the denominator.
+Subtracting one chain term from the other, the marginal cost of absorbing step $k$ is the endpoint's management cost inflated by the step's failure risk,
 \begin{equation}
 \label{eq:ca_margin}
+\frac{\AIskill{r}\AItime{r}}{\prod_{i=k}^{r} q_i} - \frac{\AIskill{r}\AItime{r}}{\prod_{i=k+1}^{r} q_i}
+\;=\;
 \underbrace{\frac{\AIskill{r}\AItime{r}\,(1-q_k)}{\prod_{i=k}^{r} q_i}}_{\text{marginal cost of folding step $k$ into the chain}},
 \end{equation}
-and extending the chain backward to absorb step $k$ beats performing it manually whenever this marginal cost falls below the step's manual cost $\manualSkill{k}\manualTime{k}$.
+and the single chain is the cheaper arrangement in \eqref{eq:ca_costs} exactly when this marginal cost falls below the step's manual cost $\manualSkill{k}\manualTime{k}$.
 Notably, the step's own AI management cost $\AIskill{k}\AItime{k}$ appears nowhere in this comparison, since an automated step is never prompted or verified on its own.
 What decides automation at the margin is thus not the step's standalone comparison of manual and augmentation costs, but the comparison of its manual cost with its marginal contribution to an adjacent chain, a quantity that shrinks toward zero as AI executes the step more reliably ($q_k \to 1$).
 
