@@ -118,7 +118,7 @@ $\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\
 \subsection{Production}
 \label{sec:jobs_wages}
 
-The firm employs human workers to performs tasks and produce the final output.
+The firm employs human workers to perform tasks and produce the final output.
 Labor is the only input used in production.
 Each worker is assigned a contiguous group of tasks in the production sequence, which we call a \emph{job}.
 The firm can in principle split its workflow into several jobs and hire a separate worker for each, and it is free to choose where one job ends and the next begins.
@@ -159,7 +159,7 @@ The labor cost (i.e., wage bill) of a job is therefore its wage rate times the t
 \label{sec:model.jobs}
 
 The firm deploys AI across its workflow to minimize production costs.
-Since labor is the only cost of production, the firm's objective is to minimizes its wage bill paid to workers.
+Since labor is the only cost of production, the firm's objective is to minimize its wage bill paid to workers.
 What the firm can adjust to lower its labor cost depends on the time horizon of optimization, and we distinguish three as outlined in Table~\ref{tab:short_long_run}.
 
 \subsubsection{Short Run}
@@ -213,7 +213,7 @@ Because the worker is paid in proportion to the job's skill for the entire time 
 \min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
 \end{align}
 
-Next we turn into solving the medium-run problem. 
+Next we turn to solving the medium-run problem.
 In \eqref{eq:totalcost_mediumrun} the firm minimizes the wage bill of the job, the product of the job's total skill and its total time.
 Because this objective is a product of two sums rather than a single sum, it is not additive across tasks, and the short-run dynamic program no longer applies.
 Proposition~\ref{prop:mediumrun_dp} shows that the medium-run problem admits a polynomial-time approximation scheme.
@@ -233,5 +233,5 @@ The idea is to track both the worker's accumulated skill and accumulated time as
 In the long run, the firm additionally redraws the boundaries of jobs, reallocating tasks across workers in addition to optimizing the AI strategy in production.
 Narrowing a job lets the firm staff it with workers specializing to do specific tasks (thus requiring lower wages for fewer tasks), but splitting the workflow across more workers introduces coordination costs between them, and the firm chooses the AI deployment and the job design jointly to balance the two.
 We develop this long-run problem, which nests the medium run as the special case of fixed job boundaries, in Appendix~\ref{app:jobdesign}.
-The solution of the long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to a the worker it also chooses how tasks are allocated across different workers. 
+The solution of the long-run problem has a similar flavor to the medium-run case, but rather than fixing the steps assigned to the worker it also chooses how tasks are allocated across different workers.
 The full characterization of the problem and polynomial-time approximation of its solution are given in the job design appendix (Appendix~\ref{app:jobdesign}).
