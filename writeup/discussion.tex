@@ -34,7 +34,7 @@ Consider three consecutive steps with unit skill, so a task's cost equals its ex
 \bottomrule
 \end{tabular}
 \end{center}
-In isolation, step~1 is cheaper \emph{manually}: its manual cost
+In isolation, Step~1 is cheaper \emph{manually}: its manual cost
 \[
 \manualSkill{1}\manualTime{1} = (1)(1) = 1
 \]
@@ -42,10 +42,10 @@ lies below its augmentation cost
 \[
 \frac{\AIskill{1}\AItime{1}}{q_1} = \frac{(1)(2)}{0.5} = 4,
 \]
-so the human holds the comparative advantage on step~1.
+so the human holds the comparative advantage on Step~1.
 
-Take steps~1 and~2 on their own first (the top row of the figure).
-Performing step~1 manually and augmenting step~2 costs
+Take Steps~1 and~2 on their own first (the top row of the figure).
+Performing Step~1 manually and augmenting Step~2 costs
 \[
 \manualSkill{1}\manualTime{1} + \frac{\AIskill{2}\AItime{2}}{q_2} = 1 + \frac{(1)(1)}{0.8} = 1 + 1.25 = 2.25,
 \]
@@ -53,11 +53,11 @@ which is below the cost of chaining the two,
 \[
 \frac{\AIskill{2}\AItime{2}}{q_1\, q_2} = \frac{(1)(1)}{(0.5)(0.8)} = \frac{1}{0.4} = 2.5.
 \]
-Absent the predecessor, then, comparative advantage holds and step~1 is performed manually.
+Absent the predecessor, then, comparative advantage holds and Step~1 is performed manually.
 \input{plots/TikZ_visualization/predecessor_visualization.tex}
 
-Now introduce the predecessor, step~0 (the bottom row of the figure).
-It is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode: performing it manually costs
+Now introduce the predecessor, Step~0 (the bottom row of the figure).
+Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode: performing it manually costs
 \[
 \manualSkill{0}\manualTime{0} = (1)(5) = 5,
 \]
@@ -65,23 +65,23 @@ while augmenting it as a standalone step costs
 \[
 \frac{\AIskill{0}\AItime{0}}{q_0} = \frac{(1)(4)}{0.95} \approx 4.21.
 \]
-The only cheap way to absorb step~0 is to place it at the start of a chain, where its management cost goes unpaid.
-The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at step~2, at cost
+The only cheap way to absorb Step~0 is to place it at the start of a chain, where its management cost goes unpaid.
+The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost
 \[
 \frac{\AIskill{2}\AItime{2}}{q_0\, q_1\, q_2} = \frac{(1)(1)}{(0.95)(0.5)(0.8)} = \frac{1}{0.38} \approx 2.63.
 \]
-This falls far below the cheapest arrangement that keeps step~1 manual, which executes each step separately on its own,
+This falls far below the cheapest arrangement that keeps Step~1 manual, which executes each step separately on its own,
 \[
 \min\!\left\{\manualSkill{0}\manualTime{0},\ \frac{\AIskill{0}\AItime{0}}{q_0}\right\} + \manualSkill{1}\manualTime{1} + \min\!\left\{\manualSkill{2}\manualTime{2},\ \frac{\AIskill{2}\AItime{2}}{q_2}\right\} \approx 4.21 + 1 + 1.25 = 6.46,
 \]
 and below every other strategy.
-Step~1, which on its own would be performed manually, is automated only to bridge the AI-friendly predecessor to the cheap endpoint at step~2.
-Its own success probability is just $q_1 = 0.5$, so the chain frequently fails and is retried; the firm accepts this because handling step~0 in any other way is far more costly.
+Step~1, which on its own would be performed manually, is automated only to bridge the AI-friendly predecessor to the cheap endpoint at Step~2.
+Its own success probability is just $q_1 = 0.5$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is far more costly.
 \end{example}
 
 Lemma~\ref{lem:ca_predecessor} formalizes this mechanism: an AI-reliable but individually expensive predecessor can pull a human-advantaged step into a chain by putting pressure on it from the other side.
 
-\begin{lem}[Overturning by an AI-Friendly Predecessor]
+\begin{lem}[Overturning of Comparative Advantage by AI-Friendly Predecessor]
 \label{lem:ca_predecessor}
 Consider a step $k$ on which the human holds the comparative advantage in isolation, $\manualSkill{k}\manualTime{k} < \AIskill{k}\AItime{k}/q_k$, and any strategy in which step $k$ is performed manually, its predecessor $k-1$ is executed on its own (manually or as a standalone augmented step), and its successor $k+1$ is executed as a standalone augmented step.
 Suppose the successor is AI-attractive while chaining step $k$ with it alone does not pay,
