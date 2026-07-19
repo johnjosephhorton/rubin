@@ -260,16 +260,25 @@ Even $i$ (hard) & $(1, 0.9)$ & $(1, 1)$ & $0.1$ \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\vspace{0.25cm}
+
+\input{plots/TikZ_visualization/example1_visualization_allManual.tex}
+
 The logic is unchanged: no two easy steps are adjacent, so no chain can form, and standalone augmentation does not pay, as even an easy step's augmentation cost $\AIskill{i}\AItime{i}/q_i = 1/1 = 1$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 0.9$ (a hard step's, $1/0.1 = 10$, all the more).
-Every step is again performed manually and no AI is deployed anywhere, for a total cost of $0.9m$; the execution pattern is that of the figure in Example~\ref{ex:fragmentation_interleaved}.
+Every step is again performed manually and no AI is deployed anywhere, for a total cost of $0.9m$.
 \end{example}
 \begin{example}[Parameterization B, clustered]
 \label{ex:fragmentation_clustered_norm}
-Clustering the same steps as in Example~\ref{ex:fragmentation_clustered} again lets the firm chain the easy run, which collapses to its augmented endpoint's management cost $1/1 = 1$, while the hard half stays manual (cost $0.9$ each), for a total cost of
+Clustering the steps of Example~\ref{ex:fragmentation_interleaved_norm} again lets the firm chain the easy run, which collapses to its augmented endpoint's management cost $1/1 = 1$, while the hard half stays manual (cost $0.9$ each), for a total cost of
 \[
 1 + \tfrac{m}{2}(0.9) = 1 + 0.45m,
 \]
-strictly below the $0.9m$ of the interleaved arrangement whenever $m \geq 4$; the execution pattern is that of the figure in Example~\ref{ex:fragmentation_clustered}.
+strictly below the $0.9m$ of the interleaved arrangement whenever $m \geq 4$.
+
+\vspace{0.25cm}
+
+\input{plots/TikZ_visualization/example2_visualization.tex}
 \end{example}
 
 In either parameterization, the same steps yield very different automation outcomes depending only on whether the AI-friendly ones are clustered or dispersed.
