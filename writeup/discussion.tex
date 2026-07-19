@@ -165,15 +165,19 @@ In Example~\ref{ex:ca_predecessor}, condition \eqref{eq:pred_chain} for folding 
 \]
 The numbers show where the reversal comes from: Step~1's share ($1.25$) exceeds the manual cost ($1$) it replaces, so Step~1 does not pay its own way; it is Step~0's nearly free share ($0.13$), set against the $4.21$ standalone execution it displaces, that tips the balance.
 
-The broader takeaway is that whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors.
+The broader takeaway from this discussion is that whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors.
 The pressure to fold a human-advantaged step into a chain can come from either an AI-reliable predecessor \emph{upstream} (Lemma~\ref{lem:ca_predecessor}) or a cheap chain endpoint \emph{downstream} (the marginal-cost test in \eqref{eq:ca_test}).
-Either way, a human-advantaged step sitting beside an AI-suitable run might be drawn into a chain and automated due to cost savings available in its local work context, whereas the same step sitting beside steps that AI completes only with low probability is likely to remain manual.
+Either way, a human-advantaged step sitting beside an AI-suitable run might be drawn into a chain and automated due to cost savings available in its local work context, whereas the same step sitting beside steps that AI completes only with low probability is more likely to remain manual.
 A step with identical characteristics can therefore be automated in one workflow yet performed manually in another, depending on the AI-suitability of the workflow around it.
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that the AI execution likelihood of a step depends on its local work context in different occupations.
 
-We must emphasize that both the marginal-cost test \eqref{eq:ca_test} and Lemma~\ref{lem:ca_predecessor} are \emph{local} statements: they compare rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence.
-That determination depends not just on a step's own characteristics and those of its neighbors but on the whole workflow at once, and is therefore hard to characterize in general.
+We must emphasize that our arguments here are \emph{local} statements. 
+They compare rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence.
+That determination is more demanding and harder to characterize in general as it depends not just on a step's own characteristics and those of its neighbors but on the whole workflow at once.
 Nonetheless, the forces determining execution modes in the optimum are the ones outlined here.
+
+Even though characterizing the execution mode of each individual step in the optimal arrangement is hard, the total cost of that arrangement, and with it the overall gains from deploying AI in a job, admits a simple approximation.
+The next subsection develops this job-level view and shows that what governs these gains is the same force at work above: how the workflow's AI-friendly steps are arranged relative to one another.
 
 
 \subsection{Job-level AI Exposure and the Fragmentation Index}
