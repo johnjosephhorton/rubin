@@ -82,9 +82,11 @@ We observe that the average AI chain length in the original data is noticeably l
 This indicates that the AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
 
 These findings also mitigate two potential concerns regarding the structure of our dataset.
-In both placebo tests, the observed average AI chain length lies at the extreme tail of the distribution.
-This implies that (1) the GPT-generated workflow sequences are unlikely to be chosen arbitrarily and without logic pertaining to task orderings, and (2) the clustering of AI-executed tasks in the Anthropic data is not driven by chance co-occurrence of execution labels, but instead reflects systematic patterns within occupations.
-We stress that these tests rule out either input being pure noise; they do not establish that the orderings we use are the right ones.
+Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels assigned without regard to a task's place in the workflow, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
+In both tests it instead lies at the extreme tail.
+This implies that (1) the GPT-generated workflow sequences are unlikely to be chosen arbitrarily, and (2) the clustering of AI-executed tasks in the Anthropic data is not driven by chance co-occurrence of execution labels, but instead reflects systematic patterns within occupations.
+We emphasize that these tests rule out either input being pure noise.
+In particular, they do \emph{not} establish that the GPT task orderings we use are the right ones: they cannot distinguish genuine production sequencing from a language model's tendency to place semantically similar tasks next to one another, which would produce the same clustering whenever similar tasks share AI exposure.
 To address the latter concern, Appendix~\ref{app:gptPrompts_robustness} reports a battery of checks on the robustness of our results to alternative GPT prompt formulations.
 
 
