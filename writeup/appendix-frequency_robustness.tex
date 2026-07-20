@@ -45,67 +45,79 @@ We take the three predictions in turn.
 
 Prediction~\#1 concerns the formation of AI chains.
 We measure it, as in Section~\ref{sec:chainLength_prediction}, by the average length of a maximal run of contiguous AI-executed steps, where a step is AI-executed if it is labeled augmentation or automation, pooled across all chains in the sample.
-Figure~\ref{fig:chainlength_heatmap} reports this average across the grid.
+Panel~(A) of Figure~\ref{fig:chainlength_frequency} reports this average across the grid.
 The top all-tasks row reproduces the full-sample value of $1.45$.
 Chains shorten modestly as the sample is restricted to frequent tasks, to between $1.24$ and $1.31$ across most cuts, ticking back up only in the two sparsest Hourly$+$ corners ($1.40$ and $1.50$, with $75$ and $20$ occupations).
 
-Figure~\ref{fig:chainlength_forest} compares the observed average chain length to its position-reshuffle null.
+Panel~(B) of Figure~\ref{fig:chainlength_frequency} compares the observed average chain length to its position-reshuffle null.
 In the full sample the observed value sits at the 100th percentile of its null: AI-executed tasks form longer contiguous chains than random reordering would produce, so the chaining pattern is not a compositional artifact.
 The result survives pruning.
 The observed chain length stays in the upper tail of its null across the inclusive and moderate cuts, at the 87th to 100th percentiles under the Daily$+$ logic and the 58th to 100th under SeveralDaily$+$, and falls back toward the middle of the null only in the Hourly$+$ cuts (the 40th to 68th percentiles), which are the smallest samples.
 
-\begin{figure}[tbp]
+\begin{figure}[p]
 \caption{Average AI Chain Length Across Frequency Cuts}
-\label{fig:chainlength_heatmap}
+\label{fig:chainlength_frequency}
 \begin{center}
-\includegraphics[width=0.74\textwidth]{plots/fragmentationIndex_weeklyTasks/chainLength_logic_threshold_heatmap.png}
-\end{center}
-\footnotesize{
-\emph{Notes:} Each cell reports the average AI chain length, the mean length of a maximal run of contiguous AI-executed steps (augmentation or automation), recomputed on the corresponding frequency cut, with the number of occupations beneath.
-Rows correspond to the three frequency logics and columns to the four thresholds; the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:chainLength_prediction}.
-Darker shading indicates a longer average chain.
-}
-\end{figure}
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): Average AI Chain Length by Frequency Cut}
+    \includegraphics[width=0.56\textwidth]{plots/fragmentationIndex_weeklyTasks/chainLength_logic_threshold_heatmap.png}
+\end{subfigure}
 
-\begin{figure}[tbp]
-\caption{Observed Average AI Chain Length Versus Its Position-Reshuffle Null}
-\label{fig:chainlength_forest}
-\begin{center}
-\includegraphics[width=0.82\textwidth]{plots/fragmentationIndex_weeklyTasks/chainLength_placebo_forest.png}
+\vspace{0.8em}
+
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): Observed Average AI Chain Length Versus Its Position-Reshuffle Null}
+    \includegraphics[width=0.68\textwidth]{plots/fragmentationIndex_weeklyTasks/chainLength_placebo_forest.png}
+\end{subfigure}
 \end{center}
 \footnotesize{
-\emph{Notes:} Each row is a frequency cut, with the ``All tasks'' baseline on top.
-The grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed average chain length, red if outside the band and blue if inside.
-The right margin reports the observed value and its percentile in the null.
+\emph{Notes:} In Panel~(A), each cell reports the average AI chain length, the mean length of a maximal run of contiguous AI-executed steps (augmentation or automation), recomputed on the corresponding frequency cut, with the number of occupations beneath; rows correspond to the three frequency logics and columns to the four thresholds, the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:chainLength_prediction}, and darker shading indicates a longer average chain.
+In Panel~(B), each row is a frequency cut, with the ``All tasks'' baseline on top; the grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed average chain length, red if outside the band and blue if inside; the right margin reports the observed value and its percentile in the null.
 }
 \end{figure}
 
 \subsection{Prediction \#2: The Empirical Fragmentation Index}
 \label{app:frequency_robustness_frag}
 
-Figure~\ref{fig:frag_frequency_heatmap} summarizes the fragmentation regressions across the grid.
+Panel~(A) of Figure~\ref{fig:frag_frequency} summarizes the fragmentation regressions across the grid.
 Each cell reports the standardized coefficient on the empirical fragmentation index from re-estimating regression~\eqref{eq:fragmentation_index_regression} for the corresponding cut, with significance stars and the number of occupations printed beneath.
-We use our preferred exposure-based measure throughout (Definition~1 of Section~\ref{sec:fragmentation_prediction}, under which both E1- and E2-exposed tasks may form AI chains), and the three panels correspond to the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
+We use our preferred exposure-based measure throughout (Definition~1 of Section~\ref{sec:fragmentation_prediction}, under which both E1- and E2-exposed tasks may form AI chains), and the three heatmaps correspond to the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
 A blue cell denotes a negative coefficient, the sign predicted by the model and found in the full-sample estimates, and a red cell a positive one; darker shading indicates a larger magnitude.
 The top all-tasks row reproduces the full-sample standardized estimates of $-0.38$, $-0.32$, and $-0.23$, all significant at the 1\% level, here estimated on the $871$ occupations that retain at least five tasks (and matching the headline estimates of Table~\ref{tab:fragmentation_index_regression_exposure}).
 In the pruned samples the coefficient remains negative in all but the two smallest cells (Hourly$+$ at the 65\% threshold under SOC fixed effects, $+0.02$ and $+0.01$ with 20 occupations) and stays statistically significant across the inclusive and moderate cuts.
 Significance fades only in the sparsest corners, the Hourly$+$ cuts at the 50\% and 65\% thresholds and SeveralDaily$+$ at 65\% (75, 20, and 112 occupations), and more broadly under minor-group fixed effects, where the within-family variation is thinnest.
 
-\begin{figure}[tbp]
+\begin{figure}[p]
 \caption{Empirical Fragmentation and AI Execution Across Frequency Cuts}
-\label{fig:frag_frequency_heatmap}
+\label{fig:frag_frequency}
 \begin{center}
-\includegraphics[width=\textwidth]{plots/fragmentationIndex_weeklyTasks/frag_logic_threshold_heatmap_def1.png}
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): Standardized EFI Coefficient by Frequency Cut}
+    \includegraphics[width=\textwidth]{plots/fragmentationIndex_weeklyTasks/frag_logic_threshold_heatmap_def1.png}
+\end{subfigure}
+
+\vspace{0.8em}
+
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): Observed Coefficient Versus Its Position-Reshuffle Null}
+    \includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_fragmentation_byCut.png}
+\end{subfigure}
 \end{center}
 \footnotesize{
-\emph{Notes:} Each cell reports the standardized coefficient on the empirical fragmentation index (Definition~1, the preferred exposure-based measure) from re-estimating regression~\eqref{eq:fragmentation_index_regression} on the corresponding frequency cut, with the number of occupations beneath and significance stars ($^{*}p{<}.1,\,^{**}p{<}.05,\,^{***}p{<}.01$).
-The three panels report the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
-Within each panel, rows correspond to the three frequency logics and columns to the four thresholds; the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:fragmentation_prediction}.
-Blue denotes a negative coefficient (the predicted sign) and red a positive one.
+\emph{Notes:} In Panel~(A), each cell reports the standardized coefficient on the empirical fragmentation index (Definition~1, the preferred exposure-based measure) from re-estimating regression~\eqref{eq:fragmentation_index_regression} on the corresponding frequency cut, with the number of occupations beneath and significance stars ($^{*}p{<}.1,\,^{**}p{<}.05,\,^{***}p{<}.01$); the three heatmaps report the no-fixed-effects, SOC major-group, and SOC minor-group specifications; within each heatmap, rows correspond to the three frequency logics and columns to the four thresholds, and the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:fragmentation_prediction}; blue denotes a negative coefficient (the predicted sign) and red a positive one.
+In Panel~(B), each row is a frequency cut, with the ``All tasks'' baseline on top, and the three columns are the no-fixed-effects, SOC major-group, and SOC minor-group specifications; the grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed standardized fragmentation-index coefficient, red if outside the band and blue if inside; the left labels report the number of occupations in each cut, and the right margin reports the observed percentile in the null.
 }
 \end{figure}
 
-Figure~\ref{fig:frag_placebo_forest} benchmarks the coefficient against its position-reshuffle null, one column per specification.
+Panel~(B) of Figure~\ref{fig:frag_frequency} benchmarks the coefficient against its position-reshuffle null, one column per specification.
 In the full sample the coefficient is robustly negative but largely compositional: it lands in the middle of a tightly concentrated null, at the 53rd, 66th, and 38th percentiles across the three specifications, because a reshuffled workflow produces a similarly negative coefficient.
 This is why we do not subject Prediction~\#2 to this placebo in the main text.
 The same within-occupation reshuffle underlies the null for all three predictions, yet it speaks to the fragmentation index differently, and the reason is how much each statistic varies under reordering, not how large the space of orderings is.
@@ -115,28 +127,15 @@ This is a limit on the test's \emph{power}, not on how finely $1{,}000$ draws sa
 
 The frequent-task samples are the opposite case, and this is what makes the placebo worth reporting here.
 After pruning, each occupation retains only a handful of steps, so the fragmentation index responds strongly to the order of the surviving steps; reshuffling now genuinely scrambles it, the null distribution is correspondingly wide, and the observed coefficient's position within it becomes an informative test.
-The widening of the grey null bands as one moves down the rows of Figure~\ref{fig:frag_placebo_forest} is the visible signature of this: the same reshuffle that leaves the index almost unchanged in long workflows moves it substantially once workflows are short.
+The widening of the grey null bands as one moves down the rows of Panel~(B) in Figure~\ref{fig:frag_frequency} is the visible signature of this: the same reshuffle that leaves the index almost unchanged in long workflows moves it substantially once workflows are short.
 The observed coefficient drops below its null at the strict cuts, reaching the 2nd and 5th percentiles at SeveralDaily$+$ $\geq 65\%$ under no and major-group fixed effects, and the 2nd to 10th percentiles across the Hourly$+$ $\geq 20\%$, $\geq 35\%$, and $\geq 50\%$ cuts, a sign of genuine clustering beyond composition rather than a compositional artifact.
 The fragmentation relationship is therefore at least as strong among frequent tasks as in the full sample.
-
-\begin{figure}[p]
-\caption{Fragmentation Index: Observed Coefficient Versus Its Position-Reshuffle Null}
-\label{fig:frag_placebo_forest}
-\begin{center}
-\includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_fragmentation_byCut.png}
-\end{center}
-\footnotesize{
-\emph{Notes:} Each row is a frequency cut, with the ``All tasks'' baseline on top; the three columns are the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
-The grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed standardized fragmentation-index coefficient, red if outside the band and blue if inside.
-The left labels report the number of occupations in each cut; the right margin reports the observed percentile in the null.
-}
-\end{figure}
 
 \subsection{Prediction \#3: The Immediate-Neighbor Effect}
 \label{app:frequency_robustness_neighbor}
 
 Figure~\ref{fig:neighbor_frequency_heatmap} repeats the exercise for the neighbor prediction.
-Each cell reports the average marginal effect, from re-estimating regression~\eqref{eq:DWA_regression_ai}, of having the immediately preceding ($t{-}1$, left panel) or following ($t{+}1$, right panel) task be AI-executed on the focal task's probability of AI execution.
+Each cell reports the average marginal effect, from re-estimating regression~\eqref{eq:DWA_regression_ai}, of having the immediately preceding ($t{-}1$, Panel~(A)) or following ($t{+}1$, Panel~(B)) task be AI-executed on the focal task's probability of AI execution.
 A red cell denotes a positive effect, the sign found in the full sample.
 The top row reproduces the full-sample immediate-neighbor effects of $+0.12$ under no fixed effects, which attenuate to between $+0.04$ and $+0.06$ once SOC fixed effects absorb cross-family differences.
 The positive immediate-neighbor effect persists across the inclusive and moderate cuts and often grows in magnitude as the workflow is restricted to frequent tasks; under SeveralDaily$+$ $\geq 50\%$, for instance, the previous-task effect rises to $+0.14$ in the no-fixed-effects specification.
@@ -150,32 +149,23 @@ The effects of farther neighbors two positions away remain small and, under fixe
 \begin{subfigure}[b]{\textwidth}
     \centering
     \captionsetup{labelformat=empty}
-    \caption{Panel (A): No Fixed Effects}
-    \includegraphics[width=0.74\textwidth]{plots/execTypeVaryingDWA_weeklyTasks/neighbor_logic_threshold_heatmap_immediate_baseline.png}
+    \caption{Panel (A): Previous Task ($t{-}1$)}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_weeklyTasks/neighbor_logic_threshold_heatmap_prev_bySpec.png}
 \end{subfigure}
 
-\vspace{0.4em}
+\vspace{0.8em}
 
 \begin{subfigure}[b]{\textwidth}
     \centering
     \captionsetup{labelformat=empty}
-    \caption{Panel (B): SOC Major Group Fixed Effects}
-    \includegraphics[width=0.74\textwidth]{plots/execTypeVaryingDWA_weeklyTasks/neighbor_logic_threshold_heatmap_immediate_majorFE.png}
-\end{subfigure}
-
-\vspace{0.4em}
-
-\begin{subfigure}[b]{\textwidth}
-    \centering
-    \captionsetup{labelformat=empty}
-    \caption{Panel (C): SOC Minor Group Fixed Effects}
-    \includegraphics[width=0.74\textwidth]{plots/execTypeVaryingDWA_weeklyTasks/neighbor_logic_threshold_heatmap_immediate_minorFE.png}
+    \caption{Panel (B): Next Task ($t{+}1$)}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_weeklyTasks/neighbor_logic_threshold_heatmap_next_bySpec.png}
 \end{subfigure}
 \end{center}
 \footnotesize{
-\emph{Notes:} Each cell reports the average marginal effect, from re-estimating regression~\eqref{eq:DWA_regression_ai} on the corresponding frequency cut, of having the immediately previous task ($t{-}1$, left panel) or next task ($t{+}1$, right panel) be AI-executed on the focal task's probability of AI execution, with the number of task observations beneath and significance stars ($^{*}p{<}.1,\,^{**}p{<}.05,\,^{***}p{<}.01$).
+\emph{Notes:} Each cell reports the average marginal effect, from re-estimating regression~\eqref{eq:DWA_regression_ai} on the corresponding frequency cut, of having the immediately previous task ($t{-}1$, Panel~(A)) or next task ($t{+}1$, Panel~(B)) be AI-executed on the focal task's probability of AI execution, with the number of task observations beneath and significance stars ($^{*}p{<}.1,\,^{**}p{<}.05,\,^{***}p{<}.01$).
 Standard errors are clustered at the DWA level.
-Rows within each panel correspond to the three frequency logics; columns to the four thresholds; the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:DWA_prediction}.
+Within each panel, the three heatmaps report the no-fixed-effects, SOC major-group, and SOC minor-group specifications; rows correspond to the three frequency logics and columns to the four thresholds; the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:DWA_prediction}.
 Red denotes a positive effect (the predicted sign), blue a negative one, and ``$-$'' a cut with too few observations to estimate.
 }
 \end{figure}
