@@ -28,12 +28,15 @@ This yields a grid of twelve frequency cuts, three logics by four thresholds, fo
 \subsection{How We Read the Grid}
 \label{app:frequency_robustness_reading}
 
-We summarize each prediction with two figures.
+We summarize the predictions with two kinds of figures.
 A \emph{heatmap} reports the value of the relevant statistic in every cell of the logic-by-threshold grid, with the unpruned ``all tasks'' specification in the top row, so that the effect of progressively dropping infrequent tasks can be read down the rows, which impose a more demanding frequency logic, and across the columns, which raise the threshold.
+We use heatmaps for the two regression-based predictions, whose cells also carry significance stars and the number of observations behind each estimate.
 A \emph{forest plot} then asks whether the observed statistic exceeds what the composition of each pruned sample mechanically delivers.
 To build it we benchmark every cut against a within-occupation position-reshuffle placebo: we redraw $1{,}000$ reshuffles of task positions within occupations, re-apply the frequency filter, and recompute the statistic, producing a null distribution that holds the marginal composition of the sample fixed while destroying the workflow ordering.
 In each forest the rows are the frequency cuts, with the ``all tasks'' baseline on top; the grey bar spans the 10th to 90th percentiles of the reshuffle null, the vertical tick marks the null mean, and the dot is the observed estimate, red when it falls outside the null band and blue when inside, with the observed percentile in the null printed in the right margin.
 For the fragmentation index and the neighbor effect, which are estimated under three specifications, each forest carries one column per specification (no fixed effects, SOC major-group, and SOC minor-group).
+We report a forest plot for all three predictions.
+For Prediction~\#1, whose statistic is a descriptive average rather than a regression coefficient, the forest is the only figure we report, since it already gives the observed chain length in every cut alongside its null.
 
 Read together, the three predictions survive the restriction to frequent tasks.
 The average AI chain stays longer than reordering would produce; the immediate-neighbor effect stays in the upper tail of its null; and the fragmentation coefficient stays negative and, at the strictest cuts, drops below its null.
