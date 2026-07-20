@@ -55,7 +55,7 @@ NOCC_N = {t: v[0] for t, v in _nb.items()}; NOBS_N = {t: v[1] for t, v in _nb.it
 # Fragmentation regresses on all such occupations; the neighbor regression uses the DWA-eligible neighbored
 # subset of them (so NOCC_N <= NOCC_F). Read the fragmentation N from the heatmap sweep so the forest panel
 # header matches the heatmap cell exactly.
-_fsw = pd.read_csv(f"{fd}/frag_logic_threshold_sweep.csv"); _fsw = _fsw[(_fsw.FI_def == 'v2') & (_fsw.FE == 'none')]
+_fsw = pd.read_csv(f"{fd}/frag_logic_threshold_sweep.csv"); _fsw = _fsw[(_fsw.FI_def == 'v1') & (_fsw.FE == 'none')]  # v1 = paper Definition 1 (exposure E1|E2) after the July 2026 renumbering; rerun the sweep notebook before this script
 NOCC_F = {('all' if r['family'] == 'all' else f"{r['family']}{int(r['threshold'])}"): int(r['N_occ'])
           for _, r in _fsw.iterrows()}
 
@@ -168,9 +168,9 @@ def forest_3col(exr, eff, unit, suptitle, fname):
     fig, axes = plt.subplots(1, 3, figsize=(15.5, 7.4), sharey=True)
     for j, (ax, sp) in enumerate(zip(axes, BYCUT_SPECS)):
         panel_bycut(ax, by_cut(exr, eff, sp), unit, SPEC_TITLE[sp], ylabels=(j == 0))
-    fig.tight_layout(rect=[0, 0.06, 1, 0.88], w_pad=2.5)
+    fig.tight_layout(rect=[0, 0.06, 1, 0.99], w_pad=2.5)
     fig.legend(handles=leg, loc='lower center', ncol=4, fontsize=9, frameon=False, bbox_to_anchor=(0.5, 0.01))
-    fig.suptitle(suptitle, fontsize=12, fontweight='bold')
+    # figure titles live in the writeup, not the PNG (suptitle argument kept for call-site compatibility)
     fig.savefig(f"{outd}/{fname}", dpi=190, bbox_inches='tight'); plt.close(fig)
 
 forest_3col('Fragmentation', 'FI v2', FI_UNIT,

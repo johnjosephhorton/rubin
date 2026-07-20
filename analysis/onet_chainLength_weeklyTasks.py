@@ -115,7 +115,7 @@ for i, fam in enumerate(fam_order):
             ann[i][j] = f"{v:.2f}\nN={int(sub['N_occ'].iloc[0])}"
 vmin, vmax = np.nanmin(M), np.nanmax(M)
 fig, ax = plt.subplots(figsize=(7.2, 5.2))
-im = ax.imshow(M, cmap='YlGnBu', norm=Normalize(vmin=vmin, vmax=vmax), aspect='auto')
+im = ax.imshow(M, cmap='Purples', norm=Normalize(vmin=vmin, vmax=vmax), aspect='auto')  # sequential palette distinct from the diverging RdBu used for EFI/neighbor heatmaps
 ax.set_xticks(range(len(SWEEP_THRESHOLDS))); ax.set_xticklabels([f"≥{t}%" for t in SWEEP_THRESHOLDS])
 ax.set_yticks(range(len(fam_order))); ax.set_yticklabels([fam_label[f] for f in fam_order])
 ax.axhline(0.5, color='black', lw=2)
@@ -127,8 +127,7 @@ for i in range(len(fam_order)):
                     color='white' if shade > 0.6 else 'black')
 ax.set_xlabel('Threshold')
 fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04, label='Average AI chain length')
-ax.set_title('Average AI chain length by frequency cut\n(mean length of a contiguous AI-executed run; '
-             'top row = all-tasks baseline)', fontsize=11)
+# figure titles live in the writeup, not the PNG
 fig.tight_layout()
 fig.savefig(f"{output_plot_path}/chainLength_logic_threshold_heatmap.png", dpi=200, bbox_inches='tight')
 plt.close(fig)
@@ -182,8 +181,7 @@ if N_RESHUFFLES > 0:
     ax.set_yticks(ys); ax.set_yticklabels(order, fontsize=9)
     ax.set_xlabel('Average AI chain length (steps per contiguous AI-executed run)', fontsize=9.5)
     ax.grid(axis='x', ls=':', alpha=0.5); ax.margins(x=0.16)
-    ax.set_title(f'Observed average AI chain length vs position-reshuffle null  (N={N_RESHUFFLES})\n'
-                 'right margin = observed percentile in null', fontsize=11, fontweight='bold')
+    # figure titles live in the writeup, not the PNG
     leg = [Line2D([0], [0], color='0.55', lw=5, alpha=0.5, label='Placebo null 10–90%'),
            Line2D([0], [0], marker='|', ls='', ms=12, mew=2, color='0.35', label='Placebo mean'),
            Line2D([0], [0], marker='o', ls='', ms=9, color='crimson', mec='k', label='Observed (outside 10–90% null)'),

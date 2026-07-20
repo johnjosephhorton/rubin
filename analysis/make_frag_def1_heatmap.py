@@ -66,8 +66,7 @@ def heatmap(ax, fe, title):
 fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
 for ax, (fe_code, fe_name) in zip(axes, FE_SPECS):
     heatmap(ax, fe_code, fe_name)
-fig.suptitle('Empirical fragmentation index (EFI Definition 1) by frequency logic × threshold',
-             fontweight='bold', fontsize=12.5)
+# figure titles live in the writeup, not the PNG
 fig.tight_layout()
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 fig.savefig(OUT, dpi=200, bbox_inches='tight')

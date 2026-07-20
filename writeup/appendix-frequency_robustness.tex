@@ -180,35 +180,36 @@ Red denotes a positive effect (the predicted sign), blue a negative one, and ``$
 }
 \end{figure}
 
-Figures~\ref{fig:neighbor_placebo_forest_t1} and~\ref{fig:neighbor_placebo_forest_t2} benchmark the previous-task ($t{-}1$) and next-task ($t{+}1$) effects against their position-reshuffle nulls, one column per specification.
+Figure~\ref{fig:neighbor_placebo_forest} benchmarks the previous-task ($t{-}1$, Panel~(A)) and next-task ($t{+}1$, Panel~(B)) effects against their position-reshuffle nulls, one column per specification.
 Both effects sit far in the upper tail of their nulls in the full sample, at the 100th percentile in all three specifications, and stay there across the inclusive and moderate cuts.
 The previous-task effect lies outside its 10-to-90 null across all four Daily$+$ cuts (the 91st to 99th percentiles) and at SeveralDaily$+$ $\geq 20\%$ and $\geq 50\%$ (the 93rd to 98th), and the next-task effect behaves similarly, escaping its null across the Daily$+$ cuts.
 The effects retreat toward the middle of their nulls only at the sparsest cuts, the Hourly$+$ $\geq 35\%$ and $\geq 50\%$ cuts and SeveralDaily$+$ $\geq 35\%$, where the surviving task observations number in the low hundreds and the reshuffle bands are correspondingly wide.
 Chaining is therefore not a compositional artifact among frequent tasks.
 
 \begin{figure}[p]
-\caption{Previous-Task ($t{-}1$) Effect: Observed Marginal Effect Versus Its Position-Reshuffle Null}
-\label{fig:neighbor_placebo_forest_t1}
+\caption{Immediate-Neighbor Effects: Observed Marginal Effects Versus Their Position-Reshuffle Nulls}
+\label{fig:neighbor_placebo_forest}
 \begin{center}
-\includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_neighbor_t1_byCut.png}
-\end{center}
-\footnotesize{
-\emph{Notes:} Each row is a frequency cut, with the ``All tasks'' baseline on top; the three columns are the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
-The grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed average marginal effect of having the previous task be AI-executed, red if outside the band and blue if inside.
-The left labels report the number of occupations in each cut; the right margin reports the observed percentile in the null.
-A blank row denotes a cut with too few neighbored task observations to estimate.
-}
-\end{figure}
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): Previous Task ($t{-}1$)}
+    \includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_neighbor_t1_byCut.png}
+\end{subfigure}
 
-\begin{figure}[p]
-\caption{Next-Task ($t{+}1$) Effect: Observed Marginal Effect Versus Its Position-Reshuffle Null}
-\label{fig:neighbor_placebo_forest_t2}
-\begin{center}
-\includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_neighbor_t2_byCut.png}
+\vspace{0.8em}
+
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): Next Task ($t{+}1$)}
+    \includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_neighbor_t2_byCut.png}
+\end{subfigure}
 \end{center}
 \footnotesize{
-\emph{Notes:} Each row is a frequency cut, with the ``All tasks'' baseline on top; the three columns are the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
-The grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed average marginal effect of having the next task be AI-executed, red if outside the band and blue if inside.
+\emph{Notes:} Panel~(A) reports the average marginal effect of having the previous task ($t{-}1$) be AI-executed, and Panel~(B) the corresponding effect for the next task ($t{+}1$).
+In each panel, rows are frequency cuts, with the ``All tasks'' baseline on top; the three columns are the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
+The grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed average marginal effect, red if outside the band and blue if inside.
 The left labels report the number of occupations in each cut; the right margin reports the observed percentile in the null.
 A blank row denotes a cut with too few neighbored task observations to estimate.
 }
