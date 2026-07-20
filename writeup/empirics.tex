@@ -40,9 +40,12 @@ This prediction follows from our definition of AI chains (Definition~\ref{def:ai
 
 To test this, we compute the observed average AI chain length in the data and benchmark it against two randomization placebos.
 First, we permute task positions within each occupation's workflow.
-Second, we permute AI-execution labels across tasks in the full dataset.
+Second, we reassign tasks, each carrying its AI-execution label, randomly across occupations within the same major SOC group, preserving each occupation's task count and randomizing task positions within each occupation.\footnote{
+We confine the reassignment to major occupation groups rather than the full dataset because tasks remain meaningful within their broad field but not across fields: reassigning a manufacturing task to a software occupation makes little sense, whereas reassigning tasks between two software occupations does.
+If anything, restricting the reshuffle to major-group boundaries is the more conservative choice: each major group retains its AI intensity under the within-group reassignment, whereas randomizing tasks across the full dataset would scatter AI-executed tasks over all occupations and push the placebo average chain length even lower.}
+The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains.
 The observed mean AI chain length is 1.45.
-Figure~\ref{fig:aiChains_graphs_def1} compares this value to the distributions from 1{,}000 task position permutations (left) and 1{,}000 execution label permutations (right).
+Figure~\ref{fig:aiChains_graphs_def1} compares this value to the distributions from 1{,}000 task position permutations (left) and 1{,}000 task assignment permutations (right).
 \begin{figure}[ht!]
 \caption{Average Length of AI Chains: Actual versus Placebo Datasets}
 \label{fig:aiChains_graphs_def1}
@@ -60,7 +63,7 @@ Figure~\ref{fig:aiChains_graphs_def1} compares this value to the distributions f
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \captionsetup{labelformat=empty}
-        \caption{(b) Random Execution Label Assignment}
+        \caption{(b) Random Task Assignment within Major Groups}
         \includegraphics[width=\textwidth]{plots/aiChain_length_count/aiChains_chainLength_taskAssignmentReshuffle_definition1.png}
     \end{subfigure}
 \end{subfigure}
@@ -68,7 +71,8 @@ Figure~\ref{fig:aiChains_graphs_def1} compares this value to the distributions f
 \raggedright \footnotesize{
 \emph{Notes:}
 Red dashed lines show the observed average AI chain length in the actual dataset.
-Panel (a) (respectively, Panel (b)) shows the histogram of the average AI chain length for 1,000 placebo datasets in which the positions of tasks within each occupation (respectively, execution labels of tasks in the entire dataset) are randomized.
+Panel (a) shows the histogram of the average AI chain length for 1,000 placebo datasets in which the positions of tasks within each occupation are randomized.
+Panel (b) shows the corresponding histogram for 1,000 placebo datasets in which tasks, each carrying its execution label, are randomly reassigned across occupations within the same major SOC group, preserving occupation sizes.
 }
 \end{figure}
 We observe that the average AI chain length in the original data is noticeably larger than in both placebo distributions.
