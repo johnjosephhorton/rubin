@@ -81,12 +81,11 @@ Panel (b) shows the corresponding histogram for 1,000 placebo datasets in which 
 We observe that the average AI chain length in the original data is noticeably larger than in both placebo distributions.
 This indicates that the AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
 
-These findings also mitigate two potential concerns regarding the inputs to our analysis.
-Were the GPT-generated workflow sequences arbitrary, the observed average AI chain length would be distributed as the task position placebo; and were the Anthropic execution labels assigned without regard to a task's place in the workflow, it would be distributed as the task assignment placebo.
-It instead lies in the extreme tail of both.
-Each test therefore rules out the corresponding input being noise: the orderings are not arbitrary, and the execution labels do not co-occur by chance.
-We read this as evidence that neither input is uninformative, not that either is correct.
-In particular, the placebos cannot tell whether the orderings we use reflect genuine production sequencing or merely the tendency of a language model to place similar tasks next to one another; for that concern, which also speaks to the sequences being the output of a single prompt, Appendix~\ref{app:gptPrompts_robustness} shows that our results remain stable across alternative prompt formulations reflecting different ordering logics, and the task sequences they produce.
+These findings also mitigate two potential concerns regarding the structure of our dataset.
+In both placebo tests, the observed average AI chain length lies at the extreme tail of the distribution.
+This implies that (1) the GPT-generated workflow sequences are unlikely to be chosen arbitrarily and without logic pertaining to task orderings, and (2) the clustering of AI-executed tasks in the Anthropic data is not driven by chance co-occurrence of execution labels, but instead reflects systematic patterns within occupations.
+We stress that these tests rule out either input being pure noise; they do not establish that the orderings we use are the right ones.
+To address the latter concern, Appendix~\ref{app:gptPrompts_robustness} reports a battery of checks on the robustness of our results to alternative GPT prompt formulations.
 
 
 
