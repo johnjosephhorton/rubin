@@ -7,7 +7,21 @@ This appendix collects supplementary robustness results for Predictions \#2 and 
 \subsection{Additional Tests for Prediction \#2}
 \label{app:additional_robustness_pred2}
 To ensure that our results for the second prediction are not driven by how fragmentation is measured using the AI exposure classifications of \citet{eloundou2023gpts}, we re-estimate \eqref{eq:fragmentation_index_regression} using an additional measure of task fragmentation (EFI Definition~2) constructed directly from realized AI execution outcomes, rather than from AI-exposed tasks.
-The corresponding regression results are reported in columns (4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression} in the main text, with complementary visual evidence provided in Figure~\ref{fig:fragmentation_index_regression_execution}.
+The corresponding regression results are reported in Table~\ref{tab:fragmentation_index_regression_execution}, with complementary visual evidence provided in Figure~\ref{fig:fragmentation_index_regression_execution}.
+
+\begin{table}[ht!]
+    \caption{Role of AI-able Task Fragmentation in Determining AI Execution Outcomes (Execution-Based Empirical Fragmentation Measure)}
+    \label{tab:fragmentation_index_regression_execution}
+    \begin{center}
+    \input{tables/fragmentation_index_regression_execution.tex}
+    \end{center}
+    \raggedright \footnotesize{\emph{Notes:}} This table reports results from estimating regression~\eqref{eq:fragmentation_index_regression}.
+    The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\text{ai\_execution}$).
+    The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation, while the ``Empirical Fragmentation Index'' captures how dispersed AI-able steps are across the occupation's workflow.
+    The execution-based empirical fragmentation index (Definition~2) treats any AI-executed task, automated or augmented, as contributing equally to the formation of AI chains in measuring task fragmentation.
+    All three variables are standardized to unit standard deviation within the sample, so the reported coefficients are in standard-deviation units.
+    Clustered standard errors are in parentheses; $^{*}\!: p<0.1$, $^{**}\!: p<0.05$, $^{***}\!: p<0.01$.
+\end{table}
 
 By construction, the execution-based EFI measure is mechanically related to the share of tasks executed by AI.
 Holding the task sequence fixed, an additional AI-executed task necessarily increases the occupation's AI execution share while weakly reducing its EFI.\footnote{The reduction is weak because adding an isolated AI-executed task does not change fragmentation, whereas adding a task adjacent to an existing AI-executed task extends an AI chain and reduces fragmentation.}
