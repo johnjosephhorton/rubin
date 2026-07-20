@@ -45,38 +45,23 @@ We take the three predictions in turn.
 
 Prediction~\#1 concerns the formation of AI chains.
 We measure it, as in Section~\ref{sec:chainLength_prediction}, by the average length of a maximal run of contiguous AI-executed steps, where a step is AI-executed if it is labeled augmentation or automation, pooled across all chains in the sample.
-Panel~(A) of Figure~\ref{fig:chainlength_frequency} reports this average across the grid.
+Figure~\ref{fig:chainlength_frequency} reports this average across the frequency cuts and compares each to its position-reshuffle null.
 The top all-tasks row reproduces the full-sample value of $1.45$.
 Chains shorten modestly as the sample is restricted to frequent tasks, to between $1.24$ and $1.31$ across most cuts, ticking back up only in the two sparsest Hourly$+$ corners ($1.40$ and $1.50$, with $75$ and $20$ occupations).
-
-Panel~(B) of Figure~\ref{fig:chainlength_frequency} compares the observed average chain length to its position-reshuffle null.
 In the full sample the observed value sits at the 100th percentile of its null: AI-executed tasks form longer contiguous chains than random reordering would produce, so the chaining pattern is not a compositional artifact.
 The result survives pruning.
 The observed chain length stays in the upper tail of its null across the inclusive and moderate cuts, at the 87th to 100th percentiles under the Daily$+$ logic and the 58th to 100th under SeveralDaily$+$, and falls back toward the middle of the null only in the Hourly$+$ cuts (the 40th to 68th percentiles), which are the smallest samples.
 
-\begin{figure}[p]
-\caption{Average AI Chain Length Across Frequency Cuts}
+\begin{figure}[tbp]
+\caption{Average AI Chain Length Across Frequency Cuts, Versus Its Position-Reshuffle Null}
 \label{fig:chainlength_frequency}
 \begin{center}
-\begin{subfigure}[b]{\textwidth}
-    \centering
-    \captionsetup{labelformat=empty}
-    \caption{Panel (A): Average AI Chain Length by Frequency Cut}
-    \includegraphics[width=0.56\textwidth]{plots/fragmentationIndex_weeklyTasks/chainLength_logic_threshold_heatmap.png}
-\end{subfigure}
-
-\vspace{0.8em}
-
-\begin{subfigure}[b]{\textwidth}
-    \centering
-    \captionsetup{labelformat=empty}
-    \caption{Panel (B): Observed Average AI Chain Length Versus Its Position-Reshuffle Null}
-    \includegraphics[width=0.68\textwidth]{plots/fragmentationIndex_weeklyTasks/chainLength_placebo_forest.png}
-\end{subfigure}
+\includegraphics[width=0.82\textwidth]{plots/fragmentationIndex_weeklyTasks/chainLength_placebo_forest.png}
 \end{center}
 \footnotesize{
-\emph{Notes:} In Panel~(A), each cell reports the average AI chain length, the mean length of a maximal run of contiguous AI-executed steps (augmentation or automation), recomputed on the corresponding frequency cut, with the number of occupations beneath; rows correspond to the three frequency logics and columns to the four thresholds, the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:chainLength_prediction}, and darker shading indicates a longer average chain.
-In Panel~(B), each row is a frequency cut, with the ``All tasks'' baseline on top; the grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed average chain length, red if outside the band and blue if inside; the right margin reports the observed value and its percentile in the null.
+\emph{Notes:} Each row is a frequency cut, with the ``All tasks'' baseline on top and the number of occupations in each cut in the left labels.
+The grey bar spans the 10th to 90th percentiles of the within-occupation position-reshuffle null ($1{,}000$ draws), the vertical tick marks the null mean, and the dot is the observed average AI chain length, the mean length of a maximal run of contiguous AI-executed steps (augmentation or automation) recomputed on that cut, red if outside the band and blue if inside.
+The right margin reports the observed value and its percentile in the null.
 }
 \end{figure}
 

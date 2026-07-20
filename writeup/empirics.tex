@@ -29,6 +29,11 @@ Specifically, the automated versus augmented distinction in our model is defined
 As a result, tasks labeled as automated in the data may still be followed by manual steps, leading to apparent deviations from the model's sequencing restriction without contradicting its underlying logic.
 Therefore, when considering the structure of AI chains in the remainder of this section, we do not distinguish between tasks labeled as automated versus augmented in the data; rather, we treat both labels as indicating AI execution. %and think of a chain as a contiguous sequence of such tasks, as discussed further in Section~\ref{sec:chainLength_prediction}.
 
+A further feature of the dataset is that each occupation's sequence contains all of its O*NET tasks, regardless of how often a task is actually performed on the job.
+Rarely-executed tasks could therefore lengthen workflows and insert ``filler'' steps between the tasks that structure day-to-day production, in which case the patterns we document below would partly reflect infrequent work rather than the operative structure of a job.
+Appendix~\ref{app:frequency_robustness} re-examines all three predictions on samples restricted to the tasks that workers report performing frequently, and all three continue to hold.
+We report those exercises as robustness rather than as our headline specification because pruning on frequency erodes precisely the variation the tests rely on: AI-executed tasks make up only 13\% of our sample to begin with, and each successive restriction removes both tasks and entire occupations, leaving the strictest cuts with a few dozen occupations and correspondingly little statistical power.
+
 
 
 \subsection{Prediction \#1: Tendency to Have Runs of Consecutive AI-executed Tasks}

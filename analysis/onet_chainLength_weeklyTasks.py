@@ -178,7 +178,7 @@ if N_RESHUFFLES > 0:
         ax.text(1.012, y, f"{obs:.2f}  ({_ord(pc)})", transform=ax.get_yaxis_transform(), clip_on=False,
                 va='center', ha='left', fontsize=8, color='dimgray')
     ax.axhline(len(order) - 1.5, color='black', lw=1)
-    ax.set_yticks(ys); ax.set_yticklabels(order, fontsize=9)
+    ax.set_yticks(ys); ax.set_yticklabels([f"{lab}  (N={n_occ[lab]})" for lab in order], fontsize=9)
     ax.set_xlabel('Average AI chain length (steps per contiguous AI-executed run)', fontsize=9.5)
     ax.grid(axis='x', ls=':', alpha=0.5); ax.margins(x=0.16)
     # figure titles live in the writeup, not the PNG
