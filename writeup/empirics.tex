@@ -82,11 +82,11 @@ We observe that the average AI chain length in the original data is noticeably l
 This indicates that the AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
 
 These findings also mitigate two potential concerns regarding the structure of our dataset.
-Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels assigned without regard to a task's place in the workflow, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
-In both tests it instead lies at the extreme tail.
+Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels distributed randomly in the dataset across occupations, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
+In both cases the true value instead lies at the extreme tail.
 This implies that (1) the GPT-generated workflow sequences are unlikely to be chosen arbitrarily, and (2) the clustering of AI-executed tasks in the Anthropic data is not driven by chance co-occurrence of execution labels, but instead reflects systematic patterns within occupations.
 We emphasize that these tests rule out either input being pure noise.
-In particular, they do \emph{not} establish that the GPT task orderings we use are the right ones: they cannot distinguish genuine production sequencing from a language model's tendency to place semantically similar tasks next to one another, which would produce the same clustering whenever similar tasks share AI exposure.
+In particular, they do \emph{not} establish that the GPT task orderings we use are the ``right'' ones.
 To address the latter concern, Appendix~\ref{app:gptPrompts_robustness} reports a battery of checks on the robustness of our results to alternative GPT prompt formulations.
 
 
@@ -140,7 +140,10 @@ We estimate three specifications: no additional controls, SOC major-group fixed 
 We include SOC fixed effects to ensure the results are not driven by a narrow subset of occupation families.
 Across specifications, a one-standard-deviation increase in AI exposure is associated with a 0.08 to 0.26 standard-deviation increase in the share of occupation tasks executed by AI.
 Consistent with the model, the EFI coefficient is negative and statistically significant at the 1\% level in all specifications, implying that more dispersed AI-able steps predict lower realized AI execution conditional on exposure.
-In Appendix~\ref{app:additional_robustness_pred2} we repeat the same exercise with a complementary execution-based measure, EFI Definition~2, which forms potential chains from realized AI-executed tasks rather than from AI-exposed ones.
+In Appendix~\ref{app:additional_robustness_pred2} we repeat the same exercise with a complementary execution-based measure, EFI Definition~2, which forms potential chains from realized AI-executed tasks rather than from AI-exposed ones.\footnote{
+Consistent with our treatment of AI chains throughout this section, this measure counts any AI-executed task, augmented or automated, as able to form a chain.
+We do not impose the model's stricter requirement that a chain begin with an automated task, since, as discussed above, the automated versus augmented distinction in the Anthropic data is based on task-level feasibility rather than workflow position and so does not line up with the model's sequencing restriction.
+}
 The results, reported in Appendix Table~\ref{tab:fragmentation_index_regression_execution}, deliver the same pattern with larger coefficients.\footnote{Note that the execution-based measure is not intended to provide an independent characterization of the relationship between task fragmentation and AI execution, as it is mechanically related to the dependent variable. Rather, it serves as an additional ``check'' that the pattern observed in AI execution is consistent with the fragmentation logic.}
 
 Together, the evidence from both exposure-based (ex-ante) and execution-based (ex-post) empirical fragmentation measures points to a common pattern.
