@@ -1,12 +1,12 @@
 """
-Paper figure for Appendix J: EFI Definition 2 (preferred exposure measure) fragmentation heatmap across the
+Paper figure for Appendix J: EFI Definition 1 (preferred exposure-based measure, E1|E2) fragmentation heatmap across the
 frequency logic x threshold grid, with the three FE specifications (No FE /
 SOC Major group / SOC Minor group) shown side by side.
 
 Reads the sweep produced by onet_fragmentationIndex_weeklyTasks.ipynb
 (frag_logic_threshold_sweep.csv) and reuses that notebook's heatmap styling.
 Run after the notebook so the sweep CSV is up to date:
-    python3 analysis/make_frag_def2_heatmap.py
+    python3 analysis/make_frag_def1_heatmap.py
 """
 import os
 import numpy as np
@@ -16,7 +16,7 @@ from matplotlib.colors import TwoSlopeNorm
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SWEEP = os.path.join(BASE, "data/computed_objects/fragmentationIndex_weeklyTasks/frag_logic_threshold_sweep.csv")
-OUT = os.path.join(BASE, "writeup/plots/fragmentationIndex_weeklyTasks/frag_logic_threshold_heatmap_def2.png")
+OUT = os.path.join(BASE, "writeup/plots/fragmentationIndex_weeklyTasks/frag_logic_threshold_heatmap_def1.png")
 
 sweep = pd.read_csv(SWEEP)
 SWEEP_THRESHOLDS = [20, 35, 50, 65]
@@ -39,7 +39,7 @@ def _cell(sub, fam, t):
 
 
 def heatmap(ax, fe, title):
-    sub = sweep[(sweep['FI_def'] == 'v2') & (sweep['FE'] == fe)]
+    sub = sweep[(sweep['FI_def'] == 'v1') & (sweep['FE'] == fe)]  # v1 = paper Definition 1 (exposure E1|E2) after the July 2026 renumbering; rerun the sweep notebook before this script
     M = np.full((len(row_order), len(SWEEP_THRESHOLDS)), np.nan)
     ann = [['—' for _ in SWEEP_THRESHOLDS] for _ in row_order]
     for i, fam in enumerate(row_order):
@@ -66,7 +66,7 @@ def heatmap(ax, fe, title):
 fig, axes = plt.subplots(1, 3, figsize=(15, 4.6))
 for ax, (fe_code, fe_name) in zip(axes, FE_SPECS):
     heatmap(ax, fe_code, fe_name)
-fig.suptitle('Empirical fragmentation index (EFI Definition 2) by frequency logic × threshold',
+fig.suptitle('Empirical fragmentation index (EFI Definition 1) by frequency logic × threshold',
              fontweight='bold', fontsize=12.5)
 fig.tight_layout()
 os.makedirs(os.path.dirname(OUT), exist_ok=True)

@@ -111,14 +111,11 @@ If none of the five tasks are exposed to AI, then the number of tasks in the the
 If instead two consecutive O*NET tasks are exposed to AI (and thus can form an AI chain when all AI-exposed tasks turn into AI-executed tasks), the number of tasks in the model falls to four and the EFI becomes $4/5 = 0.8$.
 Thus, the empirical fragmentation index decreases as more AI-exposed steps can potentially be consolidated into longer AI chains.
 
-For the calculation of EFI, we treat all E1-exposed tasks as identical for the purpose of potential chaining and assume that all AI-exposed tasks could, in principle, be executed by AI.
-Because only 14\% of tasks in our dataset are E1-exposed, we also consider a broader definition of AI-able tasks when computing the empirical fragmentation.
-Specifically, we expand the set of AI-able tasks that can form AI chains to include both E1- and E2-exposed tasks, which together account for 44\% of all tasks in the dataset.
-Accordingly, we construct two versions of the empirical fragmentation index.
-Definition~1 is a stricter measure that permits only E1-exposed tasks to form AI chains.
-Definition~2 allows a broader set of AI-exposed tasks, including both E1- and E2-exposed tasks, to potentially form AI chains and therefore reflects a more lenient mapping from exposure to execution.
+For the calculation of EFI, we treat all AI-exposed tasks as identical for the purpose of potential chaining and assume that all of them could, in principle, be executed by AI.
+We count as AI-exposed both E1- and E2-exposed tasks, which together account for 44\% of the tasks in the dataset; restricting attention to E1-exposed tasks alone (14\% of tasks) would leave potential AI chains too sparse for fragmentation to be meaningfully measured.
+We refer to this exposure-based measure as EFI Definition~1.
 
-We estimate regression~\eqref{eq:fragmentation_index_regression} using the two empirical fragmentation measures.
+We estimate regression~\eqref{eq:fragmentation_index_regression} using this empirical fragmentation measure.
 The results are reported in Table~\ref{tab:fragmentation_index_regression_exposure}.
 \begin{table}[t!]
     \caption{Role of AI-able Task Fragmentation in Determining AI Execution Outcomes}
@@ -129,20 +126,18 @@ The results are reported in Table~\ref{tab:fragmentation_index_regression_exposu
     \raggedright \footnotesize{\emph{Notes:}} This table reports results from estimating regression~\eqref{eq:fragmentation_index_regression}.
     The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\text{ai\_execution}$).
     The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation, while the ``Empirical Fragmentation Index'' captures how dispersed AI-able steps are across the occupation's workflow.
-    Definition~1 measures fragmentation based on potential AI chains formed exclusively by E1-exposed tasks, whereas Definition~2 measures fragmentation based on potential chains formed by both E1- and E2-exposed tasks.
+    The empirical fragmentation index (Definition~1) measures fragmentation based on potential AI chains formed by E1- and E2-exposed tasks.
     All three variables are standardized to unit standard deviation within the sample, so the reported coefficients are in standard-deviation units.
 \end{table}
-For each definition, we estimate three specifications: no additional controls, SOC major-group fixed effects, and SOC minor-group fixed effects.
+We estimate three specifications: no additional controls, SOC major-group fixed effects, and SOC minor-group fixed effects.
 We include SOC fixed effects to ensure the results are not driven by a narrow subset of occupation families.
-Across specifications, a one-standard-deviation increase in AI exposure is associated with a 0.08 to 0.55 standard-deviation increase in the share of occupation tasks executed by AI.
-Consistent with the model, the EFI coefficient is negative in nearly all specifications, implying that more dispersed AI-able steps predict lower realized AI execution conditional on exposure.
-The only exception is Definition~1 without SOC controls (column~(1)), where EFI is imprecise and insignificant because few E1-exposed tasks sharply limit the steps that can form potential AI chains.
-Under Definition~2, which considers a broader set of AI-exposed tasks when constructing potential AI chains, the EFI coefficients are negative and statistically significant at the 1\% level in all specifications.
+Across specifications, a one-standard-deviation increase in AI exposure is associated with a 0.08 to 0.26 standard-deviation increase in the share of occupation tasks executed by AI.
+Consistent with the model, the EFI coefficient is negative and statistically significant at the 1\% level in all specifications, implying that more dispersed AI-able steps predict lower realized AI execution conditional on exposure.
 
-In Appendix Table~\ref{tab:fragmentation_index_regression_execution} we repeat the same exercise using two additional EFI measures constructed from AI execution outcomes.
-The results are consistent with those based on exposure measures reported above.\footnote{
-Note that the additional measures are not intended to provide an independent characterization of the relationship between task fragmentation and AI execution.
-Rather they are meant to serve as an additional ``check'' that the pattern observed in AI execution is consistent with the fragmentation logic.
+In Appendix Table~\ref{tab:fragmentation_index_regression_execution} we repeat the same exercise using an additional EFI measure constructed from AI execution outcomes (Definition~2), which treats any AI-executed task, whether augmented or automated, as AI-able when forming chains.
+The results are consistent with those based on the exposure measure reported above.\footnote{
+Note that the execution-based measure is not intended to provide an independent characterization of the relationship between task fragmentation and AI execution.
+Rather it is meant to serve as an additional ``check'' that the pattern observed in AI execution is consistent with the fragmentation logic.
 See Appendix~\ref{app:additional_robustness_pred2} for more details.
 }
 Together, the evidence from both exposure-based (ex-ante) and execution-based (ex-post) empirical fragmentation measures points to a common pattern.
@@ -214,7 +209,7 @@ Because some DWAs contain multiple tasks within the same occupation, column~(5) 
 This addresses mechanical proximity concerns that could inflate neighbor effects when multiple same-DWA tasks appear within an occupation's workflow.
 Estimates are close to the baseline, although distant neighbor effects are slightly weaker and less precisely estimated.
 Finally, column~(6) adds DWA fixed effects to Column~(5).
-The pattern in this case mirrors columns~(2)--(4): small positive effects for immediate neighbors and negligible effects for more distant neighbors.
+The pattern in this case mirrors columns~(2)--(4): small positive effects for immediate neighbors and negligible effects for distant ones.
 
 Because we do not have a benchmark for what constitutes a large versus small effect in our context, interpreting the magnitudes in a vacuum is difficult.
 To better understand these results and to check whether the observed patterns could have arisen by chance, we conduct a robustness exercise in which we re-estimate \eqref{eq:DWA_regression_ai} for 1,000 placebo datasets constructed by randomizing the positions of tasks within occupations.
