@@ -86,20 +86,16 @@ In fact, AI chaining can overturn standard comparative advantage logic in assign
 Output verification is therefore a fixed cost of the chain rather than a marginal cost that scales with each additional step.
 That is, appending a neighboring step to an existing AI chain adds no additional verification burden, while it may reduce the probability of AI's end-to-end successful completion of the extended chain.
 By contrast, assigning the neighboring step to a human terminates the chain and creates an additional human checkpoint, which entails another output verification (if the step is augmented with AI) or the cost of human execution (if the step is performed manually).
-When AI is sufficiently reliable on the marginal step, avoiding this additional human checkpoint can dominate, pulling the step into AI execution even if manual human execution is preferred for it in isolation.
+When AI is sufficiently reliable on the marginal step, avoiding this additional human checkpoint can dominate, pulling the step into AI execution even if manual execution is preferred for it in isolation.
 For example, in the data scientist workflow the worker verifies the report once at Step~4, so verifying a report produced after AI executes Steps~3--4 requires the same effort as verifying a report produced after AI executes only Step 4; the only difference is that the AI is less likely to succeed at the former on any given try.
+The same pressure can arrive from the opposite side of a step: a step that AI executes reliably but that is expensive to handle on its own, manually or as a standalone augmented step, is cheapest absorbed at the start of a chain, where its own direct cost goes unpaid.
+And because a chain is an unbroken run over consecutive steps, the chain such a step anchors must run forward through its successors to reach a cheap verification endpoint, potentially pulling human-advantaged steps that lie in between into automation.
+Either way, what tips a step into automation is not just its own characteristics but also those of its neighbors.
 
-A second force can overturn comparative advantage from the opposite side of a step.
-AI performs some steps reliably, yet they remain costly to handle on their own, whether manually or as a standalone augmented task.
-A cheaper way to execute such cases is to absorb it in an AI chain, where, because a human checks only the chain's final output, the step itself carries no separate AI management cost.
-Because a chain is an unbroken run over consecutive steps, starting one at such a step carries it forward through other steps up to the verification endpoint, pulling a human-advantaged step that lies in between into automation even though nothing about it favors AI.
-In the data scientist's workflow example, if AI reliably finds and fetches the data (Step~2) but verifying it is very costly, it is cheaper to begin a chain there, which then runs through the analysis (Step~3) to the report the worker checks (Step~4), automating the analysis step even though the worker might otherwise write that code manually.
-In both cases, what tips a step into automation is not its own characteristics alone but also those of its neighbors.
-
-More generally, we should expect the gains from AI automation to be greatest when automable steps co-occur in the workflow.
+More generally, we should expect the gains from AI automation to be greatest when automatable steps co-occur in the workflow.
 For example, consider lecture-based teaching versus tutoring.
 In lecture-based teaching, many AI-suitable activities (e.g., background research, drafting slides, generating examples) are clustered in a ``preparation'' block, making it feasible to delegate them to AI in a single chain and verify only the final output.
-In tutoring, by contrast, these activities are interleaved with diagnosis and rapid back-and-forth with a student, so automable steps are more dispersed and delegating preparation activities to AI is less valuable.\footnote{Rather, we might expect AI exposure in tutoring to take the form of fully automated end-to-end AI tutors, once they become effective enough that it is feasible to chain all tutoring activities.} 
+In tutoring, by contrast, these activities are interleaved with diagnosis and rapid back-and-forth with a student, so automatable steps are more dispersed and delegating preparation activities to AI is less valuable.\footnote{Rather, we might expect AI exposure in tutoring to take the form of fully automated end-to-end AI tutors, once they become effective enough that it is feasible to chain all tutoring activities.} 
 Informally, we can think of a job as more or less ``fragmented'' in its AI exposure depending on whether the steps where AI is most effective are mutually coincident or dispersed throughout the workflow.
 In Section~\ref{sec:fragmentation}, we define a fragmentation metric for jobs and show analytically that it approximately tracks the impact of optimal AI deployment.
 In Section~\ref{sec:empirics} we provide empirical evidence that jobs with higher fragmentation see a weaker translation from AI exposure to AI execution.
