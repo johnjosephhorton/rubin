@@ -2,14 +2,15 @@
 \label{app:jobdesign}
 
 The main text studies the firm's AI deployment problem: choosing how to chain and automate steps so as to minimize the cost of production, $\sum_b \skillcost{b}\,\timecost{b}$, where each task is staffed by a dedicated worker possessing the skill it requires (Section~\ref{sec:model.jobs}).
-This appendix develops the firm's long-run problem, in which it additionally bundles tasks into shared \emph{jobs}.
+This appendix develops the firm's long-run problem, in which it additionally bundles tasks into \emph{jobs}.
 A single worker may perform several tasks, but must then hold all of their skills throughout, so the cost of a job is its total skill requirement times its total time.
-Bundling economizes on the hand-off (coordination) costs incurred when work passes from one worker to another, at the expense of these broader skill requirements; the firm chooses the AI deployment and the job design jointly to trade these forces off.
-Figure~\ref{fig:hierarchical_production} illustrates the resulting three-layer structure of steps, tasks, and jobs.
+Bundling economizes on the coordination costs incurred when work passes from one worker to another, at the expense of these broader skill requirements. 
+The firm chooses the AI deployment and the job design jointly in the long-run problem to trade these forces off.
+Figure~\ref{fig:hierarchical_production} illustrates the resulting three-layer structure of steps, tasks, and jobs in the long-run optimization problem.
 
 \begin{figure}[ht!]
   \begin{center}
-  \caption{Illustrative Example of a Firm's Production}
+  \caption{Illustrative Example of a Firm's Production in the Long Run}
   \label{fig:hierarchical_production}
 
   \vspace{0.4cm}
@@ -42,25 +43,14 @@ The total time needed to complete all tasks in job $J_j$ is $\sum_{T_b \in J_j} 
 
 A worker's wage is determined by the total skill required to complete their job.
 The total skill required to complete the tasks in job $J_j$ is $\sum_{T_b \in J_j} \skillcost{b}$.
-We then assume that a worker's wage is proportional to the skill level of their job.\footnote{
-One motivation for this formulation is workers paying a human capital investment to acquire the skills necessary for a job. 
-This investment must be offset by wages, and we express skill levels in units of their corresponding requisite wage. 
-Rather than formalizing such a wage model here, we impose this as an assumption and provide a more detailed wage formulation in Appendix~\ref{sec:aggregation}.
-}
+We then assume that a worker's wage is proportional to the skill level of their job.
 That is,
 \begin{align}
 \label{eq:wage_jobdesign}
 \text{Wage}_j = \sum_{T_b \in J_j} \skillcost{b}.
 \end{align}
 
-The firm must pay workers their wage per unit of time regardless of which tasks they are assigned to complete at any given moment.\footnote{
-This derivation implicitly assumes a common base wage rate; i.e., all wage differentiation is driven by the human capital cost of acquiring skills.
-More generally, different tasks $T_b$ within job $J_j$ could have different base wage rates $w_b$ that could be influenced, for example, by the supply of and demand for labor of the corresponding type.
-One special case, explicitly motivated and discussed in Appendix~\ref{sec:aggregation}, assumes manual tasks are executed by human labor at base wage rate $w_{\manualLetter}$, and AI-assisted tasks are executed by AI management labor at base wage rate $w_{\AIletter}$.
-The formulation in Equation~\ref{eq:wage_jobdesign} implicitly normalizes these base wage rates to 1, incorporating them into skill costs $\skillcost{b}$ for notational simplicity.
-We maintain this normalization throughout subsequent sections until we explicitly distinguish human labor and AI management labor base wage rates in Appendix~\ref{sec:aggregation}.
-\label{foot:wage_jobdesign}
-}
+The firm must pay workers their wage per unit of time regardless of which tasks they are assigned to complete at any given moment.
 While we allow the firm to specialize its job design and partition its workflow into distinct jobs, we acknowledge that there are inherent inefficiencies and frictions that are introduced when splitting work among multiple workers.
 Absent such frictions in our model, it would always be optimal for a firm to specialize its workers as much as possible, assigning a distinct worker to each task of its workflow. 
 We therefore introduce \emph{hand-off costs} to a job design, as follows.
@@ -84,7 +74,7 @@ Equation~\eqref{eq:wagebill} highlights two opposing forces that shape a job's b
 Adding more tasks to a worker's job increases the cumulative skill requirement and thus the wage rate for that worker.  
 However, if tasks are kept separate, workers must incur additional hand-off costs at each job boundary.  
 These two effects, higher wages from combining tasks versus higher hand-off costs from keeping them separate, jointly determine the optimal degree of task aggregation.  
-Figure~\ref{fig:intro_task_illustration} illustrates these two opposing forces in a minimal two-task workflow.
+Figure~\ref{fig:intro_task_illustration} illustrates these opposing forces in a minimal two-task workflow.
 We explore this trade-off in greater detail in Section~\ref{sec:model_discussion}.
 
 \begin{figure}[ht!]
@@ -101,9 +91,7 @@ We explore this trade-off in greater detail in Section~\ref{sec:model_discussion
     In the right panel, tasks are bundled into a single job performed by one worker, eliminating hand-off costs but requiring a worker skilled enough to perform both tasks and compensated with a higher per-unit-time wage rate.
 \end{figure}
 
-
 Table~\ref{tab:jobdesign_parameters} collects the additional notation introduced for job design.
-
 \begin{table}[ht!]
 \centering
 \caption{Additional Notation for Job Design}
@@ -124,13 +112,17 @@ $\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b 
 \end{table}
 
 
+\subsection{Firm's Long-Run Optimization Problem}
+\label{app:jobdesign.longrun}
 
-\subsection{The Long-Run Optimization Problem}
+In the long-run optimization problem, the firm anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
+This contrasts with the short- and medium-run AI strategy deployment problems of Section~\ref{sec:model.jobs}, which minimize the skill-weighted cost of production while fixing the assignment of tasks to workers. 
+The long-run problem additionally optimizes how tasks are bundled into jobs.
 
 Given the sequence of steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, the firm can design both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs.
 The choice of $\T$ determines the time and skill requirements of each task.
 Given $\T$, the choice of $\mathcal{J}$ then determines worker wage rates and time needed per unit of output (including hand-off costs).
-Formally, we can write $\mathcal{P}(X)$ for the set of partitions of a sequence $X$ into contiguous subsequences.  Then the full optimization problem faced by the firm can be expressed as
+Formally, we can write $\mathcal{P}(X)$ for the set of partitions of a sequence $X$ into contiguous subsequences.  Then the long-run optimization problem faced by the firm can be expressed as
 \begin{align}
 \label{eq:totalcost_with_handoff}
 \min_{\T \in \mathcal{P}(\mathcal{S})} \
@@ -141,9 +133,69 @@ Formally, we can write $\mathcal{P}(X)$ for the set of partitions of a sequence 
 \end{align}
 where recall that, for each $T_b \in \T$, $\timecost{b}$ and $\skillcost{b}$ are as described in Section~\ref{sec:model.tasks} and can depend on the selected mode of operation for individual steps.
 
-We refer to \eqref{eq:totalcost_with_handoff} as the firm's \emph{long-term} optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
-This contrasts with the deployment problem of Section~\ref{sec:model.jobs}, which minimizes the skill-weighted cost of production $\sum_b \skillcost{b}\timecost{b}$ while treating each task as separately staffed; the long-run problem additionally optimizes how tasks are bundled into jobs.
+This problem has a similar flavor to the medium-run problem of Proposition~\ref{prop:mediumrun_dp}, with one additional layer: as steps are assigned to tasks, the resulting tasks must also be assigned to workers along the way by considering the hand-off costs incurred at the boundary of jobs.
+Proposition~\ref{prop:totalcost_optimization_dp} shows that, like the medium-run problem, the long-run problem admits a polynomial-time approximation scheme.
 
+\begin{proposition}[Long-run AI Deployment and Job Design]
+\label{prop:totalcost_optimization_dp}
+Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.
+For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+\end{proposition}
+
+\begin{proof}
+We prove the proposition following the same approach as the proof of the medium-run problem (Proposition~\ref{prop:mediumrun_dp}): we first state the cost minimization problem as a recursive problem and then use dynamic programming to approximate the optimal solution.
+Since much of the construction carries over, we focus on what is new, the assignment of tasks to workers and the associated hand-off costs, and refer to the earlier proof for details that are unchanged.
+
+\emph{Recursive formulation.}
+Consider a workflow with $m$ steps $\mathcal{S} = \{s_1, s_2, \ldots, s_m\}$.
+For $0 \leq i \leq m$, let $V(i)$ denote the minimum cost required to complete steps $1$ through $i$ using one or more jobs, including any hand-off costs to a subsequent worker.
+Note then that $V(m)$ is the solution to the desired optimization problem, recalling that the hand-off time for the final job will always be $0$.
+Note also that it is implicitly assumed in the definition of $V(i)$ that it optimizes over job designs for steps $1$ through $i$ in which the final job terminates after the completion of step $i$.
+
+For job designs whose final job does not necessarily terminate after step $i$ but rather continues onward to subsequent steps, we extend the auxiliary function $R(i,\; \skillcost{},\; \timecost{})$ from the proof of Proposition~\ref{prop:mediumrun_dp}.
+As before, $R(i,\; \skillcost{},\; \timecost{})$ denotes the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating work, whom we call the ``active worker,'' has already been assigned tasks with total skill cost $\skillcost{}$ and total time cost $\timecost{}$, where $\timecost{}$ now also includes any hand-off cost for the active worker.
+What is new is that the minimum is taken over job designs as well as AI deployment strategies: the recursion may either expand the active worker's job or close it and assign the remaining steps to other workers.
+The base case $R(0,\; \skillcost{},\; \timecost{}) = \skillcost{}\,\timecost{}$ is unchanged, and as before we can think of step $i$ as the highest-indexed step that has not yet been assigned.
+
+The two functions are linked, for all $0 \leq i \leq m$, by
+\[ V(i) = R(i,\; 0,\; \handofftime{i}). \]
+This is because, in $V(i)$, all job designs must end with a job that completes at step $i$ and hands off to the following worker.
+Incurring this hand-off cost is equivalent to assigning the active worker an additional task with zero skill requirement and a time cost of $\handofftime{i}$ right after step $i$ itself, which is exactly the scenario $R(i,\; 0,\; \handofftime{i})$ represents.
+
+For each $i \geq 1$, the minimum cost function $R(i,\; \skillcost{},\; \timecost{})$ satisfies the recursive relation
+\begin{align*}
+R(i,\; \skillcost{},\; \timecost{}) = \min\Biggl\{
+& \ \underbrace{\skillcost{}\,\timecost{} + V(i)}_{\text{job closed}}, \ \underbrace{R\bigl(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i}\bigr)}_{\text{Step $i$ is manual}}, \ \underbrace{\min_{0 \le r < i}\ R\!\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)}_{\text{Step $i$ optimally chained}}
+\Biggr\}.
+\end{align*}
+In words, when assigning step $i$, the three options the firm considers are:
+\begin{itemize}
+    \item \textbf{Job closure.}
+    The term $\skillcost{}\,\timecost{} \; + \; V(i)$ corresponds to not adding any further steps to the job of the active worker.
+    All steps $1$ through $i$ will be completed by other workers.
+    The active worker's total cost is then $\skillcost{}\,\timecost{}$, and $V(i)$ is the total cost of completing steps $1$ through $i$ (including hand-off costs to the active worker).
+    This option is the margin new to the long run.
+
+    \item \textbf{Manual step.}
+    The term $R(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i})$ corresponds to designating step $i$ for manual completion, and adding the corresponding (singleton) task.
+    As in the medium run, the manual execution costs $(\manualSkill{i}, \manualTime{i})$ of step $i$ are added to the accumulated costs of tasks already assigned to the active worker, extending their job to include step $i$ as well.
+
+    \item \textbf{AI chain.}
+    The term $\min_{0 \le r < i} \ R\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)$ corresponds to creating an AI chain task for steps $r+1$ through $i$, with step $i$ being augmented and steps $r+1$ through $i-1$ automated, and assigning the resulting task to the job of the active worker.
+    Step $i$ is thus chained with zero or more preceding (automated) steps, and the associated AI management costs are added to the active worker's skill and time costs.
+    The cut $r$ is the highest-indexed step that is not added to this AI chain, which can be any value between $0$ and $i-1$.
+\end{itemize}
+Note that in evaluating the AI chain option, step $i$ can only be augmented (rather than automated), as each step of the recursion adds a full AI chain to the active worker's job; AI strategies in which step $i$ is automated are considered when performing the calculations $R(r,\; \skillcost{},\; \timecost{})$ with $r > i$.
+The cost of the optimal joint AI strategy and job design for the full sequence of $m$ steps is then $V(m) = R(m,\; 0,\; 0)$.
+
+\emph{Discretization and Computation Time.}
+As in the proof of Proposition~\ref{prop:mediumrun_dp}, we fill in the table of values $R(i,\; \skillcost{},\; \timecost{})$ by dynamic programming after discretizing the skill and time coordinates to powers of $(1+\epsilon)$; only the range of the discretization requires a new argument, to account for hand-off costs.
+Completing every step manually with a separate worker incurs, for each step, a time and hand-off cost of at most $B$ each and a skill cost of at most $B$, for a total cost of at most $2B^2$ per step, so no solution containing a job with total cost above $2mB^2$ need be considered.
+Since skill costs combine additively and every non-zero skill or time cost is at least $1/B$, it suffices to tabulate skill costs in $[1/B,\, mB]$ and time costs in $[1/B,\, 2mB^3]$.
+Each range contains $O(\epsilon^{-1}\log(mB))$ powers of $(1+\epsilon)$, so the table has $O(m\,\epsilon^{-2}\log^2(mB))$ entries, each filled in time $O(m)$ via the recursion above, for a total runtime of $O(m^2\,\epsilon^{-2}\log^2(mB))$; recording which option attains each minimum lets the firm read the optimal AI strategy and job design off $V(m) = R(m,\; 0,\; 0)$.
+The discretization error is bounded exactly as before: skill and time costs accumulate additively along the manual and chaining options, so rounding down to powers of $(1+\epsilon)$ maintains a multiplicative error of at most $(1+\epsilon)$ in each coordinate, while each job's wage bill is formed by the single multiplication $\skillcost{}\,\timecost{}$ when the first option closes it, contributing a factor of at most $(1+\epsilon)^2$.
+Rescaling $\epsilon$ by a constant therefore yields the claimed $(1+\epsilon)$ approximation.
+\end{proof}
 
 \subsection{Hand-off Costs and the Limits of Worker Specialization}
 \label{sec:model_discussion}
@@ -238,150 +290,7 @@ For tractability, we abstract from the first component in our framework and trea
 The hand-off cost in the model should therefore be read as capturing the second, irreducibly human component, even though AI-facilitated reductions in the peripheral component may matter in practice.
 }
 
-\subsection{Job Design without AI}
-
-Having stated the long-run problem, we now turn to solving it, beginning with a special case in which the firm can reorganize job requirements and the assignment of tasks to workers.
-As a warm-up to the full joint optimization of jobs and AI deployment, we first show how to optimize the design of jobs for a fixed task structure.
-We can interpret this as a labor optimization problem without AI deployment, where each step has only a single (i.e., manual) mode of completion and hence the task structure is fully determined.
-
-\begin{proposition}
-    Given a fixed sequence of tasks $\T = (T_1, \dotsc, T_n)$ with skill and time costs $\skillcost{} = (\skillcost{1}, \dotsc, \skillcost{n})$ and $\timecost{} = (\timecost{1}, \dotsc, \timecost{n})$, the cost-minimizing job design $\J$ can be computed in time $O(n^2)$ by dynamic programming.
-\end{proposition}
-\begin{proof}
-    We first note the following recursive formulation of the optimization problem. 
-    For all $k \leq n$, let $C[k]$ denote the minimum cost of a job design for tasks $1$ through $k$, \emph{including hand-off costs for task $k$}.  
-    Note then that $C[n]$ is the cost of the optimal job design for all tasks, recalling that the hand-off cost for the final job (i.e., the job that includes task $n$) is always $0$.
-    
-    We now show how to calculate $C[k]$ recursively.  
-    As a base case we have $C[0] = 0$.  
-    For $k \geq 1$ we have
-    \[ 
-    C[k] = \min_{s < k} \Biggl\{ C[s] + \Biggl[\Biggl(\sum_{i = s+1}^k \skillcost{i} \Biggr) \Biggl(\handofftime{k} + \sum_{i = s+1}^k \timecost{i} \Biggr)\Biggr] \Biggr\}.
-    \]
-    In other words, we optimize over the choice of the final job $\{s+1, \dotsc, k\}$, accounting recursively for the optimal job design for remaining jobs.  
-    Note that we make implicit use of the assumption that the hand-off cost $\handofftime{k}$ depends on the final task $T_k$ of this final job but is otherwise independent of the job design.  
-    Using this formulation, we can calculate each $C[k]$ in time $O(k)$ by considering each potential choice of $s$.  
-    Doing so for each $k = 1, 2, \dotsc, n$ yields the value of $C[n]$ (and the corresponding optimal job design) in total time $O(n^2)$.
-\end{proof}
-
-
-
-\subsection{Full Long-Term Optimization}
-
-We now consider full joint optimization of job design and AI deployment strategy, accounting for both time and skill costs of workers assigned to the resulting jobs.  
-In other words, the firm's goal is to choose both the set of AI chains to implement (yielding a vector of skill and time costs) along with a job design for the resulting tasks.
-
-
-\subsubsection{Recursive Formulation of Optimization Problem}
-\label{sec:recursive_formulation}
-
-Here we present a recursive formulation of the firm's cost minimization problem. 
-In Section \ref{sec:DP_approximation} we propose an approach to calculate an approximation of the optimal solution via dynamic programming.
-
-Consider a workflow with $m$ steps $\mathcal{S} = \{s_1, s_2, \ldots, s_m\}$.
-For $0 \leq i \leq m$, let $V(i)$ denote the minimum cost required to complete steps $1$ through $i$ using one or more jobs, including any hand-off costs to a subsequent worker.  
-Note then that $V(m)$ is the solution to the desired optimization problem, recalling that the hand-off time for the final job will always be $0$.  
-Note also that it is implicitly assumed in the definition of $V(i)$ that it optimizes over job designs for steps $1$ through $i$ in which the final job terminates after the completion of step $i$.
-
-It will also be helpful to consider optimal designs for steps $1$ through $i$ in which the final job doesn't necessarily terminate after the completion of step $i$, but rather continues onward to subsequent steps.  
-To that end, we introduce an auxiliary function $W(i,\; \skillcost{},\; \timecost{})$.
-This function denotes the minimum cost of completing steps $1$ through $i$, as well as some additional (but unspecified) set of tasks that have already been assigned as a single job to a single worker (referred to as the ``active worker'').  
-It is assumed that the tasks assigned to the active worker have total time cost $\timecost{}$ and total skill cost $\skillcost{}$.  
-The time cost $\timecost{}$ is assumed to already include any hand-off cost for this active worker (which recall depends only on the final step of the worker's final task). 
-Crucially, the minimum is taken over all AI deployment strategies and job designs, including those that expand the number of tasks assigned to the active worker (e.g., by including step $i$ in the active worker's job).
-In this sense, $W(i,\; \skillcost{},\; \timecost{})$ captures the minimum cost across all feasible job designs and AI strategies that may potentially expand the active worker's task assignment.
-
-Note that, for all $i \leq n$, we have 
-\[ V(i) = W(i,\; 0,\; \handofftime{i}). \]
-This is because, in $V(i)$, all job designs must end with a job that completes at step $i$ and hands off to the following worker.  
-Consequently, the hand-off cost associated with step $i$ must be incurred by the final worker.
-Equivalently, this can be thought of as assigning the active worker an additional task with zero skill requirement but a time cost equal to the hand-off cost of step $i$ right after step $i$ itself.
-This scenario is represented explicitly by $W(i,\; 0,\; \handofftime{i})$.
-
-Also note that, for the base case $i=0$, we have 
-\[
-W(0,\; \skillcost{},\; \timecost{}) 
-= 
-\skillcost{}\,\timecost{}, 
-\quad
-\text{for all $\skillcost{}, \timecost{}$}.
-\]
-This is because, if $i=0$, then there are no further steps to add to the job of the active worker.  
-The active worker's skill and time requirements are therefore determined entirely by the steps they have already been assigned.
-
-We are now ready to describe a recursive formulation of the function $W(i,\; \skillcost{},\; \timecost{})$ for $i \geq 1$.  
-We emphasize that in the definition of $W(i,\; \skillcost{},\; \timecost{})$, the active worker has not been assigned step $i$; we can think of step $i$ as the highest-indexed step that has not yet been assigned to a worker.
-
-\begin{proposition}[Recursive Formulation of Job Design Problem]
-\label{prop:recursive_optimality}
-For each $i \geq 1$, the minimum cost function $W(i,\; \skillcost{},\; \timecost{})$ satisfies the following recursive relation:
-\begin{align*}
-W(i,\; \skillcost{},\; \timecost{})
-= \min\Biggl\{ 
-& \skillcost{}\,\timecost{} \; + \; V(i), \\
-& \ W(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i}), \\
-& \ \min_{r < i} \ W\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)
-\Biggr\}.
-\end{align*}
-The cost of the optimal joint AI strategy and job design for a given sequence of $m$ steps is then $V(m) = W(m,\; 0,\; 0)$.
-\end{proposition}
-
-The recursive formulation in Proposition~\ref{prop:recursive_optimality} evaluates the minimum cost among three distinct alternatives at each step:
-\begin{itemize}
-    \item \textbf{Option (1):} The term $\skillcost{}\,\timecost{} \; + \; V(i)$ corresponds to not adding any further steps to the job of the active worker.  
-    All steps $1$ through $i$ will be completed by other workers. 
-    The active worker's total cost is then $\skillcost{}\,\timecost{}$, and $V(i)$ is the total cost of completing steps $1$ through $i$ (including hand-off costs to the active worker).
-
-    \item \textbf{Option (2):} The term $W(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i})$ corresponds to designating step $i$ for manual completion, and adding the corresponding (singleton) task.
-    In this case, the manual execution costs $(\manualSkill{i}, \manualTime{i})$ of step $i$ are added to the accumulated costs of tasks already assigned to the active worker, extending their job to include step $i$ as well.
-
-    \item \textbf{Option (3):} The term $\min_{r < i} \ W\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)$ corresponds to creating an AI chain task for steps $r+1$ through $i$, with step $i$ being augmented and steps $r+1$ through $i-1$ automated, and assigning the resulting task to the job of the active worker. 
-    Step $i$ is thus chained with zero or more preceding (automated) steps, and the associated AI management costs are added to the active worker's skill and time costs. 
-    The index $r$ corresponds to the highest-index step that is not added to this AI chain, which can be any value between $0$ and $i-1$.
-\end{itemize}
-Note that in evaluating option (3) of the recursive step for $W(i,\; \skillcost{},\; \timecost{})$, step $i$ can only be augmented (rather than automated) as each step of the recursion adds a full AI chain to an active worker's job.
-AI strategies in which step $i$ is automated are considered when performing task calculations $W(r, \skillcost{}, \timecost{})$ with $r > i$.
-
-
-
-\subsubsection{Calculating an Approximately Optimal Solution}
-\label{sec:DP_approximation}
-
-Given our recursive formulation, we wish to use dynamic programming to solve for the jointly optimal job design and AI strategy by filling in the values of $W(i,\; \skillcost{},\; \timecost{})$ for all $i$, $\skillcost{}$, and $\timecost{}$.  
-Since $\skillcost{}$ and $\timecost{}$ take on continuous values, we will discretize all skill costs $\skillcost{}$ and time costs $\timecost{}$ to appropriate powers of $(1+\epsilon)$, where $\epsilon > 0$ is an arbitrarily small error term.  
-We obtain the following result.
-
-\begin{proposition}
-\label{prop:totalcost_optimization_dp}
-    Fix any sequence of $m$ steps $\mathcal{S} = (s_1, \dotsc, s_m)$ for which all skill costs, time costs, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.  Then for any $\epsilon > 0$, an approximately cost-minimizing pair of AI strategy $\T$ and job design $\J$ minimizing expression \eqref{eq:totalcost_with_handoff} to within a factor of $(1+\epsilon)$ can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB) )$ by dynamic programming.
-\end{proposition}
-
-\begin{proof}
-The first step of proving Proposition~\ref{prop:totalcost_optimization_dp} is to determine the range of powers of $(1+\epsilon)$ that we must consider in our discretization. 
-Suppose that all manual and augmented skill and time costs, as well as all hand-off costs, lie in $[1/B, B]$ for some $B > 0$.  
-%That is, these parameters require $O(\log B)$ bits to represent.  
-In this case, note that any subsequence of steps could be completed at a total cost of at most $2mB^2$ by performing them all manually by different workers, incurring a  time and hand-off cost of at most $B$ each for a total time of $2B$, and a skill cost of at most $B$ for a total cost of $2B^2$ for each of the $m$ tasks. 
-We therefore need not consider any solution containing a job with total cost greater than $2mB^2$.  
-In particular, since any non-zero skill cost for any job is at least $1/B$, we need not consider any job design in which a job has total time cost greater than $2mB^3$.
-Furthermore, each job has total skill cost lying between $1/B$ and $mB$ (as skill costs combine additively) and time cost at least $1/B$ (as each step's manual cost is at least $1/B$, and any AI chain's time cost is at least the management cost of its final step which is also at least $1/B$).
-
-We conclude that when filling table $W(i, \skillcost{}, \timecost{})$, it suffices to consider skill costs $\skillcost{}$ lying in the range $[1/B, mB]$ and time costs $\timecost{}$ lying in the range $[1/B, 2mB^3]$.  There are $O(\epsilon^{-1} \log(mB))$ powers of $(1+\epsilon)$ in each of these ranges, so our table will have $O(m \epsilon^{-2} \log^2(mB))$ total entries. 
-Each entry can be filled in time $O(m)$ by considering the recursive formulation in Proposition~\ref{prop:recursive_optimality}, for a total runtime of $O(m^2 \epsilon^{-2} \log^2(mB))$.
-
-Note that while the table formally describes only the cost of a solution and not the solution itself, one can also read off the corresponding task and job design as well.  
-Indeed, by recording which of the options described in Proposition~\ref{prop:recursive_optimality} achieves the minimum for each table entry $W(i, \skillcost{}, \timecost{})$, one can trace out the corresponding task and job designs starting with $V(m) = W(m, 0 , 0)$.  
-The pair of AI strategy $\T$ and job design $\J$ can therefore be computed in time $O(m^2 \epsilon^{-2} \log(mB) )$, the same as the time required to fill the table.
-
-It remains to bound the error introduced by our discretization.  
-Consider the recursive formulation in Proposition~\ref{prop:recursive_optimality} and suppose that $\skillcost{}$ and $\timecost{}$ are rounded down to the nearest power of $(1+\epsilon)$.  
-Since time and skill costs are multiplied together to calculate the total cost of a proposed job, this discretization introduces a multiplicative error of at most $(1+\epsilon)^2$ into our cost calculation for the first option when minimizing in the recursive definition of $W(i, \skillcost{}, \timecost{})$. 
-For the other two options, note that we accumulate time and skill costs additively when chaining tasks together for a single worker.  
-As $\skillcost{}$ and $\timecost{}$ are rounded to a power of $(1+\epsilon)$, adding additional (accurate) skill and time costs and subsequently rounding maintains a multiplicative error of at most $(1+\epsilon)$ on the total time and skill costs.  
-
-We conclude that if we fill in our table for all $W(i,\; \skillcost{},\; \timecost{})$ where $i \leq m$ and $\skillcost{}$ and $\timecost{}$ are discretized into powers of $(1+\epsilon)$, rounding down to nearest values of $(1+\epsilon)$ on recursive calls into the table, we obtain a $1 + O(\epsilon)$ approximation to the optimal solution.  
-An appropriate change of variables (scaling $\epsilon$ by a constant) yields a $(1+\epsilon)$ approximation factor in total runtime $O(m^2 \epsilon^{-2} \log^2(mB))$, as claimed in Proposition~\ref{prop:totalcost_optimization_dp}.
-\end{proof}
-
+\begin{comment}
 \subsection{Impact of AI Deployment on Worker Skill and Specialization}
 \label{sec:discussion.skills}
 
@@ -478,6 +387,8 @@ Even if AI management is assumed to require no more skill than manual completion
 \end{example}
 
 
+
+\end{comment}
 
 \subsection{Connection to the Division of Labor Literature}
 
