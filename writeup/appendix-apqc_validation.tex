@@ -1,0 +1,173 @@
+\section{External Validation of the Task Orderings Against Practitioner Process Sequences}
+\label{app:apqc_validation}
+
+The workflows underlying our empirical analysis are not observed.
+O*NET catalogues the tasks that belong to an occupation but says nothing about the order in which they are performed, so we recover that order by prompting a language model (Prompt~\#1 of Appendix~\ref{app:prompts}).
+Every adjacency-based object in the paper, the AI chains of Prediction~\#1, the empirical fragmentation index of Prediction~\#2, and the neighbor-execution flags of Prediction~\#3, is a function of that imputation.
+This invites a specific objection.
+The orderings may be artifacts of how language models reason rather than reconstructions of how work is actually sequenced: a model asked to arrange a list may simply place semantically similar items next to one another, producing an ordering that looks like a workflow but encodes topical similarity instead of production logic.
+Because AI exposure is itself correlated with what a task is about, such an ordering could manufacture the contiguity we document without any underlying sequence.
+Appendix~\ref{app:gptPrompts_robustness} shows that our orderings are stable across prompt formulations, but stability is not accuracy: an instrument can be consistently wrong.
+Settling the objection requires scoring the orderings against work sequences that people, not language models, wrote down.
+
+This appendix does that on an external corpus.
+We take the ordering procedure exactly as used in the main analysis, apply it to a body of business processes whose step sequences were documented by practitioners, and measure how much of the practitioner ordering the model recovers.
+
+\subsection{The APQC Process Classification Framework}
+\label{app:apqc_validation_data}
+
+Our benchmark is the \emph{Process Classification Framework} (PCF) of APQC, a benchmarking consortium, in its Cross-Industry version 8.0.
+The PCF is a taxonomy of the processes a firm carries out, built and revised by member working groups since 2004 with no involvement of language models at any stage.
+It decomposes work into five nested levels, from thirteen Categories through 74 Process Groups, 362 Processes, 1,353 Activities, and 215 Tasks, for 2,017 process elements in total, each with a persistent identifier, a name, and a short description.
+What makes it useful here is that within a parent element the children are listed \emph{in the order in which they are performed}. Ordering steps in ``Order materials and services,'' for instance, runs from processing a requisition through approving it, soliciting quotes, issuing the purchase order, expediting, reconciling, and finally resolving exceptions.
+
+We take as our unit of analysis a \emph{process branch}: a parent element together with its ordered children.
+Restricting attention to branches with at least three children leaves 345 branches covering 1,917 process elements, with a median of five steps per branch.
+The corpus is deliberately small relative to O*NET and is weighted toward enterprise process work such as finance, procurement, human resources, information technology, and supply chain, which we return to below.
+
+\subsection{Practitioner Orderings Are Not Immutable Ground Truth}
+\label{app:apqc_validation_caveat}
+
+Before using APQC's listings as a benchmark, we register a caveat about what they are.
+The PCF is a documentation convention produced by committees, not a record of observed execution, and for some branches the listed order is one defensible arrangement among several rather than a statement about precedence.
+
+Two examples make the point.
+The branch ``Analyze deal options'' lists four children, evaluating acquisition options, merger options, de-merger options, and divestiture options.
+These are mutually exclusive alternatives that a firm considers in parallel, not steps that follow one another, and APQC's ordering runs from expansionary to contractionary options.
+Reversing it, from divestiture to acquisition, would be an equally coherent way to write the same branch down.
+Similarly, ``Process accounts payable and expense reimbursements'' lists processing accounts payable, then processing expense reimbursements, then managing corporate credit cards.
+These are three parallel disbursement streams that run concurrently, and nothing in the process dictates which is documented first.
+For branches of this kind any ordering an instrument produces will disagree with APQC roughly half the time by construction, and disagreement carries no information about whether the instrument understands sequence.
+
+We make no attempt to purge such branches from the sample, since doing so would require the very judgment about true sequence that the exercise is meant to test.
+We proceed with the full set of branches and read the resulting overlap as a lower bound on how well the procedure recovers genuine workflow order.
+
+\subsection{Design}
+\label{app:apqc_validation_design}
+
+For each of the 345 branches we take APQC's published child order as the target, shuffle the children under a fixed seed so that the model never observes the published sequence, and ask the model to order them.
+The prompt is the one used to sequence O*NET tasks in the main analysis, carried over verbatim with a single mechanical substitution that maps the occupation domain onto the process domain, replacing ``occupation'' with ``business process'' and ``task'' with ``step.''
+We repeat the exercise for each of the ten alternative prompts of Appendix~\ref{app:gptPrompts_robustness}, applying the identical substitution to all eleven so that no prompt is privileged by hand-tuning, and we use the same model and settings as in the main analysis (GPT-5-mini, temperature $0$).
+
+We measure overlap between the model's ordering and APQC's with Kendall's $\tau$, computed within each branch and averaged across branches.
+We also report the share of APQC-adjacent step pairs that the model places in the correct direction, whose null value is $0.5$, and the share of branches whose full sequence the model reproduces exactly.
+Statistical significance is assessed against a permutation null of $1{,}000$ random orderings per branch, which centers $\tau$ at zero.
+Of the $3{,}795$ orderings requested, $3{,}793$ returned a complete and parseable permutation of the branch.\footnote{The two exceptions occur under one alternative prompt, where the model paraphrased a step title rather than returning it verbatim; we require exact matches before accepting an ordering, so those two branches are dropped for that prompt alone.}
+
+\subsection{Results}
+\label{app:apqc_validation_results}
+
+Table~\ref{tab:apqc_pcf_ordering_validation} reports the main results and Figure~\ref{fig:apqc_tau_distribution} the underlying distributions.
+
+Under the main prompt the average Kendall's $\tau$ between the model's ordering and APQC's is $0.53$, with a median of $0.60$; $86.1\%$ of branches have positive $\tau$.
+The model places $70.0\%$ of APQC-adjacent step pairs in the correct direction against a null of $50\%$, and reproduces the practitioner sequence \emph{exactly} in $24.3\%$ of branches.
+The last figure is the most demanding of the three: exact recovery by chance is one in $120$ for a five-step branch and one in $40{,}320$ for an eight-step branch.
+Against the permutation null the average $\tau$ corresponds to $z = 22.6$ ($p = 0.001$).
+The model is not reproducing the order in which the steps were shown to it: the average $\tau$ between its output and the shuffled input list is $0.11$.
+
+Running the ten alternative prompts leaves this essentially unchanged.
+Prompt-specific averages span a narrow range, from $0.49$ to $0.53$, so the result is not an artifact of the particular phrasing used in the main analysis.
+Averaging the ten alternatives within each branch, which removes the sampling noise of any single formulation, leaves the mean at $0.51$ while raising the share of branches with positive $\tau$ from $86.1\%$ to $90.1\%$ and lowering the cross-branch standard deviation from $0.42$ to $0.37$; twelve of the branches that score negative under the main prompt turn positive once averaged.
+Prompt choice therefore affects individual branches but not the aggregate picture.
+
+Overlap is higher where the benchmark is a stronger claim about sequence.
+Across PCF categories the average $\tau$ ranges from $0.67$ in ``Deliver Services,'' $0.69$ in ``Manage Customer Service,'' and $0.65$ in ``Manage Supply Chain for Physical Products,'' which are transactional and genuinely sequential, down to $0.25$ in ``Develop and Manage Products and Services'' and $0.27$ in ``Manage External Relationships,'' whose children are largely parallel sub-domains of the kind discussed in Appendix~\ref{app:apqc_validation_caveat}.
+
+Nor is the result particular to the cross-industry framework.
+APQC publishes industry-specific versions of the PCF, and we repeat the exercise on sixteen of them, restricting attention to the operating processes of Categories~1--6 and discarding every branch identical to one already scored, whether in the cross-industry framework or in another industry.
+This leaves 1,032 genuinely industry-specific branches covering 6,206 process elements, roughly seven times the corresponding cross-industry sample, scored under the main prompt.
+The average $\tau$ is $0.45$, against $0.54$ for the cross-industry branches of the same categories; the gap of $-0.09$ narrows to $-0.07$ once branch length and category are controlled for, and industry averages range from $0.24$ to $0.63$ with four of the sixteen frameworks above the cross-industry level.
+Specializing the framework to an industry therefore does not make its documented sequences easier to recover, if anything slightly the reverse, which is consistent with the pattern above: what predicts recoverability is whether a branch describes a sequence at all, not how specific its content is.
+
+\begin{table}[h!]
+    \caption{Overlap Between GPT-Generated and Practitioner-Documented Process Orderings}
+    \label{tab:apqc_pcf_ordering_validation}
+    \begin{center}
+    \input{tables/apqc_pcf_ordering_validation.tex}
+    \end{center}
+    \raggedright \footnotesize{\emph{Notes:}} This table reports the overlap between the orderings GPT-5-mini produces for APQC process branches and the orderings APQC's practitioner working groups published.
+    Column~(1) covers all 345 branches; columns~(2) and~(3) split them by APQC's own division of the framework into operating processes (Categories~1--6) and management and support services (Categories~7--13).
+    ``Adjacent-pair agreement'' is the share of APQC-adjacent step pairs the model places in the correct direction, with a null value of $0.5$.
+    ``Exact-order recovery'' is the share of branches whose full published sequence the model reproduces.
+    The random-ordering row is the mean of $1{,}000$ random permutations per branch.
+\end{table}
+
+\begin{figure}[h!]
+\caption{Distribution of Overlap With Practitioner Orderings Across Process Branches}
+\label{fig:apqc_tau_distribution}
+\begin{center}
+\begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\linewidth]{plots/apqc_pcf_ordering/tau_distribution_main_share.png}
+    \caption{Main prompt}
+    \label{fig:apqc_tau_main}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\linewidth]{plots/apqc_pcf_ordering/tau_distribution_alt_share.png}
+    \caption{Average of ten alternative prompts}
+    \label{fig:apqc_tau_alt}
+\end{subfigure}
+\end{center}
+\footnotesize{
+\emph{Notes:} Each panel plots the distribution across the 345 APQC process branches of the within-branch Kendall's $\tau$ between the model's ordering and APQC's published ordering.
+Panel~(a) uses the main prompt of Appendix~\ref{app:prompts}; panel~(b) averages, within each branch, the $\tau$ obtained under the ten alternative prompts of Appendix~\ref{app:gptPrompts_robustness}.
+The red dashed line marks the sample mean and the black dashed line the value a random ordering would deliver in expectation.
+Averaging over prompts leaves the mean unchanged and thins both tails.
+}
+\end{figure}
+
+\subsection{Reading the Left Tail}
+\label{app:apqc_validation_tail}
+
+A tenth of branches record a negative $\tau$ under the main prompt, and it is worth being clear about what they are, since the sign of $\tau$ overstates the disagreement on short branches.
+Kendall's $\tau$ is coarse when there are few steps to order: on a three-step branch it can only take the values $\{-1, -1/3, +1/3, +1\}$, so a single inverted pair already registers as a large negative number, whereas on a ten-step branch the same inversion costs $0.02$ and leaves $\tau$ near $+1$.
+Figure~\ref{fig:apqc_tau_by_size} decomposes the distribution by branch length and shows the consequence directly: the mass at $\tau = -1$ consists entirely of three- and four-step branches, and so does most of the spike at $\tau = +1$, where $55.6\%$ of three-step branches sit against none of the branches with five steps or more.
+
+The tail is not, however, purely an artifact of short branches.
+Negative values are about as common among the longest branches as among the shortest, $14.3\%$ in both cases, and what differs is their magnitude: short branches produce reversals, long branches produce values between $-0.03$ and $-0.20$, that is, a handful of misordered pairs within an otherwise correct sequence.
+Inspecting the branches that remain negative after averaging over all ten alternative prompts, the recurring case is the one anticipated in Appendix~\ref{app:apqc_validation_caveat}: parents whose children are parallel streams or mutually exclusive alternatives, for which no true ordering exists and the sign of $\tau$ is close to a coin flip.
+
+\begin{figure}[h!]
+\caption{Overlap by Branch Length}
+\label{fig:apqc_tau_by_size}
+\begin{center}
+\begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\linewidth]{plots/apqc_pcf_ordering/tau_distribution_by_size_main_share.png}
+    \caption{Main prompt}
+    \label{fig:apqc_tau_size_main}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\linewidth]{plots/apqc_pcf_ordering/tau_distribution_by_size_alt_share.png}
+    \caption{Average of ten alternative prompts}
+    \label{fig:apqc_tau_size_alt}
+\end{subfigure}
+\end{center}
+\footnotesize{
+\emph{Notes:} The distributions of Figure~\ref{fig:apqc_tau_distribution}, with each bin decomposed by the number of steps in the branch; darker shading denotes longer branches.
+Kendall's $\tau$ is coarse on short branches, which is why the extreme bins at both ends are dominated by branches of three and four steps.
+}
+\end{figure}
+
+\subsection{Discussion}
+\label{app:apqc_validation_discussion}
+
+The overlap is far from perfect, and we do not claim otherwise.
+Two considerations bound how it should be read, and they point in opposite directions.
+
+On one side, part of the residual disagreement is not the model's error but indeterminacy in the benchmark, for the reasons set out in Appendix~\ref{app:apqc_validation_caveat}: where a branch has no true sequence, no instrument could score well against it.
+The measured overlap is thus a lower bound on the model's agreement with genuine workflow order.
+Appendix~\ref{app:eventlog_validation} confronts this limitation directly, repeating the exercise against process execution logs in which the data identify which precedences are real, so that the indeterminacy can be conditioned away rather than merely acknowledged; the two benchmarks agree closely.
+On the other side, the shortfall is not merely noise.
+Across the same branches the model's orderings agree with \emph{each other} at an average pairwise $\tau$ of $0.79$ across the eleven prompts, well above the $0.53$ they achieve against APQC, so the instrument is considerably more self-consistent than it is accurate, and a systematic component separates it from the practitioner benchmark.
+
+What the exercise establishes is nonetheless the thing it was designed to establish.
+An instrument that merely clustered semantically similar items would have no reason to place three quarters of consecutive step pairs in the practitioners' direction, still less to reproduce a full documented sequence one time in four, and its performance would not survive being scored against sequences it never saw.
+The orderings we use are not nonsense, and they are not an artifact of the phrasing of any single prompt.
+They recover a substantial and highly non-random share of the sequence structure that practitioners themselves record, and they do so under every prompt formulation we try.
+
+We note finally why the PCF serves as a validation sample rather than as the main sample of the paper.
+Our AI-exposure labels come from \citet{eloundou2023gpts} and our AI-execution labels from the Anthropic Economic Index \citep{handa2025economictasksperformedai}, and both are defined over O*NET tasks.
+There is no corresponding exposure or execution measure for PCF process elements, and constructing one would require us to generate the very labels that the main analysis takes from external sources.
+Working with O*NET keeps our measures comparable to the rest of the literature that uses these now-standard objects, at the cost of not observing workflow order directly.
+This appendix is our attempt to bound that cost.
