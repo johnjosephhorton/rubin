@@ -149,50 +149,68 @@ Kendall's $\tau$ is coarse on short branches, which is why the extreme bins at b
 }
 \end{figure}
 
-\subsection{The Fragmentation Index on Practitioner-Documented Sequences}
+\subsection{Re-Estimating the Sequencing Predictions on Documented Process Sequences}
 \label{app:apqc_fragmentation}
 
 The preceding subsections establish that the ordering procedure recovers practitioner sequence structure.
-This subsection uses that structure directly, re-estimating Prediction~\#2 over APQC's own step ordering so
-that the fragmentation index is computed on a workflow no language model produced.
+This subsection uses that structure directly, re-estimating the paper's sequencing predictions over APQC's own
+step ordering so that they are tested on a workflow no language model produced.
 
 Doing so requires transferring labels, since exposure and execution are measured over O*NET tasks and have no
 counterpart defined on PCF elements.
 We pool the Cross-Industry framework with APQC's sixteen industry-specific frameworks, discard duplicate
 process groups, embed each leaf element and each labelled O*NET task with \texttt{all-mpnet-base-v2}, and
 match every step to its nearest task by cosine similarity.
-Matching process steps to task statements is lossy, so we retain only matches of at least $0.70$ cosine
-similarity and keep process groups with at least five surviving steps.\footnote{The floor matters. Below it
-the transfer compresses the label mix toward exposure, and the exposure coefficient carries the wrong sign;
-above it the coefficient is positive, as the theory predicts. The fragmentation coefficient is insensitive to
-the floor, because it depends on the arrangement of AI-able steps rather than on the exposure category of any
-individual step.}
-This leaves $1{,}821$ steps in $211$ process groups drawn from eighteen frameworks, averaging $8.6$ steps per
-group at a mean match similarity of $0.74$.
-The specification is the one estimated in the main text, including the control for the number of AI-able
-steps, with the PCF Category and the source framework standing in for the SOC group as fixed effects.
+This yields $13{,}482$ steps in $525$ process groups averaging $25.7$ steps, slightly longer than the $20.6$
+tasks of the average O*NET occupation.
 
-Table~\ref{tab:apqc_fragmentation_index_regression} reports the results, and both coefficients carry their
-predicted signs.
-Fragmentation is negative and significant at the 1\% level in all three columns, at $-0.65$, $-0.28$, and
-$-0.68$, against $-0.26$ to $-0.38$ in Table~\ref{tab:fragmentation_index_regression_exposure}.
+Matching process steps to task statements is lossy, and this forces a trade-off that determines which
+predictions can be tested and how.
+Retaining only high-confidence matches sharpens the labels but prunes four steps in five, cutting the average
+process group to $8.6$ steps and breaking the contiguity of what remains.
+The two predictions we test sit on opposite sides of that trade-off, so we test each where its requirements
+are met.
+Prediction~\#1 concerns the length of contiguous runs and needs sequences intact, but not precise labels, so
+we test it on the full matched sample.
+Prediction~\#2 concerns a ratio computed over whatever sequence survives and is insensitive to pruning, but
+its exposure regressor needs accurate labels, so we test it on matches of at least $0.70$ cosine similarity
+with at least five surviving steps, leaving $1{,}821$ steps in $211$ process groups.\footnote{The floor matters
+for exposure alone. Below it the transfer compresses the label mix and the exposure coefficient carries the
+wrong sign; above it the coefficient is positive, as the theory predicts. The fragmentation coefficient is
+insensitive to the floor, because it depends on the arrangement of AI-able steps rather than on the exposure
+category of any individual step.}
+
+\paragraph{Prediction \#1.}
+Across the full sample the average AI chain spans $1.460$ steps, against $1.45$ in the main text.
+Benchmarked as in Section~\ref{sec:chainLength_prediction} against $1{,}000$ draws of a within-group
+step-order reshuffle, the null averages $1.395$ and the observed value sits at the 100th percentile
+($z = 5.44$); against a within-category reassignment that preserves group size, the null averages $1.339$ and
+the observed value again sits at the 100th percentile ($z = 10.56$).
+AI-executed steps therefore form longer contiguous runs than a random arrangement of the same steps would
+produce, exactly as in the main analysis.
+
+\paragraph{Prediction \#2.}
+Table~\ref{tab:apqc_fragmentation_index_regression} reports the fragmentation regression, and both
+coefficients carry their predicted signs.
 Exposure is positive throughout and significant once fixed effects are included, at $0.12$ and $0.14$ against
-$0.09$ to $0.24$ in the main text.
-The relationship the main text documents between the dispersion of AI-able steps and realized AI execution is
-therefore not an artifact of how the workflow ordering was obtained: it appears, with the same signs and a
-larger fragmentation magnitude, when the ordering is the one practitioners wrote down.
-Against a null that reshuffles step order within each process group while holding the labels fixed, the
-fragmentation coefficient does not separate from chance ($z = -1.24$), so the exercise speaks to the sign and
-magnitude of the relationship rather than to arrangement as an independent channel.
+$0.09$ to $0.24$ in the main text: a higher share of AI-exposed steps in a workflow is associated with a higher
+share of steps actually executed by AI.
+Fragmentation is negative and significant at the 1\% level in all three columns, at $-0.65$, $-0.28$ and
+$-0.68$, against $-0.26$ to $-0.38$ in Table~\ref{tab:fragmentation_index_regression_exposure}: the more
+dispersed those AI-able steps are across the workflow, the less of that exposure converts into execution.
+The sequential structure APQC documents is what makes this test possible, and it is the reason we bring the
+corpus in.
 
-We do not attempt a counterpart of Prediction~\#3 on this corpus.
+\paragraph{Prediction \#3.}
+We do not attempt a counterpart of the neighbor-execution regression.
 That test requires the same step to appear in several workflows with \emph{different} execution outcomes, and
-identifying it demands enough within-DWA variation to support a DWA fixed effect.
-The matched sample leaves $639$ step observations across $93$ DWAs that appear in more than one process group,
-of which only $7$ contain both an AI-executed and a non-executed step, against $10{,}708$ tasks across
-$1{,}748$ DWAs in the main analysis and $4{,}096$ observations entering the DWA-fixed-effect specification of
-Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
-The corpus is underpowered for a neighbor-execution regression by roughly an order of magnitude.
+transferred labels are a deterministic function of the matched task, so identifying variation is scarce at
+either end of the trade-off above.
+On the high-confidence sample it leaves $639$ step observations across $93$ DWAs appearing in more than one
+process group, of which only $7$ contain both an AI-executed and a non-executed step, against $10{,}708$ tasks
+across $1{,}748$ DWAs in the main analysis and $4{,}096$ observations entering the DWA-fixed-effect
+specification of Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+The corpus is underpowered for that exercise by roughly an order of magnitude.
 
 \begin{table}[h!]
     \caption{Fragmentation and AI Execution on APQC's Documented Process Sequences}
