@@ -99,10 +99,10 @@ To examine this, we ask whether occupations with similar shares of their tasks e
 Notably, this level of dispersion is related to the fragmentation index from Section~\ref{sec:fragmentation}; we will make use of a slightly modified metric (which we call the \emph{empirical fragmentation index}, defined in more detail below) that can be calculated from our dataset.
 Specifically, we estimate the following regression:
 \begin{equation}
-    \text{ai\_execution}_{o} = \beta_0 + \beta_1 \, \text{ai\_exposure}_{o} + \beta_2 \, \text{empirical\_fragmentation\_index}_{o} + \varepsilon_o,
+    \text{ai\_execution}_{o} = \beta_0 + \beta_1 \, \text{ai\_exposure}_{o} + \beta_2 \, \text{empirical\_fragmentation\_index}_{o} + \beta_3 \, \text{num\_ai\_able\_steps}_{o} + \varepsilon_o,
     \label{eq:fragmentation_index_regression}
 \end{equation}
-where \emph{$\text{ai\_execution}_{o}$} is the share of tasks executed by AI in occupation $o$, \emph{$\text{ai\_exposure}_{o}$} is the share of AI-exposed tasks, and \emph{$\text{empirical\_fragmentation\_index}_{o}$} measures how dispersed the AI-able tasks are across the occupation's workflow.
+where \emph{$\text{ai\_execution}_{o}$} is the share of tasks executed by AI in occupation $o$, \emph{$\text{ai\_exposure}_{o}$} is the share of AI-exposed tasks, and \emph{$\text{empirical\_fragmentation\_index}_{o}$} measures how dispersed the AI-able tasks are across the occupation's workflow. We additionally control for \emph{$\text{num\_ai\_able\_steps}_{o}$}, the number of AI-exposed (E1- or E2-labeled) steps in the occupation. Because the fragmentation index is the number of AI blocks per step, it varies mechanically with how many AI-able steps a workflow contains; conditioning on that count ensures $\beta_2$ is identified from how the AI-able steps are arranged rather than from how many of them there are.
 
 The model predicts that occupations with higher AI exposure should have a higher share of steps executed by AI ($\beta_1 > 0$).
 Conditional on exposure, it also predicts that when AI-able steps are more dispersed in the workflow, the share of realized AI-executed steps should be lower ($\beta_2 < 0$).
@@ -134,11 +134,11 @@ The results are reported in Table~\ref{tab:fragmentation_index_regression_exposu
     The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\text{ai\_execution}$).
     The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation, while the ``Empirical Fragmentation Index'' captures how dispersed AI-able steps are across the occupation's workflow.
     The empirical fragmentation index (Definition~1) measures fragmentation based on potential AI chains formed by E1- and E2-exposed tasks.
-    All three variables are standardized to unit standard deviation within the sample, so the reported coefficients are in standard-deviation units.
+    All three variables are standardized to unit standard deviation within the sample, so the reported coefficients are in standard-deviation units. All specifications additionally control for the number of AI-exposed (E1 or E2) steps in the occupation, so that the fragmentation coefficient is identified from how the AI-able steps are arranged rather than from how many of them the workflow contains.
 \end{table}
 We estimate three specifications: no additional controls, SOC major-group fixed effects, and SOC minor-group fixed effects.
 We include SOC fixed effects to ensure the results are not driven by a narrow subset of occupation families.
-Across specifications, a one-standard-deviation increase in AI exposure is associated with a 0.08 to 0.26 standard-deviation increase in the share of occupation tasks executed by AI.
+Across specifications, a one-standard-deviation increase in AI exposure is associated with a 0.09 to 0.24 standard-deviation increase in the share of occupation tasks executed by AI.
 Consistent with the model, the EFI coefficient is negative and statistically significant at the 1\% level in all specifications, implying that more dispersed AI-able steps predict lower realized AI execution conditional on exposure.
 In Appendix~\ref{app:additional_robustness_pred2} we repeat the same exercise with a complementary execution-based measure, EFI Definition~2, which forms potential chains from realized AI-executed tasks rather than from AI-exposed ones.\footnote{
 Consistent with our treatment of AI chains throughout this section, this measure counts any AI-executed task, augmented or automated, as able to form a chain.
