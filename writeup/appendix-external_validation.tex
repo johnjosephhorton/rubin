@@ -1,4 +1,50 @@
-\section{External Validation of the Task Orderings Against Practitioner Process Sequences}
+\section{External Validation of the Task Orderings and Sequencing Results}
+\label{app:external_validation}
+
+The workflows underlying our empirical analysis are not observed.
+O*NET catalogues the tasks that belong to an occupation but says nothing about the order in which they are
+performed, so we recover that order by prompting a language model (Prompt~\#1 of Appendix~\ref{app:prompts}).
+Every adjacency-based object in the paper, the AI chains of Prediction~\#1, the empirical fragmentation index
+of Prediction~\#2, and the neighbor-execution flags of Prediction~\#3, rests on that imputation.
+Two concerns follow.
+
+The first is that the orderings may be artifacts of how language models reason rather than reconstructions of
+how work is sequenced.
+A model asked to arrange a list may simply place semantically similar items next to one another, producing an
+ordering that looks like a workflow but encodes topical similarity instead of production logic.
+Because AI exposure is itself correlated with what a task is about, such an ordering could manufacture the
+contiguity we document without any underlying sequence.
+Appendix~\ref{app:gptPrompts_robustness} shows that our orderings are stable across prompt formulations, but
+stability is not accuracy: an instrument can be consistently wrong.
+
+The second is that O*NET tasks may not be sequenceable at all.
+O*NET is a catalogue of what an occupation involves, not a process map, and if its task lists do not describe
+work that proceeds in an order, then no ordering procedure however accurate could deliver the objects our
+predictions require.
+
+We address both concerns with external data whose sequences were documented by human practitioners: APQC's
+\emph{Process Classification Framework} (PCF), a taxonomy in which the activities and tasks belonging to a
+business process are recorded in the order in which they are performed.
+
+To address the first concern, we shuffle the activities within each documented process and ask the language
+model to recover their order, using the same prompts as the main analysis.
+The model does so to a substantial degree.
+Some processes admit no unique ordering, since their constituent activities run in parallel or are mutually
+exclusive, and we say so below; nevertheless the recovered orderings overlap heavily with what practitioners
+wrote down.
+Subsection~\ref{app:eventlog_validation} corroborates this against a second and independent external
+benchmark, process-mining event logs in which the ordering is not documented but observed, case by case, in
+records of what organizations actually did.
+
+To address the second concern, we match APQC activities to O*NET tasks using natural-language embeddings, so
+that the AI-exposure and AI-execution labels native to the O*NET taxonomy carry over to a corpus whose
+sequences are documented rather than imputed.
+On the matched data both Prediction~\#1, that AI-executed steps form contiguous chains, and Prediction~\#2,
+that the dispersion of AI-exposed steps governs how much exposure converts into execution, continue to hold.
+We are unable to test Prediction~\#3, because the matching is lossy and the surviving sample too small to
+support the required comparison.
+
+\subsection{Concern 1: Recovering Practitioner-Documented Orderings}
 \label{app:apqc_validation}
 
 The workflows underlying our empirical analysis are not observed.
@@ -13,7 +59,7 @@ Settling the objection requires scoring the orderings against work sequences tha
 This appendix does that on an external corpus.
 We take the ordering procedure exactly as used in the main analysis, apply it to a body of business processes whose step sequences were documented by practitioners, and measure how much of the practitioner ordering the model recovers.
 
-\subsection{The APQC Process Classification Framework}
+\subsubsection{The APQC Process Classification Framework}
 \label{app:apqc_validation_data}
 
 Our benchmark is the \emph{Process Classification Framework} (PCF) of APQC, a benchmarking consortium, in its Cross-Industry version 8.0.
@@ -25,7 +71,7 @@ We take as our unit of analysis a \emph{process branch}: a parent element togeth
 Restricting attention to branches with at least three children leaves 345 branches covering 1,917 process elements, with a median of five steps per branch.
 The corpus is deliberately small relative to O*NET and is weighted toward enterprise process work such as finance, procurement, human resources, information technology, and supply chain, which we return to below.
 
-\subsection{Practitioner Orderings Are Not Immutable Ground Truth}
+\subsubsection{Practitioner Orderings Are Not Immutable Ground Truth}
 \label{app:apqc_validation_caveat}
 
 Before using APQC's listings as a benchmark, we register a caveat about what they are.
@@ -42,7 +88,7 @@ For branches of this kind any ordering an instrument produces will disagree with
 We make no attempt to purge such branches from the sample, since doing so would require the very judgment about true sequence that the exercise is meant to test.
 We proceed with the full set of branches and read the resulting overlap as a lower bound on how well the procedure recovers genuine workflow order.
 
-\subsection{Design}
+\subsubsection{Design}
 \label{app:apqc_validation_design}
 
 For each of the 345 branches we take APQC's published child order as the target, shuffle the children under a fixed seed so that the model never observes the published sequence, and ask the model to order them.
@@ -54,7 +100,7 @@ We also report the share of APQC-adjacent step pairs that the model places in th
 Statistical significance is assessed against a permutation null of $1{,}000$ random orderings per branch, which centers $\tau$ at zero.
 Of the $3{,}795$ orderings requested, $3{,}793$ returned a complete and parseable permutation of the branch.\footnote{The two exceptions occur under one alternative prompt, where the model paraphrased a step title rather than returning it verbatim; we require exact matches before accepting an ordering, so those two branches are dropped for that prompt alone.}
 
-\subsection{Results}
+\subsubsection{Results}
 \label{app:apqc_validation_results}
 
 Table~\ref{tab:apqc_pcf_ordering_validation} reports the main results and Figure~\ref{fig:apqc_tau_distribution} the underlying distributions.
@@ -116,7 +162,7 @@ Averaging over prompts leaves the mean unchanged and thins both tails.
 }
 \end{figure}
 
-\subsection{Reading the Left Tail}
+\subsubsection{Reading the Left Tail}
 \label{app:apqc_validation_tail}
 
 A tenth of branches record a negative $\tau$ under the main prompt, and it is worth being clear about what they are, since the sign of $\tau$ overstates the disagreement on short branches.
@@ -149,8 +195,191 @@ Kendall's $\tau$ is coarse on short branches, which is why the extreme bins at b
 }
 \end{figure}
 
-\subsection{Re-Estimating the Sequencing Predictions on Documented Process Sequences}
-\label{app:apqc_fragmentation}
+\subsection{A Second Benchmark: Observed Process Execution}
+\label{app:eventlog_validation}
+
+Subsection~\ref{app:apqc_validation} scores our ordering instrument against sequences that practitioners
+\emph{documented}, and concedes a limitation it cannot overcome: a documented ordering is an editorial
+convention, and for branches whose children are parallel or mutually exclusive no true sequence exists, so
+disagreement there says nothing about whether the instrument understands sequence.
+This appendix removes that limitation by moving from documented order to \emph{observed} order.
+
+A process-mining event log records, case by case, the activities an organization actually executed and when.
+Two things follow.
+First, the ordering is a fact about production rather than an assertion about it.
+Second, and more useful, the data reveal \emph{which precedences are real}: if activity $x$ precedes $y$ in
+97\% of cases the precedence is genuine, whereas a 50/50 split means the two run concurrently and no
+ordering could be correct.
+We can therefore condition on the pairs that have a true order before asking whether the model recovers it,
+which is precisely the step the documented benchmark does not permit.
+
+\subsubsection{Data}
+\label{app:eventlog_data}
+
+We use eight publicly available event logs from the 4TU.ResearchData repository, listed in
+Table~\ref{tab:eventlog_overview}: fine collection by a local police force, sepsis care in a hospital
+emergency department, consumer lending at a financial institution, and five university travel and
+reimbursement processes.
+Together they cover 215,715 cases and 2,048,949 recorded events.
+Their activity sets are considerably larger than the APQC process branches, between 8 and 28 activities
+against a median of five, so they also test the instrument on long sequences.
+
+From each log we recover one trace per case, the sequence of activity labels in timestamp order, and keep the
+activities appearing in at least 2\% of cases so that the target is not driven by rare exceptions.
+We use each activity's \emph{first} occurrence within a case, which handles the loops present in every real
+log such as repeated laboratory tests or repeated approval rounds.
+This yields the two objects we need.
+The \emph{observed ordering} ranks activities by their mean normalized first-occurrence position across
+cases; this is the analogue of APQC's published order.
+The \emph{pairwise precedence matrix} records, for every pair, the share of cases containing both in which
+one precedes the other.
+We call a pair \emph{determinate} when one direction holds in at least 80\% of cases.
+Across the eight logs, 1,124 of 1,178 activity pairs (95.4\%) are determinate, so the benchmark is a
+statement about sequence for almost all of the comparisons we make.
+
+\begin{table}[h!]
+    \caption{Event Logs Used for Validation}
+    \label{tab:eventlog_overview}
+    \begin{center}
+    \small
+    \begin{tabular}{llrrrr}
+    \toprule
+    Log & Process & Cases & Events & Activities & Determinate pairs \\
+    \midrule
+    Road traffic fines & Fine management, local police & 150,370 & 561,470 & 8 & 27 of 28 \\
+    Sepsis & Emergency department sepsis care & 1,050 & 15,214 & 15 & 91 of 98 \\
+    BPI 2017 & Loan application handling & 31,509 & 1,202,267 & 23 & 238 of 245 \\
+    BPI 2020 & Domestic travel declarations & 10,366 & 56,303 & 10 & 41 of 44 \\
+    BPI 2020 & International travel declarations & 6,449 & 72,151 & 22 & 218 of 224 \\
+    BPI 2020 & Requests for payment & 6,814 & 36,724 & 10 & 39 of 42 \\
+    BPI 2020 & Prepaid travel costs & 2,092 & 18,239 & 17 & 128 of 129 \\
+    BPI 2020 & Travel permits and declarations & 7,065 & 86,581 & 28 & 342 of 368 \\
+    \midrule
+    Total & & 215,715 & 2,048,949 & 133 & 1,124 of 1,178 \\
+    \bottomrule
+    \end{tabular}
+    \end{center}
+    \raggedright \footnotesize{\emph{Notes:}} All logs are openly available from the 4TU.ResearchData repository.
+    ``Activities'' counts those appearing in at least 2\% of a log's cases, which is the set handed to the model.
+    A pair of activities is ``determinate'' when one of the two orders holds in at least 80\% of the cases containing both.
+\end{table}
+
+\subsubsection{Design}
+\label{app:eventlog_design}
+
+The procedure mirrors Appendix~\ref{app:apqc_validation_design} exactly.
+For each log we shuffle the activity labels under a fixed seed, so the model never sees the observed
+sequence, and ask it to order them, supplying a one-line description of the process in place of an
+occupation title.
+We use all eleven prompts, the main specification of Appendix~\ref{app:prompts} and the ten alternatives of
+Appendix~\ref{app:gptPrompts_robustness}, carried over with the same mechanical substitution that maps the
+occupation domain onto the process domain.
+No log is told which activity starts or ends a case.
+
+We report two levels of analysis.
+At the \emph{log level} we compute Kendall's $\tau$ between the model's ordering and the observed ordering,
+which is directly comparable to the APQC numbers, benchmarked against a permutation null of $1{,}000$ random
+orderings per log.
+At the \emph{pair level} we ask only whether the model places a pair in the direction the traces show.
+The pair level is the more informative of the two here, both because it is where the determinacy
+conditioning bites and because it is closer to what the paper's predictions actually use: Predictions~\#1
+and~\#3 depend on adjacency rather than on the global ordering.
+
+\subsubsection{Results}
+\label{app:eventlog_results}
+
+Table~\ref{tab:eventlog_ordering_validation} reports the results and
+Figure~\ref{fig:eventlog_activity_accuracy} the underlying distribution.
+
+Against a null of $0.5$, the model places $78.8\%$ of all activity pairs in the direction the traces show.
+Restricting to the determinate pairs, those the data confirm have a real order, gives $78.9\%$, and weighting
+each pair by how determinate it is gives $78.8\%$.
+That these three numbers coincide is itself informative: the model does no better on the pairs that a real
+organization orders strictly than on pairs in general, so the aggregate is not being propped up by easy
+cases.
+At the log level the mean Kendall's $\tau$ is $0.48$ with a median of $0.56$, against a permutation null
+centered at $0.00$ ($z = 6.8$, $p = 0.001$).
+The model is not echoing the list it was shown: the average $\tau$ between its output and the shuffled input
+is $0.007$.
+
+The ten alternative prompts again leave the picture unchanged.
+Determinate-pair accuracy under individual prompts spans $0.767$ to $0.817$ and log-level mean $\tau$ spans
+$0.433$ to $0.559$, so no conclusion here depends on the phrasing used in the main analysis.
+
+The result that matters for the paper is the comparison with Subsection~\ref{app:apqc_validation}.
+Restricting both exercises to \emph{adjacent} pairs, the statistic they share, the documented benchmark gives
+$0.700$ under the main prompt and $0.697$ averaged over the alternatives, while the observed benchmark gives
+$0.679$ and $0.699$.
+Two independent benchmarks, one written down by practitioners and one recovered from what organizations
+actually did, agree to within roughly two percentage points about how much sequence structure the instrument
+recovers.
+
+\begin{table}[h!]
+    \caption{Overlap Between GPT-Generated Orderings and Observed Process Execution}
+    \label{tab:eventlog_ordering_validation}
+    \begin{center}
+    \input{tables/eventlog_ordering_validation.tex}
+    \end{center}
+    \raggedright \footnotesize{\emph{Notes:}} Pairwise precedence accuracy is the share of activity pairs the model places in the direction the event traces show, with a null value of $0.5$.
+    ``Determinate pairs'' are those for which one order holds in at least 80\% of the cases containing both activities.
+    ``Adjacent pairs'' are consecutive in the observed ordering and are the statistic directly comparable to the adjacent-pair agreement of Table~\ref{tab:apqc_pcf_ordering_validation}.
+    Column~(2) pools the ten alternative prompts of Appendix~\ref{app:gptPrompts_robustness}, so its pair counts are ten times those of column~(1).
+    The random-ordering row is the mean of $1{,}000$ random permutations per log.
+\end{table}
+
+\begin{figure}[h!]
+\caption{Distribution of Overlap With Observed Execution Across Activities}
+\label{fig:eventlog_activity_accuracy}
+\begin{center}
+\begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\linewidth]{plots/eventlog_ordering/activity_accuracy_main_share.png}
+    \caption{Main prompt}
+    \label{fig:eventlog_acc_main}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
+    \includegraphics[width=\linewidth]{plots/eventlog_ordering/activity_accuracy_alt_share.png}
+    \caption{Average of ten alternative prompts}
+    \label{fig:eventlog_acc_alt}
+\end{subfigure}
+\end{center}
+\footnotesize{
+\emph{Notes:} The unit is an activity (133 across the eight logs). For each activity we take the determinate pairs it belongs to and plot the share the model ordered as the traces show.
+The black dashed line marks the coin flip and the red dashed line the mean.
+Averaging over prompts raises the share of activities above the coin flip from $86.5\%$ to $91.7\%$ while leaving the mean almost unchanged, the same pattern as in Figure~\ref{fig:apqc_tau_distribution}.
+Because activities within a log share one ordering and each pair contributes to two activities, this distribution is descriptive; the inferential statistics are the pooled pair-level accuracy and the log-level permutation test.
+}
+\end{figure}
+
+\subsubsection{Where the Instrument Fails, and Why It Understates Its Own Accuracy}
+\label{app:eventlog_failures}
+
+Performance varies sharply across logs, and the variation is diagnostic.
+Determinate-pair accuracy is $0.96$ for road traffic fines, $0.95$ for sepsis care and $0.91$ for
+international declarations, but $0.56$ for requests for payment and $0.49$ for domestic declarations.
+Inspecting the errors, the failures are overwhelmingly about \emph{reading the labels}, not about
+understanding sequence.
+
+Three examples carry most of the damage.
+In the domestic declaration log the model ranks \texttt{Request Payment} first, reading it as the employee's
+initiating request; in the data it is the second-to-last step, the finance system requesting disbursement.
+In the loan log the model treats \texttt{A\_Accepted} as terminal, whereas in the data it is an early state
+meaning the application entered processing, preceding validation, offer creation, and completion; seven of
+the twelve most determinate errors are this single activity.
+In the sepsis log the model places \texttt{Return ER} mid-visit, while in the data it denotes a patient
+returning to the emergency department after discharge and is genuinely last.
+
+This matters for how the number should be read.
+Activity labels in an event log are the strings an information system emits, not descriptions of work.
+Some are terse (\texttt{A\_Concept}), and many encode the actor rather than the action
+(\texttt{Declaration APPROVED by ADMINISTRATION}).
+The model is therefore working with substantially less context than an O*NET task statement provides, and the
+errors we observe are of a kind that richer task descriptions would largely prevent.
+Accuracy here is, in that specific sense, a conservative estimate of what the procedure achieves on the task
+statements the paper actually uses.
+
+\subsection{Concern 2: Re-Estimating the Sequencing Predictions on Documented Sequences}
+\label{app:apqc_fragmentation_top}
 
 The preceding subsections establish that the ordering procedure recovers practitioner sequence structure.
 This subsection uses that structure directly, re-estimating the paper's sequencing predictions over APQC's own
@@ -164,7 +393,6 @@ match every step to its nearest task by cosine similarity.
 This yields $13{,}482$ steps in $525$ process groups averaging $25.7$ steps, slightly longer than the $20.6$
 tasks of the average O*NET occupation.
 Table~\ref{tab:apqc_process_examples} gives two examples of what the resulting sequences look like.
-
 
 \begin{table}[h!]
     \caption{Example Process Groups From Two Industry Frameworks}
@@ -238,6 +466,8 @@ The corpus is underpowered for that exercise by roughly an order of magnitude.
 \end{table}
 
 \subsection{Discussion}
+\label{app:external_validation_discussion}
+
 \label{app:apqc_validation_discussion}
 
 The overlap is far from perfect, and we do not claim otherwise.
@@ -245,7 +475,7 @@ Two considerations bound how it should be read, and they point in opposite direc
 
 On one side, part of the residual disagreement is not the model's error but indeterminacy in the benchmark, for the reasons set out in Appendix~\ref{app:apqc_validation_caveat}: where a branch has no true sequence, no instrument could score well against it.
 The measured overlap is thus a lower bound on the model's agreement with genuine workflow order.
-Appendix~\ref{app:eventlog_validation} confronts this limitation directly, repeating the exercise against process execution logs in which the data identify which precedences are real, so that the indeterminacy can be conditioned away rather than merely acknowledged; the two benchmarks agree closely.
+Subsection~\ref{app:eventlog_validation} confronts this limitation directly, repeating the exercise against process execution logs in which the data identify which precedences are real, so that the indeterminacy can be conditioned away rather than merely acknowledged; the two benchmarks agree closely.
 On the other side, the shortfall is not merely noise.
 Across the same branches the model's orderings agree with \emph{each other} at an average pairwise $\tau$ of $0.79$ across the eleven prompts, well above the $0.53$ they achieve against APQC, so the instrument is considerably more self-consistent than it is accurate, and a systematic component separates it from the practitioner benchmark.
 
@@ -259,3 +489,23 @@ Our AI-exposure labels come from \citet{eloundou2023gpts} and our AI-execution l
 There is no corresponding exposure or execution measure for PCF process elements, and constructing one would require us to generate the very labels that the main analysis takes from external sources.
 Working with O*NET keeps our measures comparable to the rest of the literature that uses these now-standard objects, at the cost of not observing workflow order directly.
 This appendix is our attempt to bound that cost.
+
+\label{app:eventlog_discussion}
+
+Taken with Subsection~\ref{app:apqc_validation}, this exercise closes the objection that motivated both.
+If the orderings were an artifact of language-model reasoning, with semantically similar items placed
+adjacent regardless of production logic, there would be no reason for them to reproduce the precedence
+structure of 215,715 executed cases in four unrelated domains, and no reason for a documented benchmark and
+an observed one to agree so closely on how much structure is recovered.
+
+Two limitations should be stated plainly.
+First, the eight logs are not a random sample of work.
+They are administrative and clinical processes with recorded case identifiers, which is what makes them
+loggable at all, and they under-represent the judgment-intensive occupations where AI exposure is
+concentrated.
+Second, and as with the APQC exercise, this validates the ordering \emph{procedure} rather than the specific
+O*NET orderings used in the paper, since no crosswalk between event-log activities and O*NET tasks is
+involved.
+What the two appendices jointly establish is that the procedure recovers a substantial and highly
+non-random share of real sequence structure, under every prompt formulation we try, against both a
+documented and an observed benchmark.
