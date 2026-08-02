@@ -149,6 +149,80 @@ Kendall's $\tau$ is coarse on short branches, which is why the extreme bins at b
 }
 \end{figure}
 
+\subsection{The Fragmentation Index on Practitioner-Documented Sequences}
+\label{app:apqc_fragmentation}
+
+The preceding subsections establish that the ordering procedure recovers practitioner sequence structure.
+This subsection puts that structure to work directly: rather than validating the orderings and then returning
+to the imputed ones, we re-estimate Prediction~\#2 on APQC's documented sequences themselves, so that the
+fragmentation index is computed over an ordering no language model produced.
+
+Doing so requires transferring labels, because exposure and execution are measured over O*NET tasks and there
+is no counterpart defined on PCF elements.
+We embed each of the 1,622 PCF leaf elements and each of the 17,131 labelled O*NET tasks with
+\texttt{all-mpnet-base-v2}, match every PCF step to its nearest O*NET task by cosine similarity, and let the
+step inherit that task's exposure and execution labels.
+The workflow order is APQC's own: within a Process Group, steps are ordered by a depth-first traversal of the
+framework's child ordering.
+The unit of analysis is the PCF Process Group with its ordered leaf elements, which is close to the paper's
+occupations in length (73 groups averaging 22.2 steps, against 872 occupations averaging 20.6 tasks); PCF
+Processes, a level below, provide a shorter but more numerous alternative (231 units averaging 6.4 steps).
+The specification is the one estimated in the main text, including the control for the number of AI-able
+steps, with the PCF Category standing in for the SOC group as the fixed effect.
+
+Table~\ref{tab:apqc_fragmentation_index_regression} reports the results.
+The fragmentation coefficient carries over cleanly.
+It is negative and significant at the 1\% level in all four columns, at $-0.59$ and $-0.50$ across Process
+Groups and $-0.43$ and $-0.32$ across Processes, against $-0.26$ to $-0.38$ in Table~\ref{tab:fragmentation_index_regression_exposure}.
+The relationship the main text documents between the dispersion of AI-able steps and realized AI execution is
+therefore not an artifact of how the workflow ordering was obtained: it appears, with a larger magnitude, when
+the ordering is the one practitioners wrote down.
+
+\subsubsection*{What the label transfer does and does not carry}
+
+The exposure coefficient does not carry over in the same way, and the reason is the coarseness of the match
+rather than anything about the workflows.
+Matching process steps to task statements is a lossy operation.
+The median best-match cosine similarity is $0.64$, and while $97\%$ of PCF steps find a match above $0.5$,
+only $21\%$ clear $0.7$ and essentially none clear $0.8$: these are thematically related pairs, not
+equivalent descriptions of the same work.
+The 1,622 PCF steps draw on only $878$ distinct O*NET tasks, $5\%$ of those available, and $29\%$ of steps are
+matched to a task that also serves at least five other steps, with the most reused task standing in for
+$21$ of them.
+A representative match pairs ``Create resource plan'' with ``Plan and develop programs, agendas, budgets, and
+services'': close in subject, far from identical in the work described.
+
+The consequence is a systematic shift in the label mix.
+Among matched PCF steps, $27.7\%$ inherit an E1 label against $14.8\%$ in the O*NET task universe, and only
+$20.6\%$ inherit E0 against $54.4\%$.
+The transfer thus compresses precisely the margin the exposure regressor relies on.
+E1 is the rarest and most demanding exposure category, so it is the one most distorted when a step is matched
+to a task that is merely similar; in the matched data the E1 share correlates $+0.01$ with realized AI
+execution, against $+0.54$ in O*NET, whereas the broader E1-or-E2 share still correlates $+0.50$.
+The exposure coefficients in Table~\ref{tab:apqc_fragmentation_index_regression} should be read in that light,
+as a diagnostic of the matching step rather than as evidence about the exposure channel.
+
+The fragmentation index is far more robust to this, because it depends on the \emph{arrangement} of AI-able
+steps along the sequence rather than on the precise exposure category of any individual step.
+Displacing a step between adjacent exposure categories rarely changes whether it sits next to another AI-able
+step, which is what the index measures.
+Accordingly, we read this exercise as evidence on the fragmentation channel alone, and it is on that channel
+that the main-text result reproduces.
+
+\begin{table}[h!]
+    \caption{Fragmentation and AI Execution on APQC's Documented Process Sequences}
+    \label{tab:apqc_fragmentation_index_regression}
+    \begin{center}
+    \input{tables/apqc_fragmentation_index_regression.tex}
+    \end{center}
+    \raggedright \footnotesize{\emph{Notes:}} This table re-estimates the main-text fragmentation regression on APQC process sequences.
+    The dependent variable is the share of steps executed by AI; the fragmentation index is EFI Definition~1, computed over APQC's documented step ordering.
+    Exposure and execution labels are transferred from each step's nearest O*NET task in \texttt{all-mpnet-base-v2} embedding space.
+    Columns~(1)--(2) take the PCF Process Group as the unit, columns~(3)--(4) the PCF Process.
+    All columns control for the number of AI-able steps in the unit, as in Table~\ref{tab:fragmentation_index_regression_exposure}.
+    All variables are standardized within the sample.
+\end{table}
+
 \subsection{Discussion}
 \label{app:apqc_validation_discussion}
 
