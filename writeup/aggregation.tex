@@ -6,13 +6,14 @@ Ultimately, however, our interest extends beyond the firm to the broader economy
 Improvements in AI quality not only alter how individual firms organize production but also affect the composition of inputs used across the economy and the aggregate relationship between labor, capital, and output.
 Yet the firm-level optimization framework developed above prevents direct analysis of these aggregate effects and also makes our approach distinct from the large literature in which production is modeled directly at the task level and then aggregated to the economy level (e.g., \cite{acemoglu2022artificial, acemoglu2024tasks, acemoglu2025simple}).
 To bridge this gap, this section examines whether the micro-level cost-minimization problem of firms can be aggregated into well-behaved firm- and economy-level production functions. 
-In particular, we show that the detailed, many-input Leontief representation of production at the task level can be reduced to a more compact formulation with only a small number of effective inputs, and that aggregating across heterogeneous firms (in terms of AI quality level) yields a macro-level production function with a CES form. 
+In particular, we show that the detailed, many-input Leontief representation of production at the task level can be reduced to a more compact formulation with only a small number of effective inputs, and that aggregating across heterogeneous firms (in terms of AI quality level) yields a macro-level production function with a CES form.
 This provides a tractable link between micro-level organization decisions and macroeconomic implications of improving AI quality.
 
 We begin by showing how a firm's micro-level decisions can be explicitly represented by a Leontief production function at the task level.
 Next, we demonstrate how, for the purposes of analyzing labor allocation within a firm, this detailed task-level production function can be simplified into a Leontief production function with just two aggregate inputs: skill-adjusted AI management labor and skill-adjusted manual labor (we will describe what we mean by ``skill-adjusted'' below).
-Finally, we explore how the production functions of numerous individual firms, which differ only in how they can effectively put the same AI technology into use, can be aggregated into a single, economy-wide CES production function.
+We then explore how the production functions of numerous individual firms, which differ only in how they can effectively put the same AI technology into use, can be aggregated into a single, economy-wide CES production function.
 In this macro-level representation, the inputs are economy-wide aggregates of the corresponding micro-level inputs from individual firms, thereby facilitating clearer insights into the overall labor allocation in the economy.
+Finally, we put this representation to work and derive the general equilibrium effects of an improvement in AI quality on aggregate output, on the allocation of workers between AI management and manual work, and on wages.
 
 Before the aggregation analysis, let us first describe the setup of production.
 A firm uses two production inputs: (1) skill-adjusted AI management labor (to complete AI-assisted tasks), and (2) skill-adjusted manual labor (to perform manual tasks).
@@ -221,6 +222,278 @@ The derived distribution (\ref{eq:phi}) characterizes firm-level heterogeneity i
 The aggregation results in this section provide a foundation for linking micro-level technology deployment and organizational choices to macroeconomic production frameworks.
 By showing how heterogeneous firms with step-by-step Leontief technologies and endogenous task boundaries can be represented by a CES aggregator, our framework offers a micro-founded rationale for using aggregate CES production functions to study labor demand, substitution patterns, and productivity in economies adopting new AI technologies.
 This connection clarifies how firm-level decisions about automation, augmentation, and job design scale up to shape aggregate technological change.
+
+
+
+\subsection{General Equilibrium Effects of Improving AI Quality}
+\label{sec:agg_compstat}
+
+The point of an aggregate production function is to let us ask aggregate questions, and the most natural one here is what happens to output, employment, and wages as AI quality improves.
+The difficulty is that better AI does not simply make a fixed set of AI-executed steps more reliable.
+Its central effect in our model is to change the organization of production itself: as $\alpha$ rises, chains extend over steps that were previously performed by hand, and the boundary between what people do and what AI does moves.
+Holding the AI strategy fixed would assume away the mechanism the model is about.
+We therefore let the firm reoptimize, and show that the general equilibrium consequences of an improvement depend on the firm's entire response, reorganization included, only through how it moves two numbers.
+
+\subsubsection*{Two Sufficient Statistics for the Firm's Response}
+
+Let $(\T, \J)$ be the organization the firm chooses at AI quality $\alpha$, and define
+\begin{equation}
+T_{\AIletter}(\alpha) \;=\; \sum_{b=1}^{k} \skillAdjustedTimeAI{b}\,\alpha^{-d_{b}},
+\qquad
+T_{\manualLetter}(\alpha) \;=\; \skillAdjustedTimeLetter_{\manualLetter},
+\label{eq:cs_requirements}
+\end{equation}
+where the first sum runs over the AI chains of $\T$, with $d_b$ the total difficulty of chain $b$, and $\skillAdjustedTimeLetter_{\manualLetter}$ is as in \eqref{eq:def_t_H}.
+These are the two input coefficients of the firm's technology: $T_{\AIletter}$ is the skill-adjusted AI management labor and $T_{\manualLetter}$ the skill-adjusted manual labor that a best-practice firm needs per unit of output.
+Once effective AI quality is decomposed as in Assumption~\ref{as:neutral_heterogeneity} below, the firm-level Leontief function \eqref{eq:micro_agg_prod} reads
+\begin{equation}
+x = \min\left\{\frac{\varepsilon\,\labor{\AIletter}}{T_{\AIletter}},\ \frac{\labor{\manualLetter}}{T_{\manualLetter}}\right\},
+\label{eq:cs_micro_prod}
+\end{equation}
+and nothing else about the workflow, the chain structure, or the job design enters the aggregate economy.
+
+An improvement in AI quality moves the pair $(T_{\AIletter}, T_{\manualLetter})$ through two distinct channels.
+The first operates at a fixed organization: a higher $\alpha$ raises the success probability of every chain, so that fewer retries are needed and $T_{\AIletter}$ falls at rate
+\begin{equation}
+-\left.\frac{\partial \ln T_{\AIletter}}{\partial \ln \alpha}\right|_{\T}
+\;=\;
+\frac{\sum_{b=1}^{k}\skillAdjustedTimeAI{b}\,d_{b}\,\alpha^{-d_{b}}}{\sum_{b=1}^{k}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}}
+\;\equiv\; \bar{D} \;>\; 0,
+\label{eq:cs_passthrough}
+\end{equation}
+the average difficulty of the firm's AI-executed work weighted by the expected time each chain consumes, while $T_{\manualLetter}$ does not move at all.
+Because a chain's difficulty is the sum of the difficulties of its steps, $\bar{D}$ is larger when AI is deployed in longer chains, so chaining amplifies how much a given improvement in raw AI quality is worth.
+
+The second is the chaining channel, and it is the one that makes the organization of production endogenous to $\alpha$.
+When an improvement makes it worthwhile to extend a chain over a step that was previously manual, $T_{\manualLetter}$ falls by that step's manual time requirement, while $T_{\AIletter}$ \emph{rises}, because the lengthened chain carries a higher total difficulty and so must be retried more often.
+Automation therefore appears in \eqref{eq:cs_requirements} as a substitution out of manual labor and into AI management labor at the level of the firm's input coefficients, and it is the only way $T_{\manualLetter}$ can move at all.
+
+We write $\hat{T}_{\AIletter}$ and $\hat{T}_{\manualLetter}$ for the proportional changes in the two coefficients induced by a small improvement in AI quality, combining both channels, so that $\hat{T}_{\manualLetter} < 0$ exactly when the improvement pulls steps out of manual execution.
+Because the firm chooses among finitely many organizations, the chaining channel operates at the discrete reorganization thresholds of Section~\ref{sec:nonlinear} rather than continuously, and $\hat{T}_{\manualLetter} = 0$ between thresholds.
+The results below are stated for small changes in $(T_{\AIletter}, T_{\manualLetter})$.
+They describe a threshold crossing to first order, and describe it exactly in the limit of a workflow with many steps, where thresholds are dense and each reorganization moves a small share of the work.
+
+\subsubsection*{Deployment Heterogeneity}
+
+The one substantive restriction we need concerns how a firm's effective AI quality relates to the technology it has deployed.
+
+\begin{assumption}[Neutral deployment heterogeneity]
+\label{as:neutral_heterogeneity}
+A firm's effective AI quality factors as $\bar{\alpha} = \Lambda\,\varepsilon$, where $\Lambda$ is common across firms and depends only on the AI technology and the organization adopted, and $\varepsilon \in (0,1]$ is the firm's relative deployment effectiveness, whose distribution across productive capacity is invariant to both.
+\end{assumption}
+
+This holds exactly if firms differ in an \emph{integration reliability} $\varepsilon$ that multiplies the success probability of every AI chain the firm runs, so that a chain spanning steps $(s_\ell, \dotsc, s_r)$ succeeds with probability $\varepsilon \prod_{i=\ell}^{r} q_i$ rather than $\prod_{i=\ell}^{r} q_i$.
+This captures how well a firm has wired AI into its workflow, as distinct from how good the technology itself is.
+Substituting into \eqref{eq:alpha_bar} gives $\bar{\alpha} = \varepsilon\,\Lambda$ with $\Lambda = \skillAdjustedTimeLetter_{\AIletter}/T_{\AIletter}$, the effective AI quality of a firm that deploys the technology at best practice, so that the firm's AI management requirement per unit of output is $\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha} = T_{\AIletter}/\varepsilon$, as in \eqref{eq:cs_micro_prod}.
+This is the precise sense in which the firms considered above ``differ only in how they can effectively put the same AI technology into use'': $\Lambda$ is the technology as deployed and $\varepsilon$ is the firm's ability to deploy it.
+Requiring the distribution of $\varepsilon$ to be invariant is natural here because $\phi$ describes how productive capacity, equivalently the fixed capital stock, is distributed across firms of differing deployment effectiveness, and neither the frontier technology nor the firm's choice of workflow redistributes capital across firms.
+
+With this decomposition the aggregation of the previous subsection goes through with $\varepsilon$ in place of $\bar{\alpha}$ as the index of firm heterogeneity, and it does so for \emph{any} organization the firm might adopt.
+What is more, the organization affects the resulting CES only through its weights.
+
+\begin{lem}[Invariance of the aggregate elasticity of substitution]
+\label{lem:sigma_invariance}
+Under Assumption~\ref{as:neutral_heterogeneity}, for any input coefficients $(T_{\AIletter}, T_{\manualLetter})$ the economy with heterogeneity distribution \eqref{eq:phi} admits the CES representation
+\begin{equation}
+X = \left(\theta'_{\AIletter}\,\aggregateAIlabor^{\rho}+\theta'_{\manualLetter}\,\aggregateManualLabor^{\rho}+\theta'_{K}\,K^\rho\right)^{\frac{1}{\rho}},
+\label{eq:macro_agg_prod_general}
+\end{equation}
+with the same $\rho$, and hence the same elasticity of substitution $\sigma = 1/(1-\rho)$, and with weights $(\theta'_{\AIletter}, \theta'_{\manualLetter}, \theta'_{K})$ that depend on the organization and reduce to $(\theta_{\AIletter}, \theta_{\manualLetter}, 1-\theta_{\AIletter}-\theta_{\manualLetter})$ at the baseline organization.
+A reorganization of the workflow therefore shifts the weights of the macro production function but leaves its elasticity of substitution unchanged.
+\end{lem}
+
+\begin{proof}
+Under Assumption~\ref{as:neutral_heterogeneity} the firm's technology is \eqref{eq:cs_micro_prod} and the break-even condition \eqref{eq:alpha_threshold} becomes $\varepsilon \geq u \equiv w_{\AIletter}T_{\AIletter}/(1 - w_{\manualLetter}T_{\manualLetter})$, which are the expressions of Section~\ref{sec:aggregation} with $\varepsilon$ in place of $\bar{\alpha}$ and $(T_{\AIletter}, T_{\manualLetter})$ in place of $(\skillAdjustedTimeLetter_{\AIletter}, \skillAdjustedTimeLetter_{\manualLetter})$.
+Hence $X = \Gamma(u)$, $\aggregateAIlabor = T_{\AIletter}\Psi(u)$ and $\aggregateManualLabor = T_{\manualLetter}\Gamma(u)$, with $\Gamma$ and $\Psi$ as in \eqref{eq:gamma} and \eqref{eq:psi}.
+From Section~\ref{sec:aggregationDist}, $\Gamma(u) = \theta_{K}^{1/\rho}\left(b_0 - b_1 v\right)^{-1/\rho}$ and $\Psi(u) = (b_1/b_0)\,u^{1/(\rho-1)}\,\Gamma(u)$, where $v \equiv u^{\rho/(\rho-1)}$, $\theta_K = 1-\theta_{\AIletter}-\theta_{\manualLetter}$, $b_0 = 1 - \theta_{\manualLetter}\skillAdjustedTimeLetter_{\manualLetter}^{\rho}$ and $b_1 = b_0^{\rho/(\rho-1)}(\theta_{\AIletter}\skillAdjustedTimeLetter_{\AIletter}^{\rho})^{1/(1-\rho)}$.
+Substituting into \eqref{eq:macro_agg_prod_general} and dividing by $X^{\rho}$ gives
+\[
+1 \;=\; \theta'_{\AIletter}\,T_{\AIletter}^{\rho}\left(\frac{b_1}{b_0}\right)^{\rho} v \;+\; \theta'_{\manualLetter}\,T_{\manualLetter}^{\rho} \;+\; \frac{\theta'_{K}}{\theta_{K}}\left(b_0 - b_1 v\right),
+\]
+which holds identically in $u$ if and only if the coefficient on $v$ vanishes and the constant term equals one.
+Together with $\theta'_{\AIletter}+\theta'_{\manualLetter}+\theta'_{K} = 1$ this is a system of three linear equations in the three weights with a unique solution, which is the baseline solution when $(T_{\AIletter}, T_{\manualLetter}) = (\skillAdjustedTimeLetter_{\AIletter}, \skillAdjustedTimeLetter_{\manualLetter})$.\footnote{
+The weights remain positive for organizations in a neighborhood of the baseline by continuity.
+Consistency of the closed form \eqref{eq:phi} with the definition $\Gamma(u) = \int_u^1\phi(\varepsilon)\,d\varepsilon$ also requires the boundary condition $\Gamma(1) = 0$, which holds if and only if $\theta_{\AIletter}\skillAdjustedTimeLetter_{\AIletter}^{\rho} + \theta_{\manualLetter}\skillAdjustedTimeLetter_{\manualLetter}^{\rho} = 1$.
+We impose this restriction on the baseline macro parameters throughout, which costs one degree of freedom in $(\theta_{\AIletter}, \theta_{\manualLetter}, \rho)$ and leaves the aggregation result otherwise unchanged.
+}
+\end{proof}
+
+\subsubsection*{Closing the Model}
+
+To move from technology to equilibrium we must say how the two labor inputs are supplied.
+Workers are ex ante identical and are hired and trained by firms for designated jobs (Section~\ref{sec:jobs_wages}), so free entry into both kinds of work equalizes the base wage rates, $w_{\AIletter} = w_{\manualLetter} = w$, which is the normalization the main text adopts in Footnote~\ref{foot:wage}.
+Total skill-adjusted labor is supplied inelastically at $L$, and capital remains the fixed factor, in supply $K = 1$.
+
+A firm with deployment effectiveness $\varepsilon$ produces $\phi(\varepsilon)$ if it breaks even and nothing otherwise, so it produces exactly when $\varepsilon \geq u$, where the entry cutoff $u$ and the wage satisfy
+\begin{equation}
+u \;=\; \frac{w\,T_{\AIletter}}{1 - w\,T_{\manualLetter}},
+\qquad\text{equivalently}\qquad
+w \;=\; \left(\frac{T_{\AIletter}}{u} + T_{\manualLetter}\right)^{-1}.
+\label{eq:cs_cutoff}
+\end{equation}
+The second expression says the wage is the inverse of the labor the marginal firm needs per unit of output.
+Aggregate output and the two labor aggregates are
+\begin{equation}
+X = \Gamma(u), \qquad \aggregateAIlabor = T_{\AIletter}\,\Psi(u), \qquad \aggregateManualLabor = T_{\manualLetter}\,\Gamma(u),
+\label{eq:cs_aggregates}
+\end{equation}
+and the labor market clears when
+\begin{equation}
+T_{\AIletter}\,\Psi(u) + T_{\manualLetter}\,\Gamma(u)
+\;=\;
+\int_u^1 \left(\frac{T_{\AIletter}}{\varepsilon} + T_{\manualLetter}\right)\phi(\varepsilon)\,d\varepsilon
+\;=\; L.
+\label{eq:cs_clearing}
+\end{equation}
+The middle expression is the economy's total labor requirement, the labor each producing firm needs per unit of output integrated against its output.
+It is strictly decreasing in $u$, vanishes as $u \to 1$, and diverges as $u \to 0$, so \eqref{eq:cs_clearing} has a unique solution $u \in (0,1)$ for any $L > 0$, and \eqref{eq:cs_cutoff} then delivers the wage.\footnote{
+Divergence at $u \to 0$ follows because $\phi(\varepsilon)$ behaves like $\varepsilon^{1/(\rho-1)}$ near zero by \eqref{eq:phi}, so $\phi(\varepsilon)/\varepsilon$ is not integrable at the origin.
+Note also that firms with $\varepsilon < u$ leave their capital idle, so aggregate capital in use, $\Gamma(u)$, is below the aggregate supply $K = 1$.
+}
+Firms above the cutoff earn rents on their capacity, and we write
+\[
+s_{\AIletter} = \frac{w\,\aggregateAIlabor}{X},
+\qquad
+s_{\manualLetter} = \frac{w\,\aggregateManualLabor}{X} = w\,T_{\manualLetter},
+\qquad
+s_{K} = 1 - s_{\AIletter} - s_{\manualLetter}
+\]
+for the shares of output accruing to AI management labor, to manual labor, and to capital.
+
+\subsubsection*{Comparative Statics}
+
+Proposition~\ref{prop:agg_compstat} gives the general equilibrium response to an improvement in AI quality, allowing the firm to reorganize.
+
+\begin{proposition}[General equilibrium effects of AI progress]
+\label{prop:agg_compstat}
+Suppose an improvement in AI quality changes the firm's input coefficients by $(\hat{T}_{\AIletter}, \hat{T}_{\manualLetter})$, and let
+\begin{equation}
+\gamma \;\equiv\; -\left(s_{\AIletter}\hat{T}_{\AIletter} + s_{\manualLetter}\hat{T}_{\manualLetter}\right)
+\label{eq:cs_tfp}
+\end{equation}
+denote the induced rate of aggregate productivity growth.
+Then, under Assumption~\ref{as:neutral_heterogeneity},
+\begin{align}
+\hat{X} \;=\; \gamma,
+\qquad
+\hat{u} \;=\; -\frac{s_{K}}{\sigma\,s_{\AIletter}}\,\gamma,
+\qquad
+&\hat{\aggregateManualLabor} \;=\; \gamma + \hat{T}_{\manualLetter},
+\qquad
+\hat{\aggregateAIlabor} \;=\; -\frac{\aggregateManualLabor}{\aggregateAIlabor}\left(\gamma + \hat{T}_{\manualLetter}\right),
+\label{eq:cs_quantities}\\[4pt]
+\hat{w} \;=\; \underbrace{\frac{1-s_{\manualLetter}}{s_{\AIletter}}\left(1 - \frac{s_{K}}{\sigma}\right)\gamma}_{\text{productivity}}
+\;&+\;
+\underbrace{\frac{s_{K}\,s_{\manualLetter}}{s_{\AIletter}}\,\hat{T}_{\manualLetter}}_{\text{displacement}}.
+\label{eq:cs_prices}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Let $\eta \equiv u\,\phi(u)/X = -\,d\ln\Gamma/d\ln u$ denote the \emph{entry elasticity}, the elasticity of aggregate output with respect to the entry cutoff.
+We proceed in four steps.
+
+\emph{Step 1: the entry margin.}
+Write the left-hand side of \eqref{eq:cs_clearing} as $g(u, T_{\AIletter}, T_{\manualLetter})$.
+Since $\Gamma'(u) = -\phi(u)$ and $\Psi'(u) = -\phi(u)/u$,
+\[
+\frac{\partial g}{\partial \ln T_{\AIletter}} = \aggregateAIlabor,
+\qquad
+\frac{\partial g}{\partial \ln T_{\manualLetter}} = \aggregateManualLabor,
+\qquad
+\frac{\partial g}{\partial u} = -\phi(u)\left(\frac{T_{\AIletter}}{u} + T_{\manualLetter}\right) = -\frac{\phi(u)}{w},
+\]
+where the last equality uses \eqref{eq:cs_cutoff}.
+Totally differentiating \eqref{eq:cs_clearing} therefore gives
+\begin{equation}
+\hat{u} \;=\; \frac{w\left(\aggregateAIlabor \hat{T}_{\AIletter} + \aggregateManualLabor \hat{T}_{\manualLetter}\right)}{u\,\phi(u)} \;=\; \frac{s_{\AIletter}\hat{T}_{\AIletter} + s_{\manualLetter}\hat{T}_{\manualLetter}}{\eta} \;=\; -\frac{\gamma}{\eta}.
+\label{eq:cs_proof_cutoff}
+\end{equation}
+
+\emph{Step 2: quantities.}
+From \eqref{eq:cs_aggregates}, $\hat{X} = -\eta\,\hat{u} = \gamma$, and $\aggregateManualLabor = T_{\manualLetter}X$ gives $\hat{\aggregateManualLabor} = \hat{T}_{\manualLetter} + \gamma$.
+Market clearing $\aggregateAIlabor = L - \aggregateManualLabor$ then implies $\aggregateAIlabor\,\hat{\aggregateAIlabor} = -\aggregateManualLabor\,\hat{\aggregateManualLabor}$, which is the last expression in \eqref{eq:cs_quantities}.
+
+\emph{Step 3: the wage.}
+Differentiating the second expression in \eqref{eq:cs_cutoff} and using $w\,T_{\AIletter}/u = 1 - w\,T_{\manualLetter} = 1 - s_{\manualLetter}$,
+\[
+\hat{w} \;=\; -(1-s_{\manualLetter})\left(\hat{T}_{\AIletter} - \hat{u}\right) - s_{\manualLetter}\hat{T}_{\manualLetter}.
+\]
+Substituting $\hat{u} = -\gamma/\eta$ and $\hat{T}_{\AIletter} = -(\gamma + s_{\manualLetter}\hat{T}_{\manualLetter})/s_{\AIletter}$ from \eqref{eq:cs_tfp}, and collecting terms,
+\[
+\hat{w} \;=\; \frac{1-s_{\manualLetter}}{s_{\AIletter}}\left(1 - \frac{s_{\AIletter}}{\eta}\right)\gamma \;+\; \left(\frac{1-s_{\manualLetter}}{s_{\AIletter}} - 1\right)s_{\manualLetter}\hat{T}_{\manualLetter},
+\]
+and $(1-s_{\manualLetter})/s_{\AIletter} - 1 = s_{K}/s_{\AIletter}$.
+
+\emph{Step 4: the entry elasticity.}
+It remains to show that $\eta = \sigma\,s_{\AIletter}/s_{K}$ for any $(T_{\AIletter}, T_{\manualLetter})$.
+Using $\Psi(u) = (b_1/b_0)\,u^{1/(\rho-1)}\Gamma(u)$ from the proof of Lemma~\ref{lem:sigma_invariance} together with $w\,T_{\AIletter} = u\,(1 - w\,T_{\manualLetter}) = u\,(1-s_{\manualLetter})$,
+\[
+s_{\AIletter} = \frac{w\,T_{\AIletter}\Psi(u)}{\Gamma(u)} = w\,T_{\AIletter}\,\frac{b_1}{b_0}\,u^{\frac{1}{\rho-1}} = (1-s_{\manualLetter})\,\frac{b_1 v}{b_0},
+\qquad v \equiv u^{\frac{\rho}{\rho-1}},
+\]
+so that $s_{K} = 1 - s_{\manualLetter} - s_{\AIletter} = (1-s_{\manualLetter})(b_0 - b_1 v)/b_0$ and therefore $s_{\AIletter}/s_{K} = b_1 v/(b_0 - b_1 v)$.
+Since $\Gamma(u) = \theta_{K}^{1/\rho}(b_0 - b_1 v)^{-1/\rho}$ and $d\ln v/d\ln u = \rho/(\rho-1)$,
+\[
+\eta = -\frac{d \ln \Gamma}{d \ln u} = \frac{1}{\rho}\,\frac{d \ln (b_0 - b_1 v)}{d \ln u} = \frac{b_1 v}{(1-\rho)(b_0 - b_1 v)} = \sigma\,\frac{s_{\AIletter}}{s_{K}}.
+\]
+Note that $\eta$ depends on the organization only through the equilibrium cutoff it induces.
+Substituting into \eqref{eq:cs_proof_cutoff} and into Step~3 gives \eqref{eq:cs_quantities} and \eqref{eq:cs_prices}.
+\end{proof}
+
+The two channels through which AI progress reaches the economy have sharply different aggregate signatures, and Corollaries~\ref{cor:cs_within} and~\ref{cor:cs_reorg} record them.
+
+\begin{cor}[Better AI at a fixed organization]
+\label{cor:cs_within}
+Between reorganization thresholds, $\hat{T}_{\manualLetter} = 0$ and $\hat{T}_{\AIletter} = -\bar{D}\,\hat{\alpha}$, so $\gamma = \bar{D}\,s_{\AIletter}\,\hat{\alpha}$ and
+\[
+\hat{X} = \hat{\aggregateManualLabor} = \bar{D}\,s_{\AIletter}\,\hat{\alpha} > 0,
+\qquad
+\hat{\aggregateAIlabor} = -\,\bar{D}\,s_{\manualLetter}\,\hat{\alpha} < 0,
+\qquad
+\hat{w} = \bar{D}\left(1 - s_{\manualLetter}\right)\left(1 - \frac{s_{K}}{\sigma}\right)\hat{\alpha}.
+\]
+Output and manual employment rise, AI management employment falls, and the wage rises if and only if $\sigma > s_{K}$.
+\end{cor}
+
+\begin{cor}[Reorganization that lengthens a chain]
+\label{cor:cs_reorg}
+At a reorganization that pulls a manual step into a chain, $\hat{T}_{\AIletter} > 0 > \hat{T}_{\manualLetter}$, and $\gamma > 0$ whenever the reorganization lowers the economy's labor requirement.
+Then $\hat{X} > 0$, $\hat{u} < 0$, $\hat{\aggregateManualLabor} < 0$ and $\hat{\aggregateAIlabor} > 0$.
+Output and entry rise, manual employment falls, AI management employment rises, and the wage carries a strictly negative displacement term in \eqref{eq:cs_prices}.
+\end{cor}
+
+\begin{proof}
+Only the employment signs require an argument.
+By \eqref{eq:cs_tfp}, $\hat{\aggregateManualLabor} = \gamma + \hat{T}_{\manualLetter} = -s_{\AIletter}\hat{T}_{\AIletter} + (1-s_{\manualLetter})\hat{T}_{\manualLetter}$, and both terms are negative when $\hat{T}_{\AIletter} > 0 > \hat{T}_{\manualLetter}$.
+The sign of $\hat{\aggregateAIlabor}$ follows from market clearing.
+\end{proof}
+
+Four features of these results are worth drawing out.
+
+First, aggregate output grows at exactly the rate at which the firm's technology improves.
+The object $\gamma$ in \eqref{eq:cs_tfp} is the standard productivity residual, the share-weighted reduction in unit input requirements, and with labor and capital in fixed supply it is also the growth rate of aggregate output and of output per worker.
+Within a regime it equals $\bar{D}\,s_{\AIletter}$, so the macroeconomic return to better AI is governed by how much of the wage bill is currently spent managing AI and by how difficult the work AI has been given is, rather than by how impressive the improvement is in engineering terms.
+Since $\gamma = \bar{D}\,s_{\AIletter}$ between thresholds, and $\bar{D}$ is non-increasing in $\alpha$ within a regime but jumps up whenever a reorganization lengthens a chain, the non-monotonicity of Lemma~\ref{lem:reorg_threshold} carries over to aggregate productivity growth: it diminishes as a given organization of work is pushed further and revives when the workflow is redrawn, which is the sense in which our framework microfounds a productivity J-curve \citep{brynjolfsson2021productivity}.\footnote{
+That $\bar{D}$ falls within a regime follows because it is a weighted average of chain difficulties with weights proportional to $\skillAdjustedTimeAI{b}\alpha^{-d_b}$, and a higher $\alpha$ shifts those weights toward the easier chains; formally $d\bar{D}/d\ln\alpha$ equals minus the variance of $d_b$ under those weights.
+When a reorganization absorbs a manual step into chain $b$, both $d_b$ and its weight rise, so $\bar{D}$ jumps up.
+}
+
+Second, and this is where the chaining margin does its work, the two channels move employment composition in \emph{opposite} directions.
+At a fixed organization, each unit of output still requires $T_{\manualLetter}$ units of manual labor while the human time needed per unit of AI-executed work falls, so the economy reallocates workers out of AI management and into manual work, and the manual steps that AI has not absorbed become the binding constraint on scale.
+A reorganization reverses this: it removes manual steps from the workflow outright, and by Corollary~\ref{cor:cs_reorg} manual employment falls and AI management employment rises even though output expands.
+Whether AI progress shrinks or grows manual employment over a stretch of the diffusion path is therefore a question about how often, and how far, firms cross reorganization thresholds along the way, not a question about the rate of technical improvement as such.
+Without the chaining margin the first channel is all there is, and better AI could only ever push workers toward manual work.
+
+Third, the wage response in \eqref{eq:cs_prices} is a race between the labor AI releases and the output expansion that reabsorbs it, in the sense of \cite{acemoglu2019automation}, and the decomposition separates the two forces cleanly.
+The productivity term is positive if and only if $\sigma > s_{K}$.
+Behind that condition is the entry elasticity $\eta = u\phi(u)/X = \sigma\,s_{\AIletter}/s_{K}$, which measures how much productive capacity sits just below the break-even level of deployment effectiveness: when $\eta$ is large, a small decline in the break-even level brings a great deal of output on line and labor demand expands.
+The displacement term is active only when the improvement reorganizes work, and it is then unambiguously negative.
+Automation therefore puts downward pressure on wages over and above anything that happens to productivity, and it can push the wage down even in an economy where $\sigma > s_{K}$ and pure quality gains would raise it.
+
+Fourth, the elasticity of substitution that governs all of this is a property of the dispersion of deployment effectiveness across firms, not of the workflow.
+By Lemma~\ref{lem:sigma_invariance}, when firms reorganize around better AI the macro production function's weights move, shifting toward AI management labor, but $\sigma$ does not.
+Aggregate substitutability between AI management labor and the rest of the economy is thus inherited from how unevenly firms deploy AI, and improvements in AI quality change what the economy produces and who produces it without changing how substitutable the inputs are.
 
 
 

@@ -32,7 +32,45 @@ The task survives the SeveralDaily$+$ cuts at the 20\%, 35\%, and 50\% threshold
 Nothing stricter retains it, in either direction: no worker reports the task hourly or more, so it fails every Hourly$+$ cut, and its frequent share falls short of 65\%, so it fails the strictest threshold under both remaining logics.
 Each logic-threshold pair therefore defines its own subsample of tasks and occupations.
 We estimate every prediction separately on each subsample and present the results for all twelve cuts together in a grid, three logics by four thresholds, for ease of comparison.
+
+Figure~\ref{fig:frequency_pruning_example} makes the pruning procedure concrete for a single occupation, Allergists and Immunologists (SOC 29-1229.01).
+Panel~(A) shows the occupation's full sequenced workflow, the object used throughout the main analysis: sixteen O*NET tasks in the order the language model places them, with the AI-executed steps shaded.
+Panel~(B) shows what survives the Hourly$+$ $\geq 50\%$ cut, one of the most demanding in the grid: seven of the sixteen tasks, retained in their original relative order and still carrying their original position numbers so that the dropped steps can be read off directly.
+What the filter removes is what one would expect it to remove.
+The specialized diagnostic procedures (steps~3 and~4), the coordination and consultation activities (steps~9 and~10), and the research and continuing-education tasks (steps~14 through~16) are performed episodically rather than within the hour, and they drop out; what remains is the recurring clinical loop of documenting histories, examining patients, interpreting results, planning treatment, educating patients, and prescribing.
+The figure also shows why pruning is not innocuous for our measures, which is precisely the concern this appendix addresses.
+All four AI-executed steps survive the filter, but in the full workflow each is isolated between manual steps, so the occupation contributes four chains of length one and an average AI chain length of $1.00$; once the intervening manual steps~8 through~10 are dropped, steps~7 and~11 become adjacent and the same four AI-executed tasks now form three chains of lengths $1$, $1$, and $2$, raising the occupation's average to $1.33$.
+Pruning can thus both shorten workflows and concentrate the surviving AI-executed steps, and the exercises that follow ask whether our three results survive once this is done for every occupation.
 We take the three predictions in turn.
+
+\begin{figure}[p]
+\caption{Frequency Pruning of a Single Occupation's Workflow: Allergists and Immunologists}
+\label{fig:frequency_pruning_example}
+\begin{center}
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (A): Full Workflow (All Tasks)}
+    \includegraphics[width=0.86\textwidth]{plots/taskSequence_vs_anthropicIndex/example_pruning/example_allergists_full.png}
+\end{subfigure}
+
+\vspace{0.6em}
+
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \captionsetup{labelformat=empty}
+    \caption{Panel (B): Pruned Workflow (Hourly$+$ $\geq 50\%$)}
+    \includegraphics[width=0.86\textwidth]{plots/taskSequence_vs_anthropicIndex/example_pruning/example_allergists_hourly50.png}
+\end{subfigure}
+\end{center}
+\footnotesize{
+\emph{Notes:} Panel~(A) reports the full sequenced workflow for Allergists and Immunologists (SOC 29-1229.01), the object used in the main analysis: the occupation's sixteen O*NET tasks in the order assigned by the language model.
+Panel~(B) reports the workflow that survives the Hourly$+$ $\geq 50\%$ frequency cut, which retains a task only if at least half of the surveyed incumbent workers report performing it hourly or more.
+Surviving tasks keep their original relative order and their position in the full workflow, so the numbers skipped in Panel~(B) are the pruned steps.
+Shaded rows are AI-executed steps (augmentation or automation in the Anthropic Economic Index); unshaded rows are manual.
+Pruning keeps all four AI-executed steps but drops the manual steps separating positions~7 and~11, merging two isolated AI-executed steps into a chain of length two.
+}
+\end{figure}
 
 \subsection{Prediction \#1: The Average AI Chain Length}
 \label{app:frequency_robustness_chains}
