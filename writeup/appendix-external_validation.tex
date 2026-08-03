@@ -2,48 +2,48 @@
 \label{app:external_validation}
 
 The task sequences underlying our empirical analysis are not observed.
-O*NET catalogues the tasks that belong to an occupation but says nothing about the order in which they are
-performed, so we recover that order by prompting a language model (GPT-5-mini).
-Every adjacency-based object in the paper thus rests on that imputation.
-Two concerns follow this approach.
+O*NET catalogues the tasks that belong to an occupation but not the order in which they are performed, so we
+construct that order by prompting a language model (GPT-5-mini).
+Every adjacency-based object in the paper rests on that imputation, which raises two concerns.
 
 The first is that the orderings may be artifacts of how language models reason rather than reconstructions of
 how work is sequenced.
-An LLM asked to arrange a list may simply place semantically similar items next to one another, producing an
-ordering that looks like a workflow but encodes topical similarity instead of production logic.
+An LLM asked to arrange a list may simply place semantically similar items next to one another, encoding
+topical similarity instead of production logic.
 Because AI exposure is itself correlated with what a task is about, such an ordering could manufacture the
 contiguity we document without any underlying sequence.
-Appendix~\ref{app:gptPrompts_robustness} shows that our orderings are stable across prompt formulations, but
+Appendix~\ref{app:gptPrompts_robustness} shows our orderings are stable across prompt formulations, but
 stability is not accuracy: an instrument can be consistently wrong.
 
-The second is that O*NET tasks may not be sequenceable at all.
+The second is that not all O*NET tasks may be performed in some sequence.
 O*NET is a catalogue of what an occupation involves, not a process map, and if its task lists do not describe
-work that proceeds in an order, then no ordering procedure however accurate could deliver the objects our
+work that proceeds in an order, no ordering procedure however accurate could deliver the objects our
 predictions require.
-While in Appendix~\ref{app:frequency_robustness} we prune the O*NET workflows to only contain tasks that are frequently performed 
-to make task sequences more like a workflow, the main caveat still applies.
+Appendix~\ref{app:frequency_robustness} prunes the O*NET workflows to tasks that are very frequently
+performed, which makes them more workflow-like, but the caveat still applies.
 
-In this appendix, we address both concerns with external data whose sequences were documented by human practitioners: APQC's
-\emph{Process Classification Framework} (PCF), a taxonomy in which the activities and tasks belonging to a
-business process are recorded in the order in which they are performed by human practitioners \citep{apqc_pcf}.
+We address both concerns with external data whose sequences human practitioners documented: the
+\emph{Process Classification Framework} (PCF) of the American Productivity \& Quality Center (APQC), a
+taxonomy recording the activities and tasks of a business process in the order practitioners perform them
+\citep{apqc_pcf}.
 
-To address the first concern, we shuffle the activities within each documented process and ask the language
-model to recover their order, using the same prompts as the main analysis.
-The LLM does so to a substantial degree.
-Some processes admit no unique ordering, since their constituent activities are mutually exclusive options (the branch ``Analyze deal options,'' for instance, lists evaluating acquisition, merger, de-merger and divestiture options, which a firm weighs against one another rather than performs in turn), and we say so below; 
-nevertheless the recovered orderings overlap heavily with what practitioners wrote down.
-Subsection~\ref{app:eventlog_validation} corroborates this against a second and independent external
-benchmark, process-mining event logs in which the ordering is not documented but observed, case by case, in
-records of what organizations actually did.
+For the first, we shuffle the activities within each documented process and ask the language model to recover
+their order, using the same prompts as the main analysis.
+It does so to a substantial degree.
+Some processes admit no unique ordering, since their activities are mutually exclusive options, as we note
+below; nevertheless the recovered orderings overlap heavily with what practitioners wrote down.
+Subsection~\ref{app:eventlog_validation} corroborates this against a second, independent benchmark:
+process-mining event logs in which the ordering is not documented but observed, case by case, in records of
+what organizations actually did.
 
-To address the second concern, we match APQC activities to O*NET tasks using natural-language embeddings, so
-that the AI-exposure and AI-execution labels native to the O*NET taxonomy carry over to a corpus whose
-sequences are documented by human practitioners rather than imputed by an LLM.
+For the second, we match APQC activities to O*NET tasks using natural-language embeddings, so that the
+AI-exposure and AI-execution labels native to O*NET carry over to a corpus whose sequences practitioners
+documented rather than an LLM imputed.
 On the matched data both Prediction~\#1, that AI-executed steps form contiguous chains, and the
 fragmentation channel of Prediction~\#2, that the dispersion of AI-exposed steps governs how much exposure
 converts into execution, continue to hold.
-We are unable to test Prediction~\#3, because the matching is lossy and the surviving sample too small to
-support the conditions required for a proper comparison.
+Prediction~\#3 we cannot test: the matching is lossy and the surviving sample too small to support the
+required comparison.
 
 \subsection{Concern 1: Recovering Practitioner-Documented Orderings}
 \label{app:apqc_validation}
@@ -384,11 +384,10 @@ $8.1\%$ of steps are AI-exposed and $2.6\%$ are AI-executed, against $45.6\%$ an
 universe.
 The exercise therefore asks whether the predictions hold on a corpus carrying roughly a fifth of the main
 sample's AI density, with every label that does survive verified at high similarity.
-This is a deliberately conservative reading of the transfer, and it sets the terms for how the two sets of
-results below differ: the point estimates stay in place, but the precision does not.
+This is a deliberately conservative reading of the transfer, and it sets the terms for why the point estimates stay in place but the precisions do not.
 
 \paragraph{Prediction \#1.}
-The average AI chain spans $1.144$ steps, against $1.45$ in the main text.
+The average AI chain in the PCF dataset spans $1.144$ steps, against $1.45$ in the main text for O*NET.
 The magnitude is small, and mechanically so: with only $2.6\%$ of steps AI-executed, there is little
 opportunity for long runs to form, and the ceiling on the statistic is far below the main sample's.
 What the exercise can still ask is whether the runs that do form are longer than the same labels arranged at
@@ -407,9 +406,6 @@ steps are across a workflow, the less of that exposure converts into execution.
 The exposure coefficient carries the right sign in all three columns, at $0.14$, $0.19$ and $0.15$ against
 $0.24$, $0.11$ and $0.09$ in the main text, but it is significant only under PCF Category fixed effects.
 That loss of precision is the direct cost of the thin sample described above.
-Exposure enters as the share of E1 steps, and E1 is both the rarest exposure category and the one most
-depleted by the threshold: it survives on $3.2\%$ of steps here against $14.8\%$ of O*NET tasks, so the
-regressor has little variation left to identify a coefficient from.
 Fragmentation is far less exposed to that attrition, because it depends on the \emph{arrangement} of AI-able
 steps along the sequence rather than on the exposure category of any individual step.
 The channel the prediction is about, that dispersion impedes the conversion of exposure into execution,
