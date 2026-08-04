@@ -4,9 +4,7 @@
 In this section, we empirically test three predictions of our model: (1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; (2) occupations in which AI-suitable steps are more dispersed have fewer AI-executed steps; and (3) the AI-execution status of a step's neighbors affects the likelihood that the step itself is executed by AI.
 
 For our analysis, we construct a dataset that records three attributes of each step: its AI exposure status (exposed or unexposed to AI), which we interpret as the difficulty of the step for AI, its realized mode of execution (manual, AI-augmented, or AI-automated), and its position in the production sequence.\footnote{
-Our main analysis uses the full set of O*NET tasks in each occupation.
-To address the concern that infrequently-executed tasks introduce ``filler'' steps that lengthen the workflow, in Appendix~\ref{app:frequency_robustness} we restrict the sample to subsets of more frequently-executed tasks and show that our results carry over to these restricted samples.
-Statistical power is generally lower in these samples, however, since restricting on frequency also removes AI-executed tasks, which are already scarce in the full sample.
+Our main analysis uses the full set of O*NET tasks in each occupation; the restriction to more frequently-executed subsets is discussed below and carried out in Appendix~\ref{app:frequency_robustness}.
 }
 To create this dataset, we combine data from four sources:
 \begin{enumerate}
@@ -32,7 +30,6 @@ This pattern is a consequence of natural definitional differences between our mo
 Specifically, the automated versus augmented distinction in our model is defined by production sequencing and task dependencies, whereas the Anthropic classifications are based on task-level feasibility and are agnostic to workflow position.
 As a result, tasks labeled as automated in the data may still be followed by manual steps, leading to apparent deviations from the model's sequencing restriction without contradicting its underlying logic.
 Therefore, when considering the structure of AI chains in the remainder of this section, we do not distinguish between tasks labeled as automated versus augmented in the data; rather, we treat both labels as indicating AI execution. %and think of a chain as a contiguous sequence of such tasks, as discussed further in Section~\ref{sec:chainLength_prediction}.
-
 
 
 \subsection{Prediction \#1: Tendency to Have Runs of Consecutive AI-executed Tasks}
@@ -277,3 +274,33 @@ Third, consistent with the results in Table~\ref{tab:DWA_regression_aiExecution_
 Overall, the results indicate that AI execution of immediate neighbors of the focal task increases the likelihood that the task is executed by AI, whereas execution status of more distant neighbors matters much less, especially after controlling for a range of relevant factors.
 This aligns with the relatively short average AI chain length observed in the data (mean length 1.45), implying that tasks two positions away rarely fall in the same chain as the focal task.
 It is possible that with improvements in AI quality, chains become longer and execution status of more distant neighbors becomes more relevant for the execution mode of the focal task.
+
+
+\subsection{Robustness Tests}
+\label{sec:robustness}
+
+Each of the three tests above is defined over adjacent steps, so all of them rest on the task ordering rather than on task content alone.
+Two features of how we obtain that ordering warrant scrutiny, and we address each with a separate exercise.
+
+The first concern is the prompt.
+A single prompt produces a single set of sequences, so if the phrasing of our request is what organizes the tasks, the resulting ordering might be a property of our instructions rather than of the work itself.
+In Appendix~\ref{app:gptPrompts_robustness} we re-generate the O*NET task sequences under ten alternative prompts that vary the framing and the ordering logic, and re-run all three tests on each of the resulting datasets.
+The estimates move within a narrow band, and none of the conclusions reported above turns on which prompt is used.
+
+The second concern is the O*NET occupation task list itself.
+O*NET catalogues all the work activities an occupation involves, including tasks that are rarely performed, and such tasks might act as ``filler'' steps that lengthen a workflow and separate steps that are adjacent in practice.
+In Appendix~\ref{app:frequency_robustness} we restrict the sample to progressively more frequently-executed tasks, which makes the surviving sequences more workflow-like, and recover the same patterns for all three predictions.
+Confidence intervals widen as the restriction shrinks the sample, since dropping infrequent tasks also removes AI-executed ones, which are already scarce to begin with, but the direction of the headline results remains unaffected.
+
+Both exercises above stay within the bounds of the O*NET dataset and our own imputation, so neither can establish that the imputed order corresponds to how work steps are actually sequenced.
+To externally validate our sequencing approach, in Appendix~\ref{app:external_validation} we turn to a second production taxonomy: the Process Classification Framework (PCF) of the American Productivity \& Quality Center (APQC), whose member working groups have recorded the activities and tasks composing a firm's business processes in the order practitioners perform them \citep{apqc_pcf}.
+We first shuffle the steps of documented PCF branches and ask the LLM to order them, under our main sequencing prompt and each of the ten alternatives.
+The LLM recovers the practitioners' order to a decent extent, placing $70\%$ of consecutive step pairs in the documented direction and reproducing $24\%$ of branches exactly, with an average Kendall's $\tau$ of $0.53$ against PCF's orderings that barely moves across prompts.\footnote{
+Kendall's $\tau$ is a standard rank correlation measure that, roughly speaking, captures the fraction of task pairs that appear in the same relative order across two ranked lists.
+This measure ranges from $-1$ (completely reversed orderings) to $1$ (identical orderings), with $0$ indicating no systematic overlap.  
+Higher values therefore correspond to greater similarity between task sequences.
+}
+
+Having established that the LLM can recover a documented ordering, we then match O*NET tasks to PCF activities using natural language processing techniques to carry the AI exposure and AI execution labels over to a corpus that no LLM ordered, and re-test our predictions there.
+Although this matching procedure is lossy and not all AI-exposed or AI-executed tasks are matched to an activity in the PCF corpus, Predictions~\#1 and~\#2 come through with essentially the same results: AI-executed steps co-occur far more than the same labels arranged at random along the same sequences, and the empirical fragmentation index coefficient stays negative and significant at a magnitude comparable to the main sample.
+We are unable to re-run Prediction~\#3, however, whose sample requirements are considerably more restrictive, since it needs the same step to recur across workflows with differing execution outcomes and the O*NET-PCF matched data does not retain enough of that variation.

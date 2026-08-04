@@ -129,11 +129,20 @@ First, we examine whether AI-executed steps appear in contiguous blocks rather t
 Co-occurrence of AI steps is a direct implication of the model's chaining mechanism, in which the primary gains from AI arise when multiple adjacent steps are delegated jointly to AI.
 We document that in the data AI execution indeed operates over consecutive steps, a pattern consistent with modeling AI as acting on sequences rather than as an independent execution substitute at the individual step level.
 
-Second, the chaining mechanism implies strong local complementarities in AI automation decisions within a workflow.
+Second, the model emphasizes that sequencing plays a central role in determining the returns to AI automation.
+We show empirically that, controlling for the share of steps exposed to AI, occupations whose AI-exposed steps are more dispersed across the production workflow exhibit a substantially lower share of their steps executed by AI.
+This finding supports the fragmentation logic of the model and illustrates why considering just the share of exposed steps to AI can be misleading for predicting occupational impacts of AI when production steps are technologically interdependent.
+
+Third, the chaining mechanism implies strong local complementarities in AI automation decisions within a workflow.
 When a step is positioned next to AI-executed neighbors, local gains from automating it as part of a chain may induce its AI execution even if human execution would be preferred for that step in isolation.
 We show empirically that when conceptually similar steps appear across different occupations, a given step is more likely to be executed by AI in the occupation where its neighboring steps in the workflow are also AI-executed.
 This pattern provides direct evidence that AI execution depends not only on comparative advantage and step-level characteristics, but also on the local work context influenced by adjacent steps in the workflow.
 
-Third, the model emphasizes that sequencing plays a central role in determining the returns to AI automation.
-We show empirically that, controlling for the share of steps exposed to AI, occupations whose AI-exposed steps are more dispersed across the production workflow exhibit a substantially lower share of their steps executed by AI.
-This finding supports the fragmentation logic of the model and illustrates why considering just the share of exposed steps to AI can be misleading for predicting occupational impacts of AI when production steps are technologically interdependent.
+W use the O*NET dataset in our main analysis, and we subject the sequences we build from it to two sets of checks.
+The first varies the task sequencing instrument: in Appendix~\ref{app:gptPrompts_robustness} we re-generate the sequences under ten alternative LLM prompts, and show that our results are not artifacts of the particular prompt used to generate workflows.
+The second varies the sample: in Appendix~\ref{app:frequency_robustness} we restrict each occupation to its frequently-executed steps, so that the resulting workflow represents a worker's job more accurately than a list including rarely-performed activities.
+Our results survive both tests, but neither speaks to whether an LLM-imputed ordering matches how work is actually sequenced, since both stay within O*NET and our own imputation.
+In Appendix~\ref{app:external_validation} we therefore externally validate the approach we take to order O*NET tasks using an LLM against a second dataset, the Process Classification Framework (PCF) of the American Productivity \& Quality Center (APQC), in which working groups of human practitioners have documented the order in which firms carry out the activities that make up their business processes, and show that our sequencing approach using LLMs does a reasonable job of recovering real workflows against a dataset whose orderings were documented rather than imputed.
+We further carry the AI exposure and AI execution labels from O*NET over to the APQC's PCF dataset using natural language processing techniques, and re-evaluate our predictions on its native orderings.
+The first two predictions deliver essentially the same result as in O*NET.
+The third we are unable to test, as the requirements of that test are too restrictive and the PCF data lacks the variation needed to replicate it.
