@@ -133,18 +133,18 @@ star = lambda p: '***' if p < .01 else '**' if p < .05 else '*' if p < .1 else '
 row = lambda lab, v: [f"{lab} & " + " & ".join(f"{m.params[v]:.2f}{star(m.pvalues[v])}" for m in mods) + r" \\",
                       " & " + " & ".join(f"({m.bse[v]:.2f})" for m in mods) + r" \\"]
 tex = [r"\setlength{\tabcolsep}{12pt}", r"\begin{tabular}{lccc}", r"\toprule",
-       r" & \multicolumn{3}{c}{EFI Definition 1} \\", r"\cmidrule(lr){2-4}",
+       r" & \multicolumn{3}{c}{Share of AI-executed Tasks} \\", r"\cmidrule(lr){2-4}",
        r" & (1) & (2) & (3) \\", r"\midrule", r"\addlinespace"]
-tex += row("AI Exposure", 'ai_exposure') + [r"\addlinespace"]
-tex += row("Empirical Fragmentation Index", 'fragmentation_index')
+tex += row("Share of AI-exposed Tasks", 'ai_exposure') + [r"\addlinespace"]
+tex += row("Empirical Fragmentation Index (Definition 1)", 'fragmentation_index')
 tex += [r"\hline\\[-1.25em]",
         r"Fixed Effect & & PCF Category & Framework \\",
         r"Number of AI-able Steps Control & \checkmark & \checkmark & \checkmark \\",
         "R-squared & " + " & ".join(f"{m.rsquared:.2f}" for m in mods) + r" \\",
         "Observations & " + " & ".join(f"{int(m.nobs)}" for m in mods) + r" \\",
         r"\bottomrule",
-        r"\multicolumn{4}{l}{\footnotesize Standardized coefficients; robust standard errors in parentheses.}\\",
-        r"\multicolumn{4}{l}{\footnotesize $^{*}p<0.1$, $^{**}p<0.05$, $^{***}p<0.01$}\\",
+        r"\multicolumn{4}{l}{\footnotesize Standardized coefficients. Robust standard errors in parentheses. "
+        r"*** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\",
         r"\end{tabular}"]
 open(TAB, 'w').write("\n".join(tex) + "\n")
 print(f"\nwrote {TAB}")
