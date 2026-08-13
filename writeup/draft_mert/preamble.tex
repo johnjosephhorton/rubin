@@ -1,0 +1,402 @@
+% !TeX root = 0_main.tex
+%
+% Preamble for draft_mert.
+% Formatting follows "Allocative Efficiency in Bilateral Oligopoly/1_draft/preamble.tex"
+% exactly (fonts, sizes, margins, spacing, section heads, captions, references).
+% Paper-specific definitions of "Chaining Tasks, Redefining Work" are collected in the
+% clearly marked block at the bottom of this file.
+
+
+%% DOCUMENT ENCODING ====================================================================
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+\usepackage[T1]{fontenc}
+
+% SILENCE WARNINGS ======================================================================
+\usepackage{silence}
+\WarningFilter{biblatex}{Using fall-back BibTeX(8) backend:}
+\WarningFilter{biblatex}{'\mkdatezeros' is deprecated.}
+
+%% BIBLIOGRAPHY =========================================================================
+\usepackage{csquotes}
+\MakeOuterQuote{"} % activate straight " ... " as proper curly quotes
+\usepackage{xpatch}
+% In-text citations are uniform: one or two authors are named in full, three or more
+% collapse to "First et al.". That is chicago.bst's format.lab.names rule (numnames > 2).
+% The house preamble passes [longnamesfirst], which spells out every author on a
+% reference's first appearance; this paper does not want that, so the option is dropped.
+\usepackage{natbib}
+\newcommand{\citelink}[2]{\hyperlink{cite.\therefsection @#1}{#2}}
+\usepackage{bibunits}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{cases}
+\usepackage{xfp}
+%% PAGE FORMAT ========================================================
+\usepackage{sectsty}
+\sectionfont{\Large}
+\subsectionfont{\large}
+
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{2ex plus 1ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{2ex plus 1ex minus .2ex}{1ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{2ex plus 1ex minus .2ex}{1ex plus .2ex}
+
+\titleformat*{\section}{\large\bfseries}
+\titleformat*{\subsection}{\fontsize{12.5}{12.5}\bfseries}
+\titleformat*{\subsubsection}{\normalsize\itshape}
+\titleformat*{\paragraph}{\normalsize\bfseries}
+\titlespacing*{\paragraph}{0pt}{1ex}{1em}
+\titleformat*{\subparagraph}{\large\bfseries}
+
+% Margins: 1in all around
+\usepackage[letterpaper,margin=1in]{geometry}
+
+\setlength{\parskip}{0.1\baselineskip}
+\usepackage{setspace}
+\onehalfspacing
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength{\abovedisplayskip}{9pt}
+  \setlength{\belowdisplayskip}{9pt}
+  \setlength{\abovedisplayshortskip}{9pt}
+  \setlength{\belowdisplayshortskip}{9pt}
+}
+\makeatother
+
+% FOOTNOTES FORMAT ==================================================
+\usepackage[marginal]{footmisc}
+\setlength{\footnotesep}{0.1\baselineskip}
+\setlength{\footnotemargin}{0ex}
+
+%% ADDITIONAL PACKAGES ==================================================================
+\usepackage{graphicx}
+\graphicspath{{./}}
+\usepackage{array}
+\usepackage{paralist}
+\usepackage{verbatim}
+\usepackage{enumerate}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{bigstrut}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{bbm}
+\usepackage{soul}
+\usepackage{pdflscape}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage[linewidth=1pt]{mdframed}
+\usepackage{xspace}
+\usepackage{tocloft}
+
+\usepackage{etoc}
+\usepackage{adjustbox}
+\usepackage{anyfontsize}
+\usepackage{ifdraft}
+\usepackage{eucal}
+\usepackage{rotating}
+
+\titleformat*{\section}{\fontsize{14}{14}\bfseries}
+\titleformat*{\subsection}{\fontsize{13}{12.5}\bfseries}
+
+% TODONOTES PACAGE =============================================================
+\usepackage[textsize=small,obeyFinal,colorinlistoftodos]{todonotes}
+
+\usepackage[labelfont=bf,justification=centering]{caption}
+\usepackage[labelfont=bf,justification=justified,labelformat=simple]{subcaption}
+\captionsetup{position=top}
+\captionsetup[subfigure]{justification=centering}
+\renewcommand\thesubfigure{(\alph{subfigure})}
+
+\usepackage{etoolbox,xstring,xspace}
+
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
+\newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
+\newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
+
+% TIKZ PROGRAMMING ======================================
+\usepackage{tikz}
+\usetikzlibrary{matrix,shapes,arrows,fit,tikzmark}
+\usetikzlibrary{shapes.misc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shapes.geometric}
+
+%% CHANGE FONTS =======================================================================
+\usepackage{newpxtext}
+\usepackage{textcomp}
+\usepackage[upint]{newpxmath}
+\usepackage{bm}
+
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\definecolor{darkred}{rgb}{0.55,0,0}
+\definecolor{ash}{RGB}{50,50,50}
+\setulcolor{darkred}
+
+\newtheorem{category}{Example}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{requirement}{Requirement}
+\newtheorem{result}{Result}
+\newtheorem{property}{Property}
+\newtheorem{assumption}{Assumption}
+\newtheorem{constraint}{Constraint}
+
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+\definecolor{darkred}{rgb}{0.35,0.0,0.0}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.5}
+\definecolor{navyblue}{rgb}{0.0,0.0,0.8}
+\definecolor{cadmiumgreen}{rgb}{0.0,0.6,0.24}
+\definecolor{red_tol}{HTML}{D92120}
+\definecolor{blue_tol}{HTML}{404096}
+\definecolor{blugreen_tol}{HTML}{529DB7}
+
+\usepackage{hyperref}
+\hypersetup{
+    pdfstartview={FitH},
+    pdftitle={Chaining Tasks, Redefining Work: A Theory of AI Automation},
+    pdfauthor={Demirer, Mert and Horton, John J. and Immorlica, Nicole and Lucier, Brendan and Shahidi, Peyman},
+    colorlinks=true,
+    linkcolor=darkblue,
+    citecolor=darkred,
+    filecolor=magenta,
+    urlcolor=darkred
+}
+
+% PACKAGE FOR TITLE PAGE =====================================
+\usepackage{titling}
+\setlength{\droptitle}{-4em}
+
+% BACKREF FOR FIGURES AND TABLES =============================
+\makeatletter
+\AtBeginDocument{%
+\let\origref\ref
+\renewcommand*\ref[1]{%
+  \origref{#1}\xlabel{#1}}
+}
+\newrobustcmd*\xlabel[1]{%
+   \ifcsdef{siteref@doc@#1}{}{\csgdef{siteref@doc@#1}{,}}%
+    \@bsphack%
+    \begingroup
+       \csxdef{siteref@doc@#1}{\csuse{siteref@doc@#1},\thepage}%
+         \protected@write\@auxout{}%
+        {\string\SiteRef{siteref@#1}{\csuse{siteref@doc@#1}}}%
+     \endgroup
+     \@esphack%
+}
+\newrobustcmd*\SiteRef[2]{\csgdef{#1}{#2}}
+\newrobustcmd*\xref[1]{%
+\ifcsundef{siteref@#1}{%
+     \@latex@warning@no@line{Label `#1' not defined}
+     }{%
+    \begingroup
+      \StrGobbleLeft{\csuse{siteref@#1}}{2}[\@tempa]\relax%
+      \def\@tempb{}%
+      \@tempcnta=0\relax%
+      \@tempcntb=\@ne\relax%
+      \def\do##1{\advance\@tempcnta\@ne}%
+      \expandafter\docsvlist\expandafter{\@tempa}%
+       \def\do##1{%
+         \ifnum\@tempcntb=\@tempcnta\relax%
+            \hyperpage{##1}%
+         \else
+            \hyperpage{##1},%
+          \fi%
+          \advance\@tempcntb\@ne
+       }%
+       [\expandafter\docsvlist\expandafter{\@tempa}]\xspace%
+    \endgroup
+   }%
+}
+\makeatother
+
+% USER-WRITTEN COMMAND DEFINITIONS ===========================
+\newcommand{\outline}[1]{\begin{tcolorbox}\footnotesize #1 \end{tcolorbox}}
+\newcommand{\redtext}[1]{\textcolor{red}{#1}}
+\newcommand{\xxx}{\colorbox{yellow}{\textcolor{magenta}{\texttt{<XX>}}}}
+\newcommand{\takeaway}[1]{\begin{center}\textit{#1}\end{center}}
+\newcommand{\backreference}[1]{\ifoptionfinal{}{\\[1ex]\textit{Backreferenced:} \xref{#1}.}}
+% NOTE: the house preamble also has
+%     \AtBeginEnvironment{table}{\vspace{-0.5\baselineskip}\singlespacing}
+%     \AtBeginEnvironment{figure}{\vspace{-0.5\baselineskip}\singlespacing}
+% Both begin-hooks are dropped here, deliberately, because neither does what it looks
+% like it does. \AtBeginEnvironment fires *before* the float box is opened, so:
+%   - \singlespacing lands on the paragraph still being built whenever \begin{table}
+%     or \begin{figure} follows body text with no blank line, and that whole preceding
+%     paragraph comes out single-spaced. It buys nothing in exchange, since \@xfloat
+%     calls \@parboxrestore and float contents are single-spaced either way.
+%   - \vspace stays behind at the anchor point rather than travelling with the float,
+%     so for any float that migrates to the top or bottom of a page it just removes
+%     half a line from an unrelated spot in the running text.
+% The end-hooks below are fine: they fire inside the float box and trim its bottom.
+%
+% Extra breathing room between a figure and its Notes block. Figures only: tables sit
+% directly on their notes, as in the house format. Tune here, not float by float.
+\newlength{\fignotesskip}
+\setlength{\fignotesskip}{0.3em}
+\AtEndEnvironment{table}{\vspace{-0.5\baselineskip}}
+\AtEndEnvironment{figure}{\vspace{-0.5\baselineskip}}
+
+\hfuzz=100pt
+
+\usepackage{comment}
+\DeclareRobustCommand{\hlgr}[1]{{\sethlcolor{green}\hl{#1}}}
+
+\newcommand{\note}[1]{\marginpar{\singlespacing \footnotesize \flushleft \textcolor{blue}{\textsf{#1}}}}
+
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
+
+% TODONOTES ==================================================
+\newcommand{\smalltodo}[2][]{\todo[caption={#2}, #1]{\begin{spacing}{0.5}#2\end{spacing}}}
+\setlength{\marginparwidth}{2cm}
+
+\newcounter{todocounter}
+\newcommand{\todonum}[2][]{\stepcounter{todocounter}\todo[#1]{\thetodocounter: #2}}
+
+\newcounter{todoListItems}
+\newcommand{\todoLink}[2][]{\addtocounter{todoListItems}{1} \todo[caption={\protect\hypertarget{todo\thetodoListItems}{}Translation},#1]{\thetodoListItems: #2 \hfill \hyperlink{todo\thetodoListItems}{$\uparrow$}}}
+\newcommand{\td}{\todoLink}
+\newcommand{\forDJH}[1]{\td[color=green!40,inline,caption={\thetodoListItems: For @DJH}]{\textbf{@DJH} -- #1}}
+\newcommand{\forDL}[1]{\td[color=blue!40,inline,caption={\thetodoListItems: For @DL}]{\textbf{@DL} -- #1}}
+\newcommand{\forMD}[1]{\td[color=red!40,inline,caption={\thetodoListItems: For @MD}]{\textbf{@MD} -- #1}}
+\newcommand{\forAll}[1]{\td[color=orange!40,inline,caption={\thetodoListItems: For All}]{\textbf{@All} -- #1}}
+
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\newcommand{\myuline}[1]{\uline{\mbox{#1}}}
+\newcommand{\bigcdot}{\boldsymbol{\cdot}}
+
+
+%% =====================================================================================
+%% PAPER-SPECIFIC DEFINITIONS ("Chaining Tasks, Redefining Work")
+%% Everything above this line is the shared house format; everything below carries over
+%% the definitions the draft's own sections rely on.
+%% =====================================================================================
+
+% -- Packages used by the draft's exhibits ------------------------------------
+% \usepackage{dialogue}  -- REMOVED. The original GenAI preamble loaded it but the paper
+% never uses a dialogue environment, and it redefines \@makefntext: with dialogue loaded the
+% footnote marker is set at \parindent with flush-left continuation lines, which defeats
+% footmisc[marginal] and does not match the house format (marker hanging in the margin).
+\usepackage{color-edits}
+\addauthor[BL]{bl}{blue}
+\addauthor[PS]{ps}{red}
+\addauthor[NSI]{nsi}{orange}
+\tcbuselibrary{skins,breakable}
+
+% -- Extra tikz libraries and node styles for the workflow illustrations ------
+\usetikzlibrary{positioning, decorations.pathreplacing, decorations.pathmorphing, calc}
+
+\tikzstyle{task} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=gray!20, rounded corners, text width=2.2cm, align=center]
+\tikzstyle{decision} = [rectangle, minimum width=4cm, minimum height=2cm, text centered, draw=black, fill=green!20, rounded corners, text width=3cm, align=center]
+\tikzstyle{process} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=orange!40, rounded corners, text width=3cm, align=center]
+\tikzstyle{process2} = [rectangle, minimum width=2.5cm, minimum height=2cm, text centered, draw=black, fill=gray!10, text width=3cm, align=center]
+\tikzstyle{smallbox} = [rectangle, minimum width=1cm, minimum height=1cm, text centered, draw=black, fill=gray!20, text width=1.5cm, align=center]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% -- Theorem-like environments used by the draft but absent from the house set -
+% `lem` and `cor` share the counters of the house `lemma` and `corollary`.
+\newtheorem{lem}[lemma]{Lemma}
+\newtheorem{cor}[corollary]{Corollary}
+\newtheorem{observation}{Observation}
+\theoremstyle{definition} % upright (non-italic) body for examples
+\newtheorem{example}{Example}
+\theoremstyle{plain}
+
+% -- Optional colored boxes around results and examples -----------------------
+% The house format leaves theorem-like environments unboxed. Set \boxedresultstrue
+% to restore the blue result boxes and red example boxes of the original draft.
+\newif\ifboxedresults
+\boxedresultsfalse
+
+\ifboxedresults
+  \tcolorboxenvironment{example}{
+    breakable, boxrule=0.5pt, arc=2pt,
+    colback=red!5, colframe=red!50!black,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    before skip=12pt, after skip=12pt,
+  }
+  \tcolorboxenvironment{proposition}{
+    breakable, boxrule=0.5pt, arc=2pt,
+    colback=blue!5, colframe=blue!50!black,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    before skip=12pt, after skip=12pt,
+  }
+  \tcolorboxenvironment{theorem}{
+    breakable, boxrule=0.5pt, arc=2pt,
+    colback=blue!5, colframe=blue!50!black,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    before skip=12pt, after skip=12pt,
+  }
+  \tcolorboxenvironment{lem}{
+    breakable, boxrule=0.5pt, arc=2pt,
+    colback=blue!5, colframe=blue!50!black,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    before skip=12pt, after skip=12pt,
+  }
+  \tcolorboxenvironment{cor}{
+    breakable, boxrule=0.5pt, arc=2pt,
+    colback=blue!5, colframe=blue!50!black,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    before skip=12pt, after skip=12pt,
+  }
+  \tcolorboxenvironment{observation}{
+    breakable, boxrule=0.5pt, arc=2pt,
+    colback=blue!5, colframe=blue!50!black,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    before skip=12pt, after skip=12pt,
+  }
+\fi
+
+% -- Math operators ----------------------------------------------------------
+\DeclareMathOperator{\CostBlock}{CostBlock}
+\DeclareMathOperator{\minCost}{minCost}
+
+% -- Notation ----------------------------------------------------------------
+\newcommand{\T}[0]{\mathcal{T}}
+\newcommand{\J}[0]{\mathcal{J}}
+
+\newcommand{\manualLetter}{M}
+\newcommand{\AIletter}{A}
+\newcommand{\handoffLetter}{H}
+\newcommand{\skillCostLetter}{c}
+\newcommand{\timeCostLetter}{t}
+\newcommand{\laborLetter}{l}
+\newcommand{\skillAdjustedTimeLetter}{\ensuremath{\tau}}
+\newcommand{\aggregateManualLabor}{M}
+\newcommand{\aggregateAIlabor}{A}
+
+\newcommand{\timecost}[1]{\ensuremath{\timeCostLetter_{#1}}}
+\newcommand{\skillcost}[1]{\ensuremath{\skillCostLetter_{#1}}}
+\newcommand{\hccost}[1]{\skillcost{#1}}
+\newcommand{\labor}[1]{\ensuremath{\laborLetter_{#1}}}
+\newcommand{\handofftime}[1]{\ensuremath{\timeCostLetter^{\handoffLetter}_{#1}}}
+
+\newcommand{\manualTime}[1]{\ensuremath{\timeCostLetter^{\manualLetter}_{#1}}}
+\newcommand{\AItime}[1]{\ensuremath{\timeCostLetter^{\AIletter}_{#1}}}
+\newcommand{\manualSkill}[1]{\ensuremath{\skillCostLetter^{\manualLetter}_{#1}}}
+\newcommand{\AIskill}[1]{\ensuremath{\skillCostLetter^{\AIletter}_{#1}}}
+
+\newcommand{\minTime}[1]{\ensuremath{\timeCostLetter^*_{#1}}}
+
+\newcommand{\skillAdjustedTimeManual}[1]{\ensuremath{\skillAdjustedTimeLetter^{\manualLetter}_{#1}}}
+\newcommand{\skillAdjustedTimeAI}[1]{\ensuremath{\skillAdjustedTimeLetter^{\AIletter}_{#1}}}
+\newcommand{\skillAdjustedTimeHandoff}[1]{\ensuremath{\skillAdjustedTimeLetter^{\handoffLetter}_{#1}}}
+
+\newcommand{\topic}[1]{\paragraph{#1}}
+\newcommand{\minitab}[2][1]{\begin{tabular}{#1}#2\end{tabular}}
+% The original GenAI preamble set \arraystretch{1.25}, which stretches every table row
+% by 25%% and is the only reason table geometry differed from the bilateral paper (it
+% pushed the first row further below the caption). The house format uses the LaTeX
+% default, so the line is dropped and caption-to-table spacing now matches.

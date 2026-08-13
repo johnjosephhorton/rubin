@@ -1,0 +1,264 @@
+% Every example in the draft, one per page, with all the tables and diagrams it uses.
+% Blocks are extracted verbatim from the section files, so repetition across examples
+% (Examples 2 and 3 print the same parameter table) is reproduced as it stands.
+%
+% Build:  pdflatex examples_by_page.tex   (twice)
+
+\documentclass[12pt, final]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\input{../preamble}
+\graphicspath{{./}{../}{../../}}
+\makeatletter\def\input@path{{./}{../}{../../}}\makeatother
+
+% Cross-references and citation keys borrowed from the main document's .aux, so numbers
+% and citations resolve exactly as they do in the draft. This has to sit in the preamble:
+% LaTeX makes \newlabel and \bibcite preamble-only once \begin{document} has read the aux.
+\makeatletter\input{_labels.tex}\makeatother
+
+\begin{document}
+\pagestyle{plain}
+
+%% ---------------------------------------------------------------- Example 1
+\noindent{\small\itshape\color{black!55}Example 1 \textemdash\ Comparative advantage: an AI-friendly predecessor \quad(main text, p. 18)}\\[-0.2em]
+\noindent{\color{black!25}\rule{\linewidth}{0.4pt}}\par\vspace{1em}
+\renewcommand\theexample{\arabic{example}}
+\setcounter{example}{0}
+\begin{example}
+\label{ex:ca_predecessor}
+Consider three consecutive steps with unit skill, so a task's cost equals its expected completion time, with the following step parameters:
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+0 & $(1, 5)$ & $(1, 4)$ & $0.95$ \\
+1 & $(1, 1)$ & $(1, 2)$ & $0.50$ \\
+2 & $(1, 4)$ & $(1, 1)$ & $0.80$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\input{plots/TikZ_visualization/predecessor_visualization.tex}
+In isolation, Step~1 is cheaper \emph{manually}: its manual cost $\manualSkill{1}\manualTime{1} = 1$ lies below its augmentation cost $\AIskill{1}\AItime{1}/q_1 = 2/0.5 = 4$, so the human holds the comparative advantage on Step~1.
+
+Take Steps~1 and~2 on their own first (the top row of the figure).
+Performing Step~1 manually and augmenting Step~2 costs $\manualSkill{1}\manualTime{1} + \AIskill{2}\AItime{2}/q_2 = 1 + 1.25 = 2.25$, below the cost $\AIskill{2}\AItime{2}/(q_1\, q_2) = 1/0.4 = 2.5$ of chaining the two.
+Absent the predecessor, then, comparative advantage holds and Step~1 is performed manually.
+
+Now introduce the predecessor, Step~0 (the bottom row of the figure).
+Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode: manually it costs $\manualSkill{0}\manualTime{0} = 5$, and as a standalone augmented step it costs $\AIskill{0}\AItime{0}/q_0 = 4/0.95 \approx 4.21$.
+The only cheap way to absorb Step~0 is to place it at the start of a chain, where its management cost goes unpaid.
+The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost $\AIskill{2}\AItime{2}/(q_0\, q_1\, q_2) = 1/0.38 \approx 2.63$.
+This falls far below the cheapest arrangement that keeps Step~1 manual, which executes each step separately on its own at cost $4.21 + 1 + 1.25 = 6.46$, and below every other strategy.
+Step~1, which on its own would be performed manually, is thus automated only to bridge the AI-friendly predecessor to the cheap endpoint at Step~2.
+Its own success probability is just $q_1 = 0.5$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is far more costly.
+\end{example}
+\clearpage
+
+%% ---------------------------------------------------------------- Example 2
+\noindent{\small\itshape\color{black!55}Example 2 \textemdash\ Fragmentation: AI-able steps dispersed \quad(main text, p. 20)}\\[-0.2em]
+\noindent{\color{black!25}\rule{\linewidth}{0.4pt}}\par\vspace{1em}
+\renewcommand\theexample{\arabic{example}}
+\setcounter{example}{1}
+\begin{example}
+\label{ex:fragmentation_interleaved}
+Consider a job of $m$ steps (with $m$ even) with unit skill, so a task's cost equals its expected completion time.
+The steps alternate between \emph{easy} and \emph{hard} for AI: odd-numbered steps succeed with probability $q_i = 1$, while even-numbered steps succeed with probability only $q_i = 0.1$.
+All steps share the costs below.
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+Odd $i$ (easy) & $(1, 5)$ & $(1, 6)$ & $1$ \\
+Even $i$ (hard) & $(1, 5)$ & $(1, 6)$ & $0.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.25cm}
+
+\input{plots/TikZ_visualization/example1_visualization_allManual.tex}
+
+Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes an option.
+The firm therefore treats each step on its own, and on its own no step is worth executing with AI: managing a single AI attempt takes longer than doing the work manually, as even an easy step's augmentation cost $\AIskill{i}\AItime{i}/q_i = 6/1 = 6$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 5$ (for a hard step the gap widens to $6/0.1 = 60$ against $5$).
+The optimal strategy thus performs all $m$ steps manually and deploys no AI anywhere, for a total cost of
+\[
+m(5) = 5m.
+\]
+\end{example}
+\clearpage
+
+%% ---------------------------------------------------------------- Example 3
+\noindent{\small\itshape\color{black!55}Example 3 \textemdash\ Fragmentation: AI-able steps clustered \quad(main text, p. 21)}\\[-0.2em]
+\noindent{\color{black!25}\rule{\linewidth}{0.4pt}}\par\vspace{1em}
+\renewcommand\theexample{\arabic{example}}
+\setcounter{example}{2}
+\begin{example}
+\label{ex:fragmentation_clustered}
+Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly steps: the first $m/2$ steps are easy (each succeeds with probability $q_i = 1$) and the last $m/2$ are hard (each succeeds with probability $q_i = 0.1$).
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+$i \le m/2$ (easy) & $(1, 5)$ & $(1, 6)$ & $1$ \\
+$i > m/2$ (hard) & $(1, 5)$ & $(1, 6)$ & $0.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.25cm}
+
+\input{plots/TikZ_visualization/example2_visualization.tex}
+
+Now the easy steps form a contiguous run, so the firm can chain them: it automates the first $m/2 - 1$ at zero direct cost and verifies only once, at the end of the run.
+Because every easy step succeeds on the first attempt, the entire run of $m/2$ easy steps collapses to the single management cost of its augmented endpoint,
+\[
+\frac{\AIskill{m/2}\,\AItime{m/2}}{\prod_{i=1}^{m/2} q_i} = \frac{6}{1} = 6.
+\]
+Managing an AI attempt was too slow to pay at any single step, yet one verification covering the entire easy run pays easily, as the chain replaces the run's $m/2$ manual executions, costing $5m/2$ in total, with the single cost of $6$.
+The $m/2$ hard steps remain cheaper performed manually (cost $5$ each), for a total cost of
+\[
+6 + \tfrac{m}{2}(5) = 6 + \tfrac{5m}{2},
+\]
+strictly below the $5m$ of the interleaved arrangement whenever $m > 2$.
+\end{example}
+\clearpage
+
+%% ---------------------------------------------------------------- Example 4
+\noindent{\small\itshape\color{black!55}Example 4 \textemdash\ Non-monotone gains from AI quality \quad(main text, p. 24)}\\[-0.2em]
+\noindent{\color{black!25}\rule{\linewidth}{0.4pt}}\par\vspace{1em}
+\renewcommand\theexample{\arabic{example}}
+\setcounter{example}{3}
+\begin{example}
+\label{ex:nonmonotone}
+Consider a two-step workflow with unit skill, with the following step parameters:
+\begin{center}
+\begin{tabular}{c|cccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{Step difficulty\\$(d_i)$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+1 & $(1, 1)$ & $(1, 1)$ & $6$ & $\alpha^{6}$ \\
+2 & $(1, 2)$ & $(1, 1)$ & $1$ & $\alpha^{1}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Step~1 is short but hard for AI, while step~2 is more time-consuming but easy; the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$.
+The panels below trace the optimal cost (Panel~a) and its marginal benefit (Panel~b) as AI quality $\alpha$ rises.
+
+\begin{figure}[H]
+\caption{Optimal Cost and the Marginal Benefit of AI Quality in Example~\ref{ex:nonmonotone}}
+\label{fig:example5_nonmonotone}
+\centering
+\begin{minipage}{0.49\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{plots/example5_costs.png}
+  \subcaption{Total cost by AI strategy}
+  \label{fig:example5_costs}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{plots/example5_marginalBenefit.png}
+  \subcaption{Marginal benefit of improving $\alpha$}
+  \label{fig:example5_marginalBenefit}
+\end{minipage}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: This figure plots the two-step workflow of Example~\ref{ex:nonmonotone} as AI quality $\alpha$ rises. Panel (a) shows the cost of each AI strategy, with the optimal strategy given by their lower envelope (thick black line): both steps manual below $\alpha = 0.50$, step~2 augmented between $\alpha = 0.50$ and $\alpha \approx 0.90$, and both steps chained above $\alpha \approx 0.90$. Panel (b) shows the marginal benefit of improving AI quality, $-\mathrm{d}C/\mathrm{d}\alpha$. The marginal benefit jumps at each $\alpha$ where the optimal strategy switches, so gains from AI improvements are non-monotone in $\alpha$.}
+\end{spacing}
+\end{minipage}
+\end{figure}
+
+Below $\alpha = 0.50$ both steps are manual; between $\alpha = 0.50$ and $\alpha \approx 0.90$ the firm augments step~2; and above $\alpha \approx 0.90$ it chains both steps, automating step~1:
+\begin{align*}
+\text{both manual:} \quad & \manualSkill{1}\manualTime{1} + \manualSkill{2}\manualTime{2} = (1)(1) + (1)(2) = 3, \\
+\text{augment step 2:} \quad & \manualSkill{1}\manualTime{1} + \frac{\AIskill{2}\,\AItime{2}}{q_2} = (1)(1) + \frac{(1)(1)}{\alpha} = 1 + \tfrac{1}{\alpha}, \\
+\text{chain (steps 1--2):} \quad & \frac{\AIskill{2}\,\AItime{2}}{q_1 q_2} = \frac{(1)(1)}{\alpha^{6}\,\alpha^{1}} = \alpha^{-7}.
+\end{align*}
+The marginal benefit of improving AI quality is the negative derivative of cost, $-\mathrm{d}C/\mathrm{d}\alpha$, which across the three regimes is
+\begin{align*}
+\text{both manual:} \quad & -\frac{\mathrm{d}}{\mathrm{d}\alpha}\,(3) = 0, \\
+\text{augment step 2:} \quad & -\frac{\mathrm{d}}{\mathrm{d}\alpha}\!\left(1 + \frac{1}{\alpha}\right) = \frac{1}{\alpha^{2}}, \\
+\text{chain (steps 1--2):} \quad & -\frac{\mathrm{d}}{\mathrm{d}\alpha}\,\alpha^{-7} = \frac{7}{\alpha^{8}}.
+\end{align*}
+Panel~(b) shows that the marginal return to improving AI quality jumps up at each threshold where the optimal strategy switches, since a different strategy governs cost on either side of the threshold.
+It is also worth noting that the jump at $\alpha \approx 0.90$ is larger than the one at $\alpha = 0.50$: forming the chain pulls a second step under AI, so cost falls more steeply.
+This ordering is specific to this example, however, since a later threshold need not introduce a longer chain than an earlier one.
+\end{example}
+\clearpage
+
+%% ---------------------------------------------------------------- Example OA-1
+\noindent{\small\itshape\color{black!55}Example OA-1 \textemdash\ Fragmentation index: tightness \quad(Online Appendix, p. OA-5)}\\[-0.2em]
+\noindent{\color{black!25}\rule{\linewidth}{0.4pt}}\par\vspace{1em}
+\renewcommand\theexample{OA-\arabic{example}}
+\setcounter{example}{0}
+\begin{example}
+\label{ex:FI.tight}
+Consider a three-step workflow (recall that $\AIskill{i}\AItime{i} = 1$ for all $i$):
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+1 & $(1, 1)$ & $(1, 1)$ & $1$ \\
+2 & $(1, 2)$ & $(1, 1)$ & $1/2$ \\
+3 & $(1, 1)$ & $(1, 1)$ & $1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The first and last steps always succeed, while the second succeeds with probability $1/2$ and has a manual cost of $2$.
+The optimal policy automates all three together for an expected cost of $\AIskill{3}\AItime{3}/(q_1 q_2 q_3) = 1/(1 \cdot \tfrac12 \cdot 1) = 2$, whereas the fragmentation index is $\tfrac12 \times 1 + \tfrac12 \times (1+2+1) = \tfrac52$.
+The ratio $FI/OPT$ is therefore $\tfrac54$.
+\end{example}
+\clearpage
+
+%% ---------------------------------------------------------------- Example OA-2
+\noindent{\small\itshape\color{black!55}Example OA-2 \textemdash\ Fragmentation index: lower-bound gap \quad(Online Appendix, p. OA-7)}\\[-0.2em]
+\noindent{\color{black!25}\rule{\linewidth}{0.4pt}}\par\vspace{1em}
+\renewcommand\theexample{OA-\arabic{example}}
+\setcounter{example}{1}
+\begin{example}
+\label{ex:FI.lower.gap}
+Consider a sequence of $m$ identical steps:
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+All $i$ & $(1, \sqrt{2})$ & $(1, 1)$ & $1/\sqrt{2}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The task sequence described in the proof of Lemma~\ref{lem:FI.lower.bound.4} handles each task separately, for a total cost of $m \sqrt{2}$, so the optimal task sequence performs at least this well.
+The fragmentation index is such that each task contributes $\sqrt{2}$ if it fails, plus $1$ if the preceding task did not fail, for a total contribution of $(1-1/\sqrt{2})(\sqrt{2} + 1/\sqrt{2}) = \tfrac{3}{2}(\sqrt{2}-1) \approx 0.6213$.
+As $m$ grows large, the ratio between $m\sqrt{2}$ and $1 + m \times 0.6213$ approaches $\tfrac{2}{3}(2+\sqrt{2}) \approx 2.276$.
+\end{example}
+\clearpage
+
+%% ---------------------------------------------------------------- Example OA-3
+\noindent{\small\itshape\color{black!55}Example OA-3 \textemdash\ Fragmentation index: necessity \quad(Online Appendix, p. OA-8)}\\[-0.2em]
+\noindent{\color{black!25}\rule{\linewidth}{0.4pt}}\par\vspace{1em}
+\renewcommand\theexample{OA-\arabic{example}}
+\setcounter{example}{2}
+\begin{example}
+\label{ex:FI.necessity}
+Consider a sequence that alternates between two step types, with $K > 1$ such pairs (so $2K$ steps in total), where $\epsilon$ is vanishingly small:
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} & \makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+Odd $i$ & $(1, 0)$ & $(1, 1)$ & $1/\sqrt{2}-\epsilon$ \\
+Even $i$ & $(1, 1)$ & $(1, 1)$ & $1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+The task sequence described in the proof of Lemma~\ref{lem:FI.lower.bound.8} groups the steps into pairs of two-step tasks, for a total cost of $K \sqrt{2}$ (ignoring $\epsilon$).
+The fragmentation index is $1$ plus $1$ for each task that fails, which is $1 + K(1 - 1/\sqrt{2})$ (again ignoring the impact of $\epsilon$).
+As $K$ grows large, the ratio tends to $2(\sqrt{2}+1)$, which is strictly greater than $4$.
+\end{example}
+\clearpage
+
+\end{document}

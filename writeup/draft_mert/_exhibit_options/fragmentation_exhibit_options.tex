@@ -1,0 +1,732 @@
+% Review mock-up: four ways to consolidate Examples 2 and 3 (the fragmentation
+% examples) into a single top-of-page exhibit. Nothing here is wired into the paper;
+% it loads draft_mert's real preamble so everything renders exactly as it would.
+%
+% Build:  pdflatex fragmentation_exhibit_options.tex
+
+\documentclass[12pt, final]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\input{../preamble}
+\graphicspath{{../}{../../}}
+
+\newcommand{\optnote}[2]{%
+  \par\vspace{1em}\noindent
+  \begin{minipage}{\linewidth}
+  \setlength{\fboxsep}{8pt}%
+  \fcolorbox{black!25}{black!3}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule}
+  \footnotesize\singlespacing\textbf{#1}\\[0.35em]#2
+  \end{minipage}}
+  \end{minipage}\par}
+
+% ---- shared parameter table -------------------------------------------------
+\newcommand{\paramtable}{%
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualSkill{i}, \manualTime{i})$} &
+\makecell{AI management cost\\$(\AIskill{i}, \AItime{i})$} &
+\makecell{AI success probability\\$(q_i)$} \\
+\midrule
+Easy & $(1, 5)$ & $(1, 6)$ & $1$ \\
+Hard & $(1, 5)$ & $(1, 6)$ & $0.1$ \\
+\bottomrule
+\end{tabular}}
+
+% ---- two-layer diagrams (as in the current draft) ---------------------------
+\newcommand{\interleaveddiag}{%
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[>=latex,
+    box/.style={rectangle, rounded corners, draw, minimum width=1.8cm, minimum height=0.8cm, align=center, font=\small},
+    easy/.style={fill=teal!40}, hard/.style={fill=red!40}, manual/.style={fill=gray!10},
+    idx/.style={draw=none, font=\scriptsize}, rowlab/.style={draw=none, font=\footnotesize\itshape}]
+  \node[box, easy] (d1) {Easy};
+  \node[box, hard, right=0.6cm of d1] (d2) {Hard};
+  \node[box, easy, right=0.6cm of d2] (d3) {Easy};
+  \node[draw=none, right=0.45cm of d3] (dd) {$\cdots$};
+  \node[box, easy, right=0.45cm of dd] (d5) {Easy};
+  \node[box, hard, right=0.6cm of d5] (d6) {Hard};
+  \node[idx, above=1pt of d1] {Step 1};
+  \node[idx, above=1pt of d2] {Step 2};
+  \node[idx, above=1pt of d3] {Step 3};
+  \node[idx, above=1pt of d5] {Step $m{-}1$};
+  \node[idx, above=1pt of d6] {Step $m$};
+  \node[box, manual, below=1.4cm of d1] (e1) {Manual};
+  \node[box, manual, below=1.4cm of d2] (e2) {Manual};
+  \node[box, manual, below=1.4cm of d3] (e3) {Manual};
+  \node[draw=none] (ed) at (dd |- e3) {$\cdots$};
+  \node[box, manual, below=1.4cm of d5] (e5) {Manual};
+  \node[box, manual, below=1.4cm of d6] (e6) {Manual};
+  \foreach \a/\b in {d1/e1,d2/e2,d3/e3,d5/e5,d6/e6} \draw[->,thick] (\a)--(\b);
+  \node[rowlab, left=0.5cm of d1] {Difficulty:};
+  \node[rowlab, left=0.5cm of e1] {Execution:};
+\end{tikzpicture}
+\end{adjustbox}}
+
+\newcommand{\clustereddiag}{%
+\begin{adjustbox}{max width=\linewidth}
+\begin{tikzpicture}[>=latex,
+    box/.style={rectangle, rounded corners, draw, minimum width=1.8cm, minimum height=0.8cm, align=center, font=\small},
+    easy/.style={fill=teal!40}, hard/.style={fill=red!40}, manual/.style={fill=gray!10},
+    automated/.style={fill=green!30}, augmented/.style={fill=orange!30},
+    idx/.style={draw=none, font=\scriptsize}, rowlab/.style={draw=none, font=\footnotesize\itshape},
+    chainbox/.style={draw=blue, rectangle, rounded corners, dashed, inner sep=0.20cm, line width=1pt}]
+  \node[box, easy] (d1) {Easy};
+  \node[box, easy, right=0.6cm of d1] (d2) {Easy};
+  \node[draw=none, right=0.45cm of d2] (dd1) {$\cdots$};
+  \node[box, easy, right=0.45cm of dd1] (dk) {Easy};
+  \node[box, hard, right=0.7cm of dk] (dk1) {Hard};
+  \node[draw=none, right=0.45cm of dk1] (dd2) {$\cdots$};
+  \node[box, hard, right=0.45cm of dd2] (dm) {Hard};
+  \node[idx, above=1pt of d1] {Step 1};
+  \node[idx, above=1pt of d2] {Step 2};
+  \node[idx, above=1pt of dk] {Step $\tfrac{m}{2}$};
+  \node[idx, above=1pt of dk1] {Step $\tfrac{m}{2}{+}1$};
+  \node[idx, above=1pt of dm] {Step $m$};
+  \node[box, automated, below=1.4cm of d1] (e1) {Automated};
+  \node[box, automated, below=1.4cm of d2] (e2) {Automated};
+  \node[draw=none] (ed1) at (dd1 |- e1) {$\cdots$};
+  \node[box, augmented, below=1.4cm of dk] (ek) {Augmented};
+  \node[box, manual, below=1.4cm of dk1] (ek1) {Manual};
+  \node[draw=none] (ed2) at (dd2 |- e1) {$\cdots$};
+  \node[box, manual, below=1.4cm of dm] (em) {Manual};
+  \foreach \a/\b in {d1/e1,d2/e2,dk/ek,dk1/ek1,dm/em} \draw[->,thick] (\a)--(\b);
+  \node[chainbox, fit=(e1)(e2)(ed1)(ek)] (chain) {};
+  \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.30)$) {single task (AI chain)};
+  \node[rowlab, left=0.5cm of d1] {Difficulty:};
+  \node[rowlab, left=0.5cm of e1] {Execution:};
+\end{tikzpicture}
+\end{adjustbox}}
+
+% ---- compact one-row-per-arrangement diagram (Option D) ---------------------
+\newcommand{\compactdiag}{%
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=latex,
+    box/.style={rectangle, rounded corners, draw, minimum width=2.0cm, minimum height=1.0cm, align=center, font=\scriptsize},
+    easy/.style={fill=teal!40}, hard/.style={fill=red!40},
+    rowlab/.style={draw=none, font=\footnotesize\itshape, align=right},
+    cost/.style={draw=none, font=\small},
+    idx/.style={draw=none, font=\scriptsize},
+    chainbox/.style={draw=blue, rectangle, rounded corners, dashed, inner sep=0.16cm, line width=1pt}]
+
+  % ---------- row 1: interleaved ----------
+  \node[box, easy] (a1) {Easy\\\textsc{manual}};
+  \node[box, hard, right=0.45cm of a1] (a2) {Hard\\\textsc{manual}};
+  \node[box, easy, right=0.45cm of a2] (a3) {Easy\\\textsc{manual}};
+  \node[draw=none, right=0.35cm of a3] (ad) {$\cdots$};
+  \node[box, easy, right=0.35cm of ad] (a5) {Easy\\\textsc{manual}};
+  \node[box, hard, right=0.45cm of a5] (a6) {Hard\\\textsc{manual}};
+  \node[idx, above=1pt of a1] {Step 1};
+  \node[idx, above=1pt of a2] {Step 2};
+  \node[idx, above=1pt of a3] {Step 3};
+  \node[idx, above=1pt of a5] {Step $m{-}1$};
+  \node[idx, above=1pt of a6] {Step $m$};
+  \node[rowlab, left=0.45cm of a1, text width=2.4cm] {Dispersed\\(Example~2)};
+  \node[cost, right=0.7cm of a6] {Total cost $=5m$};
+
+  % ---------- row 2: clustered ----------
+  \node[box, easy, below=1.9cm of a1] (b1) {Easy\\\textsc{automated}};
+  \node[box, easy, right=0.45cm of b1] (b2) {Easy\\\textsc{automated}};
+  \node[draw=none, right=0.35cm of b2] (bd1) {$\cdots$};
+  \node[box, easy, right=0.35cm of bd1] (bk) {Easy\\\textsc{augmented}};
+  \node[box, hard, right=0.55cm of bk] (bk1) {Hard\\\textsc{manual}};
+  \node[draw=none, right=0.35cm of bk1] (bd2) {$\cdots$};
+  \node[box, hard, right=0.35cm of bd2] (bm) {Hard\\\textsc{manual}};
+  \node[idx, above=1pt of b1] {Step 1};
+  \node[idx, above=1pt of b2] {Step 2};
+  \node[idx, above=1pt of bk] {Step $\tfrac{m}{2}$};
+  \node[idx, above=1pt of bk1] {Step $\tfrac{m}{2}{+}1$};
+  \node[idx, above=1pt of bm] {Step $m$};
+  \node[rowlab, left=0.45cm of b1, text width=2.4cm] {Clustered\\(Example~3)};
+  \node[chainbox, fit=(b1)(b2)(bd1)(bk)] (ch) {};
+  \node[font=\scriptsize, text=blue!60!black] at ($(ch.south)+(0,-0.26)$) {single task (AI chain)};
+  \node[cost, right=0.7cm of bm] {Total cost $=6+\tfrac{5m}{2}$};
+\end{tikzpicture}}}
+
+\newcommand{\housenotes}[1]{%
+\par\vspace{0.6em}%
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: #1}
+\end{spacing}
+\end{minipage}}
+
+\newcommand{\sharedparams}{Every step has manual cost $(\manualSkill{i},\manualTime{i})=(1,5)$ and AI management cost $(\AIskill{i},\AItime{i})=(1,6)$; easy steps succeed with probability $q_i=1$ and hard steps with $q_i=0.1$. The two arrangements therefore differ only in \emph{where} the AI-able steps sit, not in any cost primitive.}
+
+\newcommand{\sharedreading}{Top layer: each step's difficulty for AI (teal = easy, red = hard). Bottom layer: its execution in the cost-minimizing strategy (gray = manual, green = automated, orange = augmented). In the dispersed arrangement no two easy steps are adjacent, so no chain can form and every step is manual, for a total cost of $5m$. In the clustered arrangement the easy steps form a contiguous run that the firm executes as one AI chain, verified once at its augmented endpoint, for a total cost of $6+5m/2$, strictly below $5m$ whenever $m>2$.}
+
+\begin{document}
+\pagestyle{empty}
+
+%% ===================== OPTION A =====================
+\begin{figure}[!t]
+\caption{Arrangement of AI-Able Steps and the Automation Outcome}
+\label{fig:optA}
+\centering
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \paramtable
+  \subcaption{Step parameters, common to both arrangements}
+\end{subfigure}
+
+\vspace{1.1em}
+
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \interleaveddiag
+  \subcaption{Dispersed AI-able steps: no chain forms, all steps manual}
+\end{subfigure}
+
+\vspace{1.1em}
+
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \clustereddiag
+  \subcaption{Clustered AI-able steps: the easy run becomes one AI chain}
+\end{subfigure}
+\housenotes{\sharedreading}
+\end{figure}
+
+\noindent\textbf{\large Option A \quad Three panels: parameters, then each arrangement}
+\optnote{What it does}{Keeps every element of the current Examples 2 and 3 and simply
+lifts them out of the running text into one float. The cost table becomes panel (a), so
+the reader sees immediately that the two arrangements share identical primitives.
+\\[0.4em]\emph{For:} nothing is lost; the shared-primitives point is made visually.
+\emph{Against:} tallest of the four; a table as a lettered figure panel is a little unusual.}
+\clearpage
+
+%% ===================== OPTION B =====================
+\begin{figure}[!t]
+\caption{Arrangement of AI-Able Steps and the Automation Outcome}
+\label{fig:optB}
+\centering
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \interleaveddiag
+  \subcaption{Dispersed AI-able steps: no chain forms, all steps manual}
+\end{subfigure}
+
+\vspace{1.1em}
+
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \clustereddiag
+  \subcaption{Clustered AI-able steps: the easy run becomes one AI chain}
+\end{subfigure}
+\housenotes{\sharedparams\ \sharedreading}
+\end{figure}
+
+\noindent\textbf{\large Option B \quad Two panels, parameters moved into the notes}
+\optnote{What it does}{Drops the table entirely and states the parameters as one sentence
+at the head of the notes. The exhibit is then purely the two workflow diagrams.
+\\[0.4em]\emph{For:} shortest and cleanest; the diagrams carry the argument and the
+numbers are one line away. \emph{Against:} the reader has to parse the primitives from
+prose rather than read them off a table.}
+\clearpage
+
+%% ===================== OPTION C =====================
+\begin{figure}[!t]
+\caption{Arrangement of AI-Able Steps and the Automation Outcome}
+\label{fig:optC}
+\centering
+{\footnotesize\paramtable}
+
+\vspace{1.2em}
+
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \interleaveddiag
+  \subcaption{Dispersed AI-able steps: no chain forms, all steps manual}
+\end{subfigure}
+
+\vspace{1.1em}
+
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \clustereddiag
+  \subcaption{Clustered AI-able steps: the easy run becomes one AI chain}
+\end{subfigure}
+\housenotes{\sharedreading}
+\end{figure}
+
+\noindent\textbf{\large Option C \quad Parameters on top, unlettered; two lettered panels}
+\optnote{What it does}{Same content as Option A, but the cost table sits above the panels
+as an unlettered header rather than as panel (a), so the letters (a) and (b) refer only to
+the two arrangements being compared.
+\\[0.4em]\emph{For:} the panel letters mean one thing only, which reads more naturally in
+the text (``Panel (a) shows the dispersed case''). \emph{Against:} still tall, and the
+floating table above the panels is slightly ambiguous about what it belongs to.}
+\clearpage
+
+%% ===================== OPTION D =====================
+\begin{figure}[!t]
+\caption{Arrangement of AI-Able Steps and the Automation Outcome}
+\label{fig:optD}
+\centering
+\compactdiag
+\housenotes{\sharedparams\ Each box is one production step, shaded by its difficulty for AI
+(teal = easy, red = hard) and labelled with its execution mode in the cost-minimizing
+strategy. In the dispersed arrangement no two easy steps are adjacent, so no chain can
+form and every step is executed manually. In the clustered arrangement the easy steps
+form a contiguous run that the firm executes as a single AI chain, verified once at its
+augmented endpoint. The two arrangements use identical steps and identical costs.}
+\end{figure}
+
+\noindent\textbf{\large Option D \quad One diagram, one row per arrangement, costs on the right}
+\optnote{What it does}{Collapses the two-layer (difficulty over execution) design into a
+single row per arrangement: each box carries its difficulty as shading and its execution
+mode as a label. The two total costs sit at the right, so the punchline of the comparison
+is inside the exhibit rather than only in the text.
+\\[0.4em]\emph{For:} by far the most compact, and the only option that shows the result
+($5m$ versus $6+5m/2$) graphically. \emph{Against:} loses the explicit difficulty
+$\rightarrow$ execution mapping that the arrows make in Figures 1 and 2, so it is less
+consistent with the exhibits that precede it.}
+\clearpage
+
+%% ================================================================
+%%  IN-TEXT ALTERNATIVES: keep the parameters in the running text,
+%%  but present them so they do not break the flow the way the
+%%  current ruled tabular does. Example 3 is used as the exemplar.
+%% ================================================================
+
+\newcommand{\exlead}{Consider the same set of steps as in Example~2, but now cluster the
+AI-friendly steps: the first $m/2$ steps are easy (each succeeds with probability
+$q_i = 1$) and the last $m/2$ are hard (each succeeds with probability $q_i = 0.1$).}
+
+\newcommand{\extail}{Now the easy steps form a contiguous run, so the firm can chain
+them: it automates the first $m/2 - 1$ at zero direct cost and verifies only once, at the
+end of the run. Because every easy step succeeds on the first attempt, the entire run of
+$m/2$ easy steps collapses to the single management cost of its augmented endpoint,
+$\AIskill{m/2}\AItime{m/2}/\prod_{i=1}^{m/2} q_i = 6$.}
+
+% ---- H: costs annotated on the diagram itself -------------------------------
+\newcommand{\annotateddiag}{%
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[>=latex,
+    box/.style={rectangle, rounded corners, draw, minimum width=2.1cm, minimum height=1.15cm, align=center, font=\scriptsize},
+    easy/.style={fill=teal!40}, hard/.style={fill=red!40}, manual/.style={fill=gray!10},
+    automated/.style={fill=green!30}, augmented/.style={fill=orange!30},
+    idx/.style={draw=none, font=\scriptsize}, rowlab/.style={draw=none, font=\footnotesize\itshape},
+    chainbox/.style={draw=blue, rectangle, rounded corners, dashed, inner sep=0.18cm, line width=1pt}]
+  \node[box, easy] (d1) {Easy\\$q_i=1$};
+  \node[box, easy, right=0.5cm of d1] (d2) {Easy\\$q_i=1$};
+  \node[draw=none, right=0.4cm of d2] (dd1) {$\cdots$};
+  \node[box, easy, right=0.4cm of dd1] (dk) {Easy\\$q_i=1$};
+  \node[box, hard, right=0.6cm of dk] (dk1) {Hard\\$q_i=0.1$};
+  \node[draw=none, right=0.4cm of dk1] (dd2) {$\cdots$};
+  \node[box, hard, right=0.4cm of dd2] (dm) {Hard\\$q_i=0.1$};
+  \node[idx, above=1pt of d1] {Step 1};
+  \node[idx, above=1pt of d2] {Step 2};
+  \node[idx, above=1pt of dk] {Step $\tfrac{m}{2}$};
+  \node[idx, above=1pt of dk1] {Step $\tfrac{m}{2}{+}1$};
+  \node[idx, above=1pt of dm] {Step $m$};
+  \node[box, automated, below=1.5cm of d1] (e1) {Automated};
+  \node[box, automated, below=1.5cm of d2] (e2) {Automated};
+  \node[draw=none] (ed1) at (dd1 |- e1) {$\cdots$};
+  \node[box, augmented, below=1.5cm of dk] (ek) {Augmented};
+  \node[box, manual, below=1.5cm of dk1] (ek1) {Manual};
+  \node[draw=none] (ed2) at (dd2 |- e1) {$\cdots$};
+  \node[box, manual, below=1.5cm of dm] (em) {Manual};
+  \foreach \a/\b in {d1/e1,d2/e2,dk/ek,dk1/ek1,dm/em} \draw[->,thick] (\a)--(\b);
+  \node[chainbox, fit=(e1)(e2)(ed1)(ek)] (chain) {};
+  \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.28)$) {single task (AI chain)};
+  \node[rowlab, left=0.5cm of d1] {Difficulty:};
+  \node[rowlab, left=0.5cm of e1] {Execution:};
+\end{tikzpicture}}}
+
+%% ===================== OPTION E =====================
+\noindent\textbf{\large Option E \quad Parameters as a sentence, no table at all}
+\par\vspace{1em}
+
+\setcounter{example}{2}
+\begin{example}
+\exlead\ Every step costs the same to run: manual execution has skill and time cost
+$(\manualSkill{i},\manualTime{i}) = (1,5)$, and managing a single AI attempt has
+$(\AIskill{i},\AItime{i}) = (1,6)$.
+
+
+\vspace{0.25cm}
+\begin{center}\clustereddiag\end{center}
+
+\extail
+\end{example}
+
+\optnote{What it does}{Deletes the tabular and states the two cost pairs in the sentence
+that already introduces the example. Nothing is displayed, so the paragraph runs
+straight into the diagram.
+\\[0.4em]\emph{For:} the least disruptive of all; reads like the rest of the theory
+section. \emph{Against:} four numbers in running prose are harder to find again later.}
+\clearpage
+
+%% ===================== OPTION F =====================
+\noindent\textbf{\large Option F \quad Parameters as a centred display, like an equation}
+\par\vspace{1em}
+
+\setcounter{example}{2}
+\begin{example}
+\exlead\ All steps share the same costs:
+\[
+  (\manualSkill{i},\manualTime{i}) = (1,5),
+  \qquad
+  (\AIskill{i},\AItime{i}) = (1,6),
+  \qquad
+  q_i =
+  \begin{cases}
+    1   & i \le m/2 \quad(\text{easy}),\\[2pt]
+    0.1 & i >    m/2 \quad(\text{hard}).
+  \end{cases}
+\]
+\clustereddiag
+
+\extail
+\end{example}
+
+\optnote{What it does}{Replaces the tabular with a single centred display. The paper
+already sets displayed equations throughout, so this is the one presentation that
+matches the surrounding typography exactly.
+\\[0.4em]\emph{For:} blends with the text, keeps the numbers scannable, and the
+\texttt{cases} brace carries the easy/hard split that the table's row labels used to.
+\emph{Against:} slightly wide; a fifth displayed object in an already display-heavy
+subsection.}
+\clearpage
+
+%% ===================== OPTION G =====================
+\noindent\textbf{\large Option G \quad Same table, rule-light and tucked in}
+\par\vspace{1em}
+
+\setcounter{example}{2}
+\begin{example}
+\exlead\ All steps share the costs below.
+
+\vspace{0.4em}
+{\centering\footnotesize
+\setlength{\tabcolsep}{10pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Step & $(\manualSkill{i},\manualTime{i})$ & $(\AIskill{i},\AItime{i})$ & $q_i$ \\
+\midrule
+$i \le m/2$ (easy) & $(1,5)$ & $(1,6)$ & $1$   \\
+$i >    m/2$ (hard) & $(1,5)$ & $(1,6)$ & $0.1$ \\
+\bottomrule
+\end{tabular}\par}
+\vspace{0.35em}
+
+\begin{center}\clustereddiag\end{center}
+
+\extail
+\end{example}
+
+\optnote{What it does}{Keeps a table but strips it back: no vertical rules, no stacked
+\texttt{makecell} headers, symbols instead of spelled-out column names, \texttt{footnotesize},
+and tight space above and below.
+\\[0.4em]\emph{For:} still a table you can scan, but it no longer sits in the page like a
+foreign object. \emph{Against:} the column heads become symbols, so the reader has to know
+the notation; still an interruption, just a smaller one.}
+\clearpage
+
+%% ===================== OPTION H =====================
+\noindent\textbf{\large Option H \quad Success probabilities moved onto the diagram}
+\par\vspace{1em}
+
+\setcounter{example}{2}
+\begin{example}
+\exlead\ Manual execution costs $(\manualSkill{i},\manualTime{i}) = (1,5)$ at every step
+and managing an AI attempt costs $(\AIskill{i},\AItime{i}) = (1,6)$; only the success
+probability varies, as shown in the diagram.
+
+
+\vspace{0.25cm}
+\begin{center}\annotateddiag\end{center}
+
+\extail
+\end{example}
+
+\optnote{What it does}{The two cost pairs are constant across steps, so they go in the
+sentence; the one thing that varies, $q_i$, is printed inside each difficulty box where
+the reader is already looking.
+\\[0.4em]\emph{For:} no table and no display, and the parameter that does the work sits
+next to the step it belongs to. \emph{Against:} makes the diagram denser, and it has to
+diverge from the otherwise-identical diagram used in Example~2.}
+\clearpage
+
+%% ================================================================
+%%  OPTION I / J: the proposed hybrid. Parameters stay in the text as a
+%%  centred display (Option F); BOTH diagrams move into one figure float
+%%  at the top of the page, referenced from each example.
+%% ================================================================
+
+\newcommand{\paramdisplay}{%
+\[
+  (\manualSkill{i},\manualTime{i}) = (1,5),
+  \qquad
+  (\AIskill{i},\AItime{i}) = (1,6),
+  \qquad
+  q_i =
+  \begin{cases}
+    1   & i \le m/2 \quad(\text{easy}),\\[2pt]
+    0.1 & i >    m/2 \quad(\text{hard}).
+  \end{cases}
+\]}
+
+\newcommand{\paramdisplayalt}{%
+\[
+  (\manualSkill{i},\manualTime{i}) = (1,5),
+  \qquad
+  (\AIskill{i},\AItime{i}) = (1,6),
+  \qquad
+  q_i =
+  \begin{cases}
+    1   & i \text{ odd} \quad(\text{easy}),\\[2pt]
+    0.1 & i \text{ even} \quad(\text{hard}).
+  \end{cases}
+\]}
+
+\newcommand{\pairfigure}[1]{%
+\begin{figure}[t]
+\caption{Arrangement of AI-Able Steps and the Automation Outcome}
+\label{#1}
+\centering
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \interleaveddiag
+  \subcaption{Dispersed AI-able steps: no chain forms, all steps manual}
+\end{subfigure}
+
+\vspace{1.1em}
+
+\begin{subfigure}[b]{\linewidth}
+  \centering
+  \clustereddiag
+  \subcaption{Clustered AI-able steps: the easy run becomes one AI chain}
+\end{subfigure}
+\housenotes{Top layer: each step's difficulty for AI (teal = easy, red = hard). Bottom
+layer: its execution in the cost-minimizing strategy (gray = manual, green = automated,
+orange = augmented). Step costs are given in Examples~2 and~3. The two arrangements use
+identical steps and identical costs, and differ only in where the AI-able steps sit.}
+\end{figure}}
+
+%% ===================== OPTION I =====================
+\pairfigure{fig:optI}
+\noindent\textbf{\large Option I \quad Costs displayed in the text, both diagrams in one float on top}
+\par\vspace{1em}
+
+\setcounter{example}{1}
+\begin{example}
+Consider a job of $m$ steps (with $m$ even) with unit skill, so a task's cost equals its
+expected completion time. The steps alternate between \emph{easy} and \emph{hard} for AI:
+odd-numbered steps succeed with probability $q_i = 1$, while even-numbered steps succeed
+with probability only $q_i = 0.1$. All steps share the same costs:
+\paramdisplayalt
+Panel~(a) of Figure~\ref{fig:optI} shows the arrangement and its optimal execution.
+Because every easy step is flanked by hard ones, no two AI-friendly steps are ever
+adjacent, so no chain longer than a single step can form, and automation never becomes an
+option. On its own no step is worth executing with AI, since an easy step's augmentation
+cost $\AIskill{i}\AItime{i}/q_i = 6$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 5$.
+The optimal strategy performs all $m$ steps manually, for a total cost of $5m$.
+\end{example}
+
+\begin{example}
+Consider the same set of steps, but now cluster the AI-friendly ones: the first $m/2$
+steps are easy and the last $m/2$ are hard, with the same costs as before:
+\paramdisplay
+Panel~(b) of Figure~\ref{fig:optI} shows the result. The easy steps now form a contiguous
+run, so the firm can chain them: it automates the first $m/2 - 1$ at zero direct cost and
+verifies only once, at the end of the run. The entire run collapses to the single
+management cost of its augmented endpoint, $\AIskill{m/2}\AItime{m/2}/\prod_{i=1}^{m/2} q_i = 6$,
+and the $m/2$ hard steps remain cheaper performed manually, for a total cost of
+$6 + 5m/2$, strictly below $5m$ whenever $m > 2$.
+\end{example}
+
+\optnote{What it does \textnormal{(this is your proposal)}}{Splits the two jobs the current
+layout is trying to do at once. The four numbers, which are short and read like an
+equation, stay in the text with the argument that uses them. The two diagrams, which are
+what actually breaks the page, move into one float at the top, referenced as Panel~(a)
+and Panel~(b).
+\\[0.4em]\emph{For:} each example keeps its own parameters where they are needed, the
+prose is never interrupted by a ruled box, and the reader can see both arrangements side
+by side in one exhibit --- which is the comparison the subsection is making.
+\emph{Against:} the parameter display repeats across the two examples, and the diagrams
+sit further from the sentences describing them.}
+\clearpage
+
+%% ===================== OPTION J =====================
+\pairfigure{fig:optJ}
+\noindent\textbf{\large Option J \quad Same, but the second example does not repeat the display}
+\par\vspace{1em}
+
+\setcounter{example}{1}
+\begin{example}
+Consider a job of $m$ steps (with $m$ even) with unit skill, so a task's cost equals its
+expected completion time. The steps alternate between \emph{easy} and \emph{hard} for AI:
+odd-numbered steps succeed with probability $q_i = 1$, while even-numbered steps succeed
+with probability only $q_i = 0.1$. All steps share the same costs:
+\paramdisplayalt
+Panel~(a) of Figure~\ref{fig:optJ} shows the arrangement and its optimal execution.
+Because every easy step is flanked by hard ones, no two AI-friendly steps are ever
+adjacent, so no chain longer than a single step can form, and automation never becomes an
+option. On its own no step is worth executing with AI, since an easy step's augmentation
+cost $\AIskill{i}\AItime{i}/q_i = 6$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 5$.
+The optimal strategy performs all $m$ steps manually, for a total cost of $5m$.
+\end{example}
+
+\begin{example}
+Consider the same steps and the same costs as in Example~2, but now cluster the AI-friendly
+ones: the first $m/2$ steps are easy ($q_i = 1$) and the last $m/2$ are hard ($q_i = 0.1$).
+Panel~(b) of Figure~\ref{fig:optJ} shows the result. The easy steps now form a contiguous
+run, so the firm can chain them: it automates the first $m/2 - 1$ at zero direct cost and
+verifies only once, at the end of the run. The entire run collapses to the single
+management cost of its augmented endpoint, $\AIskill{m/2}\AItime{m/2}/\prod_{i=1}^{m/2} q_i = 6$,
+and the $m/2$ hard steps remain cheaper performed manually, for a total cost of
+$6 + 5m/2$, strictly below $5m$ whenever $m > 2$.
+\end{example}
+
+\optnote{What it does}{Identical to Option I, except the second example states the change
+in words rather than repeating the display. The only thing that differs between the two
+examples is the arrangement, so the display appears exactly once.
+\\[0.4em]\emph{For:} no repetition; the second example gets to the point immediately.
+\emph{Against:} the reader has to look back one paragraph for the numbers.}
+\clearpage
+
+%% ================================================================
+%%  EXAMPLE 4 (non-monotone gains). Its parameters vary by step, so the
+%%  cases-display of Option F does not carry over directly. Options K-N.
+%% ================================================================
+
+\newcommand{\exfourfig}[1]{%
+\begin{figure}[t]
+\caption{Optimal Cost and the Marginal Benefit of AI Quality}
+\label{#1}
+\centering
+\begin{minipage}{0.49\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{plots/example5_costs.png}
+  \subcaption{Total cost by AI strategy}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{plots/example5_marginalBenefit.png}
+  \subcaption{Marginal benefit of improving $\alpha$}
+\end{minipage}
+\housenotes{Panel~(a) shows the cost of each AI strategy, with the optimal strategy given
+by their lower envelope (thick black line). Panel~(b) shows the marginal benefit of
+improving AI quality, $-\mathrm{d}C/\mathrm{d}\alpha$, which jumps at each $\alpha$ where
+the optimal strategy switches. Step parameters are given in Example~4.}
+\end{figure}}
+
+\newcommand{\exfourtail}{Step~1 is short but hard for AI, while step~2 is more
+time-consuming but easy. Figure~\ref{fig:ex4} traces the optimal cost and its marginal
+benefit as AI quality $\alpha$ rises. Below $\alpha = 0.50$ both steps are manual; between
+$\alpha = 0.50$ and $\alpha \approx 0.90$ the firm augments step~2; and above
+$\alpha \approx 0.90$ it chains both steps, automating step~1.}
+
+%% ===================== OPTION K =====================
+\exfourfig{fig:ex4}
+\noindent\textbf{\large Option K \quad One display line per step}
+\par\vspace{1em}
+\setcounter{example}{3}
+\begin{example}
+Consider a two-step workflow with unit skill, where the AI succeeds at step~$i$ with
+probability $q_i = \alpha^{d_i}$:
+\[
+\begin{aligned}
+  \text{Step 1:}\qquad && (\manualSkill{1},\manualTime{1}) &= (1,1), &\qquad
+    (\AIskill{1},\AItime{1}) &= (1,1), &\qquad d_1 &= 6,\\[2pt]
+  \text{Step 2:}\qquad && (\manualSkill{2},\manualTime{2}) &= (1,2), &\qquad
+    (\AIskill{2},\AItime{2}) &= (1,1), &\qquad d_2 &= 1.
+\end{aligned}
+\]
+\exfourtail
+\end{example}
+\optnote{What it does}{Sets the table as an aligned display, one line per step, so the
+row-per-step structure survives but the rules and the stacked headers do not. The derived
+column $q_i = \alpha^{d_i}$ moves into the lead-in sentence, where the paper already
+states it.
+\\[0.4em]\emph{For:} closest to the table, so nothing has to be re-read; aligns on the
+$=$ signs, which is how the rest of the section sets math. \emph{Against:} still a
+five-column grid, just without rules.}
+\clearpage
+
+%% ===================== OPTION L =====================
+\exfourfig{fig:ex4}
+\noindent\textbf{\large Option L \quad One compact display, redundant columns dropped}
+\par\vspace{1em}
+\setcounter{example}{3}
+\begin{example}
+Consider a two-step workflow with unit skill. Managing an AI attempt costs
+$(\AIskill{i},\AItime{i}) = (1,1)$ at either step, and the AI succeeds at step~$i$ with
+probability $q_i = \alpha^{d_i}$, so the two steps differ only in
+\[
+  (\manualSkill{1},\manualTime{1}) = (1,1), \qquad
+  (\manualSkill{2},\manualTime{2}) = (1,2), \qquad
+  d_1 = 6, \qquad d_2 = 1.
+\]
+\exfourtail
+\end{example}
+\optnote{What it does}{Uses the fact that the table is mostly redundant. The AI management
+cost is $(1,1)$ in both rows, and the last column is just $\alpha^{d_i}$, which the next
+sentence already states. Only three numbers actually vary, so only those are displayed.
+\\[0.4em]\emph{For:} the shortest honest statement of the example; the display shows
+exactly what differs between the two steps, which is the point of the example.
+\emph{Against:} the reader cannot see the constant AI cost lined up against the varying
+manual cost.}
+\clearpage
+
+%% ===================== OPTION M =====================
+\exfourfig{fig:ex4}
+\noindent\textbf{\large Option M \quad Prose only, no display and no table}
+\par\vspace{1em}
+\setcounter{example}{3}
+\begin{example}
+Consider a two-step workflow with unit skill. Step~1 is short but hard for AI: performing
+it manually costs $(\manualSkill{1},\manualTime{1}) = (1,1)$ and its difficulty is
+$d_1 = 6$. Step~2 is the reverse, more time-consuming but easy:
+$(\manualSkill{2},\manualTime{2}) = (1,2)$ and $d_2 = 1$. Managing an AI attempt costs
+$(\AIskill{i},\AItime{i}) = (1,1)$ at either step, and the AI succeeds at step~$i$ with
+probability $q_i = \alpha^{d_i}$.
+Figure~\ref{fig:ex4} traces the optimal cost and its marginal benefit as AI quality
+$\alpha$ rises. Below $\alpha = 0.50$ both steps are manual; between $\alpha = 0.50$ and
+$\alpha \approx 0.90$ the firm augments step~2; and above $\alpha \approx 0.90$ it chains
+both steps, automating step~1.
+\end{example}
+\optnote{What it does}{Drops the display too. Note that the current draft already
+restates the table in the sentence right below it (``Step~1 is short but hard for AI,
+while step~2 is more time-consuming but easy''), so this option merely attaches the
+numbers to that sentence instead of printing them twice.
+\\[0.4em]\emph{For:} removes a genuine duplication that exists in the draft today; the
+paragraph is unbroken. \emph{Against:} six numbers in prose is the most any of these
+options asks of the reader.}
+\clearpage
+
+%% ===================== OPTION N =====================
+\exfourfig{fig:ex4}
+\noindent\textbf{\large Option N \quad Rule-light table, redundant columns dropped}
+\par\vspace{1em}
+\setcounter{example}{3}
+\begin{example}
+Consider a two-step workflow with unit skill, where the AI succeeds at step~$i$ with
+probability $q_i = \alpha^{d_i}$:
+
+\vspace{0.4em}
+{\centering\footnotesize
+\setlength{\tabcolsep}{14pt}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+Step $i$ & $(\manualSkill{i},\manualTime{i})$ & $(\AIskill{i},\AItime{i})$ & $d_i$ \\
+\midrule
+1 & $(1,1)$ & $(1,1)$ & $6$ \\
+2 & $(1,2)$ & $(1,1)$ & $1$ \\
+\bottomrule
+\end{tabular}\par}
+\vspace{0.5em}
+
+\exfourtail
+\end{example}
+\optnote{What it does}{Keeps a table but drops the derived $q_i$ column, replaces the
+stacked headers with symbols, removes the vertical rule, and sets it \texttt{footnotesize}.
+Four columns instead of five, two rules instead of three.
+\\[0.4em]\emph{For:} preserves the grid for a reader who wants to compare the two steps
+column by column, at a fraction of the visual weight. \emph{Against:} still an
+interruption, and still repeats what the following sentence says in words.}
+\clearpage
+
+\end{document}

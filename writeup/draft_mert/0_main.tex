@@ -1,0 +1,257 @@
+% !TeX root = 0_main.tex
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+% !TEX output_directory = .textmp
+
+\documentclass[12pt, final]{article}
+%\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+
+\input{preamble}
+\usepackage{lscape}
+\usepackage{geometry}
+\usepackage{pdflscape}
+% Exhibits are sourced from the parent project: ../plots/ and ../tables/.
+% This folder is searched first, so a local copy of a file overrides the parent's
+% (currently used for one truncated PNG -- see README.md).
+\graphicspath{{./}{../}}
+\makeatletter\def\input@path{{./}{../}}\makeatother
+
+\title{Chaining Tasks, Redefining Work: A Theory of AI Automation}
+
+\author{Mert Demirer\thanks{MIT; mdemirer@mit.edu} \and John J. Horton\thanks{MIT and NBER; jjhorton@mit.edu} \and Nicole Immorlica\thanks{Yale and Microsoft; nicimm@microsoft.com} \and Brendan Lucier\thanks{Microsoft; brlucier@microsoft.com} \and Peyman Shahidi\thanks{MIT; peymansh@mit.edu \\
+We thank Martin Fleming, Seyed Mahdi Hosseini Maasoum, Guy Lichtinger, Anand Shah, Philip Trammell, and Michael Zhao for helpful discussions. We also thank seminar and conference participants at MIT's Economics of AI Reading Group, FutureTech Lab, Social Analytics Lab, and IDE BIG.AI conference, as well as at Wharton, Columbia Business School, ACM EC'26, and ESIF 2026 at Cornell.} }
+
+\date{First version: February 22, 2026 \\
+This version: \today \\[0.4em]
+{\normalsize\color[RGB]{0,51,153}[Click \href{https://peymanshahidi.github.io/assets/pdf/chaining_tasks_ai_automation.pdf}{here} for the most recent version.]}}
+
+% Five authors and a two-line title need a little more headroom than the house
+% default of -4em for the abstract to stay on the title page.
+\setlength{\droptitle}{-7em}
+
+\begin{document}
+ \etocdepthtag.toc{main}
+%\etocsettagdepth{main}{subsection}
+%\etocsettagdepth{appendix}{none}
+
+\ifoptionfinal
+{}%
+{
+{
+\small
+\thispagestyle{empty}
+% \listoftodos
+% \newpage
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+}
+}
+
+%\pagenumbering{gobble} % no page numbers
+\thispagestyle{empty}
+
+\maketitle
+
+% \vspace{-2.5em}
+% \begin{center}
+% {\textbf{Preliminary Draft: Please do not cite or distribute without consent of the authors.}}
+% \end{center}
+
+%\vspace{-3.5em}
+\begin{abstract}
+\noindent
+Production is a sequence of steps that can be executed (1) manually, (2) augmented with AI, or (3) fully automated within contiguous AI-executed steps called ``chains.''
+We characterize how a firm optimally assigns humans and AI across the steps of its workflow, and show that AI chaining can overturn comparative advantage logic: a step at which humans hold an advantage in isolation may still be automated when it sits beside strong AI-performing steps, because chaining removes the human verification checkpoint between them.
+The model implies that the productivity gains from AI depend not only on which steps are exposed to AI but on where those steps sit in the workflow, and that marginal improvements in AI quality can generate non-monotone productivity gains as longer chains become viable.
+Empirical evidence supports the model's key predictions that (1) AI-executed steps co-occur in chains, (2) dispersion of AI-exposed steps lowers AI execution at the job level, and (3) adjacency to AI-executed steps increases the likelihood that a step is AI-executed.
+In extensions developed in the appendix, we embed this chaining problem in the firm's longer-run redesign of jobs around AI and aggregate firm-level production into a macroeconomic CES production function.
+
+% Previous version:
+% \noindent We introduce a task-based model of production that responds to automation technologies such as AI, and empirically validate several of its core implications.
+% Production is a sequence of \emph{steps} that firms aggregate into \emph{tasks} and then into \emph{jobs}, each performed by a single worker.
+% A firm can reduce wage costs of jobs by assigning each worker a narrower set of tasks, thereby increasing specialization, but doing so introduces coordination frictions among a larger number of workers.
+% The optimal organizational structure resulting from these aggregations balances these opposing forces.
+% Production steps may be executed \emph{manually} by humans, \emph{augmented} with AI assistance under human oversight, or \emph{automated} within an AI chain, where multiple consecutive steps are executed by AI and only the final output is verified by a human.
+% A key implication of chaining is that it can overturn simple comparative advantage logic: a step where a human has an advantage over AI in isolation may nonetheless be optimally automated as part of an AI chain if it sits next to strong AI performing steps.
+% Productivity gains therefore depend not only on AI-ability of individual steps but also on where these steps are positioned in the workflow.
+% We characterize how firms optimally allocate steps between humans and AI in both the short run, when job boundaries are fixed, and the long run, when AI deployment strategy and job design are jointly chosen.
+% This framework yields predictions about task- versus job-level exposure to AI, worker specialization, and the non-monotone productivity gains when marginal improvements in AI quality trigger discrete reorganizations of work.
+% Finally, we show how production functions obtained from firm-level cost minimization can map into an aggregate CES production function to study the macroeconomic implications of improvements in AI quality.
+
+% The house format carries Keywords and JEL codes on the title page, separated from
+% the abstract by \vspace{2cm}. Uncomment the three lines below once the authors have
+% agreed on them.
+% \vspace{2cm}
+%
+% \noindent \textbf{Keywords:} Artificial Intelligence, Automation, Task-based Models, Job Design
+%
+% \noindent \textbf{JEL codes:} D24, J24, O33, L23
+
+\end{abstract}
+\vspace{1ex}
+
+\thispagestyle{empty}
+\newpage
+\clearpage
+
+\newpage
+\setcounter{page}{1}
+
+\section{Introduction}
+\input{1_introduction.tex}
+
+\section{Related Literature}
+\input{2_literature.tex}
+
+\section{Model}
+\input{3_model.tex}
+
+\section{Discussion}
+\input{4_discussion.tex}
+
+\section{Empirical Evaluation} \label{sec:empirics}
+\input{5_empirics.tex}
+
+\section{Conclusion}
+\input{6_conclusion.tex}
+
+\newpage
+\clearpage
+
+\bibliographystyle{chicago}
+\setlength{\bibsep}{0.2ex}
+\begin{spacing}{0.98}
+\bibliography{rubin}
+\end{spacing}
+
+\newpage
+\appendix
+\newpage
+
+\clearpage
+\renewcommand\thefigure{OA-\arabic{figure}}
+\renewcommand\thetable{OA-\arabic{table}}
+\renewcommand*{\thepage}{OA - \arabic{page}}
+%\renewcommand\thesection{Appendix \Alph{section}}
+%\renewcommand\thesubsection{\Alph{section}.\arabic{subsection}}
+
+\renewcommand\thedefinition{OA-\arabic{definition}}
+\renewcommand\thelemma{OA-\arabic{lemma}}
+\renewcommand\theassumption{OA-\arabic{assumption}}
+\renewcommand\theconstraint{OA-\arabic{constraint}}
+\renewcommand\theproposition{OA-\arabic{proposition}}
+\renewcommand\thecorollary{OA-\arabic{corollary}}
+\renewcommand\thetheorem{OA-\arabic{theorem}}
+\renewcommand\theobservation{OA-\arabic{observation}}
+\renewcommand\theexample{OA-\arabic{example}}
+\renewcommand\thefigure{OA-\arabic{figure}}
+\renewcommand\thetable{OA-\arabic{table}}
+\renewcommand\theequation{OA.\arabic{equation}}
+\renewcommand*{\thepage}{OA - \arabic{page}}
+\newcommand{\appendixletter}{\Alph{section}}
+
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{page}{1}
+\setcounter{definition}{0}
+\setcounter{lemma}{0}
+\setcounter{assumption}{0}
+\setcounter{constraint}{0}
+\setcounter{proposition}{0}
+\setcounter{corollary}{0}
+\setcounter{theorem}{0}
+\setcounter{observation}{0}
+\setcounter{example}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{equation}{0}
+\setcounter{section}{0}
+
+\pagestyle{empty}
+\begin{center}
+	{\Large Chaining Tasks, Redefining Work: A Theory of AI Automation}\\[1em]
+	\large Mert Demirer, John J. Horton, Nicole Immorlica, Brendan Lucier, and Peyman Shahidi \\[1em]
+	\Large Online Appendix \\[1em]
+\end{center}
+
+% TABLE OF CONTENTS FOR THE APPENDIX
+% Show only the appendix sections; hide the main body.
+\setcounter{tocdepth}{2}
+% Initialize etoc's depth-tag store: tocloft/hyperref can bypass etoc's \tableofcontents,
+% leaving \Etoc@savedtocdepth undefined when the .toc depth tags are processed.
+\makeatletter\xdef\Etoc@savedtocdepth{\number\c@tocdepth}\makeatother
+\tocloftpagestyle{empty}
+% The house preamble suppresses page numbers in the appendix Contents with
+%     \cftpagenumbersoff{section}
+%     \cftpagenumbersoff{subsection}
+% They are left on here: this appendix runs to OA - 75, so the numbers earn their place.
+% "OA - 11" is wider than tocloft's default 1.55em page-number box, so widen it and the
+% right margin to match, otherwise the dot leaders run into the number.
+\cftsetpnumwidth{3.9em}
+\cftsetrmarg{4.9em}
+\etocsettagdepth{main}{none}
+\etocsettagdepth{appendix}{subsection}
+\tableofcontents
+\clearpage
+\pagestyle{plain}
+\renewcommand*{\thepage}{OA - \arabic{page}}
+
+
+\newpage
+
+\setcounter{page}{1}
+\appendix
+
+\clearpage
+\renewcommand*{\thepage}{OA - \arabic{page}}
+\setcounter{page}{1}
+
+
+\begin{bibunit}[chicago]
+
+% Tag everything from here on as "appendix" so the appendix TOC can filter out the main body.
+\etocdepthtag.toc{appendix}
+
+\input{10_appendix_omitted_proofs.tex}
+
+\clearpage
+\input{11_appendix_jobdesign.tex}
+
+\clearpage
+\input{12_appendix_aggregation.tex}
+
+\clearpage
+\input{13_appendix_data_prep.tex}
+
+\clearpage
+\input{14_appendix_additional_robustness.tex}
+
+\clearpage
+\input{15_appendix_prompts.tex}
+
+\clearpage
+\input{16_appendix_gpt_prompts_robustness.tex}
+
+\clearpage
+\input{17_appendix_frequency_robustness.tex}
+
+\clearpage
+\input{18_appendix_external_validation.tex}
+
+% References for the Online Appendix.
+\clearpage
+\renewcommand{\refname}{\large References for Online Appendix}
+\setlength{\bibsep}{0.2ex}
+\begin{spacing}{0.98}
+\putbib[rubin]
+\end{spacing}
+
+\end{bibunit}
+
+\end{document}
