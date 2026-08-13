@@ -1,6 +1,6 @@
 In this section we draw out three implications of the model.
 First, we show that AI chaining can overturn comparative advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be automated in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
-Second, we introduce a \emph{fragmentation index} that captures how dispersed a job's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps, not merely on what fraction of a job's steps are suitable for AI execution (Section~\ref{sec:fragmentation}).
+Second, we introduce a \emph{fragmentation index} that captures how dispersed a workflow's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps, not merely on what fraction of a workflow's steps are suitable for AI execution (Section~\ref{sec:fragmentation}).
 Third, we show that the marginal gains from improving AI quality are non-monotone, abruptly rising whenever improvements in AI quality make redesigning workflows worthwhile (Section~\ref{sec:nonlinear}).
 We collect the proofs of all formal results in this section in Appendix~\ref{app:omitted_proofs}.
 
@@ -96,20 +96,20 @@ A step with identical characteristics can therefore be automated in one workflow
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that the AI execution likelihood of a step depends on its local work context in different occupations.
 
 
-\subsection{Job-level AI Exposure and the Fragmentation Index}
+\subsection{Workflow-level AI Exposure and the Fragmentation Index}
 \label{sec:fragmentation}
 
-Even though characterizing the execution mode of each individual step in the optimal arrangement is hard, the overall gains from deploying AI in a job can still be studied without knowing precisely which steps end up automated.
+Even though characterizing the execution mode of each individual step in the optimal arrangement is hard, the overall gains from deploying AI across a workflow can still be studied without knowing precisely which steps end up automated.
 % Here we show that what governs these gains is not just how many of a workflow's steps are AI-friendly but how those steps are arranged relative to one another.
-Returning to the firm's AI deployment problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:model.jobs}, we can interpret job-level AI exposure as the extent to which an optimal AI strategy employs AI automation and augmentation.
+Returning to the firm's AI deployment problem described in \eqref{eq:totalcost_shortterm} and Section~\ref{sec:model.jobs}, we can interpret workflow-level AI exposure as the extent to which an optimal AI strategy employs AI automation and augmentation.
 Intuitively, a run of consecutive steps in the workflow that an AI can perform effectively is a natural candidate for an AI chain.
-A job that contains such runs of consecutive steps is therefore likely to benefit most from AI automation.
-On the other hand, a job for which AI-friendly steps are separated by intermediate steps that an AI is likely to fail is less exposed to large-scale automation, even though its step-level exposure to AI may appear high. 
+A workflow that contains such runs of consecutive steps is therefore likely to benefit most from AI automation.
+On the other hand, a workflow in which AI-friendly steps are separated by intermediate steps that an AI is likely to fail is less exposed to large-scale automation, even though its step-level exposure to AI may appear high. 
 The two examples below showcase this point.
 
 \begin{example}
 \label{ex:fragmentation_interleaved}
-Consider a job of $m$ steps (with $m$ even).
+Consider a workflow of $m$ steps (with $m$ even).
 The steps alternate between \emph{easy} and \emph{hard} for AI, and all share the same costs:
 \[
   \manualTime{i} = 5,
@@ -196,10 +196,10 @@ The contrast is, moreover, of a kind the data we bring to the model in Section~\
 To make this intuition more precise, let us return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm}.
 Consider the special case where AI management costs are normalized: $\AItime{i} = 1$ for all $i$.
 That is, each step requires the same time to prompt and manage one attempt by the AI.
-Under this assumption, we will define a measure of the dispersion of AI-exposed steps in a workflow, which we refer to as the \emph{fragmentation index} of a job.
-We then show that the fragmentation index of a job approximates (up to constant factors) the cost of an optimal AI strategy for that job.
-In other words, jobs for which the fragmentation index is high will tend to yield less benefit from AI automation.
-Notably, this measure speaks to the chaining problem and abstracts from job design, which we develop in Appendix~\ref{app:jobdesign}.
+Under this assumption, we will define a measure of the dispersion of AI-exposed steps in a workflow, which we refer to as the \emph{fragmentation index} of a workflow.
+We then show that the fragmentation index of a workflow approximates (up to constant factors) the cost of an optimal AI strategy for that workflow.
+In other words, workflows for which the fragmentation index is high will tend to yield less benefit from AI automation.
+Notably, this measure speaks to the chaining problem and abstracts from job design, which we take up in Section~\ref{sec:longrun}.
 
 Intuitively, the fragmentation index is motivated by a hypothetical scenario where a prophet can ``see the future'' to determine which tasks would be completed successfully by AI on its first attempt and which would not.
 If many tasks in sequence will all complete successfully on the first try, these are a good candidate for an AI chain.
@@ -231,7 +231,7 @@ We will show that the fragmentation index is within a constant factor of the cos
    If we further assume $\manualTime{i} \geq 1$ for all $i$, then $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
 \end{proposition}
 
-The key take-away from Proposition~\ref{prop:fragmentation} is that jobs with high fragmentation index (i.e., those for which the expected number of \emph{consecutive} successful step executions by an AI is low) will tend to have higher costs even under optimal use of AI chaining.
+The key take-away from Proposition~\ref{prop:fragmentation} is that workflows with high fragmentation index (i.e., those for which the expected number of \emph{consecutive} successful step executions by an AI is low) will tend to have higher costs even under optimal use of AI chaining.
 A key driver of efficiency gains via AI automation is therefore not simply the expected number of steps that can be automated effectively, but the number of \emph{adjacent} steps in the workflow that have high exposure to AI.
 
 An implication of our proof of Proposition~\ref{prop:fragmentation} is a natural and approximately optimal greedy algorithm for constructing AI strategies.

@@ -13,12 +13,12 @@ To create this dataset, we combine data from four sources:
 The details of how the dataset is constructed are given in Appendix~\ref{app:data_prep}.
 
 The structure of our theoretical framework closely aligns with the structure of the O*NET dataset.
-Each production step in the model corresponds to an O*NET task, and each job corresponds to an O*NET occupation.
+Each production step in the model corresponds to an O*NET task, and each occupation's workflow corresponds to the model's step sequence.
 In the absence of AI, a step (that is, an O*NET task) is executed manually and maps directly into a task under the model's definition.
 Thus, without AI, an O*NET task can be viewed as both a step and a task, which matches the standard treatment of tasks in the O*NET dataset.
 Later when we discuss AI execution, however, multiple steps, corresponding to a subset of O*NET tasks, may be chained together and executed jointly by AI, forming a composite task per the model's definition.
 Throughout this section, we use the terms step, O*NET task, and task interchangeably and expect the reader to keep these distinctions in mind.
-We similarly use the terms job and occupation interchangeably without restating the mapping each time.
+We similarly use the terms workflow and occupation interchangeably without restating the mapping each time.
 
 One feature of the data shapes how we use it throughout.
 The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow.

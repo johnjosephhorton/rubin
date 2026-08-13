@@ -115,7 +115,7 @@ $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual st
 
     \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation used in the model. Step-level primitives are indexed by $i$, task-level objects by the set of steps a task contains. Superscripts $M$ and $A$ denote the manual and AI modes of executing a step. Section~\ref{sec:longrun} introduces the additional notation needed once jobs are designed around AI.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation used in the model. Step-level primitives are indexed by $i$, task-level objects by the set of steps a task contains. Superscripts $M$ and $A$ denote the manual and AI modes of executing a step. Section~\ref{sec:longrun} introduces the additional notation needed once the firm apportions the workflow across workers.}
 \end{spacing}
 \end{minipage}
 \end{table}
@@ -130,20 +130,16 @@ Labor is the only input used in production.\footnote{
 Viewed as a production function, our sequential technology is Leontief at the level of the individual firm: producing a unit of output requires completing every step of the workflow, in fixed proportions.
 If different firms deploy and operationalize the AI technology with different effectiveness, however, the economy can be represented by a single production function at the macro level. In Appendix~\ref{sec:aggregation} we show that under the appropriate form of cross-firm AI deployment heterogeneity the economy can be aggregated across firms and represented by a CES production function over aggregate AI management labor, manual labor, and capital.
 }
-Each worker is assigned a contiguous group of tasks in the production sequence, which we call a \emph{job}.
-The firm can in principle split its workflow into several jobs and hire a separate worker for each, choosing where one job ends and the next begins.
-That choice is what reallocates work across workers, and it is the subject of Section~\ref{sec:longrun}.
-Throughout this section and the next we hold the boundary of a job fixed and exogenous, and, without loss, treat the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, as a single worker's job.
+Throughout this section and the next, a single worker executes the whole workflow: the firm hires one worker, and the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, is theirs to carry out.
+Section~\ref{sec:longrun} lets the firm divide the workflow among several workers instead, and it is there that how work is apportioned becomes something the firm chooses.
 
-With the job fixed, a worker is in place and is paid for the entire time the job takes to complete.
-The rate they are paid does not depend on how AI is deployed, since it is settled by the job the firm has already hired them for, so the firm's cost varies only with how long the job runs.
-The duration of a job is the total expected time requirement of its tasks,
+The worker is paid for the entire time the workflow takes to complete, at a rate the firm cannot change by deploying AI differently, since it was settled when the worker was hired.
+The duration of the workflow is the total expected time requirement of its tasks,
 \begin{align}
 \label{eq:job_duration}
 \sum_{T_b \in \T} \timecost{b},
 \end{align}
 and this is the object AI can move.
-Section~\ref{sec:longrun} takes up what determines the rate itself, which becomes the relevant margin once the firm is free to redraw the job.
 
 
 
@@ -152,8 +148,8 @@ Section~\ref{sec:longrun} takes up what determines the rate itself, which become
 \label{sec:model.jobs}
 
 The firm deploys AI across its workflow to minimize production costs.
-Labor is the only cost of production, and with the job fixed the firm's cost is the rate its worker is paid times the duration \eqref{eq:job_duration} of the job.
-Because that rate is settled and is owed for as long as the job runs no matter how AI is deployed, the firm takes it as given, and cost minimization reduces to compressing the time the workflow takes.
+Labor is the only cost of production, so the firm's cost is the rate its worker is paid times the duration \eqref{eq:job_duration} of the workflow.
+Because that rate is settled and is owed for as long as the work runs no matter how AI is deployed, the firm takes it as given, and cost minimization reduces to compressing the time the workflow takes.
 The firm therefore chooses its AI deployment strategy $\T$ to solve
 \begin{align}
 \label{eq:totalcost_shortterm}
@@ -167,10 +163,10 @@ Whether automating a step lowers expected time depends on the arrangement the st
 The number of such arrangements grows exponentially in the number of steps $m$.
 
 \paragraph{Interpretation and solution.}
-The problem above describes how a firm adapts to AI in the short run, when the boundary of the job is fixed.
-Having already hired a worker for a designated block of the workflow, the firm cannot reallocate steps across workers or change what the job pays, so its only lever is where in the workflow to deploy AI, and it pulls that lever to compress the time the workflow takes.
+The problem above describes how a firm adapts to AI in the short run, when who does what is already settled.
+Having already hired a worker to carry out the workflow, the firm cannot reallocate steps across workers or change what that work pays, so its only lever is where in the workflow to deploy AI, and it pulls that lever to compress the time production takes.
 Taking the wage as given is what lets us set it aside and work with expected time alone, which is why the model to this point needs no notion of skill at all: time savings are the whole of the short-run problem.
-Section~\ref{sec:longrun} takes up the longer horizon, in which AI changes not only how fast a worker gets through their assigned steps but which steps are assigned to them, and it is there that what a job pays becomes a margin the firm chooses; Table~\ref{tab:short_long_run} summarizes how the horizons differ.
+Section~\ref{sec:longrun} takes up the longer horizon, in which AI changes not only how fast a worker gets through their assigned steps but which steps are assigned to them, and it is there that what that work pays becomes a margin the firm chooses; Table~\ref{tab:short_long_run} summarizes how the horizons differ.
 Despite the exponential number of arrangements, \eqref{eq:totalcost_shortterm} is exactly solvable in polynomial time by dynamic programming, walking the workflow from left to right and at each step either performing it manually or closing an AI chain that ends there, optimizing over where that chain began.
 We defer the characterization to Appendix~\ref{app:shortrun_dp}.
 Nothing in what follows depends on how the optimum is computed, and we work with the cost-minimizing arrangement directly from here on.
