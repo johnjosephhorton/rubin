@@ -4,10 +4,9 @@ We hold the set of production steps fixed and abstract from the creation or disa
 Each step can be performed manually, performed with AI assistance (augmentation), or, when chained with neighboring steps, executed by AI with no direct human involvement (automation).
 Completing a step takes worker time, and how much it takes differs across the modes of execution.
 
-Throughout this section and the next we assume that production is carried out by a \emph{single worker}, to whom every step of the workflow is assigned.
-The firm has already hired this worker and their wage is set, so we treat it as fixed throughout.
-This is the short run of the firm's problem: with the worker in place and their pay settled, the only margin through which AI can affect production is by raising the worker's productivity on the set of tasks allocated to them.
-Minimizing production cost accordingly reduces to minimizing the time the workflow takes, and the firm's problem is to deploy AI so as to compress it.
+Throughout this section and the next we assume that the entire production sequence is allocated to a \emph{single worker}, and that this worker's wage rate is fixed, which we normalize to $1$.
+This is the short run of the firm's problem: the worker has already been hired and their pay settled, so the only margin through which AI can affect production is by raising their productivity on the set of tasks allocated to them.
+With the wage rate normalized, the cost of production is simply the time the workflow takes, and the firm's problem is to deploy AI so as to compress it.
 Section~\ref{sec:longrun} relaxes the assumption and studies the firm's long-run problem, in which the firm also chooses how to allocate tasks across workers.
 Changing that allocation changes what each worker's assignment demands of them, so wages adjust in step with the organizational structure, and the firm redraws both together to lower its overall wage bill.
 Table~\ref{tab:short_long_run} summarizes how the two horizons differ.
@@ -136,8 +135,8 @@ $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual st
 The firm employs human labor to perform tasks and produce the output, and labor is the only input used in production.\footnote{
 Viewed as a production function, our sequential technology is Leontief at the level of the individual firm: producing a unit of output requires completing every step of the workflow, in fixed proportions.
 }
-Its worker carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T = (T_1, \dotsc, T_n)$, and is paid at their fixed rate for the whole time this takes.
-Production therefore costs that rate times the total expected time requirement of the workflow's tasks, so the firm's problem is to choose the AI deployment strategy that makes the workflow shortest,
+Its worker carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T = (T_1, \dotsc, T_n)$, and is paid at the normalized rate of $1$ for the whole time this takes.
+The cost of production is therefore the total expected time requirement of the workflow's tasks, and the firm chooses the AI deployment strategy that minimizes it,
 \begin{align}
 \label{eq:totalcost_shortterm}
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b},
