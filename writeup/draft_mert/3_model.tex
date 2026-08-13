@@ -12,8 +12,7 @@ Section~\ref{sec:longrun} relaxes the assumption and studies the firm's long-run
 Changing that allocation changes what each worker's assignment demands of them, so wages adjust in step with the organizational structure, and the firm redraws both together to lower its overall wage bill.
 Table~\ref{tab:short_long_run} summarizes how the two horizons differ.
 
-The firm groups contiguous subsequences of steps into \emph{tasks}, choosing how to deploy AI across the workflow to minimize the time production takes.
-Figure~\ref{fig:steps_tasks} illustrates this procedure.
+Where the firm deploys AI is what groups contiguous subsequences of steps into \emph{tasks}, as Figure~\ref{fig:steps_tasks} illustrates.
 We formally characterize the components of the figure below in turn. %, and then introduce the firm's optimal AI deployment strategy and show that it can be computed efficiently in polynomial time.
 
 \begin{figure}[!t]
@@ -134,26 +133,16 @@ $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual st
 \subsection{Production}
 \label{sec:jobs_wages}
 
-The firm employs human workers to perform tasks and produce the final output.
-Labor is the only input used in production.\footnote{
+The firm employs human labor to perform tasks and produce the output, and labor is the only input used in production.\footnote{
 Viewed as a production function, our sequential technology is Leontief at the level of the individual firm: producing a unit of output requires completing every step of the workflow, in fixed proportions.
-If different firms deploy and operationalize the AI technology with different effectiveness, however, the economy can be represented by a single production function at the macro level. In Appendix~\ref{sec:aggregation} we show that under the appropriate form of cross-firm AI deployment heterogeneity the economy can be aggregated across firms and represented by a CES production function over aggregate AI management labor, manual labor, and capital.
 }
-The single worker of our short-run assumption carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, and is paid for the whole time it takes them.
-The duration of the workflow is the total expected time requirement of its tasks,
-\begin{align}
-\label{eq:job_duration}
-\sum_{T_b \in \T} \timecost{b},
-\end{align}
-and this is the object AI can move.
-
-Labor is the only cost of production, so the firm's cost is the fixed rate its worker is paid times the duration \eqref{eq:job_duration} of the workflow.
-Since that rate is owed for as long as the work runs no matter how AI is deployed, the firm minimizes cost by minimizing duration, and chooses its AI deployment strategy $\T$ to solve
+Its worker carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T = (T_1, \dotsc, T_n)$, and is paid at their fixed rate for the whole time this takes.
+Production therefore costs that rate times the total expected time requirement of the workflow's tasks, so the firm's problem is to choose the AI deployment strategy that makes the workflow shortest,
 \begin{align}
 \label{eq:totalcost_shortterm}
-\min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
+\min_{\T} \ \sum_{T_b \in \T} \timecost{b},
 \end{align}
-AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
+deploying AI on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
 
 Problem \eqref{eq:totalcost_shortterm} is where chaining does its work, and it is the problem the rest of the paper analyzes.
 Note that the firm cannot solve it step by step.
