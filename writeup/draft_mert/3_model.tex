@@ -2,8 +2,8 @@ A firm's production consists of a sequence of steps $\mathcal{S}=(s_1,\ldots,s_m
 We hold the set of production steps fixed and abstract from the creation or disappearance of steps in our model.
 }
 Each step can be performed manually, performed with AI assistance (augmentation), or, when chained with neighboring steps, executed by AI with no direct human involvement (automation).
-Completing a step requires worker time and skill, and these requirements differ across the modes of execution.
-The firm groups contiguous subsequences of steps into \emph{tasks}, choosing how to deploy AI across the workflow to minimize production costs.
+Completing a step takes worker time, and how much it takes differs across the modes of execution.
+The firm groups contiguous subsequences of steps into \emph{tasks}, choosing how to deploy AI across the workflow to minimize the time production takes.
 Figure~\ref{fig:steps_tasks} illustrates this procedure.
 We formally characterize the components of the figure below in turn. %, and then introduce the firm's optimal AI deployment strategy and show that it can be computed efficiently in polynomial time.
 
@@ -27,8 +27,8 @@ We formally characterize the components of the figure below in turn. %, and then
 
 Steps are the smallest unit of work in our framework.
 An individual step can be completed either with AI or manually (without AI).
-If the firm assigns step $i$ to manual execution (denoted by $\manualLetter$), it hires a human worker of skill level $\manualSkill{i}$ and pays for the time $\manualTime{i}$ required to complete the step without AI.
-Alternatively, if the firm assigns step $i$ to AI-assisted execution (denoted by $\AIletter$), it hires a human worker of (potentially different) skill level $\AIskill{i}$ and pays for the time $\AItime{i}$ spent completing the step in collaboration with AI.\footnote{
+If the firm assigns step $i$ to manual execution (denoted by $\manualLetter$), a human worker spends time $\manualTime{i}$ completing the step without AI.
+Alternatively, if the firm assigns step $i$ to AI-assisted execution (denoted by $\AIletter$), a worker spends time $\AItime{i}$ completing the step in collaboration with AI.\footnote{
 This could, for example, represent the time spent formulating a prompt for AI and checking the response, or ``managing'' the AI.
 }
 Such a collaboration succeeds independently with some (step-dependent) probability $q_i=\alpha^{d_i}$, where $\alpha$ is the quality of the general purpose AI technology and $d_i$ represents how ``difficult'' step $i$ is for AI.
@@ -39,13 +39,13 @@ Definitions~\ref{def:manual_task} and~\ref{def:augmented_task} formalize the two
 \begin{definition}[Manual Step]
 \label{def:manual_task}
 A step $i$ is performed manually if it is executed entirely by a human worker without AI assistance.
-The associated skill and time costs for a manual step are denoted by $(\manualSkill{i}, \manualTime{i})$.
+The time cost of a manual step is denoted by $\manualTime{i}$.
 \end{definition}
 
 \begin{definition}[Augmented Step]
 \label{def:augmented_task}
 A step $i$ is augmented if it is executed by the AI, after which its output is reviewed and approved by a human worker.
-The associated skill and (expected) time costs of managing a single augmented step are denoted by $(\AIskill{i}, \frac{\AItime{i}}{q_i})$, where $q_i = \alpha^{d_i} \in (0,1]$ is the AI's probability of successfully completing the step, increasing in the quality $\alpha$ of the general-purpose AI technology and decreasing in the step's difficulty $d_i$ for AI.
+The expected time cost of managing a single augmented step is $\AItime{i}/q_i$, where $q_i = \alpha^{d_i} \in (0,1]$ is the AI's probability of successfully completing the step, increasing in the quality $\alpha$ of the general-purpose AI technology and decreasing in the step's difficulty $d_i$ for AI.
 \end{definition}
 
 
@@ -54,7 +54,7 @@ The associated skill and (expected) time costs of managing a single augmented st
 \label{sec:model.tasks}
 
 Tasks are the smallest unit of work for a human worker.
-A step performed on its own, whether manually or with AI augmentation, constitutes a task, with skill and (expected) time costs equal to those of the step in its chosen mode: $(\manualSkill{i},\, \manualTime{i})$ if performed manually and $(\AIskill{i},\, \AItime{i}/q_i)$ if augmented.
+A step performed on its own, whether manually or with AI augmentation, constitutes a task, with an expected time cost equal to that of the step in its chosen mode: $\manualTime{i}$ if performed manually and $\AItime{i}/q_i$ if augmented.
 
 Steps can also be executed in an \emph{automated} mode in which AI performs the step end-to-end with no direct human involvement, and hence at zero direct human cost.\footnote{That execution of automated steps do not incur any cost to the firm is consistent with the AI subscription business model, where the firm pays an upfront fixed cost to an AI provider and uses AI tools at zero marginal cost afterward. The mechanisms discussed in the model remain unaffected even if we assume each time the firm deploys AI on a step it has to incur a marginal cost, but we abstract away from considering this to avoid complicating the model.}
 Automation, however, arises only within an \emph{AI chain}: a contiguous run of AI-executed steps in which each step's output feeds directly into the next and a human verifies only the final output.
@@ -63,9 +63,9 @@ The AI chain as a whole can be thought as a single \emph{composite} task delegat
 
 Consider an AI chain spanning steps $(s_\ell, \dotsc, s_r)$.
 The worker manages the chain by prompting for and evaluating only its final step $s_r$, since all earlier steps run automatically ``under the hood'' and remain beneath the worker's awareness.
-Managing one attempt at the chain therefore costs the same as augmenting step $s_r$: skill $\AIskill{r}$ and time $\AItime{r}$ per attempt.
+Managing one attempt at the chain therefore costs the same as augmenting step $s_r$, namely time $\AItime{r}$ per attempt.
 An attempt succeeds only if AI completes every step of the chain, which, assuming independent failures, occurs with probability $\prod_{i=\ell}^{r} q_i$; the chain is retried until it succeeds, for a total expected time of $\AItime{r}/\prod_{i=\ell}^{r} q_i$.
-The chain's skill and (expected) time costs are therefore $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$.
+The chain's expected time cost is therefore $\AItime{r}/\prod_{i=\ell}^{r} q_i$.
 Since $q_i = \alpha^{d_i}$, the chain succeeds with probability $\alpha^{\sum_{i=\ell}^{r} d_i}$, so $\sum_{i=\ell}^{r} d_i$ is the chain's total difficulty, aggregating additively over its constituent steps.
 Finally, an AI chain may consist of a single step, with $\ell = r$: having no automated predecessors, it is simply an augmented step.
 An AI-augmented step is thus an AI chain of length one, a convention we adopt throughout the paper.
@@ -75,13 +75,13 @@ Definitions~\ref{def:automated_task} and~\ref{def:ai_chain} formalize the automa
 \begin{definition}[Automated Step]
 \label{def:automated_task}
 A step is automated if it is executed entirely by AI without direct human intervention, and its output is passed directly to a subsequent augmented or automated step.
-The direct human costs (in both the skill and time dimension) of an automated step are zero.
+The direct human time cost of an automated step is zero.
 \end{definition}
 
 \begin{definition}[AI Chain]
 \label{def:ai_chain}
 An AI chain is a contiguous block of one or more sequential steps executed by AI, in which all steps but the final one are automated and the final step is augmented.
-An AI chain spanning steps $(s_\ell,\dots,s_r)$ has steps $(s_\ell,\dots,s_{r-1})$ automated and step $s_r$ augmented, with skill and (expected) time costs $\left(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i\right)$.
+An AI chain spanning steps $(s_\ell,\dots,s_r)$ has steps $(s_\ell,\dots,s_{r-1})$ automated and step $s_r$ augmented, with expected time cost $\AItime{r}/\prod_{i=\ell}^{r} q_i$.
 \end{definition}
 
 Finally, we define an \emph{AI deployment strategy} (or \emph{AI strategy} for short) as a partition of the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\mathcal{T}$, each of which is either a manual step or an AI chain.
@@ -101,21 +101,21 @@ $\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
 \addlinespace
 $s_i$ & Production step $i$ \\
 $\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
-$\manualSkill{i},\ \manualTime{i}$ & Skill and time cost of completing step $i$ manually \\
-$\AIskill{i},\ \AItime{i}$ & Skill and time cost of managing one AI attempt at step $i$ \\
+$\manualTime{i}$ & Time cost of completing step $i$ manually \\
+$\AItime{i}$ & Time cost of managing one AI attempt at step $i$ \\
 $d_i$ & Difficulty of step $i$ for AI \\
 $q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
 \addlinespace
 \addlinespace
 $T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
 $\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
-$\skillcost{b},\ \timecost{b}$ & Skill and (expected) time cost of task $b$: $(\manualSkill{i},\, \manualTime{i})$ if a manual step, $(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i)$ if an AI chain over steps $\ell, \dotsc, r$ \\
+$\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual step, $\AItime{r}/\prod_{i=\ell}^{r} q_i$ if an AI chain over steps $\ell, \dotsc, r$ \\
 \bottomrule
 \end{tabularx}
 
     \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation used in the model. Step-level primitives are indexed by $i$, task-level objects by the set of steps a task contains. Superscripts $M$ and $A$ denote the manual and AI modes of executing a step, and $H$ denotes a hand-off between workers.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation used in the model. Step-level primitives are indexed by $i$, task-level objects by the set of steps a task contains. Superscripts $M$ and $A$ denote the manual and AI modes of executing a step. Section~\ref{sec:longrun} introduces the additional notation needed once jobs are designed around AI.}
 \end{spacing}
 \end{minipage}
 \end{table}
@@ -131,36 +131,19 @@ Viewed as a production function, our sequential technology is Leontief at the le
 If different firms deploy and operationalize the AI technology with different effectiveness, however, the economy can be represented by a single production function at the macro level. In Appendix~\ref{sec:aggregation} we show that under the appropriate form of cross-firm AI deployment heterogeneity the economy can be aggregated across firms and represented by a CES production function over aggregate AI management labor, manual labor, and capital.
 }
 Each worker is assigned a contiguous group of tasks in the production sequence, which we call a \emph{job}.
-The firm can in principle split its workflow into several jobs and hire a separate worker for each, and it is free to choose where one job ends and the next begins.
-This choice trades the gains from specializing workers on narrower sets of tasks against the coordination costs of splitting work across more of them, and it is what reallocates tasks across workers.
-We delegate the full characterization of this job design problem, including what pins down the boundary of a job, to Appendix~\ref{app:jobdesign}.
-Here we instead hold the boundary of a job fixed and exogenous, and, without loss, treat the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, as a single worker's job.
+The firm can in principle split its workflow into several jobs and hire a separate worker for each, choosing where one job ends and the next begins.
+That choice is what reallocates work across workers, and it is the subject of Section~\ref{sec:longrun}.
+Throughout this section and the next we hold the boundary of a job fixed and exogenous, and, without loss, treat the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the AI strategy organizes into the task sequence $\T$, as a single worker's job.
 
-Workers are ex-ante identical, and are hired and trained by the firm to be employed in designated jobs.
-A worker is paid for the entire time their job takes to complete, at a rate equal to the skill the job requires.\footnote{
-One motivation for this formulation is that workers make a human capital investment to acquire the skills their job demands, an investment that must be recovered through wages; we express skill levels directly in units of the wage they command.
-Intuitively, since workers are ex-ante identical, one will train for a more skill-demanding job only if the wage compensates the extra investment, so competition for workers ties the wage a job pays to the total skill it requires.
-Rather than formalize such a wage model here, we impose it as an assumption and develop a more detailed formulation in Appendix~\ref{sec:aggregation}.
-}
-The skill a job requires is the total skill of its tasks, so the worker's wage rate is
+With the job fixed, a worker is in place and is paid for the entire time the job takes to complete.
+The rate they are paid does not depend on how AI is deployed, since it is settled by the job the firm has already hired them for, so the firm's cost varies only with how long the job runs.
+The duration of a job is the total expected time requirement of its tasks,
 \begin{align}
-\label{eq:wage}
-\text{Wage} = \sum_{T_b \in \T} \skillcost{b},
-\end{align}
-and the firm pays this rate for as long as the job takes, regardless of which task the worker is performing at any given moment.\footnote{
-This implicitly assumes a common base wage rate, so that all wage differences are driven by the human capital cost of acquiring skills.
-More generally, manual and AI-assisted tasks could carry different base wage rates $w_{\manualLetter}$ and $w_{\AIletter}$, reflecting the supply of and demand for each type of labor; Equation~\eqref{eq:wage} normalizes these rates to $1$ and folds them into the skill costs $\skillcost{b}$.
-We maintain this normalization for notational simplicity but it can be relaxed to more general cases.
-\label{foot:wage}
-}
-The duration of a job is the total (expected) time requirement of its tasks,
-\begin{align*}
+\label{eq:job_duration}
 \sum_{T_b \in \T} \timecost{b},
-\end{align*}
-The labor cost (i.e., wage bill) of a job is therefore its wage rate times the time it takes,
-\begin{align*}
-\text{Wage Bill} = \bigl(\sum_{T_b \in \T} \skillcost{b}\bigr)\bigl(\sum_{T_b \in \T} \timecost{b}\bigr).
-\end{align*}
+\end{align}
+and this is the object AI can move.
+Section~\ref{sec:longrun} takes up what determines the rate itself, which becomes the relevant margin once the firm is free to redraw the job.
 
 
 
@@ -169,10 +152,9 @@ The labor cost (i.e., wage bill) of a job is therefore its wage rate times the t
 \label{sec:model.jobs}
 
 The firm deploys AI across its workflow to minimize production costs.
-Since labor is the only cost of production, the firm's objective is to minimize its wage bill, the wage rate its worker commands times the time the job takes.
-Consider a firm that has already staffed the workflow: a worker is in place, and the set of steps that constitute their job is settled.
-The wage rate is then a schedule the firm takes as given, since it is pinned down by the skills the job demands and is owed for as long as the job runs no matter how AI is deployed.
-Cost minimization accordingly reduces to minimizing the time the workflow takes, and the firm chooses its AI deployment strategy $\T$ to solve
+Labor is the only cost of production, and with the job fixed the firm's cost is the rate its worker is paid times the duration \eqref{eq:job_duration} of the job.
+Because that rate is settled and is owed for as long as the job runs no matter how AI is deployed, the firm takes it as given, and cost minimization reduces to compressing the time the workflow takes.
+The firm therefore chooses its AI deployment strategy $\T$ to solve
 \begin{align}
 \label{eq:totalcost_shortterm}
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
@@ -186,9 +168,9 @@ The number of such arrangements grows exponentially in the number of steps $m$.
 
 \paragraph{Interpretation and solution.}
 The problem above describes how a firm adapts to AI in the short run, when the boundary of the job is fixed.
-Having already hired a worker for a designated block of the workflow, the firm cannot reallocate steps across workers or renegotiate what the job pays, so its only lever is where in the workflow to deploy AI, and it pulls that lever to compress the time the workflow takes.
-Taking the wage schedule as given is what lets us set the wage aside and work with expected time alone.
-The longer horizons, in which wages adjust to the skills a job actually requires and the firm redraws job boundaries around AI, are taken up in Section~\ref{sec:longrun}; Table~\ref{tab:short_long_run} summarizes how the three differ.
+Having already hired a worker for a designated block of the workflow, the firm cannot reallocate steps across workers or change what the job pays, so its only lever is where in the workflow to deploy AI, and it pulls that lever to compress the time the workflow takes.
+Taking the wage as given is what lets us set it aside and work with expected time alone, which is why the model to this point needs no notion of skill at all: time savings are the whole of the short-run problem.
+Section~\ref{sec:longrun} takes up the longer horizon, in which AI changes not only how fast a worker gets through their assigned steps but which steps are assigned to them, and it is there that what a job pays becomes a margin the firm chooses; Table~\ref{tab:short_long_run} summarizes how the horizons differ.
 Despite the exponential number of arrangements, \eqref{eq:totalcost_shortterm} is exactly solvable in polynomial time by dynamic programming, walking the workflow from left to right and at each step either performing it manually or closing an AI chain that ends there, optimizing over where that chain began.
 We defer the characterization to Appendix~\ref{app:shortrun_dp}.
 Nothing in what follows depends on how the optimum is computed, and we work with the cost-minimizing arrangement directly from here on.

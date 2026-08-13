@@ -1,8 +1,12 @@
-Section~\ref{sec:model.jobs} took the boundaries of jobs as given: a worker had already been hired for a designated block of the workflow, and AI could move only the time that block took.
-This section relaxes that restriction and closes the model in two steps.
-First, we let the firm redraw job boundaries, so that the same chaining decisions that reorganize work \emph{within} a job also reorganize work \emph{across} workers.
+So far the boundaries of jobs have been fixed: a worker had already been hired for a designated block of the workflow, AI could move only the time that block took, and the results of Section~\ref{sec:results} followed from that single margin.
+The more consequential effects of AI, however, arrive when it does more than make a worker faster at the steps they have been assigned.
+Once a firm can also change \emph{which} steps go to which worker, AI reshapes the composition of jobs rather than only the pace at which their contents are executed.
+That is inherently a longer-run object: the firm decides jointly where to deploy AI along the workflow and where to draw the boundaries between jobs, and the two decisions cannot be separated, since automating a run of steps changes what the job containing them requires of the person doing it.
+
+This section develops that problem and closes the model in two steps.
+First, we let the firm redraw job boundaries, which requires two ingredients the short-run problem did not: what a job pays, and what it costs to split work between workers.
 Second, we aggregate the firm's problem to the economy, showing that a workflow-level technology with endogenous task boundaries is consistent with the aggregate production function macroeconomists write down.
-We treat both as extensions and keep them at the level of the economic content here; the full characterizations are developed in Appendices~\ref{app:jobdesign} and~\ref{sec:aggregation}.
+We keep both at the level of the economic content here; the full characterizations are developed in Appendices~\ref{app:jobdesign} and~\ref{sec:aggregation}.
 
 
 \subsection{Job Design and the Limits of Specialization}
@@ -10,10 +14,28 @@ We treat both as extensions and keep them at the level of the economic content h
 
 A \emph{job} is a contiguous block of tasks assigned to a single worker, and a partition $\J = (J_1, \dotsc, J_p)$ of the task sequence into jobs is a \emph{job design}.
 The firm hires one worker per job.
-As in Section~\ref{sec:jobs_wages}, a worker must hold every skill their job demands and is paid for the whole time the job takes, so job $J_j$ commands a wage rate equal to its total skill, $\sum_{T_b \in J_j} \skillcost{b}$.
+
+What a job pays now has to be pinned down, since the firm is choosing the job.
+Each step carries a skill requirement alongside the time requirement of Section~\ref{sec:model.steps}: completing step $i$ manually demands skill $\manualSkill{i}$, and managing an AI attempt at it demands skill $\AIskill{i}$, so a task $T_b$ inherits the skill $\skillcost{b}$ of whichever mode executes it, with an automated step inside a chain demanding none.
+Workers are ex-ante identical and are hired and trained for the job they are given, so a worker must hold every skill their job demands and is paid at a rate equal to their total,\footnote{
+One motivation for this formulation is that workers make a human capital investment to acquire the skills their job demands, an investment that must be recovered through wages; we express skill levels directly in units of the wage they command.
+Since workers are ex-ante identical, one will train for a more skill-demanding job only if the wage compensates the extra investment, so competition for workers ties the wage a job pays to the total skill it requires.
+Rather than formalize such a wage model here, we impose it as an assumption and develop a more detailed formulation in Appendix~\ref{sec:aggregation}.
+}
+\begin{align}
+\label{eq:wage}
+\text{Wage}_j = \sum_{T_b \in J_j} \skillcost{b},
+\end{align}
+which the firm pays for as long as the job takes, regardless of which task the worker is performing at any given moment.\footnote{
+This implicitly assumes a common base wage rate, so that all wage differences are driven by the human capital cost of acquiring skills.
+More generally, manual and AI-assisted tasks could carry different base wage rates $w_{\manualLetter}$ and $w_{\AIletter}$, reflecting the supply of and demand for each type of labor; Equation~\eqref{eq:wage} normalizes these rates to $1$ and folds them into the skill costs $\skillcost{b}$.
+We maintain this normalization for notational simplicity but it can be relaxed to more general cases.
+\label{foot:wage}
+}
+This is what the short run held fixed and what the firm now chooses: a narrower job demands fewer skills and so pays less.
 
 Left there, the firm would specialize without limit.
-Splitting the workflow into ever-narrower jobs strictly lowers the wage bill, since each worker then needs fewer skills, so the cost-minimizing design would assign a separate worker to every task.
+Splitting the workflow into ever-narrower jobs strictly lowers the wage bill, so the cost-minimizing design would assign a separate worker to every task.
 What stops this is coordination.
 When a worker's job ends and the work passes to the next worker, that transfer takes time: we write $\handofftime{i}$ for the hand-off time incurred when step $s_i$ is the last step of a job, and $\handofftime{}(J_j)$ for the hand-off time of job $J_j$, with $\handofftime{m} = 0$ at the end of the workflow.
 Because the worker is paid for as long as the job takes, hand-off time enters the wage bill exactly as execution time does,

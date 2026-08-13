@@ -12,19 +12,19 @@ With more than one step, however, the optimal deployment of AI depends on more t
 As a result, the factor of production holding the comparative advantage on a step \emph{in isolation} need not be the one that performs it in the optimal production configuration.
 That is, a step that is more cost-effective to perform manually may nonetheless be automated as part of a chain.
 
-To see what determines the execution mode of a step, consider a human-advantaged step $k$ whose successor $k+1$ is executed as a standalone augmented step, and compare two ways of handling the pair while leaving the rest of the workflow untouched: chaining steps $k$ and $k+1$ together, or performing step $k$ manually alongside the augmented step $k+1$.\footnote{The augmented step $k+1$ can be thought of a longer AI chain terminating augmented at some step $r > k+1$. Such a chain can be considered as a single augmented step with composite cost parameters, namely management cost $\AIskill{r}\AItime{r}$ and success probability $\prod_{i=k+1}^{r} q_i$, so \eqref{eq:ca_test} applies unchanged with these composite values.}
+To see what determines the execution mode of a step, consider a human-advantaged step $k$ whose successor $k+1$ is executed as a standalone augmented step, and compare two ways of handling the pair while leaving the rest of the workflow untouched: chaining steps $k$ and $k+1$ together, or performing step $k$ manually alongside the augmented step $k+1$.\footnote{The augmented step $k+1$ can be thought of a longer AI chain terminating augmented at some step $r > k+1$. Such a chain can be considered as a single augmented step with composite cost parameters, namely management cost $\AItime{r}$ and success probability $\prod_{i=k+1}^{r} q_i$, so \eqref{eq:ca_test} applies unchanged with these composite values.}
 Chaining is the cheaper arrangement exactly when
 \begin{equation}
 \label{eq:ca_test}
-\underbrace{\frac{\AIskill{k+1}\AItime{k+1}}{q_k\, q_{k+1}}}_{\text{chain over $\{k, k+1\}$}}
+\underbrace{\frac{\AItime{k+1}}{q_k\, q_{k+1}}}_{\text{chain over $\{k, k+1\}$}}
 \;<\;
-\underbrace{\manualSkill{k}\manualTime{k} + \frac{\AIskill{k+1}\AItime{k+1}}{q_{k+1}}}_{\text{$k$ manual, $k+1$ augmented}}
+\underbrace{\manualTime{k} + \frac{\AItime{k+1}}{q_{k+1}}}_{\text{$k$ manual, $k+1$ augmented}}
 \quad \Longleftrightarrow \quad
-\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_k)}{q_k\, q_{k+1}}}_{\text{marginal cost of folding step $k$ in}}
+\underbrace{\frac{\AItime{k+1}\,(1-q_k)}{q_k\, q_{k+1}}}_{\text{marginal cost of folding step $k$ in}}
 \;<\;
-\manualSkill{k}\manualTime{k}.
+\manualTime{k}.
 \end{equation}
-Chaining automates step $k$ at zero direct cost: the worker still prompts for and verifies only the same endpoint $k+1$, and, importantly, since an automated step is never prompted or verified on its own step $k$'s own AI management cost $\AIskill{k}\AItime{k}$ never enters.
+Chaining automates step $k$ at zero direct cost: the worker still prompts for and verifies only the same endpoint $k+1$, and, importantly, since an automated step is never prompted or verified on its own step $k$'s own AI management cost $\AItime{k}$ never enters.
 The only additional expense is that the chain now also fails whenever AI fails at step $k$.
 Subtracting the augmentation cost of step $k+1$ from both sides of the first inequality in \eqref{eq:ca_test} makes this explicit.
 Chaining pays exactly when the endpoint's management cost, inflated by step $k$'s failure risk $1-q_k$, falls below the manual cost it displaces.
@@ -37,11 +37,11 @@ Because a chain pays only for the management of its augmented endpoint per each 
 Folding the pair $\{k-1, k\}$ into the chain costs the endpoint's management inflated by the pair's joint failure risk $1 - q_{k-1}q_k$. 
 Decomposing this risk as $1 - q_{k-1}q_k = (1-q_{k-1}) + q_{k-1}(1-q_k)$ splits the marginal cost into a share for each folded step,
 \[
-\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_{k-1}q_k)}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{marginal cost of folding the pair $\{k-1, k\}$ in}}
+\underbrace{\frac{\AItime{k+1}\,(1-q_{k-1}q_k)}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{marginal cost of folding the pair $\{k-1, k\}$ in}}
 \;=\;
-\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_{k-1})}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{step $k-1$'s share}}
+\underbrace{\frac{\AItime{k+1}\,(1-q_{k-1})}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{step $k-1$'s share}}
 \;+\;
-\underbrace{\frac{\AIskill{k+1}\AItime{k+1}\,(1-q_k)}{q_k\,q_{k+1}}}_{\text{step $k$'s share}}.
+\underbrace{\frac{\AItime{k+1}\,(1-q_k)}{q_k\,q_{k+1}}}_{\text{step $k$'s share}}.
 \]
 Notice that step $k$'s share is exactly the marginal cost in \eqref{eq:ca_test}, which by supposition exceeds the manual cost it replaces: step $k$ does not pay its own way into the chain.
 The predecessor's share, by contrast, is governed by its failure risk $1 - q_{k-1}$ alone, so it shrinks toward zero as AI executes the step more reliably ($q_{k-1} \to 1$), even while the standalone execution cost it displaces stays large.
@@ -51,13 +51,13 @@ Example~\ref{ex:ca_predecessor} showcases these forces numerically.
 
 \begin{example}
 \label{ex:ca_predecessor}
-Consider three consecutive steps with unit skill, so a task's cost equals its expected completion time:
+Consider three consecutive steps with the following parameters:
 \[
-  \bigl((\manualSkill{i},\manualTime{i}),\ (\AIskill{i},\AItime{i}),\ q_i\bigr) =
+  \bigl(\manualTime{i},\ \AItime{i},\ q_i\bigr) =
   \begin{cases}
-    \bigl((1,5),\ (1,4),\ 0.95\bigr) & i = 0,\\[2pt]
-    \bigl((1,1),\ (1,2),\ 0.50\bigr) & i = 1,\\[2pt]
-    \bigl((1,4),\ (1,1),\ 0.80\bigr) & i = 2.
+    \bigl(5,\ 4,\ 0.95\bigr) & i = 0,\\[2pt]
+    \bigl(1,\ 2,\ 0.50\bigr) & i = 1,\\[2pt]
+    \bigl(4,\ 1,\ 0.80\bigr) & i = 2.
   \end{cases}
 \]
 Figure~\ref{fig:ex_predecessor} shows how the optimal execution changes once Step~0 is placed in front of Steps~1--2.
@@ -73,16 +73,16 @@ Figure~\ref{fig:ex_predecessor} shows how the optimal execution changes once Ste
 \end{spacing}
 \end{minipage}
 \end{figure}
-In isolation, Step~1 is cheaper \emph{manually}: its manual cost $\manualSkill{1}\manualTime{1} = 1$ lies below its augmentation cost $\AIskill{1}\AItime{1}/q_1 = 2/0.5 = 4$, so the human holds the comparative advantage on Step~1.
+In isolation, Step~1 is cheaper \emph{manually}: its manual cost $\manualTime{1} = 1$ lies below its augmentation cost $\AItime{1}/q_1 = 2/0.5 = 4$, so the human holds the comparative advantage on Step~1.
 
 Take Steps~1 and~2 on their own first (the top row of the figure).
-Performing Step~1 manually and augmenting Step~2 costs $\manualSkill{1}\manualTime{1} + \AIskill{2}\AItime{2}/q_2 = 1 + 1.25 = 2.25$, below the cost $\AIskill{2}\AItime{2}/(q_1\, q_2) = 1/0.4 = 2.5$ of chaining the two.
+Performing Step~1 manually and augmenting Step~2 costs $\manualTime{1} + \AItime{2}/q_2 = 1 + 1.25 = 2.25$, below the cost $\AItime{2}/(q_1\, q_2) = 1/0.4 = 2.5$ of chaining the two.
 Absent the predecessor, then, comparative advantage holds and Step~1 is performed manually.
 
 Now introduce the predecessor, Step~0 (the bottom row of the figure).
-Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode: manually it costs $\manualSkill{0}\manualTime{0} = 5$, and as a standalone augmented step it costs $\AIskill{0}\AItime{0}/q_0 = 4/0.95 \approx 4.21$.
+Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode: manually it costs $\manualTime{0} = 5$, and as a standalone augmented step it costs $\AItime{0}/q_0 = 4/0.95 \approx 4.21$.
 The only cheap way to absorb Step~0 is to place it at the start of a chain, where its management cost goes unpaid.
-The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost $\AIskill{2}\AItime{2}/(q_0\, q_1\, q_2) = 1/0.38 \approx 2.63$.
+The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost $\AItime{2}/(q_0\, q_1\, q_2) = 1/0.38 \approx 2.63$.
 This falls far below the cheapest arrangement that keeps Step~1 manual, which executes each step separately on its own at cost $4.21 + 1 + 1.25 = 6.46$, and below every other strategy.
 Step~1, which on its own would be performed manually, is thus automated only to bridge the AI-friendly predecessor to the cheap endpoint at Step~2.
 Its own success probability is just $q_1 = 0.5$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is far more costly.
@@ -109,12 +109,12 @@ The two examples below showcase this point.
 
 \begin{example}
 \label{ex:fragmentation_interleaved}
-Consider a job of $m$ steps (with $m$ even) with unit skill, so a task's cost equals its expected completion time.
+Consider a job of $m$ steps (with $m$ even).
 The steps alternate between \emph{easy} and \emph{hard} for AI, and all share the same costs:
 \[
-  (\manualSkill{i},\manualTime{i}) = (1,5),
+  \manualTime{i} = 5,
   \qquad
-  (\AIskill{i},\AItime{i}) = (1,6),
+  \AItime{i} = 6,
   \qquad
   q_i =
   \begin{cases}
@@ -140,7 +140,7 @@ Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 \end{figure}
 
 Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes an option.
-The firm therefore treats each step on its own, and on its own no step is worth executing with AI: managing a single AI attempt takes longer than doing the work manually, as even an easy step's augmentation cost $\AIskill{i}\AItime{i}/q_i = 6/1 = 6$ exceeds its manual cost $\manualSkill{i}\manualTime{i} = 5$ (for a hard step the gap widens to $6/0.1 = 60$ against $5$).
+The firm therefore treats each step on its own, and on its own no step is worth executing with AI: managing a single AI attempt takes longer than doing the work manually, as even an easy step's augmentation cost $\AItime{i}/q_i = 6/1 = 6$ exceeds its manual cost $\manualTime{i} = 5$ (for a hard step the gap widens to $6/0.1 = 60$ against $5$).
 The optimal strategy thus performs all $m$ steps manually and deploys no AI anywhere, for a total cost of
 \[
 m(5) = 5m.
@@ -150,9 +150,9 @@ m(5) = 5m.
 \label{ex:fragmentation_clustered}
 Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly steps: the first $m/2$ steps are easy and the last $m/2$ are hard. All steps share the same costs:
 \[
-  (\manualSkill{i},\manualTime{i}) = (1,5),
+  \manualTime{i} = 5,
   \qquad
-  (\AIskill{i},\AItime{i}) = (1,6),
+  \AItime{i} = 6,
   \qquad
   q_i =
   \begin{cases}
@@ -180,7 +180,7 @@ Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
 Now the easy steps form a contiguous run, so the firm can chain them: it automates the first $m/2 - 1$ at zero direct cost and verifies only once, at the end of the run.
 Because every easy step succeeds on the first attempt, the entire run of $m/2$ easy steps collapses to the single management cost of its augmented endpoint,
 \[
-\frac{\AIskill{m/2}\,\AItime{m/2}}{\prod_{i=1}^{m/2} q_i} = \frac{6}{1} = 6.
+\frac{\AItime{m/2}}{\prod_{i=1}^{m/2} q_i} = \frac{6}{1} = 6.
 \]
 Managing an AI attempt was too slow to pay at any single step, yet one verification covering the entire easy run pays easily, as the chain replaces the run's $m/2$ manual executions, costing $5m/2$ in total, with the single cost of $6$.
 The $m/2$ hard steps remain cheaper performed manually (cost $5$ each), for a total cost of
@@ -194,8 +194,8 @@ The same steps thus yield very different automation outcomes depending only on w
 The contrast is, moreover, of a kind the data we bring to the model in Section~\ref{sec:empirics} can detect: augmented and automated execution are observationally equivalent there, so what distinguishes the two arrangements empirically is that the interleaved workflow uses no AI at all while the clustered workflow executes half its steps with AI.
 
 To make this intuition more precise, let us return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm}.
-Consider the special case where AI management costs are normalized: $\AIskill{i}\AItime{i} = 1$ for all $i$.
-That is, each step requires the same skill-weighted time to prompt and manage one attempt by the AI.
+Consider the special case where AI management costs are normalized: $\AItime{i} = 1$ for all $i$.
+That is, each step requires the same time to prompt and manage one attempt by the AI.
 Under this assumption, we will define a measure of the dispersion of AI-exposed steps in a workflow, which we refer to as the \emph{fragmentation index} of a job.
 We then show that the fragmentation index of a job approximates (up to constant factors) the cost of an optimal AI strategy for that job.
 In other words, jobs for which the fragmentation index is high will tend to yield less benefit from AI automation.
@@ -210,12 +210,12 @@ However, what we show is that its cost approximates the cost of the optimal stra
 
 To define the fragmentation index more formally, suppose that each step $s_i$ succeeds independently with probability $q_i$; any task that does not succeed is said to fail.
 Write $F$ for the set of steps that fail, and $\mathcal{C} = \{C_1, \dotsc, C_k\}$ for the random variable representing the collection of maximal connected components of non-failed steps.
-The weight of each $C_j \in \mathcal{C}$ is defined to be $\omega(C_j) = \min\{ 1, \sum_{i \in C_j} \manualSkill{i}\manualTime{i} \}$.
+The weight of each $C_j \in \mathcal{C}$ is defined to be $\omega(C_j) = \min\{ 1, \sum_{i \in C_j} \manualTime{i} \}$.
 That is, each $C_j$ has weight $1$ unless the sum of the manual costs of its steps is less than $1$ (due to our assumption that AI management costs are normalized to $1$).
 
 Given a realization of $\mathcal{C}$ and $F$, we define the realized fragmentation to be
 \begin{equation}
-    \sum_{i \in F}\min\left\{\manualSkill{i}\manualTime{i}, \frac{\AIskill{i}\AItime{i}}{q_i}\right\} + \sum_{C_j \in \mathcal{C}} \omega(C_j).\label{eq:fragmentation}
+    \sum_{i \in F}\min\left\{\manualTime{i}, \frac{\AItime{i}}{q_i}\right\} + \sum_{C_j \in \mathcal{C}} \omega(C_j).\label{eq:fragmentation}
 \end{equation}
 The \emph{fragmentation index} is defined to be the expected value of the realized fragmentation.
 
@@ -225,10 +225,10 @@ We will show that the fragmentation index is within a constant factor of the cos
 
 \begin{proposition}
 \label{prop:fragmentation}
-   Fix a sequence of $m$ steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, each with normalized AI management cost $\AIskill{i}\AItime{i} = 1$.
+   Fix a sequence of $m$ steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, each with normalized AI management cost $\AItime{i} = 1$.
    Let $FI$ denote its fragmentation index and let $OPT$ denote the minimum cost over all AI strategies.
    Then $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$.
-   If we further assume $\manualSkill{i}\manualTime{i} \geq 1$ for all $i$, then $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+   If we further assume $\manualTime{i} \geq 1$ for all $i$, then $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
 \end{proposition}
 
 The key take-away from Proposition~\ref{prop:fragmentation} is that jobs with high fragmentation index (i.e., those for which the expected number of \emph{consecutive} successful step executions by an AI is low) will tend to have higher costs even under optimal use of AI chaining.
@@ -259,11 +259,11 @@ The example below shows this pattern at work in a two-step workflow.
 
 \begin{example}
 \label{ex:nonmonotone}
-Consider a two-step workflow with unit skill.
-Managing an AI attempt costs $(\AIskill{i},\AItime{i}) = (1,1)$ at either step, and the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$, so the two steps differ only in
+Consider a two-step workflow.
+Managing an AI attempt costs $\AItime{i} = 1$ at either step, and the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$, so the two steps differ only in
 \[
-  (\manualSkill{1},\manualTime{1}) = (1,1), \qquad
-  (\manualSkill{2},\manualTime{2}) = (1,2), \qquad
+  \manualTime{1} = 1, \qquad
+  \manualTime{2} = 2, \qquad
   d_1 = 6, \qquad d_2 = 1.
 \]
 Step~1 is short but hard for AI, while step~2 is more time-consuming but easy.
@@ -296,9 +296,9 @@ Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal b
 
 Below $\alpha = 0.50$ both steps are manual; between $\alpha = 0.50$ and $\alpha \approx 0.90$ the firm augments step~2; and above $\alpha \approx 0.90$ it chains both steps, automating step~1:
 \begin{align*}
-\text{both manual:} \quad & \manualSkill{1}\manualTime{1} + \manualSkill{2}\manualTime{2} = (1)(1) + (1)(2) = 3, \\
-\text{augment step 2:} \quad & \manualSkill{1}\manualTime{1} + \frac{\AIskill{2}\,\AItime{2}}{q_2} = (1)(1) + \frac{(1)(1)}{\alpha} = 1 + \tfrac{1}{\alpha}, \\
-\text{chain (steps 1--2):} \quad & \frac{\AIskill{2}\,\AItime{2}}{q_1 q_2} = \frac{(1)(1)}{\alpha^{6}\,\alpha^{1}} = \alpha^{-7}.
+\text{both manual:} \quad & \manualTime{1} + \manualTime{2} = (1)(1) + (1)(2) = 3, \\
+\text{augment step 2:} \quad & \manualTime{1} + \frac{\AItime{2}}{q_2} = (1)(1) + \frac{(1)(1)}{\alpha} = 1 + \tfrac{1}{\alpha}, \\
+\text{chain (steps 1--2):} \quad & \frac{\AItime{2}}{q_1 q_2} = \frac{(1)(1)}{\alpha^{6}\,\alpha^{1}} = \alpha^{-7}.
 \end{align*}
 The marginal benefit of improving AI quality is the negative derivative of cost, $-\mathrm{d}C/\mathrm{d}\alpha$, which across the three regimes is
 \begin{align*}
