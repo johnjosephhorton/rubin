@@ -41,6 +41,68 @@ In this sense, the execution-based EFI functions as a falsification-style check 
 
 \subsection{Additional Tests for Prediction \#3}
 \label{app:additional_robustness_pred3}
+
+\subsubsection*{Placebo Distributions for the Neighbor Effects}
+
+The main text reports average marginal effects for Prediction~\#3 but notes that, absent an external benchmark, their magnitudes are difficult to interpret on their own.
+To provide one, we re-estimate regression~\eqref{eq:DWA_regression_ai} on 1{,}000 placebo datasets constructed by randomizing the positions of tasks within occupations, holding each occupation's task composition and execution labels fixed so that only the ordering changes.
+Figure~\ref{fig:DWA_regression_aiExecution_mainSample} plots the resulting distributions against the estimates from the actual data, for each of the four specifications of Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+\begin{figure}[p]
+  \centering
+  \caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution}
+  \label{fig:DWA_regression_aiExecution_mainSample}
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_no_dwa.png}
+    \subcaption{No Fixed Effects}
+    \label{fig:ame_nofe}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_major_fe_no_dwa.png}
+    \subcaption{SOC Major Group Fixed Effects}
+    \label{fig:ame_major}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_minor_fe_no_dwa.png}
+    \subcaption{SOC Minor Group Fixed Effects}
+    \label{fig:ame_minor}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_with_dwa.png}
+    \subcaption{Detailed Work Activity Fixed Effects}
+    \label{fig:ame_dwa}
+  \end{subfigure}
+  \par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being executed by AI, while more distant neighbors have little to no effect on a task's AI execution likelihood.
+The red dashed line in each graph indicates the observed average marginal effect of the corresponding variable in the original dataset reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+The red shaded area marks the 90\% confidence interval around the observed point estimates in the main sample.
+The histograms plot the distribution of average marginal effects across 1{,}000 randomized reshuffles of task positions within occupations.
+Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai}, while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+\end{spacing}
+\end{minipage}
+\end{figure}
+
+Three patterns emerge.
+First, within each specification the randomized distributions for all four neighbors are centered at similar means and have similar shapes, so if ordering did not matter each neighbor would contribute about equally to the focal task's AI execution likelihood.
+Second, in every panel the observed effects for immediate neighbors lie to the right of their placebo distributions while the observed effects for distant neighbors lie to the left, so immediate neighbors exert more influence than random assignment would produce and distant neighbors less, once immediate neighbors are accounted for.
+Third, consistent with Table~\ref{tab:DWA_regression_aiExecution_mainSample}, adding SOC group and DWA fixed effects collapses the distant neighbor effects to essentially zero in Panels~(b)--(d) while the immediate neighbor effects remain positive and separated from the placebo distributions.
+
+\subsubsection*{A Stricter Definition of Task Similarity}
+
 Although DWAs are intended to group conceptually similar tasks, one might argue that even within a given DWA tasks may still somewhat differ in their objectives, execution nature, or required skills.
 To address this concern, we re-estimate regression~\eqref{eq:DWA_regression_ai} using a more restrictive definition of task similarity within DWAs.
 Specifically, for each DWA, we ask GPT-5-mini to select the subset of tasks that are most similar in terms of skill requirements and execution complexity.\footnote{The prompt used to identify similar DWA tasks is provided in Appendix~\ref{app:prompts}.}

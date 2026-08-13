@@ -2,8 +2,57 @@
 \label{app:omitted_proofs}
 
 This appendix collects the proofs omitted from the main body of the paper.
+Sections~\ref{app:shortrun_dp} and~\ref{app:mediumrun_dp} record the sense in which the firm's short- and medium-run cost minimization problems of Section~\ref{sec:model.jobs} can be solved, which the main text states without proof.
 
-\subsection{Proof of Proposition~\ref{prop:mediumrun_dp}}
+\subsection{Short-Run AI Deployment}
+\label{app:shortrun_dp}
+
+The short-run problem \eqref{eq:totalcost_shortterm} minimizes a sum over tasks, and this additivity is what makes it exactly solvable despite the exponentially many arrangements available to the firm.
+
+\begin{proposition}[Short-run AI Deployment]
+\label{prop:shortrun_dp}
+Given a workflow with $m$ steps, the short-run cost-minimizing AI strategy can be calculated in time $O(m^2)$ via dynamic programming.
+\end{proposition}
+
+\begin{proof}
+We first note the following recursive formulation of the optimization problem.
+For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
+Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
+Note also that $C[m]$ is the cost of our desired optimal solution.
+
+We now show how to calculate $C[k]$ recursively.
+As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
+For $k \geq 1$, $C[k]$ is the lesser of
+\[ C[k-1] + \manualTime{k} \]
+and
+\[ \min_{\ell < k} \Biggl\{ C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
+\]
+In other words, we either complete step $k$ manually (at time $\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at expected time $\AItime{k}/\prod_{i=\ell+1}^k q_i$.
+In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
+This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
+For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
+
+Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
+Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
+\end{proof}
+
+
+\subsection{Medium-Run AI Deployment}
+\label{app:mediumrun_dp}
+
+The medium-run objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the short-run recursion no longer applies.
+The problem still admits a polynomial-time approximation scheme.
+
+\begin{proposition}[Medium-run AI Deployment]
+\label{prop:mediumrun_dp}
+Fix a workflow with $m$ steps whose skill and time costs lie in $[1/B, B]$ for some $B > 0$.
+For any $\epsilon > 0$, an AI strategy whose medium-run cost~\eqref{eq:totalcost_mediumrun} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+\end{proposition}
+
+The idea still relies on dynamic programming: the firm decides how to execute the job's steps one at a time, and the program tracks the worker's accumulated skill cost and accumulated time cost along the way, evaluating the wage bill only once every step has been assigned.
+What makes the problem non-trivial is that each execution choice moves the skill and time costs simultaneously, so the program must carry a two-dimensional state that can take exponentially many values.
+We therefore discretize both costs to a geometric grid, which keeps the running time polynomial while approximating the optimum subject to an error term that can be made arbitrarily small.
+
 
 \begin{proof}
 In the medium run a single worker performs the entire workflow, so the firm chooses only the AI strategy and pays the wage bill $\bigl(\sum_{T_b \in \T} \skillcost{b}\bigr)\bigl(\sum_{T_b \in \T} \timecost{b}\bigr)$, the product of the worker's total skill and total time.
