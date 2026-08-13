@@ -228,11 +228,13 @@ The first concern is the prompt.
 A single prompt produces a single set of sequences, so if the phrasing of our request is what organizes the tasks, the resulting ordering might be a property of our instructions rather than of the work itself.
 In Appendix~\ref{app:gptPrompts_robustness} we re-generate the O*NET task sequences under ten alternative prompts that vary the framing and the ordering logic, and re-run all three tests on each of the resulting datasets.
 The estimates move within a narrow band, and none of the conclusions reported above turns on which prompt is used.
+This shows that our results are not artifacts of the specific prompt or the sequencing logic used to order tasks.
 
 The second concern is the O*NET occupation task list itself.
 O*NET catalogues all the work activities an occupation involves, including tasks that are rarely performed, and such tasks might act as ``filler'' steps that lengthen a workflow and separate steps that are adjacent in practice.
 In Appendix~\ref{app:frequency_robustness} we restrict the sample to progressively more frequently-executed tasks, which makes the surviving sequences more workflow-like, and recover the same patterns for all three predictions.
 Confidence intervals widen as the restriction shrinks the sample, since dropping infrequent tasks also removes AI-executed ones, which are already scarce to begin with, but the direction of the headline results remains unaffected.
+This shows that our results do not hinge on specific way that O*NET constructs its occupation taxonomy.
 
 Both exercises above stay within the bounds of the O*NET dataset and our own imputation, so neither can establish that the imputed order corresponds to how work steps are actually sequenced.
 To externally validate our sequencing approach, in Appendix~\ref{app:external_validation} we turn to a second production taxonomy: the Process Classification Framework (PCF) of the American Productivity \& Quality Center (APQC), whose member working groups have recorded the activities and tasks composing a firm's business processes in the order practitioners perform them \citep{apqc_pcf}.
@@ -242,7 +244,8 @@ Kendall's $\tau$ is a standard rank correlation measure that, roughly speaking, 
 This measure ranges from $-1$ (completely reversed orderings) to $1$ (identical orderings), with $0$ indicating no systematic overlap.  
 Higher values therefore correspond to greater similarity between task sequences.
 }
+Moreover, we use the 4TU.ResearchData...
 
-Having established that the LLM can recover a documented ordering, we then match O*NET tasks to PCF activities using natural language processing techniques to carry the AI exposure and AI execution labels over to a corpus that no LLM ordered, and re-test our predictions there.
+Having established that the LLM can reasonably recover the ordering of production activities, we then match O*NET tasks to PCF activities using natural language processing techniques to carry the AI exposure and AI execution labels over to a corpus that no LLM ordered, and re-test our predictions there.
 Although this matching procedure is lossy and not all AI-exposed or AI-executed tasks are matched to an activity in the PCF corpus, Predictions~\#1 and~\#2 come through with essentially the same results: AI-executed steps co-occur far more than the same labels arranged at random along the same sequences, and the empirical fragmentation index coefficient stays negative and significant at a magnitude comparable to the main sample.
 We are unable to re-run Prediction~\#3, however, whose sample requirements are considerably more restrictive, since it needs the same step to recur across workflows with differing execution outcomes and the O*NET-PCF matched data does not retain enough of that variation.

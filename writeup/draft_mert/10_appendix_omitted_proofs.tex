@@ -65,9 +65,9 @@ We therefore discretize both costs to a geometric grid, which keeps the running 
 
 
 \begin{proof}
-In the medium run a single worker performs the entire workflow, so the firm chooses only the AI strategy and pays the wage bill $\bigl(\sum_{T_b \in \T} \skillcost{b}\bigr)\bigl(\sum_{T_b \in \T} \timecost{b}\bigr)$, the product of the worker's total skill and total time.
+Here a single worker performs the entire workflow, so the firm chooses only the AI strategy and pays the wage bill $\bigl(\sum_{T_b \in \T} \skillcost{b}\bigr)\bigl(\sum_{T_b \in \T} \timecost{b}\bigr)$, the product of the worker's total skill and total time.
 Because the wage bill multiplies these two totals, the running value of one alone never reveals how an added task changes it, so the dynamic program carries both and optimizes the worker's job one task at a time.
-For the proof we first show that the firm's medium-run optimization problem can be stated as a recursive problem.
+For the proof we first show that this optimization problem can be stated as a recursive problem.
 Then proceed to use dynamic programming to approximate the optimal solution.
 
 \emph{Recursive formulation.}
@@ -78,7 +78,7 @@ In the base case $i = 0$ no steps remain to assign, the worker's totals are exac
 \[
 R(0,\, \skillcost{},\, \timecost{}) = \skillcost{}\,\timecost{}, \qquad \text{for all } \skillcost{}, \timecost{}.
 \]
-The medium-run optimum is $R(m,\, 0,\, 0)$, the cheapest way to execute all $m$ steps within a job that starts with no tasks.
+The optimum is $R(m,\, 0,\, 0)$, the cheapest way to execute all $m$ steps within a job that starts with no tasks.
 
 For $i \ge 1$ the firm chooses how step $i$ is assigned optimally, with $R(i,\, \skillcost{},\, \timecost{})$ taking the form
 \begin{align*}

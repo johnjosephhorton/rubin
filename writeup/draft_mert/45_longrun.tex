@@ -66,6 +66,36 @@ In the right panel, tasks are bundled into a single job performed by one worker,
 \end{minipage}
 \end{figure}
 Splitting a job removes the dead area above the less demanding tasks but adds a hand-off rectangle whose height is the departing worker's full skill, so the coordination penalty is itself larger for more skilled workers.
+Table~\ref{tab:jobdesign_parameters} collects the notation this section adds to that of Table~\ref{tab:model_parameters}.
+\begin{table}[!t]
+\centering
+\caption{Additional Notation for Job Design}
+\label{tab:jobdesign_parameters}
+    \footnotesize
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+$\manualSkill{i}$ & Skill required to complete step $i$ manually \\
+$\AIskill{i}$ & Skill required to manage one AI attempt at step $i$ \\
+$\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step, $\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none \\
+\addlinespace
+$J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
+$\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
+\addlinespace
+$\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
+$\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
+$\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
+$\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
+\bottomrule
+\end{tabularx}
+
+    \begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation introduced in this section. The skill parameters in the top block play no role in the short-run problem of Section~\ref{sec:model.jobs}, which turns on execution time alone, and enter only once the firm chooses the job and therefore chooses what the job pays. The model notation of Table~\ref{tab:model_parameters} continues to apply throughout.}
+\end{spacing}
+\end{minipage}
+\end{table}
 
 In the long run the firm chooses the AI strategy and the job design together,
 \begin{align}
