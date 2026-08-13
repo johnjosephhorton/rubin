@@ -2,16 +2,17 @@
 \label{app:omitted_proofs}
 
 This appendix collects the proofs omitted from the main body of the paper.
-Sections~\ref{app:shortrun_dp} and~\ref{app:mediumrun_dp} record the sense in which the firm's short- and medium-run cost minimization problems of Section~\ref{sec:model.jobs} can be solved, which the main text states without proof.
+Section~\ref{app:shortrun_dp} characterizes the solution to the firm's AI deployment problem of Section~\ref{sec:model.jobs}, which the main text states without proof.
+Section~\ref{app:mediumrun_dp} then extends it to the case in which wages adjust to the skill a job requires.
 
-\subsection{Short-Run AI Deployment}
+\subsection{AI Deployment with a Fixed Wage Schedule}
 \label{app:shortrun_dp}
 
-The short-run problem \eqref{eq:totalcost_shortterm} minimizes a sum over tasks, and this additivity is what makes it exactly solvable despite the exponentially many arrangements available to the firm.
+The deployment problem \eqref{eq:totalcost_shortterm} minimizes a sum over tasks, and this additivity is what makes it exactly solvable despite the exponentially many arrangements available to the firm.
 
-\begin{proposition}[Short-run AI Deployment]
+\begin{proposition}[AI Deployment with a Fixed Wage Schedule]
 \label{prop:shortrun_dp}
-Given a workflow with $m$ steps, the short-run cost-minimizing AI strategy can be calculated in time $O(m^2)$ via dynamic programming.
+Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
 
 \begin{proof}
@@ -37,16 +38,25 @@ Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corr
 \end{proof}
 
 
-\subsection{Medium-Run AI Deployment}
+\subsection{AI Deployment when Wages Adjust}
 \label{app:mediumrun_dp}
 
-The medium-run objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the short-run recursion no longer applies.
+Section~\ref{sec:model.jobs} holds the wage rate fixed, which is what reduces cost minimization to minimizing time.
+Over a longer horizon, competitive pressure and free entry let the firm adjust the wage to the skill the job actually requires once AI has lowered the cost of executing its tasks, and deploying AI then pays on both margins at once, since an augmented or automated step may demand less skill as well as less time.
+The firm minimizes the wage bill of the job, the product of its total skill and its total time,
+\begin{align}
+\label{eq:totalcost_mediumrun}
+\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
+\end{align}
+Fixed job boundaries make jobs' costs independent of one another, so minimizing total production cost reduces to minimizing \eqref{eq:totalcost_mediumrun} for each job separately, and it is without loss to study a single job.
+
+Objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the recursion of Appendix~\ref{app:shortrun_dp} no longer applies: a task's contribution to cost depends on the skill and the time the rest of the job already carries.
 The problem still admits a polynomial-time approximation scheme.
 
-\begin{proposition}[Medium-run AI Deployment]
+\begin{proposition}[AI Deployment when Wages Adjust]
 \label{prop:mediumrun_dp}
 Fix a workflow with $m$ steps whose skill and time costs lie in $[1/B, B]$ for some $B > 0$.
-For any $\epsilon > 0$, an AI strategy whose medium-run cost~\eqref{eq:totalcost_mediumrun} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+For any $\epsilon > 0$, an AI strategy whose cost~\eqref{eq:totalcost_mediumrun} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
 
 The idea still relies on dynamic programming: the firm decides how to execute the job's steps one at a time, and the program tracks the worker's accumulated skill cost and accumulated time cost along the way, evaluating the wage bill only once every step has been assigned.

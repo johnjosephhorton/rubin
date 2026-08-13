@@ -169,49 +169,26 @@ The labor cost (i.e., wage bill) of a job is therefore its wage rate times the t
 \label{sec:model.jobs}
 
 The firm deploys AI across its workflow to minimize production costs.
-Since labor is the only cost of production, the firm's objective is to minimize its wage bill paid to workers.
-What the firm can adjust to lower its labor cost depends on the time horizon of optimization, and we distinguish three as outlined in Table~\ref{tab:short_long_run}.
-
-\subsubsection{Short Run: Fixed Job Boundaries and Wages, Adjustable Execution Times}
-\label{sec:model.shortrun}
-In the short run, the boundary of the job and wages are fixed as the firm has already hired a worker to do a designated set of tasks.
-The wage is then sunk, since the firm owes it for as long as the job takes no matter how AI is deployed, so the only margin AI can move is the time the job takes.
-The firm therefore chooses its AI deployment strategy $\T$ to minimize the total expected time of completing the workflow,
+Since labor is the only cost of production, the firm's objective is to minimize its wage bill, the wage rate its worker commands times the time the job takes.
+Consider a firm that has already staffed the workflow: a worker is in place, and the set of steps that constitute their job is settled.
+The wage rate is then a schedule the firm takes as given, since it is pinned down by the skills the job demands and is owed for as long as the job runs no matter how AI is deployed.
+Cost minimization accordingly reduces to minimizing the time the workflow takes, and the firm chooses its AI deployment strategy $\T$ to solve
 \begin{align}
 \label{eq:totalcost_shortterm}
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
-AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this (expected) time.
+AI is deployed on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
 
-Because chaining makes the cost of automating a step depend on the arrangement it sits in, the firm cannot decide step by step and must instead choose among whole arrangements, of which there are exponentially many in $m$.
-The problem is nonetheless exactly solvable: the cost-minimizing strategy is the solution to a dynamic program that walks the workflow from left to right, at each step either performing it manually or closing an AI chain that ends there, and optimizing over where that chain began.
-Appendix~\ref{app:shortrun_dp} states the result and gives the recursion.
+Problem \eqref{eq:totalcost_shortterm} is where chaining does its work, and it is the problem the rest of the paper analyzes.
+Note that the firm cannot solve it step by step.
+Whether automating a step lowers expected time depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm must choose among whole arrangements rather than making a separate decision at each step.
+The number of such arrangements grows exponentially in the number of steps $m$.
 
-
-
-\subsubsection{Medium Run: Fixed Job Boundaries, Adjustable Wages and Execution Times}
-\label{sec:model.mediumrun}
-In the medium run, the boundaries of jobs remain fixed, but competitive pressure on the worker side and free entry into jobs let the firm do two things at once: optimize the job's time cost \emph{and} adjust the wage to the skill the job actually requires once AI lowers the cost of executing its tasks.
-Deploying AI can potentially lower costs on both margins, since an augmented or automated step may demand both less skill and less time than manual execution.
-The firm therefore minimizes total wage bill for each job.
-
-Since fixed job boundaries make jobs' costs independent of one another, the problem of minimizing total production costs in the medium run can be reduced to minimizing the wage bill of each job separately. 
-Therefore, it is without loss to study how the wage bill of a single job is minimized, as we do so below.
-Because the worker is paid in proportion to their job's skill for the entire time the job takes, the wage bill of a job is the product of its total skill and its total time,
-\begin{align}
-\label{eq:totalcost_mediumrun}
-\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
-\end{align}
-
-The wage bill in \eqref{eq:totalcost_mediumrun} multiplies two sums rather than adding across tasks, so a task's contribution to cost depends on the skill and the time the rest of the job already carries, and the left-to-right argument of the short run no longer goes through.
-The problem remains tractable, but only approximately: Appendix~\ref{app:omitted_proofs} gives an algorithm that comes within any desired factor of the optimum.
+\paragraph{Interpretation and solution.}
+The problem above describes how a firm adapts to AI in the short run, when the boundary of the job is fixed.
+Having already hired a worker for a designated block of the workflow, the firm cannot reallocate steps across workers or renegotiate what the job pays, so its only lever is where in the workflow to deploy AI, and it pulls that lever to compress the time the workflow takes.
+Taking the wage schedule as given is what lets us set the wage aside and work with expected time alone.
+The longer horizons, in which wages adjust to the skills a job actually requires and the firm redraws job boundaries around AI, are taken up in Section~\ref{sec:longrun}; Table~\ref{tab:short_long_run} summarizes how the three differ.
+Despite the exponential number of arrangements, \eqref{eq:totalcost_shortterm} is exactly solvable in polynomial time by dynamic programming, walking the workflow from left to right and at each step either performing it manually or closing an AI chain that ends there, optimizing over where that chain began.
+We defer the characterization to Appendix~\ref{app:shortrun_dp}.
 Nothing in what follows depends on how the optimum is computed, and we work with the cost-minimizing arrangement directly from here on.
-
-
-\subsubsection{Long Run: Adjustable Job Boundaries, Wages, and Execution Times}
-\label{sec:model.longrun}
-In the long run, the firm can also redraw the boundaries of jobs, reallocating tasks across workers in addition to optimizing wages and the AI strategy in production.
-Narrowing a job lets the firm staff it with workers specializing in fewer tasks, and thus commanding lower wages, but splitting the workflow with a fixed number of steps across more workers introduces coordination costs between them.
-We capture this friction with a ``hand-off'' time cost incurred at each job boundary: when a worker's job ends, they spend additional time passing their intermediate output to the next worker, lengthening the job and hence raising its wage bill.
-The firm chooses AI deployment and job design jointly, trading the lower wages of narrower jobs against the higher coordination costs of maintaining more of them.
-Section~\ref{sec:longrun} takes up this problem, which nests the medium run as the special case of fixed job boundaries, and uses it to close the model.
