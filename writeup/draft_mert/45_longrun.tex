@@ -15,22 +15,23 @@ We keep both at the level of the economic content here; the full characterizatio
 
 Rather than give the whole workflow to a single worker, the firm may divide it and hire several.
 Just as an AI strategy partitions the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\T$, the firm partitions that task sequence into contiguous blocks, each of which it assigns to one worker.
-We call such a block a \emph{job} and the partition $\J = (J_1, \dotsc, J_p)$ of $\T$ into $p$ jobs a \emph{job design}.
-The firm hires one worker per job, and the problem of Section~\ref{sec:jobs_wages} is the special case of a job design with a single job spanning the whole workflow.
+We call each such block a \emph{job} and the partition $\J = (J_1, \dotsc, J_p)$ of $\T$ into $p$ jobs a \emph{job design}.
+The firm hires one worker per job.
+The problem of Section~\ref{sec:jobs_wages} is the special case of a job design with a single job spanning the whole workflow.
 
-In order to introduce wages we also assume that a worker must acquire the skills required to perform each of the steps they are responsible for.
-This skill cost reflects the body of knowledge and the specific know-how that performing a given step demands.
+In order to allow wages to vary we also assume that a worker must acquire the skills required to perform all tasks in their job.
+This skill cost reflects the specific know-how and body of knowledge that performing a given step demands.
 We therefore extend Definitions~\ref{def:manual_task} and~\ref{def:augmented_task} so that a step carries not only the time its execution takes but also the skill that execution requires: performing step $i$ manually costs $(\manualSkill{i},\, \manualTime{i})$, and managing one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
 The two need not coincide, since doing the work oneself calls for knowing how to do it, whereas directing an AI to do it and judging what comes back may call for less knowledge, or for knowledge of a different kind.
 A task inherits the skill of whichever mode executes it, so task $T_b$ carries skill $\skillcost{b}$, equal to $\manualSkill{i}$ if it is a manual step and to $\AIskill{r}$ if it is an AI chain augmented at step $r$.
 An automated step inside a chain demands no skill of anyone, since no human ever handles it.
 
 Workers are ex-ante identical and are assigned to jobs by the firm.
-A worker assigned job $J_j$ then acquires the skills needed to perform all of its tasks, and the firm compensates that training through the wage it pays them.
-Because workers are identical and free to take any job, the wage must leave them indifferent between jobs: a job that obliges its holder to acquire more skill must pay correspondingly more to cover the additional training it requires.
-The wage rate of a job is thus the rate at which the firm compensates a worker for the skills that job obliged them to acquire.
+A worker assigned job $J_j$ acquires the skills needed to perform all of its tasks, and the firm compensates that training through the wage it pays them.
+Because workers are identical and free to take any job, wages must leave them indifferent between jobs: a job that obliges its holder to acquire more skill must pay correspondingly more to cover the additional training it requires.
+We thus take the wage rate of a job is to be the flow rate at which the firm compensates a worker for the skills that job obliged them to acquire.
 
-Since skills are acquired task by task, this compensation is additive over the tasks the job contains,\footnote{
+Since skills are acquired separately for each individual task, this compensation is additive over the tasks the job contains,\footnote{
 We express skill levels directly in units of the wage they command, which is what lets the skill a task requires and the compensation it commands be written as the same object.
 Rather than formalize the underlying human capital problem here, we impose \eqref{eq:wage} as an assumption and develop a more detailed formulation in Appendix~\ref{sec:aggregation}.
 }
@@ -44,13 +45,26 @@ More generally, manual and AI-assisted tasks could carry different base wage rat
 We maintain this normalization for notational simplicity but it can be relaxed to more general cases.
 \label{foot:wage}
 }
-Equation~\eqref{eq:wage} is the object the short run held fixed and normalized to $1$, and it is what the firm now chooses: a narrower job demands fewer skills and so pays less.
+Equation~\eqref{eq:wage} is the object the short run held fixed and normalized to $1$, and it is what the firm now chooses: a narrower (i.e., specialized) job demands fewer skills and so pays less.
 
 Left there, the firm would specialize without limit.
-Splitting the workflow into ever-narrower jobs strictly lowers the wage bill, so the cost-minimizing design would assign a separate worker to every task.
-What stops this is coordination.
-When a worker's job ends and the work passes to the next worker, that transfer takes time: we write $\handofftime{i}$ for the hand-off time incurred when step $s_i$ is the last step of a job, and $\handofftime{}(J_j)$ for the hand-off time of job $J_j$, with $\handofftime{m} = 0$ at the end of the workflow.
-Because the worker is paid for as long as the job takes, hand-off time enters the wage bill exactly as execution time does,
+Splitting the workflow into ever-narrower jobs strictly lowers the wage bill, since each worker then has fewer skills to acquire and commands less for them, so the cost-minimizing design would put a separate worker on every step.
+This is the classical gain from the division of labor, and something has to bound it.
+
+For Adam Smith's pin factory the bound was the extent of the market.
+For the sequential knowledge work we have in mind it is something else: the cost of handing the work over.
+When one worker's job ends, whoever picks the work up has to be told what was done, why, and what state the output is now in, and the worker handing it over has to spend time putting it in a form that can be received.
+This friction is what limits specialization in \citet{becker1992division}, where coordination costs rise as production is split among more workers, and it is why the skills used to carry out such transfers, which \citet{deming2017growing} shows have become increasingly well paid, bear on how work can be organized at all.
+
+Because our production process is a sequence, we can be more specific than a cost that depends only on how many workers there are.
+A hand-off happens at a particular point in the workflow, and what it costs depends on which point.
+Some places are natural seams, where the work has reached a self-contained intermediate output, a finished design or a signed-off specification, that can be described briefly and passed on.
+Others fall in the middle of something, where whoever receives the work has to reconstruct the context the previous worker had built up.
+Handing a completed design to an engineer is cheap; stopping halfway through the design and handing over the fragments is not.
+We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs, so that \emph{where} the firm divides the workflow matters and not merely how often it divides it.
+
+We write $\handofftime{i}$ for the time a hand-off takes when step $s_i$ is the last step of a job, and $\handofftime{}(J_j)$ for the hand-off time of job $J_j$; the final job hands off to no one, so $\handofftime{m} = 0$.
+Because the worker is paid for as long as their job takes, this time enters the wage bill exactly as execution time does,
 \begin{align}
 \label{eq:lr_wagebill}
 \text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr).
