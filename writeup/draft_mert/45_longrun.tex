@@ -14,12 +14,11 @@ We keep both at the level of the economic content here; the full characterizatio
 \label{sec:longrun.jobdesign}
 
 Rather than give the whole workflow to a single worker, the firm may divide it and hire several.
-Just as an AI strategy partitions the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\T$, the firm partitions that task sequence into contiguous blocks, each of which it assigns to one worker.
+Just as an AI strategy partitions the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\T$, the firm partitions that task sequence into contiguous blocks, each of which it assigns to a single worker.
 We call each such block a \emph{job} and the partition $\J = (J_1, \dotsc, J_p)$ of $\T$ into $p$ jobs a \emph{job design}.
-The firm hires one worker per job.
 The problem of Section~\ref{sec:jobs_wages} is the special case of a job design with a single job spanning the whole workflow.
 
-In order to allow wages to vary we also assume that a worker must acquire the skills required to perform all tasks in their job.
+In order to introduce wages, and allow them to vary, we also assume that executing steps requires a skill cost in addition to the time cost of execution.
 This skill cost reflects the specific know-how and body of knowledge that performing a given step demands.
 We therefore extend Definitions~\ref{def:manual_task} and~\ref{def:augmented_task} so that a step carries not only the time its execution takes but also the skill that execution requires: performing step $i$ manually costs $(\manualSkill{i},\, \manualTime{i})$, and managing one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
 The two need not coincide, since doing the work oneself calls for knowing how to do it, whereas directing an AI to do it and judging what comes back may call for less knowledge, or for knowledge of a different kind.
@@ -27,11 +26,11 @@ A task inherits the skill of whichever mode executes it, so task $T_b$ carries s
 An automated step inside a chain demands no skill of anyone, since no human ever handles it.
 
 Workers are ex-ante identical and are assigned to jobs by the firm.
-A worker assigned job $J_j$ acquires the skills needed to perform all of its tasks, and the firm compensates that training through the wage it pays them.
-Because workers are identical and free to take any job, wages must leave them indifferent between jobs: a job that obliges its holder to acquire more skill must pay correspondingly more to cover the additional training it requires.
+A worker assigned to job $J_j$ acquires the skills needed to perform all of the job's tasks, and the firm compensates that training through the wage it pays them.
+Because workers are identical and free to take any job, wages must leave them indifferent between sorting into different jobs: a job that obliges its holder to acquire more skill must pay correspondingly more to cover the additional training it requires.
 We thus take the wage rate of a job is to be the flow rate at which the firm compensates a worker for the skills that job obliged them to acquire.
 
-Since skills are acquired separately for each individual task, this compensation is additive over the tasks the job contains,\footnote{
+Since skills are acquired separately for each individual task, the overall job's compensation is additive over the skill cost of tasks the job contains,\footnote{
 We express skill levels directly in units of the wage they command, which is what lets the skill a task requires and the compensation it commands be written as the same object.
 Rather than formalize the underlying human capital problem here, we impose \eqref{eq:wage} as an assumption and develop a more detailed formulation in Appendix~\ref{sec:aggregation}.
 }
@@ -45,16 +44,22 @@ More generally, manual and AI-assisted tasks could carry different base wage rat
 We maintain this normalization for notational simplicity but it can be relaxed to more general cases.
 \label{foot:wage}
 }
-Equation~\eqref{eq:wage} is the object the short run held fixed and normalized to $1$, and it is what the firm now chooses: a narrower (i.e., specialized) job demands fewer skills and so pays less.
+Equation~\eqref{eq:wage} is the object the short run held fixed and normalized to $1$, and it is now something the firm chooses.
 
-Left there, the firm would specialize without limit.
-Splitting the workflow into ever-narrower jobs strictly lowers the wage bill, since each worker then has fewer skills to acquire and commands less for them, so the cost-minimizing design would put a separate worker on every step.
-This is the classical gain from the division of labor, and something has to bound it.
+Since the worker is paid this rate per unit of time for the entire duration of their job, the labor cost of job $J_j$ is its wage rate times the time it takes,
+$\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\sum_{T_b \in J_j} \timecost{b}\bigr)$.
+Note what this implies for a broad job.
+The worker is compensated for every skill the job demands over its whole duration, even though at any given moment they are performing a single task and drawing on only the portion of their knowledge that task requires.
+The remainder of their human capital sits idle at that moment and is paid for regardless.
 
-For Adam Smith's pin factory the bound was the extent of the market.
-For the sequential knowledge work we have in mind it is something else: the cost of handing the work over.
-When one worker's job ends, whoever picks the work up has to be told what was done, why, and what state the output is now in, and the worker handing it over has to spend time putting it in a form that can be received.
-This friction is what limits specialization in \citet{becker1992division}, where coordination costs rise as production is split among more workers, and it is why the skills used to carry out such transfers, which \citet{deming2017growing} shows have become increasingly well paid, bear on how work can be organized at all.
+In a world without frictions the firm would respond by specializing as far as it can.
+Dividing a job in two splits its skill requirement between two workers while leaving the total time to be worked unchanged, so it strictly lowers the wage bill.
+Carried to its conclusion, the firm would assign every step to its own worker, each of whom acquires exactly the knowledge their step requires and none of whom is ever paid for skill they are not using.
+
+Work is not organized this way, because dividing production among many workers is not free.
+Each division creates a point at which work in progress must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.
+We capture this friction with a \emph{hand-off cost}, the additional time a worker spends passing their work on to the next worker.
+For Adam Smith's pin factory the limit on specialization was the extent of the market; for the sequential knowledge work we have in mind it is this coordination cost, which is the friction that bounds specialization in \citet{becker1992division} and the reason the skills used to carry out such transfers, which \citet{deming2017growing} shows have become increasingly well paid, bear on how work can be organized at all.
 
 Because our production process is a sequence, we can be more specific than a cost that depends only on how many workers there are.
 A hand-off happens at a particular point in the workflow, and what it costs depends on which point.
@@ -70,9 +75,9 @@ Because the worker is paid for as long as their job takes, this time enters the 
 \text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr).
 \end{align}
 
-Equation~\eqref{eq:lr_wagebill} contains the whole trade-off.
-Bundling more tasks into one job raises the first factor, since the worker must be skilled enough for all of them and is paid that rate throughout, including while performing the tasks that demand far less.
-Splitting them raises the second factor, since every additional boundary inserts another hand-off.
+Equation~\eqref{eq:lr_wagebill} contains the whole trade-off, with one factor for each of the two forces above.
+Bundling tasks into one job raises the first, for the reason already given: the worker must be skilled enough for all of them and is paid that rate throughout.
+Splitting them raises the second, since every additional boundary inserts another hand-off.
 Figure~\ref{fig:lr_job_design} makes this geometric: a job's wage bill is the area of a rectangle whose height is the skill it requires and whose width is the time it takes, and the firm is choosing how to cover the workflow with such rectangles.
 \begin{figure}[!t]
     \centering
