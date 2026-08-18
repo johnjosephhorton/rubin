@@ -2,41 +2,7 @@
 \label{app:omitted_proofs}
 
 This appendix collects the proofs omitted from the main body of the paper.
-Section~\ref{app:shortrun_dp} characterizes the solution to the firm's AI deployment problem of Section~\ref{sec:jobs_wages}, which the main text states without proof.
-Section~\ref{app:mediumrun_dp} then extends it to the case in which wages adjust to the skill a job requires.
-
-\subsection{AI Deployment with a Fixed Wage Schedule}
-\label{app:shortrun_dp}
-
-The deployment problem \eqref{eq:totalcost_shortterm} minimizes a sum over tasks, and this additivity is what makes it exactly solvable despite the exponentially many arrangements available to the firm.
-
-\begin{proposition}[AI Deployment with a Fixed Wage Schedule]
-\label{prop:shortrun_dp}
-Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
-\end{proposition}
-
-\begin{proof}
-We first note the following recursive formulation of the optimization problem.
-For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
-Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
-Note also that $C[m]$ is the cost of our desired optimal solution.
-
-We now show how to calculate $C[k]$ recursively.
-As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
-For $k \geq 1$, $C[k]$ is the lesser of
-\[ C[k-1] + \manualTime{k} \]
-and
-\[ \min_{\ell < k} \Biggl\{ C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
-\]
-In other words, we either complete step $k$ manually (at time $\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at expected time $\AItime{k}/\prod_{i=\ell+1}^k q_i$.
-In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
-This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
-For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
-
-Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
-Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
-\end{proof}
-
+Section~\ref{app:mediumrun_dp} extends the firm's AI deployment problem of Section~\ref{sec:jobs_wages} to the case in which wages adjust to the skill a job requires.
 
 \subsection{AI Deployment when Wages Adjust}
 \label{app:mediumrun_dp}
@@ -50,7 +16,7 @@ The firm minimizes the wage bill of the job, the product of its total skill and 
 \end{align}
 Fixed job boundaries make jobs' costs independent of one another, so minimizing total production cost reduces to minimizing \eqref{eq:totalcost_mediumrun} for each job separately, and it is without loss to study a single job.
 
-Objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the recursion of Appendix~\ref{app:shortrun_dp} no longer applies: a task's contribution to cost depends on the skill and the time the rest of the job already carries.
+Objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the recursion of Proposition~\ref{prop:shortrun_dp} no longer applies: a task's contribution to cost depends on the skill and the time the rest of the job already carries.
 The problem still admits a polynomial-time approximation scheme.
 
 \begin{proposition}[AI Deployment when Wages Adjust]

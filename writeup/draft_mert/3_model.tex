@@ -2,17 +2,18 @@ A firm's production consists of a sequence of steps $\mathcal{S}=(s_1,\ldots,s_m
 We hold the set of production steps fixed and abstract from the creation or disappearance of steps in our model.
 }
 Each step can be performed manually, performed with AI assistance (augmentation), or, when chained with neighboring steps, executed by AI with no direct human involvement (automation).
-Completing a step takes worker time and demands worker skill, and both differ across the three modes of execution.
-The firm deploys AI by assigning one of the modes to each step, and that assignment determines the set of \emph{tasks} the human worker actually handles.
-Figure~\ref{fig:steps_tasks} illustrates an AI strategy in which seven steps constitute five tasks.
+Completing a step takes time and demands skill, and both differ across the three modes of execution.
+The firm deploys AI by assigning one of the modes to each step, and that assignment determines the set of tasks the human worker actually handles.
+Figure~\ref{fig:steps_tasks}, for instance, illustrates an AI strategy in which seven steps constitute five tasks.
 
 In this section and the next we fix a worker's job boundary, that is, the set of steps assigned to them.
-The entire production sequence is thus allocated to a \emph{single worker} whose wage rate is fixed and normalized to $1$.
-What that rate compensates is the total skill the worker's assignment demands of them.
+It is therefore without loss to assume that the entire production sequence is allocated to a \emph{single worker} whose wage rate is fixed and normalized to $1$.
+What the wage rate compensates is the total skill the worker needs to possess in order to perform all activities in their job.
 Because the assignment is fixed here, so is the rate, and we normalize it away.
-This characterization reflects the short-run dynamics of the economy, in which the firm has already determined the set of tasks for a worker, workers have acquired the skills their roles require, and the firm has hired them at a pre-specified hourly wage rate, so what the firm optimizes is how to use AI to minimize the time production takes.
-Section~\ref{sec:longrun} lets the firm decide how to assign steps across multiple workers, at which point the skill an assignment demands, and hence what it pays, becomes endogenous, and the firm lowers production costs by deploying AI in tandem with its organizational structure.
-We now define each of these objects formally, beginning with steps.
+This characterization reflects the short-run dynamics of the economy, in which the firm has already determined the set of tasks for a worker, workers have acquired the skills their roles require, and the firm has hired them at a pre-specified wage rate, so what the firm optimizes is how to deploy AI in order to minimize the time the worker spends to perform their job.
+Section~\ref{sec:longrun} lets the firm decide how to allocate steps across multiple workers, at which point the skill a job assignment demands, and hence what it pays, becomes endogenous, and the firm lowers production costs by deploying AI in tandem with its organizational structure.
+
+Below we define each of the model's components formally in turn.
 
 \begin{figure}[!t]
   \centering
@@ -143,13 +144,48 @@ The cost of production is therefore the total expected time requirement of the w
 \end{align}
 deploying AI on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
 
-Problem \eqref{eq:totalcost_shortterm} is where chaining does its work, and it is the problem the rest of the paper analyzes.
-Note that the firm cannot solve it step by step.
+Problem \eqref{eq:totalcost_shortterm} is where chaining does its work.
+Note that the firm cannot solve this optimization it step by step.
 Whether automating a step lowers expected time depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm must choose among whole arrangements rather than making a separate decision at each step.
 The number of such arrangements grows exponentially in the number of steps $m$.
 
-Despite the exponential number of arrangements, \eqref{eq:totalcost_shortterm} is exactly solvable in polynomial time by dynamic programming, walking the workflow from left to right and at each step either performing it manually or closing an AI chain that ends there, optimizing over where that chain began.
-We defer the characterization to Appendix~\ref{app:shortrun_dp}.
-Nothing in what follows depends on how the optimum is computed, and we work with the cost-minimizing arrangement directly from here on.
-It is worth noting how little the problem requires: because the wage is fixed, time savings are the whole of it, and the model to this point needs no notion of worker skill at all.
+Despite this, the firm's problem is exactly solvable, and cheaply.
+What makes it tractable is that \eqref{eq:totalcost_shortterm} adds up over tasks: once the firm has decided where a task ends, the cost of everything before it is a separate problem.
+The firm can therefore walk the workflow from left to right, and at each step face only one question, namely whether to perform that step manually or to end an AI chain there, and in the latter case how far back the chain reaches.
+
+\begin{proposition}[Optimal AI Deployment]
+\label{prop:shortrun_dp}
+Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
+\end{proposition}
+
+\begin{proof}
+We first note the following recursive formulation of the optimization problem.
+For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
+Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
+Note also that $C[m]$ is the cost of our desired optimal solution.
+
+We now show how to calculate $C[k]$ recursively.
+As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
+For $k \geq 1$, $C[k]$ is the lesser of
+\[ C[k-1] + \manualTime{k} \]
+and
+\[ \min_{\ell < k} \Biggl\{ C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
+\]
+In other words, we either complete step $k$ manually (at time $\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at expected time $\AItime{k}/\prod_{i=\ell+1}^k q_i$.
+In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
+This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
+For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
+
+Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
+Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
+\end{proof}
+
+The recursion also says something about the economics of the problem, not merely its computation.
+The two branches are the firm's only real alternatives at any point in the workflow: stop the chain and pay a human to execute the step, or extend the chain and pay instead for the higher chance that the whole run has to be repeated.
+The inner minimization over $\ell$ is where chaining enters, since it prices how far back an AI chain should reach before the accumulated failure risk $\prod_{i=\ell+1}^{k} q_i$ makes another retry more expensive than the manual execution it displaces.
+Section~\ref{sec:results} works through what this trade-off implies once the whole workflow is considered at once.
+
+Two features of this problem are worth flagging before we proceed.
+First, nothing in what follows depends on how the optimum is computed; we work with the cost-minimizing arrangement directly from here on.
+Second, note how little the problem requires: because the wage is fixed, time savings are the whole of it, and the model to this point needs no notion of worker skill at all.
 Skill enters in Section~\ref{sec:longrun}, where what a worker's assignment pays becomes a margin the firm chooses.
