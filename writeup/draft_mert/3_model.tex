@@ -6,8 +6,9 @@ Completing a step takes worker time, and how much it takes differs across the mo
 
 In this section and the next we fix a worker's job boundary, that is, the set of steps assigned to them, and introduce the production framework and how the firm's AI deployment determines which work units are assigned to humans and to AI.
 The entire production sequence is allocated to a \emph{single worker} whose wage rate is fixed and normalized to $1$.
-This can reflect the short-run dynamics of the economy, in which the firm has already determined the set of tasks for a worker and hired them at a pre-specified wage rate.
-Section~\ref{sec:longrun} then lets the firm decide how to assign steps across multiple workers to further optimize its organizational structure.
+What that rate compensates is the skill the worker's assignment demands of them; because the assignment is fixed here, so is the rate, and it can be normalized away.
+This can reflect the short-run dynamics of the economy, in which the firm has already determined the set of tasks for a worker and hired them at a pre-specified wage rate, so that what it optimizes is the time required to complete them.
+Section~\ref{sec:longrun} then lets the firm decide how to assign steps across multiple workers, at which point the skill an assignment demands, and hence what it pays, becomes a margin the firm chooses.
 
 Where the firm deploys AI is what groups contiguous subsequences of steps into \emph{tasks}, as Figure~\ref{fig:steps_tasks} illustrates.
 We formally characterize the components of the figure below in turn. %, and then introduce the firm's optimal AI deployment strategy and show that it can be computed efficiently in polynomial time.
@@ -90,7 +91,7 @@ An AI chain spanning steps $(s_\ell,\dots,s_r)$ has steps $(s_\ell,\dots,s_{r-1}
 \end{definition}
 
 Finally, we define an \emph{AI deployment strategy} (or \emph{AI strategy} for short) as a partition of the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\mathcal{T}$, each of which is either a manual step or an AI chain.
-The strategy in Figure~\ref{fig:steps_tasks}, for instance, groups seven steps into five tasks: two AI chains (a length-three chain containing Steps 2--4 and a length-one chain containing only Step~6) and three manual steps.
+The AI strategy in Figure~\ref{fig:steps_tasks}, for instance, groups seven steps into five tasks: two AI chains (a length-three chain containing Steps 2--4 and a length-one chain containing only Step~6) and three manual steps.
 Table~\ref{tab:model_parameters} summarizes the notation introduced for steps and tasks.
 
 \begin{table}[!t]
@@ -146,7 +147,6 @@ Note that the firm cannot solve it step by step.
 Whether automating a step lowers expected time depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm must choose among whole arrangements rather than making a separate decision at each step.
 The number of such arrangements grows exponentially in the number of steps $m$.
 
-\paragraph{Solving the problem.}
 Despite the exponential number of arrangements, \eqref{eq:totalcost_shortterm} is exactly solvable in polynomial time by dynamic programming, walking the workflow from left to right and at each step either performing it manually or closing an AI chain that ends there, optimizing over where that chain began.
 We defer the characterization to Appendix~\ref{app:shortrun_dp}.
 Nothing in what follows depends on how the optimum is computed, and we work with the cost-minimizing arrangement directly from here on.
