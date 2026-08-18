@@ -10,8 +10,8 @@ In this section and the next we fix a worker's job boundary, that is, the set of
 Because these boundaries are fixed, how AI is deployed within one worker's job does not affect what any other worker's job costs, so it is without loss to study a \emph{single worker} to whom the entire production sequence is allocated.
 What that worker's wage rate compensates is the total skill they must possess in order to perform all the tasks in their job.
 Because the assignment of steps is fixed here, so is the wage rate, and we normalize it to $1$.
-This characterization reflects the short-run dynamics of the economy, in which the firm has already determined the boundaries of workers' jobs, workers have acquired the skills their roles require, and the firm has hired them at pre-specified wage rates, so what the firm optimizes is how to deploy AI in order to minimize the time each worker spends on their job.
-Section~\ref{sec:longrun} lets the firm decide how to allocate steps across multiple workers, at which point the skill a job assignment demands, and hence what it pays, becomes endogenous, and the firm lowers production costs by deploying AI in tandem with its organizational structure.
+This characterization reflects the short-run dynamics of the economy, in which the firm has already determined the boundaries of workers' jobs, workers have acquired the skills their roles require, and the firm has hired them at pre-specified wage rates, so what the firm optimizes is how to deploy AI in order to improve worker's productivity on a fixed set of steps and minimize the time each worker spends performing their job.
+Section~\ref{sec:longrun} lets the firm decide how to allocate steps across multiple workers, at which point the skill a job assignment demands, and hence what it pays, becomes endogenous, and the firm lowers production costs by deploying AI in tandem with optimizing its organizational structure.
 
 Below we define each of the model's components formally in turn.
 
@@ -136,21 +136,21 @@ $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual st
 The firm employs human labor to perform tasks and produce the output, and labor is the only input used in production.\footnote{
 Viewed as a production function, our sequential technology is Leontief at the level of the individual firm: producing a unit of output requires completing every step of the workflow, in fixed proportions.
 }
-The worker carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the firm's AI strategy organizes into the task sequence $\T = (T_1, \dotsc, T_n)$, and is paid at the normalized rate of $w = 1$ for the whole time this takes.
+The worker carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the firm's AI strategy organizes into the task sequence $\T = (T_1, \dotsc, T_n)$, and is paid at the normalized rate of $w = 1$ per unit of time for the whole time production takes.
 The cost of production is therefore the total expected time requirement of the workflow's tasks, and the firm chooses the AI deployment strategy that minimizes it,
 \begin{align}
 \label{eq:totalcost_shortterm}
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b},
 \end{align}
 deploying AI on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
-
 Problem \eqref{eq:totalcost_shortterm} is the firm's short-run cost minimization problem.
-Note that the firm cannot solve this optimization it step by step due to chaining.
+
+Note that the firm cannot solve this problem step by step due to chaining.
 Whether automating a step lowers expected time depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm must choose among whole arrangements rather than making a separate decision at each step.
 The number of such arrangements grows exponentially in the number of steps $m$.
 
 Despite this, the firm's short-run problem is exactly solvable, and cheaply.
-What makes it tractable is that \eqref{eq:totalcost_shortterm} adds up over tasks: once the firm has decided where a task ends, the cost of everything before it is a separate problem.
+What makes it tractable is that \eqref{eq:totalcost_shortterm} adds up time costs over tasks: once the firm has decided where a task ends, the cost of everything before it is a separate problem.
 The firm can therefore walk the workflow from left to right, and at each step face only one question, namely whether to perform that step manually or to end an AI chain there, and in the latter case how far back the chain reaches.
 
 \begin{proposition}[Optimal AI Deployment]

@@ -1,11 +1,12 @@
-So far a single worker has executed the whole workflow, AI could move only the time that took, and the results of Section~\ref{sec:results} followed from that single margin.
+So far we assumed a single worker executes the entire workflow, and that AI could improve only the time that took to execute steps. 
+The results of Section~\ref{sec:results} thus followed from only that one margin.
 The more consequential effects of AI, however, arrive when it does more than make a worker faster at the steps they have been given.
-Once a firm can also change \emph{which} steps go to which worker, AI reshapes how work is apportioned across people rather than only the pace at which each person's share is executed.
+Once a firm is also able to change which workflow steps go to which worker, AI reshapes how work is apportioned across workers rather than only the pace at which each person's share is executed.
 That is inherently a longer-run object: the firm decides jointly where to deploy AI along the workflow and where to divide it between workers, and the two decisions cannot be separated, since automating a run of steps changes what the worker who owns them has to be able to do.
 
 This section develops that problem and closes the model in two steps.
-First, we let the firm apportion the workflow across several workers, which requires two ingredients the short-run problem did not: what a worker's assignment pays, and what it costs to split work between workers.
-Second, we aggregate the firm's problem to the economy, showing that a workflow-level technology with endogenous task boundaries is consistent with the aggregate production function macroeconomists write down.
+First, we let the firm apportion the workflow across several workers, which requires two ingredients the short-run problem did not: endogenizing workers' wage, and what it costs the firm to split work among many workers.
+Second, we show that individual firms' optimization problems can be represented by a single macro production function across the economy, showing that a workflow-level technology with endogenous task boundaries is consistent with the aggregate production function macroeconomists write down.
 We keep both at the level of the economic content here; the full characterizations are developed in Appendices~\ref{app:jobdesign} and~\ref{sec:aggregation}.
 
 
@@ -16,24 +17,30 @@ Rather than give the whole workflow to one worker, the firm may divide it and hi
 We call the contiguous block of tasks assigned to a single worker a \emph{job}, and a partition $\J = (J_1, \dotsc, J_p)$ of the task sequence into jobs a \emph{job design}.
 The firm hires one worker per job, and the short-run problem of Section~\ref{sec:jobs_wages} is the special case of a single job spanning the whole workflow.
 
-What a job pays now has to be pinned down, since the firm is choosing the job.
-Each step carries a skill requirement alongside the time requirement of Section~\ref{sec:model.steps}: completing step $i$ manually demands skill $\manualSkill{i}$, and managing an AI attempt at it demands skill $\AIskill{i}$, so a task $T_b$ inherits the skill $\skillcost{b}$ of whichever mode executes it, with an automated step inside a chain demanding none.
-Workers are ex-ante identical and are hired and trained for the job they are given, so a worker must hold every skill their job demands and is paid at a rate equal to their total,\footnote{
-One motivation for this formulation is that workers make a human capital investment to acquire the skills their job demands, an investment that must be recovered through wages; we express skill levels directly in units of the wage they command.
-Since workers are ex-ante identical, one will train for a more skill-demanding job only if the wage compensates the extra investment, so competition for workers ties the wage a job pays to the total skill it requires.
-Rather than formalize such a wage model here, we impose it as an assumption and develop a more detailed formulation in Appendix~\ref{sec:aggregation}.
+What a job pays now has to be pinned down, since the firm is choosing the job, and doing so requires one addition to the model's primitives.
+We further assume that performing a step demands not only time but also a specific body of knowledge, which we call the \emph{skill} the step requires.
+This extends Definitions~\ref{def:manual_task} and~\ref{def:augmented_task} to carry a skill cost alongside the time cost each already had: executing step $i$ manually now costs $(\manualSkill{i},\, \manualTime{i})$, and managing one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
+Nothing requires the two to be equal, and in general they are not, since doing the work oneself calls for knowing how to do it, whereas directing an AI to do it and judging what comes back may call for less knowledge, or for knowledge of a different kind.
+A task inherits the skill of whichever mode executes it, so a task $T_b$ carries skill $\skillcost{b}$, equal to $\manualSkill{i}$ if it is a manual step and to $\AIskill{r}$ if it is an AI chain augmented at step $r$.
+An automated step inside a chain demands no skill of anyone, since no human ever handles it.
+
+Wages follow from these requirements.
+Workers are ex-ante identical, so a worker assigned a job must first acquire every skill that job demands, an investment they will make only if the wage they are paid recovers it.
+Competition for workers therefore ties what a job pays to the total skill it requires,\footnote{
+We express skill levels directly in units of the wage they command, which is what lets the requirement and the payment be written as the same object.
+Rather than formalize the underlying human capital problem here, we impose \eqref{eq:wage} as an assumption and develop a more detailed formulation in Appendix~\ref{sec:aggregation}.
 }
 \begin{align}
 \label{eq:wage}
 \text{Wage}_j = \sum_{T_b \in J_j} \skillcost{b},
 \end{align}
-which the firm pays for as long as the job takes, regardless of which task the worker is performing at any given moment.\footnote{
+and the firm pays this rate for as long as the job takes, regardless of which task the worker is performing at any given moment.\footnote{
 This implicitly assumes a common base wage rate, so that all wage differences are driven by the human capital cost of acquiring skills.
 More generally, manual and AI-assisted tasks could carry different base wage rates $w_{\manualLetter}$ and $w_{\AIletter}$, reflecting the supply of and demand for each type of labor; Equation~\eqref{eq:wage} normalizes these rates to $1$ and folds them into the skill costs $\skillcost{b}$.
 We maintain this normalization for notational simplicity but it can be relaxed to more general cases.
 \label{foot:wage}
 }
-This is what the short run held fixed at $1$ and what the firm now chooses: a narrower job demands fewer skills and so pays less.
+Equation~\eqref{eq:wage} is the object the short run held fixed and normalized to $1$, and it is what the firm now chooses: a narrower job demands fewer skills and so pays less.
 
 Left there, the firm would specialize without limit.
 Splitting the workflow into ever-narrower jobs strictly lowers the wage bill, so the cost-minimizing design would assign a separate worker to every task.
