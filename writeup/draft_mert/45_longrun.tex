@@ -70,9 +70,9 @@ Dividing a job in two splits its skill requirement between two workers while lea
 Carried to its conclusion, the firm would assign every step to its own worker, each of whom acquires exactly the knowledge their step requires and none of whom is ever paid for skill they are not using.
 
 Work is not organized this way, because dividing production among many workers is not free.
-Each division creates a point at which work in progress must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.
-We capture this friction with a \emph{hand-off cost}, the additional time a worker spends passing their work on to the next worker.
-For Adam Smith's pin factory the limit on specialization was the extent of the market; for the sequential knowledge work we have in mind it is this coordination cost, which is the friction that bounds specialization in \citet{becker1992division} and the reason the skills used to carry out such transfers, which \citet{deming2017growing} shows have become increasingly well paid, bear on how work can be organized at all.
+Each division creates a point at which intermediate output must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.
+We model this friction resulting from context switching with a \emph{hand-off cost}, in time, that a worker spends passing their work on to the next worker.
+% For Adam Smith's pin factory the limit on specialization was the extent of the market; for the sequential knowledge work we have in mind it is this coordination cost, which is the friction that bounds specialization in \citet{becker1992division} and the reason the skills used to carry out such transfers, which \citet{deming2017growing} shows have become increasingly well paid, bear on how work can be organized at all.
 
 Because our production process is a sequence, we can be more specific than a cost that depends only on how many workers there are.
 A hand-off happens at a particular point in the workflow, and what it costs depends on which point.
@@ -88,10 +88,10 @@ Because the worker is paid for as long as their job takes, this time enters the 
 \text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr).
 \end{align}
 
-Equation~\eqref{eq:lr_wagebill} contains the whole trade-off, with one factor for each of the two forces above.
-Bundling tasks into one job raises the first, for the reason already given: the worker must be skilled enough for all of them and is paid that rate throughout.
-Splitting them raises the second, since every additional boundary inserts another hand-off.
-Figure~\ref{fig:lr_job_design} makes this geometric: a job's wage bill is the area of a rectangle whose height is the skill it requires and whose width is the time it takes, and the firm is choosing how to cover the workflow with such rectangles.
+Equation~\eqref{eq:lr_wagebill} contains the whole job design trade-off, with one factor for each of the two forces above.
+Bundling tasks into one job raises the first, for the reason already given: the worker must be skilled enough to perform all of them and is paid that rate throughout.
+Splitting tasks raises the second, since every additional boundary inserts another hand-off.
+Figure~\ref{fig:lr_job_design} gives the geometric visualization of the optimization problem: a job's wage bill is the area of a rectangle whose height is the skill it requires and whose width is the time it takes, and the firm is choosing how to cover the workflow with such rectangles.
 \begin{figure}[!t]
     \centering
     \caption{The Trade-off between Worker Specialization and Coordination}
@@ -109,7 +109,7 @@ In the right panel, tasks are bundled into a single job performed by one worker,
 \end{spacing}
 \end{minipage}
 \end{figure}
-Splitting a job removes the dead area above the less demanding tasks but adds a hand-off rectangle whose height is the departing worker's full skill, so the coordination penalty is itself larger for more skilled workers.
+Splitting a job removes the dead area above and to the right side of each task but adds a hand-off rectangle whose height is the departing worker's full skill, so the coordination penalty is itself larger for more skilled workers.
 Table~\ref{tab:jobdesign_parameters} collects the notation this section adds to that of Table~\ref{tab:model_parameters}.
 \begin{table}[!t]
 \centering
@@ -141,7 +141,7 @@ $\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b 
 \end{minipage}
 \end{table}
 
-In the long run the firm chooses the AI strategy and the job design together,
+In the long run the firm chooses its AI deployment strategy and job design together,
 \begin{align}
 \label{eq:lr_totalcost}
 \min_{\T} \ \min_{\J} \
@@ -150,7 +150,7 @@ In the long run the firm chooses the AI strategy and the job design together,
 which nests the fixed-boundary problem \eqref{eq:totalcost_mediumrun} of Appendix~\ref{app:mediumrun_dp} as the case of a single job spanning the whole workflow.
 Appendix~\ref{app:jobdesign.longrun} shows that this joint problem remains solvable to any desired accuracy.
 
-The economics of putting the two margins together is that AI acts on job design through the skill dimension, not only the time dimension.
+The economics of putting the two margins together is that AI lowers production costs not only by enabling productivity gains and lowering the execution time of steps, but also through the skill dimension and job design.
 A chain replaces a run of steps with a single verification at its endpoint, so it strips out the skills the automated steps used to demand and leaves the worker holding only the skill needed to manage and check the chain.
 That shrinks the height of the rectangle a bundled job must cover, which lowers the wage penalty from bundling and makes wider jobs cheaper to sustain: the same coordination cost now buys more.
 Automation and consolidation of jobs are therefore complements in our framework, which is the sense in which AI redefines work rather than merely displacing it from a fixed set of jobs.
@@ -165,39 +165,56 @@ Appendix~\ref{app:jobdesign} develops the full problem, including a worked examp
 \subsection{From the Firm to the Macroeconomy}
 \label{sec:longrun.aggregation}
 
-Our production technology is Leontief over the steps of a workflow, with the boundaries of tasks and jobs chosen by the firm.
-This is a more detailed object than the aggregate production functions used to study automation at the macro level, and it is natural to ask whether the two are compatible: does a workflow-level technology with endogenous task boundaries aggregate to anything a macroeconomist would recognize?
-It does, in two steps, and the answer tells us where the firm's organizational choices show up once the economy is viewed in aggregate.
+The questions that motivate this paper are largely macroeconomic ones: what better AI does to labor demand, to wages, and to how many workers an economy employs and at what.
+What the framework has delivered so far is smaller, namely how one firm with one workflow should deploy AI and how it should divide the resulting work among its workers.
+Closing that gap matters for a second reason too.
+The task-based literature studies automation using production functions written directly at the level of the economy \citep{acemoglu2018, acemoglu2022artificial, acemoglu2024tasks}, and it is worth knowing whether the sequential structure we have insisted on is a friend or an obstacle to that apparatus.
 
-The first step collapses the workflow.
-For a given AI strategy and job design, every task is executed either by AI management labor or by manual labor, and the many-input Leontief function over individual tasks reduces to a Leontief function over just those two aggregates,
+The obstacle is that our firms have no substitution in them at all.
+Producing a unit of output requires completing every step of the workflow, so a firm's technology is Leontief: giving it more AI management labor without also giving it more manual labor buys nothing.
+Aggregate production functions, by contrast, assume the two kinds of labor substitute, and the elasticity with which they do so carries most of the weight in any comparative static.
+If no individual firm can substitute, where would aggregate substitution come from?
+
+The answer, which goes back to \citet{houthakker1955pareto} and \citet{levhari1968note}, is that it can come entirely from composition.
+Suppose firms differ in how much they get out of the same technology.
+When AI management labor becomes cheaper, no firm changes its input mix, because none can.
+What happens instead is that firms for which AI was previously not worth managing begin to use it, and the economy's input ratio moves because the set of firms using AI has moved.
+Rigid technologies plus dispersion across firms deliver a smooth aggregate, provided the dispersion is of the right kind.
+
+Our model supplies dispersion of exactly that kind, and it is not an assumption added for the purpose.
+Fix a firm's AI strategy and job design.
+Every task is then executed either by a worker managing AI or by a worker performing it manually, and the many-input Leontief technology over individual steps collapses to a Leontief technology over just those two kinds of labor,
 \begin{align}
 \label{eq:lr_micro_prod}
 x = \min\left\{ \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}, \ \frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}} \right\},
 \end{align}
-where $\labor{\AIletter}$ and $\labor{\manualLetter}$ are the firm's AI management and manual labor, and $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are the skill-adjusted time requirements of the two groups of tasks, with the hand-off times of Section~\ref{sec:longrun.jobdesign} entering $\skillAdjustedTimeLetter_{\manualLetter}$.
-The organizational problem of the previous sections survives aggregation entirely inside these coefficients: which steps are chained, where jobs are cut, and how much verification the workflow requires all enter through $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$, and through the firm's \emph{effective} AI quality
+where $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are how much of each kind of labor a unit of output requires, with the hand-off times of Section~\ref{sec:longrun.jobdesign} entering $\skillAdjustedTimeLetter_{\manualLetter}$.
+Everything the firm decided in the previous sections survives into these two coefficients and into $\bar{\alpha}$, the firm's \emph{effective} AI quality,
 \begin{align}
 \label{eq:lr_alphabar}
 \bar{\alpha} = \frac{\sum_{b}\skillAdjustedTimeAI{b}}{\sum_{b}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}},
 \end{align}
-a time-weighted harmonic average of the success probabilities of the chains the firm actually runs.
-Two firms facing the same general-purpose technology $\alpha$ therefore have different $\bar{\alpha}$ when they deploy it over different arrangements of work, which is the sense in which effective AI quality is an organizational object and not only a technological one.
+a time-weighted average of the success rates of the chains the firm actually runs.
 
-The second step aggregates across firms.
-Individual Leontief technologies do not aggregate to a smooth production function on their own; what smooths them is heterogeneity, in the tradition of \citet{houthakker1955pareto} and \citet{levhari1968note}.
-Here the natural dimension of heterogeneity is the one the model already delivers: firms differ in how effectively they put the same AI technology to work, that is, in $\bar{\alpha}$.
-Appendix~\ref{sec:aggregation} shows that there is a distribution of $\bar{\alpha}$ across firms under which the economy admits the CES representation
+Effective AI quality is where the economics of the previous sections enters the aggregate.
+Two firms can face the identical general-purpose technology $\alpha$ and still differ in $\bar{\alpha}$, because $\bar{\alpha}$ depends on the chains the firm is able to form, and that depends on how its AI-able steps are arranged.
+A firm whose AI-suitable steps sit next to one another chains them and gets a great deal out of $\alpha$; a firm whose AI-suitable steps are scattered among steps the AI fails at cannot chain, and gets much less out of the same technology.
+This is the fragmentation result of Section~\ref{sec:fragmentation} restated as a cross-sectional fact: dispersion in $\bar{\alpha}$ across firms is dispersion in how well their workflows happen to suit chaining.
+So the heterogeneity the aggregation argument requires is the heterogeneity the model already produces.
+
+Appendix~\ref{sec:aggregation} makes this precise.
+It derives, in closed form, the distribution of $\bar{\alpha}$ across firms under which the economy admits the CES representation
 \begin{align}
 \label{eq:lr_macro_ces}
 X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\,\aggregateManualLabor^{\rho} + (1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^{\rho}\right)^{\frac{1}{\rho}},
 \end{align}
-over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$, and derives that distribution in closed form.
-Firms whose effective AI quality is too low to cover the cost of managing AI stay fully manual, so the aggregates in \eqref{eq:lr_macro_ces} are taken over the firms above an endogenous adoption threshold, and improvements in $\alpha$ move both the threshold and the input coefficients of the firms already above it.
+over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$.
+Firms whose effective AI quality is too low to justify the cost of managing AI stay fully manual, so the aggregates in \eqref{eq:lr_macro_ces} run over the firms above an endogenous adoption threshold, and an improvement in $\alpha$ moves both that threshold and the input requirements of the firms already above it.
 
-Two things follow that matter for how our results should be read.
-The first is a licence: the CES production functions used to study AI and labor demand at the macro level are consistent with production being sequential and with task boundaries being chosen rather than given, so nothing in our framework requires abandoning that apparatus.
-The second is a caution about what the apparatus conceals.
-The chaining results of Section~\ref{sec:comparative_advantage} and the fragmentation result of Section~\ref{sec:fragmentation} operate on $\skillAdjustedTimeLetter_{\AIletter}$, $\skillAdjustedTimeLetter_{\manualLetter}$, and $\bar{\alpha}$, which appear in \eqref{eq:lr_macro_ces} only through the input aggregates and the CES weights.
-Two economies with identical AI exposure at the step level, differing only in how those steps are arranged within workflows, therefore reach the aggregate production function with different coefficients while looking identical in any step-level exposure measure.
-Aggregation preserves the arrangement of work, but it stores it in the parameters rather than displaying it, which is precisely why the fragmentation index has to be measured at the level of the workflow.
+Two things follow for how the rest of the paper should be read.
+The first is permission.
+The CES production functions used to study AI and labor demand at the macro level are consistent with production being sequential and with the boundaries of tasks and jobs being chosen rather than given, so nothing in our framework asks anyone to abandon that apparatus.
+The second is a warning about what the apparatus hides.
+Chaining and fragmentation act on $\skillAdjustedTimeLetter_{\AIletter}$, $\skillAdjustedTimeLetter_{\manualLetter}$, and $\bar{\alpha}$, and these enter \eqref{eq:lr_macro_ces} only through its input aggregates and weights.
+Two economies whose steps are identically exposed to AI, differing only in how those steps are arranged within workflows, therefore arrive at the same functional form with different coefficients while looking alike on any step-level exposure measure.
+Aggregation keeps the arrangement of work but stores it in the parameters instead of displaying it, which is why the fragmentation index has to be measured where the arrangement is still visible, at the level of the workflow.
