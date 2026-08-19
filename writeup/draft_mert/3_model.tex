@@ -94,9 +94,9 @@ An AI chain spanning steps $(s_\ell,\dots,s_r)$ has steps $(s_\ell,\dots,s_{r-1}
 
 Finally, we define an \emph{AI deployment strategy} (or \emph{AI strategy} for short) as a partition of the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\mathcal{T}$, each of which is either a manual step or an AI chain.
 The AI strategy in Figure~\ref{fig:steps_tasks}, for instance, groups seven steps into five tasks: two AI chains (a length-three chain containing Steps 2--4 and a length-one chain containing only Step~6) and three manual steps.
-Table~\ref{tab:model_parameters} summarizes the notation introduced for steps and tasks.
+Table~\ref{tab:model_parameters} collects the notation used throughout the paper; Panel~A covers everything needed here and in Section~\ref{sec:results}.
 
-\begin{table}[!t]
+\begin{table}[p]
 \centering
 \caption{Notation Summary}
 \label{tab:model_parameters}
@@ -105,6 +105,9 @@ Table~\ref{tab:model_parameters} summarizes the notation introduced for steps an
 \toprule
 \textbf{Symbol} & \textbf{Description} \\
 \midrule
+\addlinespace
+\multicolumn{2}{@{}l}{\textbf{Panel A. Short run: steps, tasks, and AI deployment (Sections~\ref{sec:model.steps}--\ref{sec:results})}} \\
+\addlinespace
 $\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
 \addlinespace
 $s_i$ & Production step $i$ \\
@@ -114,16 +117,44 @@ $\AItime{i}$ & Time cost of managing one AI attempt at step $i$ \\
 $d_i$ & Difficulty of step $i$ for AI \\
 $q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
 \addlinespace
-\addlinespace
 $T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
 $\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
 $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual step, $\AItime{r}/\prod_{i=\ell}^{r} q_i$ if an AI chain over steps $\ell, \dotsc, r$ \\
+\addlinespace
+\midrule
+\addlinespace
+\multicolumn{2}{@{}l}{\textbf{Panel B. Long run: skills, jobs, and wages (Section~\ref{sec:longrun.jobdesign})}} \\
+\addlinespace
+$\manualSkill{i}$ & Skill required to complete step $i$ manually \\
+$\AIskill{i}$ & Skill required to manage one AI attempt at step $i$ \\
+$\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step, $\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none \\
+\addlinespace
+$J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
+$\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
+$\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
+$\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
+\addlinespace
+$\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
+$\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
+\addlinespace
+\midrule
+\addlinespace
+\multicolumn{2}{@{}l}{\textbf{Panel C. Long run: aggregation (Section~\ref{sec:longrun.aggregation})}} \\
+\addlinespace
+$\skillAdjustedTimeLetter_{\AIletter},\ \skillAdjustedTimeLetter_{\manualLetter}$ & Skill-adjusted time the firm requires per unit of output, of AI management labor and of manual labor; hand-offs enter $\skillAdjustedTimeLetter_{\manualLetter}$ \\
+$\labor{\AIletter},\ \labor{\manualLetter}$ & AI management labor and manual labor the firm employs, in the same units \\
+$\bar{\alpha}$ & Firm's realized effective AI quality, a time-weighted average of the success rates of the chains it runs \\
+$x$ & Firm output \\
+\addlinespace
+$\aggregateAIlabor,\ \aggregateManualLabor$ & Economy-wide AI management labor and manual labor \\
+$K,\ X$ & Aggregate capital and aggregate output \\
+$\theta_{\AIletter},\ \theta_{\manualLetter},\ \rho$ & CES weights and substitution parameter in \eqref{eq:lr_macro_ces} \\
 \bottomrule
 \end{tabularx}
 
     \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation used in the model. Step-level primitives are indexed by $i$, task-level objects by the set of steps a task contains. Superscripts $M$ and $A$ denote the manual and AI modes of executing a step. Section~\ref{sec:longrun} introduces the additional notation needed once the firm apportions the workflow across workers.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation used throughout the paper. Step-level primitives are indexed by $i$, task-level objects by $b$, and jobs by $j$. Superscripts $M$ and $A$ denote the manual and AI modes of executing a step, and $H$ denotes a hand-off between workers. Panel~A is all the short-run problem requires: with the whole workflow assigned to one worker at a fixed wage, execution time is the only margin, and no notion of skill is needed. The skill, job, and wage notation of Panel~B enters only once the firm chooses how to divide the workflow among workers, and Panel~C only once firm-level production is aggregated to the economy.}
 \end{spacing}
 \end{minipage}
 \end{table}
