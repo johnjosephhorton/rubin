@@ -1,0 +1,129 @@
+The preceding sections developed the model and took its short-run implications to the data.
+This section collects two further results that the framework delivers but that are not needed to read those sections.
+Section~\ref{sec:extensions.aggregation} asks whether a technology built on sequential workflows can be aggregated into a production function for the economy, and shows that it can.
+Section~\ref{sec:extensions.computation} asks whether the cost minimization problems we have posed can actually be solved, and shows that they can be, in polynomial time.
+
+
+\subsection{From the Firm to the Macroeconomy}
+\label{sec:extensions.aggregation}
+
+So far the model has been about decision-making inside a single firm.
+Our interest, however, extends beyond it: improvements in AI quality change the composition of labor employed across the economy and the aggregate relationship between labor, capital, and output, and it is in those terms that the consequences of AI are usually debated.
+That is also where the task-based literature works, writing production functions directly at the level of the economy and studying automation there \citep{acemoglu2018, acemoglu2022artificial, acemoglu2024tasks}.
+This subsection asks whether the two are compatible: can the firm-level cost minimization we have posed be aggregated into a well-behaved production function for the economy, and if so, what becomes of the organizational detail along the way?
+
+Imagine the economy employs two kinds of labor.
+\emph{Manual labor} performs tasks directly, \emph{AI management labor} prompts the AI and verifies what it returns, and an automated step inside a chain draws on neither, since no human handles it.
+These are the two inputs any aggregate account of AI and work has to track, and the obstacle is that our firms cannot trade one for the other: producing a unit of output requires completing every step of the workflow, so a firm's technology is Leontief, and more AI management labor without more manual labor buys nothing.
+Aggregate production functions assume instead that the two substitute, with an elasticity that carries most of the weight in any comparative static.
+If no individual firm can substitute, where would aggregate substitution come from?
+
+The answer, which goes back to \citet{houthakker1955pareto} and \citet{levhari1968note}, is that it can come entirely from composition.
+Suppose many firms have access to the same technology but differ in how effectively they can use it.
+When AI management labor becomes relatively cheaper no firm changes its input mix, because none can; what happens instead is that firms for which AI was previously not worth managing begin to use it, and the economy's input ratio moves because the set of firms for which using AI is beneficial has moved.
+Rigid technologies plus dispersion across firms deliver a smooth aggregate, provided the dispersion is of the right kind.
+Appendix~\ref{sec:aggregation} obtains one from the order in which a firm has to commit: it settles on an AI strategy $\T$ and a job design $\J$ and posts vacancies before it learns how effectively it can put AI to use, so firms sharing a common prior organize identically and only then draw different realizations against that common organization.
+
+\paragraph{Carrying out the aggregation.}
+Fix the AI strategy and job design that firms have committed to, and assume that hand-offs are performed manually.
+Producing a unit of output then requires completing every task in the workflow and every hand-off between the workers who share it, each of which needs labor of its own that no other can supply, so the firm's technology is Leontief with one input per task and one per hand-off.
+Because every requirement is proportional to output, tasks drawing on the same kind of labor stand in fixed ratios to one another and can be pooled without loss, and writing $\labor{\AIletter}$ and $\labor{\manualLetter}$ for the two kinds of labor the firm employs, its technology collapses to
+\begin{align}
+\label{eq:lr_micro_prod}
+x = \min\left\{ \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}, \ \frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}} \right\},
+\end{align}
+where $x$ is the firm's output and $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are its \emph{skill-adjusted time requirements}, the time each task takes scaled by the wage the job containing it commands, summed over the tasks that draw on each kind of labor.\footnote{
+Equation~\eqref{eq:skill_adjusted_time} in Appendix~\ref{sec:aggregation} gives the expression.
+The scaling by the job's wage is what lets tasks differing in both skill and time be added into a cost: without it, an hour of a highly skilled worker's time and an hour of a barely skilled one's would count the same.
+}
+The hand-offs are counted with the manual tasks, which is how the coordination costs of Section~\ref{sec:longrun.jobdesign} enter as a requirement for manual labor.
+
+The remaining term is $\bar{\alpha}$, the firm's \emph{effective} AI quality,
+\begin{align}
+\label{eq:lr_alphabar}
+\bar{\alpha} = \frac{\sum_{T_b \in \T_{\AIletter}}\skillAdjustedTimeAI{b}}{\sum_{T_b \in \T_{\AIletter}}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}},
+\end{align}
+where $\T_{\AIletter} \subseteq \T$ collects the AI chains and $d_b$ is the total difficulty of chain $T_b$.
+It divides the AI management labor the workflow would need if every chain succeeded on its first attempt by what it needs once retries are counted, and enters \eqref{eq:lr_micro_prod} by inflating the AI management requirement to $\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha}$.
+This is where the organization of work reaches the aggregate: $\bar{\alpha}$ averages over the chains the committed strategy actually runs, so AI-able steps sitting next to one another support long chains over which a given $\alpha$ compounds, while scattered ones support only short chains and the same $\alpha$ buys less.
+Because every firm commits to the same strategy over the same workflow, however, this fixes the level of effective AI quality the whole economy is organized around and generates no variation across firms; the dispersion the aggregation runs on is dispersion in what firms realize against that common level.
+
+Appendix~\ref{sec:aggregation} then derives, in closed form, the distribution of $\bar{\alpha}$ across firms under which the economy admits the CES representation
+\begin{align}
+\label{eq:lr_macro_ces}
+X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\,\aggregateManualLabor^{\rho} + (1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^{\rho}\right)^{\frac{1}{\rho}},
+\end{align}
+over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$.
+Firms whose effective AI quality is too low to justify the cost of managing AI stay fully manual, so these aggregates run over the firms above an endogenous adoption threshold, and an improvement in $\alpha$ moves both that threshold and the input requirements of the firms already above it.\footnote{The scope of the two results differs.
+The collapse in \eqref{eq:lr_micro_prod} holds for any firm and any workflow, regardless of $\T$ and $\J$, since it needs only that the technology is Leontief.
+The CES in \eqref{eq:lr_macro_ces} requires more: capital productivity is common, every firm organizes identically, and realized effective AI quality is the single dimension along which firms differ.}
+
+This characterization is the payoff of the exercise.
+A firm-level framework built on chaining, in which the boundaries of tasks and of jobs are chosen rather than given, nonetheless admits a well-behaved CES representation at the aggregate level.
+The sequential structure we have insisted on is therefore not an obstacle to studying automation at the macro level: our framework connects to the literature that works with aggregate production functions rather than contradicting it, and the organizational choices of Section~\ref{sec:longrun} reach that literature through the parameters of \eqref{eq:lr_macro_ces} rather than being lost on the way.
+That last point carries a warning about what the aggregate representation hides.
+Two economies whose steps are identically exposed to AI, differing only in how those steps are arranged within workflows, arrive at the same functional form with different parameters while looking alike on any step-level exposure measure.
+Aggregation keeps the arrangement of work but summarizes it in the parameters instead of explicitly displaying it, which is why workflow-level objects such as the fragmentation index have to be measured where that arrangement is still visible.
+
+
+\subsection{Computing the Firm's Optimum}
+\label{sec:extensions.computation}
+
+Throughout the paper we have taken the firm to be at its cost-minimizing arrangement without asking whether that arrangement can be found.
+The question is not idle here, because chaining is what makes it hard.
+Whether automating a step lowers cost depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm chooses among whole arrangements rather than deciding separately at each step, and the number of arrangements grows exponentially in the number of steps $m$.
+A model in which the optimum is out of reach would be a poor positive account of what firms do, and it would also leave the fragmentation index of Section~\ref{sec:results} approximating a quantity no one could compute.
+This subsection shows that neither concern applies: the short-run problem is solvable exactly and cheaply, and the long-run problem is solvable to any desired accuracy.
+
+\paragraph{The short run.}
+What makes the short-run problem \eqref{eq:totalcost_shortterm} tractable is that it adds up time costs across tasks.
+Once the firm has decided where a task ends, the cost of everything before it is a separate problem, so the firm can walk the workflow from left to right and face only one question at each step: whether to perform that step manually, or to end an AI chain there, and in the latter case how far back the chain reaches.
+
+\begin{proposition}[Optimal AI Deployment]
+\label{prop:shortrun_dp}
+Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
+\end{proposition}
+
+Appendix~\ref{app:shortrun_proof} gives the proof.
+Writing $C[k]$ for the minimum cost of completing the first $k$ steps alone, the two options above give a recursion for $C[k]$ in terms of $C[0], \dotsc, C[k-1]$; each of the $m$ values costs $O(m)$ to evaluate because the chain reaching back from step $k$ can start anywhere before it, which is where the $O(m^2)$ comes from.
+
+\paragraph{When wages adjust.}
+Holding the wage fixed is what reduced cost minimization to minimizing time.
+Once the wage adjusts to the skill a job requires, deploying AI pays on both margins at once, since an augmented or automated step may demand less skill as well as less time, and the firm minimizes the wage bill of the job, the product of its total skill and its total time,
+\begin{align}
+\label{eq:totalcost_mediumrun}
+\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
+\end{align}
+With job boundaries fixed, jobs' costs are independent of one another, so minimizing total production cost reduces to minimizing \eqref{eq:totalcost_mediumrun} for each job separately and it is without loss to study a single job.
+
+Objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the recursion behind Proposition~\ref{prop:shortrun_dp} no longer applies: a task's contribution to cost depends on the skill and the time the rest of the job already carries.
+Exactness is what has to give, but only by an amount the firm can choose.
+
+\begin{proposition}[AI Deployment when Wages Adjust]
+\label{prop:mediumrun_dp}
+Fix a workflow with $m$ steps whose skill and time costs lie in $[1/B, B]$ for some $B > 0$.
+For any $\epsilon > 0$, an AI strategy whose cost~\eqref{eq:totalcost_mediumrun} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+\end{proposition}
+
+The idea still relies on dynamic programming: the firm decides how to execute the job's steps one at a time, and the program tracks the worker's accumulated skill cost and accumulated time cost along the way, evaluating the wage bill only once every step has been assigned.
+What makes the problem non-trivial is that each execution choice moves the skill and time costs simultaneously, so the program must carry a two-dimensional state that can take exponentially many values.
+We therefore discretize both costs to a geometric grid, which keeps the running time polynomial while approximating the optimum subject to an error term that can be made arbitrarily small.
+Appendix~\ref{app:mediumrun_dp} gives the proof.
+
+\paragraph{The long run.}
+The full long-run problem \eqref{eq:lr_totalcost} adds one further margin to this: as steps are assigned to tasks, the resulting tasks must also be assigned to workers, and the hand-off costs incurred at job boundaries have to be counted along the way.
+
+\begin{proposition}[Long-run AI Deployment and Job Design]
+\label{prop:totalcost_optimization_dp}
+Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.
+For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:lr_totalcost} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+\end{proposition}
+
+The proof, in Appendix~\ref{app:jobdesign.longrun}, extends the program behind Proposition~\ref{prop:mediumrun_dp} with a third option at each step: besides executing the step manually or ending an AI chain there, the firm may close the job of the worker currently accumulating tasks and start a new one, paying the hand-off cost at that boundary.
+Closing a job is the point at which the accumulated skill and time are multiplied into a wage bill, which is why the two-dimensional state and its discretization carry over unchanged, and why the running time does as well.
+Adding the job design margin therefore costs nothing in tractability over the problem in which wages adjust but boundaries are fixed.
+
+Taken together, these results say that the firm's problem is not merely well posed but solvable, in the short run exactly and in the long run to any accuracy the firm cares to specify.
+This matters for how the rest of the paper should be read.
+The predictions we take to the data in Section~\ref{sec:empirics} are predictions about an optimum, and they would be of limited interest if that optimum were something no firm could locate.
+It also suggests a use for the framework beyond what we do here: paired with detailed measurement of the time and skill content of individual tasks, these algorithms could be run on real workflows to ask how a given advance in AI capability would redraw them.

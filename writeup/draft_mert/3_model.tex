@@ -139,7 +139,7 @@ $\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b 
 \addlinespace
 \midrule
 \addlinespace
-\multicolumn{2}{@{}l}{\textbf{Panel C. Long run: aggregation (Section~\ref{sec:longrun.aggregation})}} \\
+\multicolumn{2}{@{}l}{\textbf{Panel C. Aggregation to the macroeconomy (Section~\ref{sec:extensions.aggregation})}} \\
 \addlinespace
 $\skillAdjustedTimeLetter_{\AIletter},\ \skillAdjustedTimeLetter_{\manualLetter}$ & Skill-adjusted time the firm requires per unit of output, of AI management labor and of manual labor; hand-offs enter $\skillAdjustedTimeLetter_{\manualLetter}$ \\
 $\labor{\AIletter},\ \labor{\manualLetter}$ & AI management labor and manual labor the firm employs, in the same units \\
@@ -181,18 +181,10 @@ Whether automating a step lowers expected time depends on the arrangement the st
 The number of such arrangements grows exponentially in the number of steps $m$.
 
 Despite this, the firm's short-run problem is exactly solvable, and cheaply.
-What makes it tractable is that \eqref{eq:totalcost_shortterm} adds up time costs over tasks: once the firm has decided where a task ends, the cost of everything before it is a separate problem.
-The firm can therefore walk the workflow from left to right, and at each step face only one question, namely whether to perform that step manually or to consider an AI chain that ends there, and in the latter case how far back the chain reaches.
+What makes it tractable is that \eqref{eq:totalcost_shortterm} adds up time costs over tasks, so that once the firm has decided where a task ends, the cost of everything before it is a separate problem.
+Section~\ref{sec:extensions.computation} builds a recursion on this observation and shows that the cost-minimizing AI strategy can be computed in time $O(m^2)$ by dynamic programming.
 
-\begin{proposition}[Optimal AI Deployment]
-\label{prop:shortrun_dp}
-Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
-\end{proposition}
-
-The proof is in Appendix~\ref{app:shortrun_proof}.
-We formulate the firm's problem recursively and solve it by dynamic programming: for each $k$ in turn we compute the cheapest way of completing just the first $k$ steps, which is possible precisely because of the additivity noted above.
-
-The argument also says something about the economics of the problem, not merely its computation.
+The argument behind it says something about the economics of the problem, not merely its computation.
 At each point in the workflow the firm has only two real alternatives: stop the chain and pay a human to execute the step, or extend the chain and pay instead for the higher chance that the whole run has to be repeated.
 Choosing how far back a chain reaches is where chaining enters, since it weighs the execution cost a longer chain avoids against the accumulated failure risk it takes on, and the chain stops where one more retry would cost more than the manual execution it displaces.
 Section~\ref{sec:results} works through what this trade-off implies once the whole workflow is considered at once.

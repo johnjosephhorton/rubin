@@ -96,11 +96,9 @@ A job is more or less ``fragmented'' in its AI exposure depending on whether the
 We formalize this idea in a \emph{fragmentation index}, the expected cost of an optimal execution plan with foresight into AI's successes and failures, and show analytically that it approximately tracks the impact of optimal AI deployment.
 We then provide empirical evidence that jobs with higher fragmentation see a weaker translation from AI exposure to AI execution.
 
-Whether a firm can actually solve this cost-minimization problem is not obvious.
 Because chaining makes the cost of automating a step depend on the arrangement it sits in, the firm optimizes over entire arrangements rather than step by step, and their number grows exponentially in the number of steps $m$.
-We show that the short-run problem can nonetheless be solved exactly, computing the cost-minimizing strategy in time $O(m^2)$ using dynamic programming, and we prove that our fragmentation index approximates the value of this program, as both the exact and the approximate plan drive down costs by chaining together easy tasks.
-The long-run problem is harder, since AI deployment is then determined jointly with wages and with job boundaries, but it too remains tractable: we provide an algorithm that approximates the optimum in polynomial time subject to an error that can be made arbitrarily small.
-Although we do not do it in this paper, this algorithmic approach could be combined with micro-details of task content to estimate how technological change in various tasks would impact workers.
+Whether the firm can actually locate its optimum is therefore not obvious, and Section~\ref{sec:extensions.computation} shows that it can, exactly in the short run and to any desired accuracy once wages and job boundaries are also chosen.
+Our fragmentation index is the closed-form counterpart of that program, and we prove that it approximates its value, as both the exact and the approximate plan drive down costs by chaining together easy tasks.
 
 \paragraph{Non-Monotone Effects of AI Progress.}
 The AI chaining feature of the model implies that improvements in AI quality can generate non-monotone effects on labor demand and wages.
@@ -134,3 +132,17 @@ A natural caveat in this empirical exercise is that our findings may reflect the
 We therefore run a series of robustness checks.
 In Appendix~\ref{app:gptPrompts_robustness} we re-generate the sequences under ten alternative LLM prompts, and in Appendix~\ref{app:frequency_robustness} we restrict each occupation to its frequently-executed steps; our results survive both.
 Because neither check leaves O*NET or our own imputation, in Appendix~\ref{app:external_validation} we validate the approach against the Process Classification Framework (PCF) of the American Productivity \& Quality Center, whose orderings are documented by human practitioners rather than imputed, and find that our LLM sequencing recovers real workflows reasonably well.
+
+
+\paragraph{Job Design and the Limits of Specialization.}
+Holding the boundary of a worker's job fixed is what makes AI a purely productivity-improving tool in the short run.
+Over a longer horizon the firm also decides how many workers share the workflow and where to divide it between them, and this is the margin on which AI does more than make a worker faster.
+A worker responsible for many tasks must hold all of their skills and is paid for all of them throughout, so narrower jobs are cheaper; what stops the firm from dividing indefinitely is that every boundary creates a hand-off, and coordinating an intermediate output takes time that scales with the skill of the worker handing it over.
+AI moves this balance through the skill margin rather than the time margin.
+A chain replaces a run of steps with a single verification at its endpoint, so it strips out the skills the automated steps demanded and leaves the worker holding only the skill needed to manage the chain, which lowers the wage a bundled job must pay and lets the same coordination cost buy a broader job.
+Automation and job consolidation are therefore complements in our framework, which is the sense in which AI redefines work rather than merely displacing it from a fixed set of jobs.
+
+Finally, we ask what survives aggregation.
+A firm in our model cannot substitute AI management labor for manual labor, since producing a unit of output requires completing every step, so its technology is Leontief and the substitution that aggregate analyses rely on has to come from somewhere else.
+Following \citet{houthakker1955pareto} and \citet{levhari1968note}, we show it can come entirely from composition across firms that differ in how effectively they deploy the same AI, and that the economy then admits a CES production function over AI management labor, manual labor, and capital.
+The organizational choices the paper is about are not lost in that representation, but they survive only in its parameters, which is why workflow-level objects such as the fragmentation index have to be measured where the arrangement of work is still visible.
