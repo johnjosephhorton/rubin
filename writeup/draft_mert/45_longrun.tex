@@ -208,18 +208,34 @@ When the time comes to actually produce the output, they draw different realizat
 This mirrors a realistic order in which firms actually behave: they structure operations and post vacancies before they discover how productive their inputs turn out to be.
 
 Fix the AI strategy $\T$ and job design $\J$ that firms have committed to.
-Every task is then executed either by a worker managing AI or by a worker performing it manually, and the many-input Leontief technology over individual steps collapses to a Leontief technology over just those two kinds of labor,
+Producing a unit of output then requires completing every task in the workflow, and every hand-off between the workers who share it.
+Each of these needs labor of its own: a manual task needs a worker who can perform it, an AI chain needs a worker who can prompt for it and check what comes back, and a hand-off needs time from the worker making it.
+None of these substitutes for any other, since output requires all of them, so more labor on one task with no more on the rest produces nothing extra.
+The firm's technology is therefore Leontief with one input per task and one per hand-off, and output is governed by whichever of them is least well supplied.
+
+This many-input description collapses to a two-input one.
+Because each requirement is proportional to output, the amounts of labor the tasks call for stand in fixed ratios to one another, so tasks drawing on the same kind of labor can be pooled without loss into a single input.
+Let $\labor{\AIletter}$ and $\labor{\manualLetter}$ denote the quantities of AI management labor and manual labor the firm employs.
+Pooling gives
 \begin{align}
 \label{eq:lr_micro_prod}
 x = \min\left\{ \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}, \ \frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}} \right\},
 \end{align}
-where $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are how much of each kind of labor a unit of output requires, with the hand-off times of Section~\ref{sec:longrun.jobdesign} entering $\skillAdjustedTimeLetter_{\manualLetter}$.
-Everything decided in the previous sections survives into these two coefficients and into $\bar{\alpha}$, the firm's realized \emph{effective} AI quality,
+where $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are the firm's \emph{skill-adjusted time requirements} per unit of output.
+
+Two of these terms need saying precisely.
+A task's skill-adjusted time is the time it takes, scaled by the wage the job containing it commands, so that an hour counts for more when the job requires the worker performing it to hold more skill.
+The scaling is what lets tasks that differ in both dimensions be added up: without it, an hour of a highly skilled worker's time and an hour of a barely skilled one's would count the same, and the sum would not be a cost.
+The firm's requirement of each kind of labor is then the sum of these skill-adjusted times over the tasks that use it, so $\skillAdjustedTimeLetter_{\AIletter}$ runs over the AI-managed tasks and $\skillAdjustedTimeLetter_{\manualLetter}$ over the manual ones together with the hand-offs, which is how the coordination costs of Section~\ref{sec:longrun.jobdesign} enter as a requirement for manual labor.
+The two labor quantities $\labor{\AIletter}$ and $\labor{\manualLetter}$ are measured in these same units, so each ratio in \eqref{eq:lr_micro_prod} is an amount of output.
+
+The remaining term is $\bar{\alpha}$, the firm's realized \emph{effective} AI quality,
 \begin{align}
 \label{eq:lr_alphabar}
 \bar{\alpha} = \frac{\sum_{b}\skillAdjustedTimeAI{b}}{\sum_{b}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}},
 \end{align}
-a time-weighted average of the success rates of the chains the firm runs.
+which divides the AI management labor the workflow would need if every chain succeeded on its first attempt by what it needs once retries are counted, chain by chain.
+It is a time-weighted average of the success rates of the chains the firm runs, and it enters \eqref{eq:lr_micro_prod} by inflating the AI management requirement to $\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha}$.
 
 Effective AI quality is where the organization of work enters the aggregate.
 By \eqref{eq:lr_alphabar}, $\bar{\alpha}$ averages over the chains the committed strategy actually runs, so which chains exist, how long each one is, and how much of the firm's AI management time rides on each all feed into it.
