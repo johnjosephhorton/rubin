@@ -11,7 +11,7 @@ Because these boundaries are fixed, how AI is deployed within one worker's job d
 What that worker's wage rate compensates is the total skill they must possess in order to perform all the tasks in their job.
 Because the assignment of steps is fixed here, so is the wage rate, and we normalize it to $1$.
 This characterization reflects the short-run dynamics of the economy, in which the firm has already determined the boundaries of workers' jobs, workers have acquired the skills their roles require, and the firm has hired them at pre-specified wage rates, so what the firm optimizes is how to deploy AI in order to improve worker's productivity on a fixed set of steps and minimize the time each worker spends performing their job.
-Section~\ref{sec:longrun} lets the firm decide how to allocate steps across multiple workers, at which point the skill a job assignment demands, and hence what it pays, becomes endogenous, and the firm lowers production costs by deploying AI in tandem with optimizing its organizational structure.
+Section~\ref{sec:longrun} lets the firm decide how to allocate steps across multiple workers, at which point the skill a job assignment demands, and hence what it pays, becomes endogenous, and the firm lowers production costs by deploying AI in tandem with optimizing workers' job structure.
 
 Below we define each of the model's components formally in turn.
 
@@ -182,7 +182,7 @@ The number of such arrangements grows exponentially in the number of steps $m$.
 
 Despite this, the firm's short-run problem is exactly solvable, and cheaply.
 What makes it tractable is that \eqref{eq:totalcost_shortterm} adds up time costs over tasks: once the firm has decided where a task ends, the cost of everything before it is a separate problem.
-The firm can therefore walk the workflow from left to right, and at each step face only one question, namely whether to perform that step manually or to end an AI chain there, and in the latter case how far back the chain reaches.
+The firm can therefore walk the workflow from left to right, and at each step face only one question, namely whether to perform that step manually or to consider an AI chain that ends there, and in the latter case how far back the chain reaches.
 
 \begin{proposition}[Optimal AI Deployment]
 \label{prop:shortrun_dp}
@@ -190,7 +190,7 @@ Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_
 \end{proposition}
 
 The proof is in Appendix~\ref{app:shortrun_proof}.
-It builds the optimal strategy by solving, for each $k$ in turn, the cheapest way to complete just the first $k$ steps, which is possible precisely because of the additivity noted above.
+We formulate the firm's problem recursively and solve it by dynamic programming: for each $k$ in turn we compute the cheapest way of completing just the first $k$ steps, which is possible precisely because of the additivity noted above.
 
 The argument also says something about the economics of the problem, not merely its computation.
 At each point in the workflow the firm has only two real alternatives: stop the chain and pay a human to execute the step, or extend the chain and pay instead for the higher chance that the whole run has to be repeated.
@@ -199,5 +199,4 @@ Section~\ref{sec:results} works through what this trade-off implies once the who
 
 Two features of this problem are worth flagging before we proceed.
 First, nothing in what follows depends on how the optimum is computed; we work with the cost-minimizing arrangement directly from here on.
-Second, note how little the problem requires: because the wage is fixed, time savings are the whole of it, and the model to this point needs no notion of worker skill at all.
-Skill enters in Section~\ref{sec:longrun}, where what a worker's assignment pays becomes a margin the firm chooses.
+Second, note how little the problem requires: with the boundary of the worker's job, and hence their wage, held fixed, AI acts purely as a productivity-improving tool, lowering the time it takes to execute a fixed set of steps.
