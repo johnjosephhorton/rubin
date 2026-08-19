@@ -44,7 +44,7 @@ We confine the reassignment to major occupation groups rather than the full data
 If anything, restricting the reshuffle to major-group boundaries is the more conservative choice: each major group retains its AI intensity under the within-group reassignment, whereas randomizing tasks across the full dataset would scatter AI-executed tasks over all occupations and push the placebo average chain length even lower.}
 The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains.
 The observed mean AI chain length is 1.45.
-Figure~\ref{fig:aiChains_graphs_def1} compares this value to the distributions from 1{,}000 task position permutations (left) and 1{,}000 task assignment permutations (right).
+Figure~\ref{fig:aiChains_graphs_def1} compares this value to the distributions from 1{,}000 task position permutations (left) and 1{,}000 task AI-execution label reassignment permutations (right).
 \begin{figure}[!t]
 \caption{Average Length of AI Chains: Actual versus Placebo Datasets}
 \label{fig:aiChains_graphs_def1}
@@ -111,7 +111,7 @@ Assuming all AI-exposed steps turn into AI-executed tasks, the empirical fragmen
 The following example clarifies the definition.
 Consider an occupation with five O*NET tasks.
 If none of the five tasks are exposed to AI, then the number of tasks in the theoretical sense is five, and the EFI equals $5/5 = 1$.
-If instead two consecutive O*NET tasks are exposed to AI (and thus can form an AI chain when all AI-exposed tasks turn into AI-executed tasks), the number of tasks in the model falls to four and the EFI becomes $4/5 = 0.8$.
+If instead two consecutive O*NET tasks are exposed to AI (and thus can form an AI chain of length two when all AI-exposed tasks turn into AI-executed tasks), the number of tasks in the model falls to four and the EFI becomes $4/5 = 0.8$.
 Thus, the empirical fragmentation index decreases as more AI-exposed steps can potentially be consolidated into longer AI chains.
 
 For the calculation of EFI, we treat all AI-exposed tasks as identical for the purpose of potential chaining and assume that all of them could, in principle, be executed by AI.
@@ -215,8 +215,74 @@ The pattern is the same throughout: the immediate neighbor effect attenuates rel
 That the baseline estimates attenuate tells us they partly reflect systematic differences across occupation families; that the immediate neighbor effect persists tells us the local pattern is not merely such a difference.
 
 Because we have no external benchmark for what counts as a large effect here, the magnitudes are hard to read on their own.
-Appendix~\ref{app:additional_robustness_pred3} therefore re-estimates \eqref{eq:DWA_regression_ai} on 1,000 placebo datasets that randomize task positions within occupations, for each of the four specifications.
-In every one, the observed immediate-neighbor effects lie to the right of the placebo distribution while the distant-neighbor effects lie to the left, so proximity does the work that the reshuffled orderings cannot reproduce by chance.
+We therefore construct one from the data itself.
+We re-estimate \eqref{eq:DWA_regression_ai} on 1{,}000 placebo datasets, each built by randomizing the positions of tasks within every occupation while holding fixed which tasks the occupation contains and how each is executed.
+The placebo thus destroys exactly one thing, the ordering, and leaves everything else about the sample intact: the same tasks, the same execution labels, the same occupation sizes, the same DWA memberships.
+Whatever the reshuffled data produce is therefore what the estimator returns when adjacency carries no information, and the question is whether the estimates from the real orderings fall outside that range.
+Figure~\ref{fig:DWA_regression_aiExecution_mainSample} plots the answer, one panel per specification.
+
+\begin{figure}[p]
+  \centering
+  \caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution}
+  \label{fig:DWA_regression_aiExecution_mainSample}
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_no_dwa.png}
+    \subcaption{No Fixed Effects}
+    \label{fig:ame_nofe}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_major_fe_no_dwa.png}
+    \subcaption{SOC Major Group Fixed Effects}
+    \label{fig:ame_major}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_minor_fe_no_dwa.png}
+    \subcaption{SOC Minor Group Fixed Effects}
+    \label{fig:ame_minor}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_with_dwa.png}
+    \subcaption{Detailed Work Activity Fixed Effects}
+    \label{fig:ame_dwa}
+  \end{subfigure}
+  \par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being executed by AI, while more distant neighbors have little to no effect on a task's AI execution likelihood.
+The red dashed line in each graph indicates the observed average marginal effect of the corresponding variable in the original dataset reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+The red shaded area marks the 90\% confidence interval around the observed point estimates in the main sample.
+The histograms plot the distribution of average marginal effects across 1{,}000 randomized reshuffles of task positions within occupations.
+Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai}, while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+\end{spacing}
+\end{minipage}
+\end{figure}
+
+Three patterns emerge.
+First, within each specification the placebo distributions for all four neighbors are centered at similar means and have similar shapes.
+This is what one should expect if position carries no information: with orderings randomized, being one step away and being two steps away are the same relationship, so each neighbor contributes about equally to the focal task's AI execution likelihood.
+That the four distributions coincide is thus a check that the placebo is doing what it should, and it gives the comparison below its force, since any asymmetry between near and far neighbors in the real data cannot come from the estimator.
+
+Second, in every panel the observed immediate-neighbor effects lie to the right of their placebo distributions and the observed distant-neighbor effects lie to the left.
+The two displacements are worth reading together.
+Immediate neighbors matter more than random assignment would produce, which is the prediction.
+But distant neighbors matter \emph{less} than random assignment would produce, which the prediction does not require and which is more telling: conditional on what its immediate neighbors are doing, a task two positions away carries less information than an arbitrarily placed task would.
+That is the signature of a mechanism that operates over contiguous runs, since a chain that reaches two steps away must pass through the step in between, and the step in between is already in the regression.
+
+Third, adding SOC group and DWA fixed effects collapses the distant-neighbor effects to essentially zero in Panels~(b)--(d), while the immediate-neighbor effects remain positive and separated from their placebo distributions.
+The baseline estimates therefore carry some component that is common to occupation families and to broad activity types, but the local pattern survives comparisons that hold both fixed.
 
 Overall, the results indicate that AI execution of immediate neighbors of the focal task increases the likelihood that the task is executed by AI, whereas execution status of more distant neighbors matters much less, especially after controlling for a range of relevant factors.
 This aligns with the relatively short average AI chain length observed in the data (mean length 1.45), implying that tasks two positions away rarely fall in the same chain as the focal task.
