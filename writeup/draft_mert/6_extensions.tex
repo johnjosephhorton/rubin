@@ -4,66 +4,34 @@ Section~\ref{sec:extensions.aggregation} asks whether a technology built on sequ
 Section~\ref{sec:extensions.computation} asks whether the cost minimization problems we have posed can actually be solved, and shows that they can be, in polynomial time.
 
 
-\subsection{From the Firm to the Macroeconomy}
+\subsection{CES Representation}
 \label{sec:extensions.aggregation}
 
-So far the model has been about decision-making inside a single firm.
-Our interest, however, extends beyond it: improvements in AI quality change the composition of labor employed across the economy and the aggregate relationship between labor, capital, and output, and it is in those terms that the consequences of AI are usually debated.
-That is also where the task-based literature works, writing production functions directly at the level of the economy and studying automation there \citep{acemoglu2018, acemoglu2022artificial, acemoglu2024tasks}.
-This subsection asks whether the two are compatible: can the firm-level cost minimization we have posed be aggregated into a well-behaved production function for the economy, and if so, what becomes of the organizational detail along the way?
+Everything the model has said so far happens inside a single firm: which steps it chains together, where it draws the boundaries of jobs, and what those jobs pay.
+One might reasonably object that this is not where the effects of AI will be settled.
+The consequences people care about are macroeconomic, namely how much labor of each kind the economy employs, how output responds to capital and to labor, and what becomes of both as AI improves, and that is where the automation literature works, writing production functions directly at the level of the economy \citep{acemoglu2018, acemoglu2022artificial, acemoglu2024tasks}.
+A framework built on the internal reorganization of workflows might seem to have nothing to say in those terms, or worse, to sit awkwardly beside them.
 
-Imagine the economy employs two kinds of labor.
-\emph{Manual labor} performs tasks directly, \emph{AI management labor} prompts the AI and verifies what it returns, and an automated step inside a chain draws on neither, since no human handles it.
-These are the two inputs any aggregate account of AI and work has to track, and the obstacle is that our firms cannot trade one for the other: producing a unit of output requires completing every step of the workflow, so a firm's technology is Leontief, and more AI management labor without more manual labor buys nothing.
-Aggregate production functions assume instead that the two substitute, with an elasticity that carries most of the weight in any comparative static.
-If no individual firm can substitute, where would aggregate substitution come from?
-
-The answer, which goes back to \citet{houthakker1955pareto} and \citet{levhari1968note}, is that it can come entirely from composition.
-Suppose many firms have access to the same technology but differ in how effectively they can use it.
-When AI management labor becomes relatively cheaper no firm changes its input mix, because none can; what happens instead is that firms for which AI was previously not worth managing begin to use it, and the economy's input ratio moves because the set of firms for which using AI is beneficial has moved.
-Rigid technologies plus dispersion across firms deliver a smooth aggregate, provided the dispersion is of the right kind.
-Appendix~\ref{sec:aggregation} obtains one from the order in which a firm has to commit: it settles on an AI strategy $\T$ and a job design $\J$ and posts vacancies before it learns how effectively it can put AI to use, so firms sharing a common prior organize identically and only then draw different realizations against that common organization.
-
-\paragraph{Carrying out the aggregation.}
-Fix the AI strategy and job design that firms have committed to, and assume that hand-offs are performed manually.
-Producing a unit of output then requires completing every task in the workflow and every hand-off between the workers who share it, each of which needs labor of its own that no other can supply, so the firm's technology is Leontief with one input per task and one per hand-off.
-Because every requirement is proportional to output, tasks drawing on the same kind of labor stand in fixed ratios to one another and can be pooled without loss, and writing $\labor{\AIletter}$ and $\labor{\manualLetter}$ for the two kinds of labor the firm employs, its technology collapses to
-\begin{align}
-\label{eq:lr_micro_prod}
-x = \min\left\{ \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}, \ \frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}} \right\},
-\end{align}
-where $x$ is the firm's output and $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are its \emph{skill-adjusted time requirements}, the time each task takes scaled by the wage the job containing it commands, summed over the tasks that draw on each kind of labor.\footnote{
-Equation~\eqref{eq:skill_adjusted_time} in Appendix~\ref{sec:aggregation} gives the expression.
-The scaling by the job's wage is what lets tasks differing in both skill and time be added into a cost: without it, an hour of a highly skilled worker's time and an hour of a barely skilled one's would count the same.
-}
-The hand-offs are counted with the manual tasks, which is how the coordination costs of Section~\ref{sec:longrun.jobdesign} enter as a requirement for manual labor.
-
-The remaining term is $\bar{\alpha}$, the firm's \emph{effective} AI quality,
-\begin{align}
-\label{eq:lr_alphabar}
-\bar{\alpha} = \frac{\sum_{T_b \in \T_{\AIletter}}\skillAdjustedTimeAI{b}}{\sum_{T_b \in \T_{\AIletter}}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}},
-\end{align}
-where $\T_{\AIletter} \subseteq \T$ collects the AI chains and $d_b$ is the total difficulty of chain $T_b$.
-It divides the AI management labor the workflow would need if every chain succeeded on its first attempt by what it needs once retries are counted, and enters \eqref{eq:lr_micro_prod} by inflating the AI management requirement to $\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha}$.
-This is where the organization of work reaches the aggregate: $\bar{\alpha}$ averages over the chains the committed strategy actually runs, so AI-able steps sitting next to one another support long chains over which a given $\alpha$ compounds, while scattered ones support only short chains and the same $\alpha$ buys less.
-Because every firm commits to the same strategy over the same workflow, however, this fixes the level of effective AI quality the whole economy is organized around and generates no variation across firms; the dispersion the aggregation runs on is dispersion in what firms realize against that common level.
-
-Appendix~\ref{sec:aggregation} then derives, in closed form, the distribution of $\bar{\alpha}$ across firms under which the economy admits the CES representation
+It does not.
+We show in Appendix~\ref{sec:aggregation} that the firm-level technology developed above, in which the boundaries of tasks and of jobs are chosen rather than given, aggregates to
 \begin{align}
 \label{eq:lr_macro_ces}
 X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\,\aggregateManualLabor^{\rho} + (1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^{\rho}\right)^{\frac{1}{\rho}},
 \end{align}
-over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$.
-Firms whose effective AI quality is too low to justify the cost of managing AI stay fully manual, so these aggregates run over the firms above an endogenous adoption threshold, and an improvement in $\alpha$ moves both that threshold and the input requirements of the firms already above it.\footnote{The scope of the two results differs.
-The collapse in \eqref{eq:lr_micro_prod} holds for any firm and any workflow, regardless of $\T$ and $\J$, since it needs only that the technology is Leontief.
-The CES in \eqref{eq:lr_macro_ces} requires more: capital productivity is common, every firm organizes identically, and realized effective AI quality is the single dimension along which firms differ.}
+over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$.\footnote{
+The representation asks more of the economy than the firm-level argument does: capital productivity is common across firms, every firm organizes identically, and realized effective AI quality is the single dimension along which firms differ.
+}
+This is the familiar form, the one in which the macroeconomic implications of automation are usually studied, with an elasticity of substitution between AI and human labor that carries most of the weight in any comparative static.
 
-This characterization is the payoff of the exercise.
-A firm-level framework built on chaining, in which the boundaries of tasks and of jobs are chosen rather than given, nonetheless admits a well-behaved CES representation at the aggregate level.
-The sequential structure we have insisted on is therefore not an obstacle to studying automation at the macro level: our framework connects to the literature that works with aggregate production functions rather than contradicting it, and the organizational choices of Section~\ref{sec:longrun} reach that literature through the parameters of \eqref{eq:lr_macro_ces} rather than being lost on the way.
-That last point carries a warning about what the aggregate representation hides.
-Two economies whose steps are identically exposed to AI, differing only in how those steps are arranged within workflows, arrive at the same functional form with different parameters while looking alike on any step-level exposure measure.
-Aggregation keeps the arrangement of work but summarizes it in the parameters instead of explicitly displaying it, which is why workflow-level objects such as the fragmentation index have to be measured where that arrangement is still visible.
+Arriving there is not automatic, and what makes it work is worth stating.
+No firm in our model substitutes AI management labor for manual labor, since producing a unit of output requires completing every step of the workflow, so each firm's technology is Leontief.
+Aggregate substitution comes instead from composition, in the manner of \citet{houthakker1955pareto} and \citet{levhari1968note}: firms have access to the same AI but differ in how effectively they deploy it, and when AI management labor becomes relatively cheaper the economy's input mix moves because the set of firms for which using AI is worthwhile has moved, not because any firm has changed its own mix.
+Appendix~\ref{sec:aggregation} obtains that dispersion from the order in which a firm has to commit, settling on its AI strategy and job design before it learns how effectively it can put AI to use, and derives in closed form the distribution of realized AI effectiveness under which \eqref{eq:lr_macro_ces} holds.
+
+The two levels are therefore not in competition.
+Our account of how chaining redraws tasks and jobs is not an alternative to the aggregate view of automation but a foundation for it, and the implications people draw from improving AI quality in a CES economy carry over intact.
+The organizational content carries over as well, but only in the parameters of \eqref{eq:lr_macro_ces}: two economies whose steps are identically exposed to AI, differing only in how those steps are arranged within workflows, reach the same functional form with different weights and input requirements while looking alike on any step-level exposure measure.
+That is why workflow-level objects such as the fragmentation index have to be measured where the arrangement of work is still visible, which is what Section~\ref{sec:empirics} does.
 
 
 \subsection{Computing the Firm's Optimum}
