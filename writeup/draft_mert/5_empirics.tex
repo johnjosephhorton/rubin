@@ -214,12 +214,12 @@ Columns~(5)--(6) repeat the exercise controlling for the number of same-DWA task
 The pattern is the same throughout: the immediate neighbor effect attenuates relative to the baseline but stays statistically and economically meaningful, while the distant neighbor effects shrink toward zero and lose significance.
 That the baseline estimates attenuate tells us they partly reflect systematic differences across occupation families; that the immediate neighbor effect persists tells us the local pattern is not merely such a difference.
 
-Because we have no external benchmark for what counts as a large effect here, the magnitudes are hard to read on their own.
-We therefore construct one from the data itself.
-We re-estimate \eqref{eq:DWA_regression_ai} on 1{,}000 placebo datasets, each built by randomizing the positions of tasks within every occupation while holding fixed which tasks the occupation contains and how each is executed.
-The placebo thus destroys exactly one thing, the ordering, and leaves everything else about the sample intact: the same tasks, the same execution labels, the same occupation sizes, the same DWA memberships.
-Whatever the reshuffled data produce is therefore what the estimator returns when adjacency carries no information, and the question is whether the estimates from the real orderings fall outside that range.
-Figure~\ref{fig:DWA_regression_aiExecution_mainSample} plots the answer, one panel per specification.
+Because we do not have a benchmark for what constitutes a large versus small effect in our context, interpreting the magnitudes in a vacuum is difficult.
+To better understand these results and to check whether the observed patterns could have arisen by chance, we conduct a robustness exercise in which we re-estimate \eqref{eq:DWA_regression_ai} for 1,000 placebo datasets constructed by randomizing the positions of tasks within occupations.
+The results are shown in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}.
+In each graph, the red dashed line marks the AME estimated using the actual data (i.e., the values reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample}) along with the 90\% confidence interval around it.
+The blue bars in Panel~(a) show the histogram of AMEs obtained from reshuffled datasets estimated using the baseline specification.
+Panels~(b), (c), and (d) report the corresponding histograms when SOC major group, SOC minor group, and DWA fixed effects are included, respectively.
 
 \begin{figure}[p]
   \centering
@@ -270,19 +270,14 @@ Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai}, while
 \end{minipage}
 \end{figure}
 
-Three patterns emerge.
-First, within each specification the placebo distributions for all four neighbors are centered at similar means and have similar shapes.
-This is what one should expect if position carries no information: with orderings randomized, being one step away and being two steps away are the same relationship, so each neighbor contributes about equally to the focal task's AI execution likelihood.
-That the four distributions coincide is thus a check that the placebo is doing what it should, and it gives the comparison below its force, since any asymmetry between near and far neighbors in the real data cannot come from the estimator.
+Several patterns emerge from the graphs.
+First, across all neighbors within each specification, the randomized distributions are centered at similar means and have similar shapes.
+This indicates that if ordering of tasks had no effect on AI execution outcomes, each neighbor's mode of execution would contribute similarly, on average, to the AI execution likelihood of the focal task.
 
-Second, in every panel the observed immediate-neighbor effects lie to the right of their placebo distributions and the observed distant-neighbor effects lie to the left.
-The two displacements are worth reading together.
-Immediate neighbors matter more than random assignment would produce, which is the prediction.
-But distant neighbors matter \emph{less} than random assignment would produce, which the prediction does not require and which is more telling: conditional on what its immediate neighbors are doing, a task two positions away carries less information than an arbitrarily placed task would.
-That is the signature of a mechanism that operates over contiguous runs, since a chain that reaches two steps away must pass through the step in between, and the step in between is already in the regression.
+Second, in all panels, the observed marginal effects for immediate neighbors (middle columns) in the actual data lie to the right of the randomized distributions, while the actual effects for farther neighbors (side columns) tend to lie to the left.
+This suggests that immediate neighbors exert a stronger positive influence on a task's AI execution likelihood than would be expected under random assignment, while farther neighbors exert less influence once the contribution of immediate neighbors is accounted for.
 
-Third, adding SOC group and DWA fixed effects collapses the distant-neighbor effects to essentially zero in Panels~(b)--(d), while the immediate-neighbor effects remain positive and separated from their placebo distributions.
-The baseline estimates therefore carry some component that is common to occupation families and to broad activity types, but the local pattern survives comparisons that hold both fixed.
+Third, consistent with the results in Table~\ref{tab:DWA_regression_aiExecution_mainSample}, once SOC occupation group and DWA fixed effects are added, the estimated effects of distant neighbors collapse to essentially zero in Panels~(b)--(d), while the effects of immediate neighbors remain positive and distinct from the placebo distributions.
 
 Overall, the results indicate that AI execution of immediate neighbors of the focal task increases the likelihood that the task is executed by AI, whereas execution status of more distant neighbors matters much less, especially after controlling for a range of relevant factors.
 This aligns with the relatively short average AI chain length observed in the data (mean length 1.45), implying that tasks two positions away rarely fall in the same chain as the focal task.
