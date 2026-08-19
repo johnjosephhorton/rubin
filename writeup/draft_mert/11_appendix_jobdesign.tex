@@ -1,7 +1,7 @@
 \section{Job Design and the Firm's Long Run Problem}
 \label{app:jobdesign}
 
-The main text studies the firm's AI deployment problem: choosing how to chain and automate steps so as to minimize the cost of production, $\sum_b \skillcost{b}\,\timecost{b}$, where each task is staffed by a dedicated worker possessing the skill it requires (Section~\ref{sec:jobs_wages}).
+Section~\ref{sec:jobs_wages} studies the firm's AI deployment problem with the whole workflow assigned to a single worker whose wage is fixed, so that the firm chooses how to chain and automate steps in order to minimize the time production takes, $\sum_b \timecost{b}$.
 This appendix develops the firm's long-run problem, in which it additionally bundles tasks into \emph{jobs}.
 A single worker may perform several tasks, but must then hold all of their skills throughout, so the cost of a job is its total skill requirement times its total time.
 Bundling economizes on the coordination costs incurred when work passes from one worker to another, at the expense of these broader skill requirements. 
@@ -13,8 +13,10 @@ Figure~\ref{fig:hierarchical_production} of the main text illustrates the result
 \subsection{Jobs, Wages, and Hand-off Costs}
 \label{sec:app.jobs}
 
+This subsection restates, in full detail, the objects Section~\ref{sec:longrun.jobdesign} introduces, so that the long-run problem below is self-contained.
+
 A job is a subsequence of tasks that are assigned to a single human worker.
-Each task $T_b$ in the task sequence $\T = \{T_1, \dotsc, T_n\}$ has a skill cost $\skillcost{b}$ and a time cost $\timecost{b}$ that depend on whether the task is completed manually or with the aid of AI (Sections~\ref{sec:model.steps}--\ref{sec:model.tasks}).
+Each task $T_b$ in the task sequence $\T = \{T_1, \dotsc, T_n\}$ has a time cost $\timecost{b}$, defined in Section~\ref{sec:model.tasks}, and a skill cost $\skillcost{b}$, introduced in Section~\ref{sec:longrun.jobdesign}; both depend on whether the task is completed manually or with the aid of AI.
 A job $J$ is a contiguous subsequence of tasks, say $J = (T_b, \dotsc, T_{b+\ell})$ for some $b$ and $\ell$.
 We say that a partition $\mathcal{J} = (J_1, \dotsc, J_p)$ of all tasks into jobs is a \emph{job design}.
 
@@ -65,7 +67,7 @@ The notation for job design is collected in Table~\ref{tab:jobdesign_parameters}
 \label{app:jobdesign.longrun}
 
 In the long-run optimization problem, the firm anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
-This contrasts with the AI deployment problem of Section~\ref{sec:jobs_wages}, which minimizes the cost of production while fixing the assignment of tasks to workers. 
+This contrasts with the AI deployment problem of Section~\ref{sec:jobs_wages}, which minimizes the time production takes while holding the assignment of steps to a single worker fixed. 
 The long-run problem additionally optimizes how tasks are bundled into jobs.
 
 Given the sequence of steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, the firm can design both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs.
@@ -80,7 +82,7 @@ Formally, we can write $\mathcal{P}(X)$ for the set of partitions of a sequence 
 = \sum_{J_j \in \mathcal{J}} \text{WageBill}_j = 
 \sum_{J_j \in \mathcal{J}} \Biggl[\Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr)\Biggr]
 \end{align}
-where recall that, for each $T_b \in \T$, $\timecost{b}$ and $\skillcost{b}$ are as described in Section~\ref{sec:model.tasks} and can depend on the selected mode of operation for individual steps.
+where recall that, for each $T_b \in \T$, $\timecost{b}$ is as described in Section~\ref{sec:model.tasks} and $\skillcost{b}$ as in Section~\ref{sec:longrun.jobdesign}, both depending on the selected mode of operation for individual steps.
 
 This problem has a similar flavor to the fixed-boundary problem of Proposition~\ref{prop:mediumrun_dp}, with one additional layer: as steps are assigned to tasks, the resulting tasks must also be assigned to workers along the way by considering the hand-off costs incurred at the boundary of jobs.
 Proposition~\ref{prop:totalcost_optimization_dp} shows that, like that problem, the long-run problem admits a polynomial-time approximation scheme.
