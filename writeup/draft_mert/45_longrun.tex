@@ -1,7 +1,7 @@
 So far we assumed a single worker executes the entire workflow, and that AI could improve only the time that took to execute steps. 
-The results of Section~\ref{sec:results} thus followed from only that one margin, reflecting the short-run effects of deploying AI.
+The results of Section~\ref{sec:results} thus followed from only that one margin.
 The more consequential effects of AI, however, arrive when it does more than make a worker faster at the work they have been assigned.
-Once a firm is also able to change the allocation of steps to workers and fully restructure production around capabilities of AI by adjusting how work steps are apportioned across workers rather than only the pace at which each person's share is executed the real gains from AI are realized.
+Once a firm is also able to change the allocation of steps to workers it fully restructures its entire production around capabilities of AI.
 That is inherently a longer-run object: the firm decides jointly where to deploy AI along the workflow and where to divide it between workers, and the two decisions cannot be separated, since automating a run of steps changes what the worker who owns them has to be able to do.
 
 This section develops that problem and closes the model in two steps.
@@ -190,37 +190,42 @@ What the framework has delivered so far is smaller, namely how one firm with one
 Closing that gap matters for a second reason too.
 The task-based literature studies automation using production functions written directly at the level of the economy \citep{acemoglu2018, acemoglu2022artificial, acemoglu2024tasks}, and it is worth knowing whether the sequential structure we have insisted on is a friend or an obstacle to that apparatus.
 
-The obstacle is that our firms have no substitution in them at all.
+[Here you should say imagine there are two types of labor: AI management and manual labor. then go into these] The obstacle is that our firms have no substitution in them at all.
 Producing a unit of output requires completing every step of the workflow, so a firm's technology is Leontief: giving it more AI management labor without also giving it more manual labor buys nothing.
 Aggregate production functions, by contrast, assume the two kinds of labor substitute, and the elasticity with which they do so carries most of the weight in any comparative static.
 If no individual firm can substitute, where would aggregate substitution come from?
 
 The answer, which goes back to \citet{houthakker1955pareto} and \citet{levhari1968note}, is that it can come entirely from composition.
-Suppose firms differ in how much they get out of the same technology.
-When AI management labor becomes cheaper, no firm changes its input mix, because none can.
-What happens instead is that firms for which AI was previously not worth managing begin to use it, and the economy's input ratio moves because the set of firms using AI has moved.
+Suppose the economy consists of many firms, and these firms differ in how much they get out of the same technology.
+When AI management labor becomes relatively cheaper, no firm changes its input mix, because none can.
+What happens instead is that firms for which AI was previously not worth managing begin to use it, and the economy's input ratio moves because the set of firms for which using AI is beneficial has moved.
 Rigid technologies plus dispersion across firms deliver a smooth aggregate, provided the dispersion is of the right kind.
 
-Our model supplies dispersion of exactly that kind, and it is not an assumption added for the purpose.
-Fix a firm's AI strategy and job design.
+Our model supplies dispersion of exactly that kind, and it comes from the order in which a firm has to commit.
+Structuring production comes first: the firm settles on an AI deployment strategy and a job design, and posts the resulting vacancies.
+Only afterwards does it hire, begin producing, and discover how well AI actually performs in its hands.
+Facing a common workflow and a common prior over what AI will deliver, firms make the same organizational choice, but they do not realize the same effective AI quality once production is under way, and by then the organization is settled and cannot be adjusted to the draw.
+Appendix~\ref{sec:aggregation} develops this two-stage structure.
+
+Fix the AI strategy $\T$ and job design $\J$ that firms have committed to.
 Every task is then executed either by a worker managing AI or by a worker performing it manually, and the many-input Leontief technology over individual steps collapses to a Leontief technology over just those two kinds of labor,
 \begin{align}
 \label{eq:lr_micro_prod}
 x = \min\left\{ \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}, \ \frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}} \right\},
 \end{align}
 where $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are how much of each kind of labor a unit of output requires, with the hand-off times of Section~\ref{sec:longrun.jobdesign} entering $\skillAdjustedTimeLetter_{\manualLetter}$.
-Everything the firm decided in the previous sections survives into these two coefficients and into $\bar{\alpha}$, the firm's \emph{effective} AI quality,
+Everything decided in the previous sections survives into these two coefficients and into $\bar{\alpha}$, the firm's realized \emph{effective} AI quality,
 \begin{align}
 \label{eq:lr_alphabar}
 \bar{\alpha} = \frac{\sum_{b}\skillAdjustedTimeAI{b}}{\sum_{b}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}},
 \end{align}
-a time-weighted average of the success rates of the chains the firm actually runs.
+a time-weighted average of the success rates of the chains the firm runs.
 
-Effective AI quality is where the economics of the previous sections enters the aggregate.
-Two firms can face the identical general-purpose technology $\alpha$ and still differ in $\bar{\alpha}$, because $\bar{\alpha}$ depends on the chains the firm is able to form, and that depends on how its AI-able steps are arranged.
-A firm whose AI-suitable steps sit next to one another chains them and gets a great deal out of $\alpha$; a firm whose AI-suitable steps are scattered among steps the AI fails at cannot chain, and gets much less out of the same technology.
-This is the fragmentation result of Section~\ref{sec:fragmentation} restated as a cross-sectional fact: dispersion in $\bar{\alpha}$ across firms is dispersion in how well their workflows happen to suit chaining.
-So the heterogeneity the aggregation argument requires is the heterogeneity the model already produces.
+Effective AI quality is where the economics of the previous sections enters the aggregate, because the organization chosen in the first stage determines what $\bar{\alpha}$ is an average over.
+Which chains exist, how long each one is, and how much of the firm's AI management time rides on each are all inherited from the committed strategy.
+An arrangement of work in which AI-able steps sit next to one another supports long chains, so a given $\alpha$ compounds over many steps at once and buys a great deal; an arrangement in which those steps are scattered among steps the AI fails at supports only short chains, and the same $\alpha$ buys much less.
+The fragmentation result of Section~\ref{sec:fragmentation} therefore fixes the level of effective AI quality at which the whole economy operates, while the second-stage realization spreads firms around that level.
+The heterogeneity the aggregation argument requires is thus not an assumption bolted on to make the algebra work: it is what remains once every firm has organized itself as well as it can and still finds that AI performs differently in practice.
 
 Appendix~\ref{sec:aggregation} makes this precise.
 It derives, in closed form, the distribution of $\bar{\alpha}$ across firms under which the economy admits the CES representation
