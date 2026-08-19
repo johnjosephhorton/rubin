@@ -202,18 +202,19 @@ x = \min\left\{ \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_
 \end{align}
 where $x$ is the firm's output, and $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are its \emph{skill-adjusted time requirements}, the amount of each kind of labor a unit of that output takes.
 
-Two of these terms need saying precisely.
+Two of these terms need explaining precisely.
 A task's skill-adjusted time is the time it takes, scaled by the wage the job containing it commands, so that an hour counts for more when the job requires the worker performing it to hold more skill; Equation~\eqref{eq:skill_adjusted_time} in Appendix~\ref{sec:aggregation} gives the expression.
-The scaling is what lets tasks that differ in both dimensions be added up: without it, an hour of a highly skilled worker's time and an hour of a barely skilled one's would count the same, and the sum would not be a cost.
+The scaling is what lets tasks that differ in both skill and time dimensions be added up: without it, an hour of a highly skilled worker's time and an hour of a barely skilled one's would count the same, and the sum would not be a cost.
 The firm's requirement of each kind of labor is then the sum of these skill-adjusted times over the tasks that use it, so $\skillAdjustedTimeLetter_{\AIletter}$ runs over the AI-managed tasks and $\skillAdjustedTimeLetter_{\manualLetter}$ over the manual ones together with the hand-offs, which is how the coordination costs of Section~\ref{sec:longrun.jobdesign} enter as a requirement for manual labor.
 The two labor quantities $\labor{\AIletter}$ and $\labor{\manualLetter}$ are measured in these same units, so each ratio in \eqref{eq:lr_micro_prod} is an amount of output.
 
 The remaining term is $\bar{\alpha}$, the firm's \emph{effective} AI quality,
 \begin{align}
 \label{eq:lr_alphabar}
-\bar{\alpha} = \frac{\sum_{b}\skillAdjustedTimeAI{b}}{\sum_{b}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}},
+\bar{\alpha} = \frac{\sum_{T_b \in \T_{\AIletter}}\skillAdjustedTimeAI{b}}{\sum_{T_b \in \T_{\AIletter}}\skillAdjustedTimeAI{b}\,\alpha^{-d_{b}}},
 \end{align}
-which divides the AI management labor the workflow would need if every chain succeeded on its first attempt by what it needs once retries are counted, chain by chain.
+where $\T_{\AIletter} \subseteq \T$ collects the AI chains, that is, the tasks requiring AI management labor, and $d_b$ is the total difficulty of chain $T_b$, the sum of the difficulties of the steps it spans.
+Effective AI quality divides the AI management labor the workflow would need if every chain succeeded on its first attempt by what it needs once retries are counted, chain by chain.
 It is a time-weighted average of the success rates of the chains the firm runs, and it enters \eqref{eq:lr_micro_prod} by inflating the AI management requirement to $\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha}$.
 
 Effective AI quality is where the organization of work enters the aggregate.
