@@ -164,7 +164,7 @@ It also sets our approach apart from the task-based literature, which writes pro
 This subsection therefore asks whether the two are compatible: can the firm-level cost minimization we have posed be aggregated into a well-behaved production function for the economy, and if so, what becomes of the organizational detail along the way?
 
 Imagine the economy employs two kinds of labor.
-\emph{Manual labor} performs steps directly, and \emph{AI management labor} prompts the AI and verifies what it returns.
+\emph{Manual labor} performs tasks directly, and \emph{AI management labor} prompts the AI and verifies what it returns.
 Every task in the model draws on one or the other, and an automated step inside a chain draws on neither, since no human handles it.
 These are the two inputs any aggregate account of AI and work has to keep track of, and the obstacle is that our firms cannot trade one for the other.
 Producing a unit of output requires completing every step of the workflow, so a firm's technology is Leontief: giving it more AI management labor without also giving it more manual labor buys nothing.
@@ -177,15 +177,15 @@ When AI management labor becomes relatively cheaper, no firm changes its input m
 What happens instead is that firms for which AI was previously not worth managing begin to use it, and the economy's input ratio moves because the set of firms for which using AI is beneficial has moved.
 Rigid technologies plus dispersion across firms deliver a smooth aggregate, provided the dispersion is of the right kind.
 
-Appendix~\ref{sec:aggregation} obtains dispersion of this kind from the order in which a firm has to commit.
-Production unfolds in two stages.
+In Appendix~\ref{sec:aggregation} we obtain a dispersion of this kind from the order in which a firm has to commit.
+Suppose production unfolds in two stages.
 In the first, the firm settles on an AI deployment strategy $\T$ and a job design $\J$ and posts vacancies to hire workers accordingly; in the second it hires, begins producing, and only then learns how effectively it can put AI to use.
 In other words, a firm does not know its own effective AI quality when it is organizing its workflow, and all firms share a common prior about the distribution that quality is drawn from, so they make identical organizational choices.
 When the time comes to actually produce the output, they draw different realizations of how effectively they are able to deploy AI, and by that point the organization is settled and cannot be adjusted to the draw.
-This mirrors a realistic order in which firms actually behave: they structure operations and post vacancies before they discover how productive their inputs turn out to be.
+This mirrors a realistic order in which firms behave: they structure operations and post vacancies before they discover how productive their inputs turn out to be in production.
 
 \paragraph{Carrying out the aggregation.}
-The exercise itself proceeds in two steps: we first collapse a single firm's workflow into a technology in two inputs, and then aggregate that technology across firms.
+The exercise itself proceeds in two steps: we first collapse a single firm's workflow into a production function with just two inputs, and then aggregate that technology across firms.
 Let us fix the AI strategy $\T$ and job design $\J$ that firms have committed to, and assume that hand-offs are performed manually.
 Producing a unit of output then requires completing every task in the workflow, and every hand-off between the workers who share it.
 Each of these needs labor of its own: a manual task needs a worker who can perform it, an AI chain needs a worker who can prompt for it and check what comes back, and a hand-off needs time from the worker making it.
@@ -200,10 +200,10 @@ An individual firm's production function can be represented simply as
 \label{eq:lr_micro_prod}
 x = \min\left\{ \frac{\bar{\alpha}\,\labor{\AIletter}}{\skillAdjustedTimeLetter_{\AIletter}}, \ \frac{\labor{\manualLetter}}{\skillAdjustedTimeLetter_{\manualLetter}} \right\},
 \end{align}
-where $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are the firm's \emph{skill-adjusted time requirements} per unit of output.
+where $x$ is the firm's output, and $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$ are its \emph{skill-adjusted time requirements}, the amount of each kind of labor a unit of that output takes.
 
 Two of these terms need saying precisely.
-A task's skill-adjusted time is the time it takes, scaled by the wage the job containing it commands, so that an hour counts for more when the job requires the worker performing it to hold more skill.
+A task's skill-adjusted time is the time it takes, scaled by the wage the job containing it commands, so that an hour counts for more when the job requires the worker performing it to hold more skill; Equation~\eqref{eq:skill_adjusted_time} in Appendix~\ref{sec:aggregation} gives the expression.
 The scaling is what lets tasks that differ in both dimensions be added up: without it, an hour of a highly skilled worker's time and an hour of a barely skilled one's would count the same, and the sum would not be a cost.
 The firm's requirement of each kind of labor is then the sum of these skill-adjusted times over the tasks that use it, so $\skillAdjustedTimeLetter_{\AIletter}$ runs over the AI-managed tasks and $\skillAdjustedTimeLetter_{\manualLetter}$ over the manual ones together with the hand-offs, which is how the coordination costs of Section~\ref{sec:longrun.jobdesign} enter as a requirement for manual labor.
 The two labor quantities $\labor{\AIletter}$ and $\labor{\manualLetter}$ are measured in these same units, so each ratio in \eqref{eq:lr_micro_prod} is an amount of output.
