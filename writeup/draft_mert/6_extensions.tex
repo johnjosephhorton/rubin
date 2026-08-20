@@ -1,5 +1,4 @@
-The preceding sections focused on the firm's problem over both short- and long-run horizons.
-This section collects two further results that the framework delivers.
+This section briefly provides two additional results that the framework delivers, but defers their detailed discussion to the appendix.
 Section~\ref{sec:extensions.aggregation} reconciles our firm-level, sequential model of production where tasks and jobs are determined endogenously with models that study the implications of automation from a macro perspective by aggregating many firms' production function into a single CES production function at the macro level.
 Section~\ref{sec:extensions.computation} provides algorithms showing how the cost minimization problems we have posed for firm's short- and long-run optimization can actually be solved in polynomial time.
 
@@ -8,11 +7,16 @@ Section~\ref{sec:extensions.computation} provides algorithms showing how the cos
 \label{sec:extensions.aggregation}
 
 So far we have focused on a single firm's production: which steps it chains together, where it draws the boundaries of jobs, and what those jobs pay workers.
-What ultimately matters, however, is how these firm-level adjustments translate into the broader labor market: how much labor of each kind the economy employs, how output responds to capital and to labor, and what becomes of both as AI improves.
-These are the terms the automation literature works in, writing production functions directly at the level of the economy \citep{acemoglu2018, acemoglu2022artificial, acemoglu2024tasks}.
+What ultimately matters, however, is how these firm-level adjustments translate into the broader labor market: how much labor the economy employs, how output responds to capital and to labor, and what becomes of both as AI improves.
+These are the terms the automation literature works in, writing production functions directly at the level of the aggregate economy \citep{acemoglu2018, acemoglu2022artificial, acemoglu2024tasks}.
 
 Our framework can be expressed in the same terms.
-We show in Appendix~\ref{sec:aggregation} that the firm-level technology developed above, in which the boundaries of tasks and of jobs are chosen rather than given, aggregates to
+We distinguish two types of labor: manual labor, which performs steps directly, and AI management labor, which prompts the AI and verifies what it returns.\footnote{
+The distinction is deliberate rather than necessary.
+One could carry the aggregation through with a single type of labor, pooling the two requirements into one input.
+We keep them apart because the model already distinguishes the skill a step demands when a worker performs it, $\manualSkill{i}$, from the skill it demands when a worker manages an AI attempt at it, $\AIskill{i}$, so two types of labor is the natural counterpart of a distinction we have already drawn.
+}
+Appendix~\ref{sec:aggregation} shows that the firm-level technology developed earlier, in which the content of tasks and of jobs are chosen rather than given, then aggregates to
 \begin{align}
 \label{eq:lr_macro_ces}
 X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\,\aggregateManualLabor^{\rho} + (1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^{\rho}\right)^{\frac{1}{\rho}},
@@ -20,9 +24,9 @@ X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\
 over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$.\footnote{
 The representation asks more of the economy than the firm-level argument does: capital productivity is common across firms, every firm organizes identically, and realized effective AI quality is the single dimension along which firms differ.
 }
-This is the familiar form, the one in which the macroeconomic implications of automation are usually studied, with an elasticity of substitution between AI and human labor that carries most of the weight in any comparative static.
+This is the familiar constant elasticity of substitution (CES) form, by which the macroeconomic implications of automation are usually studied, with an elasticity of substitution between AI and human labor that carries most of the weight in any comparative static.
 
-Arriving there is not automatic, and what makes it work is worth stating.
+Arriving at \eqref{eq:lr_macro_ces} is not automatic, and what makes it work is worth stating.
 No firm in our model substitutes AI management labor for manual labor, since producing a unit of output requires completing every step of the workflow, so each firm's technology is Leontief.
 Aggregate substitution comes instead from composition, in the manner of \citet{houthakker1955pareto} and \citet{levhari1968note}: firms have access to the same AI but differ in how effectively they deploy it, and when AI management labor becomes relatively cheaper the economy's input mix moves because the set of firms for which using AI is worthwhile has moved, not because any firm has changed its own mix.
 Appendix~\ref{sec:aggregation} obtains that dispersion from the order in which a firm has to commit, settling on its AI strategy and job design before it learns how effectively it can put AI to use, and derives in closed form the distribution of realized AI effectiveness under which \eqref{eq:lr_macro_ces} holds.
