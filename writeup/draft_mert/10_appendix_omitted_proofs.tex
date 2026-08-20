@@ -2,7 +2,7 @@
 \label{app:omitted_proofs}
 
 This appendix collects the proofs omitted from the main body of the paper.
-Sections~\ref{app:shortrun_proof} and~\ref{app:mediumrun_dp} prove Propositions~\ref{prop:shortrun_dp} and~\ref{prop:mediumrun_dp} of Section~\ref{sec:extensions.computation}, the first for the firm's short-run AI deployment problem and the second for the case in which wages adjust to the skill a job requires.
+Section~\ref{app:shortrun_proof} proves Proposition~\ref{prop:shortrun_dp} of Section~\ref{sec:extensions.computation}, and Section~\ref{app:mediumrun_dp} treats an intermediate case, in which wages adjust to the skill a job requires but job boundaries are still given, that the long-run proof of Appendix~\ref{app:jobdesign.longrun} builds on.
 
 \subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
 \label{app:shortrun_proof}
@@ -29,11 +29,29 @@ Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calcul
 Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
 \end{proof}
 
-\subsection{Proof of Proposition~\ref{prop:mediumrun_dp}}
+\subsection{AI Deployment when Wages Adjust}
 \label{app:mediumrun_dp}
 
-Recall the problem of Section~\ref{sec:extensions.computation}, in which the wage adjusts to the skill a job requires and the firm minimizes the job's wage bill \eqref{eq:totalcost_mediumrun}, the product of its total skill and its total time.
+This subsection treats an intermediate case that the proof of Proposition~\ref{prop:totalcost_optimization_dp} builds on: wages adjust to the skill a job requires, but job boundaries are still given.
+Holding the wage fixed is what reduces cost minimization to minimizing time in Section~\ref{sec:jobs_wages}.
+Once it adjusts, deploying AI pays on both margins at once, since an augmented or automated step may demand less skill as well as less time, and the firm minimizes the wage bill of the job, the product of its total skill and its total time,
+\begin{align}
+\label{eq:totalcost_mediumrun}
+\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
+\end{align}
 Fixed job boundaries make jobs' costs independent of one another, so minimizing total production cost reduces to minimizing \eqref{eq:totalcost_mediumrun} for each job separately, and it is without loss to study a single job.
+
+Objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the recursion behind Proposition~\ref{prop:shortrun_dp} no longer applies: a task's contribution to cost depends on the skill and the time the rest of the job already carries.
+The problem still admits a polynomial-time approximation scheme.
+
+\begin{proposition}[AI Deployment when Wages Adjust]
+\label{prop:mediumrun_dp}
+Fix a workflow with $m$ steps whose skill and time costs lie in $[1/B, B]$ for some $B > 0$.
+For any $\epsilon > 0$, an AI strategy whose cost~\eqref{eq:totalcost_mediumrun} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+\end{proposition}
+
+The program decides how to execute the job's steps one at a time, tracking the worker's accumulated skill and time along the way and evaluating the wage bill only once every step has been assigned.
+Since each execution choice moves both coordinates, the state is two-dimensional and can take exponentially many values, so we discretize both to a geometric grid.
 
 
 \begin{proof}

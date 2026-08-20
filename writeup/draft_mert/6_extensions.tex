@@ -55,31 +55,11 @@ Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_
 Appendix~\ref{app:shortrun_proof} gives the proof.
 Writing $C[k]$ for the minimum cost of completing the first $k$ steps alone, the two options above give a recursion for $C[k]$ in terms of $C[0], \dotsc, C[k-1]$; each of the $m$ values costs $O(m)$ to evaluate because the chain reaching back from step $k$ can start anywhere before it, which is where the $O(m^2)$ comes from.
 
-\paragraph{When wages adjust.}
-Holding the wage fixed is what reduced cost minimization to minimizing time.
-Once the wage adjusts to the skill a job requires, deploying AI pays on both margins at once, since an augmented or automated step may demand less skill as well as less time, and the firm minimizes the wage bill of the job, the product of its total skill and its total time,
-\begin{align}
-\label{eq:totalcost_mediumrun}
-\min_{\T} \ \Bigl(\sum_{T_b \in \T} \skillcost{b}\Bigr)\Bigl(\sum_{T_b \in \T} \timecost{b}\Bigr).
-\end{align}
-With job boundaries fixed, jobs' costs are independent of one another, so minimizing total production cost reduces to minimizing \eqref{eq:totalcost_mediumrun} for each job separately and it is without loss to study a single job.
-
-Objective \eqref{eq:totalcost_mediumrun} is a product of two sums rather than a single sum, so it is not additive across tasks and the recursion behind Proposition~\ref{prop:shortrun_dp} no longer applies: a task's contribution to cost depends on the skill and the time the rest of the job already carries.
-Exactness is what has to give, but only by an amount the firm can choose.
-
-\begin{proposition}[AI Deployment when Wages Adjust]
-\label{prop:mediumrun_dp}
-Fix a workflow with $m$ steps whose skill and time costs lie in $[1/B, B]$ for some $B > 0$.
-For any $\epsilon > 0$, an AI strategy whose cost~\eqref{eq:totalcost_mediumrun} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
-\end{proposition}
-
-The idea still relies on dynamic programming: the firm decides how to execute the job's steps one at a time, and the program tracks the worker's accumulated skill cost and accumulated time cost along the way, evaluating the wage bill only once every step has been assigned.
-What makes the problem non-trivial is that each execution choice moves the skill and time costs simultaneously, so the program must carry a two-dimensional state that can take exponentially many values.
-We therefore discretize both costs to a geometric grid, which keeps the running time polynomial while approximating the optimum subject to an error term that can be made arbitrarily small.
-Appendix~\ref{app:mediumrun_dp} gives the proof.
-
 \paragraph{The long run.}
-The full long-run problem \eqref{eq:totalcost_with_handoff} adds one further margin to this: as steps are assigned to tasks, the resulting tasks must also be assigned to workers, and the hand-off costs incurred at job boundaries have to be counted along the way.
+The long-run problem \eqref{eq:totalcost_with_handoff} is harder on two counts.
+Its objective is not a sum of task costs but a sum of products of two sums, one for the skill a job requires and one for the time it takes, so a task's contribution to cost depends on what the rest of its job already carries and the recursion above no longer applies.
+The firm must also decide where jobs end, not only where chains end.
+Exactness is what has to give, but only by an amount the firm can choose.
 
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
@@ -87,9 +67,10 @@ Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B
 For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
 
-The proof, in Appendix~\ref{app:jobdesign.longrun}, extends the program behind Proposition~\ref{prop:mediumrun_dp} with a third option at each step: besides executing the step manually or ending an AI chain there, the firm may close the job of the worker currently accumulating tasks and start a new one, paying the hand-off cost at that boundary.
-Closing a job is the point at which the accumulated skill and time are multiplied into a wage bill, which is why the two-dimensional state and its discretization carry over unchanged, and why the running time does as well.
-Adding the job design margin therefore costs nothing in tractability over the problem in which wages adjust but boundaries are fixed.
+The program still walks the workflow from left to right, but it now carries the accumulated skill and time of the worker currently being assigned tasks, and at each step chooses among three options rather than two: execute the step manually, end an AI chain there, or close that worker's job and start a new one, paying the hand-off cost at that boundary.
+Closing a job is the point at which the accumulated skill and time are multiplied into a wage bill, which is why the state has to carry both.
+That state can take exponentially many values, so we discretize each coordinate to a geometric grid, which keeps the running time polynomial at the cost of an error that can be made arbitrarily small.
+Appendix~\ref{app:jobdesign.longrun} gives the proof, building on the intermediate case of Appendix~\ref{app:mediumrun_dp}, in which wages adjust to the skill a job requires but job boundaries are still given.
 
 Taken together, these results say that the firm's problem is not merely well posed but solvable, in the short run exactly and in the long run to any accuracy the firm cares to specify.
 This matters for how the rest of the paper should be read.
