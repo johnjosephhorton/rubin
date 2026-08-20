@@ -1,4 +1,4 @@
-In this section we draw out three implications of the model.
+In this section we draw out three implications of the model in the short run.
 First, we show that AI chaining can overturn comparative advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be automated in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
 Second, we introduce a \emph{fragmentation index} that captures how dispersed a workflow's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps, not merely on what fraction of a workflow's steps are suitable for AI execution (Section~\ref{sec:fragmentation}).
 Third, we show that the marginal gains from improving AI quality are non-monotone, abruptly rising whenever improvements in AI quality make redesigning workflows worthwhile (Section~\ref{sec:nonlinear}).
@@ -88,12 +88,12 @@ Step~1, which on its own would be performed manually, is thus automated only to 
 Its own success probability is just $q_1 = 0.5$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is far more costly.
 \end{example}
 
-We must emphasize that our arguments here are \emph{local} statements: they compare rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence, which depends on the whole workflow at once.
-Nonetheless, the forces determining execution modes in the optimum are the ones outlined here.
-
 In sum, whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors: the pressure to fold a human-advantaged step into a chain can come from either a cheap chain endpoint \emph{downstream} or an AI-reliable predecessor \emph{upstream}.
 A step with identical characteristics can therefore be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that the AI execution likelihood of a step depends on its local work context in different occupations.
+
+We must emphasize that our arguments here are \emph{local} statements: they compare rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence, which depends on the whole workflow at once.
+Nonetheless, the forces determining execution modes in the optimum are the ones outlined here.
 
 
 \subsection{Workflow-level AI Exposure and the Fragmentation Index}
@@ -254,7 +254,7 @@ We can then consider general technology improvements as increasing the value of 
 When AI quality is so low that the firm deploys AI nowhere, marginal improvements in $\alpha$ offer no return at all: every step is performed manually, and production costs do not depend on AI quality.
 Once $\alpha$ passes the level at which deploying AI somewhere in the workflow becomes worthwhile, further improvements pay off, but at a diminishing rate, as a more reliable AI is being applied to a fixed set of AI-executed steps.
 And when $\alpha$ reaches a level at which the firm reorganizes its deployment strategy, extending a chain to automate steps that were previously manual, the marginal return to AI quality jumps up discontinuously, because quality improvements now compound over a longer stretch of the workflow.
-We refer to the values of $\alpha$ at which the optimal strategy changes as \emph{reorganization thresholds}: they partition the range of AI quality into \emph{regimes}, within which the returns to AI progress diminish, while at each threshold the returns jump upward.
+We refer to the values of $\alpha$ at which the optimal strategy changes as \emph{reorganization thresholds}: they partition the range of AI quality into regimes, within which the returns to AI progress diminish, while at each threshold the returns jump upward.
 The example below shows this pattern at work in a two-step workflow.
 
 \begin{example}
@@ -308,7 +308,7 @@ The marginal benefit of improving AI quality is the negative derivative of cost,
 \end{align*}
 Panel~(b) shows that the marginal return to improving AI quality jumps up at each threshold where the optimal strategy switches, since a different strategy governs cost on either side of the threshold.
 It is also worth noting that the jump at $\alpha \approx 0.90$ is larger than the one at $\alpha = 0.50$: forming the chain pulls a second step under AI, so cost falls more steeply.
-This ordering is specific to this example, however, since a later threshold need not introduce a longer chain than an earlier one.
+This ordering is specific to this example, however, since a later threshold does not necessarily introduce a longer chain than an earlier one.
 \end{example}
 
 The non-monotonicity in marginal returns to improving AI is a general phenomenon, and we formalize it in Appendix~\ref{app:nonmonotone}.
