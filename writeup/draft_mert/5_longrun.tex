@@ -7,7 +7,7 @@ In a longer time horizon, the firm decides jointly where to deploy AI along the 
 These decisions cannot be separated, as changing the task assignment of workers changes the skill requirements of jobs and thus will affect wages.
 
 Here we develop the firm's long run problem.
-Section~\ref{sec:longrun.jobdesign} lets the firm apportion the workflow across several workers, which requires endogenizing wages, and Section~\ref{sec:longrun.orgstructure} states the joint problem over AI deployment and job design that results.
+Section~\ref{sec:longrun.jobdesign} lets the firm apportion the workflow across several workers, which requires endogenizing wages, and states the joint problem over AI deployment and job design that results.
 Section~\ref{sec:longrun.specialization} then discusses what stops the firm from dividing the workflow indefinitely, and shows how the answer to that question changes once AI is deployed.
 Appendix~\ref{app:jobdesign} carries the problem further and relates the resulting trade-off to the literature on the division of labor within the firm.
 
@@ -82,9 +82,9 @@ Note what \eqref{eq:jobcost} implies for a job.
 The worker is compensated for every skill the job demands over its whole duration, even though at any given moment they are performing a single task and drawing on only the portion of their knowledge that task requires.
 The remainder of their human capital sits idle at that moment and is paid for regardless.
 
-Without any frictions, the firm would minimize production costs by specializing as far as it can.
+Absent any frictions, the firm would minimize production costs by specializing as far as it can.
 Dividing a job in two splits its skill requirement between two workers while leaving the total time to be worked unchanged, so it strictly lowers the wage bill.
-Carried to its conclusion, the firm would assign every task to its own worker, each of whom acquires exactly the knowledge their task requires and none of whom is ever paid for skill they are not using.
+Carried to its conclusion, the firm would fully specialize work and assign every task to its own worker, each of whom acquires exactly the knowledge their task requires and none of whom is ever paid for skill they are not using.
 
 In reality, work is not organized this way, because dividing production among many workers is not free.
 Each division creates a point at which work must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.
@@ -95,7 +95,7 @@ A hand-off happens at a particular point in production, and what it costs depend
 Some places are natural seams, where the work has reached a self-contained intermediate output, a finished design or a signed-off specification, that can be described briefly and passed on.
 Others fall in the middle of something, where whoever receives the work has to reconstruct the context the previous worker had built up.
 We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs, so that \emph{where} the firm divides the workflow matters and not merely how often it divides it.
-The red curly arrows in Figure~\ref{fig:hierarchical_production} illustrate how hand-offs occur at job boundaries and that they can be traced back to the steps separating the two neighboring jobs.
+The red curly arrows in Figure~\ref{fig:hierarchical_production} illustrate how hand-offs occur at job boundaries and that this cost reflects the characteristics of the last step in a worker's job.
 
 Formally, given step $s_i$, we write $\handofftime{i}$ for the additional hand-off time spent by a worker for whom the last step of their job is $s_i$, and $\handofftime{}(J_j)$ for the hand-off time of job $J_j$, which is equal to $\handofftime{i}$ if $s_i$ is the final step in $J_j$.
 The final job hands off to no one, so $\handofftime{m} = 0$.
@@ -114,30 +114,7 @@ Equation~\eqref{eq:wagebill} highlights two opposing forces that shape a job's b
 Adding more tasks to a worker's job increases the cumulative skill requirement and thus the wage rate for that worker.
 However, if tasks are kept separate, workers must incur additional hand-off costs at each job boundary.
 These two effects, higher wages from combining tasks versus higher hand-off costs from keeping them separate, jointly determine the optimal degree of task aggregation.
-Figure~\ref{fig:lr_job_design} illustrates them in a minimal two-task workflow, where each rectangle represents a task, its height the task's skill cost and its width its time cost, so that a job's wage bill is the area of the rectangle whose height is the skill the job requires and whose width is the time it takes.
-\begin{figure}[!t]
-    \centering
-    \caption{The Trade-off between Worker Specialization and Coordination}
-    \label{fig:lr_job_design}
-    \includegraphics[width=1\linewidth]{plots/job_design.png}
-    \footnotesize
-    \par\vspace{\fignotesskip}
-\begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: The blue bounded rectangles indicate tasks.
-The height of each rectangle corresponds to the task's skill requirement ($\skillcost{}$) and its width to the time requirement ($\timecost{}$).
-The shaded areas represent the wage bills of jobs.
-In the left panel, tasks are assigned to two specialized workers but a hand-off cost (the pink rectangle) is introduced due to coordination frictions between them.
-In the right panel, tasks are bundled into a single job performed by one worker, eliminating hand-off costs but requiring a worker skilled enough to perform both tasks and compensated with a higher per-unit-time wage rate.}
-\end{spacing}
-\end{minipage}
-\end{figure}
 We explore this trade-off in greater detail in Section~\ref{sec:longrun.specialization}.
-Panel~B of Table~\ref{tab:model_parameters} collects the notation this section adds.
-
-
-\subsection{Firm's Organizational Structure}
-\label{sec:longrun.orgstructure}
 
 Given the sequence of steps $\mathcal{S} = \{s_1, \dotsc, s_m\}$, the firm can design both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs.
 The choice of $\T$ determines the time and skill requirements of each task.
@@ -157,6 +134,7 @@ where recall that, for each $T_b \in \T$, $\timecost{b}$ is as described in Sect
 We refer to \eqref{eq:totalcost_with_handoff} as the firm's \emph{long-run} optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
 It nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:jobs_wages} as the case of a single job spanning the whole workflow, whose wage is fixed rather than chosen: with the job design given, minimizing the wage bill reduces to minimizing the time the job takes, and the firm optimizes each job separately.
 Section~\ref{sec:extensions.computation} shows that \eqref{eq:totalcost_with_handoff} can be solved to any desired accuracy in polynomial time.
+Panel~B of Table~\ref{tab:model_parameters} collects the notation this section adds.
 
 
 \subsection{Hand-off Costs and the Limits of Worker Specialization}
@@ -211,7 +189,7 @@ Bundling them buys that hand-off away at the price of a worker who must hold the
 Equation~\eqref{eq:wagebill} is what makes the comparison: bundling raises the wage through $\sum_{T_b \in J_j} \skillcost{b}$, and splitting raises time through $\handofftime{}(J_j)$.
 Neither force wins outright, and where they balance is the firm's degree of specialization.
 
-Figure~\ref{fig:job_design} reads the same four designs geometrically, using the convention of Figure~\ref{fig:lr_job_design}.
+Figure~\ref{fig:job_design} reads the same four designs geometrically, drawing each task as a rectangle whose height is its skill cost and whose width is its time cost, so that a job's wage bill is the area its bounding rectangle encloses.
 \begin{figure}[!t]
 \centering
 \caption{Geometric Interpretation of Job Designs} \label{fig:job_design}
