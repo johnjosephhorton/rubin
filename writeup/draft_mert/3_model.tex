@@ -6,12 +6,15 @@ Completing a step takes worker time and demands skill, and both differ across th
 The firm deploys AI by assigning one of the modes to each step, and that assignment determines the set of tasks the human worker actually handles.
 Figure~\ref{fig:steps_tasks} illustrates one such AI deployment strategy.
 
-In this section and the next we fix a worker's job boundary, that is, the set of steps assigned to them.
-Because these boundaries are fixed, how AI is deployed within one worker's job does not affect what any other worker's job costs, so it is without loss to study a \emph{single worker} to whom the entire production sequence is allocated.
-What that worker's wage rate compensates is the total skill they must possess in order to perform all the tasks in their job.
-Because the assignment of steps is fixed here, so is the wage rate, and we normalize it to $1$.
-This characterization reflects the short-run dynamics of the economy, in which the firm has already determined the boundaries of workers' jobs, workers have acquired the skills their roles require, and the firm has hired them at pre-specified wage rates, so what the firm optimizes is how to deploy AI in order to improve worker's productivity on a fixed set of steps and minimize the time each worker spends performing their job.
-Section~\ref{sec:longrun} lets the firm decide how to allocate steps across multiple workers, at which point the skill a job assignment demands, and hence what it pays, becomes endogenous, and the firm lowers production costs by deploying AI in tandem with optimizing workers' job structure.
+In this section and the next we work in the short run.
+The boundaries of jobs, that is, the sets of steps assigned to each worker, are already drawn, workers have acquired the skills their roles require, and the firm has hired them at wages agreed in advance.
+What remains open is only how AI is deployed on the steps each worker already holds.
+Two simplifications follow.
+A worker's wage compensates the skills their job demands, so with those demands settled the wage is a constant, which we normalize to $1$.
+And since AI deployed within one worker's job leaves the cost of every other job untouched, nothing is lost by studying a \emph{single worker} to whom the entire production sequence is allocated.
+
+Section~\ref{sec:longrun} reopens both.
+There the firm also chooses how to divide the steps among workers, so the skill a job demands, and hence the wage it commands, becomes something the firm decides, and AI lowers costs by reshaping jobs as well as by shortening the time they take.
 
 Below we define each of the model's components formally in turn.
 
@@ -168,11 +171,11 @@ The cost of production is therefore the total expected time requirement of the w
 \label{eq:totalcost_shortterm}
 \min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
-Problem \eqref{eq:totalcost_shortterm} is the firm's short-run cost minimization problem.
 
-This problem is where chaining shows its bite.
-The firm cannot solve it step by step: whether automating a step lowers expected time depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm must choose among whole arrangements rather than making a separate decision at each step.
+Problem \eqref{eq:totalcost_shortterm} is the firm's short-run cost minimization problem, and is where chaining shows its bite.
+The firm cannot solve this problem step by step: whether automating a step lowers total expected time depends on the overall arrangement of steps in the workflow. 
+So the firm must choose among all possible arrangements rather than making a separate decision at each step.
 
-What the firm is doing is lowering its production costs by grouping consecutive steps into AI chains, and it does so with the content of the worker's job, and hence the rate at which they are paid, held fixed.
+In the short run, what the firm does is lowering its production costs by optimally grouping steps into tasks and creating AI chains, and it does so while keeping the content of the worker's job, and hence the rate at which they are paid, fixed.
 AI is therefore a purely productivity-improving tool here, compressing the time a fixed set of steps takes.
-Section~\ref{sec:extensions.computation} shows how the problem can be solved via dynamic programming, and Section~\ref{sec:results} works through what its solution implies for how AI is deployed across a workflow.
+Section~\ref{sec:results} works through what its solution implies for how AI is deployed across a workflow, and Section~\ref{sec:extensions.computation} shows how the problem can be solved via dynamic programming.
