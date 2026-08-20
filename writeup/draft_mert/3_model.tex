@@ -2,9 +2,9 @@ A firm's production consists of a sequence of steps $\mathcal{S}=(s_1,\ldots,s_m
 We hold the set of production steps fixed and abstract from the creation or disappearance of steps in our model.
 }
 Each step can be performed manually, performed with AI assistance (augmentation), or, when chained with neighboring steps, executed by AI with no direct human involvement (automation).
-Completing a step takes worker time and demands worker skill, and both differ across the three modes of execution.
+Completing a step takes worker time and demands skill, and both differ across the three modes of execution.
 The firm deploys AI by assigning one of the modes to each step, and that assignment determines the set of tasks the human worker actually handles.
-Figure~\ref{fig:steps_tasks} illustrates one such AI strategy, in which seven steps are bundled into five tasks.
+Figure~\ref{fig:steps_tasks} illustrates one such AI deployment strategy.
 
 In this section and the next we fix a worker's job boundary, that is, the set of steps assigned to them.
 Because these boundaries are fixed, how AI is deployed within one worker's job does not affect what any other worker's job costs, so it is without loss to study a \emph{single worker} to whom the entire production sequence is allocated.
@@ -163,27 +163,16 @@ The firm employs human labor to perform tasks and produce the output, and labor 
 Viewed as a production function, our sequential technology is Leontief at the level of the individual firm: producing a unit of output requires completing every step of the workflow, in fixed proportions.
 }
 The worker carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the firm's AI strategy organizes into the task sequence $\T = (T_1, \dotsc, T_n)$, and is paid at the normalized rate of $w = 1$ per unit of time for the whole time production takes.
-The cost of production is therefore the total expected time requirement of the workflow's tasks, and the firm chooses the AI deployment strategy that minimizes it,
+The cost of production is therefore the total expected time requirement of the workflow's tasks, and the firm chooses the AI deployment strategy that minimizes
 \begin{align}
 \label{eq:totalcost_shortterm}
-\min_{\T} \ \sum_{T_b \in \T} \timecost{b},
+\min_{\T} \ \sum_{T_b \in \T} \timecost{b}.
 \end{align}
-deploying AI on a step, or on a run of steps as a chain, whenever doing so lowers this expected time.
 Problem \eqref{eq:totalcost_shortterm} is the firm's short-run cost minimization problem.
 
-Note that the firm cannot solve this problem step by step due to chaining.
-Whether automating a step lowers expected time depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm must choose among whole arrangements rather than making a separate decision at each step.
-The number of such arrangements grows exponentially in the number of steps $m$.
+This problem is where chaining shows its bite.
+The firm cannot solve it step by step: whether automating a step lowers expected time depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm must choose among whole arrangements rather than making a separate decision at each step.
 
-Despite this, the firm's short-run problem is exactly solvable, and cheaply.
-What makes it tractable is that \eqref{eq:totalcost_shortterm} adds up time costs over tasks, so that once the firm has decided where a task ends, the cost of everything before it is a separate problem.
-Section~\ref{sec:extensions.computation} builds a recursion on this observation and shows that the cost-minimizing AI strategy can be computed in time $O(m^2)$ by dynamic programming.
-
-The argument behind it says something about the economics of the problem, not merely its computation.
-At each point in the workflow the firm has only two real alternatives: stop the chain and pay a human to execute the step, or extend the chain and pay instead for the higher chance that the whole run has to be repeated.
-Choosing how far back a chain reaches is where chaining enters, since it weighs the execution cost a longer chain avoids against the accumulated failure risk it takes on, and the chain stops where one more retry would cost more than the manual execution it displaces.
-Section~\ref{sec:results} works through what this trade-off implies once the whole workflow is considered at once.
-
-Two features of this problem are worth flagging before we proceed.
-First, nothing in what follows depends on how the optimum is computed; we work with the cost-minimizing arrangement directly from here on.
-Second, note how little the problem requires: with the boundary of the worker's job, and hence their wage, held fixed, AI acts purely as a productivity-improving tool, lowering the time it takes to execute a fixed set of steps.
+What the firm is doing is lowering its production costs by grouping consecutive steps into AI chains, and it does so with the content of the worker's job, and hence the rate at which they are paid, held fixed.
+AI is therefore a purely productivity-improving tool here, compressing the time a fixed set of steps takes.
+Section~\ref{sec:extensions.computation} shows how the problem can be solved via dynamic programming, and Section~\ref{sec:results} works through what its solution implies for how AI is deployed across a workflow.
