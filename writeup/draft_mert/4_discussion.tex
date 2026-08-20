@@ -253,23 +253,25 @@ Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal b
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This figure plots the two-step workflow of Example~\ref{ex:nonmonotone} as AI quality $\alpha$ rises. Panel (a) shows the cost of each AI strategy, with the optimal strategy given by their lower envelope (thick black line): both steps manual below $\alpha = 0.50$, step~2 augmented between $\alpha = 0.50$ and $\alpha \approx 0.90$, and both steps chained above $\alpha \approx 0.90$. Panel (b) shows the marginal benefit of improving AI quality, $-\mathrm{d}C/\mathrm{d}\alpha$. The marginal benefit jumps at each $\alpha$ where the optimal strategy switches, so gains from AI improvements are non-monotone in $\alpha$.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: This figure plots the two-step workflow of Example~\ref{ex:nonmonotone} as AI quality $\alpha$ rises. Panel (a) shows the cost of each AI strategy, with the optimal strategy given by their lower envelope (thick black line); the table below gives each strategy's cost and the range of $\alpha$ over which it is optimal. Panel (b) shows the marginal benefit of improving AI quality, $-\mathrm{d}C/\mathrm{d}\alpha$. The marginal benefit jumps at each $\alpha$ where the optimal strategy switches, so gains from AI improvements are non-monotone in $\alpha$.}
 \end{spacing}
 \end{minipage}
 \end{figure}
 
-Below $\alpha = 0.50$ both steps are manual; between $\alpha = 0.50$ and $\alpha \approx 0.90$ the firm augments step~2; and above $\alpha \approx 0.90$ it chains both steps, automating step~1:
-\begin{align*}
-\text{both manual:} \quad & \manualTime{1} + \manualTime{2} = (1)(1) + (1)(2) = 3, \\
-\text{augment step 2:} \quad & \manualTime{1} + \frac{\AItime{2}}{q_2} = (1)(1) + \frac{(1)(1)}{\alpha} = 1 + \tfrac{1}{\alpha}, \\
-\text{chain (steps 1--2):} \quad & \frac{\AItime{2}}{q_1 q_2} = \frac{(1)(1)}{\alpha^{6}\,\alpha^{1}} = \alpha^{-7}.
-\end{align*}
-The marginal benefit of improving AI quality is the negative derivative of cost, $-\mathrm{d}C/\mathrm{d}\alpha$, which across the three regimes is
-\begin{align*}
-\text{both manual:} \quad & -\frac{\mathrm{d}}{\mathrm{d}\alpha}\,(3) = 0, \\
-\text{augment step 2:} \quad & -\frac{\mathrm{d}}{\mathrm{d}\alpha}\!\left(1 + \frac{1}{\alpha}\right) = \frac{1}{\alpha^{2}}, \\
-\text{chain (steps 1--2):} \quad & -\frac{\mathrm{d}}{\mathrm{d}\alpha}\,\alpha^{-7} = \frac{7}{\alpha^{8}}.
-\end{align*}
+With $q_1 = \alpha^{6}$ and $q_2 = \alpha$, the firm chooses among three configurations, whose costs follow from the task time costs of Section~\ref{sec:model.tasks}.
+The marginal benefit of improving AI quality is the negative derivative of cost, $-\mathrm{d}C/\mathrm{d}\alpha$.
+\begin{center}
+\singlespacing
+\begin{tabular}{lccc}
+\toprule
+Configuration & Time cost & $-\mathrm{d}C/\mathrm{d}\alpha$ & Optimal for \\
+\midrule
+Both steps manual & $\manualTime{1} + \manualTime{2} = 3$ & $0$ & $\alpha \leq 0.50$ \\
+Step 2 augmented & $\manualTime{1} + \AItime{2}/q_2 = 1 + 1/\alpha$ & $1/\alpha^{2}$ & $0.50 \leq \alpha \lesssim 0.90$ \\
+Steps 1--2 chained & $\AItime{2}/(q_1 q_2) = \alpha^{-7}$ & $7/\alpha^{8}$ & $\alpha \gtrsim 0.90$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 Panel~(b) shows that the marginal return to improving AI quality jumps up at each threshold where the optimal strategy switches, since a different strategy governs cost on either side of the threshold.
 It is also worth noting that the jump at $\alpha \approx 0.90$ is larger than the one at $\alpha = 0.50$: forming the chain pulls a second step under AI, so cost falls more steeply.
 This ordering is specific to this example, however, since a later threshold does not necessarily introduce a longer chain than an earlier one.
