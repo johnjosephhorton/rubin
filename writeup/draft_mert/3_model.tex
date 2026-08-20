@@ -1,20 +1,20 @@
+In this section and the next we consider the firm's production in the short run.
 A firm's production consists of a sequence of steps $\mathcal{S}=(s_1,\ldots,s_m)$, all of which need to be performed in order to produce the final output.\footnote{
 We hold the set of production steps fixed and abstract from the creation or disappearance of steps in our model.
 }
 Completing a step takes worker time and demands skill, and both differ across different modes of execution.
 The firm deploys AI by assigning each step to human or AI, and that assignment determines the set of tasks the human worker actually handles.
-Figure~\ref{fig:steps_tasks} illustrates one such AI deployment strategy.
-We define each component of the figure formally in turn.
+Figure~\ref{fig:steps_tasks} illustrates an example of how AI can be deployed to bundle steps into tasks.
+We define each component shown in the figure formally below.
 
-In this section and the next we consider the firm's production in the short run.
-The boundaries of jobs, that is, the sets of steps assigned to each worker, are already set, workers have acquired the skills their roles require, and the firm has hired them at wages agreed in advance.
-The only available margin to the firm is thus how to deploy AI on the steps each worker already holds to minimize production costs.
+In the short run, the boundaries of jobs, that is, the sets of steps assigned to each worker, are already set, workers have acquired the skills their roles require, and the firm has hired them at wages agreed in advance.
+The only available margin to the firm is thus how to deploy AI on the steps each worker already holds to lower the time cost of production per unit of output.
+
 Two simplifications follow.
 A worker's wage compensates the skills their job demands, so with those demands settled in the short run the wage is constant, and we normalize it to $1$.
-And since AI deployed within one worker's job leaves the cost of every other job untouched, it is without loss to focus on a single worker to whom the entire production sequence is allocated.
-
-Section~\ref{sec:longrun} relaxes both.
-There the firm also chooses how to divide the steps among workers, so the skill a job demands, and hence the wage it commands, becomes an endogenous object the firm decides on, and AI lowers costs by changing the boundaries of jobs as well as by shortening the time they take.
+Moreover, since AI deployed within one worker's job leaves the cost of every other job untouched, it is without loss to focus on a single worker to whom the entire production sequence is allocated.
+In Section~\ref{sec:longrun} we we allow the firm to also choose how to divide the steps among workers, so the skill a job demands, and hence the wage it commands, becomes an endogenous object.
+There AI deployment lowers costs not only by shortening the time performing steps take but also by changing the boundaries of jobs.
 
 \begin{figure}[!t]
   \centering
@@ -65,7 +65,7 @@ The expected time cost of managing a single augmented step is $\AItime{i}/q_i$, 
 Tasks are the smallest unit of work for a human worker.
 A step performed on its own, whether manually or with AI augmentation, constitutes a task, with an expected time cost equal to that of the step in its chosen mode: $\manualTime{i}$ if performed manually and $\AItime{i}/q_i$ if augmented.
 
-Steps can also be executed in an \emph{automated} mode in which AI performs the step end-to-end with no direct human involvement, and hence at zero direct human cost.\footnote{That execution of automated steps do not incur any cost to the firm is consistent with the AI subscription business model, where the firm pays an upfront fixed cost to an AI provider and uses AI tools at zero marginal cost afterward. The mechanisms discussed in the model remain unaffected even if we assume each time the firm deploys AI on a step it has to incur a marginal cost, but we abstract away from considering this to avoid complicating the model.}
+Steps can also be executed in an \emph{automated} mode in which AI performs the step end-to-end with no direct human involvement, and hence at zero direct human cost.\footnote{That execution of automated steps do not incur any cost to the firm is consistent with the AI subscription business model, where the firm pays an upfront fixed cost to an AI provider and uses AI tools at zero marginal cost afterward. The main forces discussed in the model remain at play even if we assume each time the firm deploys AI on a step it has to incur a cost. We deliberately avoid modeling this to prevent complicating the model.}
 Automation, however, arises only within an \emph{AI chain}: a contiguous run of AI-executed steps in which each step's output feeds directly into the next and a human verifies only the final output.
 Every step of such a chain but the last is automated while the last step is augmented, since its output is the one the worker reviews.
 The AI chain as a whole can be thought as a single \emph{composite} task delegated by the human to AI for execution.
@@ -150,6 +150,6 @@ Problem \eqref{eq:totalcost_shortterm} is the firm's short-run cost minimization
 The firm cannot solve this problem step by step: whether automating a step lowers total expected time depends on the overall arrangement of steps in the workflow. 
 So the firm must choose among all possible arrangements rather than making a separate decision at each step.
 
-In the short run, what the firm does is lowering its production costs by optimally grouping steps into tasks and creating AI chains, and it does so while keeping the content of the worker's job, and hence the rate at which they are paid, fixed.
+What the firm does in the short run is lowering its production costs by optimally creating AI chains, and it does so while the content of the worker's job, and hence the rate at which they are paid, are held fixed.
 AI is therefore a purely productivity-improving tool here, compressing the time performing a fixed set of steps takes.
-Section~\ref{sec:results} works through what this implies for how AI is deployed across a workflow, and Section~\ref{sec:extensions.computation} shows how the problem can be solved via dynamic programming.
+Section~\ref{sec:results} works through the implications of chaining, and Section~\ref{sec:extensions.computation} shows how the solution to the short-run problem can be calculated.
