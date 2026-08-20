@@ -74,12 +74,20 @@ We maintain this normalization throughout subsequent sections until we explicitl
 While we allow the firm to specialize its job design and partition its production process into distinct jobs, we acknowledge that there are inherent inefficiencies and frictions that are introduced when splitting work among multiple workers.
 Absent such frictions in our model, it would always be optimal for a firm to specialize its workers as much as possible, assigning a distinct worker to each task of its production process.
 We therefore introduce \emph{hand-off costs} to a job design, as follows.
-In addition to the time required completing tasks, a worker may need to spend time handing off their work to another worker if $J_j$ is not the final job in the job design $\mathcal{J}$.
-We will assume throughout that the hand-off time of a worker assigned to job $J_j$ depends only on the final step of job $J_j$ (see red curly arrows in Figure~\ref{fig:hierarchical_production}).
-That is, conditional on where the hand-off occurs in the production process, its cost does not otherwise depend on previous hand-off events.
-Given step $s_i$, we write $\handofftime{i}$ to denote the additional hand-off time spent by a worker for whom the last step of their job is $s_i$.
-For notational convenience we define the hand-off time for the final step $s_m$ to be zero: $\handofftime{m} = 0$.
-Also for notational convenience, we will write $\handofftime{}(J_j)$ to denote the hand-off time of job $J_j$, which recall is equal to $\handofftime{i}$ if $s_i$ is the final step in job $J_j$.
+
+Each division of the production process creates a point at which work must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.
+In addition to the time required completing tasks, a worker therefore spends time handing their work off to another worker whenever $J_j$ is not the final job in the job design $\mathcal{J}$.
+
+Because our production process has an order, we can be more specific than a cost that depends only on how many workers there are.
+A hand-off happens at a particular point in production, and what it costs depends on which point.
+Some places are natural seams, where the work has reached a self-contained intermediate output, a finished design or a signed-off specification, that can be described briefly and passed on.
+Others fall in the middle of something, where whoever receives the work has to reconstruct the context the previous worker had built up.
+We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs, so that \emph{where} the firm divides the workflow matters and not merely how often it divides it.
+The red curly arrows in Figure~\ref{fig:hierarchical_production} illustrate how hand-offs occur at job boundaries and that they can be traced back to the steps separating the two neighboring jobs.
+
+Formally, given step $s_i$, we write $\handofftime{i}$ for the additional hand-off time spent by a worker for whom the last step of their job is $s_i$, and $\handofftime{}(J_j)$ for the hand-off time of job $J_j$, which is equal to $\handofftime{i}$ if $s_i$ is the final step in $J_j$.
+The final job hands off to no one, so $\handofftime{m} = 0$.
+Conditional on where the hand-off occurs in the production process, its cost does not otherwise depend on previous hand-off events.
 Thus the total time needed to complete job $J_j$, including hand-off costs, is
 \[
 \handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}.
