@@ -52,14 +52,17 @@ Example~\ref{ex:ca_predecessor} showcases these forces numerically.
 \begin{example}
 \label{ex:ca_predecessor}
 Consider three consecutive steps with the following parameters:
-\[
-  \bigl(\manualTime{i},\ \AItime{i},\ q_i\bigr) =
-  \begin{cases}
-    \bigl(5,\ 4,\ 0.95\bigr) & i = 0,\\[2pt]
-    \bigl(1,\ 2,\ 0.50\bigr) & i = 1,\\[2pt]
-    \bigl(4,\ 1,\ 0.80\bigr) & i = 2.
-  \end{cases}
-\]
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualTime{i})$} & \makecell{AI management cost\\$(\AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+$0$ & $5$ & $4$ & $0.95$ \\
+$1$ & $1$ & $2$ & $0.50$ \\
+$2$ & $4$ & $1$ & $0.80$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 Figure~\ref{fig:ex_predecessor} shows how the optimal execution changes once Step~0 is placed in front of Steps~1--2.
 \begin{figure}[!t]
 \caption{Comparative Advantage Overturned by an AI-Friendly Predecessor}
@@ -110,20 +113,17 @@ The two examples below showcase this point.
 \begin{example}
 \label{ex:fragmentation_interleaved}
 Consider a workflow of $m$ steps (with $m$ even).
-The steps alternate between \emph{easy} and \emph{hard} for AI, and all share the same costs:
-\[
-  \manualTime{i} = 5,
-  \qquad
-  \AItime{i} = 6,
-  \qquad
-  q_i =
-  \begin{cases}
-    1   & i \text{ odd} \quad(\text{easy}),\\[2pt]
-    0.1 & i \text{ even} \quad(\text{hard}).
-  \end{cases}
-\]
-
-\vspace{0.25cm}
+The steps alternate between \emph{easy} and \emph{hard} for AI, and differ only in how reliably AI executes them:
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Steps\\$(i)$} & \makecell{Manual cost\\$(\manualTime{i})$} & \makecell{AI management cost\\$(\AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+Odd $i$ (easy) & $5$ & $6$ & $1$ \\
+Even $i$ (hard) & $5$ & $6$ & $0.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
@@ -148,20 +148,17 @@ m(5) = 5m.
 \end{example}
 \begin{example}
 \label{ex:fragmentation_clustered}
-Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly steps: the first $m/2$ steps are easy and the last $m/2$ are hard. All steps share the same costs:
-\[
-  \manualTime{i} = 5,
-  \qquad
-  \AItime{i} = 6,
-  \qquad
-  q_i =
-  \begin{cases}
-    1   & i \le m/2 \quad(\text{easy}),\\[2pt]
-    0.1 & i >    m/2 \quad(\text{hard}).
-  \end{cases}
-\]
-
-\vspace{0.25cm}
+Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly steps, so that the first $m/2$ steps are easy and the last $m/2$ are hard:
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Steps\\$(i)$} & \makecell{Manual cost\\$(\manualTime{i})$} & \makecell{AI management cost\\$(\AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
+\midrule
+$i \le m/2$ (easy) & $5$ & $6$ & $1$ \\
+$i > m/2$ (hard) & $5$ & $6$ & $0.1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
@@ -259,13 +256,17 @@ The example below shows this pattern at work in a two-step workflow.
 
 \begin{example}
 \label{ex:nonmonotone}
-Consider a two-step workflow.
-Managing an AI attempt costs $\AItime{i} = 1$ at either step, and the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$, so the two steps differ only in
-\[
-  \manualTime{1} = 1, \qquad
-  \manualTime{2} = 2, \qquad
-  d_1 = 6, \qquad d_2 = 1.
-\]
+Consider a two-step workflow in which the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$:
+\begin{center}
+\begin{tabular}{c|ccc}
+\toprule
+\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualTime{i})$} & \makecell{AI management cost\\$(\AItime{i})$} & \makecell{Difficulty for AI\\$(d_i)$} \\
+\midrule
+$1$ & $1$ & $1$ & $6$ \\
+$2$ & $2$ & $1$ & $1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
 Step~1 is short but hard for AI, while step~2 is more time-consuming but easy.
 Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal benefit as AI quality $\alpha$ rises.
 
