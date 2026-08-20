@@ -95,19 +95,17 @@ An AI chain spanning steps $(s_\ell,\dots,s_r)$ has steps $(s_\ell,\dots,s_{r-1}
 
 Finally, we define an \emph{AI deployment strategy} (or \emph{AI strategy} for short) as a partition of the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\mathcal{T}$, each of which is either a manual step or an AI chain.
 The AI strategy in Figure~\ref{fig:steps_tasks}, for instance, groups seven steps into five tasks: two AI chains (a length-three chain containing Steps 2--4 and a length-one chain containing only Step~6) and three manual steps.
-Table~\ref{tab:model_parameters} collects the notation used throughout the paper; Panel~A covers everything needed here and in Section~\ref{sec:results}.
+Table~\ref{tab:notation_shortrun} collects the notation this section introduces, which is everything needed here and in Section~\ref{sec:results}.
 
-\begin{table}[p]
+\begin{table}[!t]
 \centering
-\caption{Notation Summary}
-\label{tab:model_parameters}
+\caption{Notation: Steps, Tasks, and AI Deployment}
+\label{tab:notation_shortrun}
     \footnotesize
 \begin{tabularx}{\textwidth}{l X}
 \toprule
 \textbf{Symbol} & \textbf{Description} \\
 \midrule
-\addlinespace
-\multicolumn{2}{@{}l}{\textbf{Panel A. Short run: steps, tasks, and AI deployment (Sections~\ref{sec:model.steps}--\ref{sec:results})}} \\
 \addlinespace
 $\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
 \addlinespace
@@ -121,36 +119,14 @@ $q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
 $T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
 $\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
 $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual step, $\AItime{r}/\prod_{i=\ell}^{r} q_i$ if an AI chain over steps $\ell, \dotsc, r$ \\
-\addlinespace
-\midrule
-\addlinespace
-\multicolumn{2}{@{}l}{\textbf{Panel B. Long run: skills, jobs, and wages (Section~\ref{sec:longrun.jobdesign})}} \\
-\addlinespace
-$\manualSkill{i}$ & Skill required to complete step $i$ manually \\
-$\AIskill{i}$ & Skill required to manage one AI attempt at step $i$ \\
-$\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step, $\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none \\
-\addlinespace
-$J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
-$\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
-$\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
-$\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
-\addlinespace
-$\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
-$\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
-\addlinespace
-\midrule
-\addlinespace
-\multicolumn{2}{@{}l}{\textbf{Panel C. CES representation (Section~\ref{sec:extensions.aggregation})}} \\
-\addlinespace
-$\aggregateAIlabor,\ \aggregateManualLabor$ & Economy-wide AI management labor and manual labor \\
-$K,\ X$ & Aggregate capital and aggregate output \\
-$\theta_{\AIletter},\ \theta_{\manualLetter},\ \rho$ & CES weights and substitution parameter in \eqref{eq:lr_macro_ces} \\
 \bottomrule
 \end{tabularx}
 
     \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This table collects the notation used throughout the paper. Step-level primitives are indexed by $i$, task-level objects by $b$, and jobs by $j$. Superscripts $M$ and $A$ denote the manual and AI modes of executing a step, and $H$ denotes a hand-off between workers. Panel~A is all the short-run problem requires: with the whole workflow assigned to one worker at a fixed wage, execution time is the only margin, and no notion of skill is needed. The skill, job, and wage notation of Panel~B enters only once the firm chooses how to divide the workflow among workers, and Panel~C only once firm-level production is aggregated to the economy.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Step-level primitives are indexed by $i$ and task-level objects by $b$, and superscripts $M$ and $A$ denote the manual and AI modes of executing a step.
+This is all the short-run problem requires: with the whole workflow assigned to one worker at a fixed wage, execution time is the only margin and no notion of skill is needed.
+Table~\ref{tab:notation_longrun} collects the skill, job, and wage notation that Section~\ref{sec:longrun} adds.}
 \end{spacing}
 \end{minipage}
 \end{table}

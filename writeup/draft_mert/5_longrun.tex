@@ -131,10 +131,42 @@ Then the full optimization problem faced by the firm can be expressed as
 \end{align}
 where recall that, for each $T_b \in \T$, $\timecost{b}$ is as described in Section~\ref{sec:model.tasks} and $\skillcost{b}$ as above, both depending on the selected mode of operation for individual steps.
 
-We refer to \eqref{eq:totalcost_with_handoff} as the firm's \emph{long-run} optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
-It nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:jobs_wages} as the case of a single job spanning the whole workflow, whose wage is fixed rather than chosen: with the job design given, minimizing the wage bill reduces to minimizing the time the job takes, and the firm optimizes each job separately.
+We refer to \eqref{eq:totalcost_with_handoff} as the firm's long-run optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
+It nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:jobs_wages} as the case of a single job spanning the whole production, with wage being fixed rather than chosen: with the job design given, minimizing the wage bill reduces to minimizing the time the job takes, and the firm optimizes each job separately.
 Section~\ref{sec:extensions.computation} shows that \eqref{eq:totalcost_with_handoff} can be solved to any desired accuracy in polynomial time.
-Panel~B of Table~\ref{tab:model_parameters} collects the notation this section adds.
+Table~\ref{tab:notation_longrun} collects the notation this section adds.
+
+\begin{table}[!t]
+\centering
+\caption{Notation: Skills, Jobs, and Wages}
+\label{tab:notation_longrun}
+    \footnotesize
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+\addlinespace
+$\manualSkill{i}$ & Skill required to complete step $i$ manually \\
+$\AIskill{i}$ & Skill required to manage one AI attempt at step $i$ \\
+$\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step, $\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none \\
+\addlinespace
+$J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
+$\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
+$\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
+$\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
+\addlinespace
+$\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
+$\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
+\bottomrule
+\end{tabularx}
+
+    \begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Jobs are indexed by $j$, and the superscript $H$ denotes a hand-off between workers.
+This notation enters only once the firm chooses how to divide the workflow among workers, and it extends the step- and task-level notation of Table~\ref{tab:notation_shortrun}, which the long-run problem continues to use.}
+\end{spacing}
+\end{minipage}
+\end{table}
 
 
 \subsection{Hand-off Costs and the Limits of Worker Specialization}
