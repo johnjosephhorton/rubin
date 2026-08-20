@@ -166,17 +166,7 @@ The bound of $\tfrac{5}{4}$ in Lemma~\ref{lem:FI.upper.bound} is tight, as the f
 \begin{example}
 \label{ex:FI.tight}
 Consider a three-step workflow in which the first and last steps always succeed, while the second succeeds with probability $1/2$ and is twice as costly to perform manually:
-\begin{center}
-\begin{tabular}{c|ccc}
-\toprule
-\makecell{Step\\$(i)$} & \makecell{Manual cost\\$(\manualTime{i})$} & \makecell{AI management cost\\$(\AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
-\midrule
-$1$ & $1$ & $1$ & $1$ \\
-$2$ & $2$ & $1$ & $1/2$ \\
-$3$ & $1$ & $1$ & $1$ \\
-\bottomrule
-\end{tabular}
-\end{center}
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr)_{i=1,2,3} = (1,\,1,\,1),\quad (2,\,1,\,\tfrac12),\quad (1,\,1,\,1). \]
 The optimal policy automates all three together for an expected cost of $\AItime{3}/(q_1 q_2 q_3) = 1/(1 \cdot \tfrac12 \cdot 1) = 2$, whereas the fragmentation index is $\tfrac12 \times 1 + \tfrac12 \times (1+2+1) = \tfrac52$.
 The ratio $FI/OPT$ is therefore $\tfrac54$.
 \end{example}
@@ -257,15 +247,7 @@ The approximation factor in Lemma~\ref{lem:FI.lower.bound.4} cannot be improved 
 \begin{example}
 \label{ex:FI.lower.gap}
 Consider a sequence of $m$ identical steps:
-\begin{center}
-\begin{tabular}{c|ccc}
-\toprule
-\makecell{Steps\\$(i)$} & \makecell{Manual cost\\$(\manualTime{i})$} & \makecell{AI management cost\\$(\AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
-\midrule
-All $i$ & $\sqrt{2}$ & $1$ & $1/\sqrt{2}$ \\
-\bottomrule
-\end{tabular}
-\end{center}
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = \bigl(\sqrt{2},\, 1,\, 1/\sqrt{2}\bigr) \ \text{ for all $i$}. \]
 The task sequence described in the proof of Lemma~\ref{lem:FI.lower.bound.4} handles each task separately, for a total cost of $m \sqrt{2}$, so the optimal task sequence performs at least this well.
 The fragmentation index is such that each task contributes $\sqrt{2}$ if it fails, plus $1$ if the preceding task did not fail, for a total contribution of $(1-1/\sqrt{2})(\sqrt{2} + 1/\sqrt{2}) = \tfrac{3}{2}(\sqrt{2}-1) \approx 0.6213$.
 As $m$ grows large, the ratio between $m\sqrt{2}$ and $1 + m \times 0.6213$ approaches $\tfrac{2}{3}(2+\sqrt{2}) \approx 2.276$.
@@ -312,16 +294,7 @@ But, as the following example shows, the factor is strictly greater than the fac
 \begin{example}
 \label{ex:FI.necessity}
 Consider a sequence that alternates between two step types, with $K > 1$ such pairs (so $2K$ steps in total), where $\epsilon$ is vanishingly small:
-\begin{center}
-\begin{tabular}{c|ccc}
-\toprule
-\makecell{Steps\\$(i)$} & \makecell{Manual cost\\$(\manualTime{i})$} & \makecell{AI management cost\\$(\AItime{i})$} & \makecell{AI success probability\\$(q_i)$} \\
-\midrule
-Odd $i$ & $0$ & $1$ & $1/\sqrt{2}-\epsilon$ \\
-Even $i$ & $1$ & $1$ & $1$ \\
-\bottomrule
-\end{tabular}
-\end{center}
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = \bigl(0,\, 1,\, 1/\sqrt{2}-\epsilon\bigr) \ \text{ for odd $i$}, \qquad (1,\,1,\,1) \ \text{ for even $i$}. \]
 The task sequence described in the proof of Lemma~\ref{lem:FI.lower.bound.8} groups the steps into pairs of two-step tasks, for a total cost of $K \sqrt{2}$ (ignoring $\epsilon$).
 The fragmentation index is $1$ plus $1$ for each task that fails, which is $1 + K(1 - 1/\sqrt{2})$ (again ignoring the impact of $\epsilon$).
 As $K$ grows large, the ratio tends to $2(\sqrt{2}+1)$, which is strictly greater than $4$.
