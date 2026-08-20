@@ -34,7 +34,8 @@ Completing a step demands not only time but also skill, by which we mean the bod
 The short run had no need of this notion, as we assumed workers had acquired the skills necessary to perform all activities in their job. 
 In the long run, however, the firm chooses which steps to assign to which worker and thus we introduce skills to capture the changes in requirements of jobs. 
 
-Accordingly, we extend Definitions~\ref{def:manual_task}--\ref{def:ai_chain} to incorporate the skill cost of steps as well: performing step $i$ manually costs $(\manualSkill{i},\, \manualTime{i})$, and managing one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
+Accordingly, we extend Definitions~\ref{def:manual_task}--\ref{def:ai_chain} to incorporate the skill cost of steps as well: 
+the skill and time cost of performing step $i$ manually is $(\manualSkill{i},\, \manualTime{i})$, while managing one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
 The two costs need not coincide, since doing the work oneself calls for knowing how to do it, whereas directing an AI to do it and judging what comes back may call for knowledge of a different kind.
 As with time costs, a task inherits the skill of whichever mode executes it, so each task $T_b$ in the task sequence $\T = \{T_1, \dotsc, T_n\}$ carries a pair of skill and time costs $(\skillcost{b}, \timecost{b})$ that depend on whether it is completed manually or with the aid of AI.
 An AI chain therefore demands only the skill required to check and validate the output of its augmented step, and an automated step inside a chain demands no skill of anyone, since no human ever handles it directly.
@@ -42,8 +43,7 @@ An AI chain therefore demands only the skill required to check and validate the 
 The firm hires one worker for each job in its job design $\mathcal{J}$.
 The worker for job $J_j$ completes all tasks associated with their job.
 The total time needed to complete all tasks in job $J_j$ is $\sum_{T_b \in J_j} \timecost{b}$.
-
-A worker's wage is determined by the total skill required to complete their job.
+The worker's wage is determined by the total skill required to complete their job.
 The total skill required to complete the tasks in job $J_j$ is $\sum_{T_b \in J_j} \skillcost{b}$.
 We then assume that a worker's wage is proportional to the skill level of their job.\footnote{
 One motivation for this formulation is workers paying a human capital investment to acquire the skills necessary for a job.
@@ -59,7 +59,7 @@ That is,
 The firm must pay workers their wage per unit of time regardless of which tasks they are assigned to complete at any given moment.\footnote{
 This derivation implicitly assumes a common base wage rate; i.e., all wage differentiation is driven by the human capital cost of acquiring skills.
 More generally, different tasks $T_b$ within job $J_j$ could have different base wage rates $w_b$ that could be influenced, for example, by the supply of and demand for labor of the corresponding type.
-One special case, explicitly motivated and discussed in Appendix~\ref{sec:aggregation}, assumes manual tasks are executed by human labor at base wage rate $w_{\manualLetter}$, and AI-assisted tasks are executed by AI management labor at base wage rate $w_{\AIletter}$.
+One special case, explicitly motivated and discussed in Appendix~\ref{sec:aggregation}, assumes manual tasks are executed by manual labor at base wage rate $w_{\manualLetter}$, and AI chains are executed by AI management labor at base wage rate $w_{\AIletter}$.
 The formulation in Equation~\eqref{eq:wage} implicitly normalizes these base wage rates to $1$, incorporating them into skill costs $\skillcost{b}$ for notational simplicity.
 We maintain this normalization throughout subsequent sections until we explicitly distinguish human labor and AI management labor base wage rates in Appendix~\ref{sec:aggregation}.
 \label{foot:wage}
@@ -77,11 +77,11 @@ Absent any frictions, the firm would minimize production costs by specializing a
 Dividing a job in two splits its skill requirement between two workers while leaving the total time to be worked unchanged, so it strictly lowers the wage bill.
 Carried to its conclusion, the firm would fully specialize work and assign every task to its own worker, each of whom acquires exactly the knowledge their task requires and none of whom is ever paid for skill they are not using.
 
-In reality, work is not organized this way, because dividing production among many workers is not free.
+In reality, work is not organized this way, because dividing production among many workers is costly.
 Each division creates a point at which work must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.
-We model this coordination friction with an additional \emph{hand-off cost}, in time, that a worker spends passing their work on to the next worker, incurred whenever $J_j$ is not the final job in the job design $\mathcal{J}$.
+We model this coordination friction with an additional \emph{hand-off} cost, in time, that a worker spends passing their work on to the next worker, incurred whenever $J_j$ is not the final job in the job design $\mathcal{J}$.
 
-Because our production process has an order, we can be more specific than a cost that depends only on how many workers there are.
+Because production in our model exhibits an order, we can be more specific than a cost that depends only on how many workers there are.
 A hand-off happens at a particular point in production, and what it costs depends on which point.
 Some places are natural seams, where the work has reached a self-contained intermediate output, a finished design or a signed-off specification, that can be described briefly and passed on.
 Others fall in the middle of something, where whoever receives the work has to reconstruct the context the previous worker had built up.
@@ -101,7 +101,7 @@ Because the worker is paid for as long as their job takes, this time enters the 
 \label{eq:wagebill}
 \text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr).
 \end{align}
-Equation~\eqref{eq:wagebill} highlights two opposing forces that shape a job's boundaries.
+Equation~\eqref{eq:wagebill} highlights the two opposing forces that shape a job's boundaries.
 Adding more tasks to a worker's job increases the cumulative skill requirement and thus the wage rate for that worker.
 However, if tasks are kept separate, workers must incur additional hand-off costs at each job boundary.
 These two effects, higher wages from combining tasks versus higher hand-off costs from keeping them separate, jointly determine the optimal degree of task aggregation.
@@ -123,8 +123,8 @@ Then the full optimization problem faced by the firm can be expressed as
 where recall that, for each $T_b \in \T$, $\timecost{b}$ is as described in Section~\ref{sec:model.tasks} and $\skillcost{b}$ as above, both depending on the selected mode of operation for individual steps.
 
 We refer to \eqref{eq:totalcost_with_handoff} as the firm's long-run optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
-It nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:jobs_wages} as the case of a single job spanning the whole production, with wage being fixed rather than chosen: with the job design given, minimizing the wage bill reduces to minimizing the time the job takes, and the firm optimizes each job separately.
-Section~\ref{sec:extensions.computation} shows that \eqref{eq:totalcost_with_handoff} can be solved to any desired accuracy in polynomial time.
+It nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:jobs_wages} as the case of a single job spanning the whole production, with wage being fixed rather than chosen.
+In Section~\ref{sec:extensions.computation} we discuss how the solution to \eqref{eq:totalcost_with_handoff} can be approximated to any desired accuracy in polynomial time.
 Table~\ref{tab:notation_longrun} collects the notation this section adds.
 
 \begin{table}[!t]
@@ -143,6 +143,7 @@ $\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step
 \addlinespace
 $J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
 $\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
+\addlinespace
 $\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
 $\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
 \addlinespace
@@ -153,7 +154,7 @@ $\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b 
 
     \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Jobs are indexed by $j$, and the superscript $H$ denotes a hand-off between workers.
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Jobs are indexed by $j$, and the superscript $H$ denotes a hand-off between consecutive workers.
 This notation enters only once the firm chooses how to divide the workflow among workers, and it extends the step- and task-level notation of Table~\ref{tab:notation_shortrun}, which the long-run problem continues to use.}
 \end{spacing}
 \end{minipage}
@@ -172,12 +173,12 @@ Consider a workflow that, under a fixed AI deployment strategy $\T$, has $n=3$ t
 With three tasks there are four ways the firm can design jobs.\footnote{
 More generally, a production sequence with $n$ tasks has $2^{(n-1)}$ unique job designs.
 }
-Denoting jobs by square brackets, they are
+Denoting jobs by square brackets, the feasible designs are
 $\{[1][2][3], \quad [1,2][3], \quad [1][2,3], \quad [1,2,3]\}$.
 Table~\ref{tab:job_design} reports the cost of each.
 \begin{table}[!t]
     \caption{Role of Hand-off Costs in Organizational Structure}
-    \vspace{-0.4cm}
+    \vspace{-0.3cm}
     \centering
     \resizebox{0.9\textwidth}{!}{%
     \begin{tabular}{c}
@@ -185,7 +186,7 @@ Table~\ref{tab:job_design} reports the cost of each.
     \centering
     Panel (a): Without Hand-off Costs \\[1ex]
     \input{tables/job_design_example_no_handoff.tex}
-    \end{minipage} \\[21ex]
+    \end{minipage} \\[15ex]
 
     \begin{minipage}{\textwidth}
     \centering
@@ -206,58 +207,48 @@ Once hand-off costs are taken into account, in Panel (b) the optimal organizatio
 \end{minipage}
 \end{table}
 Panel (a) sets hand-off costs to zero and recovers the frictionless benchmark: the optimum is full specialization, with each task its own job.
-Panel (b) reinstates them, and the optimum moves to $[1,2][3]$, in which tasks 1 and 2 are bundled and task 3 stands alone.
+Panel (b) reinstates them, and the optimum moves to $[1,2][3]$, in which tasks 1 and 2 are bundled into one job and task 3 stands alone in a separate job.
 The reason is the large hand-off time $\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger.
-Bundling them buys that hand-off away at the price of a worker who must hold the skills of both, and who is paid for both throughout.
+Bundling them avoid that hand-off at the price of a worker who must hold the skills of both tasks, and who is paid for both per unit of time fort he duration of both tasks.
 Equation~\eqref{eq:wagebill} is what makes the comparison: bundling raises the wage through $\sum_{T_b \in J_j} \skillcost{b}$, and splitting raises time through $\handofftime{}(J_j)$.
 Neither force wins outright, and where they balance is the firm's degree of specialization.
 
-The problem in \eqref{eq:totalcost_with_handoff} also admits a geometric representation.
-Each task is a rectangle whose height is its skill cost and whose width is its time cost.
-A job's wage bill is then the area of the rectangle whose height is the total skill the job requires and whose width is the total time it takes, so the firm is choosing how to cover the workflow with such rectangles so as to minimize total area.
-Read this way, the two forces are areas of two different kinds.
-Bundling tasks into one job creates dead area, since the worker is paid throughout for skill they are not using while performing a task that does not require it.
-Splitting a job removes that dead area but adds a hand-off rectangle whose height is the departing worker's full skill, so the coordination penalty is itself larger for more skilled workers.
-Figure~\ref{fig:job_design} reads the four designs of the example above in these terms.
+The firm's job design problem also admits a geometric representation.
+Figure~\ref{fig:job_design} visualizes the workflow of the example in Table~\ref{tab:job_design} as stacked rectangles, where each rectangle's height corresponds to $\skillcost{b}$ and its width to $\timecost{b}$.
 \begin{figure}[!t]
-\centering
+\begin{center}
 \caption{Geometric Interpretation of Job Designs} \label{fig:job_design}
 \begin{subfigure}[b]{0.49\textwidth}
-
+    \caption{Job Design Without Hand-off Costs}
     \includegraphics[width=\textwidth]{plots/combined_grid_no_handoff.png}
-    \subcaption{Job Design Without Hand-off Costs}
 \end{subfigure}
 \begin{subfigure}[b]{0.49\textwidth}
-
+    \caption{Job Design With Hand-off Costs}
     \includegraphics[width=\textwidth]{plots/combined_grid_with_handoff.png}
-    \subcaption{Job Design With Hand-off Costs}
 \end{subfigure}
-\par\vspace{\fignotesskip}
-\begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Each panel visualizes the workflow as stacked rectangles, where the area of each job's bounding box represents its wage bill.
+\end{center}
+\footnotesize{\emph{Notes:} Each panel visualizes the workflow as stacked rectangles, where the area of each job's bounding box represents its wage bill.  
 Panel (a) sets hand-off costs to zero, in which case it is optimal to assign one task per job.
-Panel (b) introduces hand-off costs, which alters the cost structure and makes the [1,2][3] design cost-minimizing.}
-\end{spacing}
-\end{minipage}
+Panel (b) introduces hand-off costs, which alters the cost structure and makes the [1,2][3] design cost-minimizing.
+}
 \end{figure}
-In Panel~(a) hand-offs are free, so only the dead area is at stake and splitting always shrinks it; the fully specialized design wins.
-Panel~(b) adds the pink hand-off rectangles, and their heights are what decide the comparison: a boundary drawn after a high-skill task is expensive in a way that one drawn after a low-skill task is not.
-That is why the optimum here keeps tasks 1 and 2 together.
-The boundary that would separate them falls after the most skilled task in the workflow and carries the longest hand-off, so bundling buys away nine units of cost, the skill of $3$ that task 1 demands held over the three units of time its hand-off takes.
-The dead space bundling creates in exchange is smaller, chiefly the two units of time during task 2 in which the worker's skill of $3$ from task 1 goes unused.
+Panel~(a) depicts the job design when hand-off costs are zero. 
+Panel~(b) shows the same workflow with hand-off costs.  
+Visually, optimal job design balances the two opposing forces.
+Combining tasks into a single job eliminates the pink rectangles representing additional hand-off costs between tasks, but creates inefficiencies due to the higher skill level of the worker required to do the job. 
+Conversely, splitting tasks into separate jobs eliminates the intra-job inefficiencies but incurs hand-off time costs at each job boundary.
+These boundary costs scale with the cumulative human capital of the switching worker, so the height of the pink hand-off rectangle in Panel (b) equals the sum of human capital heights for that job. 
+Cost-effective job design balances these effects.
 
 AI moves this balance, and it does so through the skill margin rather than the time margin that Section~\ref{sec:results} worked with.
 A chain replaces a run of steps with a single verification at its endpoint, so it strips out the skills the automated steps used to demand and leaves the worker holding only the skill needed to manage and check the chain.
 That lowers the wage rate a bundled job must pay, and with it the penalty from bundling, making jobs that contain more tasks cheaper to sustain: the same coordination cost now buys more.
 With a fixed set of production steps, this means that one worker's job extends to absorb the tasks of adjacent workers.
-Automation and job consolidation are therefore complements in our framework, which is the sense in which AI redefines work rather than merely displacing it from a fixed set of jobs.
+Automation and job consolidation are therefore two sides of the same coin in our framework, which is the sense in which AI also redefines work rather than merely displacing it from a fixed set of jobs.
 
 Working in the opposite direction, we treat hand-off costs as fixed, whereas AI plausibly lowers them too, by absorbing the peripheral coordination work of a transfer such as summarizing prior work or drafting the documentation that accompanies it.
 Were that channel active, it would push the other way, toward narrower jobs and more specialization: hand-off costs are incurred only at job boundaries, so making them cheaper makes every boundary cheaper to draw, and the bundling they were paying for is no longer worth its cost in idle skill.
 Panel~(a) of Table~\ref{tab:job_design} is the limiting case, with hand-offs free and full specialization optimal.
 The net effect of AI on job breadth is therefore an empirical question our framework poses rather than settles.\footnote{
 A useful reading of the hand-off cost is that it has two components: peripheral coordination work that AI can facilitate, and a remainder that rests on tacit, interpersonal, or social knowledge and is not easily executable by AI \citep{deming2017growing}.
-The hand-off cost in the model should be read as the second, irreducibly human component.
 }
-Appendix~\ref{app:jobdesign} develops the long-run problem in full and relates the trade-off above to the literature on the division of labor within the firm.
