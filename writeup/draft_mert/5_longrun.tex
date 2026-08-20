@@ -40,8 +40,10 @@ Red curly arrows mark hand-off costs incurred at job boundaries, and can be trac
 \end{figure}
 
 Completing a step demands not only time but also skill, by which we mean the body of knowledge and the specific know-how a worker must acquire in order to perform it.
-The short run had no need of this notion, since the wage was fixed, and we introduce it now.
-We extend Definitions~\ref{def:manual_task}--\ref{def:ai_chain} accordingly: performing step $i$ manually costs $(\manualSkill{i},\, \manualTime{i})$, and managing one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
+The short run had no need of this notion, as we assumed workers had acquired skills necessary for to perform all activities in their job. 
+In the long run, however, the firm chooses which steps to assign to which worker and thus we introduce skills to capture the changes in requirements of jobs. 
+
+Accordingly, we extend Definitions~\ref{def:manual_task}--\ref{def:ai_chain} to incorporate the skill cost of steps as well: performing step $i$ manually costs $(\manualSkill{i},\, \manualTime{i})$, and managing one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
 The two costs need not coincide, since doing the work oneself calls for knowing how to do it, whereas directing an AI to do it and judging what comes back may call for knowledge of a different kind.
 As with time costs, a task inherits the skill of whichever mode executes it, so each task $T_b$ in the task sequence $\T = \{T_1, \dotsc, T_n\}$ carries a pair of skill and time costs $(\skillcost{b}, \timecost{b})$ that depend on whether it is completed manually or with the aid of AI.
 An AI chain therefore demands only the skill required to check and validate the output of its augmented step, and an automated step inside a chain demands no skill of anyone, since no human ever handles it directly.
@@ -71,8 +73,18 @@ The formulation in Equation~\eqref{eq:wage} implicitly normalizes these base wag
 We maintain this normalization throughout subsequent sections until we explicitly distinguish human labor and AI management labor base wage rates in Appendix~\ref{sec:aggregation}.
 \label{foot:wage}
 }
+Taking into account both time and skill requirements, the total wage bill paid to a worker assigned to job $J_j$, per unit of output, is
+\begin{align}
+\label{eq:jobcost}
+\text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr)\Biggl(\sum_{T_b \in J_j} \timecost{b} \Biggr).
+\end{align}
+Note what \eqref{eq:jobcost} implies for a job.
+The worker is compensated for every skill the job demands over its whole duration, even though at any given moment they are performing a single task and drawing on only the portion of their knowledge that task requires.
+The remainder of their human capital sits idle at that moment and is paid for regardless.
+
 While we allow the firm to specialize its job design and partition its production process into distinct jobs, we acknowledge that there are inherent inefficiencies and frictions that are introduced when splitting work among multiple workers.
 Absent such frictions in our model, it would always be optimal for a firm to specialize its workers as much as possible, assigning a distinct worker to each task of its production process.
+Dividing a job in two splits its skill requirement between two workers while leaving the total time to be worked unchanged, so by \eqref{eq:jobcost} it strictly lowers the wage bill, and carried to its conclusion every task would form a job of its own.
 We therefore introduce \emph{hand-off costs} to a job design, as follows.
 
 Each division of the production process creates a point at which work must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.
@@ -93,7 +105,7 @@ Thus the total time needed to complete job $J_j$, including hand-off costs, is
 \handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}.
 \]
 
-Taking into account both time and skill requirements, the total wage bill paid to a worker assigned to job $J_j$, per unit of output, is
+Because the worker is paid for as long as their job takes, this time enters the wage bill exactly as execution time does, so \eqref{eq:jobcost} becomes
 \begin{align}
 \label{eq:wagebill}
 \text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr).
