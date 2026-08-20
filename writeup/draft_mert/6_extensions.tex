@@ -79,12 +79,12 @@ We therefore discretize both costs to a geometric grid, which keeps the running 
 Appendix~\ref{app:mediumrun_dp} gives the proof.
 
 \paragraph{The long run.}
-The full long-run problem \eqref{eq:lr_totalcost} adds one further margin to this: as steps are assigned to tasks, the resulting tasks must also be assigned to workers, and the hand-off costs incurred at job boundaries have to be counted along the way.
+The full long-run problem \eqref{eq:totalcost_with_handoff} adds one further margin to this: as steps are assigned to tasks, the resulting tasks must also be assigned to workers, and the hand-off costs incurred at job boundaries have to be counted along the way.
 
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
 Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.
-For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:lr_totalcost} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
 
 The proof, in Appendix~\ref{app:jobdesign.longrun}, extends the program behind Proposition~\ref{prop:mediumrun_dp} with a third option at each step: besides executing the step manually or ending an AI chain there, the firm may close the job of the worker currently accumulating tasks and start a new one, paying the hand-off cost at that boundary.
