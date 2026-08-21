@@ -121,7 +121,7 @@ Example~\ref{ex:ca_predecessor} showcases these forces numerically.
 \begin{example}
 \label{ex:ca_predecessor}
 Consider three consecutive steps with the following parameters:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr)_{i=0,1,2} = (20,\,20,\,0.95),\quad (6,\,3.6,\,0.28),\quad (8,\,4,\,0.9). \]
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr)_{i=0,1,2} = (25,\,25,\,0.95),\quad (6,\,3.5,\,0.28),\quad (8,\,4,\,0.9). \]
 Step~1 is \emph{hard} for AI and Step~2 is \emph{easy}; the same two steps reappear in Examples~\ref{ex:fragmentation_interleaved} and~\ref{ex:fragmentation_clustered} below.
 Figure~\ref{fig:ex_predecessor} shows how the optimal execution changes once Step~0 is placed in front of Steps~1--2.
 \begin{figure}[!t]
@@ -137,56 +137,40 @@ Figure~\ref{fig:ex_predecessor} shows how the optimal execution changes once Ste
 \end{minipage}
 \end{figure}
 In isolation the two steps fall on opposite sides.
-The human holds the comparative advantage on Step~1 by a wide margin, its manual cost $\manualTime{1} = 6$ lying far below its augmentation cost $\AItime{1}/q_1 = 3.6/0.28 \approx 12.86$, while AI holds it on Step~2, where augmentation costs $\AItime{2}/q_2 = 4/0.9 \approx 4.44$ against a manual cost of $\manualTime{2} = 8$.
+The human holds the comparative advantage on Step~1 by a wide margin, its manual cost $\manualTime{1} = 6$ lying far below its augmentation cost $\AItime{1}/q_1 = 3.5/0.28 = 12.5$, while AI holds it on Step~2, where augmentation costs $\AItime{2}/q_2 = 4/0.9 \approx 4.44$ against a manual cost of $\manualTime{2} = 8$.
 
 Take Steps~1 and~2 on their own first (the top row of the figure).
 Each is executed the way comparative advantage dictates: Step~1 manually and Step~2 augmented, at a total of $6 + 4.44 \approx 10.44$.
 Chaining the two would cost $\AItime{2}/(q_1\, q_2) = 4/0.252 \approx 15.87$, since the chain inherits Step~1's failure risk, and performing both by hand would cost $14$.
 
 Now introduce the predecessor, Step~0 (the bottom row of the figure).
-Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode, costing $20$ manually and $\AItime{0}/q_0 = 20/0.95 \approx 21.05$ as a standalone augmented step.
+Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode, costing $25$ manually and $\AItime{0}/q_0 = 25/0.95 \approx 26.32$ as a standalone augmented step.
 The only cheap way to absorb Step~0 is to place it at the start of a chain, where its management cost goes unpaid.
 The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost $\AItime{2}/(q_0\, q_1\, q_2) = 4/0.239 \approx 16.71$.
-This falls below the $30.44$ of the arrangement comparative advantage would dictate, which performs Steps~0 and~1 by hand and augments Step~2, and below every other strategy, the cheapest of which chains Steps~0--1 and augments Step~2 at a cost of $17.98$.
+This falls below the $35.44$ of the arrangement comparative advantage would dictate, which performs Steps~0 and~1 by hand and augments Step~2, and below every other strategy, the cheapest of which chains Steps~0--1 and augments Step~2 at a cost of $17.60$.
 Step~1, on which the human holds a more than two-fold advantage in isolation, is thus automated only to bridge the AI-friendly predecessor to the cheap endpoint at Step~2.
 Its own success probability is just $q_1 = 0.28$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is more costly still.
 \end{example}
 
 Conditions~(i)--(iii) are easiest to read as a map of the block's parameters.
-Figure~\ref{fig:ca_regions} holds every parameter of Example~\ref{ex:ca_predecessor} fixed except two and shades how the cost-minimizing arrangement executes Step~$k$, with the example's own parameters marked by a star in each panel.
-The human keeps the comparative advantage on Step~$k$ everywhere in both panels, since augmenting it in isolation costs $\AItime{k}/q_k$ against a manual cost of $6$, and each panel stops where the two coincide.
-Panel~(a) varies the success probabilities of Steps~$k-1$ and~$k$, and Step~$k$ is performed manually only in the lower left.
+Figure~\ref{fig:ca_regions} holds every parameter of Example~\ref{ex:ca_predecessor} fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$, with the example itself marked by a star.
+The human keeps the comparative advantage on Step~$k$ everywhere in the figure, since augmenting it in isolation costs $\AItime{k}/q_k$ against a manual cost of $6$, and the horizontal axis stops where the two coincide.
+Step~$k$ is nonetheless performed manually only in the lower left.
 Moving right from there improves AI on Step~$k$ itself until, at $q_k \approx 0.43$, folding it into the chain that terminates at Step~$k+1$ costs less than the manual work it displaces, which is condition~(i).
 Moving up instead leaves Step~$k$ untouched and improves only its predecessor, and two boundaries are crossed on the way.
 The first is condition~(iii): the pair becomes reliable enough that absorbing the predecessor into a chain, at the price of managing AI at Step~$k$, beats executing the two separately.
 The second is condition~(ii), where the chain no longer stops at Step~$k$ but runs on to Step~$k+1$.
-Extending it that far saves executing the endpoint separately but exposes its management cost to the failure risk of everything upstream, so the extension pays only once the pair is reliable enough, which is why condition~(ii) lies above condition~(iii) rather than beside it.
-Panel~(b) replaces the horizontal axis with Step~$k$'s own AI management cost.
-The boundary between manual execution and the three-step chain is flat, so whether the step is automated does not depend on $\AItime{k}$ at all, which is the content of conditions~(i) and~(ii): a step in the interior of a chain is never prompted, and its management cost is never paid.
-What $\AItime{k}$ decides is instead where the chain ends.
-Once it is low enough, Step~$k$ becomes a cheaper place to stop than Step~$k+1$, so the predecessor's chain terminates there and Step~$k$ is augmented rather than automated, which is condition~(iii).
+Extending it that far saves executing the endpoint separately but exposes its management cost to the failure risk of everything upstream, so the extension pays only once the pair is reliable enough, which is why condition~(ii) lies beyond condition~(iii) rather than beside it.
 
 \begin{figure}[!t]
 \caption{When Is a Human-Advantaged Step Executed by AI?}
 \label{fig:ca_regions}
 \centering
-\begin{minipage}{0.49\linewidth}
-  \centering
-  \includegraphics[width=\linewidth]{plots/ca_regions_reliability.png}
-  \subcaption{Varying the reliability of Steps $k-1$ and $k$}
-  \label{fig:ca_regions_reliability}
-\end{minipage}
-\hfill
-\begin{minipage}{0.49\linewidth}
-  \centering
-  \includegraphics[width=\linewidth]{plots/ca_regions_mgmtcost.png}
-  \subcaption{Varying the AI management cost of Step $k$}
-  \label{fig:ca_regions_mgmtcost}
-\end{minipage}
+\includegraphics[width=0.74\linewidth]{plots/ca_regions_reliability.png}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: The figure fixes every parameter of Example~\ref{ex:ca_predecessor} except the two on the axes, and shades the treatment Step~$k$ receives in the cost-minimizing arrangement of the block $\{k-1,\, k,\, k+1\}$, with Steps~$k-1$, $k$, and $k+1$ carrying the cost parameters of Steps~0, 1, and~2 of the example. Panel~(a) fixes $\AItime{k} = 3.6$ and varies the two success probabilities; panel~(b) fixes $q_k = 0.28$ and varies Step~$k$'s AI management cost. The human holds the comparative advantage on Step~$k$ throughout both panels: each ends where AI would break even on the step in isolation, at $q_k = \AItime{k}/6$ in panel~(a) and at $\AItime{k} = 1.68$ in panel~(b). Stars mark the parameters of Example~\ref{ex:ca_predecessor}. Condition~(i) selects no region in panel~(b), where Step~$k$ is too unreliable for a chain to run through it without the predecessor's help.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: The figure fixes every parameter of Example~\ref{ex:ca_predecessor} except the success probabilities $q_{k-1}$ and $q_k$, and shades the treatment Step~$k$ receives in the cost-minimizing arrangement of the block $\{k-1,\, k,\, k+1\}$, with Steps~$k-1$, $k$, and $k+1$ carrying the cost parameters of Steps~0, 1, and~2 of the example. The human holds the comparative advantage on Step~$k$ throughout the plotted range, which ends at $q_k = \AItime{k}/\manualTime{k}$, where AI would break even on the step in isolation. The star marks the parameters of Example~\ref{ex:ca_predecessor}, at which the firm chains all three steps.}
 \end{spacing}
 \end{minipage}
 \end{figure}
@@ -213,7 +197,7 @@ The two examples below showcase this point.
 \begin{example}
 \label{ex:fragmentation_interleaved}
 Consider a workflow of four steps that alternate between the \emph{easy} and \emph{hard} steps of Example~\ref{ex:ca_predecessor}, namely its Steps~2 and~1:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (8,\,4,\,0.9) \ \text{ for $i = 1, 3$ (easy)}, \qquad (6,\,3.6,\,0.28) \ \text{ for $i = 2, 4$ (hard)}. \]
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (8,\,4,\,0.9) \ \text{ for $i = 1, 3$ (easy)}, \qquad (6,\,3.5,\,0.28) \ \text{ for $i = 2, 4$ (hard)}. \]
 Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
 \caption{Dispersed AI-Able Steps: No AI Chain Forms}
@@ -229,13 +213,13 @@ Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 \end{figure}
 
 Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes an option.
-The firm therefore treats each step on its own, and each is executed the way comparative advantage dictates: the two easy steps are augmented at $\AItime{i}/q_i \approx 4.44$ apiece, and the two hard steps performed manually at $\manualTime{i} = 6$ apiece, since augmenting one of those would cost $3.6/0.28 \approx 12.86$.
+The firm therefore treats each step on its own, and each is executed the way comparative advantage dictates: the two easy steps are augmented at $\AItime{i}/q_i \approx 4.44$ apiece, and the two hard steps performed manually at $\manualTime{i} = 6$ apiece, since augmenting one of those would cost $3.5/0.28 = 12.5$.
 Every AI-executed step here is verified separately, for a total cost of $2(4.44) + 2(6) \approx 20.89$.
 \end{example}
 \begin{example}
 \label{ex:fragmentation_clustered}
 Consider the same four steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly ones, so that the first two are easy and the last two are hard:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (8,\,4,\,0.9) \ \text{ for $i = 1, 2$ (easy)}, \qquad (6,\,3.6,\,0.28) \ \text{ for $i = 3, 4$ (hard)}. \]
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (8,\,4,\,0.9) \ \text{ for $i = 1, 2$ (easy)}, \qquad (6,\,3.5,\,0.28) \ \text{ for $i = 3, 4$ (hard)}. \]
 Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
 \caption{Clustered AI-Able Steps: The Easy Run Becomes One AI Chain}
@@ -328,7 +312,7 @@ The example below shows this pattern at work in a two-step workflow.
 \begin{example}
 \label{ex:nonmonotone}
 Consider the AI-hard and AI-easy steps of Example~\ref{ex:ca_predecessor} once more, now with their difficulties written out, so that the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, d_i\bigr)_{i=1,2} = (6,\,3.6,\,12),\quad (8,\,4,\,1). \]
+\[ \bigl(\manualTime{i},\, \AItime{i},\, d_i\bigr)_{i=1,2} = (6,\,3.5,\,12),\quad (8,\,4,\,1). \]
 At an AI quality of about $\alpha = 0.9$, these difficulties deliver the success probabilities used in those examples, $q_1 = 0.28$ and $q_2 = 0.9$.
 Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal benefit as AI quality $\alpha$ rises.
 
