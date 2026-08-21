@@ -1,34 +1,32 @@
 In this section we empirically test the implications of our model.
-The predictions we take to the data are those of the short-run problem of Section~\ref{sec:jobs_wages}, in which the boundaries of jobs are given and AI acts only on how the steps within them are executed.
+The predictions we take to the data are those of the short-run problem of Section~\ref{sec:jobs_wages}, in which the boundaries of jobs are fixed and AI acts only on how the steps within them are executed.
 This is a deliberate restriction rather than a limitation of the theory.
-The long-run margins of Section~\ref{sec:longrun}, in which firms redraw jobs around AI and wages adjust to the skills those jobs come to require, operate on a horizon over which firms reorganize and workers retrain, and not enough time has passed since these tools became widely available for such reorganization to have worked its way into the data we observe.
+The long-run margins of Section~\ref{sec:longrun}, in which firms redraw jobs around AI and wages adjust to the skills those jobs come to require, operate on a horizon over which firms reorganize and workers retrain, and not enough time has passed since the AI tools became widely available for such reorganization to have worked its way into the data we observe.
 What we can observe is where AI is being deployed inside workflows as they are currently arranged, which is precisely what the short-run problem speaks to.
-The three predictions we test are: (1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; (2) occupations in which AI-suitable steps are more dispersed have fewer of those steps actually executed by AI; and (3) the AI-execution status of a step's neighbors affects the likelihood that the step itself is executed by AI.
+The three predictions we test are: (1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; (2) occupations in which AI-friendly steps are more dispersed have fewer of those steps actually executed by AI; and (3) the AI-execution status of a step's neighbors affects the likelihood that the step itself is executed by AI.
 
-For our analysis, we construct a dataset that records three attributes of each step: its AI exposure status (exposed or unexposed to AI), which we interpret as the difficulty of the step for AI, its realized mode of execution (manual, AI-augmented, or AI-automated), and its position in the production sequence.\footnote{
-Our main analysis uses the full set of O*NET tasks in each occupation; the restriction to more frequently-executed subsets is discussed below and carried out in Appendix~\ref{app:frequency_robustness}.
-}
+For our analysis, we construct a dataset that records three attributes of each step: its AI exposure status (exposed or unexposed to AI), which we interpret as the difficulty of the step for AI, its realized mode of execution (manual, AI-augmented, or AI-automated), and its position in the production sequence.
 To create this dataset, we combine data from four sources:
 \begin{enumerate}
     \item The O*NET 27.3 Database \citep{onet27_3},
-    \item Human-generated labels for AI exposure of O*NET tasks from \cite{eloundou2023gpts},
-    \item Realized AI execution mode of O*NET tasks from the Anthropic Economic Index \citep{handa2025economictasksperformedai},
+    \item AI exposure labels of O*NET tasks from \cite{eloundou2023gpts},
+    \item AI execution labels of O*NET tasks from Anthropic Economic Index \citep{handa2025economictasksperformedai},
     \item A GPT-generated task ordering for each O*NET occupation.
 \end{enumerate}
 The details of how the dataset is constructed are given in Appendix~\ref{app:data_prep}.
 
 The structure of our theoretical framework closely aligns with the structure of the O*NET dataset.
 Each production step in the model corresponds to an O*NET task, and each occupation's workflow corresponds to the model's step sequence.
-In the absence of AI, a step (that is, an O*NET task) is executed manually and maps directly into a task under the model's definition.
+In the absence of AI, a step (that is, an O*NET task) is executed manually and maps directly into a task under our model's definition.
 Thus, without AI, an O*NET task can be viewed as both a step and a task, which matches the standard treatment of tasks in the O*NET dataset.
-Later when we discuss AI execution, however, multiple steps, corresponding to a subset of O*NET tasks, may be chained together and executed jointly by AI, forming a composite task per the model's definition.
-Throughout this section, we use the terms step, O*NET task, and task interchangeably and expect the reader to keep these distinctions in mind.
+Later when we discuss AI execution, however, multiple steps, corresponding to a subset of O*NET tasks, may be chained together and executed jointly by AI, forming a composite task per our model's definition.
+In the rest of this section, we use the terms step, O*NET task, and task interchangeably and expect the reader to keep these distinctions in mind.
 We similarly use the terms workflow and occupation interchangeably without restating the mapping each time.
 
 One feature of the data shapes how we use it throughout.
 The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow.
 We therefore do not distinguish the two labels in what follows and treat both as indicating AI execution.
-Appendix~\ref{app:data_prep} documents the discrepancy and gives examples.
+Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.
 
 
 \subsection{Prediction \#1: Tendency to Have Runs of Consecutive AI-executed Tasks}
@@ -296,14 +294,14 @@ In Appendix~\ref{app:gptPrompts_robustness} we re-generate the O*NET task sequen
 The estimates move within a narrow band, and none of the conclusions reported above turns on which prompt is used.
 This shows that our results are not artifacts of the specific prompt or the sequencing logic used to order tasks.
 
-The second concern is the taxonomy of the O*NET occupation task list itself.
-O*NET catalogues all the work activities an occupation involves, including tasks that are rarely performed, and such tasks might act as ``filler'' steps that lengthen a workflow and separate steps that are adjacent in practice.
+The second concern is the taxonomy of the O*NET dataset itself.
+O*NET catalogues all tasks an occupation involves, including those that are rarely performed, and such tasks might act as ``filler'' steps that lengthen a workflow and separate steps that are adjacent in practice.
 In Appendix~\ref{app:frequency_robustness} we restrict the sample to progressively more frequently-executed tasks, which makes the surviving sequences more workflow-like, and recover the same patterns for all three predictions.
 Confidence intervals widen as the restriction shrinks the sample, since dropping infrequent tasks also removes AI-executed ones, which are already scarce to begin with, but the direction of the headline results remains unaffected.
-This shows that our results do not hinge on specific way that O*NET constructs its occupation taxonomy.
+This raises our confidence that our results do not hinge on the specific way that O*NET provides its occupation taxonomy.
 
-Both exercises above stay within the bounds of the O*NET dataset and our own imputation, so neither can establish that the imputed order corresponds to how work steps are actually sequenced.
-To externally validate our sequencing approach, in Appendix~\ref{app:external_validation} we turn to a second production taxonomy: the Process Classification Framework (PCF) of the American Productivity \& Quality Center (APQC), whose member working groups have recorded the activities and tasks composing a firm's business processes in the order practitioners perform them \citep{apqc_pcf}.
+The two robustness tests above stay within the bounds of the O*NET dataset and our own imputation, so neither can establish that the imputed order corresponds to how work steps are actually sequenced.
+To externally validate our LLM sequencing approach, in Appendix~\ref{app:external_validation} we turn to a second production taxonomy: the Process Classification Framework (PCF) of the American Productivity \& Quality Center (APQC), whose member working groups have recorded the activities and tasks composing a firm's business processes in the order practitioners perform them \citep{apqc_pcf}.
 We first shuffle the steps of documented PCF branches and ask the LLM to order them, under our main sequencing prompt and each of the ten alternatives.
 The LLM recovers the practitioners' order to a decent extent, placing $70\%$ of consecutive step pairs in the documented direction and reproducing $24\%$ of branches exactly, with an average Kendall's $\tau$ of $0.53$ against PCF's orderings that barely moves across prompts.\footnote{
 Kendall's $\tau$ is a standard rank correlation measure that, roughly speaking, captures the fraction of task pairs that appear in the same relative order across two ranked lists.
@@ -314,4 +312,4 @@ Moreover, we use the 4TU.ResearchData...
 
 Having established that the LLM can reasonably recover the ordering of production activities, we then match O*NET tasks to PCF activities using natural language processing techniques to carry the AI exposure and AI execution labels over to a corpus that no LLM ordered, and re-test our predictions there.
 Although this matching procedure is lossy and not all AI-exposed or AI-executed tasks are matched to an activity in the PCF corpus, Predictions~\#1 and~\#2 come through with essentially the same results: AI-executed steps co-occur far more than the same labels arranged at random along the same sequences, and the empirical fragmentation index coefficient stays negative and significant at a magnitude comparable to the main sample.
-We are unable to re-run Prediction~\#3, however, whose sample requirements are considerably more restrictive, since it needs the same step to recur across workflows with differing execution outcomes and the O*NET-PCF matched data does not retain enough of that variation.
+We are unable to re-run Prediction~\#3, however, whose sample requirements are considerably more restrictive, since it needs the same step to recur across PCF workflows with differing execution outcomes and the O*NET-PCF matched data does not retain enough of that variation.

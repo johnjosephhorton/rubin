@@ -56,7 +56,7 @@ In the long run it must also carry the skill and the time of the worker whose jo
 We take the two horizons in turn and defer the proofs to the appendix.
 
 \paragraph{The Short Run Optimization.}
-The short-run cost \eqref{eq:totalcost_shortterm} is a sum of expected task times, so what a task costs does not depend on which tasks precede it.
+The short-run optimization problem \eqref{eq:totalcost_shortterm} is a sum of expected task times, so what a task costs does not depend on which tasks precede it.
 This is what lets the problem come apart.
 Suppose the firm has settled how to arrange the first $\ell$ steps and knows what that costs.
 Nothing about the way those steps were arranged changes what any later step costs, so the firm can treat that stretch as closed and carry it forward as a single number.
@@ -64,7 +64,7 @@ It can therefore work outward from the start of the workflow, and at each point 
 Either that task is step $k$ done by hand, or it is an AI chain running to $k$ from somewhere earlier, and each candidate starting point is priced by a stretch the firm has already closed.
 Writing $C[k]$ for the cost of the best arrangement of the first $k$ steps, this pins down $C[k]$ from $C[0], \dotsc, C[k-1]$.
 
-\begin{proposition}[Optimal AI Deployment]
+\begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
 Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
@@ -73,7 +73,7 @@ Appendix~\ref{app:shortrun_proof} gives the proof.
 There are $m$ stretches to price, and each costs $O(m)$ because the chain ending at step $k$ may begin anywhere before it.
 
 \paragraph{The Long Run Optimization.}
-The long-run cost \eqref{eq:totalcost_with_handoff} is not a sum of task costs but a sum over jobs of skill times time, and within a job those two multiply.
+The long-run optimization problem \eqref{eq:totalcost_with_handoff} is not a sum of task costs but a sum over jobs of skill times time, and within a job those two multiply.
 Adding a task to a job therefore raises its wage bill by an amount that depends on how much skill and how much time the job already carries, so what a task costs is no longer independent of what precedes it.
 A settled stretch can no longer be summarized by its cost alone, and to that extent the short-run argument breaks down.
 What rescues it is that the stretch can still be summarized, just by more.
