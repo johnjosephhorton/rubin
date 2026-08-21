@@ -174,7 +174,7 @@ The job design problem admits a geometric representation.
 Each task is a rectangle whose height is its skill cost $\skillcost{b}$ and whose width is its time cost $\timecost{b}$, so that by \eqref{eq:wagebill} a job's wage bill is the area of the rectangle spanning the tasks it contains: its height is the skill the job requires and its width the time it takes.
 Figure~\ref{fig:lr_job_design} draws the two-task case, the smallest in which the firm has a choice to make.
 In the left panel the tasks go to two specialized workers, each of whom acquires only the skill their own task needs, so no one is paid for knowledge they are not using; but the work must pass between them, and the pink rectangle is what that hand-off costs.
-In the right panel one worker performs both tasks, which removes the hand-off entirely but obliges that worker to hold both skills and be paid for both throughout, the dead area sitting above whichever task they are not currently performing.
+In the right panel one worker performs both tasks, which removes the hand-off entirely but obliges that worker to hold both skills and be paid for both throughout, the dead area sitting next to whichever task they are not currently performing.
 Equation~\eqref{eq:wagebill} is what makes the comparison: bundling raises the wage rate through $\sum_{T_b \in J_j} \skillcost{b}$, and splitting raises time through $\handofftime{}(J_j)$.
 Neither force wins outright, and where they balance is the firm's degree of specialization.
 
@@ -200,8 +200,8 @@ Consider a workflow that, under a fixed AI deployment strategy $\T$, has $n=3$ t
 With three tasks there are four ways the firm can design jobs,\footnote{
 More generally, a production sequence with $n$ tasks has $2^{(n-1)}$ unique job designs.
 } and Figure~\ref{fig:job_design} draws all four in the same terms, once with hand-off costs switched off and once with them on; Table~\ref{tab:job_design} in Appendix~\ref{app:jobdesign_example} reports the cost of each.
-Panel~(a) sets hand-off costs to zero and recovers the frictionless benchmark: the cost-minimizing design, outlined in red, is full specialization, with each task its own job.
-Panel~(b) reinstates them and the red outline moves to $[1,2][3]$, in which tasks 1 and 2 are bundled into one job and task 3 stands alone.
+Panel~(a) sets hand-off costs to zero and recovers the frictionless benchmark: the cost-minimizing design, outlined in red, is full specialization, with each task its own separate job.
+Panel~(b) reinstates hand-offs and the optimal design moves to $[1,2][3]$, in which tasks 1 and 2 are bundled into one job and task 3 stands alone.
 The reason is the large hand-off time $\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger: bundling them avoids that hand-off at the price of a worker who must hold the skills of both and is paid for both throughout.
 \begin{figure}[!t]
 \begin{center}
@@ -221,13 +221,7 @@ Panel (a) sets hand-off costs to zero, in which case full specialization is opti
 Panel (b) introduces them, and the optimum moves to [1,2][3].
 }
 \end{figure}
-Panel~(a) depicts the job design when hand-off costs are zero. 
-Panel~(b) shows the same workflow with hand-off costs.  
-Visually, optimal job design balances the two opposing forces.
-Combining tasks into a single job eliminates the pink rectangles representing additional hand-off costs between tasks, but creates inefficiencies due to the higher skill level of the worker required to do the job. 
-Conversely, splitting tasks into separate jobs eliminates the intra-job inefficiencies but incurs hand-off time costs at each job boundary.
-These boundary costs scale with the cumulative human capital of the switching worker, so the height of the pink hand-off rectangle in Panel (b) equals the sum of human capital heights for that job. 
-Cost-effective job design balances these effects.
+Cost-effective job design balances these forces.
 
 AI moves this balance, and it does so through the skill margin rather than the time margin that Section~\ref{sec:results} worked with.
 A chain replaces a run of steps with a single verification at its endpoint, so it strips out the skills the automated steps used to demand and leaves the worker holding only the skill needed to manage and check the chain.
