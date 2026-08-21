@@ -152,6 +152,27 @@ Step~1, on which the human holds a more than three-fold advantage in isolation, 
 Its own success probability is just $q_1 = 0.28$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is more costly still.
 \end{example}
 
+Conditions~(i)--(iii) are easiest to read as a map of the block's parameters.
+Figure~\ref{fig:ca_regions} holds every parameter of Example~\ref{ex:ca_predecessor} fixed except two, the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$.
+The human keeps the comparative advantage on Step~$k$ everywhere in the figure, since augmenting it in isolation costs $4/q_k$ against a manual cost of $6$, and the right edge is where the two coincide.
+Step~$k$ is nonetheless performed manually only in the lower left.
+Moving right along the bottom of the figure improves AI on Step~$k$ itself until, at $q_k \approx 0.43$, folding it into the chain that terminates at Step~$k+1$ costs less than the manual work it displaces, which is condition~(i).
+Moving up instead leaves Step~$k$ untouched and improves only its predecessor, and the boundary crossed on the way is condition~(ii): the predecessor's share of the chain's failure risk falls far enough that absorbing it, and Step~$k$ with it, beats executing the two separately.
+Example~\ref{ex:ca_predecessor} sits at the marked point, deep inside that second region, at a reliability of $q_1 = 0.28$ on Step~$k$ that on its own would leave the step manual.
+
+\begin{figure}[!t]
+\caption{Execution of a Human-Advantaged Step as Its Neighborhood Varies}
+\label{fig:ca_regions}
+\centering
+\includegraphics[width=0.78\linewidth]{plots/ca_regions.png}
+\par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: The figure fixes every parameter of Example~\ref{ex:ca_predecessor} except the success probabilities $q_{k-1}$ and $q_k$, and shades the treatment Step~$k$ receives in the cost-minimizing arrangement of the block $\{k-1,\, k,\, k+1\}$. Steps~$k-1$, $k$, and $k+1$ carry the cost parameters of Steps~0, 1, and~2 of Example~\ref{ex:ca_predecessor}, with $q_{k+1} = 0.9$ held fixed. The human holds the comparative advantage on Step~$k$ throughout the plotted range, which ends at $q_k = 2/3$, where AI would break even on the step in isolation. The star marks the parameters of Example~\ref{ex:ca_predecessor}. Condition~(iii) of Proposition~\ref{prop:ca_local} holds in the upper right of the figure but never selects the cheapest arrangement there, since a chain stopping at Step~$k$ pays that step's management cost while one running on to Step~$k+1$ does not.}
+\end{spacing}
+\end{minipage}
+\end{figure}
+
 In sum, whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors: the pressure to fold a human-advantaged step into a chain can come from either a cheap chain endpoint \emph{downstream} or an AI-reliable predecessor \emph{upstream}.
 A step with identical characteristics can therefore be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that the AI execution likelihood of a step depends on its local work context in different occupations.
