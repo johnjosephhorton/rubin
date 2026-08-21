@@ -44,9 +44,10 @@ That is why workflow-level objects such as the fragmentation index have to be me
 Throughout the paper we have assumed the firm can obtain its cost-minimizing arrangement without discussing how that arrangement is found.
 Chaining is what makes this a substantive question.
 A step absorbed into a chain costs nothing directly, but it adds its failure risk to every attempt at the chain, so whether automating it pays depends on the arrangement the step sits in rather than on the step alone.
-The firm cannot decide step by step, then, and must instead compare all feasible arrangements, of which a production containing $m$ steps admits exponentially many.
+The firm cannot solve its optimization problem step by step, then, and must instead compare all feasible arrangements at once. 
+A production containing $m$ steps admits exponentially many arrangements.
 
-That count overstates the difficulty, because the arrangements overlap heavily.
+That exponential count overstates the difficulty, however, because the arrangements overlap heavily.
 Any two that treat the first stretch of the workflow alike cost the same over that stretch, so the firm need not price it twice.
 Both of its problems can therefore be built up from the front, one step at a time, with the work spent on an early stretch reused for every arrangement of what follows.
 The two differ only in how much a settled stretch has to remember about itself.
@@ -55,7 +56,7 @@ In the long run it must also carry the skill and the time of the worker whose jo
 We take the two horizons in turn and defer the proofs to the appendix.
 
 \paragraph{The Short Run Optimization.}
-The short-run cost \eqref{eq:totalcost_shortterm} is a sum of task times, so what a task costs does not depend on which tasks precede it.
+The short-run cost \eqref{eq:totalcost_shortterm} is a sum of expected task times, so what a task costs does not depend on which tasks precede it.
 This is what lets the problem come apart.
 Suppose the firm has settled how to arrange the first $\ell$ steps and knows what that costs.
 Nothing about the way those steps were arranged changes what any later step costs, so the firm can treat that stretch as closed and carry it forward as a single number.
@@ -90,7 +91,7 @@ Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B
 For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
 
-Appendix~\ref{app:jobdesign.longrun} gives the proof, building on the intermediate case of Appendix~\ref{app:mediumrun_dp}, in which wages adjust to the skill a job requires but job boundaries are still given.
+Appendix~\ref{app:jobdesign.longrun} gives the proof.
 
 Together these results also suggest a use for the framework beyond what we do here.
 Paired with detailed measurement of the time and skill content of individual tasks, the algorithms above could be run on real workflows to ask how a given advance in AI capability would redraw them.
