@@ -64,9 +64,9 @@ If in addition step $k+1$ is AI-easy, so that $v_{k+1} = \AItime{k+1}/q_{k+1}$, 
 \[
 \text{(i) } \ \Delta_k < \manualTime{k},
 \qquad
-\text{(ii) } \ \Delta_{k-1} + \Delta_k < v_{k-1} + \manualTime{k},
+\text{(ii) } \ \frac{\AItime{k}}{q_{k-1}\, q_k} < v_{k-1} + \manualTime{k},
 \qquad
-\text{(iii) } \ \frac{\AItime{k}}{q_{k-1}\, q_k} < v_{k-1} + \manualTime{k},
+\text{(iii) } \ \Delta_{k-1} + \Delta_k < v_{k-1} + \manualTime{k},
 \]
 where $\Delta_k = \AItime{k+1}(1-q_k)/(q_k\, q_{k+1})$ and $\Delta_{k-1} = \AItime{k+1}(1-q_{k-1})/(q_{k-1}\, q_k\, q_{k+1})$ are the marginal costs of folding steps $k$ and $k-1$ into a chain terminating at $k+1$.
 \end{proposition}
@@ -104,17 +104,17 @@ In case~(1) the term $v_{k-1}$ cancels, leaving
 \Delta_k = \frac{\AItime{k+1}(1-q_k)}{q_k\, q_{k+1}} \; < \; \manualTime{k},
 \]
 which is condition~(i).
-In case~(3) the term $v_{k+1}$ cancels, leaving $\AItime{k}/(q_{k-1} q_k) < v_{k-1} + \manualTime{k}$, which is condition~(iii).
+In case~(3) the term $v_{k+1}$ cancels, leaving $\AItime{k}/(q_{k-1} q_k) < v_{k-1} + \manualTime{k}$, which is condition~(ii).
 In case~(2) nothing cancels, and subtracting $\AItime{k+1}/q_{k+1}$ from both sides leaves
 \[
 \frac{\AItime{k+1}\,(1 - q_{k-1} q_k)}{q_{k-1}\, q_k\, q_{k+1}} \; < \; v_{k-1} + \manualTime{k}.
 \]
-Decomposing the chain's joint failure risk as $1 - q_{k-1}q_k = (1-q_{k-1}) + q_{k-1}(1-q_k)$ splits the left-hand side into $\Delta_{k-1} + \Delta_k$, which is condition~(ii).
+Decomposing the chain's joint failure risk as $1 - q_{k-1}q_k = (1-q_{k-1}) + q_{k-1}(1-q_k)$ splits the left-hand side into $\Delta_{k-1} + \Delta_k$, which is condition~(iii).
 \end{proof}
 
-Condition (i) is the downstream channel of \eqref{eq:ca_test} and condition (ii) the upstream one, and in both of them step $k$ is automated.
-Condition (iii) is a third route to the same outcome, in which the predecessor anchors a chain that terminates at step $k$, so that AI executes step $k$ under human supervision rather than without it.
-The distinction matters for what the firm pays: step $k$'s own management cost $\AItime{k}$ appears in (iii), but in neither (i) nor (ii), since a step in the interior of a chain is never prompted or verified on its own.
+Condition (i) is the downstream channel of \eqref{eq:ca_test}, in which the chain runs from step $k$ to the cheap endpoint at $k+1$.
+Conditions (ii) and (iii) are the upstream channel, and differ only in where the predecessor's chain stops: at step $k$ under (ii), which leaves it augmented under human supervision, or one step further under (iii), which leaves it automated.
+The distinction matters for what the firm pays: step $k$'s own management cost $\AItime{k}$ appears in (ii), but in neither (i) nor (iii), since a step in the interior of a chain is never prompted or verified on its own.
 The human's comparative advantage on step $k$, however wide, therefore does not enter the two conditions under which the step ends up automated.
 Example~\ref{ex:ca_predecessor} showcases these forces numerically.
 
@@ -158,9 +158,9 @@ The human keeps the comparative advantage on Step~$k$ everywhere in the figure, 
 Step~$k$ is nonetheless performed manually only in the lower left.
 Moving right from there improves AI on Step~$k$ itself until, at $q_k \approx 0.43$, folding it into the chain that terminates at Step~$k+1$ costs less than the manual work it displaces, which is condition~(i).
 Moving up instead leaves Step~$k$ untouched and improves only its predecessor, and two boundaries are crossed on the way.
-The first is condition~(iii): the pair becomes reliable enough that absorbing the predecessor into a chain, at the price of managing AI at Step~$k$, beats executing the two separately.
-The second is condition~(ii), where the chain no longer stops at Step~$k$ but runs on to Step~$k+1$.
-Extending it that far saves executing the endpoint separately but exposes its management cost to the failure risk of everything upstream, so the extension pays only once the pair is reliable enough, which is why condition~(ii) lies beyond condition~(iii) rather than beside it.
+The first is condition~(ii): the pair becomes reliable enough that absorbing the predecessor into a chain, at the price of managing AI at Step~$k$, beats executing the two separately.
+The second is condition~(iii), where the chain no longer stops at Step~$k$ but runs on to Step~$k+1$.
+Extending it that far saves executing the endpoint separately but exposes its management cost to the failure risk of everything upstream, so the extension pays only once the pair is reliable enough, which is why condition~(iii) lies beyond condition~(ii) rather than beside it.
 
 \begin{figure}[!t]
 \caption{When Is a Human-Advantaged Step Executed by AI?}
