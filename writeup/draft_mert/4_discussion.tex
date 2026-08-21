@@ -219,9 +219,9 @@ The example below shows this pattern at work in a two-step workflow.
 
 \begin{example}
 \label{ex:nonmonotone}
-Consider a two-step workflow in which the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, d_i\bigr)_{i=1,2} = (1,\,1,\,6),\quad (2,\,1,\,1). \]
-Step~1 is short but hard for AI, while step~2 is more time-consuming but easy.
+Consider the AI-hard and AI-easy steps of Example~\ref{ex:ca_predecessor} once more, now with their difficulties written out, so that the AI succeeds at step~$i$ with probability $q_i = \alpha^{d_i}$:
+\[ \bigl(\manualTime{i},\, \AItime{i},\, d_i\bigr)_{i=1,2} = (6,\,4,\,15),\quad (8,\,4,\,1). \]
+At an AI quality of about $\alpha = 0.9$, these difficulties deliver the success probabilities used in those examples, $q_1 = 0.2$ and $q_2 = 0.9$.
 Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal benefit as AI quality $\alpha$ rises.
 
 \begin{figure}[!t]
@@ -249,11 +249,12 @@ Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal b
 \end{minipage}
 \end{figure}
 
-With $q_1 = \alpha^{6}$ and $q_2 = \alpha$, the firm chooses among five configurations, ranging from both steps manual to both chained.
+With $q_1 = \alpha^{15}$ and $q_2 = \alpha$, the firm chooses among five configurations, ranging from both steps manual to both chained.
 Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:nonmonotone} collects them, together with the cost of each, the marginal benefit of improving AI quality, and the range of $\alpha$ over which each is cost-minimizing.
+Below $\alpha = 0.5$ the firm uses no AI; between $0.5$ and roughly $0.94$ it augments the easy step alone, which is what the top row of Figure~\ref{fig:ex_predecessor} showed at $\alpha = 0.9$; above that it chains the two.
 
 Panel~(b) shows that the marginal return to improving AI quality jumps up at each threshold where the optimal strategy switches, since a different strategy governs cost on either side of the threshold.
-It is also worth noting that the jump at $\alpha \approx 0.90$ is larger than the one at $\alpha = 0.50$: forming the chain pulls a second step under AI, so cost falls more steeply.
+It is also worth noting that the jump at $\alpha \approx 0.94$ is larger than the one at $\alpha = 0.50$: forming the chain pulls a second step under AI, so cost falls more steeply.
 This ordering is specific to this example, however, since a later threshold does not necessarily introduce a longer chain than an earlier one.
 \end{example}
 
