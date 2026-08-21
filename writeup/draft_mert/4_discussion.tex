@@ -8,13 +8,11 @@ We collect the proofs of all formal results in this section in Appendix~\ref{app
 \label{sec:comparative_advantage}
 
 For a single step, the decision whether or not to deploy AI depends simply on whether the manual execution cost exceeds the AI augmentation cost.
-Throughout this section we call a step \emph{easy} for AI when its difficulty $d_i$ is low, so that $q_i$ sits close to one and the AI completes it reliably, and \emph{hard} when its difficulty is high and the AI frequently fails and must retry.
-The two labels describe how well AI performs a step, not whether the firm should have AI perform it: a step can be easy for AI and still cost more to augment than to execute by hand, if prompting and checking the AI is itself slow.
 With more than one step, however, the optimal deployment of AI depends on more than each step's own characteristics, because of the benefits of automating multiple steps together in an AI chain.
 As a result, the factor of production holding the comparative advantage on a step \emph{in isolation} need not be the one that performs it in the optimal production configuration.
 That is, a step that is more cost-effective to perform manually may nonetheless be automated as part of a chain.
 
-To see what determines the execution mode of a step, consider a human-advantaged step $k$ whose successor $k+1$ is executed as a standalone augmented step, and compare two ways of handling the pair while leaving the rest of the workflow untouched: chaining steps $k$ and $k+1$ together, or performing step $k$ manually alongside the augmented step $k+1$.\footnote{The augmented step $k+1$ can be thought of a longer AI chain terminating augmented at some step $r > k+1$. Such a chain can be considered as a single augmented step with composite cost parameters, namely management cost $\AItime{r}$ and success probability $\prod_{i=k+1}^{r} q_i$, so \eqref{eq:ca_test} applies unchanged with these composite values.}
+To see what determines the execution mode of a step, consider an \emph{AI-hard} step $k$, that is, one on which the human holds the comparative advantage, whose successor $k+1$ is \emph{AI-easy} and executed as a standalone augmented step, and compare two ways of handling the pair while leaving the rest of the workflow untouched: chaining steps $k$ and $k+1$ together, or performing step $k$ manually alongside the augmented step $k+1$.\footnote{The augmented step $k+1$ can be thought of a longer AI chain terminating augmented at some step $r > k+1$. Such a chain can be considered as a single augmented step with composite cost parameters, namely management cost $\AItime{r}$ and success probability $\prod_{i=k+1}^{r} q_i$, so \eqref{eq:ca_test} applies unchanged with these composite values.}
 Chaining is the cheaper arrangement exactly when
 \begin{equation}
 \label{eq:ca_test}
