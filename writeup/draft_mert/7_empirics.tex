@@ -308,7 +308,11 @@ Kendall's $\tau$ is a standard rank correlation measure that, roughly speaking, 
 This measure ranges from $-1$ (completely reversed orderings) to $1$ (identical orderings), with $0$ indicating no systematic overlap.  
 Higher values therefore correspond to greater similarity between task sequences.
 }
-Moreover, we use the 4TU.ResearchData...
+We then repeat the exercise on a second corpus where the order is observed rather than documented: eight process-mining event logs from the 4TU.ResearchData repository, covering $215{,}715$ cases and over two million recorded events in police, hospital, banking, and university administrative processes.
+Because these logs record what organizations actually did, they reveal which precedences are real, and we can restrict the comparison to the $95\%$ of activity pairs that a genuine order governs.
+The LLM places $79\%$ of those pairs in the direction the traces show.
+Restricting both exercises to adjacent pairs, the statistic they share, the documented and the observed benchmark agree to within roughly two percentage points.
+These logs record work that passes between several people, which is the object Section~\ref{sec:longrun.production} describes rather than a departure from it: what our imputation recovers is the order of the steps, not who performs them.
 
 Having established that the LLM can reasonably recover the ordering of production activities, we then match O*NET tasks to PCF activities using natural language processing techniques to carry the AI exposure and AI execution labels over to a corpus that no LLM ordered, and re-test our predictions there.
 Although this matching procedure is lossy and not all AI-exposed or AI-executed tasks are matched to an activity in the PCF corpus, Predictions~\#1 and~\#2 come through with essentially the same results: AI-executed steps co-occur far more than the same labels arranged at random along the same sequences, and the empirical fragmentation index coefficient stays negative and significant at a magnitude comparable to the main sample.
