@@ -12,7 +12,7 @@ These are the terms the automation literature works in, writing production funct
 
 Our framework can be expressed in the same terms.
 We distinguish two types of labor: manual labor, which performs steps directly, and AI management labor, which prompts the AI and verifies what it returns.\footnote{
-The distinction is deliberate rather than necessary.
+The distinction between these two types of labor is deliberate rather than necessary.
 One could carry the aggregation through with a single type of labor, pooling the two requirements into one input.
 We keep them apart because the model already distinguishes the skill a step demands when a worker performs it, $\manualSkill{i}$, from the skill it demands when a worker manages an AI attempt at it, $\AIskill{i}$, so two types of labor is the natural counterpart of a distinction we have already drawn.
 }
@@ -21,30 +21,35 @@ Appendix~\ref{sec:aggregation} shows that the firm-level technology developed ea
 \label{eq:lr_macro_ces}
 X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\,\aggregateManualLabor^{\rho} + (1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^{\rho}\right)^{\frac{1}{\rho}},
 \end{align}
-over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$.\footnote{
+over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$, with $X$ denoting aggregate output.\footnote{
 The representation asks more of the economy than the firm-level argument does: capital productivity is common across firms, every firm organizes identically, and realized effective AI quality is the single dimension along which firms differ.
 }
 This is the familiar constant elasticity of substitution (CES) form, by which the macroeconomic implications of automation are usually studied, with an elasticity of substitution between AI and human labor that carries most of the weight in any comparative static.
 
 Arriving at \eqref{eq:lr_macro_ces} is not automatic, and what makes it work is worth stating.
-No firm in our model substitutes AI management labor for manual labor, since producing a unit of output requires completing every step of the workflow, so each firm's technology is Leontief.
-Aggregate substitution comes instead from composition, in the manner of \citet{houthakker1955pareto} and \citet{levhari1968note}: firms have access to the same AI but differ in how effectively they deploy it, and when AI management labor becomes relatively cheaper the economy's input mix moves because the set of firms for which using AI is worthwhile has moved, not because any firm has changed its own mix.
+No individual firm in our model substitutes AI management labor for manual labor, since producing a unit of output requires completing production steps in fixed proportions, so each firm's technology is Leontief.
+Aggregate substitution comes instead from composition, in the manner of \citet{houthakker1955pareto} and \citet{levhari1968note}: firms have access to the same AI technology but differ in how effectively they are able to deploy it, and when AI management labor becomes relatively cheaper the economy's input mix moves because the set of firms for which using AI is worthwhile has moved, not because any firm has changed its own mix.
 Appendix~\ref{sec:aggregation} obtains that dispersion from the order in which a firm has to commit, settling on its AI strategy and job design before it learns how effectively it can put AI to use, and derives in closed form the distribution of realized AI effectiveness under which \eqref{eq:lr_macro_ces} holds.
 
-The two levels are therefore not in competition.
+The micro and macro levels are therefore not in competition.
 Our account of how chaining redraws tasks and jobs is not an alternative to the aggregate view of automation but a foundation for it, and the implications people draw from improving AI quality in a CES economy carry over intact.
-The organizational content carries over as well, but only in the parameters of \eqref{eq:lr_macro_ces}: two economies whose steps are identically exposed to AI, differing only in how those steps are arranged within workflows, reach the same functional form with different weights and input requirements while looking alike on any step-level exposure measure.
-That is why workflow-level objects such as the fragmentation index have to be measured where the arrangement of work is still visible, which is what Section~\ref{sec:empirics} does.
+The organizational content carries over as well, but only in the parameters. 
+That is, two economies whose production steps are identically exposed to AI, differing only in how those steps are arranged within workflows, reach the same functional form expressed by \eqref{eq:lr_macro_ces} but with different weights and input requirements while looking alike on any step-level exposure measure.
+That is why workflow-level objects such as the fragmentation index have to be measured where the arrangement of work is still visible, which is what our empirical evaluation in Section~\ref{sec:empirics} does.
 
 
 \subsection{Computing the Firm's Optimum}
 \label{sec:extensions.computation}
 
-Throughout the paper we have taken the firm to be at its cost-minimizing arrangement without asking whether that arrangement can be found.
-The question is not idle here, because chaining is what makes it hard.
-Whether automating a step lowers cost depends on the arrangement the step sits in, since a step costs nothing directly once it is absorbed into a chain but adds its failure risk to every attempt at that chain, so the firm chooses among whole arrangements rather than deciding separately at each step, and the number of arrangements grows exponentially in the number of steps $m$.
-A model in which the optimum is out of reach would be a poor positive account of what firms do, and it would also leave the fragmentation index of Section~\ref{sec:results} approximating a quantity no one could compute.
-This subsection shows that neither concern applies: the short-run problem is solvable exactly and cheaply, and the long-run problem is solvable to any desired accuracy.
+Throughout the paper we have assumed the firm can obtain its cost-minimizing arrangement without discussing how that arrangement is found.
+Chaining is what makes this a substantive question.
+A step absorbed into a chain costs nothing directly, but it adds its failure risk to every attempt at the chain, so whether automating it pays depends on the arrangement the step sits in rather than on the step alone.
+The firm cannot decide step by step, then, and must instead compare whole arrangements, of which a workflow of $m$ steps admits exponentially many.
+
+The answer bears on how the rest of the paper should be read.
+The predictions we take to the data in Section~\ref{sec:empirics} are predictions about an optimum, and the fragmentation index of Section~\ref{sec:results} approximates the value of the very program that defines that optimum, so both would be of limited interest if the program were beyond reach.
+This subsection shows that it is not, on either horizon: the short-run problem is solved exactly and cheaply, and the long-run problem to any accuracy the firm cares to specify, each by dynamic programming.
+We take the two in turn.
 
 \paragraph{The short run.}
 What makes the short-run problem \eqref{eq:totalcost_shortterm} tractable is that it adds up time costs across tasks.
@@ -75,7 +80,5 @@ Closing a job is the point at which the accumulated skill and time are multiplie
 That state can take exponentially many values, so we discretize each coordinate to a geometric grid, which keeps the running time polynomial at the cost of an error that can be made arbitrarily small.
 Appendix~\ref{app:jobdesign.longrun} gives the proof, building on the intermediate case of Appendix~\ref{app:mediumrun_dp}, in which wages adjust to the skill a job requires but job boundaries are still given.
 
-Taken together, these results say that the firm's problem is not merely well posed but solvable, in the short run exactly and in the long run to any accuracy the firm cares to specify.
-This matters for how the rest of the paper should be read.
-The predictions we take to the data in Section~\ref{sec:empirics} below are predictions about an optimum, and they would be of limited interest if that optimum were something no firm could locate.
-It also suggests a use for the framework beyond what we do here: paired with detailed measurement of the time and skill content of individual tasks, these algorithms could be run on real workflows to ask how a given advance in AI capability would redraw them.
+Together these results also suggest a use for the framework beyond what we do here.
+Paired with detailed measurement of the time and skill content of individual tasks, the algorithms above could be run on real workflows to ask how a given advance in AI capability would redraw them.
