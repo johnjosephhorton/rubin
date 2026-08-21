@@ -61,8 +61,10 @@ Step $k$ is either performed manually, or augmented as the endpoint of an AI cha
 \label{eq:shortrun_recursion}
 C[k] = \min\Biggl\{ \underbrace{C[k-1] + \manualTime{k}}_{\text{step $k$ manual}}, \ \underbrace{\min_{\ell < k}\ \Bigl( C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^{k} q_i} \Bigr)}_{\text{step $k$ ends a chain begun at } \ell+1} \Biggr\}.
 \end{align}
-Because time costs enter \eqref{eq:totalcost_shortterm} additively, a stretch's time cost is all that \eqref{eq:shortrun_recursion} needs from it, and the position $k$ indexes the table on its own.
+Because time costs enter \eqref{eq:totalcost_shortterm} additively, a stretch's time cost is all that \eqref{eq:shortrun_recursion} needs from it.
 Each of the $m$ values costs $O(m)$ to evaluate, since the chain ending at step $k$ may begin anywhere before it.
+There are $m$ possible candidates, making the computational complexity of the algorithm $O(m^2)$.
+Proposition~\ref{prop:shortrun_dp} formalizes this.
 
 \begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
@@ -79,9 +81,11 @@ The base case is $W(0,\, \skillcost{},\, \timecost{}) = \skillcost{}\,\timecost{
 W(i,\, \skillcost{},\, \timecost{}) = \min\Biggl\{ \underbrace{\skillcost{}\,\timecost{} + V(i)}_{\text{close the job}}, \ \underbrace{W\bigl(i-1,\, \skillcost{} + \manualSkill{i},\, \timecost{} + \manualTime{i}\bigr)}_{\text{step $i$ manual}}, \ \underbrace{\min_{r < i}\ W\Bigl(r,\, \skillcost{} + \AIskill{i},\, \timecost{} + \tfrac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\Bigr)}_{\text{step $i$ ends a chain begun at } r+1} \Biggr\},
 \end{align}
 with the optimum at $V(m) = W(m,\, 0,\, 0)$.
-Closing a job is where the accumulated skill and time are finally multiplied into a wage bill, which is why the state has to carry both.
-Both are continuous, so the table cannot be filled exactly, and we round each coordinate to powers of $(1+\epsilon)$.
-Skill then lies in $[1/B,\, mB]$ and time in $[1/B,\, 2mB^3]$, each range holding $O(\epsilon^{-1}\log(mB))$ such powers, so the table has $O(m\,\epsilon^{-2}\log^2(mB))$ entries and $O(m)$ work per entry.
+Closing a job is where the accumulated skill and time are finally multiplied into a wage bill, which is why the recursion has to carry both alongside the position $i$.
+That is also what makes the long run costlier to solve.
+Skill and time are continuous, so the recursion must distinguish between infinitely many situations rather than the $m$ of the short run, and it cannot be carried out to completion.
+We therefore round each of the two costs to a power of $(1+\epsilon)$, which leaves finitely many of them to keep track of at the price of inflating the cost by at most a factor $(1+\epsilon)$.
+Skill then lies in $[1/B,\, mB]$ and time in $[1/B,\, 2mB^3]$, each range holding $O(\epsilon^{-1}\log(mB))$ such powers, so $O(m\,\epsilon^{-2}\log^2(mB))$ combinations of position, skill, and time survive the rounding, each costing $O(m)$ to evaluate.
 
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
