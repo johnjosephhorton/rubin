@@ -105,7 +105,6 @@ The two examples below showcase this point.
 Consider a workflow of $m$ steps (with $m$ even).
 The steps alternate between \emph{easy} and \emph{hard} for AI, and differ only in how reliably AI executes them:
 \[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (5,\,6,\,1) \ \text{ for odd $i$ (easy)}, \qquad (5,\,6,\,0.1) \ \text{ for even $i$ (hard)}. \]
-
 Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
 \caption{Dispersed AI-Able Steps: No AI Chain Forms}
@@ -122,16 +121,12 @@ Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 
 Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes an option.
 The firm therefore treats each step on its own, and on its own no step is worth executing with AI: managing a single AI attempt takes longer than doing the work manually, as even an easy step's augmentation cost $\AItime{i}/q_i = 6/1 = 6$ exceeds its manual cost $\manualTime{i} = 5$ (for a hard step the gap widens to $6/0.1 = 60$ against $5$).
-The optimal strategy thus performs all $m$ steps manually and deploys no AI anywhere, for a total cost of
-\[
-m(5) = 5m.
-\]
+The optimal strategy thus performs all $m$ steps manually and deploys no AI anywhere, for a total cost of $m(5) = 5m$.
 \end{example}
 \begin{example}
 \label{ex:fragmentation_clustered}
 Consider the same set of steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly steps, so that the first $m/2$ steps are easy and the last $m/2$ are hard:
 \[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (5,\,6,\,1) \ \text{ for $i \le m/2$ (easy)}, \qquad (5,\,6,\,0.1) \ \text{ for $i > m/2$ (hard)}. \]
-
 Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
 \caption{Clustered AI-Able Steps: The Easy Run Becomes One AI Chain}
@@ -147,15 +142,9 @@ Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
 \end{figure}
 
 Now the easy steps form a contiguous run, so the firm can chain them: it automates the first $m/2 - 1$ at zero direct cost and verifies only once, at the end of the run.
-Because every easy step succeeds on the first attempt, the entire run of $m/2$ easy steps collapses to the single management cost of its augmented endpoint,
-\[
-\frac{\AItime{m/2}}{\prod_{i=1}^{m/2} q_i} = \frac{6}{1} = 6.
-\]
+Because every easy step succeeds on the first attempt, the entire run of $m/2$ easy steps collapses to the single management cost of its augmented endpoint, $\tfrac{\AItime{m/2}}{\prod_{i=1}^{m/2} q_i} = \tfrac{6}{1} = 6.$
 Managing an AI attempt was too slow to pay at any single step, yet one verification covering the entire easy run pays easily, as the chain replaces the run's $m/2$ manual executions, costing $5m/2$ in total, with the single cost of $6$.
-The $m/2$ hard steps remain cheaper performed manually (cost $5$ each), for a total cost of
-\[
-6 + \tfrac{m}{2}(5) = 6 + \tfrac{5m}{2},
-\]
+The $m/2$ hard steps remain cheaper performed manually (cost $5$ each), for a total cost of $6 + \tfrac{m}{2}(5) = 6 + \tfrac{5m}{2},$
 strictly below the $5m$ of the interleaved arrangement whenever $m > 2$.
 \end{example}
 
