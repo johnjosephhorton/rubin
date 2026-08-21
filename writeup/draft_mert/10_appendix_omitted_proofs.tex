@@ -2,41 +2,7 @@
 \label{app:omitted_proofs}
 
 This appendix collects the proofs omitted from the main body of the paper.
-Section~\ref{app:ca_local_proof} proves Proposition~\ref{prop:ca_local} of Section~\ref{sec:comparative_advantage} and Section~\ref{app:shortrun_proof} proves Proposition~\ref{prop:shortrun_dp} of Section~\ref{sec:extensions.computation}; the companion long-run result, Proposition~\ref{prop:totalcost_optimization_dp}, is proved in Appendix~\ref{app:jobdesign.longrun}.
-
-\subsection{Proof of Proposition~\ref{prop:ca_local}}
-\label{app:ca_local_proof}
-
-\begin{proof}
-Within the block $\{k-1,\, k,\, k+1\}$ a feasible arrangement is a partition of the three steps into contiguous tasks, each of which is either a manual step or an AI chain terminating in an augmented step.
-The block's cost is the sum of the costs of its tasks, so the firm chooses the cheapest such partition.
-
-Consider first the arrangements in which the human performs step $k$.
-Step $k$ is then a task on its own, and steps $k-1$ and $k+1$ are not adjacent to one another, so neither can belong to a chain that does not contain $k$.
-Every such arrangement therefore executes all three steps separately, and the cheapest of them costs $v_{k-1} + \manualTime{k} + v_{k+1}$, where $v_k = \manualTime{k}$ because $\manualTime{k} < \AItime{k}/q_k$ by assumption.
-
-Consider next the arrangements in which AI executes step $k$.
-Either step $k$ is a task on its own, in which case it is augmented at cost $\AItime{k}/q_k > \manualTime{k}$ and the arrangement is strictly more expensive than the one that differs from it only in performing step $k$ manually, or step $k$ belongs to a chain running over steps $\ell, \dotsc, r$ with $\ell \leq k \leq r$ and $\ell < r$.
-In the latter case the steps of the block outside the chain are tasks on their own, each executed at cost $v_i$, so the arrangement costs
-\[
-\frac{\AItime{r}}{\prod_{i=\ell}^{r} q_i} \; + \sum_{i \notin \{\ell, \dotsc, r\}} v_i,
-\]
-which falls below $v_{k-1} + \manualTime{k} + v_{k+1}$ exactly when \eqref{eq:ca_local} holds.
-As ties are broken in favor of manual execution, AI executes step $k$ in the cost-minimizing arrangement if and only if \eqref{eq:ca_local} holds for at least one such chain, which is the first claim.
-
-The chains with $k-1 \leq \ell \leq k \leq r \leq k+1$ and $\ell < r$ are exactly $\{k,\, k+1\}$, $\{k-1,\, k\}$, and $\{k-1,\, k,\, k+1\}$.
-Writing \eqref{eq:ca_local} for the first of them and cancelling $v_{k+1} = \AItime{k+1}/q_{k+1}$ from both sides gives
-\[
-\frac{\AItime{k+1}}{q_k\, q_{k+1}} - \frac{\AItime{k+1}}{q_{k+1}} = \frac{\AItime{k+1}(1-q_k)}{q_k\, q_{k+1}} = \Delta_k \; < \; \manualTime{k},
-\]
-which is condition (i), and writing it for the second gives condition (iii) directly.
-For the third, cancelling $v_{k+1}$ again leaves
-\[
-\frac{\AItime{k+1}(1 - q_{k-1} q_k)}{q_{k-1}\, q_k\, q_{k+1}} \; < \; v_{k-1} + \manualTime{k},
-\]
-and decomposing the joint failure risk as $1 - q_{k-1}q_k = (1-q_{k-1}) + q_{k-1}(1-q_k)$ splits the left-hand side into $\Delta_{k-1} + \Delta_k$, which is condition (ii).
-Since a chain satisfying \eqref{eq:ca_local} exists if and only if one of the three does, the second claim follows.
-\end{proof}
+Section~\ref{app:shortrun_proof} proves Proposition~\ref{prop:shortrun_dp} of Section~\ref{sec:extensions.computation}; the companion long-run result, Proposition~\ref{prop:totalcost_optimization_dp}, is proved in Appendix~\ref{app:jobdesign.longrun}.
 
 \subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
 \label{app:shortrun_proof}
