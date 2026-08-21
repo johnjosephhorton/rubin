@@ -52,7 +52,8 @@ Example~\ref{ex:ca_predecessor} showcases these forces numerically.
 \begin{example}
 \label{ex:ca_predecessor}
 Consider three consecutive steps with the following parameters:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr)_{i=0,1,2} = (5,\,4,\,0.95),\quad (1,\,2,\,0.50),\quad (4,\,1,\,0.80). \]
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr)_{i=0,1,2} = (8,\,8,\,1),\quad (5,\,6,\,0.4),\quad (4,\,6,\,1). \]
+Step~1 is \emph{hard} for AI and Step~2 is \emph{easy}; the same two steps reappear in Examples~\ref{ex:fragmentation_interleaved} and~\ref{ex:fragmentation_clustered} below.
 Figure~\ref{fig:ex_predecessor} shows how the optimal execution changes once Step~0 is placed in front of Steps~1--2.
 \begin{figure}[!t]
 \caption{Comparative Advantage Overturned by an AI-Friendly Predecessor}
@@ -62,23 +63,24 @@ Figure~\ref{fig:ex_predecessor} shows how the optimal execution changes once Ste
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: With only Steps~1--2 the firm performs Step~1 manually, since in isolation the human holds the comparative advantage there. Adding the AI-friendly Step~0 in front makes it cheapest to run all three as a single AI chain, so Step~1 is pulled under AI by its predecessor's characteristics rather than its own. Step parameters are given in Example~\ref{ex:ca_predecessor}.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: With only Steps~1--2 the firm uses no AI at all, since in isolation the human holds the comparative advantage on both. Adding the AI-friendly Step~0 in front makes it cheapest to run all three as a single AI chain, so Step~1 is pulled under AI by its predecessor's characteristics rather than its own. Step parameters are given in Example~\ref{ex:ca_predecessor}.}
 \end{spacing}
 \end{minipage}
 \end{figure}
-In isolation, Step~1 is cheaper \emph{manually}: its manual cost $\manualTime{1} = 1$ lies below its augmentation cost $\AItime{1}/q_1 = 2/0.5 = 4$, so the human holds the comparative advantage on Step~1.
+In isolation the human holds the comparative advantage on Step~1 by a wide margin: its manual cost $\manualTime{1} = 5$ lies far below its augmentation cost $\AItime{1}/q_1 = 6/0.4 = 15$.
+Step~2 is also cheaper by hand, at $\manualTime{2} = 4$ against $\AItime{2}/q_2 = 6$, though by much less.
 
 Take Steps~1 and~2 on their own first (the top row of the figure).
-Performing Step~1 manually and augmenting Step~2 costs $\manualTime{1} + \AItime{2}/q_2 = 1 + 1.25 = 2.25$, below the cost $\AItime{2}/(q_1\, q_2) = 1/0.4 = 2.5$ of chaining the two.
-Absent the predecessor, then, comparative advantage holds and Step~1 is performed manually.
+Performing both manually costs $\manualTime{1} + \manualTime{2} = 5 + 4 = 9$, below the $\AItime{2}/(q_1\, q_2) = 6/0.4 = 15$ of chaining them and below the $11$ of augmenting Step~2 alone.
+Absent the predecessor, then, comparative advantage holds at every step and the workflow uses no AI at all.
 
 Now introduce the predecessor, Step~0 (the bottom row of the figure).
-Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode: manually it costs $\manualTime{0} = 5$, and as a standalone augmented step it costs $\AItime{0}/q_0 = 4/0.95 \approx 4.21$.
+Step~0 is reliable for AI ($q_0 = 1$) but expensive to execute on its own in either mode, costing $8$ manually and $\AItime{0}/q_0 = 8$ as a standalone augmented step.
 The only cheap way to absorb Step~0 is to place it at the start of a chain, where its management cost goes unpaid.
-The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost $\AItime{2}/(q_0\, q_1\, q_2) = 1/0.38 \approx 2.63$.
-This falls far below the cheapest arrangement that keeps Step~1 manual, which executes each step separately on its own at cost $4.21 + 1 + 1.25 = 6.46$, and below every other strategy.
-Step~1, which on its own would be performed manually, is thus automated only to bridge the AI-friendly predecessor to the cheap endpoint at Step~2.
-Its own success probability is just $q_1 = 0.5$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is far more costly.
+The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost $\AItime{2}/(q_0\, q_1\, q_2) = 6/0.4 = 15$.
+This falls below the cheapest arrangement that keeps Step~1 manual, which handles Step~0 on its own and performs the other two by hand at cost $8 + 5 + 4 = 17$, and below every other strategy.
+Step~1, on which the human holds a three-fold advantage in isolation, is thus automated only to bridge the AI-friendly predecessor to the cheap endpoint at Step~2.
+Its own success probability is just $q_1 = 0.4$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is more costly still.
 \end{example}
 
 In sum, whether a step is automated depends not just on its own cost parameters (as comparative advantage logic would predict) but also on characteristics of its neighbors: the pressure to fold a human-advantaged step into a chain can come from either a cheap chain endpoint \emph{downstream} or an AI-reliable predecessor \emph{upstream}.
@@ -102,8 +104,8 @@ The two examples below showcase this point.
 
 \begin{example}
 \label{ex:fragmentation_interleaved}
-Consider a workflow of four steps that alternate between \emph{easy} and \emph{hard} for AI, and differ only in how reliably AI executes them:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (5,\,6,\,1) \ \text{ for $i = 1, 3$ (easy)}, \qquad (5,\,6,\,0.1) \ \text{ for $i = 2, 4$ (hard)}. \]
+Consider a workflow of four steps that alternate between the \emph{easy} and \emph{hard} steps of Example~\ref{ex:ca_predecessor}, namely its Steps~2 and~1:
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (4,\,6,\,1) \ \text{ for $i = 1, 3$ (easy)}, \qquad (5,\,6,\,0.4) \ \text{ for $i = 2, 4$ (hard)}. \]
 Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
 \caption{Dispersed AI-Able Steps: No AI Chain Forms}
@@ -119,13 +121,13 @@ Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
 \end{figure}
 
 Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes an option.
-The firm therefore treats each step on its own, and on its own no step is worth executing with AI: managing a single AI attempt takes longer than doing the work manually, as even an easy step's augmentation cost $\AItime{i}/q_i = 6/1 = 6$ exceeds its manual cost $\manualTime{i} = 5$ (for a hard step the gap widens to $6/0.1 = 60$ against $5$).
-The optimal strategy thus performs all four steps manually and deploys no AI anywhere, for a total cost of $4(5) = 20$.
+The firm therefore treats each step on its own, and on its own no step is worth executing with AI: managing a single AI attempt takes longer than doing the work manually, as even an easy step's augmentation cost $\AItime{i}/q_i = 6/1 = 6$ exceeds its manual cost $\manualTime{i} = 4$ (for a hard step the gap widens to $6/0.4 = 15$ against $5$).
+The optimal strategy thus performs all four steps manually and deploys no AI anywhere, for a total cost of $2(4) + 2(5) = 18$.
 \end{example}
 \begin{example}
 \label{ex:fragmentation_clustered}
 Consider the same four steps as in Example~\ref{ex:fragmentation_interleaved}, but now cluster the AI-friendly ones, so that the first two are easy and the last two are hard:
-\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (5,\,6,\,1) \ \text{ for $i = 1, 2$ (easy)}, \qquad (5,\,6,\,0.1) \ \text{ for $i = 3, 4$ (hard)}. \]
+\[ \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (4,\,6,\,1) \ \text{ for $i = 1, 2$ (easy)}, \qquad (5,\,6,\,0.4) \ \text{ for $i = 3, 4$ (hard)}. \]
 Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
 \begin{figure}[!t]
 \caption{Clustered AI-Able Steps: The Easy Run Becomes One AI Chain}
@@ -142,12 +144,12 @@ Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
 
 Now the easy steps form a contiguous run, so the firm can chain them: it automates step~1 at zero direct cost and verifies only once, at step~2, the end of the run.
 Because every easy step succeeds on the first attempt, the whole run collapses to the single management cost of its augmented endpoint, $\tfrac{\AItime{2}}{q_1 q_2} = \tfrac{6}{1} = 6.$
-Managing an AI attempt was too slow to pay at any single step, yet one verification covering the entire easy run pays easily, as the chain replaces the run's two manual executions, costing $10$ in total, with the single cost of $6$.
-The two hard steps remain cheaper performed manually at $5$ each, for a total cost of $6 + 2(5) = 16$, below the $20$ of the interleaved arrangement.
+Managing an AI attempt was too slow to pay at any single step, yet one verification covering the entire easy run pays easily, as the chain replaces the run's two manual executions, costing $8$ in total, with the single cost of $6$.
+The two hard steps remain cheaper performed manually at $5$ each, for a total cost of $6 + 2(5) = 16$, below the $18$ of the interleaved arrangement.
 \end{example}
 
 The same steps thus yield very different automation outcomes depending only on whether the AI-friendly ones are clustered or dispersed.
-The contrast is, moreover, of a kind the data we bring to the model in Section~\ref{sec:empirics} can detect: augmented and automated execution are observationally equivalent there, so what distinguishes the two arrangements empirically is that the interleaved workflow uses no AI at all while the clustered workflow executes half its steps with AI.
+The contrast is, moreover, of a kind the data we bring to the model in Section~\ref{sec:empirics} can detect: augmented and automated execution are observationally equivalent there, so what distinguishes the two arrangements empirically is that the interleaved workflow uses less AI while the clustered workflow executes more of its steps with AI.
 
 To make this intuition more precise, let us return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm}.
 Consider the special case where AI management costs are normalized: $\AItime{i} = 1$ for all $i$.

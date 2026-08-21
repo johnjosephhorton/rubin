@@ -16,11 +16,11 @@
 
   % row (a): steps 1 and 2 only -- step 1 manual, step 2 augmented (separate tasks)
   \node[box, manual] (a1) {Manual};
-  \node[box, augmented, right=0.6cm of a1] (a2) {Augmented};
+  \node[box, manual, right=0.6cm of a1] (a2) {Manual};
   \node[idx, above=1pt of a1] {Step 1};
   \node[idx, above=1pt of a2] {Step 2};
   \draw[->, thick] (a1) -- (a2);
-  \node[font=\footnotesize, anchor=west] at ($(a2.east)+(0.8,0)$) {Total cost $\approx 2.25$};
+  \node[font=\footnotesize, align=left, anchor=west] at ($(a2.east)+(0.8,0)$) {Total cost $= 9$\\ \scriptsize(best alternative: $11$)};
 
   % row (b): introduce step 0 -- all three chained, steps 0 and 1 automated
   \node[box, automated, below=1.7cm of a1] (b1) {Automated};
@@ -32,7 +32,7 @@
   \node[chainbox, fit=(b0)(b1)(b2)] (chain) {};
   \node[idx] at ($(b0.north)+(0,0.36)$) {Step 0};
   \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.30)$) {single task (AI chain)};
-  \node[font=\footnotesize, anchor=west] at ($(b2.east)+(0.8,0)$) {Total cost $\approx 2.63$};
+  \node[font=\footnotesize, align=left, anchor=west] at ($(b2.east)+(0.8,0)$) {Total cost $= 15$\\ \scriptsize(best alternative: $17$)};
 
   % row labels, both anchored to the left of the wider (lower) row
   \node[rowlab, anchor=east] at ($(b0.west |- a1)+(-0.6,0)$) {Steps 1--2 alone:};
