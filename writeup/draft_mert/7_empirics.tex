@@ -301,18 +301,13 @@ Confidence intervals widen as the restriction shrinks the sample, since dropping
 This raises our confidence that our results do not hinge on the specific way that O*NET provides its occupation taxonomy.
 
 The two robustness tests above stay within the bounds of the O*NET dataset and our own imputation, so neither can establish that the imputed order corresponds to how work steps are actually sequenced.
-To externally validate our LLM sequencing approach, in Appendix~\ref{app:external_validation} we turn to a second production taxonomy: the Process Classification Framework (PCF) of the American Productivity \& Quality Center (APQC), whose member working groups have recorded the activities and tasks composing a firm's business processes in the order practitioners perform them \citep{apqc_pcf}.
-We first shuffle the steps of documented PCF branches and ask the LLM to order them, under our main sequencing prompt and each of the ten alternatives.
-The LLM recovers the practitioners' order to a decent extent, placing $70\%$ of consecutive step pairs in the documented direction and reproducing $24\%$ of branches exactly, with an average Kendall's $\tau$ of $0.53$ against PCF's orderings that barely moves across prompts.\footnote{
-Kendall's $\tau$ is a standard rank correlation measure that, roughly speaking, captures the fraction of task pairs that appear in the same relative order across two ranked lists.
-This measure ranges from $-1$ (completely reversed orderings) to $1$ (identical orderings), with $0$ indicating no systematic overlap.  
-Higher values therefore correspond to greater similarity between task sequences.
-}
-We then repeat the exercise on a second corpus where the order is observed rather than documented: eight process-mining event logs from the 4TU.ResearchData repository \citep{roadfines_log, sepsis_log, bpi2017_log, bpi2020_log}, covering $215{,}715$ cases and over two million recorded events in police, hospital, banking, and university administrative processes.
-Because these logs record what organizations actually did, they reveal which precedences are real, and we can restrict the comparison to the $95\%$ of activity pairs that a genuine order governs.
-The LLM places $79\%$ of those pairs in the direction the traces show.
-Restricting both exercises to adjacent pairs, the statistic they share, the documented and the observed benchmark agree to within roughly two percentage points.
-These logs record work that passes between several people, which is the object Section~\ref{sec:longrun.production} describes rather than a departure from it: what our imputation recovers is the order of the steps, not who performs them.
+To validate our LLM sequencing approach externally, in Appendix~\ref{app:external_validation} we apply it to two corpora of production processes whose orderings we did not generate.
+The first is the Process Classification Framework (PCF) of the American Productivity \& Quality Center (APQC), whose member working groups have recorded the activities and tasks composing a firm's business processes in the order practitioners perform them \citep{apqc_pcf}.
+The second is a collection of process-mining event logs from the 4TU.ResearchData repository \citep{roadfines_log, sepsis_log, bpi2017_log, bpi2020_log}, covering police, hospital, banking, and university administrative processes, where the order of work is observed in the recorded traces rather than documented after the fact.
+In both cases we shuffle the steps of a process and ask the LLM to restore their order, under our main sequencing prompt and each of the ten alternatives.
+The LLM recovers a large majority of the benchmark precedences in both corpora, the documented and the observed benchmark agree closely with each other, and neither result moves much across prompts.
+The overlap is substantial rather than exact, which is what one would expect of a procedure that infers an order from task descriptions alone, but it is systematic enough that our imputed sequences cannot be read as an artifact of the LLM.
+We also note that the event logs record work that passes between several people, which is the object Section~\ref{sec:longrun.production} describes rather than a departure from it: what our imputation recovers is the order of the steps, not who performs them.
 
 Having established that the LLM can reasonably recover the ordering of production activities, we then match O*NET tasks to PCF activities using natural language processing techniques to carry the AI exposure and AI execution labels over to a corpus that no LLM ordered, and re-test our predictions there.
 Although this matching procedure is lossy and not all AI-exposed or AI-executed tasks are matched to an activity in the PCF corpus, Predictions~\#1 and~\#2 come through with essentially the same results: AI-executed steps co-occur far more than the same labels arranged at random along the same sequences, and the empirical fragmentation index coefficient stays negative and significant at a magnitude comparable to the main sample.
