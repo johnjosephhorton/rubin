@@ -35,6 +35,10 @@
 
   \foreach \a/\b in {d1/e1,d2/e2,d3/e3,d4/e4} \draw[->,thick] (\a)--(\b);
 
+  % arrows between consecutive steps and between consecutive tasks
+  \foreach \a/\b in {d1/d2,d2/d3,d3/d4} \draw[->,thick] (\a)--(\b);
+  \foreach \a/\b in {e1/e2,e2/e3,e3/e4} \draw[->,thick] (\a)--(\b);
+
   % the contiguous easy run is executed as a single AI chain
   \node[chainbox, fit=(e1)(e2)] (chain) {};
   \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.30)$) {single task (AI chain)};
