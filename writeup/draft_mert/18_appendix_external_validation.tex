@@ -32,11 +32,11 @@ than asserted.
 
 We first establish that the LLM can recover an ordering of activities at all, against corpora whose order is
 already known.
-Subsection~\ref{app:apqc_validation} shuffles the steps of 345 documented process branches and asks the LLM to
+Appendix~\ref{app:apqc_validation} shuffles the steps of 345 documented process branches and asks the LLM to
 order them in a sequence, under the main analysis's prompt and each of its ten alternatives.
 It recovers the practitioners' order to a substantial degree, and does so despite presence of branches whose activities 
 are mutually exclusive options for which no true order exists.
-Subsection~\ref{app:eventlog_validation} repeats the exercise against the event logs, where the data reveal
+Appendix~\ref{app:eventlog_validation} repeats the exercise against the event logs, where the data reveal
 which precedences are real and the comparison can be restricted to them.
 The two benchmarks agree closely about how much sequence structure the instrument recovers.
 
@@ -52,7 +52,14 @@ the required comparison.
 Taken together, the exercises conducted in this appendix indicate that our findings are artifacts neither of how LLMs
 order a list of tasks in a sequence nor of how O*NET catalogues tasks in occupations.
 
-\subsection{Concern \#1: LLM Recovering Practitioner-Documented Task Orderings}
+\subsection{Concern \#1: LLM Recovering Real-World Task Orderings}
+\label{app:sequencing_validation}
+
+We benchmark the sequencing procedure twice, against two corpora that differ in where their order comes from.
+The first records the order practitioners say they work in; the second records the order in which work was
+actually carried out.
+
+\subsubsection{Benchmark \#1: Practitioner-Documented Orderings}
 \label{app:apqc_validation}
 
 We apply our task-ordering approach, exactly as used in the main analysis, to the APQC corpus, and measure how much of the
@@ -169,7 +176,7 @@ The tail is not, however, purely an artifact of short branches.
 Negative values are about as common among the longest branches as among the shortest, $14\%$ in both cases, and what differs is their magnitude: short branches produce reversals; long branches produce values between $-0.03$ and $-0.20$, that is, a handful of misordered pairs within an otherwise correct sequence.
 Inspecting the branches that remain negative after averaging over all ten alternative prompts, the recurring case is the one anticipated above: parents whose children are parallel streams or mutually exclusive alternatives, for which no true ordering exists and the sign of $\tau$ is close to a coin flip.
 
-\subsection{A Second Benchmark: Observed Process Execution}
+\subsubsection{Benchmark \#2: Observed Process Execution}
 \label{app:eventlog_validation}
 
 The benchmark above has a limitation it cannot overcome: a documented ordering is an editorial convention, so where a process has no true sequence, disagreement says nothing about the instrument.
