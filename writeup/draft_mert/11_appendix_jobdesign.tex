@@ -1,7 +1,7 @@
 \section{Job Design and the Firm's Long Run Problem}
 \label{app:jobdesign}
 
-Section~\ref{sec:jobs_wages} studies the firm's AI deployment problem with the whole workflow assigned to a single worker whose wage is fixed, so that the firm chooses how to chain and automate steps in order to minimize the time production takes, $\sum_b \timecost{b}$.
+Section~\ref{sec:shortrun.production} studies the firm's AI deployment problem with the whole workflow assigned to a single worker whose wage is fixed, so that the firm chooses how to chain and automate steps in order to minimize the time production takes, $\sum_b \timecost{b}$.
 This appendix develops the firm's long-run problem, in which it additionally bundles tasks into \emph{jobs}.
 A single worker may perform several tasks, but must then hold all of their skills throughout, so the cost of a job is its total skill requirement times its total time.
 Bundling economizes on the coordination costs incurred when work passes from one worker to another, at the expense of these broader skill requirements. 
@@ -12,13 +12,13 @@ Figure~\ref{fig:hierarchical_production} of the main text illustrates the result
 \subsection{Jobs, Wages, and the Job Design Trade-off}
 \label{sec:app.jobs}
 
-This subsection develops the same objects as Section~\ref{sec:longrun.jobdesign} of the main text in discursive form, spelling out the economics behind each modeling choice.
+This subsection develops the same objects as Sections~\ref{sec:longrun.jobdesign} and~\ref{sec:longrun.production} of the main text in discursive form, spelling out the economics behind each modeling choice.
 
 
 The firm can divide its production sequence and hire different workers to perform different contiguous blocks of tasks.
 Just as an AI strategy partitions the step sequence $\mathcal{S}$ into a sequence of contiguous tasks $\T$, the firm can partition the task sequence into contiguous blocks, each of which it assigns to a single worker.
 We call each such block a \emph{job} and the partition $\J = (J_1, \dotsc, J_p)$ of $\T$ into $p$ jobs a \emph{job design}.
-The short run problem in Section~\ref{sec:jobs_wages} is the special case of a job design with a single job spanning the whole workflow, whose wage is normalized to 1.
+The short run problem in Section~\ref{sec:shortrun.production} is the special case of a job design with a single job spanning the whole workflow, whose wage is normalized to 1.
 Figure~\ref{fig:hierarchical_production} of the main text shows the additional layer of bundling tasks into jobs that the firm considers in its long-run problem.
 
 
@@ -104,17 +104,17 @@ In the long run the firm chooses its AI deployment strategy and job design toget
 \min_{\T} \ \min_{\J} \
 \sum_{J_j \in \J} \Biggl[\Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr)\Biggr],
 \end{align}
-which nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:jobs_wages} as the case of a single job spanning the whole workflow whose wage is held fixed rather than chosen.
+which nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:shortrun.production} as the case of a single job spanning the whole workflow whose wage is held fixed rather than chosen.
 
 
 \subsection{Firm's Long-Run Optimization Problem}
 \label{app:jobdesign.longrun}
 
 In the long-run optimization problem, the firm anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
-This contrasts with the AI deployment problem of Section~\ref{sec:jobs_wages}, which minimizes the time production takes while holding the assignment of steps to a single worker fixed. 
+This contrasts with the AI deployment problem of Section~\ref{sec:shortrun.production}, which minimizes the time production takes while holding the assignment of steps to a single worker fixed. 
 The long-run problem additionally optimizes how tasks are bundled into jobs.
 
-The firm's long-run problem is \eqref{eq:totalcost_with_handoff} of Section~\ref{sec:longrun.jobdesign}: it designs both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs, where the choice of $\T$ determines the time and skill requirements of each task and, given $\T$, the choice of $\mathcal{J}$ determines worker wage rates and the time needed per unit of output, including hand-off costs.
+The firm's long-run problem is \eqref{eq:totalcost_with_handoff} of Section~\ref{sec:longrun.production}: it designs both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs, where the choice of $\T$ determines the time and skill requirements of each task and, given $\T$, the choice of $\mathcal{J}$ determines worker wage rates and the time needed per unit of output, including hand-off costs.
 
 What makes this harder than the short-run problem of Proposition~\ref{prop:shortrun_dp} is that steps must be assigned to tasks and the resulting tasks to workers at the same time, with the hand-off costs incurred at the boundary of jobs counted along the way.
 Proposition~\ref{prop:totalcost_optimization_dp} of Section~\ref{sec:extensions.computation} states that the problem nonetheless admits a polynomial-time approximation scheme.
