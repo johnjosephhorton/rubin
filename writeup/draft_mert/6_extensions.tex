@@ -65,11 +65,11 @@ Because time costs enter \eqref{eq:totalcost_shortterm} additively, a stretch's 
 Each of the $m$ values costs $O(m)$ to evaluate, since the chain ending at step $k$ may begin anywhere before it.
 There are $m$ possible candidates, making the computational complexity of the algorithm $O(m^2)$.
 Proposition~\ref{prop:shortrun_dp} formalizes this.
-
 \begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
 Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
+See Appendix~\ref{app:shortrun_proof} for the proof.
 
 \paragraph{The Long Run Optimization.}
 The firm now chooses job boundaries as well, and \eqref{eq:totalcost_with_handoff} multiplies each job's total skill by its total time.
@@ -82,18 +82,16 @@ W(i,\, \skillcost{},\, \timecost{}) = \min\Biggl\{ \underbrace{\skillcost{}\,\ti
 \end{align}
 with the optimum at $V(m) = W(m,\, 0,\, 0)$.
 Closing a job is where the accumulated skill and time are finally multiplied into a wage bill, which is why the recursion has to carry both alongside the position $i$.
-That is also what makes the long run costlier to solve.
+That is also what makes the long run more complicated to solve.
 Skill and time are continuous, so the recursion must distinguish between infinitely many situations rather than the $m$ of the short run, and it cannot be carried out to completion.
 We therefore round each of the two costs to a power of $(1+\epsilon)$, which leaves finitely many of them to keep track of at the price of inflating the cost by at most a factor $(1+\epsilon)$.
-Skill then lies in $[1/B,\, mB]$ and time in $[1/B,\, 2mB^3]$, each range holding $O(\epsilon^{-1}\log(mB))$ such powers, so $O(m\,\epsilon^{-2}\log^2(mB))$ combinations of position, skill, and time survive the rounding, each costing $O(m)$ to evaluate.
-
+Proposition~\ref{prop:totalcost_optimization_dp} formalizes the resulting approximation of the optimal solution.
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
 Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.
 For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
-
-Appendices~\ref{app:shortrun_proof} and~\ref{app:jobdesign.longrun} give the proofs, including the bound on the error the rounding introduces.
+See Appendix~\ref{app:jobdesign.longrun} for the details and proof.
 
 Together these results also suggest a use for the framework beyond what we do here.
 Paired with detailed measurement of the time and skill content of individual tasks, the algorithms above could be run on real workflows to ask how a given advance in AI capability would redraw them.
