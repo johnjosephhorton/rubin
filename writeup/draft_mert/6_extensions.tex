@@ -46,18 +46,22 @@ Chaining is what makes this a substantive question.
 A step absorbed into a chain costs nothing directly, but it adds its failure risk to every attempt at the chain, so whether automating it pays depends on the arrangement the step sits in rather than on the step alone.
 The firm cannot decide step by step, then, and must instead compare all feasible arrangements, of which a production containing $m$ steps admits exponentially many.
 
-The predictions we take to the data in Section~\ref{sec:empirics} are predictions about an optimum, and the fragmentation index of Section~\ref{sec:results} approximates the value of the very program that defines that optimum, so both would be of limited interest if the program were beyond reach.
-This subsection shows that it is not, on either horizon.
-We formulate both problems recursively, asking for the cheapest way to cover the first $k$ steps of the workflow and building that value up from the answers for shorter prefixes, and we solve both by dynamic programming.
-What separates them is how much the recursion must carry from one step to the next: the position alone in the short run, and in the long run the skill and the time the current worker has already accumulated as well.
-That is why the short-run problem is solved exactly and cheaply, while the long-run problem is solved to any accuracy the firm cares to specify but not exactly.
-We take the two in turn, and defer proofs to the appendix.
+That count overstates the difficulty, because the arrangements overlap heavily.
+Any two that treat the first stretch of the workflow alike cost the same over that stretch, so the firm need not price it twice.
+Both of its problems can therefore be built up from the front, one step at a time, with the work spent on an early stretch reused for every arrangement of what follows.
+The two differ only in how much a settled stretch has to remember about itself.
+In the short run its cost is all that matters, and the optimum is reached exactly.
+In the long run it must also carry the skill and the time of the worker whose job is still open, and exactness gives way to an approximation the firm can make as tight as it likes.
+We take the two horizons in turn and defer the proofs to the appendix.
 
 \paragraph{The Short Run Optimization.}
-What makes the short-run problem \eqref{eq:totalcost_shortterm} tractable is that it adds up time costs across tasks.
-Once the firm has decided where a task ends, the cost of everything before it is a separate problem, so the recursion need carry nothing beyond the position it has reached.
-Writing $C[k]$ for the minimum cost of completing the first $k$ steps alone, the firm faces a single question at each step: whether to perform that step manually, or to end an AI chain there, and in the latter case how far back the chain reaches.
-These two options give a recursion for $C[k]$ in terms of $C[0], \dotsc, C[k-1]$.
+The short-run cost \eqref{eq:totalcost_shortterm} is a sum of task times, so what a task costs does not depend on which tasks precede it.
+This is what lets the problem come apart.
+Suppose the firm has settled how to arrange the first $\ell$ steps and knows what that costs.
+Nothing about the way those steps were arranged changes what any later step costs, so the firm can treat that stretch as closed and carry it forward as a single number.
+It can therefore work outward from the start of the workflow, and at each point face one question rather than an exponential search: where does the task ending at step $k$ begin?
+Either that task is step $k$ done by hand, or it is an AI chain running to $k$ from somewhere earlier, and each candidate starting point is priced by a stretch the firm has already closed.
+Writing $C[k]$ for the cost of the best arrangement of the first $k$ steps, this pins down $C[k]$ from $C[0], \dotsc, C[k-1]$.
 
 \begin{proposition}[Optimal AI Deployment]
 \label{prop:shortrun_dp}
@@ -65,17 +69,20 @@ Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_
 \end{proposition}
 
 Appendix~\ref{app:shortrun_proof} gives the proof.
-Each of the $m$ values costs $O(m)$ to evaluate, because the chain reaching back from step $k$ can start anywhere before it, which is where the $O(m^2)$ comes from.
+There are $m$ stretches to price, and each costs $O(m)$ because the chain ending at step $k$ may begin anywhere before it.
 
 \paragraph{The Long Run Optimization.}
-The long-run problem \eqref{eq:totalcost_with_handoff} is harder on two counts.
-Its objective is not a sum of task costs but a sum of products of two sums, one for the skill a job requires and one for the time it takes, so a task's contribution to cost depends on what the rest of its job already carries and the recursion above no longer applies.
-The firm must also decide where jobs end, not only where chains end.
-The recursion accommodates both by carrying more state.
-It tracks the skill and the time the current worker has already accumulated, and at each step it chooses among three options rather than two: execute the step manually, end an AI chain there, or close that worker's job and start a new one, paying the hand-off cost at that boundary.
-Closing a job is the point at which the accumulated skill and time are multiplied into a wage bill, which is why the state has to carry both.
-That state can take exponentially many values, so we discretize each coordinate to a geometric grid, which keeps the running time polynomial at the cost of an error that can be made arbitrarily small.
-Exactness is what has to give, then, but only by an amount the firm can choose.
+The long-run cost \eqref{eq:totalcost_with_handoff} is not a sum of task costs but a sum over jobs of skill times time, and within a job those two multiply.
+Adding a task to a job therefore raises its wage bill by an amount that depends on how much skill and how much time the job already carries, so what a task costs is no longer independent of what precedes it.
+A settled stretch can no longer be summarized by its cost alone, and to that extent the short-run argument breaks down.
+What rescues it is that the stretch can still be summarized, just by more.
+Alongside its cost the firm carries the skill and the time the still-open job has accumulated, and those are all the rest of the workflow needs to know about it.
+Work then proceeds outward from the start as before, with a third option at each step: besides doing the step by hand or ending an AI chain there, the firm may close the open job and begin a new one, paying the hand-off cost at that boundary.
+Closing a job is where the accumulated skill and time are finally multiplied into a wage bill.
+
+What this costs is exactness.
+Skill and time are continuous, so the firm cannot enumerate every stretch it might have to price, and we round both to a geometric grid.
+The grid keeps the number of them polynomial, and refining it drives the error to zero.
 
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
