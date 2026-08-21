@@ -48,24 +48,6 @@ The predecessor's share, by contrast, is governed by its failure risk $1 - q_{k-
 Whenever the predecessor's cost saving exceeds step $k$'s shortfall, running $\{k-1, k, k+1\}$ as a single AI chain augmented at $k+1$ is strictly cheaper than executing each step on its own based on comparative advantage. 
 The human-advantaged step will thus be pulled under AI by its predecessor's characteristics, not its own.
 
-Remark~\ref{rem:ca_local} collects the ways this can happen.
-
-\begin{remark}[Routes into automation]
-\label{rem:ca_local}
-Take the block of steps $\{k-1,\, k,\, k+1\}$ around a human-advantaged step $k$, hold the execution of the rest of the workflow fixed, and let no chain cross the block's boundary.
-Step $k$ is never augmented on its own: either the firm pays to manage AI at that step, in which case it prefers the manual mode, or it does not pay for it at all, which happens only when the step sits inside a chain.
-AI therefore executes step $k$ only as part of a chain covering at least one of its neighbors, and because chains are contiguous there are three of them:
-\begin{enumerate}
-\item[(i)] \emph{Steps $k$ and $k+1$ chained}, with step $k$ automated. This is the downstream channel of \eqref{eq:ca_test}: it pays when the failure risk step $k$ adds to the chain costs less than the manual work it displaces.
-\item[(ii)] \emph{Steps $k-1$ and $k$ chained}, with step $k$ augmented as the chain's endpoint. It pays when the predecessor is reliable enough that absorbing it into a chain, at the price of managing AI at step $k$, beats executing the two on their own.
-\item[(iii)] \emph{All three steps chained}, with $k-1$ and $k$ both automated. Relative to~(ii) the chain runs on to the cheaper endpoint at $k+1$, which saves executing that step separately but exposes its management cost to the failure risk of the two steps upstream.
-\end{enumerate}
-In each case the comparison is the one \eqref{eq:ca_test} makes for the pair $\{k, k+1\}$: whether the endpoint's management cost, inflated by the joint failure risk of every step the chain covers, falls below what those steps would cost executed on their own.
-Figure~\ref{fig:ca_regions} maps the three against manual execution as the reliability of the two steps varies.
-\end{remark}
-
-Only in~(ii) does step $k$'s own management cost enter, since there it terminates the chain and is prompted and verified.
-Under~(i) and~(iii) the step is automated, never prompted, and its management cost is never paid, so the human's comparative advantage on step $k$, however wide, does not bear on either.
 Example~\ref{ex:ca_predecessor} showcases these forces numerically.
 
 \begin{example}
@@ -102,21 +84,38 @@ Step~1, on which the human holds close to a two-fold advantage in isolation, is 
 Its own success probability is just $q_1 = 0.3$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is more costly still.
 \end{example}
 
-Conditions~(i)--(iii) are easiest to read as a map of the block's parameters.
-Figure~\ref{fig:ca_regions} holds every parameter of Example~\ref{ex:ca_predecessor} fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$, with the example itself marked by a star.
+The example turns on one particular route into automation, but it is not the only one.
+Which route the firm takes depends on which neighbor anchors the chain and on where the chain terminates, and Remark~\ref{rem:ca_local} collects the possibilities.
+
+\begin{remark}[Routes into Automation]
+\label{rem:ca_local}
+Take the block of steps $\{k-1,\, k,\, k+1\}$ around a human-advantaged step $k$, hold the execution of the rest of the workflow fixed, and let no chain cross the block's boundary.
+Step $k$ is never augmented on its own: either the firm pays to manage AI at that step, in which case it prefers the manual mode, or it does not pay for it at all, which happens only when the step sits inside a chain.
+AI therefore executes step $k$ only as part of a chain covering at least one of its neighbors, and because chains are contiguous there are three of them:
+\begin{enumerate}
+\item[(i)] \emph{Steps $k$ and $k+1$ chained}, with step $k$ automated. This is the downstream channel of \eqref{eq:ca_test}: it pays when the failure risk step $k$ adds to the chain costs less than the manual work it displaces.
+\item[(ii)] \emph{Steps $k-1$ and $k$ chained}, with step $k$ augmented as the chain's endpoint. It pays when the predecessor is reliable enough that absorbing it into a chain, at the price of managing AI at step $k$, beats executing the two on their own.
+\item[(iii)] \emph{All three steps chained}, with $k-1$ and $k$ both automated. Relative to~(ii) the chain runs on to the cheaper endpoint at $k+1$, which saves executing that step separately but exposes its management cost to the failure risk of the two steps upstream.
+\end{enumerate}
+In each case the comparison is the one \eqref{eq:ca_test} makes for the pair $\{k, k+1\}$: whether the endpoint's management cost, inflated by the joint failure risk of every step the chain covers, falls below what those steps would cost executed on their own.
+\end{remark}
+
+Only in~(ii) does step $k$'s own management cost enter, since there it terminates the chain and is prompted and verified.
+Under~(i) and~(iii) the step is automated, never prompted, and its management cost is never paid, so the human's comparative advantage on step $k$, however wide, does not bear on either.
+
+Figure~\ref{fig:ca_regions} maps the three routes against manual execution.
+It holds every parameter of Example~\ref{ex:ca_predecessor} fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$, with the example itself marked by a star.
 The human keeps the comparative advantage on Step~$k$ everywhere in the figure, since augmenting it in isolation costs $\AItime{k}/q_k$ against a manual cost of $6$, and the horizontal axis stops where the two coincide.
 Step~$k$ is nonetheless performed manually only in the lower left.
 Moving right from there improves AI on Step~$k$ itself until, at $q_k \approx 0.43$, folding it into the chain that terminates at Step~$k+1$ costs less than the manual work it displaces, which is condition~(i).
-Moving up instead leaves Step~$k$ untouched and improves only its predecessor, and two boundaries are crossed on the way.
-The first is condition~(ii): the pair becomes reliable enough that absorbing the predecessor into a chain, at the price of managing AI at Step~$k$, beats executing the two separately.
-The second is condition~(iii), where the chain no longer stops at Step~$k$ but runs on to Step~$k+1$.
-Extending it that far saves executing the endpoint separately but exposes its management cost to the failure risk of everything upstream, so the extension pays only once the pair is reliable enough, which is why condition~(iii) lies beyond condition~(ii) rather than beside it.
+Moving up instead leaves Step~$k$ untouched and improves only its predecessor, crossing two boundaries on the way: first condition~(ii), where absorbing the predecessor into a chain becomes worthwhile, and then condition~(iii), where the pair has become reliable enough that carrying the chain on to Step~$k+1$ pays as well.
+That order is not incidental, since the extension to the cheap endpoint is worth its exposure to upstream failure risk only once that risk is small.
 
 \begin{figure}[!t]
 \caption{When Is a Human-Advantaged Step Executed by AI?}
 \label{fig:ca_regions}
 \centering
-\includegraphics[width=0.74\linewidth]{plots/ca_regions_reliability.png}
+\includegraphics[width=0.56\linewidth]{plots/ca_regions_reliability.png}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
