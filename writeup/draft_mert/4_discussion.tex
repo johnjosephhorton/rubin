@@ -47,6 +47,34 @@ Notice that step $k$'s share is exactly the marginal cost in \eqref{eq:ca_test},
 The predecessor's share, by contrast, is governed by its failure risk $1 - q_{k-1}$ alone, so it shrinks toward zero as AI executes the step more reliably ($q_{k-1} \to 1$), even while the standalone execution cost it displaces stays large.
 Whenever the predecessor's cost saving exceeds step $k$'s shortfall, running $\{k-1, k, k+1\}$ as a single AI chain augmented at $k+1$ is strictly cheaper than executing each step on its own based on comparative advantage. 
 The human-advantaged step will thus be pulled under AI by its predecessor's characteristics, not its own.
+
+Proposition~\ref{prop:ca_local} collects these comparisons.
+Because a chain is paid for through its endpoint alone, the test for any candidate chain is the same one \eqref{eq:ca_test} applies to the pair $\{k, k+1\}$: whether the endpoint's management cost, inflated by the joint failure risk of every step the chain covers, falls below what those steps would cost executed on their own.
+
+\begin{proposition}[Local Overturning of Comparative Advantage]
+\label{prop:ca_local}
+Fix a step $k$ on which the human holds the comparative advantage in isolation, $\manualTime{k} < \AItime{k}/q_k$, and write $v_i = \min\{\manualTime{i},\, \AItime{i}/q_i\}$ for the cost of executing step $i$ on its own.
+Hold the execution of all steps outside $\{k-1,\, k,\, k+1\}$ fixed, let no task cross the boundary of this block, and break ties in favor of manual execution.
+Then AI executes step $k$ in the cost-minimizing arrangement of the block if and only if some AI chain running over steps $\ell, \dotsc, r$ with $k-1 \leq \ell \leq k \leq r \leq k+1$ and $\ell < r$ satisfies
+\begin{equation}
+\label{eq:ca_local}
+\frac{\AItime{r}}{\prod_{i=\ell}^{r} q_i} \;<\; \sum_{i=\ell}^{r} v_i.
+\end{equation}
+If in addition step $k+1$ is AI-easy, so that $v_{k+1} = \AItime{k+1}/q_{k+1}$, then \eqref{eq:ca_local} holds for some such chain if and only if at least one of
+\[
+\text{(i) } \ \Delta_k < \manualTime{k},
+\qquad
+\text{(ii) } \ \Delta_{k-1} + \Delta_k < v_{k-1} + \manualTime{k},
+\qquad
+\text{(iii) } \ \frac{\AItime{k}}{q_{k-1}\, q_k} < v_{k-1} + \manualTime{k},
+\]
+where $\Delta_k = \AItime{k+1}(1-q_k)/(q_k\, q_{k+1})$ and $\Delta_{k-1} = \AItime{k+1}(1-q_{k-1})/(q_{k-1}\, q_k\, q_{k+1})$ are the marginal costs of folding steps $k$ and $k-1$ into a chain terminating at $k+1$.
+\end{proposition}
+
+Condition (i) is the downstream channel of \eqref{eq:ca_test} and condition (ii) the upstream one, and in both of them step $k$ is automated.
+Condition (iii) is a third route to the same outcome, in which the predecessor anchors a chain that terminates at step $k$, so that AI executes step $k$ under human supervision rather than without it.
+The distinction matters for what the firm pays: step $k$'s own management cost $\AItime{k}$ appears in (iii), but in neither (i) nor (ii), since a step in the interior of a chain is never prompted or verified on its own.
+The human's comparative advantage on step $k$, however wide, therefore does not enter the two conditions under which the step ends up automated.
 Example~\ref{ex:ca_predecessor} showcases these forces numerically.
 
 \begin{example}
@@ -78,7 +106,7 @@ Now introduce the predecessor, Step~0 (the bottom row of the figure).
 Step~0 is reliable for AI ($q_0 = 0.95$) but expensive to execute on its own in either mode, costing $15$ manually and $\AItime{0}/q_0 = 15/0.95 \approx 15.8$ as a standalone augmented step.
 The only cheap way to absorb Step~0 is to place it at the start of a chain, where its management cost goes unpaid.
 The cost-minimizing strategy therefore chains all three steps into a single AI chain augmented at Step~2, at cost $\AItime{2}/(q_0\, q_1\, q_2) = 4/0.239 \approx 16.71$.
-This falls below the $19.48$ of the arrangement comparative advantage would dictate, which performs Steps~0 and~1 by hand and augments Step~2, and below every other strategy.
+This falls below the $25.44$ of the arrangement comparative advantage would dictate, which performs Steps~0 and~1 by hand and augments Step~2, and below every other strategy, the cheapest of which chains Steps~0--1 and augments Step~2 at a cost of $19.48$.
 Step~1, on which the human holds a more than three-fold advantage in isolation, is thus automated only to bridge the AI-friendly predecessor to the cheap endpoint at Step~2.
 Its own success probability is just $q_1 = 0.28$, so the chain frequently fails and is retried; the firm accepts this because handling Step~0 in any other way is more costly still.
 \end{example}
@@ -87,7 +115,7 @@ In sum, whether a step is automated depends not just on its own cost parameters 
 A step with identical characteristics can therefore be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that the AI execution likelihood of a step depends on its local work context in different occupations.
 
-We must emphasize that our arguments here are \emph{local} statements: they compare rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence, which depends on the whole workflow at once.
+We must emphasize that Proposition~\ref{prop:ca_local} and the arguments around it are \emph{local} statements: they compare rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence, which depends on the whole workflow at once.
 Nonetheless, the forces determining execution modes in the optimum are the ones outlined here.
 
 
