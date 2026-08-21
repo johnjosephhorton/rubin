@@ -168,56 +168,41 @@ This notation enters only once the firm chooses how to divide the workflow among
 \label{sec:longrun.specialization}
 
 What the firm settles when it solves \eqref{eq:totalcost_with_handoff} is how far to carry the division of labor, and the answer is interior precisely because hand-offs are costly.
-This subsection makes that limit concrete.
-We work through a numerical example and its geometric counterpart, and then ask how AI moves the balance the example strikes.
+This subsection makes that limit concrete, first in the smallest workflow that contains the trade-off and then in one where the optimum sits between the two extremes.
 
-Consider a workflow that, under a fixed AI deployment strategy $\T$, has $n=3$ tasks with the following cost parameters:
-\[ \bigl(\skillcost{b},\, \timecost{b},\, \handofftime{b}\bigr)_{b=1,2,3} = (3,\,1,\,3),\quad (1,\,2,\,0.5),\quad (2,\,2,\,0). \]
-With three tasks there are four ways the firm can design jobs.\footnote{
-More generally, a production sequence with $n$ tasks has $2^{(n-1)}$ unique job designs.
-}
-Denoting jobs by square brackets, the feasible designs are
-$\{[1][2][3], \quad [1,2][3], \quad [1][2,3], \quad [1,2,3]\}$.
-Table~\ref{tab:job_design} reports the cost of each.
-\begin{table}[!t]
-    \caption{Role of Hand-off Costs in Organizational Structure}
-    \vspace{-0.3cm}
-    \centering
-    \resizebox{0.9\textwidth}{!}{%
-    \begin{tabular}{c}
-    \begin{minipage}{\textwidth}
-    \centering
-    Panel (a): Without Hand-off Costs \\[1ex]
-    \input{tables/job_design_example_no_handoff.tex}
-    \end{minipage} \\[15ex]
-
-    \begin{minipage}{\textwidth}
-    \centering
-    Panel (b): Including Hand-off Costs \\[1ex]
-    \input{tables/job_design_example_with_handoff.tex}
-    \end{minipage}
-    \end{tabular}
-    }
-    \label{tab:job_design}
-    \footnotesize
-    \begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This table reports total production costs for each possible job design in an example workflow with a fixed automation strategy and $n = 3$ tasks.
-The cost parameters of the tasks are given in the main text.
-In Panel (a), in the absence of hand-off frictions, full specialization, corresponding to job design [1][2][3], is cost-minimizing.
-Once hand-off costs are taken into account, in Panel (b) the optimal organizational structure changes to job design [1,2][3], which avoids the large coordination cost between tasks 1 and 2 at the expense of employing a higher-cost (more skilled) worker to complete those tasks.}
-\end{spacing}
-\end{minipage}
-\end{table}
-Panel (a) sets hand-off costs to zero and recovers the frictionless benchmark: the optimum is full specialization, with each task its own job.
-Panel (b) reinstates them, and the optimum moves to $[1,2][3]$, in which tasks 1 and 2 are bundled into one job and task 3 stands alone in a separate job.
-The reason is the large hand-off time $\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger.
-Bundling them avoid that hand-off at the price of a worker who must hold the skills of both tasks, and who is paid for both per unit of time fort he duration of both tasks.
-Equation~\eqref{eq:wagebill} is what makes the comparison: bundling raises the wage through $\sum_{T_b \in J_j} \skillcost{b}$, and splitting raises time through $\handofftime{}(J_j)$.
+The job design problem admits a geometric representation.
+Each task is a rectangle whose height is its skill cost $\skillcost{b}$ and whose width is its time cost $\timecost{b}$, so that by \eqref{eq:wagebill} a job's wage bill is the area of the rectangle spanning the tasks it contains: its height is the skill the job requires and its width the time it takes.
+Figure~\ref{fig:lr_job_design} draws the two-task case, the smallest in which the firm has a choice to make.
+In the left panel the tasks go to two specialized workers, each of whom acquires only the skill their own task needs, so no one is paid for knowledge they are not using; but the work must pass between them, and the pink rectangle is what that hand-off costs.
+In the right panel one worker performs both tasks, which removes the hand-off entirely but obliges that worker to hold both skills and be paid for both throughout, the dead area sitting above whichever task they are not currently performing.
+Equation~\eqref{eq:wagebill} is what makes the comparison: bundling raises the wage rate through $\sum_{T_b \in J_j} \skillcost{b}$, and splitting raises time through $\handofftime{}(J_j)$.
 Neither force wins outright, and where they balance is the firm's degree of specialization.
 
-The firm's job design problem also admits a geometric representation.
-Figure~\ref{fig:job_design} visualizes the workflow of the example in Table~\ref{tab:job_design} as stacked rectangles, where each rectangle's height corresponds to $\skillcost{b}$ and its width to $\timecost{b}$.
+\begin{figure}[!t]
+    \centering
+    \caption{The Trade-off between Worker Specialization and Coordination}
+    \label{fig:lr_job_design}
+    \includegraphics[width=1\linewidth]{plots/job_design.png}
+    \par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: The blue bounded rectangles are tasks, with height the task's skill requirement ($\skillcost{}$) and width its time requirement ($\timecost{}$).
+The shaded areas are the wage bills of jobs.
+In the left panel the two tasks are assigned to two specialized workers, and the pink rectangle is the hand-off cost incurred between them.
+In the right panel they are bundled into a single job, which eliminates the hand-off but requires a worker skilled enough to perform both tasks and paid at the corresponding rate throughout.}
+\end{spacing}
+\end{minipage}
+\end{figure}
+
+With more than two tasks the optimum need not sit at either extreme.
+Consider a workflow that, under a fixed AI deployment strategy $\T$, has $n=3$ tasks with the cost parameters
+\[ \bigl(\skillcost{b},\, \timecost{b},\, \handofftime{b}\bigr)_{b=1,2,3} = (3,\,1,\,3),\quad (1,\,2,\,0.5),\quad (2,\,2,\,0). \]
+With three tasks there are four ways the firm can design jobs,\footnote{
+More generally, a production sequence with $n$ tasks has $2^{(n-1)}$ unique job designs.
+} and Figure~\ref{fig:job_design} draws all four in the same terms, once with hand-off costs switched off and once with them on; Table~\ref{tab:job_design} in Appendix~\ref{app:jobdesign_example} reports the cost of each.
+Panel~(a) sets hand-off costs to zero and recovers the frictionless benchmark: the cost-minimizing design, outlined in red, is full specialization, with each task its own job.
+Panel~(b) reinstates them and the red outline moves to $[1,2][3]$, in which tasks 1 and 2 are bundled into one job and task 3 stands alone.
+The reason is the large hand-off time $\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger: bundling them avoids that hand-off at the price of a worker who must hold the skills of both and is paid for both throughout.
 \begin{figure}[!t]
 \begin{center}
 \caption{Geometric Interpretation of Job Designs} \label{fig:job_design}
@@ -230,9 +215,10 @@ Figure~\ref{fig:job_design} visualizes the workflow of the example in Table~\ref
     \includegraphics[width=\textwidth]{plots/combined_grid_with_handoff.png}
 \end{subfigure}
 \end{center}
-\footnotesize{\emph{Notes:} Each panel visualizes the workflow as stacked rectangles, where the area of each job's bounding box represents its wage bill.  
-Panel (a) sets hand-off costs to zero, in which case it is optimal to assign one task per job.
-Panel (b) introduces hand-off costs, which alters the cost structure and makes the [1,2][3] design cost-minimizing.
+\footnotesize{\emph{Notes:} Each panel draws all four job designs of the three-task workflow in the convention of Figure~\ref{fig:lr_job_design}, with the area of each job's bounding box its wage bill.
+The cost-minimizing design is outlined in red.
+Panel (a) sets hand-off costs to zero, in which case full specialization is optimal.
+Panel (b) introduces them, and the optimum moves to [1,2][3].
 }
 \end{figure}
 Panel~(a) depicts the job design when hand-off costs are zero. 

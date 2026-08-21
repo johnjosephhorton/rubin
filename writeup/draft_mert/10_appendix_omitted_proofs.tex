@@ -231,6 +231,40 @@ Combining Lemmas~\ref{lem:FI.upper.bound}, \ref{lem:FI.lower.bound.4}, and~\ref{
 \subsection{Non-Monotone Gains from AI Improvements: Formal Statement and Proof}
 \label{app:nonmonotone}
 
+\begin{table}[!t]
+\centering
+\caption{Configurations, Costs, and Marginal Gains in Example~\ref{ex:nonmonotone}}
+\label{tab:nonmonotone_costs}
+\singlespacing
+\setlength{\tabcolsep}{10pt}
+\begin{tabular}{lccc}
+\toprule
+Configuration & Time cost ($C$) & $-\mathrm{d}C/\mathrm{d}\alpha$ & Optimal for \\
+\midrule
+Both steps manual & $\manualTime{1} + \manualTime{2} = 3$ & $0$ & $\alpha \leq 0.50$ \\
+\midrule
+Step 1 augmented & $\AItime{1}/q_1 + \manualTime{2} = \alpha^{-6} + 2$ & $6/\alpha^{7}$ & never \\
+\midrule
+Step 2 augmented & $\manualTime{1} + \AItime{2}/q_2 = 1 + 1/\alpha$ & $1/\alpha^{2}$ & $0.50 \leq \alpha \lesssim 0.90$ \\
+\midrule
+Both steps augmented & $\AItime{1}/q_1 + \AItime{2}/q_2 = \alpha^{-6} + 1/\alpha$ & $6/\alpha^{7} + 1/\alpha^{2}$ & never \\
+\midrule
+Steps 1--2 chained & $\AItime{2}/(q_1 q_2) = \alpha^{-7}$ & $7/\alpha^{8}$ & $\alpha \gtrsim 0.90$ \\
+\bottomrule
+\end{tabular}
+\par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: The two-step workflow of Example~\ref{ex:nonmonotone}, in which $\manualTime{1}=1$, $\manualTime{2}=2$, $\AItime{1}=\AItime{2}=1$, and the AI succeeds at step $i$ with probability $q_i = \alpha^{d_i}$ for $d_1 = 6$ and $d_2 = 1$, so that $q_1 = \alpha^{6}$ and $q_2 = \alpha$.
+Costs follow from the task time costs of Section~\ref{sec:model.tasks}, and $-\mathrm{d}C/\mathrm{d}\alpha$ is the marginal benefit of improving AI quality.
+The last column gives the range of $\alpha$ over which each configuration is cost-minimizing.
+The two configurations that are never cost-minimizing are dominated for the same reason: augmenting step~1 costs $\AItime{1}/q_1 = \alpha^{-6} \geq 1$, while performing it manually costs $\manualTime{1} = 1$, so it is never worth augmenting whatever step~2 does.
+Chaining escapes this because step~1 is then automated rather than augmented, and an automated step is never prompted or verified on its own, so its management cost is never paid.}
+\end{spacing}
+\end{minipage}
+\end{table}
+
+
 To make the argument of Section~\ref{sec:nonlinear} precise, consider a workflow with any number of steps and chains.
 For any AI strategy $\T$, total cost is a fixed manual term plus a polynomial in $1/\alpha$,
 \begin{equation}

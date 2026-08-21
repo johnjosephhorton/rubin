@@ -247,29 +247,9 @@ Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal b
 \end{minipage}
 \end{figure}
 
-With $q_1 = \alpha^{6}$ and $q_2 = \alpha$, the firm chooses among the five configurations below, whose costs follow from the task time costs of Section~\ref{sec:model.tasks}.
-The marginal benefit of improving AI quality is the negative derivative of cost, $-\mathrm{d}C/\mathrm{d}\alpha$.
-\begin{center}
-\singlespacing
-\setlength{\tabcolsep}{10pt}
-\begin{tabular}{lccc}
-\toprule
-Configuration & Time cost ($C$) & $-\mathrm{d}C/\mathrm{d}\alpha$ & Optimal for \\
-\midrule
-Both steps manual & $\manualTime{1} + \manualTime{2} = 3$ & $0$ & $\alpha \leq 0.50$ \\
-\midrule
-Step 1 augmented & $\AItime{1}/q_1 + \manualTime{2} = \alpha^{-6} + 2$ & $6/\alpha^{7}$ & never \\
-\midrule
-Step 2 augmented & $\manualTime{1} + \AItime{2}/q_2 = 1 + 1/\alpha$ & $1/\alpha^{2}$ & $0.50 \leq \alpha \lesssim 0.90$ \\
-\midrule
-Both steps augmented & $\AItime{1}/q_1 + \AItime{2}/q_2 = \alpha^{-6} + 1/\alpha$ & $6/\alpha^{7} + 1/\alpha^{2}$ & never \\
-\midrule
-Steps 1--2 chained & $\AItime{2}/(q_1 q_2) = \alpha^{-7}$ & $7/\alpha^{8}$ & $\alpha \gtrsim 0.90$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-The two configurations that are never cost-minimizing are dominated for the same reason: augmenting step~1 costs $\AItime{1}/q_1 = \alpha^{-6} \geq 1$, while performing it manually costs $\manualTime{1} = 1$, so it is never worth augmenting whatever step~2 does.
-Chaining escapes this because step~1 is then automated rather than augmented, and an automated step is never prompted or verified on its own, so its management cost is never paid.
+With $q_1 = \alpha^{6}$ and $q_2 = \alpha$, the firm chooses among five configurations, ranging from both steps manual to both chained.
+Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:nonmonotone} collects them, together with the cost of each, the marginal benefit of improving AI quality, and the range of $\alpha$ over which each is cost-minimizing.
+
 Panel~(b) shows that the marginal return to improving AI quality jumps up at each threshold where the optimal strategy switches, since a different strategy governs cost on either side of the threshold.
 It is also worth noting that the jump at $\alpha \approx 0.90$ is larger than the one at $\alpha = 0.50$: forming the chain pulls a second step under AI, so cost falls more steeply.
 This ordering is specific to this example, however, since a later threshold does not necessarily introduce a longer chain than an earlier one.
