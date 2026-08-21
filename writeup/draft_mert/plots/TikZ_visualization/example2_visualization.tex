@@ -1,4 +1,4 @@
-% Example 4 (fragmentation, clustered). Two layers:
+% Fragmentation example (clustered). Two layers:
 %  - top: each step's difficulty for AI (easy=teal, hard=red), the easy steps first;
 %  - bottom: the optimal execution. The contiguous easy run becomes one AI chain
 %    (automated up to the augmented endpoint, grouped by the blue dashed box); the
@@ -18,32 +18,25 @@
 
   % ---- top layer: step difficulty ----
   \node[box, easy] (d1) {Easy};
-  \node[box, easy, right=0.6cm of d1] (d2) {Easy};
-  \node[draw=none, right=0.45cm of d2] (dd1) {$\cdots$};
-  \node[box, easy, right=0.45cm of dd1] (dk) {Easy};
-  \node[box, hard, right=0.7cm of dk] (dk1) {Hard};
-  \node[draw=none, right=0.45cm of dk1] (dd2) {$\cdots$};
-  \node[box, hard, right=0.45cm of dd2] (dm) {Hard};
+  \node[box, easy, right=0.7cm of d1] (d2) {Easy};
+  \node[box, hard, right=0.7cm of d2] (d3) {Hard};
+  \node[box, hard, right=0.7cm of d3] (d4) {Hard};
 
   \node[idx, above=1pt of d1] {Step 1};
   \node[idx, above=1pt of d2] {Step 2};
-  \node[idx, above=1pt of dk] {Step $\tfrac{m}{2}$};
-  \node[idx, above=1pt of dk1] {Step $\tfrac{m}{2}{+}1$};
-  \node[idx, above=1pt of dm] {Step $m$};
+  \node[idx, above=1pt of d3] {Step 3};
+  \node[idx, above=1pt of d4] {Step 4};
 
   % ---- bottom layer: optimal execution (tasks) ----
   \node[box, automated, below=1.4cm of d1] (e1) {Automated};
-  \node[box, automated, below=1.4cm of d2] (e2) {Automated};
-  \node[draw=none] (ed1) at (dd1 |- e1) {$\cdots$};
-  \node[box, augmented, below=1.4cm of dk] (ek) {Augmented};
-  \node[box, manual, below=1.4cm of dk1] (ek1) {Manual};
-  \node[draw=none] (ed2) at (dd2 |- e1) {$\cdots$};
-  \node[box, manual, below=1.4cm of dm] (em) {Manual};
+  \node[box, augmented, below=1.4cm of d2] (e2) {Augmented};
+  \node[box, manual, below=1.4cm of d3] (e3) {Manual};
+  \node[box, manual, below=1.4cm of d4] (e4) {Manual};
 
-  \foreach \a/\b in {d1/e1,d2/e2,dk/ek,dk1/ek1,dm/em} \draw[->,thick] (\a)--(\b);
+  \foreach \a/\b in {d1/e1,d2/e2,d3/e3,d4/e4} \draw[->,thick] (\a)--(\b);
 
   % the contiguous easy run is executed as a single AI chain
-  \node[chainbox, fit=(e1)(e2)(ed1)(ek)] (chain) {};
+  \node[chainbox, fit=(e1)(e2)] (chain) {};
   \node[font=\footnotesize, text=blue!60!black] at ($(chain.south)+(0,-0.30)$) {single task (AI chain)};
 
   \node[rowlab, left=0.5cm of d1] {Difficulty:};

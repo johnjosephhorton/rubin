@@ -16,27 +16,22 @@
 
   % ---- top layer: step difficulty ----
   \node[box, easy] (d1) {Easy};
-  \node[box, hard, right=0.6cm of d1] (d2) {Hard};
-  \node[box, easy, right=0.6cm of d2] (d3) {Easy};
-  \node[draw=none, right=0.45cm of d3] (dd) {$\cdots$};
-  \node[box, easy, right=0.45cm of dd] (d5) {Easy};
-  \node[box, hard, right=0.6cm of d5] (d6) {Hard};
+  \node[box, hard, right=0.7cm of d1] (d2) {Hard};
+  \node[box, easy, right=0.7cm of d2] (d3) {Easy};
+  \node[box, hard, right=0.7cm of d3] (d4) {Hard};
 
   \node[idx, above=1pt of d1] {Step 1};
   \node[idx, above=1pt of d2] {Step 2};
   \node[idx, above=1pt of d3] {Step 3};
-  \node[idx, above=1pt of d5] {Step $m{-}1$};
-  \node[idx, above=1pt of d6] {Step $m$};
+  \node[idx, above=1pt of d4] {Step 4};
 
   % ---- bottom layer: optimal execution (tasks) ----
   \node[box, manual, below=1.4cm of d1] (e1) {Manual};
   \node[box, manual, below=1.4cm of d2] (e2) {Manual};
   \node[box, manual, below=1.4cm of d3] (e3) {Manual};
-  \node[draw=none] (ed) at (dd |- e3) {$\cdots$};
-  \node[box, manual, below=1.4cm of d5] (e5) {Manual};
-  \node[box, manual, below=1.4cm of d6] (e6) {Manual};
+  \node[box, manual, below=1.4cm of d4] (e4) {Manual};
 
-  \foreach \a/\b in {d1/e1,d2/e2,d3/e3,d5/e5,d6/e6} \draw[->,thick] (\a)--(\b);
+  \foreach \a/\b in {d1/e1,d2/e2,d3/e3,d4/e4} \draw[->,thick] (\a)--(\b);
 
   \node[rowlab, left=0.5cm of d1] {Difficulty:};
   \node[rowlab, left=0.5cm of e1] {Execution:};
