@@ -56,34 +56,34 @@ In the long run it must also carry the skill and the time of the worker whose jo
 We take the two horizons in turn and defer the proofs to the appendix.
 
 \paragraph{The Short Run Optimization.}
-The short-run optimization problem \eqref{eq:totalcost_shortterm} is a sum of expected task times, so what a task costs does not depend on which tasks precede it.
-This is what lets the problem come apart.
-Suppose the firm has settled how to arrange the first $\ell$ steps and knows what that costs.
-Nothing about the way those steps were arranged changes what any later step costs, so the firm can treat that stretch as closed and carry it forward as a single number.
-It can therefore work outward from the start of the workflow, and at each point face one question rather than an exponential search: where does the task ending at step $k$ begin?
-Either that task is step $k$ done by hand, or it is an AI chain running to $k$ from somewhere earlier, and each candidate starting point is priced by a stretch the firm has already closed.
-Writing $C[k]$ for the cost of the best arrangement of the first $k$ steps, this pins down $C[k]$ from $C[0], \dotsc, C[k-1]$.
+With the job and its wage fixed, the firm minimizes total time \eqref{eq:totalcost_shortterm}.
+For $k \leq m$, let $C[k]$ denote the minimum time needed to complete a hypothetical workflow containing only steps $1$ through $k$, so that $C[0] = 0$ and $C[m]$ is the optimum.
+Step $k$ is either performed manually, or augmented as the endpoint of an AI chain reaching back to some earlier step $\ell$; in either case the steps before that point are optimized separately, which gives
+\begin{align}
+\label{eq:shortrun_recursion}
+C[k] = \min\Biggl\{ \underbrace{C[k-1] + \manualTime{k}}_{\text{step $k$ manual}}, \ \underbrace{\min_{\ell < k}\ \Bigl( C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^{k} q_i} \Bigr)}_{\text{step $k$ ends a chain begun at } \ell+1} \Biggr\}.
+\end{align}
+Because time costs enter \eqref{eq:totalcost_shortterm} additively, a stretch's time cost is all that \eqref{eq:shortrun_recursion} needs from it, and the position $k$ indexes the table on its own.
+Each of the $m$ values costs $O(m)$ to evaluate, since the chain ending at step $k$ may begin anywhere before it.
 
 \begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
 Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
 
-Appendix~\ref{app:shortrun_proof} gives the proof.
-There are $m$ stretches to price, and each costs $O(m)$ because the chain ending at step $k$ may begin anywhere before it.
-
 \paragraph{The Long Run Optimization.}
-The long-run optimization problem \eqref{eq:totalcost_with_handoff} is not a sum of task costs but a sum over jobs of skill times time, and within a job those two multiply.
-Adding a task to a job therefore raises its wage bill by an amount that depends on how much skill and how much time the job already carries, so what a task costs is no longer independent of what precedes it.
-A settled stretch can no longer be summarized by its cost alone, and to that extent the short-run argument breaks down.
-What rescues it is that the stretch can still be summarized, just by more.
-Alongside its cost the firm carries the skill and the time the still-open job has accumulated, and those are all the rest of the workflow needs to know about it.
-Work then proceeds outward from the start as before, with a third option at each step: besides doing the step by hand or ending an AI chain there, the firm may close the open job and begin a new one, paying the hand-off cost at that boundary.
-Closing a job is where the accumulated skill and time are finally multiplied into a wage bill.
-
-What this costs is exactness.
-Skill and time are continuous, so the firm cannot enumerate every stretch it might have to price, and we round both to a geometric grid.
-The grid keeps the number of them polynomial, and refining it drives the error to zero.
+The firm now chooses job boundaries as well, and \eqref{eq:totalcost_with_handoff} multiplies each job's total skill by its total time.
+A task's contribution to cost therefore depends on how much skill and how much time its job already carries, so the position alone no longer summarizes a stretch and we carry two further coordinates.
+Let $W(i,\, \skillcost{},\, \timecost{})$ be the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating tasks, the \emph{active worker}, already holds total skill $\skillcost{}$ and total time $\timecost{}$, the latter including their hand-off, and let $V(i) = W(i,\, 0,\, \handofftime{i})$ be the corresponding cost when that worker's job closes at step $i$.
+The base case is $W(0,\, \skillcost{},\, \timecost{}) = \skillcost{}\,\timecost{}$, and the firm faces three options at each step rather than two,
+\begin{align}
+\label{eq:longrun_recursion}
+W(i,\, \skillcost{},\, \timecost{}) = \min\Biggl\{ \underbrace{\skillcost{}\,\timecost{} + V(i)}_{\text{close the job}}, \ \underbrace{W\bigl(i-1,\, \skillcost{} + \manualSkill{i},\, \timecost{} + \manualTime{i}\bigr)}_{\text{step $i$ manual}}, \ \underbrace{\min_{r < i}\ W\Bigl(r,\, \skillcost{} + \AIskill{i},\, \timecost{} + \tfrac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\Bigr)}_{\text{step $i$ ends a chain begun at } r+1} \Biggr\},
+\end{align}
+with the optimum at $V(m) = W(m,\, 0,\, 0)$.
+Closing a job is where the accumulated skill and time are finally multiplied into a wage bill, which is why the state has to carry both.
+Both are continuous, so the table cannot be filled exactly, and we round each coordinate to powers of $(1+\epsilon)$.
+Skill then lies in $[1/B,\, mB]$ and time in $[1/B,\, 2mB^3]$, each range holding $O(\epsilon^{-1}\log(mB))$ such powers, so the table has $O(m\,\epsilon^{-2}\log^2(mB))$ entries and $O(m)$ work per entry.
 
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
@@ -91,7 +91,7 @@ Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B
 For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
 
-Appendix~\ref{app:jobdesign.longrun} gives the proof.
+Appendices~\ref{app:shortrun_proof} and~\ref{app:jobdesign.longrun} give the proofs, including the bound on the error the rounding introduces.
 
 Together these results also suggest a use for the framework beyond what we do here.
 Paired with detailed measurement of the time and skill content of individual tasks, the algorithms above could be run on real workflows to ask how a given advance in AI capability would redraw them.
