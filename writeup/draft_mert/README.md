@@ -23,7 +23,7 @@ files are untouched, and the parent's exhibits are only ever read.
 ./build.sh
 ```
 
-produces `0_main.pdf` (118 pages). The Online Appendix uses `bibunits`, so `bibtex`
+produces `0_main.pdf` (131 pages). The Online Appendix uses `bibunits`, so `bibtex`
 has to run once on `0_main.aux` and once on `bu1.aux`; `latexmk` does not pick the
 `bu*.aux` files up on its own, which is why the build is a script rather than a
 one-liner.
@@ -34,8 +34,8 @@ one-liner.
 |---|---|
 | `0_main.tex` | Main file: title page, section list, bibliography, Online Appendix scaffolding |
 | `preamble.tex` | House format (identical to the bilateral-oligopoly preamble), plus a clearly marked block of paper-specific definitions at the bottom |
-| `1_introduction.tex` … `6_conclusion.tex` | Body sections, numbered in document order |
-| `10_appendix_omitted_proofs.tex` … `18_appendix_external_validation.tex` | Online Appendix sections, numbered in document order |
+| `1_introduction.tex` … `8_conclusion.tex` | Body sections; the numeric prefix is the section number in the paper |
+| `A_omitted_proofs.tex` … `H_external_validation.tex` | Online Appendix sections; the letter prefix is the appendix letter in the paper |
 | `rubin.bib` | Bibliography |
 | `plots/` | One local override only (see the last section); everything else comes from `../plots/` and `../tables/` |
 

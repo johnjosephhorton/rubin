@@ -94,18 +94,12 @@ Then:
 
 The intuition behind Proposition~\ref{prop:ca_local} is as follows.
 Part~(i) says that whether a step is executed by AI depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors.
-The pressure to fold a human-advantaged step into a chain can come from either a cheap chain endpoint downstream or an AI-reliable predecessor upstream.
 A step with identical characteristics can therefore be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
 This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction} to show that the AI execution likelihood of a step depends on its local work context in different occupations.
-Where part~(i) says that being human-advantaged carries no guarantee of being executed one way or the other, part~(ii) says that whatever the answer at a given set of parameters, making a step and/or its neighbors friendlier to AI can only push it toward AI execution: a step that AI executes never reverts to manual as its neighbors become more reliable, and the same holds when the step's own reliability improves alongside theirs.
+Where part~(i) says that being human-advantaged carries no guarantee of being executed one way or the other, part~(ii) says that whatever the answer at a given set of parameters, making a step and/or its neighbors friendlier to AI can only push it toward AI execution.
+A step that AI executes never reverts to manual as its neighbors become more reliable, and the same holds when the step's own reliability improves alongside theirs.
 
 Figure~\ref{fig:ca_regions} shows these implications at work in Example~\ref{ex:ca_predecessor}.
-It holds parameter of the example fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star.
-The human keeps the comparative advantage on Step~$k$ throughout, since the horizontal axis stops where augmenting the step in isolation would break even against its manual cost of $6$.
-Even so, Step~$k$ is performed manually only in the lower left where AI is unreliable on both steps $k$ and $k-1$.
-Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces; moving up instead leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band is not a general feature. When managing AI at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
-Varying a step's own success probability and that of a single neighbor is thus enough to cover all four feasible ways of executing a human-advantaged step, minimal as that adjustment is.
-Part~(ii) can be read off the same figure as well: starting anywhere that AI executes Step~$k$ and moving up, to the right, or both, one never crosses back into the grey region, so improvements in AI reliability only ever add steps to those AI executes.
 \begin{figure}[!t]
 \caption{When Is a Human-Advantaged Step Executed by AI?}
 \label{fig:ca_regions}
@@ -118,6 +112,12 @@ Part~(ii) can be read off the same figure as well: starting anywhere that AI exe
 \end{spacing}
 \end{minipage}
 \end{figure}
+It holds parameter of the example fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star.
+The human keeps the comparative advantage on Step~$k$ throughout, since the horizontal axis stops where augmenting the step in isolation would break even against its manual cost of $6$.
+Even so, Step~$k$ is performed manually only in the lower left where AI is unreliable on both steps $k$ and $k-1$.
+Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces; moving up instead leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band is not a general feature. When managing AI at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
+Varying a step's own success probability and that of a single neighbor is thus enough to cover all four feasible ways of executing a human-advantaged step, minimal as that adjustment is.
+Part~(ii) can be read off the same figure as well: starting anywhere that AI executes Step~$k$ and moving up, to the right, or both, one never crosses back into the grey region, so improvements in AI reliability only ever add steps to those AI executes.
 
 We must note that Proposition~\ref{prop:ca_local} is a \emph{local} statement: it compares rearrangements of a step and its neighbors while holding the AI strategy on the rest of the workflow fixed, and so they fall short of determining whether the overturning takes place in the cost-minimizing arrangement of the entire production sequence, which depends on the whole workflow at once.
 Nonetheless, the forces determining execution modes in the optimum are the ones outlined here.
