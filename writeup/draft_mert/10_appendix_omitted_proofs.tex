@@ -2,79 +2,14 @@
 \label{app:omitted_proofs}
 
 This appendix collects the proofs omitted from the main body of the paper.
-Appendix~\ref{app:ca_local_proof} proves Proposition~\ref{prop:ca_local} of Section~\ref{sec:comparative_advantage}.
+% TEMP: Appendix~\ref{app:ca_local_proof} proves Proposition~\ref{prop:ca_local} of Section~\ref{sec:comparative_advantage}.
 Appendix~\ref{app:shortrun_proof} proves Proposition~\ref{prop:shortrun_dp} of Section~\ref{sec:extensions.computation}; the companion long-run result, Proposition~\ref{prop:totalcost_optimization_dp}, is proved in Appendix~\ref{app:jobdesign.longrun}.
 
-\subsection{Proof of Proposition~\ref{prop:ca_local}}
-\label{app:ca_local_proof}
-
-Throughout, write $\minTime{j} = \min\left\{\manualTime{j}, \frac{\AItime{j}}{q_j}\right\}$ for the cheapest way of executing step $j$ on its own, whether manually or as a standalone augmented step, and take $q_{k-1}, q_k, q_{k+1} \in (0,1)$.
-Because chains are contiguous and none crosses the boundary of the block $\{k-1,\, k,\, k+1\}$, an arrangement of the block is a partition of it into consecutive runs, each run executed either as a single step at cost $\minTime{j}$ or as an AI chain augmented at its last step $r$, at cost $\AItime{r}/\prod_i q_i$ taken over the run's steps.
-There are four such partitions.
-Using the hypothesis $\manualTime{k} < \AItime{k}/q_k$ to price a singleton $\{k\}$ at $\manualTime{k}$, their costs are
-\begin{align*}
-V_0 &= \minTime{k-1} + \manualTime{k} + \minTime{k+1}, && \text{(no chain covers step $k$)} \\
-V_1 &= \minTime{k-1} + \frac{\AItime{k+1}}{q_k\, q_{k+1}}, && \text{(chain $\{k,\, k+1\}$)} \\
-V_2 &= \frac{\AItime{k+1}}{q_{k-1}\, q_k\, q_{k+1}}, && \text{(chain $\{k-1,\, k,\, k+1\}$)} \\
-V_3 &= \frac{\AItime{k}}{q_{k-1}\, q_k} + \minTime{k+1}. && \text{(chain $\{k-1,\, k\}$)}
-\end{align*}
-We say that AI executes step $k$ when $\min\{V_1, V_2, V_3\} < V_0$, so that ties are resolved in favor of manual execution.
-
-\begin{proof}[Proof of part (i)]
-If step $k$ is executed as a singleton, its cost is $\minTime{k} = \manualTime{k}$, since $\manualTime{k} < \AItime{k}/q_k$ by hypothesis, so augmenting it on its own is strictly dominated by performing it manually.
-AI therefore executes step $k$ only if step $k$ belongs to a chain of length at least two, and since chains are contiguous and confined to the block, that chain is $\{k,\, k+1\}$, $\{k-1,\, k,\, k+1\}$, or $\{k-1,\, k\}$.
-In the first two, step $k$ is not the chain's last step, so it is never prompted or verified and is automated; in the third it is the last step, hence augmented.
-\end{proof}
-
-\begin{proof}[Proof of part (ii)]
-Fix $(\manualTime{k}, \AItime{k}, q_k)$ with $\manualTime{k} < \AItime{k}/q_k$ and fix $q_{k-1}, q_{k+1} \in (0,1)$.
-Restrict attention to the two-parameter family of neighbor costs given by $\manualTime{k-1} = \AItime{k-1} = \mu > 0$ and $\manualTime{k+1} = 1$, $\AItime{k+1} = \tau > 0$, so that $\minTime{k-1} = \mu$ and $\minTime{k+1} = \min\{1, \tau/q_{k+1}\}$.
-Since $V_0, \dotsc, V_3$ are continuous in all of the neighbor parameters, it suffices to exhibit, for each configuration, values of $(\mu, \tau)$ at which its cost is strictly below the other three; strictness then extends the conclusion to an open neighborhood.
-
-\emph{Configuration $\{k,\, k+1\}$.}
-Set $\tau = q_k\, q_{k+1} \manualTime{k}/2$, so that $V_1 = \mu + \manualTime{k}/2$, and let
-\[ 0 < \mu < \min\left\{ \frac{\manualTime{k}}{2}\cdot\frac{1-q_{k-1}}{q_{k-1}},\ \frac{\AItime{k}}{q_{k-1}\, q_k} - \frac{\manualTime{k}}{2} \right\}, \]
-a nonempty interval because $q_{k-1} < 1$ and $\AItime{k}/(q_{k-1} q_k) > \AItime{k}/q_k > \manualTime{k}$.
-Then $V_1 < V_0$, since $\manualTime{k}/2 < \manualTime{k} + \minTime{k+1}$; $V_1 < V_2$, since $V_2 - V_1 = (\manualTime{k}/2)(1-q_{k-1})/q_{k-1} - \mu > 0$; and $V_1 < V_3$ by the second bound on $\mu$.
-
-\emph{Configuration $\{k-1,\, k,\, k+1\}$.}
-Set $\mu = 1$ and let $\tau \to 0$.
-Then $V_2 = \tau/(q_{k-1} q_k q_{k+1}) \to 0$, while $V_0 > 1$, $V_1 > 1$, and $V_3 \geq \AItime{k}/(q_{k-1} q_k) > 0$ do not vanish, so $V_2$ is the strict minimum for $\tau$ small enough.
-
-\emph{Configuration $\{k-1,\, k\}$.}
-Set $\mu = \AItime{k}/(q_{k-1} q_k)$ and take $\tau > \max\{q_{k+1},\ q_k q_{k+1},\ q_{k-1} q_k q_{k+1} (\mu+1)\}$, so that $\minTime{k+1} = 1$ and $V_3 = \mu + 1$.
-Then $V_3 < V_0 = \mu + \manualTime{k} + 1$; $V_3 < V_1 = \mu + \tau/(q_k q_{k+1})$, since $\tau > q_k q_{k+1}$; and $V_3 < V_2 = \tau/(q_{k-1} q_k q_{k+1})$ by the third bound on $\tau$.
-
-The margin of the human's advantage on step $k$, $\AItime{k}/q_k - \manualTime{k}$, was unrestricted throughout, which gives the second claim of part~(ii).
-\end{proof}
-
-\begin{proof}[Proof of part (iii)]
-Let $g_j = V_j - V_0$ for $j = 1, 2, 3$, so that AI executes step $k$ exactly when $\min\{g_1, g_2, g_3\} < 0$.
-Since the set on which AI executes step $k$ is the union of the sets $\{g_j < 0\}$, and a union of upward-closed sets is upward closed, it suffices to show that each $\{g_j < 0\}$ is upward closed in $q_{k-1}$ and in $q_{k+1}$.
-Writing the three differences out,
-\begin{align*}
-g_1 &= \frac{\AItime{k+1}}{q_k\, q_{k+1}} - \manualTime{k} - \minTime{k+1}, \\
-g_2 &= \frac{\AItime{k+1}}{q_{k-1}\, q_k\, q_{k+1}} - \minTime{k-1} - \manualTime{k} - \minTime{k+1}, \\
-g_3 &= \frac{\AItime{k}}{q_{k-1}\, q_k} - \minTime{k-1} - \manualTime{k},
-\end{align*}
-where $\minTime{k-1}$ depends on $q_{k-1}$ but not on $q_{k+1}$, and $\minTime{k+1}$ the other way around.
-
-Consider $q_{k-1}$ first.
-The difference $g_1$ does not involve it, because the predecessor is executed on its own in both of the arrangements $g_1$ compares.
-Both $g_2$ and $g_3$ are of the form
-\[ g(q) = \frac{A}{q} - \min\left\{\manualTime{k-1},\, \frac{B}{q}\right\} - c, \qquad B = \AItime{k-1}, \quad c > 0, \]
-with $A = \AItime{k+1}/(q_k q_{k+1})$ and $c = \manualTime{k} + \minTime{k+1}$ for $g_2$, and $A = \AItime{k}/q_k$ and $c = \manualTime{k}$ for $g_3$.
-Let $q^* = B/\manualTime{k-1}$ be the success probability at which the predecessor, executed on its own, switches from manual to augmented.
-For $q \leq q^*$ we have $g(q) = A/q - \manualTime{k-1} - c$, which is strictly decreasing, so $\{g < 0\}$ is upward closed there.
-For $q > q^*$ we have $g(q) = (A - B)/q - c$, which is nonincreasing when $A \geq B$ and, when $A < B$, is negative at every such $q$ because both of its terms are.
-In either case $g$ is negative throughout $(q^*, 1]$ whenever it is negative anywhere in that range, and $g$ is continuous at $q^*$, so $\{g < 0\}$ is upward closed on all of $(0, 1]$.
-Intuitively, raising $q_{k-1}$ cheapens any chain that starts at the predecessor, and it cheapens the predecessor's own standalone execution only when that execution is already an augmented one, in which case the two costs fall in the same proportion and the comparison is unaffected.
-
-Now consider $q_{k+1}$.
-The difference $g_3$ does not involve it, since the successor is executed on its own in both of the arrangements $g_3$ compares.
-Both $g_1$ and $g_2$ are of the form $\lambda u - \min\{\manualTime{k+1},\, u\} + \text{const}$, where $u = \AItime{k+1}/q_{k+1}$ and $\lambda$ equals $1/q_k$ or $1/(q_{k-1} q_k)$, both at least $1$.
-The map $u \mapsto \lambda u - \min\{\manualTime{k+1}, u\}$ is nondecreasing, since it equals $(\lambda-1)u$ for $u \leq \manualTime{k+1}$ and $\lambda u - \manualTime{k+1}$ for $u \geq \manualTime{k+1}$, and $u$ is decreasing in $q_{k+1}$, so $g_1$ and $g_2$ are nonincreasing in $q_{k+1}$ and their negativity sets are upward closed.
-\end{proof}
+% TEMP: the proof of Proposition~\ref{prop:ca_local} currently sits inline in
+% 4_discussion.tex, directly under the proposition, for review.  To restore it
+% here, move the block between the TEMP markers in that file back to this spot,
+% re-adding the subsection heading and the \label{app:ca_local_proof}, and
+% uncomment the sentence about it in the paragraph above.
 
 \subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
 \label{app:shortrun_proof}
