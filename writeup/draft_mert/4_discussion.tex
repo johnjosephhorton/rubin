@@ -90,22 +90,23 @@ Remark~\ref{rem:ca_local} states this formally.
 \label{rem:ca_local}
 Take the block of steps $\{k-1,\, k,\, k+1\}$ around a human-advantaged step $k$, hold the execution of the rest of the workflow fixed, and let no chain cross the block's boundary.
 Step $k$ is never augmented on its own: either the firm pays to manage AI at that step, in which case it prefers the manual mode, or it does not pay for it at all, which happens only when the step sits inside a chain.
-Because chains are contiguous, there are exactly two ways for step $k$ to be automated, and they differ in which neighbor anchors the chain:
+AI therefore executes step $k$ only as part of a chain covering at least one of its neighbors, and because chains are contiguous there are three of them:
 \begin{enumerate}
-\item[(i)] \emph{Chained with its successor}, $\{k,\, k+1\}$. This is the downstream channel of \eqref{eq:ca_test}: it pays when the failure risk step $k$ adds to the chain costs less than the manual work it displaces.
-\item[(ii)] \emph{Chained with both neighbors}, $\{k-1,\, k,\, k+1\}$. Here the chain is anchored upstream by a predecessor worth absorbing, and step $k$ is automated on the way to the endpoint at $k+1$ whether or not it would pay for itself.
+\item[(i)] \emph{Chained with its successor}, $\{k,\, k+1\}$, which \emph{automates} step $k$. This is the downstream channel of \eqref{eq:ca_test}: it pays when the failure risk step $k$ adds to the chain costs less than the manual work it displaces.
+\item[(ii)] \emph{Chained with both neighbors}, $\{k-1,\, k,\, k+1\}$, which also \emph{automates} step $k$. The chain is anchored upstream by a predecessor worth absorbing, and step $k$ is automated on the way to the endpoint at $k+1$ whether or not it would pay for itself.
+\item[(iii)] \emph{Chained with its predecessor}, $\{k-1,\, k\}$, which \emph{augments} step $k$ as the chain's endpoint. The predecessor is again the reason the chain forms, but it stops at step $k$, which AI then executes under human supervision.
 \end{enumerate}
+The first two are the routes into automation proper.
 In both the chain terminates at step $k+1$, so step $k$ is never prompted or verified and its own management cost $\AItime{k}$ is never paid, which is why the width of the human's advantage on the step bears on neither comparison.
-One further arrangement, $\{k-1,\, k\}$, puts step $k$ under AI without automating it: the predecessor's chain terminates at step $k$, which is then augmented and does have its management cost paid.
-This is worth recording, but it is not an instance of the overturning of comparative advantage at issue here.
+Case~(iii) does pay that cost, and is the milder form of the same phenomenon: the human loses the step to AI, though not the supervision of it.
 \end{remark}
 
 Figure~\ref{fig:ca_regions} maps the arrangements of a human-advantaged step $k$ and its immediate neighbors against manual execution.
 It holds every parameter of Example~\ref{ex:ca_predecessor} fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star.
 The human keeps the comparative advantage on Step~$k$ throughout, since augmenting it in isolation costs $\AItime{k}/q_k$ against a manual cost of $6$, and the horizontal axis stops where the two coincide.
 Step~$k$ is nonetheless performed manually only in the lower left.
-Moving right from there improves AI on Step~$k$ itself, and at $q_k \approx 0.43$ chaining it with Step~$k+1$ becomes cheaper than the manual work it displaces, which is the first route into automation.
-Moving up leaves Step~$k$ untouched and improves only its predecessor, reaching the second route by way of the augmented band: the pair must first become reliable enough to be worth chaining at all, and only then reliable enough for the chain to be carried on to Step~$k+1$.\footnote{The band is not a general feature. When managing AI at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to the chain its predecessor anchors.}
+Moving right from there improves AI on Step~$k$ itself, and at $q_k \approx 0.43$ chaining it with Step~$k+1$ becomes cheaper than the manual work it displaces, which is case~(i).
+Moving up leaves Step~$k$ untouched and improves only its predecessor, reaching case~(ii) by way of the band in which case~(iii) governs: the pair must first become reliable enough to be worth chaining at all, and only then reliable enough for the chain to be carried on to Step~$k+1$.\footnote{The band is not a general feature. When managing AI at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to the chain its predecessor anchors.}
 That order is not incidental, since the extension to the cheap endpoint is worth its exposure to upstream failure risk only once that risk is small.
 
 \begin{figure}[!t]
