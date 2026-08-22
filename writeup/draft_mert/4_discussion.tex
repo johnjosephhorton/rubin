@@ -71,181 +71,18 @@ Step~1, on which the human holds close to a two-fold advantage in isolation, is 
 \end{example}
 
 The example in fact contains both routes by which a step can be automated.
-Chaining Steps~1--2, priced at $14.81$ and rejected, would have automated Step~1 from downstream, while adding Step~0 automates it from upstream at $15.60$.
-Proposition~\ref{prop:ca_local} records what the firm's choice among the available arrangements does and does not depend on.
+Proposition~\ref{prop:ca_local} formally makes the claim that comparative advantage is not sufficient to guarantee that a human-advantaged step is executed manually.
 
 \begin{proposition}[Local Overturning of Comparative Advantage]
 \label{prop:ca_local}
-Let the human hold the comparative advantage on step $k$, so that $\manualTime{k} < \AItime{k}/q_k$, hold the execution of the workflow outside the block $\{k-1,\, k,\, k+1\}$ fixed, and let no chain cross the block's boundary.
+Let the human hold the comparative advantage on step $k$, so that $\manualTime{k} < \AItime{k}/q_k$.
+Hold the execution of the workflow outside the block $\{k-1,\, k,\, k+1\}$ fixed, and let no chain cross the block's boundary.
 Then:
 \begin{enumerate}
-\item[(i)] Whatever step $k$'s own parameters, and however wide the human's advantage on it, there is a nonempty open set of neighbor parameters at which the cost-minimizing arrangement has AI execute step $k$, and the same holds separately for each chain through which AI can reach the step. Comparative advantage on a step therefore places no restriction on the mode in which that step is executed.
+\item[(i)] Whatever step $k$'s own parameters, and however wide the human's advantage on it, there is a nonempty open set of neighbor parameters at which the cost-minimizing arrangement has AI execute step $k$. Comparative advantage on a step therefore places no restriction on the mode in which that step is executed.
 \item[(ii)] Fix step $k$'s own parameters. If AI executes step $k$ at neighbor success probabilities $(q_{k-1},\, q_{k+1})$, then it does so at every $(q'_{k-1},\, q'_{k+1})$ with $q'_{k-1} \geq q_{k-1}$ and $q'_{k+1} \geq q_{k+1}$.
 \end{enumerate}
 \end{proposition}
-
-% ===== TEMP: proof inlined for review; move back to 10_appendix_omitted_proofs.tex =====
-Throughout, write $\minTime{j} = \min\left\{\manualTime{j}, \frac{\AItime{j}}{q_j}\right\}$ for the cheapest way of executing step $j$ on its own, whether manually or as a standalone augmented step, and take $q_{k-1}, q_k, q_{k+1} \in (0,1)$.
-Because chains are contiguous and none crosses the boundary of the block $\{k-1,\, k,\, k+1\}$, an arrangement of the block is a partition of it into consecutive runs, each run executed either as a single step at cost $\minTime{j}$ or as an AI chain augmented at its last step $r$, at cost $\AItime{r}/\prod_i q_i$ taken over the run's steps.
-
-Before comparing them, note which of these arrangements can have AI execute step $k$ at all.
-Executed as a singleton, step $k$ costs $\minTime{k} = \manualTime{k}$, since $\manualTime{k} < \AItime{k}/q_k$ by hypothesis, so augmenting it on its own is strictly dominated by performing it manually and never occurs in an optimum.
-AI therefore executes step $k$ only if step $k$ belongs to a chain of length at least two, and since chains are contiguous and confined to the block, that chain is $\{k,\, k+1\}$, $\{k-1,\, k,\, k+1\}$, or $\{k-1,\, k\}$: in the first two, step $k$ is not the chain's last step, so it is never prompted or verified and is automated, while in the third it is the last step, hence augmented.
-
-Pricing a singleton $\{k\}$ at $\manualTime{k}$ accordingly, the four partitions cost
-\begin{align*}
-V_0 &= \minTime{k-1} + \manualTime{k} + \minTime{k+1}, && \text{(no chain covers step $k$)} \\
-V_1 &= \minTime{k-1} + \frac{\AItime{k+1}}{q_k\, q_{k+1}}, && \text{(chain $\{k,\, k+1\}$)} \\
-V_2 &= \frac{\AItime{k+1}}{q_{k-1}\, q_k\, q_{k+1}}, && \text{(chain $\{k-1,\, k,\, k+1\}$)} \\
-V_3 &= \frac{\AItime{k}}{q_{k-1}\, q_k} + \minTime{k+1}. && \text{(chain $\{k-1,\, k\}$)}
-\end{align*}
-AI executes step $k$ exactly when $\min\{V_1, V_2, V_3\} < V_0$, ties being resolved in favor of manual execution.
-
-\begin{proof}[Proof of part (i)]
-Fix $(\manualTime{k}, \AItime{k}, q_k)$ with $\manualTime{k} < \AItime{k}/q_k$ and fix $q_{k-1}, q_{k+1} \in (0,1)$.
-Restrict attention to the two-parameter family of neighbor costs given by $\manualTime{k-1} = \AItime{k-1} = \mu > 0$ and $\manualTime{k+1} = 1$, $\AItime{k+1} = \tau > 0$, so that $\minTime{k-1} = \mu$ and $\minTime{k+1} = \min\{1, \tau/q_{k+1}\}$.
-Since $V_0, \dotsc, V_3$ are continuous in all of the neighbor parameters, it suffices to exhibit, for each configuration, values of $(\mu, \tau)$ at which its cost is strictly below the other three; strictness then extends the conclusion to an open neighborhood.
-
-\begin{itemize}
-\item \emph{Configuration $\{k,\, k+1\}$, which automates step $k$.}
-Set $\tau = q_k\, q_{k+1} \manualTime{k}/2$, so that $V_1 = \mu + \manualTime{k}/2$, and take
-\[ 0 < \mu < \min\left\{ \frac{\manualTime{k}}{2}\cdot\frac{1-q_{k-1}}{q_{k-1}},\ \frac{\AItime{k}}{q_{k-1}\, q_k} - \frac{\manualTime{k}}{2} \right\}, \]
-a nonempty interval because $q_{k-1} < 1$ and $\AItime{k}/(q_{k-1} q_k) > \AItime{k}/q_k > \manualTime{k}$.
-The three comparisons are then
-\begin{align*}
-V_0 - V_1 &= \frac{\manualTime{k}}{2} + \minTime{k+1}, \\
-V_2 - V_1 &= \frac{\manualTime{k}}{2}\cdot\frac{1-q_{k-1}}{q_{k-1}} - \mu, \\
-V_3 - V_1 &= \frac{\AItime{k}}{q_{k-1}\, q_k} - \frac{\manualTime{k}}{2} - \mu + \minTime{k+1},
-\end{align*}
-and all three are positive: the first because $\minTime{k+1} > 0$, and the second and third by the first and second bounds on $\mu$ respectively.
-
-\item \emph{Configuration $\{k-1,\, k,\, k+1\}$, which also automates step $k$.}
-Set $\mu = 1$ and take $0 < \tau < q_{k+1} \min\{q_{k-1}\, q_k,\ \AItime{k}\}$, so that the long chain is cheap.
-The three comparisons are
-\begin{align*}
-V_0 - V_2 &= 1 + \manualTime{k} + \minTime{k+1} - \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}}, \\
-V_1 - V_2 &= 1 + \frac{\tau}{q_k\, q_{k+1}} - \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}}, \\
-V_3 - V_2 &= \frac{\AItime{k}}{q_{k-1}\, q_k} + \minTime{k+1} - \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}}.
-\end{align*}
-The bound on $\tau$ holds $\tau/(q_{k-1} q_k q_{k+1})$ below both $1$ and $\AItime{k}/(q_{k-1} q_k)$, which leaves all three positive.
-
-\item \emph{Configuration $\{k-1,\, k\}$, which augments step $k$.}
-Set $\mu = \AItime{k}/(q_{k-1} q_k)$ and take $\tau > \max\{q_{k+1},\ q_k q_{k+1},\ q_{k-1} q_k q_{k+1} (\mu+1)\}$.
-The first of these bounds puts $\tau/q_{k+1}$ above $1$, so that $\minTime{k+1} = 1$ and $V_3 = \mu + 1$, and the comparisons are
-\begin{align*}
-V_0 - V_3 &= \manualTime{k}, \\
-V_1 - V_3 &= \frac{\tau}{q_k\, q_{k+1}} - 1, \\
-V_2 - V_3 &= \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}} - (\mu + 1),
-\end{align*}
-positive because $\manualTime{k} > 0$ and by the second and third bounds on $\tau$ respectively.
-\end{itemize}
-
-The margin of the human's advantage on step $k$, $\AItime{k}/q_k - \manualTime{k}$, was unrestricted throughout, which gives the second claim of part~(i).
-\end{proof}
-
-\begin{proof}[Proof of part (ii)]
-Fix step $k$'s own parameters together with the four cost parameters of its neighbors, and let the two neighbor success probabilities vary over $Q = (0,1) \times (0,1)$.
-Write
-\[ \mathcal{A} \;=\; \bigl\{ (q_{k-1},\, q_{k+1}) \in Q \; : \; \text{AI executes step } k \bigr\} \]
-for the set of neighbor reliabilities at which the cost-minimizing arrangement does not leave step $k$ to the human.
-Part~(ii) is precisely the statement that $\mathcal{A}$ is \emph{upward closed} in the coordinatewise order: whenever a pair belongs to $\mathcal{A}$, so does every pair at least as large in both coordinates.
-The proof turns that statement into one about the three differences
-\[ D_j \;=\; V_j - V_0, \qquad j = 1,\, 2,\, 3, \]
-each of which compares one arrangement that has AI execute step $k$ against the arrangement that does not.
-Three reductions get us there.
-
-\emph{Reduction 1: from $\mathcal{A}$ to one chain at a time.}
-AI executes step $k$ exactly when $\min\{V_1, V_2, V_3\} < V_0$, that is, when $D_j < 0$ for at least one $j$.
-Writing $\mathcal{A}_j = \{(q_{k-1},\, q_{k+1}) \in Q : D_j < 0\}$ for the set on which chain $j$ by itself beats manual execution of step $k$, this says
-\[ \mathcal{A} \;=\; \mathcal{A}_1 \cup \mathcal{A}_2 \cup \mathcal{A}_3 . \]
-A union of upward-closed sets is upward closed, because a pair in the union lies in one of them and every larger pair then lies in that same one.
-It is therefore enough to show that each $\mathcal{A}_j$ is upward closed, and the three can be handled separately: we never need to know which chain is optimal, only whether each one, on its own, is cheaper than leaving the step to the human.
-
-\emph{Reduction 2: from both coordinates at once to one at a time.}
-Suppose each $\mathcal{A}_j$ is upward closed in $q_{k-1}$ at every fixed value of $q_{k+1}$, and upward closed in $q_{k+1}$ at every fixed value of $q_{k-1}$.
-Given $(q_{k-1},\, q_{k+1}) \in \mathcal{A}_j$ and a larger pair $(q'_{k-1},\, q'_{k+1})$, raise the two coordinates in turn:
-\[ (q_{k-1},\, q_{k+1}) \in \mathcal{A}_j \;\implies\; (q'_{k-1},\, q_{k+1}) \in \mathcal{A}_j \;\implies\; (q'_{k-1},\, q'_{k+1}) \in \mathcal{A}_j , \]
-the first step by closure in the first coordinate holding $q_{k+1}$ fixed, the second by closure in the second coordinate holding $q'_{k-1}$ fixed.
-The one-coordinate statements deliver the joint one, provided each holds at every value of the coordinate being held fixed, which is how they are proved below.
-
-\emph{Reduction 3: from upward closure to a property of $D_j$.}
-With one coordinate fixed, $D_j$ is a function of a single success probability $q$, and $\mathcal{A}_j$ is the set on which that function is negative.
-That set is upward closed as soon as $D_j$, once negative, stays negative as $q$ rises.
-It suffices for $D_j$ to be nonincreasing in $q$, which is what we verify in every case but one; in the exceptional case $D_j$ increases, and we show instead that it is negative on the entire range where the increase can occur.
-
-Writing the three differences out,
-\begin{align*}
-D_1 &= \frac{\AItime{k+1}}{q_k\, q_{k+1}} - \manualTime{k} - \minTime{k+1}, \\
-D_2 &= \frac{\AItime{k+1}}{q_{k-1}\, q_k\, q_{k+1}} - \minTime{k-1} - \manualTime{k} - \minTime{k+1}, \\
-D_3 &= \frac{\AItime{k}}{q_{k-1}\, q_k} - \minTime{k-1} - \manualTime{k},
-\end{align*}
-the terms that move with the neighbor reliabilities are the chain costs and the two standalone costs
-\[ \minTime{k-1} = \min\left\{ \manualTime{k-1},\, \frac{\AItime{k-1}}{q_{k-1}} \right\}, \qquad \minTime{k+1} = \min\left\{ \manualTime{k+1},\, \frac{\AItime{k+1}}{q_{k+1}} \right\}, \]
-of which the first depends on $q_{k-1}$ alone and the second on $q_{k+1}$ alone.
-
-Both coordinates are covered by one observation about functions of a single success probability, which we record first.
-
-\emph{A claim covering both coordinates.}
-Let $m,\, A,\, B,\, c > 0$ and define, for $q \in (0,1)$,
-\[ D(q) \;=\; \underbrace{\frac{A}{q}}_{\text{a chain through the neighbor}} \;-\; \underbrace{\min\left\{ m,\, \frac{B}{q} \right\}}_{\text{the neighbor on its own}} \;-\; \underbrace{c}_{\text{fixed}} . \]
-Then $\{ q \in (0,1) : D(q) < 0 \}$ is upward closed.
-To see this, note that the neighbor's standalone cost is the smaller of a manual cost $m$ that does not move with $q$ and an augmented cost $B/q$ that falls as $q$ rises, the two crossing at $q^{*} = B/m$.
-Splitting there,
-\[
-D(q) \;=\;
-\begin{cases}
-\dfrac{A}{q} - m - c, & 0 < q \leq q^{*}, \\[2.2ex]
-\dfrac{A - B}{q} - c, & q^{*} < q < 1,
-\end{cases}
-\]
-the second line obtained by substituting $B/q$ for the minimum.
-The two expressions agree at $q = q^{*}$, where $m = B/q^{*}$, so $D$ is continuous; and if $q^{*} \geq 1$ the second branch is empty and only the first arises.
-On the first branch $D$ is strictly decreasing, since
-\[ \frac{\mathrm{d}}{\mathrm{d}q}\left( \frac{A}{q} - m - c \right) \;=\; -\frac{A}{q^{2}} \;<\; 0 , \]
-so raising $q$ cheapens the chain while leaving untouched the manual cost that the chain displaces.
-On the second branch the behavior depends on the sign of $A - B$:
-\begin{itemize}
-\item if $A \geq B$, then $(A-B)/q$ is nonincreasing in $q$, so $D$ is nonincreasing on the branch;
-\item if $A < B$, then $D$ increases with $q$, but $(A-B)/q < 0$ and $-c < 0$, so $D(q) < 0$ at \emph{every} point of the branch.
-\end{itemize}
-Either way, if $D$ is negative at some point of the second branch it is negative everywhere to the right of it.
-Now take $q < q'$ in $(0,1)$ with $D(q) < 0$, and consider the three possible positions of the pair relative to $q^{*}$:
-\begin{itemize}
-\item if $q' \leq q^{*}$, both lie on the first branch and $D(q') < D(q) < 0$;
-\item if $q^{*} < q$, both lie on the second branch, which was just handled;
-\item if $q \leq q^{*} < q'$, then $D(q^{*}) \leq D(q) < 0$ by the first branch, and since the second-branch expression agrees with $D$ at $q^{*}$ and the argument above applies to it on $[q^{*},\, 1)$, we get $D(q') < 0$.
-\end{itemize}
-This establishes the claim.
-Its content is that raising a neighbor's reliability always cheapens a chain that runs through that neighbor, and cheapens the neighbor's own execution only once that execution is an augmented one, in which case both costs carry the same factor $1/q$ and fall in the same proportion, so the comparison between them cannot reverse.
-
-\emph{Closure in $q_{k-1}$.}
-Fix $q_{k+1}$ and let $q = q_{k-1}$ vary.
-The difference $D_1$ does not depend on $q$ at all: the two arrangements it compares, the chain $\{k,\, k+1\}$ and manual execution of step $k$, both leave the predecessor to be executed on its own, so the term $\minTime{k-1}$ appears in $V_1$ and $V_0$ alike and cancels.
-A constant function is nonincreasing, so $\mathcal{A}_1$ is upward closed in this coordinate.
-The other two differences are instances of the claim, with $B = \AItime{k-1}$ and $m = \manualTime{k-1}$ throughout and
-\begin{align*}
-D_2: \quad A &= \frac{\AItime{k+1}}{q_k\, q_{k+1}}, & c &= \manualTime{k} + \minTime{k+1}, \\
-D_3: \quad A &= \frac{\AItime{k}}{q_k}, & c &= \manualTime{k},
-\end{align*}
-neither of which moves with $q$.
-The claim therefore makes $\mathcal{A}_2$ and $\mathcal{A}_3$ upward closed in $q_{k-1}$.
-Nothing here ties $A$ to $B$, so both of the claim's second-branch cases can occur: a predecessor whose own augmented cost falls faster than the cost of the chain it would anchor is exactly the case $A < B$, and it is settled not by monotonicity but by the chain's being cheaper throughout that branch to begin with.
-
-\emph{Closure in $q_{k+1}$.}
-The successor coordinate is the counterpart of the predecessor one, and the milder half of it, so the claim disposes of it directly.
-The difference $D_3$ now plays the role $D_1$ played above and drops out for the mirror-image reason: the chain $\{k-1,\, k\}$ and manual execution of step $k$ both leave the successor to be executed on its own, so $\minTime{k+1}$ cancels between $V_3$ and $V_0$.
-The remaining two differences are again instances of the claim, read in $q = q_{k+1}$, with $B = \AItime{k+1}$ and $m = \manualTime{k+1}$ throughout and
-\begin{align*}
-D_1: \quad A &= \frac{\AItime{k+1}}{q_k}, & c &= \manualTime{k}, \\
-D_2: \quad A &= \frac{\AItime{k+1}}{q_{k-1}\, q_k}, & c &= \minTime{k-1} + \manualTime{k} .
-\end{align*}
-The one difference from the predecessor case is that $A$ and $B$ are no longer free of each other: a chain terminating at the successor pays that same management cost $\AItime{k+1}$, inflated by the failure risk of the steps ahead of it, so $A/B$ equals $1/q_k$ or $1/(q_{k-1} q_k)$ and is at least $1$.
-Only the case $A \geq B$ of the claim can arise, and $\mathcal{A}_1$ and $\mathcal{A}_2$ are upward closed in $q_{k+1}$, with the differences nonincreasing outright.
-
-Each $\mathcal{A}_j$ is therefore upward closed in each coordinate separately, hence upward closed in the coordinatewise order by Reduction~2, and $\mathcal{A}$ is upward closed by Reduction~1.
-\end{proof}
-
-% ===== TEMP: end of inlined proof =====
 
 Part~(i) says that the human's advantage on the step, however wide, is uninformative about the step's fate once its neighbors are allowed to vary.
 Only three chains can reach step $k$, since a chain covering it must be contiguous and a human-advantaged step is never worth augmenting on its own: $\{k,\, k+1\}$ and $\{k-1,\, k,\, k+1\}$, which automate it, and $\{k-1,\, k\}$, which augments it as the chain's endpoint.
