@@ -88,7 +88,7 @@ Let the human hold the comparative advantage on step $k$, so that $\manualTime{k
 Then:
 \begin{enumerate}
 \item[(i)] Whatever step $k$'s own parameters, and however wide the human's advantage on it, there is a nonempty open set of neighbor parameters at which the cost-minimizing arrangement has AI execute step $k$. Comparative advantage on a step therefore places no restriction on the mode in which that step is executed.
-\item[(ii)] Fix step $k$'s own parameters. If AI executes step $k$ at neighbor success probabilities $(q_{k-1},\, q_{k+1})$, then it does so at every $(q'_{k-1},\, q'_{k+1})$ with $q'_{k-1} \geq q_{k-1}$ and $q'_{k+1} \geq q_{k+1}$.
+\item[(ii)] Fix the cost parameters of the three steps and let their success probabilities vary. If AI executes step $k$ at $(q_{k-1},\, q_k,\, q_{k+1})$, then it does so at every $(q'_{k-1},\, q'_k,\, q'_{k+1})$ with $q'_j \geq q_j$ for each $j$, whether or not the human still holds the comparative advantage on step $k$ there.
 \end{enumerate}
 \end{proposition}
 
@@ -115,7 +115,7 @@ Varying a step's own success probability and that of a single neighbor is thus e
 
 Part~(i) establishes that a step's own primitives are not enough to determine whether AI executes it.
 Part~(ii) adds the implication we rely on later: once AI executes a step, improvements in AI quality do not hand it back to the human.
-Raising a neighbor's success probability can only move the focal step toward AI execution, never away from it, and the step's own success probability enters the same way, since raising $q_k$ lowers the cost of every chain that could cover the step while leaving its manual cost untouched.
+Raising any of the three success probabilities, the step's own or either neighbor's, can only move the focal step toward AI execution, never away from it, which is what a uniform improvement in AI quality does.
 This is what lets us read the empirical results as more than a snapshot.
 Section~\ref{sec:DWA_prediction} finds that a step whose neighbors are executed by AI is itself more likely to be executed by AI, which is the force part~(i) isolates.
 Taken alone, that finding leaves open whether the pattern is an artifact of today's AI quality, since a neighbor that AI executes more reliably is also a neighbor that is cheaper to execute on its own: one might expect a sufficiently reliable predecessor to become worth augmenting by itself rather than anchoring a chain, or a sufficiently reliable successor to become cheap enough to verify separately, in either case releasing the focal step back to the human.

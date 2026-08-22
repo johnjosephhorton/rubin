@@ -66,11 +66,16 @@ The margin of the human's advantage on step $k$, $\AItime{k}/q_k - \manualTime{k
 \end{proof}
 
 \begin{proof}[Proof of part (ii)]
-Fix step $k$'s own parameters together with the four cost parameters of its neighbors, and let the two neighbor success probabilities vary over $Q = (0,1) \times (0,1)$.
+Fix the six cost parameters of the three steps and let their success probabilities vary over $Q = (0,1)^3$.
 Write
-\[ \mathcal{A} \;=\; \bigl\{ (q_{k-1},\, q_{k+1}) \in Q \; : \; \text{AI executes step } k \bigr\} \]
-for the set of neighbor reliabilities at which the cost-minimizing arrangement does not leave step $k$ to the human.
-Part~(ii) is precisely the statement that $\mathcal{A}$ is \emph{upward closed} in the coordinatewise order: whenever a pair belongs to $\mathcal{A}$, so does every pair at least as large in both coordinates.
+\[ \mathcal{A} \;=\; \bigl\{ (q_{k-1},\, q_k,\, q_{k+1}) \in Q \; : \; \text{AI executes step } k \bigr\} \]
+for the set of reliabilities at which the cost-minimizing arrangement does not leave step $k$ to the human.
+Part~(ii) is precisely the statement that $\mathcal{A}$ is \emph{upward closed} in the coordinatewise order: whenever a triple belongs to $\mathcal{A}$, so does every triple at least as large in all three coordinates.
+
+Before the main argument, dispose of the points at which the standing hypothesis lapses.
+Raising $q_k$ can push $\AItime{k}/q_k$ below $\manualTime{k}$, and at any such point step $k$ is cheaper augmented than performed manually even on its own, so AI executes it in every arrangement of the block and the conclusion holds there regardless of the other two coordinates.
+It is therefore enough to prove the claim when the human still holds the comparative advantage at the larger triple, $\manualTime{k} \leq \AItime{k}/q'_k$.
+In that case $q_k \leq q'_k$ gives $\manualTime{k} \leq \AItime{k}/q'_k \leq \AItime{k}/q_k$, so the advantage is in force at the smaller triple and everywhere between, and the four arrangements priced above describe the block throughout.
 The proof turns that statement into one about the three differences
 \[ D_j \;=\; V_j - V_0, \qquad j = 1,\, 2,\, 3, \]
 each of which compares one arrangement that has AI execute step $k$ against the arrangement that does not.
@@ -78,17 +83,17 @@ Three reductions get us there.
 
 \emph{Reduction 1: from $\mathcal{A}$ to one chain at a time.}
 AI executes step $k$ exactly when $\min\{V_1, V_2, V_3\} < V_0$, that is, when $D_j < 0$ for at least one $j$.
-Writing $\mathcal{A}_j = \{(q_{k-1},\, q_{k+1}) \in Q : D_j < 0\}$ for the set on which chain $j$ by itself beats manual execution of step $k$, this says
+Writing $\mathcal{A}_j = \{(q_{k-1},\, q_k,\, q_{k+1}) \in Q : D_j < 0\}$ for the set on which chain $j$ by itself beats manual execution of step $k$, this says
 \[ \mathcal{A} \;=\; \mathcal{A}_1 \cup \mathcal{A}_2 \cup \mathcal{A}_3 . \]
-A union of upward-closed sets is upward closed, because a pair in the union lies in one of them and every larger pair then lies in that same one.
+A union of upward-closed sets is upward closed, because a triple in the union lies in one of them and every larger triple then lies in that same one.
 It is therefore enough to show that each $\mathcal{A}_j$ is upward closed, and the three can be handled separately: we never need to know which chain is optimal, only whether each one, on its own, is cheaper than leaving the step to the human.
 
-\emph{Reduction 2: from both coordinates at once to one at a time.}
-Suppose each $\mathcal{A}_j$ is upward closed in $q_{k-1}$ at every fixed value of $q_{k+1}$, and upward closed in $q_{k+1}$ at every fixed value of $q_{k-1}$.
-Given $(q_{k-1},\, q_{k+1}) \in \mathcal{A}_j$ and a larger pair $(q'_{k-1},\, q'_{k+1})$, raise the two coordinates in turn:
-\[ (q_{k-1},\, q_{k+1}) \in \mathcal{A}_j \;\implies\; (q'_{k-1},\, q_{k+1}) \in \mathcal{A}_j \;\implies\; (q'_{k-1},\, q'_{k+1}) \in \mathcal{A}_j , \]
-the first step by closure in the first coordinate holding $q_{k+1}$ fixed, the second by closure in the second coordinate holding $q'_{k-1}$ fixed.
-The one-coordinate statements deliver the joint one, provided each holds at every value of the coordinate being held fixed, which is how they are proved below.
+\emph{Reduction 2: from all three coordinates at once to one at a time.}
+Suppose each $\mathcal{A}_j$ is upward closed in each single coordinate, at every fixed value of the other two.
+Given $(q_{k-1},\, q_k,\, q_{k+1}) \in \mathcal{A}_j$ and a larger triple, raise the coordinates in turn:
+\[ (q_{k-1},\, q_k,\, q_{k+1}) \;\implies\; (q'_{k-1},\, q_k,\, q_{k+1}) \;\implies\; (q'_{k-1},\, q'_k,\, q_{k+1}) \;\implies\; (q'_{k-1},\, q'_k,\, q'_{k+1}) , \]
+each step by closure in the coordinate being raised, holding the other two at the values they have reached.
+The one-coordinate statements deliver the joint one, provided each holds at every value of the coordinates being held fixed, which is how they are proved below.
 
 \emph{Reduction 3: from upward closure to a property of $D_j$.}
 With one coordinate fixed, $D_j$ is a function of a single success probability $q$, and $\mathcal{A}_j$ is the set on which that function is negative.
@@ -163,6 +168,12 @@ D_2: \quad A &= \frac{\AItime{k+1}}{q_{k-1}\, q_k}, & c &= \minTime{k-1} + \manu
 \end{align*}
 The one difference from the predecessor case is that $A$ and $B$ are no longer free of each other: a chain terminating at the successor pays that same management cost $\AItime{k+1}$, inflated by the failure risk of the steps ahead of it, so $A/B$ equals $1/q_k$ or $1/(q_{k-1} q_k)$ and is at least $1$.
 Only the case $A \geq B$ of the claim can arise, and $\mathcal{A}_1$ and $\mathcal{A}_2$ are upward closed in $q_{k+1}$, with the differences nonincreasing outright.
+
+\emph{Closure in $q_k$.}
+This coordinate needs no work beyond the pricing already in hand.
+With the human's advantage in force, the no-chain arrangement performs step $k$ manually and prices the two neighbors on their own, so $V_0$ does not involve $q_k$ at all, while each of $V_1$, $V_2$, and $V_3$ carries a factor $1/q_k$ in the cost of the chain covering step $k$ and is therefore strictly decreasing in it.
+Every $D_j$ is thus strictly decreasing in $q_k$, and each $\mathcal{A}_j$ is upward closed in that coordinate.
+This is the sense in which the step's own reliability and its neighbors' enter differently: a better neighbor cheapens the chain and the alternative to it at once, and the argument above is what settles the race between them, whereas a better step $k$ cheapens only the chain.
 
 Each $\mathcal{A}_j$ is therefore upward closed in each coordinate separately, hence upward closed in the coordinatewise order by Reduction~2, and $\mathcal{A}$ is upward closed by Reduction~1.
 \end{proof}

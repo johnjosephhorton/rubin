@@ -10,10 +10,9 @@ every contiguous arrangement of the block.
                  not a part of the statement),
     (i)          each of those three chains is uniquely optimal for some neighbor
                  parameters, whatever step k's own parameters,
-    (ii)         whether AI executes step k is monotone in the neighbors' success
-                 probabilities q_{k-1} and q_{k+1}, together with the reduction of
-                 both coordinates to a single functional form that the proof of
-                 (ii) runs on.
+    (ii)         whether AI executes step k is monotone in all three success
+                 probabilities, together with the reduction of the two neighbor
+                 coordinates to a single functional form that the proof runs on.
 
 Run:  python analysis/comparativeAdvantage_proposition_check.py
 """
@@ -76,6 +75,17 @@ def brute_force(tMp, tAp, qp, tMk, tAk, qk, tMn, tAn, qn):
 def ai_executes(**kw):
     V = arrangement_costs(**kw)
     return min(V[1], V[2], V[3]) < V[0] - 1e-12
+
+
+def ai_executes_general(tMp, tAp, qp, tMk, tAk, qk, tMn, tAn, qn):
+    """AI executes step k in the brute-force optimum, without assuming
+    t^M_k < t^A_k/q_k: step k qualifies if it sits in a chain, or if it is a
+    singleton that is cheaper augmented than manual (ties go to manual)."""
+    _, runs = brute_force(tMp, tAp, qp, tMk, tAk, qk, tMn, tAn, qn)
+    for r in runs:
+        if 1 in r:                                   # index 1 is step k
+            return len(r) > 1 or tAk / qk < tMk - 1e-12
+    raise AssertionError("step k missing from the partition")
 
 
 def draw_block():
@@ -146,30 +156,30 @@ def check_part_i(n=2_000):
 # part (ii): monotonicity in the neighbors' success probabilities
 # --------------------------------------------------------------------------- #
 def check_part_ii(n=400_000, perturbations=3):
-    base = viol_p = viol_n = viol_k = 0
+    viol = {"q_(k-1)": 0, "q_k": 0, "q_(k+1)": 0, "all three": 0}
+    base = lapsed = 0
     for _ in range(n):
         d = draw_block()
-        if not ai_executes(**d):
+        if not ai_executes_general(**d):
             continue
         base += 1
         for _ in range(perturbations):
-            up = dict(d, qp=random.uniform(d["qp"], 1.0))
-            if not ai_executes(**up):
-                viol_p += 1
-            un = dict(d, qn=random.uniform(d["qn"], 1.0))
-            if not ai_executes(**un):
-                viol_n += 1
-            # not part of the proposition, which fixes step k's own parameters, but
-            # asserted in the text: a uniform rise in AI quality lifts q_k too, and
-            # that cannot return the step to the human either.
-            uk = dict(d, qk=random.uniform(d["qk"], 1.0))
-            if not ai_executes(**uk):
-                viol_k += 1
+            hi = {"qp": random.uniform(d["qp"], 1.0),
+                  "qk": random.uniform(d["qk"], 1.0),
+                  "qn": random.uniform(d["qn"], 1.0)}
+            for name, key in (("q_(k-1)", "qp"), ("q_k", "qk"), ("q_(k+1)", "qn")):
+                if not ai_executes_general(**dict(d, **{key: hi[key]})):
+                    viol[name] += 1
+            up = dict(d, qp=hi["qp"], qk=hi["qk"], qn=hi["qn"])
+            if not ai_executes_general(**up):
+                viol["all three"] += 1
+            if up["tAk"] / up["qk"] <= up["tMk"]:     # advantage lapsed at the larger triple
+                lapsed += 1
     print(f"(ii)  AI-executing base points: {base}")
-    print(f"      violations raising q_(k-1): {viol_p}")
-    print(f"      violations raising q_(k+1): {viol_n}")
-    print(f"      violations raising q_k:     {viol_k}")
-    return viol_p == 0 and viol_n == 0 and viol_k == 0
+    for name in ("q_(k-1)", "q_k", "q_(k+1)", "all three"):
+        print(f"      violations raising {name:9s}: {viol[name]}")
+    print(f"      of the joint raises, {lapsed} landed where the human's advantage had lapsed")
+    return all(v == 0 for v in viol.values())
 
 
 # --------------------------------------------------------------------------- #
