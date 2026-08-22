@@ -113,14 +113,11 @@ Varying a step's own success probability and that of a single neighbor is thus e
 \end{minipage}
 \end{figure}
 
-Part~(i) establishes that a step's own primitives are not enough to determine whether AI executes it.
-Part~(ii) adds the implication we rely on later: once AI executes a step, improvements in AI quality do not hand it back to the human.
-Raising any of the three success probabilities, the step's own or either neighbor's, can only move the focal step toward AI execution, never away from it, which is what a uniform improvement in AI quality does.
-This is what lets us read the empirical results as more than a snapshot.
-Section~\ref{sec:DWA_prediction} finds that a step whose neighbors are executed by AI is itself more likely to be executed by AI, which is the force part~(i) isolates.
-Taken alone, that finding leaves open whether the pattern is an artifact of today's AI quality, since a neighbor that AI executes more reliably is also a neighbor that is cheaper to execute on its own: one might expect a sufficiently reliable predecessor to become worth augmenting by itself rather than anchoring a chain, or a sufficiently reliable successor to become cheap enough to verify separately, in either case releasing the focal step back to the human.
-Part~(ii) rules this out: when the neighbor's cheapest standalone execution is the manual one its cost does not fall at all, and when it is the augmented one the standalone cost and the chain cost fall in the same proportion, so the comparison between them cannot reverse.
-The adjacency we document is therefore not a feature of one particular level of AI capability that further progress would undo.
+Part~(ii) speaks to a different question.
+Where part~(i) says that being human-advantaged carries no guarantee of being executed one way or the other, part~(ii) says that whatever the answer at a given set of parameters, making a step's neighbors friendlier to AI can only push it toward AI execution: a step that AI executes never reverts to manual as its neighbors become more reliable, and the same holds when the step's own reliability improves alongside theirs.
+Our empirical exercise in Section~\ref{sec:DWA_prediction} relies on this indirectly.
+There we compare the same step across occupations whose surrounding work AI executes to different extents, but we observe a single snapshot of AI quality, and so a single realization of how well AI performs at those neighboring steps.
+Part~(ii) is what rules out reading the adjacency we measure as an artifact of that snapshot, something a more capable AI would undo by making neighbors cheap enough to execute on their own: a more reliable neighbor does cheapen its own standalone execution as well as the chain that covers the focal step, and part~(ii) says that the chain never loses that race.
 
 It must be noted that Proposition~\ref{prop:ca_local} is a \emph{local} statement, and deliberately so.
 It compares rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, so it does not by itself settle whether the overturning survives in the global cost-minimizing arrangement of the entire production sequence, which is a property of the whole workflow at once.
