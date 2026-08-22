@@ -183,82 +183,64 @@ the terms that move with the neighbor reliabilities are the chain costs and the 
 \[ \minTime{k-1} = \min\left\{ \manualTime{k-1},\, \frac{\AItime{k-1}}{q_{k-1}} \right\}, \qquad \minTime{k+1} = \min\left\{ \manualTime{k+1},\, \frac{\AItime{k+1}}{q_{k+1}} \right\}, \]
 of which the first depends on $q_{k-1}$ alone and the second on $q_{k+1}$ alone.
 
-\emph{Closure in $q_{k-1}$.}
-Fix $q_{k+1}$ and let $q = q_{k-1}$ vary.
-The difference $D_1$ does not depend on $q$ at all.
-The two arrangements it compares, the chain $\{k,\, k+1\}$ and manual execution of step $k$, both leave the predecessor to be executed on its own, so the term $\minTime{k-1}$ appears in $V_1$ and $V_0$ alike and cancels.
-A constant function is nonincreasing, so $\mathcal{A}_1$ is upward closed in this coordinate.
+Both coordinates are covered by one observation about functions of a single success probability, which we record first.
 
-The other two differences share a common form.
-Both compare a chain that starts at the predecessor against an arrangement that executes the predecessor on its own, so both can be written
-\[ D(q) \;=\; \underbrace{\frac{A}{q}}_{\text{chain starting at } k-1} \;-\; \underbrace{\min\left\{ \manualTime{k-1},\, \frac{B}{q} \right\}}_{\text{predecessor on its own}} \;-\; \underbrace{c}_{\text{fixed}}, \qquad B = \AItime{k-1}, \]
-where $A$ and $c$ are strictly positive, neither depends on $q$, and
-\begin{align*}
-D_2: \quad A &= \frac{\AItime{k+1}}{q_k\, q_{k+1}}, & c &= \manualTime{k} + \minTime{k+1}, \\
-D_3: \quad A &= \frac{\AItime{k}}{q_k}, & c &= \manualTime{k}.
-\end{align*}
-The predecessor's standalone cost is the smaller of a manual cost that does not move with $q$ and an augmented cost $B/q$ that falls as $q$ rises, and the two cross at
-\[ q^{*} \;=\; \frac{B}{\manualTime{k-1}} \;=\; \frac{\AItime{k-1}}{\manualTime{k-1}} , \]
-so the predecessor is cheapest manually for $q \leq q^{*}$ and cheapest augmented for $q > q^{*}$.
+\emph{A claim covering both coordinates.}
+Let $m,\, A,\, B,\, c > 0$ and define, for $q \in (0,1)$,
+\[ D(q) \;=\; \underbrace{\frac{A}{q}}_{\text{a chain through the neighbor}} \;-\; \underbrace{\min\left\{ m,\, \frac{B}{q} \right\}}_{\text{the neighbor on its own}} \;-\; \underbrace{c}_{\text{fixed}} . \]
+Then $\{ q \in (0,1) : D(q) < 0 \}$ is upward closed.
+To see this, note that the neighbor's standalone cost is the smaller of a manual cost $m$ that does not move with $q$ and an augmented cost $B/q$ that falls as $q$ rises, the two crossing at $q^{*} = B/m$.
 Splitting there,
 \[
 D(q) \;=\;
 \begin{cases}
-\dfrac{A}{q} - \manualTime{k-1} - c, & 0 < q \leq q^{*}, \\[2.2ex]
+\dfrac{A}{q} - m - c, & 0 < q \leq q^{*}, \\[2.2ex]
 \dfrac{A - B}{q} - c, & q^{*} < q < 1,
 \end{cases}
 \]
-the second line obtained by substituting $\minTime{k-1} = B/q$.
-The two expressions agree at $q = q^{*}$, where $\manualTime{k-1} = B/q^{*}$, so $D$ is continuous; and if $q^{*} \geq 1$ the second branch is empty and only the first arises.
-
+the second line obtained by substituting $B/q$ for the minimum.
+The two expressions agree at $q = q^{*}$, where $m = B/q^{*}$, so $D$ is continuous; and if $q^{*} \geq 1$ the second branch is empty and only the first arises.
 On the first branch $D$ is strictly decreasing, since
-\[ \frac{\mathrm{d}}{\mathrm{d}q}\left( \frac{A}{q} - \manualTime{k-1} - c \right) \;=\; -\frac{A}{q^{2}} \;<\; 0 . \]
-Raising $q$ here cheapens the chain while leaving untouched the manual predecessor cost that the chain displaces.
-
+\[ \frac{\mathrm{d}}{\mathrm{d}q}\left( \frac{A}{q} - m - c \right) \;=\; -\frac{A}{q^{2}} \;<\; 0 , \]
+so raising $q$ cheapens the chain while leaving untouched the manual cost that the chain displaces.
 On the second branch the behavior depends on the sign of $A - B$:
 \begin{itemize}
 \item if $A \geq B$, then $(A-B)/q$ is nonincreasing in $q$, so $D$ is nonincreasing on the branch;
 \item if $A < B$, then $D$ increases with $q$, but $(A-B)/q < 0$ and $-c < 0$, so $D(q) < 0$ at \emph{every} point of the branch.
 \end{itemize}
-Either way, if $D$ is negative at some point of the branch it is negative everywhere to the right of it.
-
+Either way, if $D$ is negative at some point of the second branch it is negative everywhere to the right of it.
 Now take $q < q'$ in $(0,1)$ with $D(q) < 0$, and consider the three possible positions of the pair relative to $q^{*}$:
 \begin{itemize}
 \item if $q' \leq q^{*}$, both lie on the first branch and $D(q') < D(q) < 0$;
 \item if $q^{*} < q$, both lie on the second branch, which was just handled;
 \item if $q \leq q^{*} < q'$, then $D(q^{*}) \leq D(q) < 0$ by the first branch, and since the second-branch expression agrees with $D$ at $q^{*}$ and the argument above applies to it on $[q^{*},\, 1)$, we get $D(q') < 0$.
 \end{itemize}
-So $\{D < 0\}$ is upward closed, and with it $\mathcal{A}_2$ and $\mathcal{A}_3$.
-The economics behind the two branches is the same: raising $q_{k-1}$ always cheapens a chain that starts at the predecessor, and it cheapens the predecessor's own execution only once that execution is an augmented one, in which case both costs carry the same factor $1/q$ and fall in the same proportion, so the comparison between them cannot reverse.
+This establishes the claim.
+Its content is that raising a neighbor's reliability always cheapens a chain that runs through that neighbor, and cheapens the neighbor's own execution only once that execution is an augmented one, in which case both costs carry the same factor $1/q$ and fall in the same proportion, so the comparison between them cannot reverse.
+
+\emph{Closure in $q_{k-1}$.}
+Fix $q_{k+1}$ and let $q = q_{k-1}$ vary.
+The difference $D_1$ does not depend on $q$ at all: the two arrangements it compares, the chain $\{k,\, k+1\}$ and manual execution of step $k$, both leave the predecessor to be executed on its own, so the term $\minTime{k-1}$ appears in $V_1$ and $V_0$ alike and cancels.
+A constant function is nonincreasing, so $\mathcal{A}_1$ is upward closed in this coordinate.
+The other two differences are instances of the claim, with $B = \AItime{k-1}$ and $m = \manualTime{k-1}$ throughout and
+\begin{align*}
+D_2: \quad A &= \frac{\AItime{k+1}}{q_k\, q_{k+1}}, & c &= \manualTime{k} + \minTime{k+1}, \\
+D_3: \quad A &= \frac{\AItime{k}}{q_k}, & c &= \manualTime{k},
+\end{align*}
+neither of which moves with $q$.
+The claim therefore makes $\mathcal{A}_2$ and $\mathcal{A}_3$ upward closed in $q_{k-1}$.
+Nothing here ties $A$ to $B$, so both of the claim's second-branch cases can occur: a predecessor whose own augmented cost falls faster than the cost of the chain it would anchor is exactly the case $A < B$, and it is settled not by monotonicity but by the chain's being cheaper throughout that branch to begin with.
 
 \emph{Closure in $q_{k+1}$.}
-Now fix $q_{k-1}$ and let $q_{k+1}$ vary.
-The difference $D_3$ does not depend on $q_{k+1}$, for the mirror-image reason: the chain $\{k-1,\, k\}$ and manual execution of step $k$ both leave the successor to be executed on its own, so $\minTime{k+1}$ cancels between $V_3$ and $V_0$, and $\mathcal{A}_3$ is upward closed in this coordinate.
-
-For $D_1$ and $D_2$, change variable to the successor's augmented cost
-\[ u \;=\; \frac{\AItime{k+1}}{q_{k+1}} , \]
-which is strictly decreasing in $q_{k+1}$.
-Upward closure in $q_{k+1}$ is then the same as the requirement that $D$, once negative, stay negative as $u$ \emph{falls}, for which it suffices that $D$ be nondecreasing in $u$.
-Every appearance of $q_{k+1}$ is through $u$: the chain costs in $V_1$ and $V_2$ are $u/q_k$ and $u/(q_{k-1} q_k)$, and the successor's standalone cost is $\minTime{k+1} = \min\{\manualTime{k+1},\, u\}$.
-Both differences therefore take the form
-\[ D \;=\; \lambda u \;-\; \min\{ \manualTime{k+1},\, u \} \;-\; c' , \]
-where $c'$ does not move with $u$ and
+The successor coordinate is the counterpart of the predecessor one, and the milder half of it, so the claim disposes of it directly.
+The difference $D_3$ now plays the role $D_1$ played above and drops out for the mirror-image reason: the chain $\{k-1,\, k\}$ and manual execution of step $k$ both leave the successor to be executed on its own, so $\minTime{k+1}$ cancels between $V_3$ and $V_0$.
+The remaining two differences are again instances of the claim, read in $q = q_{k+1}$, with $B = \AItime{k+1}$ and $m = \manualTime{k+1}$ throughout and
 \begin{align*}
-D_1: \quad \lambda &= \frac{1}{q_k}, & c' &= \manualTime{k}, \\
-D_2: \quad \lambda &= \frac{1}{q_{k-1}\, q_k}, & c' &= \minTime{k-1} + \manualTime{k} .
+D_1: \quad A &= \frac{\AItime{k+1}}{q_k}, & c &= \manualTime{k}, \\
+D_2: \quad A &= \frac{\AItime{k+1}}{q_{k-1}\, q_k}, & c &= \minTime{k-1} + \manualTime{k} .
 \end{align*}
-In both cases $\lambda \geq 1$, since $q_{k-1}$ and $q_k$ are at most $1$.
-Splitting at the point where the successor switches between augmented and manual execution,
-\[
-\lambda u - \min\{ \manualTime{k+1},\, u \} \;=\;
-\begin{cases}
-(\lambda - 1)\, u, & u \leq \manualTime{k+1}, \\[1ex]
-\lambda u - \manualTime{k+1}, & u > \manualTime{k+1},
-\end{cases}
-\]
-which is nondecreasing on each branch, with slopes $\lambda - 1 \geq 0$ and $\lambda > 0$, and continuous where the branches meet, both sides taking the value $(\lambda - 1)\manualTime{k+1}$ at $u = \manualTime{k+1}$.
-Hence $D$ is nondecreasing in $u$ and so nonincreasing in $q_{k+1}$, and $\mathcal{A}_1$ and $\mathcal{A}_2$ are upward closed in that coordinate.
-What $\lambda \geq 1$ says is that a chain running through the successor pays the same management cost $\AItime{k+1}$ that a standalone augmented successor pays, inflated by the failure risk of the steps ahead of it, so a cheaper endpoint helps the chain by at least as much as it helps the alternative.
+The one difference from the predecessor case is that $A$ and $B$ are no longer free of each other: a chain terminating at the successor pays that same management cost $\AItime{k+1}$, inflated by the failure risk of the steps ahead of it, so $A/B$ equals $1/q_k$ or $1/(q_{k-1} q_k)$ and is at least $1$.
+Only the case $A \geq B$ of the claim can arise, and $\mathcal{A}_1$ and $\mathcal{A}_2$ are upward closed in $q_{k+1}$, with the differences nonincreasing outright.
 
 Each $\mathcal{A}_j$ is therefore upward closed in each coordinate separately, hence upward closed in the coordinatewise order by Reduction~2, and $\mathcal{A}$ is upward closed by Reduction~1.
 \end{proof}

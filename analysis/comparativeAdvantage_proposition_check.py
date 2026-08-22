@@ -11,7 +11,9 @@ every contiguous arrangement of the block.
     (i)          each of those three chains is uniquely optimal for some neighbor
                  parameters, whatever step k's own parameters,
     (ii)         whether AI executes step k is monotone in the neighbors' success
-                 probabilities q_{k-1} and q_{k+1}.
+                 probabilities q_{k-1} and q_{k+1}, together with the reduction of
+                 both coordinates to a single functional form that the proof of
+                 (ii) runs on.
 
 Run:  python analysis/comparativeAdvantage_proposition_check.py
 """
@@ -164,6 +166,45 @@ def check_part_ii(n=400_000, perturbations=3):
 
 
 # --------------------------------------------------------------------------- #
+# part (ii), proof step: both coordinates are instances of one functional form
+# --------------------------------------------------------------------------- #
+def check_common_form(n=200_000):
+    """The proof of part (ii) reduces both coordinates to
+
+        D(q) = A/q - min{m, B/q} - c,
+
+    reading q as q_{k-1} for D_2, D_3 and as q_{k+1} for D_1, D_2.  Check the
+    four identifications, and that A >= B always holds in the successor case,
+    which is what confines it to the easy branch of the claim."""
+    def form(A, B, m, c, q):
+        return A / q - min(m, B / q) - c
+
+    bad = 0
+    for _ in range(n):
+        d = draw_block()
+        V = arrangement_costs(**d)
+        D1, D2, D3 = V[1] - V[0], V[2] - V[0], V[3] - V[0]
+        tMp, tAp, qp = d["tMp"], d["tAp"], d["qp"]
+        tMk, tAk, qk = d["tMk"], d["tAk"], d["qk"]
+        tMn, tAn, qn = d["tMn"], d["tAn"], d["qn"]
+        cp, cn = min(tMp, tAp / qp), min(tMn, tAn / qn)
+
+        cases = [                                     # (A, B, m, c, q), target
+            ((tAn / (qk * qn), tAp, tMp, tMk + cn,   qp), D2),   # q_(k-1), D_2
+            ((tAk / qk,        tAp, tMp, tMk,        qp), D3),   # q_(k-1), D_3
+            ((tAn / qk,        tAn, tMn, tMk,        qn), D1),   # q_(k+1), D_1
+            ((tAn / (qp * qk), tAn, tMn, cp + tMk,   qn), D2),   # q_(k+1), D_2
+        ]
+        for args, want in cases:
+            if abs(form(*args) - want) > 1e-9 * max(1.0, abs(want)):
+                bad += 1
+        if tAn / qk < tAn - 1e-12 or tAn / (qp * qk) < tAn - 1e-12:
+            bad += 1                                  # successor case needs A >= B
+    print(f"form  identifications failing: {bad} / {5 * n}")
+    return bad == 0
+
+
+# --------------------------------------------------------------------------- #
 # Example 1 of the paper
 # --------------------------------------------------------------------------- #
 def check_example():
@@ -177,5 +218,6 @@ def check_example():
 
 
 if __name__ == "__main__":
-    ok = all([check_example(), check_enumeration(), check_part_i(), check_part_ii()])
+    ok = all([check_example(), check_enumeration(), check_part_i(),
+              check_common_form(), check_part_ii()])
     print("\nAll claims of Proposition 1 verified." if ok else "\nFAILURES ABOVE.")
