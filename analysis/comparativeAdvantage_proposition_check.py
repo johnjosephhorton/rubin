@@ -146,7 +146,7 @@ def check_part_i(n=2_000):
 # part (ii): monotonicity in the neighbors' success probabilities
 # --------------------------------------------------------------------------- #
 def check_part_ii(n=400_000, perturbations=3):
-    base = viol_p = viol_n = 0
+    base = viol_p = viol_n = viol_k = 0
     for _ in range(n):
         d = draw_block()
         if not ai_executes(**d):
@@ -159,10 +159,17 @@ def check_part_ii(n=400_000, perturbations=3):
             un = dict(d, qn=random.uniform(d["qn"], 1.0))
             if not ai_executes(**un):
                 viol_n += 1
+            # not part of the proposition, which fixes step k's own parameters, but
+            # asserted in the text: a uniform rise in AI quality lifts q_k too, and
+            # that cannot return the step to the human either.
+            uk = dict(d, qk=random.uniform(d["qk"], 1.0))
+            if not ai_executes(**uk):
+                viol_k += 1
     print(f"(ii)  AI-executing base points: {base}")
     print(f"      violations raising q_(k-1): {viol_p}")
     print(f"      violations raising q_(k+1): {viol_n}")
-    return viol_p == 0 and viol_n == 0
+    print(f"      violations raising q_k:     {viol_k}")
+    return viol_p == 0 and viol_n == 0 and viol_k == 0
 
 
 # --------------------------------------------------------------------------- #
