@@ -85,14 +85,7 @@ Then:
 \end{proposition}
 
 Part~(i) says that the human's advantage on the step, however wide, is uninformative about the step's fate once its neighbors are allowed to vary.
-Only three chains can reach step $k$, since a chain covering it must be contiguous and a human-advantaged step is never worth augmenting on its own: $\{k,\, k+1\}$ and $\{k-1,\, k,\, k+1\}$, which automate it, and $\{k-1,\, k\}$, which augments it as the chain's endpoint.
-
-Proposition~\ref{prop:ca_local} is a \emph{local} statement, and deliberately so.
-It compares rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, so it does not by itself settle whether the overturning survives in the cost-minimizing arrangement of the entire production sequence, which is a property of the whole workflow at once.
-A window can lose its overturning to what lies outside it: if the steps before the window make it worthwhile to run a chain that terminates augmented at $k-1$, then step $k-1$ is spent as that chain's endpoint and can no longer anchor a chain running forward through step $k$, which is left with only the downstream comparison it fails.
-A window can also be handed one, since a chain formed for reasons entirely outside it, running from before $k-1$ to past $k+1$, sweeps step $k$ into automation whether or not any rearrangement of the window would.
-A global counterpart would have to quantify over the arrangements of all $m$ steps at once, and the conditions it delivered would be far more restrictive without saying more about the mechanism.
-What decides execution modes in the global optimum are nonetheless the forces isolated here, weighing a step's standalone cost against its marginal contribution to whatever chain its neighbors make available.
+Whether a step is executed by AI thus depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors: a step with identical characteristics can be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
 
 Figure~\ref{fig:ca_regions} shows the four arrangements at work.
 It holds every parameter of Example~\ref{ex:ca_predecessor} fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star; the human keeps the comparative advantage on Step~$k$ throughout, since the horizontal axis stops where augmenting the step in isolation would break even against its manual cost of $6$.
@@ -112,15 +105,20 @@ The order along that vertical path is not incidental: the pair $\{k-1, k\}$ must
 \end{minipage}
 \end{figure}
 
-Whether a step is executed by AI thus depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors: a step with identical characteristics can be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
+
 Part~(ii) of Proposition~\ref{prop:ca_local} is what turns this into something we can test.
 The primitives of the model, the management costs $\AItime{i}$ and the success probabilities $q_i$, are not observed, and part~(i) warns that knowing a step's own primitives would not pin down how the step is executed even if we did observe them.
-Part~(ii) supplies a restriction that survives this ignorance: whatever the unobserved parameters happen to be, an improvement in a neighbor's reliability moves the focal step's execution in one direction only.
-Its content is not that the effect is positive on average but that it never reverses, which is not obvious from the cost comparisons.
+Part~(ii) supplies a restriction that survives this ignorance: whatever the unobserved parameters happen to be, an improvement in a neighbor's reliability for AI moves the focal step's execution in one direction only.
+Its content is not that the effect is positive on average but that it never reverses, which is not obvious from part (i).
 Raising a neighbor's success probability cheapens the chains that would cover the focal step, but it also cheapens that neighbor's own standalone execution, so one might expect a sufficiently reliable predecessor to become worth augmenting by itself rather than anchoring a chain, or a sufficiently reliable successor to become cheap enough to verify separately, in either case leaving the focal step to be performed by hand.
 Part~(ii) rules this out: when the neighbor's cheapest standalone execution is the manual one its cost does not fall at all, and when it is the augmented one the standalone cost and the chain cost fall in the same proportion, so a better neighbor can only pull the step under AI.
 Neighbors' execution modes are themselves outcomes rather than primitives, but they are driven by the same success probabilities, so the model predicts a positive association between a step's AI execution and that of its neighbors, with the sign fixed in advance rather than read off the estimates.
 Section~\ref{sec:DWA_prediction} tests exactly this, comparing the same step across occupations whose local work contexts differ in how much of the surrounding work AI executes.
+
+It must be noted that Proposition~\ref{prop:ca_local} is a \emph{local} statement, and deliberately so.
+It compares rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, so it does not by itself settle whether the overturning survives in the global cost-minimizing arrangement of the entire production sequence, which is a property of the whole workflow at once.
+A global counterpart would have to quantify over the arrangements of all $m$ steps at once, and the conditions it delivered would be far more restrictive without saying more about the mechanism.
+What decides execution modes in the global optimum are nonetheless the forces isolated here, weighing a step's standalone cost against its marginal contribution to whatever chain its neighbors make available, and it that sense Proposition~\ref{prop:ca_local} explains all forces at play.
 
 
 \subsection{Workflow-level AI Exposure and the Fragmentation Index}
@@ -282,7 +280,7 @@ Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal b
 \end{figure}
 
 With $q_1 = \alpha^{11}$ and $q_2 = \alpha$, the firm chooses among five configurations, ranging from both steps manual to both chained.
-Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:nonmonotone} collects them, together with the cost of each, the marginal benefit of improving AI quality, and the range of $\alpha$ over which each is cost-minimizing.
+Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:theory_tables} collects them, together with the cost of each, the marginal benefit of improving AI quality, and the range of $\alpha$ over which each is cost-minimizing.
 Below $\alpha = 0.5$ the firm uses no AI; between $0.5$ and roughly $0.92$ it augments the easy step alone, which is what the top row of Figure~\ref{fig:ex_predecessor} showed at $\alpha = 0.9$; above that it chains the two.
 
 Panel~(b) shows that the marginal return to improving AI quality jumps up at each threshold where the optimal strategy switches, since a different strategy governs cost on either side of the threshold.

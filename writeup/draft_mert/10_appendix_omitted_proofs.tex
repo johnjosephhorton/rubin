@@ -2,8 +2,7 @@
 \label{app:omitted_proofs}
 
 This appendix collects the proofs omitted from the main body of the paper.
-Appendix~\ref{app:ca_local_proof} proves Proposition~\ref{prop:ca_local} of Section~\ref{sec:comparative_advantage}.
-Appendix~\ref{app:shortrun_proof} proves Proposition~\ref{prop:shortrun_dp} of Section~\ref{sec:extensions.computation}; the companion long-run result, Proposition~\ref{prop:totalcost_optimization_dp}, is proved in Appendix~\ref{app:jobdesign.longrun}.
+The subsections follow the order in which the results appear in the body: Appendix~\ref{app:ca_local_proof} proves Proposition~\ref{prop:ca_local} of Section~\ref{sec:comparative_advantage}, Appendix~\ref{app:fragmentation_proof} proves Proposition~\ref{prop:fragmentation} of Section~\ref{sec:fragmentation}, Appendix~\ref{app:nonmonotone} states and proves the non-monotonicity result behind Section~\ref{sec:nonlinear}, and Appendices~\ref{app:shortrun_proof} and~\ref{app:jobdesign.longrun} prove the two computational results, Propositions~\ref{prop:shortrun_dp} and~\ref{prop:totalcost_optimization_dp}, of Section~\ref{sec:extensions.computation}.
 
 \subsection{Proof of Proposition~\ref{prop:ca_local}}
 \label{app:ca_local_proof}
@@ -168,32 +167,8 @@ Only the case $A \geq B$ of the claim can arise, and $\mathcal{A}_1$ and $\mathc
 Each $\mathcal{A}_j$ is therefore upward closed in each coordinate separately, hence upward closed in the coordinatewise order by Reduction~2, and $\mathcal{A}$ is upward closed by Reduction~1.
 \end{proof}
 
-\subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
-\label{app:shortrun_proof}
-
-\begin{proof}
-We first note the following recursive formulation of the optimization problem.
-For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
-Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
-Note also that $C[m]$ is the cost of our desired optimal solution.
-
-We now show how to calculate $C[k]$ recursively.
-As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
-For $k \geq 1$, $C[k]$ is the lesser of
-\[ C[k-1] + \manualTime{k} \]
-and
-\[ \min_{\ell < k} \Biggl\{ C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
-\]
-In other words, we either complete step $k$ manually (at time $\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at expected time $\AItime{k}/\prod_{i=\ell+1}^k q_i$.
-In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
-This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
-For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
-
-Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
-Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
-\end{proof}
-
 \subsection{Proof of Proposition~\ref{prop:fragmentation}}
+\label{app:fragmentation_proof}
 
 Recall that Proposition~\ref{prop:fragmentation} relates the cost of the optimal AI deployment strategy for a step sequence to its fragmentation index.
 Intuitively, we expect a workflow in which automatable tasks are clustered together will benefit more from AI deployment than one where steps with high and low levels of automation susceptibility are interspersed.
@@ -395,39 +370,7 @@ Combining Lemmas~\ref{lem:FI.upper.bound}, \ref{lem:FI.lower.bound.4}, and~\ref{
 \subsection{Non-Monotone Gains from AI Improvements: Formal Statement and Proof}
 \label{app:nonmonotone}
 
-\begin{table}[!t]
-\centering
-\caption{Configurations, Costs, and Marginal Gains in Example~\ref{ex:nonmonotone}}
-\label{tab:nonmonotone_costs}
-\singlespacing
-\setlength{\tabcolsep}{10pt}
-\begin{tabular}{lccc}
-\toprule
-Configuration & Time cost ($C$) & $-\mathrm{d}C/\mathrm{d}\alpha$ & Optimal for \\
-\midrule
-Both steps manual & $\manualTime{1} + \manualTime{2} = 14$ & $0$ & $\alpha \leq 0.50$ \\
-\midrule
-Step 1 augmented & $\AItime{1}/q_1 + \manualTime{2} = 3.5\alpha^{-11} + 8$ & $38.5/\alpha^{12}$ & never \\
-\midrule
-Step 2 augmented & $\manualTime{1} + \AItime{2}/q_2 = 6 + 4/\alpha$ & $4/\alpha^{2}$ & $0.50 \leq \alpha \lesssim 0.92$ \\
-\midrule
-Both steps augmented & $\AItime{1}/q_1 + \AItime{2}/q_2 = 3.5\alpha^{-11} + 4/\alpha$ & $38.5/\alpha^{12} + 4/\alpha^{2}$ & never \\
-\midrule
-Steps 1--2 chained & $\AItime{2}/(q_1 q_2) = 4\alpha^{-12}$ & $48/\alpha^{13}$ & $\alpha \gtrsim 0.92$ \\
-\bottomrule
-\end{tabular}
-\par\vspace{\fignotesskip}
-\begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: The two-step workflow of Example~\ref{ex:nonmonotone}, the AI-hard and AI-easy steps of Example~\ref{ex:ca_predecessor}, in which $\manualTime{1}=6$, $\manualTime{2}=8$, $\AItime{1}=3.5$, $\AItime{2}=4$, and the AI succeeds at step $i$ with probability $q_i = \alpha^{d_i}$ for $d_1 = 11$ and $d_2 = 1$, so that $q_1 = \alpha^{11}$ and $q_2 = \alpha$.
-Costs follow from the task time costs of Section~\ref{sec:model.tasks}, and $-\mathrm{d}C/\mathrm{d}\alpha$ is the marginal benefit of improving AI quality.
-The last column gives the range of $\alpha$ over which each configuration is cost-minimizing.
-Neither configuration in which step~1 is augmented ever minimizes cost.
-Augmenting it on its own costs $3.5\alpha^{-11}$, which is prohibitive while AI is unreliable, and by the time AI is reliable enough for that to be affordable, folding step~1 into a chain is cheaper still: an automated step is never prompted or verified on its own, so its management cost is never paid at all.}
-\end{spacing}
-\end{minipage}
-\end{table}
-
+This appendix states and proves the result that Example~\ref{ex:nonmonotone} of Section~\ref{sec:nonlinear} illustrates; Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:theory_tables} reports that example's configurations and costs.
 
 To make the argument of Section~\ref{sec:nonlinear} precise, consider a workflow with any number of steps and chains.
 For any AI strategy $\T$, total cost is a fixed manual term plus a polynomial in $1/\alpha$,
@@ -489,4 +432,118 @@ g_\T(\alpha_0) \;=\; -C_\T'(\alpha_0)
 -C_{\T'}'(\alpha_0) \;=\; g_{\T'}(\alpha_0).
 \]
 Since $g^*(\alpha)$ coincides with $g_\T(\alpha)$ just below $\alpha_0$ and with $g_{\T'}(\alpha)$ just above, the firm's marginal benefit function $g^*(\alpha)$ jumps upward as $\alpha$ crosses $\alpha_0$.
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
+\label{app:shortrun_proof}
+
+\begin{proof}
+We first note the following recursive formulation of the optimization problem.
+For all $k \leq m$, let $C[k]$ denote the minimum cost of completing a hypothetical workflow that only includes steps $1$ through $k$.
+Note that, because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually.
+Note also that $C[m]$ is the cost of our desired optimal solution.
+
+We now show how to calculate $C[k]$ recursively.
+As a base case we have $C[0] = 0$, as the empty set of steps requires no work to complete.
+For $k \geq 1$, $C[k]$ is the lesser of
+\[ C[k-1] + \manualTime{k} \]
+and
+\[ \min_{\ell < k} \Biggl\{ C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^k q_i} \Biggr\}.
+\]
+In other words, we either complete step $k$ manually (at time $\manualTime{k}$, separately optimizing over steps $1$ through $k-1$) or we augment step $k$, at expected time $\AItime{k}/\prod_{i=\ell+1}^k q_i$.
+In the latter case, we then optimize over the length of the AI chain that ends with the newly-augmented step $k$.
+This could be a singleton chain with no automation (corresponding to $\ell = k-1$), or a longer chain that automates one or more steps before step $k$ (corresponding to a choice of $\ell < k-1$).
+For any such choice of $\ell$, we then separately optimize the production strategy for tasks $1$ through $\ell$.
+
+Using this formulation, given the values $(C[0], \dotsc, C[k-1])$, we can calculate $C[k]$ in time $O(k)$ by considering each potential choice of $\ell$.
+Doing so for each $k = 1, 2, \dotsc, m$ yields the value of $C[m]$ (and the corresponding optimal AI strategy) in total time $O(m^2)$.
+\end{proof}
+
+\subsection{Proof of Proposition~\ref{prop:totalcost_optimization_dp}}
+\label{app:jobdesign.longrun}
+
+In the long-run optimization problem, the firm anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
+This contrasts with the AI deployment problem of Section~\ref{sec:shortrun.production}, which minimizes the time production takes while holding the assignment of steps to a single worker fixed. 
+The long-run problem additionally optimizes how tasks are bundled into jobs.
+
+The firm's long-run problem is \eqref{eq:totalcost_with_handoff} of Section~\ref{sec:longrun.production}: it designs both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs, where the choice of $\T$ determines the time and skill requirements of each task and, given $\T$, the choice of $\mathcal{J}$ determines worker wage rates and the time needed per unit of output, including hand-off costs.
+
+What makes this harder than the short-run problem of Proposition~\ref{prop:shortrun_dp} is that steps must be assigned to tasks and the resulting tasks to workers at the same time, with the hand-off costs incurred at the boundary of jobs counted along the way.
+Proposition~\ref{prop:totalcost_optimization_dp} of Section~\ref{sec:extensions.computation} states that the problem nonetheless admits a polynomial-time approximation scheme.
+We prove it here.
+
+\begin{proof}
+We first state the cost minimization problem as a recursive problem and then use dynamic programming to approximate the optimal solution.
+
+\emph{Recursive formulation.}
+Consider a workflow with $m$ steps $\mathcal{S} = \{s_1, s_2, \ldots, s_m\}$.
+Because the wage bill of a job multiplies its total skill by its total time, the running value of either alone never reveals how an added task changes it, so the program carries both and builds the job design up one step at a time.
+For $0 \leq i \leq m$, let $V(i)$ denote the minimum cost required to complete steps $1$ through $i$ using one or more jobs, including any hand-off costs to a subsequent worker.
+Note then that $V(m)$ is the solution to the desired optimization problem, recalling that the hand-off time for the final job will always be $0$.
+Note also that it is implicitly assumed in the definition of $V(i)$ that it optimizes over job designs for steps $1$ through $i$ in which the final job terminates after the completion of step $i$.
+
+For job designs whose final job does not necessarily terminate after step $i$ but rather continues onward to subsequent steps, we need an auxiliary function.
+For $0 \leq i \leq m$ and skill and time levels $\skillcost{}$ and $\timecost{}$, let $R(i,\; \skillcost{},\; \timecost{})$ denote the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating work, whom we call the ``active worker,'' has already been assigned tasks with total skill cost $\skillcost{}$ and total time cost $\timecost{}$, where $\timecost{}$ also includes any hand-off cost for the active worker.
+The minimum is taken over AI deployment strategies and job designs together: the recursion may either expand the active worker's job or close it and assign the remaining steps to other workers.
+Throughout, step $i$ is the highest-indexed step that has not yet been assigned.
+In the base case no steps remain to assign, the active worker's totals are exactly $(\skillcost{}, \timecost{})$, and their wage bill is the product of the two,
+\[ R(0,\; \skillcost{},\; \timecost{}) = \skillcost{}\,\timecost{}. \]
+
+The two functions are linked, for all $0 \leq i \leq m$, by
+\[ V(i) = R(i,\; 0,\; \handofftime{i}). \]
+This is because, in $V(i)$, all job designs must end with a job that completes at step $i$ and hands off to the following worker.
+Incurring this hand-off cost is equivalent to assigning the active worker an additional task with zero skill requirement and a time cost of $\handofftime{i}$ right after step $i$ itself, which is exactly the scenario $R(i,\; 0,\; \handofftime{i})$ represents.
+
+For each $i \geq 1$, the minimum cost function $R(i,\; \skillcost{},\; \timecost{})$ satisfies the recursive relation
+\begin{align*}
+R(i,\; \skillcost{},\; \timecost{}) = \min\Biggl\{
+& \ \underbrace{\skillcost{}\,\timecost{} + V(i)}_{\text{job closed}}, \ \underbrace{R\bigl(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i}\bigr)}_{\text{Step $i$ is manual}}, \ \underbrace{\min_{0 \le r < i}\ R\!\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)}_{\text{Step $i$ optimally chained}}
+\Biggr\}.
+\end{align*}
+In words, when assigning step $i$, the three options the firm considers are:
+\begin{itemize}
+    \item \textbf{Job closure.}
+    The term $\skillcost{}\,\timecost{} \; + \; V(i)$ corresponds to not adding any further steps to the job of the active worker.
+    All steps $1$ through $i$ will be completed by other workers.
+    The active worker's total cost is then $\skillcost{}\,\timecost{}$, and $V(i)$ is the total cost of completing steps $1$ through $i$ (including hand-off costs to the active worker).
+    This option is the margin new to the long run.
+
+    \item \textbf{Manual step.}
+    The term $R(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i})$ corresponds to designating step $i$ for manual completion, and adding the corresponding (singleton) task.
+    The manual execution costs $(\manualSkill{i}, \manualTime{i})$ of step $i$ are added to the accumulated costs of tasks already assigned to the active worker, extending their job to include step $i$ as well, and steps $1$ through $i-1$ are left to be assigned optimally.
+
+    \item \textbf{AI chain.}
+    The term $\min_{0 \le r < i} \ R\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{s=r+1}^{i} q_s}\right)$ corresponds to creating an AI chain task for steps $r+1$ through $i$, with step $i$ being augmented and steps $r+1$ through $i-1$ automated, and assigning the resulting task to the job of the active worker.
+    Step $i$ is thus chained with zero or more preceding (automated) steps, and the associated AI management costs are added to the active worker's skill and time costs.
+    The cut $r$ is the highest-indexed step that is not added to this AI chain, which can be any value between $0$ and $i-1$.
+\end{itemize}
+Note that in evaluating the AI chain option, step $i$ can only be augmented (rather than automated), as each step of the recursion adds a full AI chain to the active worker's job; AI strategies in which step $i$ is automated are considered when performing the calculations $R(r,\; \skillcost{},\; \timecost{})$ with $r > i$.
+The cost of the optimal joint AI strategy and job design for the full sequence of $m$ steps is then $V(m) = R(m,\; 0,\; 0)$.
+
+\emph{Discretization and Computation Time.}
+We solve the recursion by dynamic programming, filling in the values of $R(i,\; \skillcost{},\; \timecost{})$ for all $i$, $\skillcost{}$, and $\timecost{}$.
+Since $\skillcost{}$ and $\timecost{}$ take continuous values, we discretize both to powers of $(1+\epsilon)$, where $\epsilon > 0$ is an arbitrarily small error term.
+
+Suppose all skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.
+Completing every step manually with a separate worker incurs, for each step, a time and hand-off cost of at most $B$ each and a skill cost of at most $B$, for a total cost of at most $2B^2$ per step, so no solution containing a job with total cost above $2mB^2$ need be considered.
+Since skill costs combine additively and every non-zero skill or time cost is at least $1/B$, a job's total skill lies in $[1/B,\, mB]$, and its total time is at most $2mB^2/(1/B) = 2mB^3$.
+It therefore suffices to tabulate skill costs in $[1/B,\, mB]$ and time costs in $[1/B,\, 2mB^3]$.
+
+Each of these ranges contains $O\bigl(\epsilon^{-1}\log(mB)\bigr)$ powers of $(1+\epsilon)$.
+The table is indexed by the step $i$, which takes $m+1$ values, together with the discretized skill and time levels, each taking $O\bigl(\epsilon^{-1}\log(mB)\bigr)$ values, so it holds
+\[
+(m+1)\,\cdot\,O\bigl(\epsilon^{-1}\log(mB)\bigr)\,\cdot\,O\bigl(\epsilon^{-1}\log(mB)\bigr) \;=\; O\bigl(m\,\epsilon^{-2}\log^2(mB)\bigr)
+\]
+entries in total.
+Each entry is filled in $O(m)$ time by taking the minimum over the job-closure option, the manual option, and the at most $m$ chain cuts $r$ in the recursion above, so filling the whole table takes
+\[
+O\bigl(m\,\epsilon^{-2}\log^2(mB)\bigr)\,\cdot\,O(m) \;=\; O\bigl(m^2\,\epsilon^{-2}\log^2(mB)\bigr)
+\]
+time.
+Recording which option attains each minimum lets the firm read the optimal AI strategy and job design off $V(m) = R(m,\; 0,\; 0)$.
+
+It remains to bound the discretization error.
+Skill and time costs accumulate additively along the manual and chaining options, so rounding the running totals down to powers of $(1+\epsilon)$ maintains a multiplicative error of at most $(1+\epsilon)$ in each coordinate.
+Each job's wage bill is formed by the single multiplication $\skillcost{}\,\timecost{}$ at the point the job-closure option closes it, so it is computed to within a factor of $(1+\epsilon)^2$.
+Rescaling $\epsilon$ by a constant therefore yields the claimed $(1+\epsilon)$ approximation.
 \end{proof}
