@@ -72,38 +72,33 @@ Step~1, on which the human holds close to a two-fold advantage in isolation, is 
 
 The example in fact contains both routes by which a step can be automated.
 Chaining Steps~1--2, priced at $14.81$ and rejected, would have automated Step~1 from downstream, while adding Step~0 automates it from upstream at $15.60$.
-Proposition~\ref{prop:ca_local} collects these configurations and records what the firm's choice among them does and does not depend on.
+Proposition~\ref{prop:ca_local} records what the firm's choice among the available arrangements does and does not depend on.
 
 \begin{proposition}[Local Overturning of Comparative Advantage]
 \label{prop:ca_local}
 Let the human hold the comparative advantage on step $k$, so that $\manualTime{k} < \AItime{k}/q_k$, hold the execution of the workflow outside the block $\{k-1,\, k,\, k+1\}$ fixed, and let no chain cross the block's boundary.\footnote{The proposition is in this sense a \emph{local} statement: it compares rearrangements of a step and its immediate neighbors while holding the AI strategy on the rest of the workflow fixed, and so it does not by itself determine whether the overturning survives in the cost-minimizing arrangement of the entire production sequence, which depends on the whole workflow at once. The forces that decide execution modes in that optimum are nonetheless the ones isolated here.} Then:
 \begin{enumerate}
-\item[(i)] Step $k$ is never augmented on its own. AI executes it only inside a chain covering at least one of its neighbors, hence in exactly one of three configurations: $\{k,\, k+1\}$ and $\{k-1,\, k,\, k+1\}$, which \emph{automate} step $k$, and $\{k-1,\, k\}$, which \emph{augments} it as the chain's endpoint.
-\item[(ii)] Whatever step $k$'s own parameters, and however wide the human's advantage on it, each of the three configurations is uniquely cost-minimizing on a nonempty open set of neighbor parameters. Comparative advantage on a step therefore places no restriction on the mode in which that step is executed.
-\item[(iii)] Fix step $k$'s own parameters. If AI executes step $k$ at neighbor success probabilities $(q_{k-1},\, q_{k+1})$, then it does so at every $(q'_{k-1},\, q'_{k+1})$ with $q'_{k-1} \geq q_{k-1}$ and $q'_{k+1} \geq q_{k+1}$.
+\item[(i)] Whatever step $k$'s own parameters, and however wide the human's advantage on it, there is a nonempty open set of neighbor parameters at which the cost-minimizing arrangement has AI execute step $k$, and the same holds separately for each chain through which AI can reach the step. Comparative advantage on a step therefore places no restriction on the mode in which that step is executed.
+\item[(ii)] Fix step $k$'s own parameters. If AI executes step $k$ at neighbor success probabilities $(q_{k-1},\, q_{k+1})$, then it does so at every $(q'_{k-1},\, q'_{k+1})$ with $q'_{k-1} \geq q_{k-1}$ and $q'_{k+1} \geq q_{k+1}$.
 \end{enumerate}
 \end{proposition}
 
 % ===== TEMP: proof inlined for review; move back to 10_appendix_omitted_proofs.tex =====
 Throughout, write $\minTime{j} = \min\left\{\manualTime{j}, \frac{\AItime{j}}{q_j}\right\}$ for the cheapest way of executing step $j$ on its own, whether manually or as a standalone augmented step, and take $q_{k-1}, q_k, q_{k+1} \in (0,1)$.
 Because chains are contiguous and none crosses the boundary of the block $\{k-1,\, k,\, k+1\}$, an arrangement of the block is a partition of it into consecutive runs, each run executed either as a single step at cost $\minTime{j}$ or as an AI chain augmented at its last step $r$, at cost $\AItime{r}/\prod_i q_i$ taken over the run's steps.
-There are four such partitions.
-Using the hypothesis $\manualTime{k} < \AItime{k}/q_k$ to price a singleton $\{k\}$ at $\manualTime{k}$, their costs are
+Before comparing them, note which of these arrangements can have AI execute step $k$ at all.
+Executed as a singleton, step $k$ costs $\minTime{k} = \manualTime{k}$, since $\manualTime{k} < \AItime{k}/q_k$ by hypothesis, so augmenting it on its own is strictly dominated by performing it manually and never occurs in an optimum.
+AI therefore executes step $k$ only if step $k$ belongs to a chain of length at least two, and since chains are contiguous and confined to the block, that chain is $\{k,\, k+1\}$, $\{k-1,\, k,\, k+1\}$, or $\{k-1,\, k\}$: in the first two, step $k$ is not the chain's last step, so it is never prompted or verified and is automated, while in the third it is the last step, hence augmented.
+Pricing a singleton $\{k\}$ at $\manualTime{k}$ accordingly, the four partitions cost
 \begin{align*}
 V_0 &= \minTime{k-1} + \manualTime{k} + \minTime{k+1}, && \text{(no chain covers step $k$)} \\
 V_1 &= \minTime{k-1} + \frac{\AItime{k+1}}{q_k\, q_{k+1}}, && \text{(chain $\{k,\, k+1\}$)} \\
 V_2 &= \frac{\AItime{k+1}}{q_{k-1}\, q_k\, q_{k+1}}, && \text{(chain $\{k-1,\, k,\, k+1\}$)} \\
 V_3 &= \frac{\AItime{k}}{q_{k-1}\, q_k} + \minTime{k+1}. && \text{(chain $\{k-1,\, k\}$)}
 \end{align*}
-We say that AI executes step $k$ when $\min\{V_1, V_2, V_3\} < V_0$, so that ties are resolved in favor of manual execution.
+AI executes step $k$ exactly when $\min\{V_1, V_2, V_3\} < V_0$, ties being resolved in favor of manual execution.
 
 \begin{proof}[Proof of part (i)]
-If step $k$ is executed as a singleton, its cost is $\minTime{k} = \manualTime{k}$, since $\manualTime{k} < \AItime{k}/q_k$ by hypothesis, so augmenting it on its own is strictly dominated by performing it manually.
-AI therefore executes step $k$ only if step $k$ belongs to a chain of length at least two, and since chains are contiguous and confined to the block, that chain is $\{k,\, k+1\}$, $\{k-1,\, k,\, k+1\}$, or $\{k-1,\, k\}$.
-In the first two, step $k$ is not the chain's last step, so it is never prompted or verified and is automated; in the third it is the last step, hence augmented.
-\end{proof}
-
-\begin{proof}[Proof of part (ii)]
 Fix $(\manualTime{k}, \AItime{k}, q_k)$ with $\manualTime{k} < \AItime{k}/q_k$ and fix $q_{k-1}, q_{k+1} \in (0,1)$.
 Restrict attention to the two-parameter family of neighbor costs given by $\manualTime{k-1} = \AItime{k-1} = \mu > 0$ and $\manualTime{k+1} = 1$, $\AItime{k+1} = \tau > 0$, so that $\minTime{k-1} = \mu$ and $\minTime{k+1} = \min\{1, \tau/q_{k+1}\}$.
 Since $V_0, \dotsc, V_3$ are continuous in all of the neighbor parameters, it suffices to exhibit, for each configuration, values of $(\mu, \tau)$ at which its cost is strictly below the other three; strictness then extends the conclusion to an open neighborhood.
@@ -122,10 +117,10 @@ Then $V_2 = \tau/(q_{k-1} q_k q_{k+1}) \to 0$, while $V_0 > 1$, $V_1 > 1$, and $
 Set $\mu = \AItime{k}/(q_{k-1} q_k)$ and take $\tau > \max\{q_{k+1},\ q_k q_{k+1},\ q_{k-1} q_k q_{k+1} (\mu+1)\}$, so that $\minTime{k+1} = 1$ and $V_3 = \mu + 1$.
 Then $V_3 < V_0 = \mu + \manualTime{k} + 1$; $V_3 < V_1 = \mu + \tau/(q_k q_{k+1})$, since $\tau > q_k q_{k+1}$; and $V_3 < V_2 = \tau/(q_{k-1} q_k q_{k+1})$ by the third bound on $\tau$.
 
-The margin of the human's advantage on step $k$, $\AItime{k}/q_k - \manualTime{k}$, was unrestricted throughout, which gives the second claim of part~(ii).
+The margin of the human's advantage on step $k$, $\AItime{k}/q_k - \manualTime{k}$, was unrestricted throughout, which gives the second claim of part~(i).
 \end{proof}
 
-\begin{proof}[Proof of part (iii)]
+\begin{proof}[Proof of part (ii)]
 Let $g_j = V_j - V_0$ for $j = 1, 2, 3$, so that AI executes step $k$ exactly when $\min\{g_1, g_2, g_3\} < 0$.
 Since the set on which AI executes step $k$ is the union of the sets $\{g_j < 0\}$, and a union of upward-closed sets is upward closed, it suffices to show that each $\{g_j < 0\}$ is upward closed in $q_{k-1}$ and in $q_{k+1}$.
 Writing the three differences out,
@@ -154,13 +149,13 @@ The map $u \mapsto \lambda u - \min\{\manualTime{k+1}, u\}$ is nondecreasing, si
 \end{proof}
 % ===== TEMP: end of inlined proof =====
 
-Part~(i) is the sense in which chaining, rather than augmentation, is what overturns comparative advantage: AI reaches the step only through a neighbor, either as a link inside a chain that runs past it, which automates it, or as the endpoint of a chain that stops there, which augments it under human supervision.
-Part~(ii) says that the human's advantage on the step, however wide, is uninformative about the step's fate once its neighbors are allowed to vary.
-Part~(iii) turns this into a comparative static on observables: holding a step's own AI suitability fixed, making its neighbors more suitable for AI can move the step into AI execution but never out of it.
+Part~(i) says that the human's advantage on the step, however wide, is uninformative about the step's fate once its neighbors are allowed to vary.
+Only three chains can reach step $k$, since a chain covering it must be contiguous and a human-advantaged step is never worth augmenting on its own: $\{k,\, k+1\}$ and $\{k-1,\, k,\, k+1\}$, which automate it, and $\{k-1,\, k\}$, which augments it as the chain's endpoint.
+Part~(ii) turns this into a comparative static on observables: holding a step's own AI suitability fixed, making its neighbors more suitable for AI can move the step into AI execution but never out of it.
 
 Figure~\ref{fig:ca_regions} shows the three configurations at work.
 It holds every parameter of Example~\ref{ex:ca_predecessor} fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star; the human keeps the comparative advantage on Step~$k$ throughout, since the horizontal axis stops where augmenting the step in isolation would break even against its manual cost of $6$.
-Step~$k$ is nonetheless performed manually only in the lower left, and, as part~(iii) requires, improving AI on either the predecessor or the step itself never returns execution there: moving right crosses into case~(i) at $q_k \approx 0.43$, where chaining Step~$k$ with Step~$k+1$ becomes cheaper than the manual work it displaces, while moving up leaves Step~$k$ untouched and reaches case~(ii) by way of the band in which case~(iii) governs.\footnote{The orange band is not a general feature. When managing AI at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
+Step~$k$ is nonetheless performed manually only in the lower left, and, as part~(ii) requires, improving AI on either the predecessor or the step itself never returns execution there: moving right forms the chain $\{k,\, k+1\}$ at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces, while moving up leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band is not a general feature. When managing AI at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
 The order along that vertical path is not incidental: the pair $\{k-1, k\}$ must first become reliable enough to be worth chaining at all, and only once the risk accumulated upstream is small is it worth carrying the chain on to the cheap endpoint at Step~$k+1$.
 
 \begin{figure}[!t]
@@ -171,13 +166,13 @@ The order along that vertical path is not incidental: the pair $\{k-1, k\}$ must
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: The figure fixes every parameter of Example~\ref{ex:ca_predecessor} except the success probabilities $q_{k-1}$ and $q_k$, and shades the treatment Step~$k$ receives in the cost-minimizing arrangement of the block $\{k-1,\, k,\, k+1\}$, with Steps~$k-1$, $k$, and $k+1$ carrying the cost parameters of Steps~0, 1, and~2 of the example. The human holds the comparative advantage on Step~$k$ throughout the plotted range, which ends at $q_k = \AItime{k}/\manualTime{k}$, where AI would break even on the step in isolation. The labelled cases are those of Proposition~\ref{prop:ca_local}, and the star marks the parameters of Example~\ref{ex:ca_predecessor}.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: The figure fixes every parameter of Example~\ref{ex:ca_predecessor} except the success probabilities $q_{k-1}$ and $q_k$, and shades the treatment Step~$k$ receives in the cost-minimizing arrangement of the block $\{k-1,\, k,\, k+1\}$, with Steps~$k-1$, $k$, and $k+1$ carrying the cost parameters of Steps~0, 1, and~2 of the example. The human holds the comparative advantage on Step~$k$ throughout the plotted range, which ends at $q_k = \AItime{k}/\manualTime{k}$, where AI would break even on the step in isolation. Each shaded region is labelled by the chain the firm forms in it, and the star marks the parameters of Example~\ref{ex:ca_predecessor}.}
 \end{spacing}
 \end{minipage}
 \end{figure}
 
 Whether a step is executed by AI thus depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors: a step with identical characteristics can be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
-This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction}, taking part~(iii) of Proposition~\ref{prop:ca_local} to the data.
+This is precisely the variation we exploit in Section~\ref{sec:DWA_prediction}, taking part~(ii) of Proposition~\ref{prop:ca_local} to the data.
 
 
 \subsection{Workflow-level AI Exposure and the Fragmentation Index}

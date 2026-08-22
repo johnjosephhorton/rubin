@@ -2,14 +2,16 @@
 
 Companion to comparativeAdvantage_regions_plot.ipynb, which draws the region map
 for the same three-step block {k-1, k, k+1}.  Nothing here produces a figure; the
-script only verifies the three claims of the proposition against brute-force
-enumeration of every contiguous arrangement of the block.
+script only verifies the claims of the proposition against brute-force enumeration of
+every contiguous arrangement of the block.
 
-    (i)   a human-advantaged step k is never augmented on its own,
-    (ii)  each of the three chained configurations is uniquely optimal for some
-          neighbor parameters, whatever step k's own parameters,
-    (iii) whether AI executes step k is monotone in the neighbors' success
-          probabilities q_{k-1} and q_{k+1}.
+    enumeration  a human-advantaged step k is never augmented on its own, so AI
+                 reaches it only through one of three chains (a step of the proof,
+                 not a part of the statement),
+    (i)          each of those three chains is uniquely optimal for some neighbor
+                 parameters, whatever step k's own parameters,
+    (ii)         whether AI executes step k is monotone in the neighbors' success
+                 probabilities q_{k-1} and q_{k+1}.
 
 Run:  python analysis/comparativeAdvantage_proposition_check.py
 """
@@ -88,9 +90,9 @@ def draw_block():
 
 
 # --------------------------------------------------------------------------- #
-# part (i): step k is never augmented on its own
+# proof step: step k is never augmented on its own
 # --------------------------------------------------------------------------- #
-def check_part_i(n=200_000):
+def check_enumeration(n=200_000):
     bad = 0
     for _ in range(n):
         d = draw_block()
@@ -100,14 +102,14 @@ def check_part_i(n=200_000):
                 tM, tA, q = d["tMk"], d["tAk"], d["qk"]
                 if tA / q < tM - 1e-12:                # would be augmented alone
                     bad += 1
-    print(f"(i)   singleton step k augmented in an optimum: {bad} / {n}")
+    print(f"enum  singleton step k augmented in an optimum: {bad} / {n}")
     return bad == 0
 
 
 # --------------------------------------------------------------------------- #
-# part (ii): each configuration is uniquely optimal somewhere
+# part (i): each chain is uniquely optimal somewhere
 # --------------------------------------------------------------------------- #
-def check_part_ii(n=2_000):
+def check_part_i(n=2_000):
     """The three constructions of the proof, each with neighbor costs
     t^M_{k-1} = t^A_{k-1} = mu, t^M_{k+1} = 1, t^A_{k+1} = tau."""
     label = {0: "manual", 1: "{k,k+1}", 2: "{k-1,k,k+1}", 3: "{k-1,k}"}
@@ -134,14 +136,14 @@ def check_part_ii(n=2_000):
             if j != want or abs(brute_force(**kw)[0] - V[j]) > 1e-9:
                 bad += 1
                 print(f"      MISMATCH: wanted {label[want]}, got {label[j]}, {kw}")
-    print(f"(ii)  constructions failing to be the unique optimum: {bad} / {3 * n}")
+    print(f"(i)   constructions failing to be the unique optimum: {bad} / {3 * n}")
     return bad == 0
 
 
 # --------------------------------------------------------------------------- #
-# part (iii): monotonicity in the neighbors' success probabilities
+# part (ii): monotonicity in the neighbors' success probabilities
 # --------------------------------------------------------------------------- #
-def check_part_iii(n=400_000, perturbations=3):
+def check_part_ii(n=400_000, perturbations=3):
     base = viol_p = viol_n = 0
     for _ in range(n):
         d = draw_block()
@@ -155,7 +157,7 @@ def check_part_iii(n=400_000, perturbations=3):
             un = dict(d, qn=random.uniform(d["qn"], 1.0))
             if not ai_executes(**un):
                 viol_n += 1
-    print(f"(iii) AI-executing base points: {base}")
+    print(f"(ii)  AI-executing base points: {base}")
     print(f"      violations raising q_(k-1): {viol_p}")
     print(f"      violations raising q_(k+1): {viol_n}")
     return viol_p == 0 and viol_n == 0
@@ -175,5 +177,5 @@ def check_example():
 
 
 if __name__ == "__main__":
-    ok = all([check_example(), check_part_i(), check_part_ii(), check_part_iii()])
+    ok = all([check_example(), check_enumeration(), check_part_i(), check_part_ii()])
     print("\nAll claims of Proposition 1 verified." if ok else "\nFAILURES ABOVE.")
