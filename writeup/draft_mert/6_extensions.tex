@@ -51,7 +51,7 @@ Both the short- and long-run problems can therefore be formulated recursively an
 The two optimization problems differ only in how much a settled stretch has to remember about itself.
 In the short run its time cost is all that matters, and the optimum is reached exactly.
 In the long run it must also carry the skill and the time of the worker whose job is still not terminated, and exactness gives way to an approximation the firm can make as tight as it likes.
-We take the two horizons in turn and defer the proofs to the appendix.
+We take the two horizons in turn, collecting the proofs of both results in Appendix~\ref{app:omitted_proofs}.
 
 \paragraph{The Short Run Optimization.}
 With the job and its wage fixed, the firm minimizes total time \eqref{eq:totalcost_shortterm}.
@@ -69,7 +69,6 @@ Proposition~\ref{prop:shortrun_dp} formalizes this.
 \label{prop:shortrun_dp}
 Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
-See Appendix~\ref{app:shortrun_proof} for the proof.
 
 \paragraph{The Long Run Optimization.}
 The firm now chooses job boundaries as well, and \eqref{eq:totalcost_with_handoff} multiplies each job's total skill by its total time.
@@ -91,7 +90,6 @@ Proposition~\ref{prop:totalcost_optimization_dp} formalizes the resulting approx
 Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.
 For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
-See Appendix~\ref{app:jobdesign.longrun} for the details and proof.
 
 Together these results also suggest a use for the framework beyond what we do here.
 Paired with detailed measurement of the time and skill content of individual tasks, the algorithms above could be run on real workflows to ask how a given advance in AI capability would redraw them.
