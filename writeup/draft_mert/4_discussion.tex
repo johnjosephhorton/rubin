@@ -87,9 +87,11 @@ Then:
 % ===== TEMP: proof inlined for review; move back to 10_appendix_omitted_proofs.tex =====
 Throughout, write $\minTime{j} = \min\left\{\manualTime{j}, \frac{\AItime{j}}{q_j}\right\}$ for the cheapest way of executing step $j$ on its own, whether manually or as a standalone augmented step, and take $q_{k-1}, q_k, q_{k+1} \in (0,1)$.
 Because chains are contiguous and none crosses the boundary of the block $\{k-1,\, k,\, k+1\}$, an arrangement of the block is a partition of it into consecutive runs, each run executed either as a single step at cost $\minTime{j}$ or as an AI chain augmented at its last step $r$, at cost $\AItime{r}/\prod_i q_i$ taken over the run's steps.
+
 Before comparing them, note which of these arrangements can have AI execute step $k$ at all.
 Executed as a singleton, step $k$ costs $\minTime{k} = \manualTime{k}$, since $\manualTime{k} < \AItime{k}/q_k$ by hypothesis, so augmenting it on its own is strictly dominated by performing it manually and never occurs in an optimum.
 AI therefore executes step $k$ only if step $k$ belongs to a chain of length at least two, and since chains are contiguous and confined to the block, that chain is $\{k,\, k+1\}$, $\{k-1,\, k,\, k+1\}$, or $\{k-1,\, k\}$: in the first two, step $k$ is not the chain's last step, so it is never prompted or verified and is automated, while in the third it is the last step, hence augmented.
+
 Pricing a singleton $\{k\}$ at $\manualTime{k}$ accordingly, the four partitions cost
 \begin{align*}
 V_0 &= \minTime{k-1} + \manualTime{k} + \minTime{k+1}, && \text{(no chain covers step $k$)} \\
@@ -105,19 +107,37 @@ Restrict attention to the two-parameter family of neighbor costs given by $\manu
 Since $V_0, \dotsc, V_3$ are continuous in all of the neighbor parameters, it suffices to exhibit, for each configuration, values of $(\mu, \tau)$ at which its cost is strictly below the other three; strictness then extends the conclusion to an open neighborhood.
 
 \begin{itemize}
-\item \emph{Configuration $\{k,\, k+1\}$.}
-Set $\tau = q_k\, q_{k+1} \manualTime{k}/2$, so that $V_1 = \mu + \manualTime{k}/2$, and let
+\item \emph{Configuration $\{k,\, k+1\}$, which automates step $k$.}
+Set $\tau = q_k\, q_{k+1} \manualTime{k}/2$, so that $V_1 = \mu + \manualTime{k}/2$, and take
 \[ 0 < \mu < \min\left\{ \frac{\manualTime{k}}{2}\cdot\frac{1-q_{k-1}}{q_{k-1}},\ \frac{\AItime{k}}{q_{k-1}\, q_k} - \frac{\manualTime{k}}{2} \right\}, \]
 a nonempty interval because $q_{k-1} < 1$ and $\AItime{k}/(q_{k-1} q_k) > \AItime{k}/q_k > \manualTime{k}$.
-Then $V_1 < V_0$, since $\manualTime{k}/2 < \manualTime{k} + \minTime{k+1}$; $V_1 < V_2$, since $V_2 - V_1 = (\manualTime{k}/2)(1-q_{k-1})/q_{k-1} - \mu > 0$; and $V_1 < V_3$ by the second bound on $\mu$.
+The three comparisons are then
+\begin{align*}
+V_0 - V_1 &= \frac{\manualTime{k}}{2} + \minTime{k+1}, \\
+V_2 - V_1 &= \frac{\manualTime{k}}{2}\cdot\frac{1-q_{k-1}}{q_{k-1}} - \mu, \\
+V_3 - V_1 &= \frac{\AItime{k}}{q_{k-1}\, q_k} - \frac{\manualTime{k}}{2} - \mu + \minTime{k+1},
+\end{align*}
+and all three are positive: the first because $\minTime{k+1} > 0$, and the second and third by the first and second bounds on $\mu$ respectively.
 
-\item \emph{Configuration $\{k-1,\, k,\, k+1\}$.}
-Set $\mu = 1$ and let $\tau \to 0$.
-Then $V_2 = \tau/(q_{k-1} q_k q_{k+1}) \to 0$, while $V_0 > 1$, $V_1 > 1$, and $V_3 \geq \AItime{k}/(q_{k-1} q_k) > 0$ do not vanish, so $V_2$ is the strict minimum for $\tau$ small enough.
+\item \emph{Configuration $\{k-1,\, k,\, k+1\}$, which also automates step $k$.}
+Set $\mu = 1$ and take $0 < \tau < q_{k+1} \min\{q_{k-1}\, q_k,\ \AItime{k}\}$, so that the long chain is cheap.
+The three comparisons are
+\begin{align*}
+V_0 - V_2 &= 1 + \manualTime{k} + \minTime{k+1} - \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}}, \\
+V_1 - V_2 &= 1 + \frac{\tau}{q_k\, q_{k+1}} - \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}}, \\
+V_3 - V_2 &= \frac{\AItime{k}}{q_{k-1}\, q_k} + \minTime{k+1} - \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}}.
+\end{align*}
+The bound on $\tau$ holds $\tau/(q_{k-1} q_k q_{k+1})$ below both $1$ and $\AItime{k}/(q_{k-1} q_k)$, which leaves all three positive.
 
-\item \emph{Configuration $\{k-1,\, k\}$.}
-Set $\mu = \AItime{k}/(q_{k-1} q_k)$ and take $\tau > \max\{q_{k+1},\ q_k q_{k+1},\ q_{k-1} q_k q_{k+1} (\mu+1)\}$, so that $\minTime{k+1} = 1$ and $V_3 = \mu + 1$.
-Then $V_3 < V_0 = \mu + \manualTime{k} + 1$; $V_3 < V_1 = \mu + \tau/(q_k q_{k+1})$, since $\tau > q_k q_{k+1}$; and $V_3 < V_2 = \tau/(q_{k-1} q_k q_{k+1})$ by the third bound on $\tau$.
+\item \emph{Configuration $\{k-1,\, k\}$, which augments step $k$.}
+Set $\mu = \AItime{k}/(q_{k-1} q_k)$ and take $\tau > \max\{q_{k+1},\ q_k q_{k+1},\ q_{k-1} q_k q_{k+1} (\mu+1)\}$.
+The first of these bounds puts $\tau/q_{k+1}$ above $1$, so that $\minTime{k+1} = 1$ and $V_3 = \mu + 1$, and the comparisons are
+\begin{align*}
+V_0 - V_3 &= \manualTime{k}, \\
+V_1 - V_3 &= \frac{\tau}{q_k\, q_{k+1}} - 1, \\
+V_2 - V_3 &= \frac{\tau}{q_{k-1}\, q_k\, q_{k+1}} - (\mu + 1),
+\end{align*}
+positive because $\manualTime{k} > 0$ and by the second and third bounds on $\tau$ respectively.
 \end{itemize}
 
 The margin of the human's advantage on step $k$, $\AItime{k}/q_k - \manualTime{k}$, was unrestricted throughout, which gives the second claim of part~(i).

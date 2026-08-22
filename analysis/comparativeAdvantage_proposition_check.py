@@ -123,7 +123,7 @@ def check_part_i(n=2_000):
         mu = 0.5 * min(tMk / 2 * (1 - qp) / qp, tAk / (qp * qk) - tMk / 2)
         cases = [(mu, tau, 1)]
         # chain {k-1, k, k+1}: a cheap endpoint makes the long chain dominant
-        cases.append((1.0, 1e-9, 2))
+        cases.append((1.0, 0.999 * qn * min(qp * qk, tAk), 2))
         # chain {k-1, k}: an expensive endpoint stops the chain at step k
         mu3 = tAk / (qp * qk)
         cases.append((mu3, 1.001 * max(qn, qk * qn, qp * qk * qn * (mu3 + 1)), 3))
