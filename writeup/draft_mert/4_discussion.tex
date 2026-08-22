@@ -92,11 +92,11 @@ Then:
 \end{enumerate}
 \end{proposition}
 
-Part~(i) says that whether a step is executed by AI depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors.
+Intuitively, part~(i) says that whether a step is executed by AI depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors.
 Figure~\ref{fig:ca_regions} shows this for Example~\ref{ex:ca_predecessor}.
 It holds every parameter of the example fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star.
 The human keeps the comparative advantage on Step~$k$ throughout, since the horizontal axis stops where augmenting the step in isolation would break even against its manual cost of $6$.
-Even so, Step~$k$ is performed manually only in the lower left.
+Even so, Step~$k$ is performed manually only in the lower left where AI is unreliable on both steps $k$ and $k-1$.
 Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces; moving up instead leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band is not a general feature. When managing AI at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
 Varying a step's own success probability and that of a single neighbor is thus enough to cover all four feasible ways of executing a human-advantaged step, minimal as that adjustment is.
 
@@ -112,10 +112,6 @@ Varying a step's own success probability and that of a single neighbor is thus e
 \end{spacing}
 \end{minipage}
 \end{figure}
-
-
-As a result, a step with identical characteristics can be automated in one workflow, where it sits beside an AI-suitable run, yet remain manual in another, where AI completes the neighboring steps only with low probability.
-
 
 Part~(ii) of Proposition~\ref{prop:ca_local} is what turns this into something we can test.
 The primitives of the model, the management costs $\AItime{i}$ and the success probabilities $q_i$, are not observed, and part~(i) warns that knowing a step's own primitives would not pin down how the step is executed even if we did observe them.
