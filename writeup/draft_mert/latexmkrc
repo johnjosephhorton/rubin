@@ -1,0 +1,21 @@
+# latexmkrc -- lets `latexmk` alone build this document, as Overleaf does.
+#
+# The Online Appendix's reference list is produced by `bibunits`, which writes
+# its own bu*.aux files while pdflatex runs. latexmk knows about 0_main.aux and
+# runs bibtex on that, but it never learns about the bu*.aux files, so without
+# this the appendix bibliography comes out empty while the body's is fine.
+#
+# Run bibtex on each bu*.aux after every pdflatex pass. The glob is empty for
+# documents that do not use bibunits, so this is inert elsewhere in the project.
+
+$pdflatex = 'internal pdflatex_with_bibunits %O %S';
+
+sub pdflatex_with_bibunits {
+    my $ret = system('pdflatex', @_);
+    foreach my $aux (glob('bu*.aux')) {
+        next unless -s $aux;                 # skip the empty default unit
+        (my $base = $aux) =~ s/\.aux$//;
+        system('bibtex', $base);
+    }
+    return $ret;
+}

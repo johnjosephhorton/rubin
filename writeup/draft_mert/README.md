@@ -23,10 +23,18 @@ files are untouched, and the parent's exhibits are only ever read.
 ./build.sh
 ```
 
-produces `0_main.pdf` (131 pages). The Online Appendix uses `bibunits`, so `bibtex`
-has to run once on `0_main.aux` and once on `bu1.aux`; `latexmk` does not pick the
-`bu*.aux` files up on its own, which is why the build is a script rather than a
-one-liner.
+produces `0_main.pdf` (131 pages) and prints a summary of the log. The Online
+Appendix uses `bibunits`, so `bibtex` has to run once on `0_main.aux` and once on
+`bu1.aux`, and plain `latexmk` does not pick the `bu*.aux` files up on its own.
+
+`latexmkrc` in this folder teaches it to, so
+
+```
+latexmk -pdf 0_main.tex
+```
+
+also produces a complete document, Online Appendix bibliography included. That is
+the path Overleaf takes; keep the file alongside `0_main.tex` when syncing.
 
 ## Layout
 

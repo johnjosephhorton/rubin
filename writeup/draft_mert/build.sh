@@ -3,7 +3,9 @@
 #
 # The appendix uses `bibunits`, so bibtex has to be run once on 0_main.aux (main
 # reference list) and once on each bu*.aux (Online Appendix reference list).
-# latexmk does not pick the bu*.aux files up on its own, hence this script.
+# Plain latexmk does not pick the bu*.aux files up on its own; `latexmkrc` in
+# this folder teaches it to, for Overleaf and anyone who prefers latexmk. This
+# script does the same passes directly and prints a summary of the log.
 
 set -e
 cd "$(dirname "$0")"
