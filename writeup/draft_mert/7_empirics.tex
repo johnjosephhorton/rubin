@@ -1,5 +1,5 @@
 In this section we empirically test the implications of our model.
-The predictions we take to the data are those of the short-run problem of Section~\ref{sec:shortrun.production}, in which the boundaries of jobs are fixed and AI acts only on how the steps within them are executed.
+The predictions we take to the data are those of the short-run problem of Section~\ref{sec:shortrun}, in which the boundaries of jobs are fixed and AI acts only on how the steps within them are executed.
 This is a deliberate restriction rather than a limitation of the theory.
 The long-run margins of Section~\ref{sec:longrun}, in which firms redraw jobs around AI and wages adjust to the skills those jobs come to require, operate on a horizon over which firms reorganize and workers retrain, and not enough time has passed since the AI tools became widely available for such reorganization to have worked its way into the data we observe.
 What we can observe is where AI is being deployed inside workflows as they are currently arranged, which is precisely what the short-run problem speaks to.
@@ -138,10 +138,7 @@ We estimate three specifications: no additional controls, SOC major-group fixed 
 We include SOC fixed effects to ensure the results are not driven by a narrow subset of occupation families.
 Across specifications, a one-standard-deviation increase in AI exposure is associated with a 0.09 to 0.24 standard-deviation increase in the share of occupation tasks executed by AI.
 Consistent with the model, the EFI coefficient is negative and statistically significant at the 1\% level in all specifications, implying that more dispersed AI-able steps predict lower realized AI execution conditional on exposure.
-In Appendix~\ref{app:additional_robustness_pred2} we repeat the same exercise with a complementary execution-based measure, EFI Definition~2, which forms potential chains from realized AI-executed tasks rather than from AI-exposed ones.\footnote{
-Consistent with our treatment of AI chains throughout this section, this measure counts any AI-executed task, augmented or automated, as able to form a chain.
-We do not impose the model's stricter requirement that a chain begin with an automated task, since, as discussed above, the automated versus augmented distinction in the Anthropic data is based on task-level feasibility rather than workflow position and so does not line up with the model's sequencing restriction.
-}
+In Appendix~\ref{app:additional_robustness_pred2} we repeat the same exercise with a complementary execution-based measure, EFI Definition~2, which forms potential chains from realized AI-executed tasks rather than from AI-exposed ones.
 The results, reported in Appendix Table~\ref{tab:fragmentation_index_regression_execution}, deliver the same pattern with larger coefficients.\footnote{Note that the execution-based measure is not intended to provide an independent characterization of the relationship between task fragmentation and AI execution, as it is mechanically related to the dependent variable. Rather, it serves as an additional ``check'' that the pattern observed in AI execution is consistent with the fragmentation logic.}
 
 Together, the evidence from both exposure-based (ex-ante) and execution-based (ex-post) empirical fragmentation measures points to a common pattern.
@@ -306,7 +303,7 @@ The first is the Process Classification Framework (PCF) of the American Producti
 The second is a collection of process-mining event logs from the 4TU.ResearchData repository \citep{roadfines_log, sepsis_log, bpi2017_log, bpi2020_log}, covering police, hospital, banking, and university administrative processes, where the order of work is observed in the recorded traces rather than documented after the fact.
 In both cases we shuffle the steps of a process and ask the LLM to restore their order, under our main sequencing prompt and each of the ten alternatives.
 The LLM recovers a large majority of the benchmark precedences in both corpora, the documented and the observed benchmark agree closely with each other, and neither result moves much across prompts.
-The overlap is substantial rather than exact, which is what one would expect of a procedure that infers an order from task descriptions alone, but it is systematic enough that our imputed sequences cannot be read as an artifact of the LLM.
+The overlap is substantial rather than exact, which is what one would expect of a procedure that infers an order from task descriptions alone, but it is systematic enough that our imputed sequences cannot be read as an artifact of the instrument.
 
 Having established that the LLM can reasonably recover the ordering of production activities, we then match O*NET tasks to PCF activities using natural language processing techniques to carry the AI exposure and execution labels over to a corpus that no LLM ordered, and re-test our predictions there.
 Although this matching procedure is lossy and not all AI-exposed or AI-executed tasks are matched to an activity in the PCF corpus, Predictions~\#1 and~\#2 come through with essentially the same results: AI-executed steps co-occur far more than the same labels arranged at random along the same sequences, and the empirical fragmentation index coefficient stays negative and significant at a magnitude comparable to the main sample.
