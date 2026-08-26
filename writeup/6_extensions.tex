@@ -20,9 +20,9 @@ We keep them apart because the model already distinguishes the skill a step dema
 Appendix~\ref{sec:aggregation} shows that the firm-level technology developed earlier, in which the content of tasks and of jobs is chosen rather than given, can be aggregated to
 \begin{align}
 \label{eq:lr_macro_ces}
-X = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\,\aggregateManualLabor^{\rho} + (1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^{\rho}\right)^{\frac{1}{\rho}},
+Y = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho} + \theta_{\manualLetter}\,\aggregateManualLabor^{\rho} + (1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^{\rho}\right)^{\frac{1}{\rho}},
 \end{align}
-over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$, with $X$ denoting aggregate output.
+over economy-wide AI management labor $\aggregateAIlabor$, manual labor $\aggregateManualLabor$, and capital $K$, with $Y$ denoting aggregate output.
 This is the familiar constant elasticity of substitution (CES) form, with which the macroeconomic implications of automation are usually studied.
 
 Arriving at \eqref{eq:lr_macro_ces} is not straightforward, and it is worth stating what makes it work.
@@ -39,11 +39,11 @@ That is, two economies whose production steps are identical, differing only in h
 This is why workflow-level objects such as the fragmentation index have to be measured where the arrangement of work is still visible, which is what our empirical exercise in Section~\ref{sec:empirics} does.
 
 
-\subsection{Computing the Firm's Optimum}
+\subsection{Computation of Firm's Short- and Long-run Optimums}
 \label{sec:extensions.computation}
 
 Throughout the paper we have assumed the firm can obtain its cost-minimizing arrangement without discussing how it is found.
-This is not a computationally trivial problem, as the firm cannot solve its optimization problem step by step due to chaining. 
+This is not computationally trivial, as the firm cannot solve its optimization problem step by step due to chaining. 
 Rather, it must consider all feasible arrangements, of which there are exponentially many.
 
 That exponential count overstates the difficulty, however, because many of the configurations overlap heavily.
@@ -55,7 +55,7 @@ In the long run the configuration's cost carries not just the time but also the 
 We take the cost minimization of the two horizons in turn, collecting the proofs in Appendix~\ref{app:omitted_proofs}.
 
 \paragraph{The Short Run Optimization.}
-With the job and its wage fixed, the firm minimizes total time \eqref{eq:totalcost_shortterm}.
+With the job and its wage fixed, the firm minimizes total expected time in \eqref{eq:totalcost_shortterm}.
 For $k \leq m$, let $C[k]$ denote the minimum time needed to complete a hypothetical workflow containing only steps $1$ through $k$, so that $C[0] = 0$ and $C[m]$ is the optimum.
 Step $k$ is either performed manually, or augmented as the endpoint of an AI chain reaching back to some earlier step $\ell$; in either case the steps before that point are optimized separately, which gives
 \begin{align}
@@ -74,7 +74,7 @@ Given a workflow with $m$ steps, the AI strategy minimizing \eqref{eq:totalcost_
 \paragraph{The Long Run Optimization.}
 The firm now chooses job boundaries as well, and \eqref{eq:totalcost_with_handoff} multiplies each job's total skill by its total time.
 A task's contribution to cost therefore depends on how much skill and how much time its job already carries, so the position alone no longer summarizes a stretch and we carry two further coordinates.
-Let $R(i,\, \skillcost{},\, \timecost{})$ be the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating tasks, the \emph{active worker}, already holds total skill $\skillcost{}$ and total time $\timecost{}$, the latter including their hand-off, and let $V(i) = R(i,\, 0,\, \handofftime{i})$ be the corresponding cost when that worker's job closes at step $i$.
+Let $R(i,\, \skillcost{},\, \timecost{})$ be the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating tasks already holds total skill $\skillcost{}$ and total time $\timecost{}$, the latter including their hand-off, and let $V(i) = R(i,\, 0,\, \handofftime{i})$ be the corresponding cost when that worker's job closes at step $i$.
 The base case is $R(0,\, \skillcost{},\, \timecost{}) = \skillcost{}\,\timecost{}$, and the firm faces three options at each step rather than two,
 \begin{align}
 \label{eq:longrun_recursion}
@@ -83,6 +83,7 @@ R(i,\, \skillcost{},\, \timecost{}) = \min\Biggl\{ \underbrace{\skillcost{}\,\ti
 with the optimum at $V(m) = R(m,\, 0,\, 0)$.
 Closing a job is where the accumulated skill and time are finally multiplied into a wage bill, which is why the recursion has to carry both alongside the position $i$.
 That is also what makes the long run more complicated to solve.
+
 Skill and time costs are continuous, so the recursion must distinguish between infinitely many situations rather than the $m$ of the short run, and it cannot be carried out to completion.
 We therefore round each of the two costs to a power of $(1+\epsilon)$, which leaves finitely many of them to keep track of at the price of inflating the cost by at most a factor $(1+\epsilon)$.
 Proposition~\ref{prop:totalcost_optimization_dp} formalizes the resulting approximation of the optimal solution.
