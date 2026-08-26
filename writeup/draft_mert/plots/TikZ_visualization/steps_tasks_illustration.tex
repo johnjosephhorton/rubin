@@ -19,10 +19,10 @@
 
     % Top layer (Steps)
     \node[manual] (S1) {Step 1\\(Manual)};
-    \node[automated, right=of S1] (S2) {Step 2\\(Automated)};
-    \node[automated, right=of S2] (S3) {Step 3\\(Automated)};
-    \node[augmented, right=of S3] (S4) {Step 4\\(Augmented)};
-    \node[manual, right=of S4] (S5) {Step 5\\(Manual)};
+    \node[augmented, right=of S1] (S2) {Step 2\\(Augmented)};
+    \node[manual, right=of S2] (S3) {Step 3\\(Manual)};
+    \node[automated, right=of S3] (S4) {Step 4\\(Automated)};
+    \node[automated, right=of S4] (S5) {Step 5\\(Automated)};
     \node[augmented, right=of S5] (S6) {Step 6\\(Augmented)};
     \node[manual, right=of S6] (S7) {Step 7\\(Manual)};
 
@@ -36,9 +36,9 @@
 
     % Dashed boxes grouping consecutive steps into tasks
     \node[dashedbox, draw=olive, fit=(S1)] (DS1) {};
-    \node[dashedbox, draw=blue, fit=(S2)(S3)(S4)] (DS2-4) {};
-    \node[dashedbox, draw=olive, fit=(S5)] (DS5) {};
-    \node[dashedbox, draw=blue, fit=(S6)] (DS6) {};
+    \node[dashedbox, draw=blue, fit=(S2)] (DS2) {};
+    \node[dashedbox, draw=olive, fit=(S3)] (DS3) {};
+    \node[dashedbox, draw=blue, fit=(S4)(S5)(S6)] (DS4-6) {};
     \node[dashedbox, draw=olive, fit=(S7)] (DS7) {};
 
     \path (S1.west) -- (S7.east) coordinate[midway] (CenterTop);
@@ -58,9 +58,9 @@
 
     % Aggregation arrows, colored to match the dashed box each task comes from
     \draw[->, thick, olive] (DS1.south) -- (T1.north);
-    \draw[->, thick, blue]  (DS2-4.south) -- (T2.north);
-    \draw[->, thick, olive] (DS5.south) -- (T3.north);
-    \draw[->, thick, blue]  (DS6.south) -- (T4.north);
+    \draw[->, thick, blue]  (DS2.south) -- (T2.north);
+    \draw[->, thick, olive] (DS3.south) -- (T3.north);
+    \draw[->, thick, blue]  (DS4-6.south) -- (T4.north);
     \draw[->, thick, olive] (DS7.south) -- (T5.north);
 
   \end{tikzpicture}

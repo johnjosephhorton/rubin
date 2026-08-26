@@ -1,9 +1,10 @@
-% Fragmentation example (interleaved, all-manual parameterization). Two layers:
+% Fragmentation example (interleaved). Two layers:
 %  - top: each step's difficulty for AI (easy=teal, hard=red), alternating;
 %  - bottom: the optimal execution of each step (all manual=gray).
-% Standalone augmentation does not pay (management cost exceeds manual cost) and
-% no two easy steps are adjacent, so no chain forms: every step is manual and the
-% workflow uses no AI at all. Colors follow Figures 1-2.
+% No two easy steps are adjacent, so no chain can form and automation is never
+% available. On its own neither step is worth giving to AI (easy: 6/0.7 ~ 8.57
+% against 8 manual; hard: 3.5/0.3 ~ 11.67 against 6), so all four are manual,
+% for a total of 2(8) + 2(6) = 28. Colors follow Figures 1-2.
 \centering
 \begin{adjustbox}{max width=\linewidth}
 \begin{tikzpicture}[>=latex,
@@ -11,6 +12,7 @@
     easy/.style={fill=teal!40},
     hard/.style={fill=red!40},
     manual/.style={fill=gray!10},
+    augmented/.style={fill=orange!30},
     idx/.style={draw=none, font=\scriptsize},
     rowlab/.style={draw=none, font=\footnotesize\itshape}]
 
@@ -39,5 +41,8 @@
 
   \node[rowlab, left=0.5cm of d1] {Difficulty:};
   \node[rowlab, left=0.5cm of e1] {Execution:};
+
+  % total cost of the depicted execution, for comparison with the clustered figure
+  \node[font=\footnotesize, anchor=west] at ($(e4.east)+(0.8,0)$) {Total cost $= 28$};
 \end{tikzpicture}
 \end{adjustbox}
