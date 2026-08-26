@@ -1,21 +1,20 @@
-# draft_mert
+# Chaining Tasks, Redefining Work: A Theory of AI Automation
 
-*Chaining Tasks, Redefining Work: A Theory of AI Automation*, re-set in the house
-format of `Allocative Efficiency in Bilateral Oligopoly/1_draft`.
+The paper, set in the house format of
+`Allocative Efficiency in Bilateral Oligopoly/1_draft`.
 
-The `.tex` sources live here; exhibits are sourced from the parent project, so
-`plots/` and `tables/` are not duplicated. `0_main.tex` sets
+Sources, exhibits, and bibliography all live in this folder. `0_main.tex` is the
+main file; `plots/` and `tables/` hold everything it inputs, so `0_main.tex` only
+needs
 
 ```latex
-\graphicspath{{./}{../}}
-\makeatletter\def\input@path{{./}{../}}\makeatother
+\graphicspath{{./}}
 ```
 
-which searches this folder first and the parent second, so `plots/foo.png` and
-`tables/foo.tex` resolve to `../plots/` and `../tables/` unless a local copy exists.
-
-Nothing outside this folder was modified. The original `main.tex` and its section
-files are untouched, and the parent's exhibits are only ever read.
+This draft previously lived in a `draft_mert/` subfolder that shadowed the parent's
+`plots/` and `tables/`. It was consolidated here on 2026-08-26: the newer copy of
+each duplicated exhibit was kept, the superseded `main.tex` and its section files
+were removed, and the two-level search path was collapsed.
 
 ## Build
 
@@ -23,7 +22,7 @@ files are untouched, and the parent's exhibits are only ever read.
 ./build.sh
 ```
 
-produces `0_main.pdf` (131 pages) and prints a summary of the log. The Online
+produces `0_main.pdf` (130 pages) and prints a summary of the log. The Online
 Appendix uses `bibunits`, so `bibtex` has to run once on `0_main.aux` and once on
 `bu1.aux`, and plain `latexmk` does not pick the `bu*.aux` files up on its own.
 
@@ -45,9 +44,10 @@ the path Overleaf takes; keep the file alongside `0_main.tex` when syncing.
 | `1_introduction.tex` … `8_conclusion.tex` | Body sections; the numeric prefix is the section number in the paper |
 | `A_omitted_proofs.tex` … `H_external_validation.tex` | Online Appendix sections; the letter prefix is the appendix letter in the paper |
 | `rubin.bib` | Bibliography |
-| `plots/` | One local override only (see the last section); everything else comes from `../plots/` and `../tables/` |
+| `plots/` | Figures: PNGs from the analysis notebooks, plus `TikZ_visualization/` for the diagrams drawn in TeX |
+| `tables/` | Regression and illustration tables, written by the analysis notebooks or by hand |
 
-## What the house format changes relative to `../main.tex`
+## What the house format changed relative to the superseded `main.tex`
 
 Formatting only. No prose, math, notation, labels, cross-references, or exhibits were
 edited. Section files are renamed to the house `N_name.tex` convention (body 1--6,
@@ -140,8 +140,8 @@ already doing a lot of work.
 - The two-part table footnotes are gone: the significance line that regression tables
   carried as a `\multicolumn` row inside the tabular ("Standardized coefficients.
   Clustered standard errors in parentheses...") is now the first sentence of the single
-  `Notes:` block. Seven table files were copied into this folder's `tables/` and stripped;
-  the parent's copies are untouched and are still used for every other table.
+  `Notes:` block. Seven table files were stripped this way; the
+  rest were already in the right shape.
 - Caption-to-exhibit and exhibit-to-notes spacing now match the other paper structurally:
   37 floats were using a `center` environment (which adds `\topsep` at both ends) where
   the house format uses `\centering`, and stray `\vspace` commands sat between the caption
@@ -192,12 +192,12 @@ instead of hanging in the margin. Measured against the bilateral paper:
 | | marker x | continuation x |
 |---|---|---|
 | bilateral | 68.51pt | 72.00pt |
-| draft_mert, with `dialogue` | 86.45pt | 72.00pt |
-| draft_mert, `dialogue` removed | 68.51pt | 72.00pt |
+| this paper, with `dialogue` | 86.45pt | 72.00pt |
+| this paper, `dialogue` removed | 68.51pt | 72.00pt |
 
 Isolated by bisecting the preamble packages against a minimal document. `color-edits`, the
-other unused carryover, is harmless and stays. Note the original `main.tex` has this same
-problem, since it loads `dialogue` too.
+other unused carryover, is harmless and stays. The superseded `main.tex` had this same
+problem, since it loaded `dialogue` too.
 
 ## One bug fixed in the house preamble
 
@@ -244,20 +244,13 @@ back, set
 
 in `preamble.tex` (the switch and the box definitions are already there).
 
-## Known issue with one exhibit
+## Resolved: the truncated DWA exhibit
 
 `plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_no_fe_no_dwa.png`
-is truncated in the parent project (163,833 bytes; its siblings are ~230,000 and it
-has no `IEND` chunk). `pdflatex` aborts on it, so the parent `main.tex` does not
-compile locally either.
+used to be truncated (163,833 bytes, no `IEND` chunk), which made `pdflatex` abort.
+The draft carried a recovered copy at the same relative path and relied on the
+`{./}` before `{../}` search order to override it.
 
-This is the one exhibit kept locally, at the same relative path, so that the
-`{./}` before `{../}` search order overrides the parent's broken file and the build
-gets through. It is a recovered version: the top ~75% of the image decoded, the
-bottom ~25% (the x-axis labels) is blank. The original truncated bytes are in
-`_broken_assets/`.
-
-**This needs a real fix**: re-sync the file from Dropbox or regenerate the figure and
-put it back in `../plots/`. Once that is done, delete this folder's `plots/` and
-`_broken_assets/` directories and the draft will pick the good file up from the
-parent automatically.
+The file has since been re-synced and is intact (219,770 bytes, valid `IEND`,
+7169x1461). The recovered copy and `_broken_assets/` are gone, and the build reads
+the good file directly.

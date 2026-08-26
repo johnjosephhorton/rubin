@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build draft_mert.
+# Build the paper.
 #
 # The appendix uses `bibunits`, so bibtex has to be run once on 0_main.aux (main
 # reference list) and once on each bu*.aux (Online Appendix reference list).
