@@ -2,7 +2,6 @@ In this section we draw out three implications of AI chaining in the model.
 First, we show that chaining can overturn comparative advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be automated in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
 Second, we introduce a \emph{fragmentation index} that captures how dispersed a workflow's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps, not merely on what fraction of a workflow's steps are suitable for AI execution (Section~\ref{sec:fragmentation}).
 Third, we show that the marginal gains from improving AI quality are non-monotone, abruptly rising whenever improvements in AI quality make redesigning workflows worthwhile (Section~\ref{sec:nonlinear}).
-We collect the proofs of all formal results in this section in Appendix~\ref{app:omitted_proofs}.
 
 \subsection{Overturning of Comparative Advantage}
 \label{sec:comparative_advantage}
@@ -118,7 +117,7 @@ Figure~\ref{fig:ca_regions} shows the implications of Proposition~\ref{prop:ca_l
 It holds the parameters of the example fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star.
 The human keeps the comparative advantage on Step~$k$ throughout, since the horizontal axis stops where augmenting the step in isolation would break even against its manual cost of $6$.
 Even so, Step~$k$ is performed manually only in the lower left where AI is unreliable on both steps $k$ and $k-1$.
-Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces; moving up instead leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band is not a general feature. When verifying AI's output at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
+Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces; moving up instead leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band, where Step $k$ is augmented, is not a general feature. When verifying AI's output at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
 Varying a step's own success probability and that of a single neighbor is thus enough to cover all four feasible ways of executing a human-advantaged step, minimal as that adjustment is.
 Part~(ii) of Proposition~\ref{prop:ca_local} can be read off the same figure as well: starting anywhere that AI executes Step~$k$ and moving up, to the right, or both, one never crosses back into the grey region, so improvements in AI reliability only ever add steps to those AI executes.
 
@@ -131,10 +130,10 @@ Nonetheless, the forces determining the execution mode of a single step in the g
 \label{sec:fragmentation}
 
 Whether, and how much, a workflow benefits from AI depends not only on how many of its steps AI can reliably perform, but on where those AI-reliable steps sit relative to one another.
-The reason is a local complementarity that chaining creates for AI execution: a chain is verified once however many steps it spans, so a run of AI-reliable steps placed side by side can share a single verification, whereas the same steps separated by other steps that AI is likely to fail must each carry a verification of their own.
-Steps that are not worth assigning to AI individually, on their own merits, can therefore be worth assigning to it together, once the verifications they would separately have required collapse into one and that saving outweighs the additional failure risk a longer chain carries.
-This is what makes the firm's short-run problem \eqref{eq:totalcost_shortterm} more than a sequence of step-by-step decisions, and it is why the gain a workflow realizes from a given stock of AI-able steps is a property of how those steps are arranged rather than of how many of them there are.
-The example below places the same four steps in two different orders.
+The reason is a local complementarity that chaining creates for AI execution: a chain is verified once however many steps it spans, so a run of AI-reliable steps placed side by side can share a single verification, whereas the same steps separated by other steps that AI is likely to fail at must each carry a verification of their own.
+Steps that are not worth assigning to AI individually can therefore be worth assigning to it together, if they appear next together in production.
+This is the sense in which AI acts on the workflow as a whole rather than just delivering a step-level productivity gain in \eqref{eq:totalcost_shortterm}.
+The example below shows this point numerically.
 
 \begin{example}
 \label{ex:fragmentation}
@@ -151,19 +150,19 @@ Two steps of each kind make up the workflow, and Figure~\ref{fig:ex_fragmentatio
 \centering
 \begin{minipage}{\linewidth}
   \centering
-  \subcaption{Interleaved: no AI chain can form}
+  \subcaption{Dispersed AI-able Steps Configuration}
   \input{plots/TikZ_visualization/example1_visualization_allManual.tex}
 \end{minipage}
-\par\vspace{1.4em}
+\par\vspace{1.6em}
 \begin{minipage}{\linewidth}
   \centering
-  \subcaption{Clustered: the AI-easy run becomes a single AI chain}
+  \subcaption{Clustered AI-able Steps Configuration}
   \input{plots/TikZ_visualization/example2_visualization.tex}
 \end{minipage}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: In each panel the top layer gives each step's difficulty for AI and the bottom layer its execution in the cost-minimizing strategy, colored as in Figure~\ref{fig:steps_tasks}. Step parameters are given in Example~\ref{ex:fragmentation}. The two panels contain exactly the same four steps and differ only in the order in which they are performed. In panel~(a) every AI-easy step is flanked by AI-hard ones, so no two AI-able steps are adjacent, no chain can form, and every step is performed manually. In panel~(b) the AI-easy steps form a contiguous run, which the firm executes as a single AI chain: Step~1 is automated and only Step~2, the endpoint, is augmented and verified. The total cost at the right of each execution row makes the two arrangements directly comparable.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: In each panel the top layer gives each step's difficulty for AI and the bottom layer its execution in the cost-minimizing strategy, colored as in Figure~\ref{fig:steps_tasks}. Step parameters are given in Example~\ref{ex:fragmentation}. The two panels contain exactly the same four steps and differ only in the order in which they are performed. In panel~(a) every AI-easy step is flanked by AI-hard ones, so no two AI-able steps are adjacent, no chain can form, and every step is performed manually. In panel~(b) the AI-easy steps form a contiguous run, which the firm executes as a single AI chain: Step~1 is automated and Step~2 is augmented and verified. The total cost at the right of each execution row makes the two arrangements directly comparable.}
 \end{spacing}
 \end{minipage}
 \end{figure}
@@ -181,7 +180,8 @@ A single verification now covers two steps instead of none, which is enough to m
 Note that the two arrangements contain exactly the same steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
 Dispersion of AI-friendly steps can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer, and it is this margin that we explore empirically later.
 
-To formalize this, return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.
+As gains from automation appear to depend on how clustered or dispersed a workflow's AI-able steps are, having a measure of that arrangement would be useful, one that stands in for them without solving the firm's optimization problem outright.
+To build such a measure, return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.\footnote{The normalization puts every step on the same footing as far as the cost of using AI goes, leaving where the AI-able steps sit as the only thing that separates one workflow from another.}
 Suppose each step $s_i$ succeeds independently with probability $q_i$, and say that any step that does not succeed \emph{fails}.
 Write $F$ for the set of steps that fail and $\mathcal{C}$ for the random collection of maximal connected components of non-failed steps, and assign each $C \in \mathcal{C}$ the weight $\omega(C) = \min\bigl\{ 1, \sum_{s_i \in C} \manualTime{i} \bigr\}$, which is $1$ unless the manual costs of its steps sum to less than the normalized cost of verifying one AI attempt.
 The realized fragmentation of the workflow is then
@@ -215,8 +215,8 @@ A further implication of the proof is a natural and approximately optimal greedy
 
 In its short-run cost minimization problem \eqref{eq:totalcost_shortterm}, the firm optimizes costs over a discrete set of feasible AI strategies.
 Here we show that the gains from marginal improvements in AI quality accrue non-monotonically, because such improvements eventually trigger discrete reorganizations of work.
-Recall that $\alpha$ measures the quality of the general-purpose AI technology, so that advances in that technology are represented by increases in its value.
 
+Recall that $\alpha$ measures the quality of the general-purpose AI technology, so that advances in that technology are represented by increases in its value.
 When AI quality is so low that the firm deploys AI nowhere, marginal improvements offer no return at all: every step is performed manually, and production costs do not depend on $\alpha$.
 Once $\alpha$ passes the level at which deploying AI somewhere in the workflow becomes worthwhile, further improvements do pay off, but at a diminishing rate, since a more reliable AI is being applied to a fixed set of AI-executed steps.
 And when $\alpha$ reaches a level at which the firm re-optimizes its deployment strategy, extending a chain to absorb steps that were previously manual, the marginal return jumps up discontinuously, because improvements in quality now compound over a longer stretch of the workflow.
@@ -237,18 +237,18 @@ Figure~\ref{fig:example5_nonmonotone} traces the optimal cost and its marginal b
 \caption{Optimal Cost and the Marginal Benefit of AI Quality in Example~\ref{ex:nonmonotone}}
 \label{fig:example5_nonmonotone}
 \centering
-\begin{minipage}{0.49\linewidth}
+\begin{minipage}[t]{0.49\linewidth}
   \centering
-  \includegraphics[width=\linewidth]{plots/example5_costs.png}
   \subcaption{Total cost by AI strategy}
   \label{fig:example5_costs}
+  \includegraphics[width=\linewidth]{plots/example5_costs.png}
 \end{minipage}
 \hfill
-\begin{minipage}{0.49\linewidth}
+\begin{minipage}[t]{0.49\linewidth}
   \centering
-  \includegraphics[width=\linewidth]{plots/example5_marginalBenefit.png}
   \subcaption{Marginal benefit of improving $\alpha$}
   \label{fig:example5_marginalBenefit}
+  \includegraphics[width=\linewidth]{plots/example5_marginalBenefit.png}
 \end{minipage}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
