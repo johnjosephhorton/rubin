@@ -1,0 +1,453 @@
+[
+ {
+  "title": "The introduction calls the fragmentation index the cost of an *optimal* foresight plan; Section 4.2 says the same plan is not optimal even with foresight",
+  "severity": "error",
+  "where_a": "1_introduction.tex:96 \u2014 \"We formalize this idea in a \\emph{fragmentation index}, the expected cost of an optimal execution plan with foresight into AI's successes and failures, and show analytically that it approximately tracks the impact of optimal AI deployment.\"",
+  "where_b": "4_implications.tex:202 \u2014 \"Notably, this AI strategy isn't necessarily optimal even with the benefit of foresight: a long AI chain with a good probability of success might be optimal even if the prophet knows that it will fail on the first attempt.\"",
+  "why": "The fragmentation index is defined (4_implications.tex:198-214) as the expected cost of one specific prophet strategy: chain every maximal run of steps that will succeed, execute the rest individually. Section 4.2 explicitly states that this strategy is not the optimal plan under foresight, and that is precisely why Proposition 2 has to prove a constant-factor approximation (1/8 or 1/4 to 5/4) rather than an equality. If FI were \"the expected cost of an optimal execution plan with foresight\" the two-sided bounds and Example OA-2 (A_omitted_proofs.tex:240-246, FI/OPT = 5/4) would be describing something else. The introduction also repeats the claim at line 101 (\"Our fragmentation index is the closed-form counterpart of that program\").",
+  "fix": "The introduction is wrong. Replace \"an optimal execution plan with foresight\" with a neutral description of the actual object, e.g. \"a simple execution plan built with foresight into AI's successes and failures, which chains together the steps that will succeed.\"",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Prose says the prophet performs all failed steps manually; the formula it introduces charges them the cheaper of manual and augmented",
+  "severity": "error",
+  "where_a": "4_implications.tex:200 \u2014 \"The prophet might therefore chain together all contiguous sequences of tasks that would all succeed, and perform all other tasks manually.\"",
+  "where_b": "4_implications.tex:212 \u2014 realized fragmentation is \"$\\sum_{i \\in F}\\min\\left\\{\\manualTime{i}, \\frac{\\AItime{i}}{q_i}\\right\\} + \\sum_{C_j \\in \\mathcal{C}} \\omega(C_j)$\"; and A_omitted_proofs.tex:196 \u2014 \"$\\minTime{i}$ is the minimum cost to implement step $s_i$ individually (whether manually or through AI augmentation).\"",
+  "why": "The prose describes the prophet's strategy as executing every non-succeeding step manually, at cost $\\manualTime{i}$. The formula it is introducing charges each failed step $\\min\\{\\manualTime{i}, \\AItime{i}/q_i\\}$, i.e. it may execute the step as a standalone augmented step instead. These differ whenever $\\AItime{i}/q_i < \\manualTime{i}$, which is exactly the AI-easy case that the surrounding examples turn on (Example 1's easy step: $\\AItime{2}/q_2 \\approx 4.44 < \\manualTime{2} = 8$). The appendix restatement of the same construction is careful about this (A_omitted_proofs.tex:195-198); the main-text prose is not.",
+  "fix": "The prose is wrong. Change \"and perform all other tasks manually\" to \"and execute every other step on its own, manually or as a standalone augmented step, whichever is cheaper.\" The same slip recurs at 4_implications.tex:232 (\"with chains of length 1 converted to manual execution when appropriate\"), which the appendix (A_omitted_proofs.tex:261) states correctly as \"either manually or augmented, whichever is cheaper.\"",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Appendix B gives Job 1 the skill of step 2, which is an automated step the model says requires no skill",
+  "severity": "error",
+  "where_a": "B_macro_production.tex:26 \u2014 \"The worker assigned to perform Job 1 is required to obtain not only the skill required for manual Task 1, $\\manualSkill{1}$, but must also possess the required skill for AI-assisted Task 2, $\\AIskill{2}$ ... and equals $\\manualSkill{1} + \\AIskill{2}$.\"",
+  "where_b": "5_longrun.tex:40 \u2014 \"An AI chain therefore demands only the skill required to check and validate the output of its augmented step, and an automated step inside a chain demands no skill of anyone, since no human ever handles it directly\"; 5_longrun.tex:122 \u2014 \"$\\skillcost{b}$ & Skill required by task $b$: $\\manualSkill{i}$ if a manual step, $\\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none\"",
+  "why": "Appendix B's example is Job 1 of Figure 4 (fig:hierarchical_production). In that figure (plots/TikZ_visualization/hierarchical_production_illustration.tex, lines 18-24 and 45) Task 2 is the AI chain over Steps 2-4, with Steps 2 and 3 automated and Step 4 augmented; 3_shortrun.tex:24 states the same (\"here steps 2--4 become Task~2\"). By the rule in 5_longrun.tex:122 the skill of Task 2 is $\\AIskill{4}$, the skill of managing the augmented endpoint. $\\AIskill{2}$ is the skill of managing an AI attempt at step 2, which is automated and by the model's own statement demands no skill of anyone. The error is a task index used where a step index is required; it propagates to \\eqref{eq:new_wage} (B_macro_production.tex:33), which sums $\\manualSkill{b}$ and $\\AIskill{b}$ over task indices $b$, and to $\\alpha^{-d_b}$ at B_macro_production.tex:48 and :80, where $d$ is defined as a step-level difficulty (3_shortrun.tex:113). 3_shortrun.tex:124 states the convention that is being broken: \"Step-level primitives are indexed by $i$ and task-level objects by $b$.\"",
+  "fix": "Appendix B is wrong. Write Job 1's wage as $\\manualSkill{1} + \\AIskill{4}$, and in \\eqref{eq:new_wage} and the skill-adjusted-time definition replace the step-level primitives carrying task indices with the task-level skill $\\skillcost{b}$ (or write $\\AIskill{r(b)}$ for the augmented endpoint $r(b)$ of chain $b$, and $d(T_b)=\\sum_{i\\in T_b}d_i$ for the chain difficulty).",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "\"AI-exposed\" means E1-only and E1-or-E2 in the same regression discussion",
+  "severity": "inconsistency",
+  "where_a": "7_empirics.tex:99 \u2014 \"\\emph{$\\text{ai\\_exposure}_{o}$} is the share of AI-exposed tasks ... We additionally control for \\emph{$\\text{num\\_ai\\_able\\_steps}_{o}$}, the number of AI-exposed (E1- or E2-labeled) steps in the occupation\"; and 7_empirics.tex:116 \u2014 \"We count as AI-exposed both E1- and E2-exposed tasks, which together account for 44\\% of the tasks in the dataset.\"",
+  "where_b": "7_empirics.tex:132 (table notes) \u2014 \"The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation\"; identically at D_tables_and_robustness.tex:99; and C_sample_construction.tex:16 \u2014 \"we treat tasks with a human-assigned E1 label as exposed to AI and those with E0 or E2 labels as unexposed to AI.\"",
+  "why": "The single term \"AI-exposed\" is given two incompatible extensions inside one subsection: the E1+E2 set (44% of tasks, used for the EFI and for the count control) and the E1-only set (14% of tasks per the footnote at line 116, used for the regressor plotted in the tables). A reader cannot tell from the text which set \\text{ai\\_exposure} is built from, since line 99 defines it as \"the share of AI-exposed tasks\" immediately before a sentence that uses \"AI-exposed\" to mean E1-or-E2, while the table note says E1.",
+  "fix": "Both sides are defensible as constructions; the terminology is not. Reserve \"AI-exposed\" for the E1-only default declared in C_sample_construction.tex:16 and use a distinct label (e.g. \"AI-able\" or \"E1/E2-exposed\") everywhere the E1+E2 set is meant, including line 116, the num_ai_able_steps control, and the EFI definition; then make line 99 state which of the two \\text{ai\\_exposure} uses.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The empirical fragmentation index is described as \"the number of AI blocks per step\", contradicting its own definition three paragraphs later",
+  "severity": "inconsistency",
+  "where_a": "7_empirics.tex:99 \u2014 \"Because the fragmentation index is the number of AI blocks per step, it varies mechanically with how many AI-able steps a workflow contains\"",
+  "where_b": "7_empirics.tex:108-112 \u2014 \"the empirical fragmentation index is the ratio of the number of \\emph{potential} tasks in the sense of our theoretical framework to the total number of steps ... If none of the five tasks are exposed to AI, then the number of tasks in the theoretical sense is five, and the EFI equals $5/5 = 1$.\"",
+  "why": "The two characterizations give different numbers on the paper's own example. Under the definition, an occupation with five steps and none exposed has EFI $=5/5=1$; under \"number of AI blocks per step\" it would be $0/5=0$. With two consecutive exposed steps the definition gives $4/5=0.8$ (three manual tasks plus one AI block), whereas \"AI blocks per step\" gives $1/5=0.2$. The numerator of EFI counts all potential tasks, manual steps included, not just AI blocks. \"AI block\" is also an undefined synonym for \"AI chain\" here and at 2_literature.tex:28.",
+  "fix": "Line 99 is wrong. Replace with \"Because the index counts potential tasks per step, it falls mechanically as a workflow contains more AI-able steps\" and use \"AI chain\" rather than \"AI block\".",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Section 4.2 and the proofs call steps \"tasks\" in the very sentences that define step-level failure, contradicting Section 3's primitive/designated distinction",
+  "severity": "inconsistency",
+  "where_a": "4_implications.tex:205 \u2014 \"suppose that each step $s_i$ succeeds independently with probability $q_i$; any task that does not succeed is said to fail\"",
+  "where_b": "A_omitted_proofs.tex:190 (the appendix restatement of the identical sentence) \u2014 \"Suppose that each step $s_i$ succeeds independently with probability $q_i$; any step that does not succeed is said to fail.\"",
+  "why": "Section 3 makes \"step\" the primitive and \"task\" a contiguous block the firm designates (3_shortrun.tex:34, :62, :93), and 3_shortrun.tex:124 fixes the index convention. Success probabilities $q_i$ attach to steps, not to tasks; the appendix version of the sentence says \"step\" where the body says \"task\", so the two statements of the same definition disagree. The same substitution recurs throughout the passage and the proofs: 4_implications.tex:198 (\"which tasks would be completed successfully by AI on its first attempt\"), :200 (\"contiguous sequences of tasks\"), :232 (\"The algorithm groups tasks into chains\" \u2014 chains are groups of steps, and a chain *is* a task), :246 (\"the probability that a task of normalized difficulty $1$ is completed successfully\" \u2014 $d_i$ is a step primitive), A_omitted_proofs.tex:185, :219-221 (\"each failed task $s_i \\in T_j$\", where $T_j$ is the task and $s_i$ the step), :281 (\"the final task $s_m$\"), :300, :358.",
+  "fix": "The body and proof prose are wrong; the appendix's line 190 wording is the correct one. Replace \"task\" with \"step\" wherever the object carries a step index $s_i$/$i$ or a success probability $q_i$ or difficulty $d_i$, and keep \"task\" only for elements of $\\T$.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The short-run DP proof says \"task $k$ cannot be automated ... it can only be augmented or performed manually\", applying step-level execution modes to a task",
+  "severity": "inconsistency",
+  "where_a": "A_omitted_proofs.tex:454 \u2014 \"because of the way we defined $C[k]$, task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$; it can only be augmented or performed manually\"; and :467 \u2014 \"we then separately optimize the production strategy for tasks $1$ through $\\ell$\"",
+  "where_b": "3_shortrun.tex:45-91 \u2014 manual, augmented and automated are defined as modes of a *step* (\"A step $i$ is performed manually...\", \"A step $i$ is augmented...\", \"A step is automated...\"), and 3_shortrun.tex:93 defines a task as \"either a manual step or an AI chain\"",
+  "why": "$C[k]$ is defined over steps 1 through $k$ (A_omitted_proofs.tex:453, and the recursion at :460-462 indexes $\\manualTime{k}$, $\\AItime{k}$, $q_i$, all step primitives), and $\\ell$ is a step index. The claim being made is about step $k$ and steps $1..\\ell$. A task has no automated/augmented/manual mode in the model: those are step modes, and a task is either a manual step or an AI chain. As written, the sentence asserts something the model's definitions do not permit.",
+  "fix": "The proof is wrong. Write \"step $k$ cannot be automated ... it can only be augmented or performed manually\" and \"optimize the production strategy for steps $1$ through $\\ell$.\"",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "\"Workflow-level AI exposure\" is defined as realized AI deployment, the opposite of the exposure/execution distinction the empirics rest on",
+  "severity": "inconsistency",
+  "where_a": "4_implications.tex:135 \u2014 \"we can interpret workflow-level AI exposure as the extent to which an optimal AI strategy employs AI automation and augmentation\" (subsection title, line 130: \"Workflow-level AI Exposure and the Fragmentation Index\")",
+  "where_b": "7_empirics.tex:8 \u2014 the dataset records \"its AI exposure status (exposed or unexposed to AI), which we interpret as the difficulty of the step for AI, its realized mode of execution (manual, AI-augmented, or AI-automated)\", and \\eqref{eq:fragmentation_index_regression} regresses ai_execution on ai_exposure as two distinct objects",
+  "why": "Section 4.2 defines workflow-level \"AI exposure\" as an outcome (how much AI the optimal strategy actually uses), which is Section 7's ai_execution, not its ai_exposure. Section 7's whole Prediction 2 is that exposure does not translate one-for-one into execution, which is unstatable if exposure just means realized deployment. Section 4.2 itself uses the ex-ante sense three lines later: \"a workflow ... is less exposed to large-scale automation, even though its step-level exposure to AI may appear high\" (4_implications.tex:138), where the second \"exposure\" is amenability, not deployment.",
+  "fix": "Section 4.2 is the loose side. Reserve \"exposure\" for ex-ante amenability throughout (matching Section 7 and Section 2's usage at 2_literature.tex:16-20) and rename the line-135 object, e.g. \"the extent of AI deployment in a workflow\"; adjust the subsection title accordingly.",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "Hand-off cost is defined on steps but the specialization example indexes it by task",
+  "severity": "inconsistency",
+  "where_a": "5_longrun.tex:90-91 \u2014 \"given step $s_i$, we write $\\handofftime{i}$ for the additional hand-off time spent by a worker for whom the last step of their job is $s_i$ ... The final job hands off to no one, so $\\handofftime{m} = 0$\"; Table 3 (5_longrun.tex:127) \u2014 \"$\\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$\"",
+  "where_b": "5_longrun.tex:199 \u2014 \"$\\bigl(\\skillcost{b},\\, \\timecost{b},\\, \\handofftime{b}\\bigr)_{b=1,2,3} = (3,\\,1,\\,3),\\quad (1,\\,2,\\,0.5),\\quad (2,\\,2,\\,0)$\"; and :205 \u2014 \"the large hand-off time $\\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger\"",
+  "why": "5_longrun.tex:87 makes the step-attachment the substantive point of the whole construction (\"We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs\"), and 3_shortrun.tex:124 fixes $i$ for step-level primitives and $b$ for task-level objects. The example then supplies $\\handofftime{b}$ per task, so $\\handofftime{1}$ denotes the hand-off after task 1 rather than after step 1. Since a task can span several steps, the two indices are not interchangeable.",
+  "fix": "The example is the loose side. Either write the hand-off as $\\handofftime{}(T_b)$, defined as $\\handofftime{i}$ for the final step $i$ of task $b$, or state explicitly that in this example each task is a single step so the indices coincide.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The introduction names the AI chain a \"meta-task\"; the model names it a \"composite task\"",
+  "severity": "cosmetic",
+  "where_a": "1_introduction.tex:11 \u2014 \"some steps are chained together and automated, creating a meta-task whose output is validated by a human worker\"; and :50 \u2014 \"putting certain production steps ``under the hood'' of a logical meta-task\"",
+  "where_b": "3_shortrun.tex:68 \u2014 \"The AI chain as a whole can be thought as a single \\emph{composite} task delegated by the human to AI for execution\"; and 7_empirics.tex:22 \u2014 \"forming a composite task per our model's definition\"",
+  "why": "The same object gets two names and neither passage acknowledges the other. \"Meta-task\" appears only in the introduction and is never defined or used again; \"composite task\" is the term the model and the empirical section use. The introduction also introduces the object a third way at line 15 (\"lumping them together into one logical task\").",
+  "fix": "The introduction is the outlier. Use \"composite task\" in both introduction passages, or drop the second name and rely on \"AI chain\" throughout.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The same steps are called AI-easy, AI-able and AI-friendly within one example",
+  "severity": "cosmetic",
+  "where_a": "4_implications.tex:143 \u2014 \"steps $1$ and $3$ are AI-easy and steps $2$ and $4$ are AI-hard\"; figure caption 4_implications.tex:146 \u2014 \"Dispersed AI-Able Steps\"; figure notes :153 \u2014 \"no two AI-able steps are ever adjacent\"",
+  "where_b": "4_implications.tex:158 (the body sentence restating the same figure note) \u2014 \"Because every easy step is flanked by hard ones, no two AI-friendly steps are ever adjacent\"",
+  "why": "Example 1 (4_implications.tex:56-58) introduces \"AI-easy\" and \"AI-hard\" as the paper's named step types, and Examples 2-3 are built from those exact parameter bundles. Within a single example the same two steps are then labelled AI-easy, AI-able and AI-friendly, and the figure note and body sentence differ only in that word. \"AI-suitable\" is a fourth variant for the same idea (4_implications.tex:3, :100; 2_literature.tex:19), and \"automatable\" a fifth (4_implications.tex:216, A_omitted_proofs.tex:185), which is doubly loose since automation in the model requires membership in a multi-step chain.",
+  "fix": "Pick one term. \"AI-easy/AI-hard\" is the only pair the paper actually defines, so use it for the step types and drop \"AI-able\", \"AI-friendly\", \"AI-suitable\" and \"automatable\" from the theory sections (the empirical sections may keep \"AI-able\" if it is defined there as the E1/E2 set).",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Three different things are each called \"the smallest unit of work\"",
+  "severity": "cosmetic",
+  "where_a": "3_shortrun.tex:34 \u2014 \"Steps are the smallest unit of work in our framework.\"",
+  "where_b": "B_macro_production.tex:40 \u2014 \"Next, we define skill-adjusted labor, which is the smallest unit of work in our analysis.\" (3_shortrun.tex:62 adds a third: \"Tasks are the smallest unit of work for a human worker.\")",
+  "why": "\"In our framework\" and \"in our analysis\" are the same scope, so two different objects are being given the same superlative. The task claim at 3_shortrun.tex:62 is at least qualified (\"for a human worker\"), but skill-adjusted labor is a derived quantity of tasks (B_macro_production.tex:44), so it cannot be smaller than a step.",
+  "fix": "Appendix B is the loose side. Say skill-adjusted labor is \"the unit of labor input in the aggregation\" rather than \"the smallest unit of work\".",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "Appendix C equates occupation with job; Section 7 equates occupation with workflow, and the model makes a workflow contain several jobs",
+  "severity": "cosmetic",
+  "where_a": "C_sample_construction.tex:11 \u2014 \"In what follows, we use the terms step, task, and O*NET task interchangeably, as in the main text; likewise, we use job and occupation interchangeably.\"",
+  "where_b": "7_empirics.tex:19 and :24 \u2014 \"each occupation's workflow corresponds to the model's step sequence\" ... \"We similarly use the terms workflow and occupation interchangeably without restating the mapping each time\"",
+  "why": "In the model a job is one worker's contiguous block of tasks and a workflow generally contains several of them: Figure 4 has $m=7$ steps, $n=5$ tasks and $p=3$ jobs (5_longrun.tex:25-26). Identifying occupation with workflow and occupation with job therefore identifies workflow with job, which the long run explicitly denies. Section 7 never uses \"job\" for an occupation, so Appendix C's declaration is unsupported by the usage it claims to follow (\"as in the main text\").",
+  "fix": "Appendix C is the outlier. Change its declaration to \"we use workflow and occupation interchangeably\", matching 7_empirics.tex:24.",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "\"Time and skill content of individual tasks\" and \"chaining together easy tasks\" describe step-level primitives as task-level",
+  "severity": "cosmetic",
+  "where_a": "6_extensions.tex:95 \u2014 \"Paired with detailed measurement of the time and skill content of individual tasks, the algorithms above could be run on real workflows\"; 1_introduction.tex:101 \u2014 \"both the exact and the approximate plan drive down costs by chaining together easy tasks\"",
+  "where_b": "3_shortrun.tex:110-114 and 5_longrun.tex:120-121 \u2014 the measured primitives are step-level: \"$\\manualTime{i}$ Time cost of completing step $i$ manually\", \"$d_i$ Difficulty of step $i$ for AI\", \"$\\manualSkill{i}$ Skill required to complete step $i$ manually\"; and 3_shortrun.tex:89 \u2014 an AI chain is \"a contiguous block of one or more sequential steps\"",
+  "why": "The dynamic programs of Section 6.2 take step-level $(\\manualSkill{i},\\manualTime{i},\\AIskill{i},\\AItime{i},q_i,\\handofftime{i})$ as inputs and produce tasks as output, so the measurement the paragraph calls for is of steps, not tasks. Likewise chains are formed from steps; \"chaining together easy tasks\" inverts the construction, since the chain is itself the task.",
+  "fix": "Both are the loose side: write \"the time and skill content of individual steps\" and \"chaining together easy steps\". The same substitution is needed at 2_literature.tex:5 (\"the ordering of tasks in production\") and :27 (\"when tasks are complementary because of sequencing\"), both of which describe this paper's own mechanism.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Automation is said to be unavailable because no chain forms, although the paper's convention makes every augmented step a chain",
+  "severity": "cosmetic",
+  "where_a": "4_implications.tex:158 \u2014 \"no two AI-friendly steps are ever adjacent, so no chain longer than a single step can form, and automation, which executes a step for free but is available only inside a chain, never becomes an option\"",
+  "where_b": "3_shortrun.tex:76-77 \u2014 \"an AI chain may consist of a single step, with $\\ell = r$: having no automated predecessors, it is simply an augmented step. An AI-augmented step is thus an AI chain of length one, a convention we adopt throughout the paper.\"",
+  "why": "Under the stated convention every augmented step is a chain, so \"available only inside a chain\" is satisfied by the two augmented steps in this example and does not by itself rule automation out. The condition that actually rules it out is chain length at least two, which Definition 4 supplies (\"all steps but the final one are automated\"). As written the sentence's stated reason does not support its conclusion given the paper's own convention.",
+  "fix": "The sentence in Section 4.2 is the loose side: \"automation, which executes a step for free but requires a chain of at least two steps, never becomes an option.\"",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "Lemma A.3 asserts the marginal-benefit function \"jumps upward\" at reorganization thresholds, but its proof derives only a weak inequality, which permits no jump at all and hence no non-monotonicity",
+  "severity": "error",
+  "where_a": "A_omitted_proofs.tex:405 (Lemma \\ref{lem:reorg_threshold}): \"Moreover, at every reorganization threshold (where the optimal AI strategy changes), $g^*$ jumps upward.\" \u2014 and 4_implications.tex:250: \"the marginal return to AI quality jumps up discontinuously\"; 4_implications.tex:253: \"at each threshold the returns jump upward\"",
+  "where_b": "A_omitted_proofs.tex:437-444: \"A differentiable function with such a sign change has nonpositive derivative in the local neighborhood of $\\alpha_0$. So $\\phi'(\\alpha_0) \\le 0$, or equivalently, $C_{\\T'}'(\\alpha_0) \\le C_\\T'(\\alpha_0)$\" ... \"$g_\\T(\\alpha_0) = -C_\\T'(\\alpha_0) \\le -C_{\\T'}'(\\alpha_0) = g_{\\T'}(\\alpha_0)$\"",
+  "why": "The chain of inequalities in the proof is weak throughout: from $\\phi(\\alpha_0^-)\\ge 0$, $\\phi(\\alpha_0)=0$, $\\phi(\\alpha_0^+)\\le 0$ one gets only $\\phi'(\\alpha_0)\\le 0$, hence $g_\\T(\\alpha_0)\\le g_{\\T'}(\\alpha_0)$. Equality is not excluded: if $\\phi$ has a triple root at $\\alpha_0$ (e.g. $\\phi(\\alpha)=-c(\\alpha-\\alpha_0)^3$, which is compatible with the sign pattern and with $\\phi$ being a difference of finite sums of powers of $\\alpha$), then $\\phi'(\\alpha_0)=0$ and $g^*$ is continuous at the threshold. In that case $g^*$ is non-increasing on each regime and continuous across the threshold, i.e. globally non-increasing, which is exactly the opposite of the non-monotonicity the body advertises. The proof therefore establishes \"$g^*$ does not jump downward,\" not \"$g^*$ jumps upward.\" Separately, the intermediate sentence at line 437 is false as written: a sign change at $\\alpha_0$ gives $\\phi'\\le 0$ at the point $\\alpha_0$, not \"in the local neighborhood.\"",
+  "fix": "The proof side is what is wrong. Either weaken the lemma and the body prose to \"$g^*$ does not fall at a reorganization threshold (and rises strictly whenever $\\phi'(\\alpha_0)\\neq 0$),\" or add a hypothesis ruling out tangential crossings (e.g. $\\phi'(\\alpha_0)\\neq 0$, i.e. the two strategy-cost curves cross transversally) and state that hypothesis in the lemma. Also replace \"nonpositive derivative in the local neighborhood of $\\alpha_0$\" with \"nonpositive derivative at $\\alpha_0$.\"",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Proposition 4's hypothesis that all hand-off costs lie in $[1/B,B]$ is violated by every workflow in the model, since the model fixes the last step's hand-off cost at zero \u2014 and the proof itself relies on that zero",
+  "severity": "inconsistency",
+  "where_a": "6_extensions.tex:90 (Proposition \\ref{prop:totalcost_optimization_dp}): \"Fix a workflow with $m$ steps whose skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.\" Repeated verbatim at A_omitted_proofs.tex:538: \"Suppose all skill, time, and hand-off costs lie in $[1/B, B]$ for some $B > 0$.\"",
+  "where_b": "5_longrun.tex:91: \"The final job hands off to no one, so $\\handofftime{m} = 0$.\" And the proof relies on it: A_omitted_proofs.tex:493: \"Note then that $V(m)$ is the solution to the desired optimization problem, recalling that the hand-off time for the final job will always be $0$.\"",
+  "why": "$[1/B,B]$ with $B>0$ forces every hand-off cost to be at least $1/B>0$, so $\\handofftime{m}=0$ is excluded. But $\\handofftime{m}=0$ is imposed by the model as a primitive (5_longrun.tex:91), is used in the worked example of Section 5.3 ($\\handofftime{3}=0$ at 5_longrun.tex:199 and in tables/job_design_example_with_handoff.tex), and is invoked inside the very proof of Proposition 4 to justify $V(m)=W(m,0,0)$. The hypothesis as stated is therefore satisfied by no instance of the model. The proof is half aware of this: A_omitted_proofs.tex:540 says \"every non-zero skill or time cost is at least $1/B$,\" implicitly conceding that zero costs occur.",
+  "fix": "The hypothesis is the wrong side. State it as \"every non-zero skill, time, and hand-off cost lies in $[1/B,B]$\" (or explicitly exempt $\\handofftime{m}=0$) in both 6_extensions.tex:90 and A_omitted_proofs.tex:538. Nothing in the complexity accounting changes, since the bounds $[1/B,mB]$ and $[1/B,2mB^3]$ are already derived from the non-zero costs.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The prophet story used to motivate the fragmentation index says failed steps are done manually, but the formal definition of realized fragmentation prices them at the cheaper of manual and standalone augmentation",
+  "severity": "inconsistency",
+  "where_a": "4_implications.tex:200-201: \"The prophet might therefore chain together all contiguous sequences of tasks that would all succeed, and perform all other tasks manually. The fragmentation index is then the expected cost of this strategy, under the assumption that the prophet's foresight is correct.\"",
+  "where_b": "4_implications.tex:\\eqref{eq:fragmentation} (lines 214-217): \"$\\sum_{i \\in F}\\min\\left\\{\\manualTime{i}, \\frac{\\AItime{i}}{q_i}\\right\\} + \\sum_{C_j \\in \\mathcal{C}} \\omega(C_j)$\", repeated in A_omitted_proofs.tex:263 as \"$\\sum_{s_i \\in F}\\minTime{i} + \\sum_{C_j \\in \\mathcal{C}} \\omega(C_j)$\" with A_omitted_proofs.tex:261 defining \"$\\minTime{i} = \\min\\{\\manualTime{i}, \\AItime{i}/q_i\\}$ ... the minimum cost to implement step $s_i$ individually (whether manually or through AI augmentation)\"",
+  "why": "The two prescriptions differ whenever $\\AItime{i}/q_i < \\manualTime{i}$, which is exactly the paper's own \"AI-easy\" step: with $(\\manualTime{},\\AItime{},q)=(8,4,0.9)$ from Example \\ref{ex:ca_predecessor}, a failed step contributes $\\min\\{8,4.44\\}=4.44$ under the formula but $8$ under \"perform all other tasks manually.\" The same mismatch appears on the other term: $\\omega(C_j)=\\min\\{1,\\sum_{i\\in C_j}\\manualTime{i}\\}$ lets a successful run be priced manually rather than chained, contrary to \"chain together all contiguous sequences of tasks that would all succeed.\" Formula and prose cannot both describe the same strategy.",
+  "fix": "The prose is the loose side (the formula is what both Lemma \\ref{lem:FI.upper.bound} and Lemma \\ref{lem:FI.lower.bound.4} actually use). Rewrite 4_implications.tex:200 as \"...and executes every other step on its own in whichever mode is cheaper, manual or augmented\" and add that a successful run is chained only when that beats doing it manually.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The introduction calls the fragmentation index the cost of an optimal foresight plan; Section 4.2 states the same plan is not optimal even with foresight",
+  "severity": "inconsistency",
+  "where_a": "1_introduction.tex:96: \"We formalize this idea in a \\emph{fragmentation index}, the expected cost of an optimal execution plan with foresight into AI's successes and failures, and show analytically that it approximately tracks the impact of optimal AI deployment.\"",
+  "where_b": "4_implications.tex:202: \"Notably, this AI strategy isn't necessarily optimal even with the benefit of foresight: a long AI chain with a good probability of success might be optimal even if the prophet knows that it will fail on the first attempt.\"",
+  "why": "The intro attaches the word \"optimal\" to the foresight plan whose cost defines FI; Section 4.2 states explicitly that this plan is sub-optimal even among foresight plans, and gives the reason (a chain worth running despite a known first-attempt failure). If FI were the value of an optimal-with-foresight plan it would be a lower bound on OPT, whereas Proposition \\ref{prop:fragmentation} and Lemma \\ref{lem:FI.upper.bound} allow $FI$ up to $\\tfrac54 OPT$ and Example \\ref{ex:FI.tight} attains it ($FI=5/2$ against $OPT=2$, recomputed and confirmed). So the intro's characterization is inconsistent with the proposition itself, not only with the Section 4.2 caveat.",
+  "fix": "The intro is the wrong side. Drop \"optimal\": e.g. \"the expected cost of a natural execution plan built with foresight into AI's successes and failures.\"",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Section 7 states the model requires an AI chain to begin with an automated task; Definition 4 requires no such thing (a length-one chain begins with an augmented step)",
+  "severity": "inconsistency",
+  "where_a": "7_empirics.tex:143: \"We do not impose the model's stricter requirement that a chain begin with an automated task...\"",
+  "where_b": "3_shortrun.tex:89 (Definition \\ref{def:ai_chain}): \"An AI chain is a contiguous block of one or more sequential steps executed by AI, in which all steps but the final one are automated and the final step is augmented.\" And 3_shortrun.tex:76-77: \"an AI chain may consist of a single step, with $\\ell = r$: having no automated predecessors, it is simply an augmented step. An AI-augmented step is thus an AI chain of length one, a convention we adopt throughout the paper.\"",
+  "why": "Definition 4 constrains the chain's *end* (the last step must be augmented, all earlier ones automated); it places no requirement on the first step, and a length-one chain explicitly begins with an augmented step. The paper states the requirement correctly twice elsewhere \u2014 7_empirics.tex:36 (\"requires every automated step to be followed by another automated or augmented step\") and 7_empirics.tex:27 (\"an automated task followed by a manual one, which the model's definition of a chain does not allow\") \u2014 so line 143 contradicts both Definition 4 and the paper's own two other renderings of it.",
+  "fix": "7_empirics.tex:143 is the wrong side. Replace \"that a chain begin with an automated task\" with the requirement Definition 4 actually imposes, e.g. \"that every automated task be followed by another AI-executed task, with the chain terminating in an augmented one.\"",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "In the proof of the 5/4 upper bound the maximizing point is written with the wrong sign in the exponent, giving a value $\\alpha^{-d(T_j)}=1/2$ that is impossible",
+  "severity": "cosmetic",
+  "where_a": "A_omitted_proofs.tex:235: \"The ratio between this expression and $\\alpha^{-d(T_j)}$ is maximized at $\\alpha^{-d(T_j)} = 1/2$, achieving a value of $5/4$ as claimed.\"",
+  "where_b": "A_omitted_proofs.tex:234: \"$1 + \\sum_{s_i \\in T_j}(1-\\alpha^{d_i})(1+\\alpha^{-d_i}) \\leq 1 + (1-\\alpha^{d(T_j)})(1+\\alpha^{-d(T_j)}) = 1 + \\alpha^{-d(T_j)} - \\alpha^{d(T_j)}$\"; and Example \\ref{ex:FI.tight} (A_omitted_proofs.tex:242-247), whose tight instance has chain success probability $q_1q_2q_3 = 1/2$, i.e. $\\alpha^{d(T)} = 1/2$",
+  "why": "Write $u = \\alpha^{-d(T_j)}$. The ratio is $(1 + u - 1/u)/u = 1/u + 1 - 1/u^2$, whose derivative $-1/u^2 + 2/u^3$ vanishes at $u = 2$, giving $1/2 + 1 - 1/4 = 5/4$. So the maximum is at $\\alpha^{-d(T_j)} = 2$, equivalently $\\alpha^{d(T_j)} = 1/2$. The value printed, $\\alpha^{-d(T_j)} = 1/2$, is not attainable at all: $\\alpha \\in (0,1]$ and $d \\ge 0$ force $\\alpha^{-d(T_j)} \\ge 1$. The paper's own tightness example confirms the correct point: its optimal chain succeeds with probability $1/2 = \\alpha^{d(T)}$, and I recomputed $FI = \\tfrac12(1) + \\tfrac12(1+2+1) = 5/2$ against $OPT = 1/(1\\cdot\\tfrac12\\cdot 1) = 2$, ratio exactly $5/4$.",
+  "fix": "Line 235 is the wrong side. Write \"maximized at $\\alpha^{d(T_j)} = 1/2$\" (equivalently $\\alpha^{-d(T_j)} = 2$).",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Appendix G says the fragmentation heatmap's \"All tasks\" row reproduces Table 4's estimates (\u22120.26, \u22120.38, \u22120.28); the heatmap it cites shows \u22120.38, \u22120.32, \u22120.23",
+  "severity": "error",
+  "where_a": "writeup/draft_mert/G_frequency_robustness.tex:114 \u2014 \"The top all-tasks row reproduces the full-sample standardized estimates of $-0.26$, $-0.38$, and $-0.28$, all significant at the 1\\% level, here estimated on the $871$ occupations that retain at least five tasks (and matching the headline estimates of Table~\\ref{tab:fragmentation_index_regression_exposure}).\"",
+  "where_b": "The figure that sentence describes, Figure OA-15 (`fig:frag_frequency`), included at writeup/draft_mert/G_frequency_robustness.tex:123 as `plots/fragmentationIndex_weeklyTasks/frag_logic_threshold_heatmap_def1.png`. Its top \"All tasks\" row reads, panel by panel: \"-0.38*** / N=871\" (No Fixed Effects), \"-0.32*** / N=871\" (SOC Major Group FE), \"-0.23*** / N=871\" (SOC Minor Group FE).",
+  "why": "The prose quotes Table 4 correctly \u2014 writeup/tables/fragmentation_index_regression_exposure.tex gives EFI coefficients \u22120.26***, \u22120.38***, \u22120.28*** in columns (1)\u2013(3), N=872, and the independent prompt-robustness figure (`plots/fragmentationIndex_robustness/fragmentation_index_robustness_definition_1.png`, Prompt 0 in red) confirms exactly \u22120.26 / \u22120.38 / \u22120.28. But the heatmap's top row is \u22120.38 / \u22120.32 / \u22120.23, which is not that triple in any order: the no-FE cell differs by 0.12 and the minor-FE cell by 0.05. The two cannot both be right, and the sentence's parenthetical (\"matching the headline estimates of Table~\\ref{...}\") asserts they are identical. This is not a rounding or ordering artifact: the coincidence that \u22120.38 appears in both (in different columns) makes the mismatch easy to miss. Note that the same appendix's other exhibits do match the main text exactly \u2014 the neighbor heatmaps (`neighbor_logic_threshold_heatmap_prev/next_bySpec.png`) show top-row 0.124 / 0.061 / 0.051 and 0.117 / 0.057 / 0.048 with N=10,708 and 9,861, exactly Table 5 columns (1)\u2013(3) after rounding, and the chain-length forest plot's \"All tasks\" row shows 1.45 as claimed \u2014 so only the fragmentation heatmap is out of step, consistent with a stale figure rather than a mistyped number.",
+  "fix": "Determine which side is stale. If the heatmap is current (it is estimated on N=871 with within-cut z-scoring, per the footnote at G:16), the prose is wrong: change the quoted triple to \"$-0.38$, $-0.32$, and $-0.23$\" and drop or soften the claim that the top row matches Table 4, since re-standardizing within the 871-occupation cut changes the estimates. If the prose is right, regenerate `plots/fragmentationIndex_weeklyTasks/frag_logic_threshold_heatmap_def1.png` so its \"All tasks\" row is the Table 4 specification.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Appendix H claims no branch of five or more steps reaches \u03c4 = +1; Figure OA-18 shows a substantial five-step block in the \u03c4 = +1 bin",
+  "severity": "inconsistency",
+  "where_a": "writeup/draft_mert/H_external_validation.tex:173 \u2014 \"Figure~\\ref{fig:apqc_tau_by_size} decomposes the distribution by branch length and shows the consequence directly: the mass at $\\tau = -1$ consists entirely of three- and four-step branches, and so does most of the spike at $\\tau = +1$, where $56\\%$ of three-step branches sit against none of the branches with five steps or more.\"",
+  "where_b": "The figure that sentence cites, Figure OA-18 panel (a) (`fig:apqc_tau_size_main`), included at writeup/draft_mert/H_external_validation.tex:135 as `plots/apqc_pcf_ordering/tau_distribution_by_size_main_share.png`. Its rightmost bar (\u03c4 \u2208 [0.9, 1.0], total \u224826.6% of branches) is stacked with all five length groups: \u224810.2% \"3 steps\", \u22488.1% \"4 steps\", \u22485.2% \"5 steps\", \u22482.1% \"6-7 steps\", \u22481.0% \"8+ steps\" (legend order light\u2192dark = 3, 4, 5, 6-7, 8+, verified against the legend swatch colors).",
+  "why": "The histogram spans exactly [\u22121, 1] in 20 bins of width 0.1, so the rightmost bin is [0.9, 1.0]. For a five-step branch Kendall's \u03c4 can only take the values 1, 0.8, 0.6, \u2026, so every five-step branch in that bin has \u03c4 = exactly +1. Scaling by the figure's own calibration (n = 63+74+70+75+63 = 345; the \"3 steps\" segment of that bar is 10.2% \u2248 35 branches = 35/63 = 56%, which is the very number the sentence quotes), the \"5 steps\" segment of \u22485.2% is \u224818 branches \u2014 roughly 26% of the 70 five-step branches \u2014 sitting at \u03c4 = +1, not \"none\". The arithmetic also cross-checks against the paper's own headline: Table OA-12 reports exact-order recovery of 0.24 \u00d7 345 \u2248 83 branches, and 35 (three-step) + 29 (four-step) + 18 (five-step) \u2248 82, i.e. the exact recoveries cannot be accounted for without the five-step branches. (The companion claim that the \u03c4 = \u22121 mass is \"entirely\" three- and four-step branches is also questionable \u2014 the leftmost bar carries a small \"6-7 steps\" segment \u2014 but a seven-step branch can sit in [\u22121, \u22120.9] at \u03c4 = \u22120.905 without being at \u22121, so that half is not decisively contradicted.)",
+  "fix": "The figure is the primary evidence and the 56% figure quoted in the same clause is confirmed by it, so the prose is the wrong side. Replace \"against none of the branches with five steps or more\" with what the figure shows \u2014 e.g. \"against roughly a quarter of the five-step branches and progressively fewer of the longer ones\" \u2014 or restate the intended point (that the extreme bins are dominated by short branches) without the absolute \"none\".",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "Tasks are indexed $b$ in the body but $j$ throughout Appendix A, where $j$ is the paper's declared job index",
+  "severity": "inconsistency",
+  "where_a": "3_shortrun.tex:124 (notes to tab:notation_shortrun): \"Step-level primitives are indexed by $i$ and task-level objects by $b$\"; 5_longrun.tex:137 (notes to tab:notation_longrun): \"Jobs are indexed by $j$\". Body usage is uniform: 3_shortrun.tex:143 \"$\\sum_{T_b \\in \\T} \\timecost{b}$\", 5_longrun.tex:69 \"$\\bigl(\\sum_{T_b \\in J_j} \\skillcost{b}\\bigr)$\".",
+  "where_b": "A_omitted_proofs.tex:213 \"$FI \\leq \\sum_{T_j \\in \\T_{\\AIletter}}\\left(1 + \\sum_{s_i \\in T_j}(1-\\alpha^{d_i})(1+\\minTime{i})\\right)$\"; A_omitted_proofs.tex:224 \"$OPT = \\sum_{T_j \\in \\T_{\\AIletter}} \\alpha^{-d(T_j)} + \\sum_{(s_i) \\in \\T_{\\manualLetter}} \\manualTime{i}$\"; also A:225, 227-235, 281-312, 340-358 ($T_j$, $\\overline{T}_j$, $E_j$).",
+  "why": "The paper states two explicit subscript conventions: $b$ for tasks, $j$ for jobs. Appendix A uses $T_j$ for a task everywhere, so within one document $j$ subscripts both jobs ($J_j$, $\\text{Wage}_j$, $\\handofftime{}(J_j)$) and tasks ($T_j$). In 5_longrun.tex:69 the two conventions appear in the same expression ($T_b \\in J_j$), which is exactly what Appendix A's $T_j$ collides with. There is no reading under which $T_j$ and $J_j$ index the same kind of object.",
+  "fix": "Appendix A is the side that departs from the stated convention: rename $T_j \\to T_b$, $\\overline{T}_j \\to \\overline{T}_b$, $E_j \\to E_b$, $d(T_j) \\to d(T_b)$ throughout Appendices A.2 and A.3, reserving $j$ for jobs.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "$m$ is redefined as a manual time cost inside the proof of Proposition 1, while $m$ is the number of production steps everywhere else (and $A$, $B$, $c$ are simultaneously overloaded in the same display)",
+  "severity": "error",
+  "where_a": "3_shortrun.tex:110 (tab:notation_shortrun): \"$\\mathcal{S} = (s_1, \\dotsc, s_m)$ & Sequence of the firm's $m$ production steps\"; 6_extensions.tex:70 \"Given a workflow with $m$ steps\"; A_omitted_proofs.tex:490 \"Consider a workflow with $m$ steps $\\mathcal{S} = \\{s_1, s_2, \\ldots, s_m\\}$\".",
+  "where_b": "A_omitted_proofs.tex:116-117: \"Let $m,\\, A,\\, B,\\, c > 0$ and define, for $q \\in (0,1)$, $D(q) = \\frac{A}{q} - \\min\\left\\{ m,\\, \\frac{B}{q} \\right\\} - c$\", instantiated at A:152 as \"with $B = \\AItime{k-1}$ and $m = \\manualTime{k-1}$ throughout\" and at A:164 \"with $B = \\AItime{k+1}$ and $m = \\manualTime{k+1}$\".",
+  "why": "$m$ is a fixed global object (the workflow length) that the same appendix uses in that sense at line 490 and that Propositions 3 and 4 use in their statements; here it is bound to a step's manual time $\\manualTime{k\\pm1}$. The same display also reuses $A$ (elsewhere the AI-mode superscript in $\\AItime{i}$, $\\AIskill{i}$, and the aggregate AI labor input $\\aggregateAIlabor$ in eq:lr_macro_ces), $B$ (the cost bound of Proposition 4: 6_extensions.tex:90 \"whose skill, time, and hand-off costs lie in $[1/B, B]$\"), and $c$ (the paper's skill-cost letter, $\\skillcost{b}$, and the chain index $c$ in A:390). Four global symbols are silently rebound in one three-line claim.",
+  "fix": "Rename the generic constants in the claim at A:116 to letters not otherwise in use (e.g. $D(q) = a/q - \\min\\{\\mu_0, \\beta/q\\} - \\gamma$), and update the instantiations at A:152-155 and A:164-167 accordingly. The claim is the side to change; $m$, $A$, $B$, $c$ are load-bearing elsewhere.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "$k$ carries three incompatible meanings: a step index, the number of connected components, and the number of non-individual tasks (a fourth in Appendix B)",
+  "severity": "inconsistency",
+  "where_a": "4_implications.tex:15 \"consider a human-advantaged step $k$ whose successor $k+1$\" (step index, used this way through 4:123 and A:10-178, and again as the DP step position in 6_extensions.tex:58 \"let $C[k]$ denote the minimum time needed to complete a hypothetical workflow containing only steps $1$ through $k$\").",
+  "where_b": "4_implications.tex:206 and A_omitted_proofs.tex:191: \"$\\mathcal{C} = \\{C_1, \\dotsc, C_k\\}$ for the random variable representing the collection of maximal connected components of non-failed steps\" (component count); A_omitted_proofs.tex:291: \"Let $k = |\\T_{NI}|$ be the number of non-individual tasks\" (task count); B_macro_production.tex:74: \"we relabel tasks such that tasks $1$ to $k$ are AI-assisted\" (count of AI tasks).",
+  "why": "A:191 and A:291 are in the same proof subsection (app:fragmentation_proof), roughly one page apart, and assign $k$ two different counts; A:293 then writes \"$ALG \\leq 2k + \\sum_{(s_i) \\in \\T_I} \\minTime{i}$\" using the second meaning while the first is still nominally in force. Neither can be reconciled with $k$ as the focal step index of Section 4.1 and of Proposition 3's recursion.",
+  "fix": "Keep $k$ for the step index (Section 4.1 and the short-run DP). In the fragmentation material rename the component count and drop it in favor of naming components without a fixed cardinality, and rename $|\\T_{NI}|$ to something like $N_{NI}$ at A:291, A:293, A:303, A:314, A:316. In Appendix B rename the AI/manual task cutoff (B:74, 80, 87, 106, 107, 111, 115).",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Connected components of non-failed steps are indexed inconsistently: $C_j$ with count $k$, then count $\\ell$, then generic component $C_\\ell$, all within one proof",
+  "severity": "inconsistency",
+  "where_a": "A_omitted_proofs.tex:191-192: \"$\\mathcal{C} = \\{C_1, \\dotsc, C_k\\}$ ... The weight of each $C_j \\in \\mathcal{C}$ is defined to be $\\omega(C_j) = \\min\\{ 1, \\sum_{s_i \\in C_j} \\manualTime{i} \\}$\" (index $j$, count $k$); same in 4_implications.tex:206-207.",
+  "where_b": "A_omitted_proofs.tex:299: \"in any realization of the connected components of non-failed steps $\\mathcal{C} = (C_1, \\dotsc, C_\\ell)$, $\\omega(C_j) = 1$ for all $j$\" (count now $\\ell$); A_omitted_proofs.tex:353-358: \"for each connected component $C_\\ell$ that intersects $T_j$ we additionally charge the contribution $\\omega(C_\\ell)$\" (now $\\ell$ is the component index, not the count).",
+  "why": "The same object $\\mathcal{C}$ is given cardinality $k$ at line 191 and cardinality $\\ell$ at line 299; then at 353-358 $\\ell$ switches from the count to a running component index, so $C_\\ell$ at 353 and $C_\\ell$ at 299 denote different things (a generic component vs. the last one). Separately, $\\ell$ is already the chain's first step in $\\AItime{r}/\\prod_{i=\\ell}^{r} q_i$ (3_shortrun.tex:73, 90, 118), the last step of a constructed task at A:263 \"$T = (s_1, \\dotsc, s_\\ell)$\", and a job's length offset at 5_longrun.tex:12 \"$J = (T_b, \\dotsc, T_{b+\\ell})$\".",
+  "fix": "Fix one index letter for components (e.g. $C_a$) and use it at 4_implications.tex:206-212, A:191-198, A:299 and A:353-358; state the cardinality with a dedicated symbol or leave it unnamed. Do not reuse $\\ell$, which is already the chain-start index.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "$j$ is used as a step index in Proposition 1 and its proof, where it simultaneously indexes the three candidate arrangements (and elsewhere jobs)",
+  "severity": "inconsistency",
+  "where_a": "4_implications.tex:95 (Prop 1(ii)): \"then it does so at every $(q'_{k-1},\\, q'_k,\\, q'_{k+1})$ with $q'_j \\geq q_j$ for each $j$\"; A_omitted_proofs.tex:10: \"write $\\minTime{j} = \\min\\left\\{\\manualTime{j}, \\frac{\\AItime{j}}{q_j}\\right\\}$ for the cheapest way of executing step $j$ on its own\".",
+  "where_b": "A_omitted_proofs.tex:80: \"$D_j = V_j - V_0, \\qquad j = 1,\\, 2,\\, 3$\", with A:86 \"$\\mathcal{A}_j = \\{(q_{k-1},\\, q_k,\\, q_{k+1}) \\in Q : D_j < 0\\}$\"; and 5_longrun.tex:137: \"Jobs are indexed by $j$.\"",
+  "why": "Inside app:ca_local_proof the letter $j$ is a step index at line 10 and an arrangement index (1, 2, 3) from line 80 onward, so $\\minTime{j}$ and $D_j$ read as indexed by the same thing when they are not; A:19 mixes them in one display ($V_0 = \\minTime{k-1} + \\manualTime{k} + \\minTime{k+1}$ is $V$ indexed by arrangement, built from $t^*$ indexed by step). Across the paper the same letter is the job index.",
+  "fix": "In A:10-11 and 4_implications.tex:95 use the step-index letter ($i$, or spell out $k-1,k,k+1$) rather than $j$, leaving $j$ for the arrangement index locally and for jobs globally.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The hand-off time $\\handofftime{\\cdot}$ is defined on step indices but written with task indices in the Section 5.3 example",
+  "severity": "inconsistency",
+  "where_a": "5_longrun.tex:90: \"given step $s_i$, we write $\\handofftime{i}$ for the additional hand-off time spent by a worker for whom the last step of their job is $s_i$\"; 5_longrun.tex:127 (tab:notation_longrun): \"$\\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$\"; 5_longrun.tex:91 \"$\\handofftime{m} = 0$\" (with $m$ the number of steps).",
+  "where_b": "5_longrun.tex:199: \"$\\bigl(\\skillcost{b},\\, \\timecost{b},\\, \\handofftime{b}\\bigr)_{b=1,2,3} = (3,\\,1,\\,3),\\quad (1,\\,2,\\,0.5),\\quad (2,\\,2,\\,0)$\"; 5_longrun.tex:205: \"the large hand-off time $\\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger\".",
+  "why": "The tuple at line 199 is explicitly indexed by $b = 1,2,3$, the task index, and line 205 confirms $\\handofftime{1}$ refers to a boundary between tasks. But $\\handofftime{\\cdot}$ was defined two pages earlier, and in the notation table, as a function of the step index $i$; the paper's whole point in 5_longrun.tex:87 is that \"the hand-off cost [attaches] to the step at which the break occurs rather than to the worker\". With $m \\neq n$ in general, $\\handofftime{1}$ (step 1) and $\\handofftime{1}$ (task 1) are different numbers.",
+  "fix": "Either write the example's third coordinate as $\\handofftime{}(T_b)$ / $\\handofftime{i(b)}$ where $s_{i(b)}$ is the last step of task $b$, or add a task-indexed variant to tab:notation_longrun. The definition at 5_longrun.tex:90 and the table are the side to preserve.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Appendix B attaches task indices to the step-level symbols $\\manualSkill{\\cdot}$, $\\AIskill{\\cdot}$, and $d$, and introduces a third notation for a chain's total difficulty",
+  "severity": "inconsistency",
+  "where_a": "5_longrun.tex:120-121 (tab:notation_longrun): \"$\\manualSkill{i}$ & Skill required to complete step $i$ manually\"; \"$\\AIskill{i}$ & Skill required to manage one AI attempt at step $i$\"; 3_shortrun.tex:113 \"$d_i$ & Difficulty of step $i$ for AI\"; task-level skill is $\\skillcost{b}$ (5_longrun.tex:122).",
+  "where_b": "B_macro_production.tex:26: \"the skill required for manual Task 1, $\\manualSkill{1}$, but must also possess the required skill for AI-assisted Task 2, $\\AIskill{2}$\"; B:33 \"$w_{\\manualLetter}(\\sum_{T_b^{\\manualLetter} \\in J} \\manualSkill{b}) + w_{\\AIletter}(\\sum_{T_b^{\\AIletter} \\in J} \\AIskill{b})$\"; B:44 \"$\\sum_{T_{\\ell}^{\\manualLetter} \\in J(b)} \\manualSkill{\\ell}$\"; B:48 and B:111 \"$\\alpha^{-d_b}$\" for a task.",
+  "why": "$\\manualSkill{}$, $\\AIskill{}$ and $d$ are declared step-level in the body's notation table, and the body already provides the task-level aggregate $\\skillcost{b}$; Appendix B silently reindexes all three by task (and at B:44 by a third letter, $\\ell$, for tasks inside a job). $d_b$ is never defined and denotes a chain's total difficulty, which Appendix A writes as $d(T_j)$ (A:225 \"we write $d(T_j) = \\sum_{s_i \\in T_j}d_i$ for the total difficulty of steps in task $T_j$\") and as $D_c$ (A:392 \"each chain $c$ ... contributing a term of degree equal to its total difficulty $D_c = \\sum_{i \\in c} d_i$\"): one object, three notations.",
+  "fix": "In Appendix B write task-level skill as $\\skillcost{b}$ split by mode (or define $\\manualSkill{b}, \\AIskill{b}$ explicitly as task-level aggregates at B:26), replace $T_\\ell$ by $T_{b'}$ at B:44, and adopt a single symbol for a chain's total difficulty ($d(T_b)$) in B:48, B:80, B:87, B:111, B:181 and in A:392.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The long-run recursion uses $s$ as the product's bound variable, although $s$ is the symbol for a step; the parallel short-run recursion uses $i$",
+  "severity": "inconsistency",
+  "where_a": "3_shortrun.tex:73 \"occurs with probability $\\prod_{i=\\ell}^{r} q_i$\"; 3_shortrun.tex:90, 118; 6_extensions.tex:62 \"$\\min_{\\ell < k}\\ \\Bigl( C[\\ell] + \\frac{\\AItime{k}}{\\prod_{i=\\ell+1}^{k} q_i} \\Bigr)$\"; A_omitted_proofs.tex:462. Every product over success probabilities in the paper is bound by $i$.",
+  "where_b": "6_extensions.tex:80 \"$\\min_{0 \\le r < i}\\ W\\Bigl(r,\\, \\skillcost{} + \\AIskill{i},\\, \\timecost{} + \\tfrac{\\AItime{i}}{\\prod_{s=r+1}^{i} q_s}\\Bigr)$\"; identically at A_omitted_proofs.tex:511 and A:527.",
+  "where_c": "",
+  "why": "$s$ is the paper's name for a step: $\\mathcal{S} = (s_1,\\dotsc,s_m)$ (3_shortrun.tex:110), and the same appendix writes \"$\\mathcal{S} = \\{s_1, s_2, \\ldots, s_m\\}$\" at A:490, twenty lines above the display. So $q_s$ in $\\prod_{s=r+1}^{i} q_s$ collides with the named object $s$: read literally the running index is the step symbol itself. The short-run recursion, which is the same construct, binds the identical product with $i$.",
+  "fix": "Change the bound variable in 6_extensions.tex:80, A:511 and A:527 to $i'$ (or reindex the outer position) so that the product matches $\\prod_{i=\\ell}^{r} q_i$ used everywhere else; $s$ must stay reserved for steps.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "\"Step\" and \"task\" are used interchangeably in the fragmentation proof, the greedy-algorithm description, and the empirical specification, although the model defines them as different objects",
+  "severity": "inconsistency",
+  "where_a": "3_shortrun.tex:93: an AI strategy is \"a partition of the step sequence $\\mathcal{S}$ into a sequence of contiguous tasks $\\mathcal{T}$, each of which is either a manual step or an AI chain\"; 3_shortrun.tex:34 \"Steps are the smallest unit of work\", 3_shortrun.tex:62 \"Tasks are the smallest unit of work for a human worker\"; tab:notation_shortrun lists $s_i$ and $T_b$ as distinct.",
+  "where_b": "4_implications.tex:232 \"The algorithm groups tasks into chains as long as the probability of success is sufficiently high\"; A_omitted_proofs.tex:220 \"each failed task $s_i \\in T_j$\"; A:281 \"If the final task $s_m$ from $\\mathcal{S}$ is contained in some $T_j$\"; A:454 \"task $k$ cannot be automated in any minimum-cost solution that determines $C[k]$\"; 7_empirics.tex:185 \"\\emph{is\\_ai}$_{t}$ indicates whether step $t$ is executed by AI\" vs 7_empirics.tex:202 \"an indicator for whether task $t$ is AI-executed ($\\text{is\\_ai}_{t}$)\".",
+  "why": "A chain is composed of steps and is itself one task, so \"groups tasks into chains\" and \"failed task $s_i \\in T_j$\" invert the containment the model defines; $s_m$ is a step, not a task; and the same regressand $\\text{is\\_ai}_t$ is called a step in the equation and a task in its table note. These are the paper's two primitive objects, and the fragmentation results depend on their distinction (the number of tasks is what chaining reduces).",
+  "fix": "Replace \"task\" with \"step\" wherever the object carries an $s$-subscript or is being grouped into a chain: 4_implications.tex:232, A:219-221, A:281, A:300, A:310, A:325-326, A:454, A:467, and 7_empirics.tex:202-204.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The regressand $\\text{ai\\_execution}_o$ is defined as a share of tasks in one place and a share of steps in three others",
+  "severity": "inconsistency",
+  "where_a": "7_empirics.tex:99: \"where \\emph{$\\text{ai\\_execution}_{o}$} is the share of tasks executed by AI in occupation $o$, \\emph{$\\text{ai\\_exposure}_{o}$} is the share of AI-exposed tasks\"; D_tables_and_robustness.tex:106 \"the execution-based EFI measure is mechanically related to the share of tasks executed by AI\".",
+  "where_b": "7_empirics.tex:101 \"occupations with higher AI exposure should have a higher share of steps executed by AI ($\\beta_1 > 0$)\"; 7_empirics.tex:131 (table note) \"The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\\text{ai\\_execution}$)\"; identically D_tables_and_robustness.tex:98 and H_external_validation.tex:385.",
+  "why": "In this paper's own model the two shares have different denominators: the count of steps is $m$ and fixed, while the count of tasks $n$ falls as chains form (7_empirics.tex:112: \"the number of tasks in the model falls to four\"). The same symbol therefore cannot be both. The empirical mapping (7_empirics.tex:110) sets \"the total number of steps ... measured by the raw count of O*NET tasks\", so the intended denominator is the step count.",
+  "fix": "Standardize 7_empirics.tex:99 and D_tables_and_robustness.tex:106 to \"share of steps executed by AI\" (and \"share of AI-exposed steps\"), matching the table notes and the EFI denominator.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The empirical fragmentation index is described as \"the number of AI blocks per step\" but defined as potential tasks per step",
+  "severity": "inconsistency",
+  "where_a": "7_empirics.tex:110-112: \"the empirical fragmentation index is the ratio of the number of \\emph{potential} tasks in the sense of our theoretical framework to the total number of steps ... If none of the five tasks are exposed to AI, then the number of tasks in the theoretical sense is five, and the EFI equals $5/5 = 1$. If instead two consecutive O*NET tasks are exposed to AI ... the number of tasks in the model falls to four and the EFI becomes $4/5 = 0.8$.\"",
+  "where_b": "7_empirics.tex:99: \"Because the fragmentation index is the number of AI blocks per step, it varies mechanically with how many AI-able steps a workflow contains\".",
+  "why": "Under the definition the numerator counts all potential tasks, manual singletons included: 5 steps with no AI exposure give EFI $=5/5=1$ even though the number of AI blocks is $0$ (which would give $0/5=0$); with two consecutive exposed steps the definition gives $4/5=0.8$ while \"AI blocks per step\" gives $1/5=0.2$. The two descriptions of the same variable disagree on every example the paper gives.",
+  "fix": "Reword 7_empirics.tex:99 to \"the fragmentation index is the number of potential tasks per step\"; the worked definition at 7_empirics.tex:110-112 and the $\\beta_2<0$ prediction are consistent with that reading.",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "$\\tau$ denotes three different things: skill-adjusted time (Appendix B), a free AI-management cost (proof of Proposition 1), and Kendall's rank correlation (empirical appendices)",
+  "severity": "inconsistency",
+  "where_a": "B_macro_production.tex:44: \"$\\skillAdjustedTimeLetter_b = \\frac{w_{\\manualLetter}(\\dots) + w_{\\AIletter}(\\dots)}{w_{E(b)}} \\, \\timecost{b}$\" (the macro \\skillAdjustedTimeLetter is $\\tau$, per preamble.tex: \"\\newcommand{\\skillAdjustedTimeLetter}{\\ensuremath{\\tau}}\"), used as $\\tau_A$, $\\tau_M$, $\\tau^H(J_j)$ throughout B:80-295.",
+  "where_b": "A_omitted_proofs.tex:28: \"$\\manualTime{k+1} = 1$, $\\AItime{k+1} = \\tau > 0$\", used as a free parameter at A:33, 45, 48-62; and C_sample_construction.tex:134 \"the average Kendall's $\\tau$ is 0.6\", F_prompt_robustness.tex:25-69, plus G and H.",
+  "why": "$\\tau$ is a defined model symbol (skill-adjusted time, carried by a dedicated macro and used in every equation of Appendix B, including the CES derivation), yet Appendix A binds the same letter to a step's AI management cost $\\AItime{k+1}$ inside the neighboring proof, and the empirical appendices bind it to a rank correlation. The A and B uses sit in the same appendix block and both concern the same model.",
+  "fix": "Rename the free parameter in A:28-62 (e.g. to $a$ or $\\lambda$). Kendall's $\\tau$ is standard and can stay, but should be flagged as distinct where it first appears (C_sample_construction.tex:134), since $\\tau$ is already a model symbol.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "A chain's total difficulty is asserted to satisfy $D_c \\ge 1$ in Appendix A but only $d \\ge 0$ in Appendix B, and the range of $d_i$ is never stated where $d_i$ is defined",
+  "severity": "inconsistency",
+  "where_a": "A_omitted_proofs.tex:392: \"with each chain $c$ (with augmented endpoint $r_c$) contributing a term of degree equal to its total difficulty $D_c = \\sum_{i \\in c} d_i \\ge 1$\", used again at A:409 \"terms $\\AItime{r_c}\\,\\alpha^{-D_c}$ with $D_c \\ge 1$\".",
+  "where_b": "B_macro_production.tex:181: \"observe from \\eqref{eq:alpha_bar} that for $d_b \\geq 0$ the upper bound of $\\bar{\\alpha}$ is 1\"; 3_shortrun.tex:113 defines only \"$d_i$ & Difficulty of step $i$ for AI\", with no range, and 3_shortrun.tex:54 requires only $q_i = \\alpha^{d_i} \\in (0,1]$, i.e. $d_i \\ge 0$.",
+  "why": "$D_c \\ge 1$ does not follow from anything stated: a length-one chain has $D_c = d_i$, and under Appendix B's declared range $d_b \\ge 0$ that can be any nonnegative number, including $0$ or $0.5$. The two appendices therefore assume incompatible ranges for the same primitive, and Section 3 supplies neither.",
+  "fix": "State the range of $d_i$ once in Section 3 (tab:notation_shortrun row for $d_i$). If difficulties are meant to be at least 1, say so there and reconcile B:181; otherwise drop \"$\\ge 1$\" from A:392 and A:409 and check that the non-monotonicity proof only needs $D_c > 0$.",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "$\\mathcal{C}$ denotes the collection of connected components in one subsection of Appendix A and the set of AI chains in the next",
+  "severity": "cosmetic",
+  "where_a": "4_implications.tex:206 and A_omitted_proofs.tex:191: \"$\\mathcal{C} = \\{C_1, \\dotsc, C_k\\}$ for the random variable representing the collection of maximal connected components of non-failed steps\".",
+  "where_b": "A_omitted_proofs.tex:390-392: \"$C_\\T(\\alpha) = K_\\T + \\sum_{c \\in \\mathcal{C}(\\T)} \\AItime{r_c}\\,\\alpha^{-D_c}$ ... the sum runs over the AI chains of $\\T$, denoted $\\mathcal{C}(\\T)$\".",
+  "why": "The two definitions are one subsection apart in the same appendix (A.2 and A.3) and both concern groupings of steps in a workflow, so $\\mathcal{C}$ is doing double duty for two different groupings; the chain element $c$ additionally collides with the skill-cost letter $c$ ($\\skillcost{b}$).",
+  "fix": "Rename the set of AI chains at A:390-412, e.g. $\\mathcal{K}(\\T)$ with elements $\\kappa$, keeping $\\mathcal{C}$ for connected components.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The ordered sequences $\\mathcal{S}$ and $\\T$ are written with set braces in some places and tuple parentheses in others",
+  "severity": "cosmetic",
+  "where_a": "3_shortrun.tex:2 \"a sequence of steps $\\mathcal{S}=(s_1,\\ldots,s_m)$\"; 3_shortrun.tex:110 \"$\\mathcal{S} = (s_1, \\dotsc, s_m)$\"; 3_shortrun.tex:117 \"$\\mathcal{T} = (T_1, \\dotsc, T_n)$\"; A_omitted_proofs.tex:188, 201, 210.",
+  "where_b": "4_implications.tex:222 \"Fix a sequence of $m$ steps $\\mathcal{S} = \\{s_1, \\dotsc, s_m\\}$\"; 5_longrun.tex:147 \"Given the sequence of steps $\\mathcal{S} = \\{s_1, \\dotsc, s_m\\}$\"; 5_longrun.tex:39 \"the task sequence $\\T = \\{T_1, \\dotsc, T_n\\}$\"; A_omitted_proofs.tex:490 \"$\\mathcal{S} = \\{s_1, s_2, \\ldots, s_m\\}$\".",
+  "why": "Order is the defining feature of these objects (chains must be contiguous runs of the sequence, jobs contiguous blocks of tasks), and the paper's own sentences call them sequences while the braces denote an unordered set. Two of the four brace instances sit in a proposition statement and in the long-run problem setup.",
+  "fix": "Use parentheses uniformly for $\\mathcal{S}$ and $\\T$: change 4_implications.tex:222, 5_longrun.tex:39, 5_longrun.tex:147, and A_omitted_proofs.tex:490 to match tab:notation_shortrun.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The short-run notation table claims completeness but omits the wage rate $w$ that the section introduces",
+  "severity": "cosmetic",
+  "where_a": "3_shortrun.tex:139: \"is paid at the normalized rate of $w = 1$ per unit of time for the whole time production takes\" (with 3_shortrun.tex:13 \"that worker's wage is a constant, which we normalize to $1$\").",
+  "where_b": "3_shortrun.tex:107-118 (tab:notation_shortrun) lists $\\alpha$, $s_i$, $\\mathcal{S}$, $\\manualTime{i}$, $\\AItime{i}$, $d_i$, $q_i$, $T_b$, $\\mathcal{T}$, $\\timecost{b}$ and no $w$; its note at 3_shortrun.tex:125 states \"This is all the short-run problem requires\", and 3_shortrun.tex:95 says the table \"collects the notation this section introduces, which is everything needed here and in Section~\\ref{sec:results}\".",
+  "why": "$w$ is introduced in the same subsection the table closes, is carried into Appendix B as $w_{\\AIletter}$ and $w_{\\manualLetter}$ (B:19-20), and is the object Section 5 makes endogenous, so a table that advertises itself as the complete short-run symbol list is missing a symbol it uses two lines below.",
+  "fix": "Add a row \"$w = 1$ & Worker's wage rate per unit of time, normalized in the short run\" to tab:notation_shortrun, or soften the completeness claim at 3_shortrun.tex:95 and 125.",
+  "confidence": "likely",
+  "dim": "?"
+ },
+ {
+  "title": "The fragmentation definition is restated with different set-membership notation in the body and the appendix",
+  "severity": "cosmetic",
+  "where_a": "4_implications.tex:207 and 212: \"$\\omega(C_j) = \\min\\{ 1, \\sum_{i \\in C_j} \\manualTime{i} \\}$\" and \"$\\sum_{i \\in F}\\min\\left\\{\\manualTime{i}, \\frac{\\AItime{i}}{q_i}\\right\\} + \\sum_{C_j \\in \\mathcal{C}} \\omega(C_j)$\" (indices are members of $F$ and $C_j$).",
+  "where_b": "A_omitted_proofs.tex:192 and 198: \"$\\omega(C_j) = \\min\\{ 1, \\sum_{s_i \\in C_j} \\manualTime{i} \\}$\" and \"$\\sum_{s_i \\in F}\\minTime{i} + \\sum_{C_j \\in \\mathcal{C}} \\omega(C_j)$\" (steps are members).",
+  "why": "The appendix explicitly presents this as a restatement (\"First recall the definition of fragmentation index\", A:188), yet $F$ and $C_j$ contain index numbers in the body and step objects in the appendix; the same displayed formula therefore parses differently in the two places.",
+  "fix": "Adopt the appendix convention ($s_i \\in F$, $s_i \\in C_j$, matching \"$F$ [is] the set of steps that fail\") in 4_implications.tex:207 and 212.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Figure 3's top row labels 14.81 as the \"best alternative\", but the true second-cheapest arrangement of Steps 1\u20132 is 14.00 (both manual)",
+  "severity": "error",
+  "where_a": "writeup/draft_mert/plots/TikZ_visualization/predecessor_visualization.tex:23 \u2014 \"\\node[font=\\footnotesize, align=left, anchor=west] at ($(a2.east)+(0.8,0)$) {Total cost $\\approx 10.44$\\\\ \\scriptsize(best alternative: $14.81$)};\"",
+  "where_b": "writeup/draft_mert/4_implications.tex:73-75 \u2014 \"$\\manualTime{1} = 6$ against an augmentation cost of $\\AItime{1}/q_1 \\approx 11.67$ \u2026 against $\\manualTime{2} = 8$ \u2026 chaining them would cost $\\AItime{2}/(q_1 q_2) \\approx 14.81$\"",
+  "why": "With (m,a,q) = (6,3.5,0.3) for Step 1 and (8,4,0.9) for Step 2 there are exactly five contiguous arrangements of the pair. I enumerated all of them: (1) Step 1 manual + Step 2 augmented = 6 + 4/0.9 = 10.4444; (2) both manual = 6 + 8 = 14.0000; (3) chain {1,2} augmented at 2 = 4/(0.3\u00b70.9) = 14.8148; (4) both augmented = 3.5/0.3 + 4/0.9 = 16.1111; (5) Step 1 augmented + Step 2 manual = 3.5/0.3 + 8 = 19.6667. The optimum is 10.44 (matching the label) but the runner-up is 14.00, not 14.81 \u2014 the chain is only third-cheapest. The label in the same figure's second row is computed the other way and is correct: for Steps 0\u20132 the optimum is 15.5945 and the true second-best is chain{0,1}+Step 2 augmented = 25/(0.95\u00b70.3) \u2026 in fact 3.5\u00b7\u2026 = 12.2807 + 4.4444 = 16.7251, i.e. exactly the 16.73 printed. So the two rows of the same figure use inconsistent notions of \"best alternative\", and the top one is wrong under either notion (under a \"best arrangement in which Step 1 is AI-executed\" reading, the bottom row would have to read 35.44, not 16.73).",
+  "fix": "Change the top row's annotation to \"(best alternative: 14.00)\", which is both-manual, so it matches the second-best-overall convention used in the bottom row. If the intent was to display the chaining cost specifically (14.81, quoted in the prose), relabel it as such rather than as the \"best alternative\".",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Figure 7's notes say the strategy table is \"below\" the figure, but the body text and the document place it in the Online Appendix, 67 pages later",
+  "severity": "inconsistency",
+  "where_a": "writeup/draft_mert/4_implications.tex:281 \u2014 \"Panel (a) shows the cost of each AI strategy, with the optimal strategy given by their lower envelope (thick black line); the table below gives each strategy's cost and the range of $\\alpha$ over which it is optimal.\"",
+  "where_b": "writeup/draft_mert/4_implications.tex:287 \u2014 \"Table~\\ref{tab:nonmonotone_costs} in Appendix~\\ref{app:theory_tables} collects them, together with the cost of each, the marginal benefit of improving AI quality, and the range of $\\alpha$ over which each is cost-minimizing.\"",
+  "why": "The two statements cannot both be right about where the table is. In the compiled 0_main.pdf, Figure 7 appears on page 23 and Table OA-3 (\"Configurations, Costs, and Marginal Gains in Example 4\") appears on page 90, in Appendix D. Nothing resembling that table sits below the figure.",
+  "fix": "In the figure notes, replace \"the table below gives each strategy's cost\" with \"Table~\\ref{tab:nonmonotone_costs} in Appendix~\\ref{app:theory_tables} gives each strategy's cost\", matching the body text.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "Figure 7's notes claim Panel (a) plots the cost of every AI strategy, but the panel omits one of the five strategies the text and Table OA-3 enumerate",
+  "severity": "inconsistency",
+  "where_a": "writeup/draft_mert/4_implications.tex:281 \u2014 \"Panel (a) shows the cost of each AI strategy, with the optimal strategy given by their lower envelope (thick black line)\"",
+  "where_b": "writeup/draft_mert/4_implications.tex:286 \u2014 \"the firm chooses among five configurations, ranging from both steps manual to both chained\"; and writeup/draft_mert/D_tables_and_robustness.tex:62 \u2014 \"Step 1 augmented & $\\AItime{1}/q_1 + \\manualTime{2} = 3.5\\alpha^{-11} + 8$ & $38.5/\\alpha^{12}$ & never\"",
+  "why": "Panel (a) (writeup/plots/example5_costs.png) draws only four curves plus the envelope; its legend reads \"Both steps manual\", \"Step 1 manual, Step 2 augmented\", \"Both steps augmented\", \"Steps 1\u20132 chained\", \"Minimum cost\". The fifth configuration listed in the text and in Table OA-3, \"Step 1 augmented, Step 2 manual\" (cost 3.5\u03b1^-11 + 8), is computed in the generating notebook (analysis/example5_plot.ipynb, variable s1aug_s2m) but never passed to plt.plot. It is not off-scale either: at \u03b1 = 0.9 it equals 19.15 and at \u03b1 = 1 it equals 11.50, both inside the panel's plotted window of \u03b1 \u2208 [0.4, 1], cost \u2208 [4, 26]. So \"each AI strategy\" describes five curves while the panel shows four.",
+  "fix": "Either add the s1aug_s2m curve to Panel (a) in analysis/example5_plot.ipynb and regenerate example5_costs.png, or soften the note to \"Panel (a) shows the cost of the AI strategies that are relevant over the plotted range\" (Panel (b)'s note is already worded so as not to claim completeness).",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "The cost of one inversion in Kendall's \u03c4 on a ten-step branch is stated as 0.02; under the paper's own \u03c4 normalization it is 0.044",
+  "severity": "error",
+  "where_a": "writeup/draft_mert/H_external_validation.tex:172 \u2014 \"whereas on a ten-step branch the same inversion costs $0.02$ and leaves $\\tau$ near $+1$\"",
+  "where_b": "writeup/draft_mert/H_external_validation.tex:172 \u2014 \"on a three-step branch it can only take the values $\\{-1, -1/3, +1/3, +1\\}$\"",
+  "why": "The enumerated three-step value set pins down the normalization the paper is using: \u03c4 = 1 \u2212 4d/(n(n\u22121)) where d is the number of discordant pairs, since for n = 3 this gives {1, 1/3, \u22121/3, \u22121} for d = 0,1,2,3, exactly the set quoted. Applying the same formula at n = 10 (45 pairs): one discordant pair gives \u03c4 = 1 \u2212 4/90 = 43/45 = 0.9556, a cost of 0.0444, not 0.02. The value 0.02 is 1/45, i.e. the pair's share of the pair count rather than its effect on \u03c4, which is twice that.",
+  "fix": "Replace \"costs $0.02$\" with \"costs about $0.04$\" (\u03c4 falls from +1 to 43/45 \u2248 0.96). The qualitative point \u2014 that the same inversion barely moves \u03c4 on a long branch \u2014 is unaffected.",
+  "confidence": "certain",
+  "dim": "?"
+ },
+ {
+  "title": "\"A single inverted pair already registers as a large negative number\" on a three-step branch contradicts the \u03c4 values listed in the same sentence",
+  "severity": "inconsistency",
+  "where_a": "writeup/draft_mert/H_external_validation.tex:172 \u2014 \"so a single inverted pair already registers as a large negative number\"",
+  "where_b": "writeup/draft_mert/H_external_validation.tex:172 \u2014 \"on a three-step branch it can only take the values $\\{-1, -1/3, +1/3, +1\\}$\"",
+  "why": "Under the normalization implied by the quoted value set (\u03c4 = 1 \u2212 4d/3 for n = 3), the four values correspond to d = 0, 1, 2, 3 discordant pairs, i.e. \u03c4 = +1, +1/3, \u22121/3, \u22121. A single inverted pair therefore gives \u03c4 = +1/3, which is positive; reaching a negative \u03c4 on a three-step branch requires at least two of the three pairs to be inverted. The clause is meant to contrast with \"on a ten-step branch the same inversion \u2026 leaves \u03c4 near +1\", but on a three-step branch that same single inversion leaves \u03c4 at +1/3, not at a large negative value.",
+  "fix": "Rewrite as \"so a single inverted pair already drags \u03c4 from +1 down to +1/3, and two inverted pairs make it negative\", which preserves the coarseness point without contradicting the enumerated values.",
+  "confidence": "likely",
+  "dim": "?"
+ }
+]
