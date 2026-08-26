@@ -49,16 +49,16 @@ We take the three predictions in turn.
 \centering
 \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[width=0.86\textwidth]{plots/taskSequence_vs_anthropicIndex/example_pruning/example_allergists_full.png}
     \subcaption{Full Workflow (All Tasks)}
+    \includegraphics[width=0.86\textwidth]{plots/taskSequence_vs_anthropicIndex/example_pruning/example_allergists_full.png}
 \end{subfigure}
 
 \vspace{0.6em}
 
 \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[width=0.86\textwidth]{plots/taskSequence_vs_anthropicIndex/example_pruning/example_allergists_hourly50.png}
     \subcaption{Pruned Workflow (Hourly$+$ $\geq 50\%$)}
+    \includegraphics[width=0.86\textwidth]{plots/taskSequence_vs_anthropicIndex/example_pruning/example_allergists_hourly50.png}
 \end{subfigure}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
@@ -139,7 +139,7 @@ Blue denotes a negative coefficient (the predicted sign) and red a positive one.
 \label{app:frequency_robustness_neighbor}
 
 Figure~\ref{fig:neighbor_frequency_heatmap} repeats the exercise for the neighbor prediction.
-Each cell reports the average marginal effect, from re-estimating regression~\eqref{eq:DWA_regression_ai}, of having the immediately preceding ($t{-}1$, Panel~(a)) or following ($t{+}1$, Panel~(b)) task be AI-executed on the focal task's probability of AI execution.
+Each cell reports the average marginal effect, from re-estimating regression~\eqref{eq:DWA_regression_ai}, of having the immediately preceding ($k{-}1$, Panel~(a)) or following ($k{+}1$, Panel~(b)) task be AI-executed on the focal task's probability of AI execution.
 A red cell denotes a positive effect, the sign found in the full sample.
 The top row reproduces the full-sample immediate-neighbor effects of $+0.12$ under no fixed effects, which attenuate to between $+0.04$ and $+0.06$ once SOC fixed effects absorb cross-family differences.
 The positive immediate-neighbor effect persists across the inclusive and moderate cuts and often grows in magnitude as the workflow is restricted to frequent tasks; under SeveralDaily$+$ $\geq 50\%$, for instance, the previous-task effect rises to $+0.14$ in the no-fixed-effects specification.
@@ -152,21 +152,21 @@ The effects of farther neighbors two positions away remain small and, under fixe
 \centering
 \begin{subfigure}[b]{\textwidth}
     \centering
+    \subcaption{Previous Task ($k{-}1$)}
     \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_weeklyTasks/neighbor_logic_threshold_heatmap_prev_bySpec.png}
-    \subcaption{Previous Task ($t{-}1$)}
 \end{subfigure}
 
 \vspace{0.8em}
 
 \begin{subfigure}[b]{\textwidth}
     \centering
+    \subcaption{Next Task ($k{+}1$)}
     \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_weeklyTasks/neighbor_logic_threshold_heatmap_next_bySpec.png}
-    \subcaption{Next Task ($t{+}1$)}
 \end{subfigure}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Each cell reports the average marginal effect of having the immediately previous task ($t{-}1$, Panel~(a)) or next task ($t{+}1$, Panel~(b)) be AI-executed on the focal task's probability of AI execution, from re-estimating regression~\eqref{eq:DWA_regression_ai} on the corresponding frequency cut.
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Each cell reports the average marginal effect of having the immediately previous task ($k{-}1$, Panel~(a)) or next task ($k{+}1$, Panel~(b)) be AI-executed on the focal task's probability of AI execution, from re-estimating regression~\eqref{eq:DWA_regression_ai} on the corresponding frequency cut.
 The heatmap layout and the significance stars are as in Figure~\ref{fig:frag_frequency}, except that the number beneath each estimate is the number of task observations and the top ``All tasks'' row is the unpruned specification of Section~\ref{sec:DWA_prediction}.
 Standard errors are clustered at the DWA level.
 Red denotes a positive effect (the predicted sign) and blue a negative one.
@@ -175,7 +175,7 @@ A ``$-$'' marks a cut with too few observations to estimate.}
 \end{minipage}
 \end{figure}
 
-Figure~\ref{fig:neighbor_placebo_forest} benchmarks the previous-task ($t{-}1$, Panel~(a)) and next-task ($t{+}1$, Panel~(b)) effects against their position-reshuffle nulls, one column per specification.
+Figure~\ref{fig:neighbor_placebo_forest} benchmarks the previous-task ($k{-}1$, Panel~(a)) and next-task ($k{+}1$, Panel~(b)) effects against their position-reshuffle nulls, one column per specification.
 Both effects sit far in the upper tail of their nulls in the full sample, at the 100th percentile in all three specifications, and stay there across the inclusive and moderate cuts.
 The previous-task effect lies outside its 10-to-90 null across all four Daily$+$ cuts (the 91st to 99th percentiles) and at SeveralDaily$+$ $\geq 20\%$ and $\geq 50\%$ (the 93rd to 98th), and the next-task effect behaves similarly, escaping its null across the Daily$+$ cuts.
 The effects retreat toward the middle of their nulls only at the sparsest cuts, the Hourly$+$ $\geq 35\%$ and $\geq 50\%$ cuts and SeveralDaily$+$ $\geq 35\%$, where the surviving task observations number in the low hundreds and the reshuffle bands are correspondingly wide.
@@ -189,21 +189,21 @@ In short, all three implications of our model appears to operate among the subse
 \centering
 \begin{subfigure}[b]{\textwidth}
     \centering
+    \subcaption{Previous Task ($k{-}1$)}
     \includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_neighbor_t1_byCut.png}
-    \subcaption{Previous Task ($t{-}1$)}
 \end{subfigure}
 
 \vspace{0.8em}
 
 \begin{subfigure}[b]{\textwidth}
     \centering
+    \subcaption{Next Task ($k{+}1$)}
     \includegraphics[width=\textwidth]{plots/placebo_summary/placebo_summary_forest_neighbor_t2_byCut.png}
-    \subcaption{Next Task ($t{+}1$)}
 \end{subfigure}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Panel~(a) reports the average marginal effect of having the previous task ($t{-}1$) be AI-executed, and Panel~(b) the corresponding effect for the next task ($t{+}1$).
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Panel~(a) reports the average marginal effect of having the previous task ($k{-}1$) be AI-executed, and Panel~(b) the corresponding effect for the next task ($k{+}1$).
 Rows, the null band, the dot coloring, and the margin labels are as in Figure~\ref{fig:chainlength_frequency}, with the dot now the observed average marginal effect; the three columns within each panel are the no-fixed-effects, SOC major-group, and SOC minor-group specifications.
 A blank row denotes a cut with too few neighbored task observations to estimate.}
 \end{spacing}

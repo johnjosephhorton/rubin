@@ -186,7 +186,7 @@ In this robustness test we treat these tasks as instances of the same underlying
 The resulting estimates, reported in Table~\ref{tab:DWA_regression_aiExecution_GPTsample} and Figure~\ref{fig:DWA_regression_aiExecution_GPTsample}, closely mirror the baseline patterns of the main specification in both sign and magnitude.
 
 Finally, we examine a stricter notion of AI execution that is directly implied by our model, under which automated steps can only precede other AI-executed steps, whether automated or augmented.
-Accordingly, we repeat the analysis focusing specifically on AI automation rather than AI execution more broadly, replacing the dependent variable in equation~\eqref{eq:DWA_regression_ai} with an indicator for whether step $t$ is AI-automated ($\text{is\_automated}_{t}$) instead of AI-executed ($\text{is\_ai}_{t}$).
+Accordingly, we repeat the analysis focusing specifically on AI automation rather than AI execution more broadly, replacing the dependent variable in equation~\eqref{eq:DWA_regression_ai} with an indicator for whether step $k$ is AI-automated ($\text{is\_automated}_{k}$) instead of AI-executed ($\text{is\_ai}_{k}$).
 The corresponding estimates for the main sample are reported in Table~\ref{tab:DWA_regression_aiAutomation_mainSample} and Figure~\ref{fig:DWA_regression_aiAutomation_mainSample}, while results for the GPT-filtered sample are reported in Table~\ref{tab:DWA_regression_aiAutomation_GPTsample} and Figure~\ref{fig:DWA_regression_aiAutomation_GPTsample}.\footnote{
 Because relatively few tasks in the data are AI-automated, and because we further restrict attention to highly similar tasks across occupations, we retain tasks associated with multiple DWAs in the original O*NET dataset and randomly assign each such task to one of its associated DWAs for these exercises.
 }
@@ -205,7 +205,7 @@ Under this stricter specification, the estimated effects are smaller in magnitud
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
 This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai}.
-The dependent variable in all specifications is an indicator for whether task $t$ is AI-executed ($\text{is\_ai}_{t}$).
+The dependent variable in all specifications is an indicator for whether task $k$ is AI-executed ($\text{is\_ai}_{k}$).
 The sample is restricted to similar tasks across occupations, identified by GPT-5-mini as tasks belonging to the same DWA with similar execution nature and skill characteristics.
 Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.}
 \end{spacing}
@@ -222,7 +222,7 @@ Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{t}$) instead of ($\text{is\_ai}_{t}$).
+This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$).
 The sample is restricted to similar tasks across occupations, identified as tasks belonging to the same DWA in the O*NET dataset.
 Tasks that are mapped to multiple DWAs are retained, with one associated DWA assigned randomly for estimation to preserve sufficient variation in the data.
 Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.}
@@ -240,7 +240,7 @@ Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{t}$) instead of ($\text{is\_ai}_{t}$).
+This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$).
 The sample is restricted to similar tasks across occupations, identified by GPT-5-mini as tasks belonging to the same DWA with similar execution nature and skill characteristics.
 Tasks that are mapped to multiple DWAs are retained, with one associated DWA assigned randomly for estimation to preserve sufficient variation in the data.
 Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.}
@@ -253,32 +253,32 @@ Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution
   \label{fig:DWA_regression_aiExecution_GPTsample}
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_no_fe_no_dwa.png}
     \subcaption{No Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_no_fe_no_dwa.png}
   \end{subfigure}
   
   \vspace{1em}
   
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_major_fe_no_dwa.png}
     \subcaption{SOC Major Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_major_fe_no_dwa.png}
   \end{subfigure}
   
   \vspace{1em}
   
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_minor_fe_no_dwa.png}
     \subcaption{SOC Minor Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_minor_fe_no_dwa.png}
   \end{subfigure}
 
   \vspace{1em}
 
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_no_fe_with_dwa.png}
     \subcaption{Detailed Work Activity Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_filtered_is_ai_no_fe_with_dwa.png}
   \end{subfigure}
   \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
@@ -296,39 +296,39 @@ Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai}, while
   \label{fig:DWA_regression_aiAutomation_mainSample}
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_no_fe_no_dwa.png}
     \subcaption{No Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_no_fe_no_dwa.png}
   \end{subfigure}
   
   \vspace{0.5em}
   
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_major_fe_no_dwa.png}
     \subcaption{SOC Major Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_major_fe_no_dwa.png}
   \end{subfigure}
   
   \vspace{0.5em}
   
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_minor_fe_no_dwa.png}
     \subcaption{SOC Minor Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_minor_fe_no_dwa.png}
   \end{subfigure}
 
   \vspace{0.5em}
 
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_no_fe_with_dwa.png}
     \subcaption{Detailed Work Activity Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_full_is_automated_no_fe_with_dwa.png}
   \end{subfigure}
   \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being automated by AI, while more distant neighbors have little to no effect on a task's AI automation likelihood.
 The dashed line, shaded band, and histograms are constructed as in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}, with the observed estimates taken from Table~\ref{tab:DWA_regression_aiAutomation_mainSample}.
-Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{t}$) instead of ($\text{is\_ai}_{t}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
 \end{spacing}
 \end{minipage}
 \end{figure}
@@ -339,39 +339,39 @@ Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but wi
   \label{fig:DWA_regression_aiAutomation_GPTsample}
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_no_fe_no_dwa.png}
     \subcaption{No Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_no_fe_no_dwa.png}
   \end{subfigure}
   
   \vspace{0.5em}
   
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_major_fe_no_dwa.png}
     \subcaption{SOC Major Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_major_fe_no_dwa.png}
   \end{subfigure}
   
   \vspace{0.5em}
   
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_minor_fe_no_dwa.png}
     \subcaption{SOC Minor Group Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_minor_fe_no_dwa.png}
   \end{subfigure}
 
   \vspace{0.5em}
 
   \begin{subfigure}[b]{\textwidth}
     
-    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_no_fe_with_dwa.png}
     \subcaption{Detailed Work Activity Fixed Effects}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA/is_automated/AME_filtered_is_automated_no_fe_with_dwa.png}
   \end{subfigure}
   \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: The pattern is the same as in Figure~\ref{fig:DWA_regression_aiAutomation_mainSample}, now on the GPT-filtered sample.
 The dashed line, shaded band, and histograms are constructed as in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}, with the observed estimates taken from Table~\ref{tab:DWA_regression_aiAutomation_GPTsample}.
-Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{t}$) instead of ($\text{is\_ai}_{t}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
 \end{spacing}
 \end{minipage}
 \end{figure}
