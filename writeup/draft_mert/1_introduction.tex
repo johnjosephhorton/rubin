@@ -7,19 +7,20 @@ We argue that this sequencing is economically consequential and should be consid
 
 We model production as a Leontief technology over an ordered sequence of exogenously specified \emph{steps}, and treat the definition of tasks and their partitioning across jobs as endogenous outcomes.
 A \emph{step} is the primitive unit of work in our framework, corresponding to what classic models would call a ``task.''
-We instead reserve the term \emph{task} for a contiguous block of steps that the firm endogenously designates for joint execution by a human worker, potentially in collaboration with AI.
-In the absence of AI, tasks optimally collapse to single-step blocks so that steps and tasks coincide.  In the presence of AI, some steps are chained together and automated, creating a meta-task whose output is validated by a human worker.
-% Relative to standard task-based formulations, we endogenize what constitutes a task and adopt a sequential Leontief structure to discipline the implied complementarities across production steps.
+We instead reserve the term \emph{task} for a contiguous block of steps that the firm endogenously designates for joint execution by a human worker, potentially with the aid of AI.
+In the absence of AI, tasks optimally collapse to single-step blocks so that steps and tasks coincide.  In the presence of AI, some steps are chained together and automated, creating a meta-task whose output is validated by a human worker.\footnote{
+In our model, with highly capable AIs the human role shrinks to verifying AI's outputs, consistent with the view in \cite{agrawal2019exploring}.
+}
 
 Firms seek to minimize production costs by choosing which steps of the sequence to delegate to AI and which to assign to human workers.
-As the AI technology improves, the firm might instead choose to automate many of these steps, lumping them together into one logical task, and then hire a single, potentially lower-skill worker to oversee this automation and validate the production outcome.
+As the AI technology improves, the firm might choose to automate many of these steps, lumping them together into one logical task, and then hire a single, potentially lower-skill worker to verify the output of that automation.
 Whether this strategy is optimal depends not only on the effectiveness of the AI technology at accomplishing individual production steps, but also on the sequential relationship between steps, the relative ease of verification versus manual execution, wages, and coordination costs between workers.
 These determinants are what set AI apart from earlier waves of automation: its capabilities are broad but jagged, varying sharply even across adjacent steps in a workflow \citep{dell2023navigating}, and getting value from it requires engineering the right context and interfaces, so the costs of sequencing work and handing off intermediate outputs become central.
 As a result, improvements in AI can shift deployment decisions at multiple points across the production chain at once, triggering discrete changes in overall production strategy.
 
-We distinguish two horizons in our framework by the degree of flexibility in organizational adjustment, and study how AI affects production in each, as summarized by Table~\ref{tab:short_long_run}.
-In the short run, the firm takes its workers and their job boundaries as given, along with what those jobs pay, and optimizes AI deployment to minimize the expected time to produce the product.
-In the long run, in tandem with AI deployment, the firm can also redraw the boundaries of jobs, which changes the skills each job demands and hence the wage it commands. 
+We distinguish two horizons in our framework by how much of its organization the firm is free to adjust, and study how AI affects production in each, as summarized in Table~\ref{tab:short_long_run}.
+In the short run, the firm takes its workers and their job boundaries as given, along with what those jobs pay, and deploys AI to minimize the time cost of production.
+In the long run, in tandem with AI deployment, the firm can also redraw the boundaries of jobs, which changes the skills each job demands and hence the wage it commands.
 \begin{table}[!t]
     \centering
     \vspace{0.1cm}
@@ -43,9 +44,7 @@ Central to our framework is the distinction between full automation of a product
 In our model, three modes of step completion are recognized: manual, augmented, and automated.
 \emph{Manual} completion of a step means that a human carries out the work without any AI assistance.
 \emph{Augmented} completion involves a human performing the step with the use of AI, which might (or might not) reduce labor costs.
-For example, a human describes the requirements of a step to an AI tool, the AI then executes the step, and its output is reviewed and approved by the human.\footnote{
-In our model, with highly capable AIs the human role shrinks to prompting and judging AI outputs, consistent with the view in \cite{agrawal2019exploring}.
-}
+For example, a human describes the requirements of a step to an AI tool, the AI then executes the step, and its output is verified by the human.
 In contrast, we say a step has been \emph{automated} if it is completed by AI end-to-end without any direct human intervention.
 We view AI automation as a way of putting certain production steps ``under the hood'' of a logical meta-task that a worker is attempting to complete.
 To fix ideas, think of the workflow of a data scientist whose job requires completing five steps: defining the business question (Step 1), finding and fetching data needed for answering the question (Step 2), building an analysis pipeline (Step 3), drafting a report (Step 4), and presenting the findings (Step 5).
@@ -53,7 +52,7 @@ As part of an AI-augmented request to complete one of these steps (such as Step 
 Any such preceding step is said to be automated, and the set of all such automated steps, plus the final step that the worker is actively engaged with, can be thought of as a single worker task which we term an \emph{AI chain}.
 By choosing which steps to automate and which to assign either manually or via augmentation, the firm implicitly designs the set of tasks exposed to its workers.
 
-Although augmented and automated production steps both involve AI, they differ in one crucial respect: AI augmentation demands direct human oversight of the AI's output, whereas automation does not.
+Although augmented and automated production steps both involve AI, they differ in one crucial respect: AI augmentation demands that a human verify the AI's output, whereas automation does not.
 Figure~\ref{fig:task_division} illustrates these concepts using the five-step data scientist workflow described earlier.
 \begin{figure}[!t]
   \centering
@@ -63,8 +62,8 @@ Figure~\ref{fig:task_division} illustrates these concepts using the five-step da
   \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This figure illustrates division of labor across five steps: Steps 1 and 5 are manual; Steps 2 and 3 are AI-automated (done without direct human intervention); Step 4 is AI-augmented (done with AI but requiring human oversight).
-Lines from the AI box indicate steps involving AI, and lines from the Human box indicate steps requiring human execution or oversight.
+{\fontsize{9.5pt}{10pt}\selectfont Notes: This figure illustrates division of labor across five steps: Steps 1 and 5 are manual; Steps 2 and 3 are AI-automated (done without direct human intervention); Step 4 is AI-augmented (done with AI but requiring a human to verify its output).
+Lines from the AI box indicate steps involving AI, and lines from the Human box indicate steps requiring human execution or verification.
 Dashed boxes group steps according to their task assignments: Steps 1 and 5 form separate human tasks, while Steps 2–4 form an AI chain task.}
 \end{spacing}
 \end{minipage}
@@ -72,10 +71,10 @@ Dashed boxes group steps according to their task assignments: Steps 1 and 5 form
 Steps 1 and 5 are performed manually by a human.  
 Steps 2, 3, and 4 form an AI chain and are done using AI.
 Steps 2 and 3 are automated because their outputs feed directly into subsequent AI steps without human review.
-Step 4 is augmented because its output is evaluated by a human before proceeding. 
+Step 4 is augmented because its output is verified by a human before proceeding. 
 The resulting worker tasks in this job thus become $1,4,$ and $5$.
 
-When a single step is performed by an AI, there is always a human requesting and evaluating its output in an augmented manner.  
+When a single step is performed by an AI, there is always a human verifying its output in an augmented manner.  
 But with two or more steps it is possible to re-configure production so that an AI completing one step passes its output directly into the next step without human intervention (i.e., the first step is automated). 
 This chaining is potentially a source of large productivity gains \emph{but} it requires AIs that can perform each step with a high probability of success.
 In this sense, the model's basic setup shares conceptual similarities with the O-ring model of production \citep{kremer1993oring, gans2026oring}.
@@ -86,27 +85,34 @@ Chaining overturns that logic because a human verifies only the output of the ch
 Appending a neighboring step to an existing chain adds no verification burden, though it lowers the probability of end-to-end success, whereas assigning that step to a human terminates the chain and creates an additional checkpoint, entailing another verification or the cost of manual execution.
 When AI is sufficiently reliable on the marginal step, avoiding this checkpoint can dominate, pulling the step into AI execution even if manual execution is preferred for it in isolation.
 In the data scientist workflow, for instance, verifying a report produced after AI executes Steps~3--4 takes the same effort as verifying one produced after AI executes Step 4 alone; the AI is just less likely to succeed at the former.
+What tips a step into automation is therefore not just its own characteristics but also those of its neighbors.
 
-The same pressure for automation can arrive from the other side: a step that AI executes reliably but that is expensive to handle on its own is cheapest absorbed at the start of a chain, where its direct cost goes unpaid.
-And because a chain is an unbroken run over consecutive steps, it must extend forward to a cheap verification endpoint, potentially pulling human-advantaged steps that lie in between into automation.
-Either way, what tips a step into automation is not just its own characteristics but also those of its neighbors.
-
-More generally, we should expect the gains from AI automation to be greatest when automatable steps co-occur in the workflow.
+More generally, we should expect the gains from AI automation to be greatest when AI-friendly steps co-occur in the workflow.
 A job is more or less ``fragmented'' in its AI exposure depending on whether the steps where AI is most effective are clustered together or dispersed throughout the workflow.
-We formalize this idea in a \emph{fragmentation index}, the expected cost of an optimal execution plan with foresight into AI's successes and failures, and show analytically that it approximately tracks the impact of optimal AI deployment.
+We formalize this idea in a \emph{fragmentation index}, the expected cost of a simple execution plan endowed with foresight into AI's successes and failures, and show analytically that it approximately tracks the impact of optimal AI deployment.
 We then provide empirical evidence that jobs with higher fragmentation see a weaker translation from AI exposure to AI execution.
 
-Because chaining makes the cost of automating a step depend on the arrangement it sits in, the firm optimizes over entire arrangements rather than step by step, and their number grows exponentially in the number of steps $m$.
-Whether the firm can actually locate its optimum is therefore not obvious, and Section~\ref{sec:extensions.computation} shows that it can, exactly in the short run and to any desired accuracy once wages and job boundaries are also chosen.
-Our fragmentation index is the closed-form counterpart of that program, and we prove that it approximates its value, as both the exact and the approximate plan drive down costs by chaining together easy tasks.
+Because chaining makes the cost of automating a step depend on the arrangement it sits in, the firm optimizes over entire feasible work configurations rather than proceeding step by step.
+The number of possible arrangements for a production process with $m$ steps grows exponentially in $m$.
+Whether the firm can actually calculate its optimum is therefore not obvious. 
+We show in extensions that it can, exactly in the short run and to any desired accuracy once wages and job boundaries are also chosen in the long run.
+
 
 \paragraph{Non-Monotone Effects of AI Progress.}
 The AI chaining feature of the model implies that improvements in AI quality can generate non-monotone effects on labor demand and wages.
 For any fixed production arrangement, better AI reduces costs smoothly by raising AI success probabilities and lowering expected execution times.
-However, firms optimize costs over a discrete set of AI deployment strategies, so the cost-minimizing arrangement can switch at particular AI quality thresholds.
+However, firms optimize costs over a discrete set of strategies, so the cost-minimizing arrangement can switch at particular AI quality thresholds.
 As a result, marginal improvements in AI may have little or no effect when they do not change the optimal production arrangement, which is especially likely in the early days of adoption when AI quality is low.
 Once AI quality crosses such a threshold, longer AI chains become viable and the optimal deployment shifts abruptly, reallocating steps between humans and AI and thus changing labor demand and wages.
 Our framework thus provides a microfoundation for the productivity J-curve phenomenon \citep{brynjolfsson2021productivity} and yields testable predictions on when and how AI-driven productivity gains trigger structural reorganization in labor markets.
+
+
+\paragraph{Job Design and Aggregate Production.}
+AI can also change the skills a job requires and, through them, the wage that job commands.
+The firm balances how much it asks of a single worker: assigning more tasks to one role raises the wage rate that role commands, since the span of knowledge the worker must acquire widens, while dividing the same work among more workers adds the cost of coordinating them and handing off intermediate outputs at every job boundary.
+In restructuring its workflow to get the full value of AI, the firm ends up redefining what its workers do and not only how quickly they do it, which makes AI more than a productivity-improving technology.
+In extensions we show how our model of endogenous tasks and job boundaries can be mapped into an aggregate production function of the constant elasticity of substitution form.
+Our account of the firm's organizational choices is therefore not at odds with aggregate views of how AI affects the broader labor market, but consistent with them.
 
 
 \paragraph{Empirical Evidence.}
@@ -121,7 +127,7 @@ We document that in the data AI execution indeed operates over consecutive steps
 
 Second, the model emphasizes that sequencing plays a central role in determining the returns to AI automation.
 We show empirically that, controlling for the share of steps exposed to AI, occupations whose AI-exposed steps are more dispersed across the production workflow exhibit a substantially lower share of their steps executed by AI.
-This finding supports the fragmentation logic of the model and illustrates why considering just the share of exposed steps to AI can be misleading for predicting occupational impacts of AI when production steps are technologically interdependent.
+This finding supports the fragmentation logic of the model and illustrates why considering just the share of steps exposed to AI can be misleading for predicting occupational impacts of AI when production steps are technologically interdependent.
 
 Third, the chaining mechanism implies strong local complementarities in AI automation decisions within a workflow.
 When a step is positioned next to AI-executed neighbors, local gains from automating it as part of a chain may induce its AI execution even if human execution would be preferred for that step in isolation.
@@ -130,5 +136,5 @@ This pattern provides direct evidence that AI execution depends not only on comp
 
 A natural caveat in this empirical exercise is that our findings may reflect the O*NET data or the LLM used to order its steps rather than the structure of work itself.
 We therefore run a series of robustness checks.
-In Appendix~\ref{app:gptPrompts_robustness} we re-generate the sequences under ten alternative LLM prompts, and in Appendix~\ref{app:frequency_robustness} we restrict each occupation to its frequently-executed steps; our results survive both.
-Because neither check leaves O*NET or our own imputation, in Appendix~\ref{app:external_validation} we validate the approach against two external corpora that no language model ordered: the Process Classification Framework of the American Productivity \& Quality Center, whose orderings practitioners documented, and eight process-mining event logs recording the activities organizations actually executed, case by case. Our LLM sequencing recovers both to a substantial degree, and the two benchmarks agree closely with each other on how much sequence structure it recovers.
+In Appendix~\ref{app:gptPrompts_robustness} we re-generate the sequences under ten alternative LLM prompts, and in Appendix~\ref{app:frequency_robustness} we restrict each occupation to its frequently-executed steps to better reflect the occupation's workflow; our results survive both.
+Because neither check leaves O*NET or our own imputation, in Appendix~\ref{app:external_validation} we validate the approach against two external corpora whose entries no language model ordered: the Process Classification Framework of the American Productivity \& Quality Center, documented by practitioners, and eight process-mining event logs recording the activities organizations actually executed, case by case. Our LLM sequencing recovers both to a substantial degree, and the two benchmarks agree closely with each other on how much sequence structure it recovers.
