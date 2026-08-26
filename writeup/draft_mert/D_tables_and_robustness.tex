@@ -1,12 +1,70 @@
 \section{Additional Tables and Robustness Tests}
 \label{app:additional_robustness}
 
-This appendix collects two tables referenced from the theory sections, together with supplementary robustness results for Predictions~\#2 and~\#3 of Section~\ref{sec:empirics}.
+This appendix collects the notation table and two further tables referenced from the theory sections, together with supplementary robustness results for Predictions~\#2 and~\#3 of Section~\ref{sec:empirics}.
 
 
 \subsection{Tables Referenced in the Theory Sections}
 \label{app:theory_tables}
 \label{app:jobdesign_example}
+
+Table~\ref{tab:notation} collects the notation the theory sections use.
+Panel~A covers the step-, task-, and strategy-level objects of Sections~\ref{sec:shortrun} and~\ref{sec:results}, and Panel~B the skill, job, and wage objects that Section~\ref{sec:longrun} adds.
+
+\begin{table}[!t]
+\centering
+\caption{Notation Used in the Theory Sections}
+\label{tab:notation}
+\footnotesize
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\multicolumn{2}{l}{\textbf{Panel A: Steps, Tasks, and AI Deployment (Section~\ref{sec:shortrun})}} \\
+\midrule
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+\addlinespace
+$\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
+\addlinespace
+$s_i$ & Production step $i$ \\
+$\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
+$\manualTime{i}$ & Time cost of completing step $i$ manually \\
+$\AItime{i}$ & Time cost of verifying the output of one AI attempt at step $i$ \\
+$d_i$ & Difficulty of step $i$ for AI \\
+$q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
+\addlinespace
+$T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
+$\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
+$\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual step, $\AItime{r}/\prod_{i=\ell}^{r} q_i$ if an AI chain over steps $\ell, \dotsc, r$ \\
+\addlinespace
+\midrule
+\multicolumn{2}{l}{\textbf{Panel B: Skills, Jobs, Wages, and Job Design (Section~\ref{sec:longrun})}} \\
+\midrule
+\textbf{Symbol} & \textbf{Description} \\
+\midrule
+\addlinespace
+$\manualSkill{i}$ & Skill required to complete step $i$ manually \\
+$\AIskill{i}$ & Skill required to verify the output of one AI attempt at step $i$ \\
+$\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step, $\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none \\
+\addlinespace
+$J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
+$\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
+\addlinespace
+$\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
+$\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
+\addlinespace
+$\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
+$\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
+\bottomrule
+\end{tabularx}
+
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Step-level primitives are indexed by $i$, task-level objects by $b$, and jobs by $j$; superscripts $M$ and $A$ denote the manual and AI modes of executing a step, and $H$ denotes a hand-off between consecutive workers.
+Panel~A is all the short-run problem requires: with the whole workflow assigned to one worker at a fixed wage, execution time is the only margin and no notion of skill is needed.
+Panel~B enters only once the firm chooses how to divide the workflow among workers, and it extends rather than replaces Panel~A, which the long-run problem continues to use.}
+\end{spacing}
+\end{minipage}
+\end{table}
 
 Section~\ref{sec:longrun.specialization} works through a three-task workflow whose four job designs are drawn in Figure~\ref{fig:job_design}.
 Table~\ref{tab:job_design} reports what each of them costs, first with hand-off costs switched off and then with them on.
