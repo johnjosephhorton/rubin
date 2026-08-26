@@ -2,7 +2,7 @@ Throughout Sections~\ref{sec:shortrun} and~\ref{sec:results} we held fixed the s
 Here we relax this assumption and allow the firm to restructure its production fully around the capabilities of AI.
 
 Over longer horizons the firm can change its organizational structure, redrawing the boundaries between jobs and with them the allocation of steps to workers, while optimizing its use of AI.
-Moreover, free entry in the labor market lets the firm pay workers according to the actual skill requirements of the jobs it designs, rather than at the rate the short run held fixed, effectively endogenizing wages.
+Moreover, adjustments in the labor market let the firm pay workers according to the actual skill requirements of the jobs it designs, rather than at the rate the short run held fixed, effectively endogenizing wages.
 Below we develop the firm's long-run production problem.
 
 \subsection{Jobs and Wages}
@@ -39,11 +39,11 @@ The short run had no need of this notion, as we assumed workers had acquired the
 In the long run, however, the firm chooses which steps to assign to which worker, effectively changing the skill requirement of their jobs.
 We thus introduce skills to capture this dimension of work.
 
-Accordingly, we extend Definitions~\ref{def:manual_step}--\ref{def:ai_chain} to incorporate the skill cost of steps as well: 
-the skill and time cost of performing step $i$ manually is $(\manualSkill{i},\, \manualTime{i})$, while verifying the output of one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
-The two costs need not coincide, since doing the work oneself calls for knowing how to do it, whereas verifying what an AI returns may call for knowledge of a different kind.
-As with time costs, a task inherits the skill of whichever mode executes it, so each task $T_b$ in the task sequence $\T = (T_1, \dotsc, T_n)$ carries a pair of skill and time costs $(\skillcost{b}, \timecost{b})$ that depend on whether it is completed manually or with the aid of AI.
-An AI chain therefore demands only the skill required to verify the output of its augmented step, and an automated step inside a chain demands no skill of anyone, since no human ever handles it directly.
+Accordingly, we extend Definitions~\ref{def:manual_step}--\ref{def:ai_chain} to incorporate the skill requirement of steps as well: 
+the skill and time requirement of performing step $i$ manually is $(\manualSkill{i},\, \manualTime{i})$, while verifying the output of one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
+The two values need not coincide, since doing the work oneself calls for knowing how to do it, whereas verifying what an AI returns may call for knowledge of a different kind.
+As with time, a task inherits the skill of whichever mode executes it, so each task $T_b$ in the task sequence $\T = (T_1, \dotsc, T_n)$ carries a pair of skill and time requirements $(\skillcost{b}, \timecost{b})$: it is $(\manualSkill{i},\, \manualTime{i})$ if $T_b$ is the manual step $s_i$, and $\bigl(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i\bigr)$ if $T_b$ is an AI chain spanning $(s_\ell, \dotsc, s_r)$.
+Both components of a chain's pair are therefore inherited from its augmented endpoint: the chain demands only the skill required to verify that step's output, and an automated step inside the chain demands no skill of anyone, since no human ever handles it directly.
 
 The firm hires one worker for each job in its job design $\mathcal{J}$.
 The worker for job $J_j$ completes all tasks associated with their job.
@@ -77,6 +77,11 @@ Note what \eqref{eq:jobcost} implies for a job.
 The worker is compensated for every skill the job demands over its whole duration, even though at any given moment they are performing a single task and drawing on only the portion of their knowledge that task requires.
 The remainder of their human capital sits idle at that moment and is paid for regardless.
 
+A university professor is a concrete example.
+The job of a professor bundles research and teaching together with the small chores that come with them, and the wage it commands reflects the skill the bundle as a whole demands.
+Wiping the board demands almost none of that skill, yet the minutes spent on it are paid at the professor's rate rather than at what the chore would command on its own.
+For those minutes the expertise that makes the professor worth hiring sits unused, and the university pays for it all the same.
+
 \subsection{Coordination and Hand-Off Cost}
 \label{sec:longrun.handoff}
 
@@ -88,11 +93,11 @@ In reality, work is not organized this way, because dividing production among ma
 Each division creates a point at which work must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received \citep{lee2023task}.
 We model this coordination friction with an additional \emph{hand-off} cost, in time, that a worker spends passing their work on to the next worker, incurred whenever $J_j$ is not the final job in the job design $\mathcal{J}$.
 
-Because production in our model exhibits an order, we can be more specific than a cost that depends only on how many workers there are.
+Because production in our model exhibits an order, we can be more specific about what a hand-off costs.
 A hand-off happens at a particular point in production, and what it costs depends on which point.
 Some places are natural seams, where the work has reached a self-contained intermediate output, a finished design or a signed-off specification, that can be described briefly and passed on.
 Others fall in the middle of something, where whoever receives the work has to reconstruct the context the previous worker had built up.
-We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs, so that \emph{where} the firm divides the workflow matters and not merely how often it divides it.
+We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs as in \citet{becker1992division}, so that \emph{where} the firm divides the workflow matters and not merely how often it divides it.
 The red curly arrows in Figure~\ref{fig:hierarchical_production} illustrate that hand-offs occur at job boundaries and that their cost reflects the characteristics of the last step in a worker's job.
 
 Formally, given step $s_i$, we write $\handofftime{i}$ for the additional hand-off time spent by a worker for whom the last step of their job is $s_i$, and $\handofftime{}(J_j)$ for the hand-off time of job $J_j$, which is equal to $\handofftime{i}$ if $s_i$ is the final step in $J_j$.
@@ -113,7 +118,6 @@ Adding more tasks to a worker's job increases the cumulative skill requirement a
 However, if tasks are kept separate, workers must incur additional hand-off costs at each job boundary.
 These two effects jointly determine the optimal degree of task aggregation.
 We explore this trade-off in greater detail in Section~\ref{sec:longrun.specialization}.
-Panel~B of Table~\ref{tab:notation} in Appendix~\ref{app:theory_tables} collects the skill, job, and wage notation this section adds.
 
 
 \subsection{Long-Run Production}
@@ -136,7 +140,9 @@ where recall that, for each $T_b \in \T$, $\timecost{b}$ is as described in Sect
 
 We refer to \eqref{eq:totalcost_with_handoff} as the firm's long-run optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
 It nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:shortrun.production} as the case of a single job spanning the whole production, with wage being fixed rather than chosen.
-In Section~\ref{sec:extensions.computation} we discuss how the solution to \eqref{eq:totalcost_with_handoff} can be approximated to any desired accuracy in polynomial time.
+%In Section~\ref{sec:extensions.computation} we discuss how the solution to \eqref{eq:totalcost_with_handoff} can be approximated to any desired accuracy in polynomial time.
+
+Next we discuss the implications of this optimization problem.
 
 
 \subsection{AI and the Limits of Worker Specialization}
