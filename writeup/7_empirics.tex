@@ -33,7 +33,7 @@ Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.
 \label{sec:chainLength_prediction}
 
 The first prediction of the model that we test is that, to leverage cost savings from forming longer AI chains, AI steps tend to appear in contiguous blocks rather than being scattered in the workflow.
-This prediction follows from our definition of AI chains (Definition~\ref{def:ai_chain}), which requires every automated step to be followed by another automated or augmented step, and from the fragmentation argument, which suggests that for a given level of AI quality longer AI chains are more likely to emerge when AI-easy steps are clustered together in the workflow (see Examples~\ref{ex:fragmentation_interleaved} and~\ref{ex:fragmentation_clustered} in Subsection~\ref{sec:fragmentation}).
+This prediction follows from our definition of AI chains (Definition~\ref{def:ai_chain}), which requires every automated step to be followed by another automated or augmented step, and from the fragmentation argument, which suggests that for a given level of AI quality longer AI chains are more likely to emerge when AI-easy steps are clustered together in the workflow (see Example~\ref{ex:fragmentation} in Subsection~\ref{sec:fragmentation}).
 
 To test this, we compute the observed average AI chain length in the data and benchmark it against two randomization placebos.
 First, we permute task positions within each occupation's workflow.
@@ -100,7 +100,7 @@ where \emph{$\text{ai\_execution}_{o}$} is the share of tasks executed by AI in 
 
 The model predicts that occupations with higher AI exposure should have a higher share of steps executed by AI ($\beta_1 > 0$).
 Conditional on exposure, it also predicts that when AI-able steps are more dispersed in the workflow, the share of realized AI-executed steps should be lower ($\beta_2 < 0$).
-The intuition is that, for a given level of AI quality (parameter $\alpha$ in the model), AI chains are more likely to form when AI-easy steps appear next to each other, as discussed in Examples~\ref{ex:fragmentation_interleaved} and~\ref{ex:fragmentation_clustered} of Subsection~\ref{sec:fragmentation}.
+The intuition is that, for a given level of AI quality (parameter $\alpha$ in the model), AI chains are more likely to form when AI-easy steps appear next to each other, as discussed in Example~\ref{ex:fragmentation} of Subsection~\ref{sec:fragmentation}.
 When such clustering occurs, nearby steps that would otherwise remain manual may instead be automated as part of a chain.
 
 To construct an empirical measure of fragmentation, we abstract from heterogeneity in tasks' underlying cost profiles, which are unobserved in our data, and focus solely on their positioning within the workflow.

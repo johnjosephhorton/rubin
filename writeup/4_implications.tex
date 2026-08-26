@@ -134,56 +134,51 @@ Whether, and how much, a workflow benefits from AI depends not only on how many 
 The reason is a local complementarity that chaining creates for AI execution: a chain is verified once however many steps it spans, so a run of AI-reliable steps placed side by side can share a single verification, whereas the same steps separated by other steps that AI is likely to fail must each carry a verification of their own.
 Steps that are not worth assigning to AI individually, on their own merits, can therefore be worth assigning to it together, once the verifications they would separately have required collapse into one and that saving outweighs the additional failure risk a longer chain carries.
 This is what makes the firm's short-run problem \eqref{eq:totalcost_shortterm} more than a sequence of step-by-step decisions, and it is why the gain a workflow realizes from a given stock of AI-able steps is a property of how those steps are arranged rather than of how many of them there are.
-The two examples below make this point using workflows built from four identical steps placed in two different orders.
+The example below places the same four steps in two different orders.
 
 \begin{example}
-\label{ex:fragmentation_interleaved}
+\label{ex:fragmentation}
 Consider a workflow containing four steps built from the AI-hard step of Example~\ref{ex:ca_predecessor} and a version of its AI-easy step that AI completes less reliably:
 \[
 \text{\emph{AI-hard} step:}\;\; \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (6,\,3.5,\,0.3),
 \qquad
 \text{\emph{AI-easy} step:}\;\; \bigl(\manualTime{i},\, \AItime{i},\, q_i\bigr) = (8,\,6,\,0.7).
 \]
-The workflow alternates them, so that steps $1$ and $3$ are AI-easy and steps $2$ and $4$ are AI-hard.
-Figure~\ref{fig:ex_dispersed} shows the arrangement and its optimal execution.
+Two steps of each kind make up the workflow, and Figure~\ref{fig:ex_fragmentation} arranges them in two different orders, showing each arrangement and its optimal execution.
 \begin{figure}[!t]
-\caption{Dispersed AI-Able Steps: No AI Chain Forms}
-\label{fig:ex_dispersed}
+\caption{The Same Four Steps in Two Arrangements}
+\label{fig:ex_fragmentation}
 \centering
-\input{plots/TikZ_visualization/example1_visualization_allManual.tex}
+\begin{minipage}{\linewidth}
+  \centering
+  \input{plots/TikZ_visualization/example1_visualization_allManual.tex}
+  \subcaption{Interleaved: no AI chain can form}
+\end{minipage}
+\par\vspace{1.4em}
+\begin{minipage}{\linewidth}
+  \centering
+  \input{plots/TikZ_visualization/example2_visualization.tex}
+  \subcaption{Clustered: the easy run becomes a single AI chain}
+\end{minipage}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Top layer: each step's difficulty for AI. Bottom layer: its execution in the cost-minimizing strategy, colored as in Figure~\ref{fig:steps_tasks}. Step parameters are given in Example~\ref{ex:fragmentation_interleaved}. Because every easy step is flanked by hard ones, no two AI-able steps are ever adjacent, so no chain can form and every step is performed manually. The total cost at the right of the execution row is directly comparable to the one in Figure~\ref{fig:ex_clustered}, which arranges the same four steps differently.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: In each panel the top layer gives each step's difficulty for AI and the bottom layer its execution in the cost-minimizing strategy, colored as in Figure~\ref{fig:steps_tasks}. Step parameters are given in Example~\ref{ex:fragmentation}. The two panels contain exactly the same four steps and differ only in the order in which they are performed. In panel~(a) every easy step is flanked by hard ones, so no two AI-able steps are adjacent, no chain can form, and every step is performed manually. In panel~(b) the easy steps form a contiguous run, which the firm executes as a single AI chain: Step~1 is automated and only Step~2, the endpoint, is augmented and verified. The total cost at the right of each execution row makes the two arrangements directly comparable.}
 \end{spacing}
 \end{minipage}
 \end{figure}
+
+Panel~(a) interleaves the two kinds, so that steps $1$ and $3$ are AI-easy and steps $2$ and $4$ are AI-hard.
 Because every easy step is flanked by hard ones, no two AI-able steps are ever adjacent, so no AI chain can form and automation, which executes a step for free but is available only inside a chain, never becomes an option.
 The firm is left to treat each step on its own, and on its own neither kind of step is worth giving to AI.
 The workflow therefore uses no AI at all, even though half of its steps are ones AI performs comparatively well.
-\end{example}
 
-\begin{example}
-\label{ex:fragmentation_clustered}
-Consider the same four steps, now clustered rather than interleaved, so that steps $1$ and $2$ are AI-easy and steps $3$ and $4$ are AI-hard.
-Figure~\ref{fig:ex_clustered} shows the arrangement and its optimal execution.
-\begin{figure}[!t]
-\caption{Clustered AI-Able Steps: The Easy Run Becomes One AI Chain}
-\label{fig:ex_clustered}
-\centering
-\input{plots/TikZ_visualization/example2_visualization.tex}
-\par\vspace{\fignotesskip}
-\begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Layers and colors are as in Figure~\ref{fig:ex_dispersed}, and the step parameters are those of Example~\ref{ex:fragmentation_interleaved}. The easy steps now form a contiguous run, which the firm executes as a single AI chain: step~1 is automated and only step~2, the endpoint, is augmented and verified. Comparing the total cost at the right of the execution row with the one in Figure~\ref{fig:ex_dispersed} shows what rearranging the same four steps is worth.}
-\end{spacing}
-\end{minipage}
-\end{figure}
+Panel~(b) clusters them instead, so that steps $1$ and $2$ are AI-easy and steps $3$ and $4$ are AI-hard.
 The easy steps now sit next to each other, so chaining becomes a cost-effective option: it automates step~1 at zero direct cost and verifies only once, at step~2, where the run ends.
 A single verification now covers two steps instead of none, which is enough to make AI worth deploying where it was not before.
 \end{example}
 
-Note that the two workflows contain exactly the same steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
+Note that the two arrangements contain exactly the same steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
 Dispersion of AI-friendly steps can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer, and it is this margin that we explore empirically later.
 
 To formalize this, return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.
