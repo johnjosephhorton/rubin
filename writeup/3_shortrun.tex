@@ -2,30 +2,16 @@ In this section and the next we consider the firm's production in the short run.
 A firm's production consists of a sequence of steps $\mathcal{S}=(s_1,\ldots,s_m)$, every one of which must be completed to produce a unit of output.\footnote{
 We hold the set of production steps fixed and abstract from the creation or disappearance of steps in our model.
 }
-Completing a step takes worker time and demands skill, and both depend on the mode in which the step is executed.
-The firm deploys AI by assigning each step to a human or to AI, and that assignment determines which tasks the worker actually handles.
+The firm can assign each step either to a human worker or to AI.
+A step assigned to a human takes worker time and demands skill.
+A step assigned to AI succeeds only with some probability, and its output may need to be reviewed by a human worker before it is accepted.
 
-In the short run, the set of steps assigned to each worker is fixed (i.e., job boundaries are already drawn); workers have acquired the skills their roles require; and the firm has hired them at wages agreed in advance.
+In the short run, job boundaries are already drawn, so each worker's job covers a fixed block of steps; workers have acquired the skills their roles require; and the firm has hired them at wages agreed in advance.
 The firm's only margin of adjustment is AI deployment, that is, which steps it assigns to AI.
 That choice sets how much time each worker spends completing steps, and hence the wage bill the firm pays.
-Given these short-run assumptions, we assume without loss of generality that a single worker holds the entire production sequence, and we normalize the wage to $1$.
+Given these short-run assumptions, we assume without loss of generality that there is a single worker type whose wage is normalized to $1$.
 Section~\ref{sec:longrun} relaxes these, letting the firm divide the steps among workers so that the skill a job demands, and hence the wage it commands, becomes endogenous.
 Table~\ref{tab:notation} in Appendix~\ref{app:theory_tables} summarizes the notation used throughout the theory sections.
-
-\begin{figure}[!t]
-  \centering
-  \caption{Bundling Steps into Tasks via AI Strategy}
-  \label{fig:steps_tasks}
-  \input{plots/TikZ_visualization/steps_tasks_illustration.tex}
-  \par\vspace{\fignotesskip}
-\begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: The top layer shows seven production steps, each completed in manual (gray), automated (green), or augmented (orange) mode; dashed boxes group contiguous steps into tasks. The bottom layer shows the resulting tasks: a run of automated steps ending in an augmented step forms an AI chain (blue; here steps 4--6 become Task~4), and a lone augmented step is an AI chain of length one (here step~2 becomes Task~2), while a step performed manually on its own is a human task (olive). Horizontal arrows show the production flow within each layer, and each colored vertical arrow shows which dashed block of steps becomes which task.}
-\end{spacing}
-\end{minipage}
-\end{figure}
-
-
 
 \subsection{Steps}
 \label{sec:model.steps}
@@ -49,20 +35,32 @@ A step $i$ is augmented if it is executed by the AI, after which a human worker 
 The expected time cost of verifying a single augmented step is $\AItime{i}/q_i$, where $q_i = \alpha^{d_i} \in (0,1]$ is the AI's probability of successfully completing the step, increasing in the quality $\alpha$ of the general-purpose AI technology and decreasing in the step's difficulty $d_i$ for AI.
 \end{definition}
 
+\begin{figure}[!t]
+  \centering
+  \caption{Bundling Steps into Tasks via AI Strategy}
+  \label{fig:steps_tasks}
+  \input{plots/TikZ_visualization/steps_tasks_illustration.tex}
+  \par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: The top layer shows seven production steps, each completed in manual (gray), automated (green), or augmented (orange) mode; dashed boxes group contiguous steps into tasks. The bottom layer shows the resulting tasks: a run of automated steps ending in an augmented step forms an AI chain (blue; here steps 4--6 become Task~4), and a lone augmented step is an AI chain of length one (here step~2 becomes Task~2), while a step performed manually on its own is a human task (olive). Horizontal arrows show the production flow within each layer, and each colored vertical arrow shows which dashed block of steps becomes which task.}
+\end{spacing}
+\end{minipage}
+\end{figure}
 In the top layer of Figure~\ref{fig:steps_tasks}, Step~1, for example, is executed manually and hence is a manual step, whereas Step~2 is an instance of an augmented step performed by the AI and verified by a human.
 
-There is a third mode of executing a step, namely automation, that makes AI more than a faster way of doing the same work, but it is not freely available.
-Because no human handles an automated step, nothing checks its output, so that output must feed directly into another AI-executed step rather than into a worker.
-Automation therefore arises only inside a contiguous run of AI-executed steps whose last step is augmented, which is where the human re-enters and verifies what the run produced.
-We call such a run an \emph{AI chain}.
+Manual and augmented execution specify the mode of a step in isolation.
+There is a third mode, which we call \emph{automation}, that the firm obtains by assigning multiple consecutive steps to AI.
+In this case, the AI attempts to complete the entire run of steps without a human reviewing the intermediate outputs, and the worker verifies only the output of the last step.
+Every step before the last is then automated, since no human is involved in it, while the last step is augmented.
+Chaining steps in this way lowers the probability that an attempt succeeds, since the AI must complete every step in the run, but it economizes on human time, since the output is verified only once.
+We call such a contiguous run of AI-executed steps an \emph{AI chain}.
 
-Formally, consider an AI chain spanning steps $(s_\ell, \dotsc, s_r)$.
-The worker verifies only the output of its final step $s_r$, since all earlier steps run automatically ``under the hood.''
-Verifying one attempt at the chain therefore costs the same as verifying step $s_r$ on its own, namely time \AItime{r} per attempt.
-An attempt succeeds only if AI completes every step of the chain, which, assuming independent failures, occurs with probability $\prod_{i=\ell}^{r} q_i$; the chain is retried until it succeeds, for a total expected time of $\AItime{r}/\prod_{i=\ell}^{r} q_i$.
+Formally, an AI chain spans steps $(s_\ell, \dotsc, s_r)$, where the worker verifies only the output of the final step $s_r$.
+One attempt at the chain therefore costs the same as verifying step $s_r$ on its own, namely time \AItime{r}.
+Assuming independent failures across steps, an attempt succeeds with probability $\prod_{i=\ell}^{r} q_i$, and the chain is retried until it succeeds, for a total expected time of $\AItime{r}/\prod_{i=\ell}^{r} q_i$.
 Since $q_i = \alpha^{d_i}$, the chain succeeds with probability $\alpha^{\sum_{i=\ell}^{r} d_i}$, so $\sum_{i=\ell}^{r} d_i$ is the chain's total difficulty, aggregating additively over its constituent steps.
 A chain may consist of a single step, with $\ell = r$: having no automated predecessors, it is simply an augmented step, so an augmented step is an AI chain of length one, a convention we adopt throughout the paper.
-
 Definitions~\ref{def:automated_step} and \ref{def:ai_chain} formalize these two additional concepts.
 
 \begin{definition}[Automated Step]
@@ -90,7 +88,6 @@ The distinction follows from the execution modes of steps above.
 A worker is involved in a step only when they perform it manually or verify what the AI returns at the end of a chain, whereas an automated step runs inside the chain entirely beneath their awareness.
 Every point at which a worker executes or verifies work therefore opens a task for them, and whatever the AI has run automatically since the last such point is absorbed into it.
 The steps of a workflow map into tasks accordingly: a manual step is a task on its own, and an entire AI chain is a single \emph{composite} task, delegated to the AI at its start and received back at its augmented endpoint.
-However many steps a chain spans, it costs the worker the same (per attempt) to verify, which is the sense in which chaining changes not just how fast work is done but how much of it a human ever handles.
 
 The firm's choice of where to place chains is therefore what creates the tasks its workers hold, and we record that choice as an \emph{AI deployment strategy}.
 

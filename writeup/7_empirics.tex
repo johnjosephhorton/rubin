@@ -1,7 +1,7 @@
 In this section we empirically test the implications of our model.
 The predictions we take to the data are those of the short-run problem of Section~\ref{sec:shortrun}, in which the boundaries of jobs are fixed and AI acts only on how the steps within them are executed.
 This is a deliberate restriction rather than a limitation of the theory.
-The long-run margins of Section~\ref{sec:longrun}, in which firms redraw jobs around AI and wages adjust to the skills those jobs come to require, operate on a horizon over which firms reorganize and workers retrain, and not enough time has passed since the AI tools became widely available for such reorganization to have worked its way into the data we observe.
+The long-run margins of Section~\ref{sec:longrun} require firms to reorganize and workers to retrain, and not enough time has passed since AI tools became widely available for these adjustments to appear in the data we observe.
 What we can observe is where AI is being deployed inside workflows as they are currently arranged, which is precisely what the short-run problem speaks to.
 The three predictions we test are: (1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; (2) occupations in which AI-friendly steps are more dispersed have fewer of those steps actually executed by AI; and (3) the AI-execution status of a step's neighbors affects the likelihood that the step itself is executed by AI.
 
@@ -13,26 +13,33 @@ To create this dataset, we combine data from four sources:
     \item AI execution labels of O*NET tasks from Anthropic Economic Index \citep{handa2025economictasksperformedai},
     \item A GPT-generated task ordering for each O*NET occupation.
 \end{enumerate}
+The first three sources are existing datasets.
+The O*NET database is the standard decomposition of work in the United States: it breaks each of more than 850 occupations into a list of constituent tasks, roughly 18,000 in total, and has served as the backbone of a large empirical literature on the task content of jobs and their exposure to new technologies \citep[e.g.,][]{autor2013putting, deming2017growing, brynjolfsson2018can, webb2020impact, felten2021occupational}.
+\cite{eloundou2023gpts} map these O*NET tasks to AI exposure: they develop a rubric asking whether access to an LLM would reduce the time required to perform a task by at least half while preserving output quality, and apply it to every task using both human annotators and GPT-4.
+We use their human-generated labels and treat their E1 category as exposed to AI and the remaining categories as unexposed, which yields a conservative measure of exposure.
+Whereas these labels capture what AI could in principle do, the Anthropic Economic Index \citep{handa2025economictasksperformedai} captures what AI actually does: it maps millions of anonymized conversations between users and Claude, Anthropic's AI assistant, to O*NET tasks and classifies each conversation by whether the interaction augments or automates the task, providing a task-level measure of realized AI usage.
+
+None of these sources, however, records the order in which an occupation's tasks are performed, and our model's predictions turn precisely on where a task sits in the production sequence.
+We therefore construct the workflow orderings ourselves: for each O*NET occupation, we prompt GPT-5-mini \citep[through Expected Parrot;][]{Horton2024EDSL} with the occupation's complete set of tasks and ask it to determine the most reasonable order in which these tasks would be performed in practice.
+Generating sequences this way inevitably introduces some noise and arbitrary choices, most notably the wording of the prompt.
+We therefore validate the orderings in two ways.
+First, we benchmark every result against placebos that randomly reshuffle task positions within occupations; the GPT-generated orderings differ sharply from these placebos, indicating that they capture meaningful workflow structure.
+Second, the orderings overlap substantially across ten deliberately varied alternative prompts, and our headline results closely mirror those under the main prompt when re-run on these alternative sequences (Appendix~\ref{app:gptPrompts_robustness}).
 The details of how the dataset is constructed are given in Appendix~\ref{app:data_prep}.
 
 The structure of our theoretical framework closely aligns with the structure of the O*NET dataset.
 Each production step in the model corresponds to an O*NET task, and each occupation's workflow corresponds to the model's step sequence.
 In the absence of AI, a step (that is, an O*NET task) is executed manually and maps directly into a task under our model's definition.
 Thus, without AI, an O*NET task can be viewed as both a step and a task, which matches the standard treatment of tasks in the O*NET dataset.
-Later when we discuss AI execution, however, multiple steps, corresponding to a subset of O*NET tasks, may be chained together and executed jointly by AI, forming a composite task per our model's definition.
+Under AI execution, however, multiple steps, corresponding to a subset of O*NET tasks, may be chained together and executed jointly, forming a composite task as defined in Section~\ref{sec:shortrun}.
 In the rest of this section, we use the terms step, O*NET task, and task interchangeably and expect the reader to keep these distinctions in mind.
-We similarly use the terms workflow and occupation interchangeably without restating the mapping each time.
-
-One feature of the data shapes how we use it throughout.
-The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow.
-We therefore do not distinguish the two labels in what follows and treat both as indicating AI execution.
-Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.
+We similarly use the terms workflow and occupation interchangeably without restating the mapping each time.\footnote{One feature of the data shapes how we use it throughout. The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow. We therefore do not distinguish the two labels in what follows and treat both as indicating AI execution. Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.}
 
 
 \subsection{Prediction \#1: Tendency to Have Runs of Consecutive AI-executed Tasks}
 \label{sec:chainLength_prediction}
 
-The first prediction of the model that we test is that, to leverage cost savings from forming longer AI chains, AI steps tend to appear in contiguous blocks rather than being scattered in the workflow.
+The first prediction of the model that we test is that AI steps tend to appear in contiguous blocks rather than being scattered in the workflow.
 This prediction follows from our definition of AI chains (Definition~\ref{def:ai_chain}), which requires every automated step to be followed by another automated or augmented step, and from the fragmentation argument, which suggests that for a given level of AI quality longer AI chains are more likely to emerge when AI-easy steps are clustered together in the workflow (see Example~\ref{ex:fragmentation} in Subsection~\ref{sec:fragmentation}).
 
 To test this, we compute the observed average AI chain length in the data and benchmark it against two randomization placebos.
@@ -70,15 +77,11 @@ Panel (b) shows the corresponding histogram for 1,000 placebo datasets in which 
 \end{minipage}
 \end{figure}
 We observe that the average AI chain length in the original data is noticeably larger than in both placebo distributions.
-This indicates that the AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
+This indicates that AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
 
 These findings also mitigate two potential concerns regarding the structure of our dataset.
-Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels distributed randomly in the dataset across occupations, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
-In both cases the true value instead lies at the extreme tail.
-This implies that (1) the GPT-generated workflow sequences are unlikely to be chosen arbitrarily, and (2) the clustering of AI-executed tasks in the Anthropic data is not driven by chance co-occurrence of execution labels, but instead reflects systematic patterns within occupations.
-We emphasize that these tests rule out either input being pure noise.
-In particular, they do \emph{not} establish that the GPT task orderings we use are the ``right'' ones.
-To address the latter concern, Appendix~\ref{app:gptPrompts_robustness} reports a battery of checks on the robustness of our results to alternative GPT prompt formulations.
+Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels distributed randomly across occupations, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
+Instead, it lies at the extreme tail of both distributions, suggesting that the GPT-generated sequences capture genuine workflow structure and that the clustering of AI-executed tasks within occupations is systematic rather than chance.
 
 
 
@@ -86,7 +89,7 @@ To address the latter concern, Appendix~\ref{app:gptPrompts_robustness} reports 
 \label{sec:fragmentation_prediction}
 
 The second prediction of the model that we test is that the extent of realized AI execution in an occupation is determined not just by the AI exposure status of its steps, but also by how clustered or dispersed those AI-able steps are in the workflow.
-To examine this, we ask whether occupations with similar shares of their tasks exposed to AI exhibit different shares of realized AI-executed tasks depending on how dispersed their AI-able tasks are in the production sequence.
+To examine this, we ask whether, among occupations with similar AI exposure, realized AI execution is lower where AI-able tasks are more dispersed in the production sequence.
 Notably, this level of dispersion is related to the fragmentation index from Section~\ref{sec:fragmentation}; we will make use of a slightly modified metric (which we call the \emph{empirical fragmentation index}, defined in more detail below) that can be calculated from our dataset.
 Specifically, we estimate the following regression:
 \begin{equation}
@@ -96,14 +99,13 @@ Specifically, we estimate the following regression:
 \end{aligned}
     \label{eq:fragmentation_index_regression}
 \end{equation}
-where \emph{$\text{ai\_execution}_{o}$} is the share of tasks executed by AI in occupation $o$, \emph{$\text{ai\_exposure}_{o}$} is the share of AI-exposed tasks, and \emph{$\text{empirical\_fragmentation\_index}_{o}$} measures how dispersed the AI-able tasks are across the occupation's workflow. We additionally control for \emph{$\text{num\_ai\_able\_steps}_{o}$}, the number of AI-exposed (E1- or E2-labeled) steps in the occupation. Because the fragmentation index is the number of AI blocks per step, it varies mechanically with how many AI-able steps a workflow contains; conditioning on that count ensures $\beta_2$ is identified from how the AI-able steps are arranged rather than from how many of them there are.
+where \emph{$\text{ai\_execution}_{o}$} is the share of tasks executed by AI in occupation $o$, \emph{$\text{ai\_exposure}_{o}$} is the share of AI-exposed tasks, and \emph{$\text{empirical\_fragmentation\_index}_{o}$} measures how dispersed the AI-able tasks are across the occupation's workflow. We additionally control for the number of AI-exposed steps in the occupation. Because the fragmentation index is the number of AI blocks per step, it varies mechanically with how many AI-able steps a workflow contains; conditioning on that count ensures $\beta_2$ is identified from how the AI-able steps are arranged rather than from how many of them there are.
 
 The model predicts that occupations with higher AI exposure should have a higher share of steps executed by AI ($\beta_1 > 0$).
 Conditional on exposure, it also predicts that when AI-able steps are more dispersed in the workflow, the share of realized AI-executed steps should be lower ($\beta_2 < 0$).
-The intuition is that, for a given level of AI quality (parameter $\alpha$ in the model), AI chains are more likely to form when AI-easy steps appear next to each other, as discussed in Example~\ref{ex:fragmentation} of Subsection~\ref{sec:fragmentation}.
+The intuition is that, for a given level of AI quality, AI chains are more likely to form when AI-easy steps appear next to each other, as discussed in Example~\ref{ex:fragmentation} of Subsection~\ref{sec:fragmentation}.
 When such clustering occurs, nearby steps that would otherwise remain manual may instead be automated as part of a chain.
 
-To construct an empirical measure of fragmentation, we abstract from heterogeneity in tasks' underlying cost profiles, which are unobserved in our data, and focus solely on their positioning within the workflow.
 We define an occupation's \emph{empirical fragmentation index} (EFI) as follows.
 Assuming all AI-exposed steps turn into AI-executed tasks, the empirical fragmentation index is the ratio of the number of \emph{potential} tasks in the sense of our theoretical framework to the total number of steps, which is fixed and is measured by the raw count of O*NET tasks in that occupation.
 The following example clarifies the definition.
