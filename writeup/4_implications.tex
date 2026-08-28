@@ -87,7 +87,7 @@ The predecessor's share, however, is only $0.8$ against the $25$ that executing 
 Running all three as one chain costs $15.6$, against the $35.4$ for the arrangement comparative advantage would dictate, and step $k$ is automated to bridge an otherwise expensive step to a cheap endpoint.
 \end{example}
 
-Proposition~\ref{prop:ca_local} formalizes these forces and makes a more general claim.
+Proposition~\ref{prop:ca_local} formalizes these and makes a more general claim.
 
 \begin{proposition}[Overturning of Comparative Advantage]
 \label{prop:ca_local}
@@ -168,16 +168,18 @@ Panel~(a) interleaves the two kinds, alternating AI-easy and AI-hard steps.
 Because every easy step is flanked by hard ones, no two AI-able steps are ever adjacent, so no AI chain can form and automation, which executes a step for free but is available only inside a chain, never becomes an option.
 The firm is left to treat each step on its own, and on its own neither kind of step is worth giving to AI.
 The workflow therefore uses no AI at all, even though half of its steps are ones AI performs comparatively well.
+
 Panel~(b) clusters them instead, placing the two AI-easy steps side by side.
 Chaining then becomes a cost-effective option: it automates the first easy step at zero direct cost and verifies only once, at the second, where the run ends.
 A single verification now covers two steps instead of none, which is enough to make AI worth deploying where it was not before.
 \end{example}
 
-Note that the two arrangements contain exactly the same steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
-Dispersion of AI-friendly steps can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer, and it is this margin that we explore empirically later.
+Note that the two arrangements contain exactly the same set of steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
+Dispersion of AI-friendly steps in the workflow can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer.
+This is precisely the margin that we explore empirically later.
 
 As gains from automation appear to depend on how clustered or dispersed a workflow's AI-able steps are, having a measure of that arrangement would be useful, one that stands in for them without solving the firm's optimization problem outright.
-To build such a measure, return to the firm's AI deployment problem in Equation~\eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.\footnote{The normalization puts every step on the same footing as far as the cost of using AI goes, leaving where the AI-able steps sit as the only thing that separates one workflow from another.}
+To build such a measure, return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.\footnote{The normalization puts every step on the same footing as far as the cost of using AI goes, leaving where the AI-able steps sit as the only thing that separates one workflow from another.}
 Suppose each step $s_i$ succeeds independently with probability $q_i$, and say that any step that does not succeed \emph{fails}.
 Write $F$ for the set of steps that fail and $\mathcal{C}$ for the random collection of maximal connected components of non-failed steps, and assign each $C \in \mathcal{C}$ the weight $\omega(C) = \min\bigl\{ 1, \sum_{s_i \in C} \manualTime{i} \bigr\}$, which is $1$ unless the manual costs of its steps sum to less than the normalized cost of verifying one AI attempt.
 The realized fragmentation of the workflow is then
@@ -185,6 +187,7 @@ The realized fragmentation of the workflow is then
     \sum_{s_i \in F}\min\left\{\manualTime{i}, \frac{1}{q_i}\right\} + \sum_{C \in \mathcal{C}} \omega(C),\label{eq:fragmentation}
 \end{equation}
 and the \emph{fragmentation index} of the workflow is its expected value.
+Proposition~\ref{prop:fragmentation} shows how the fragmentation index and optimal AI deployment cost are related.
 
 \begin{proposition}
 \label{prop:fragmentation}
@@ -195,7 +198,7 @@ and the \emph{fragmentation index} of the workflow is its expected value.
 \end{proposition}
 
 Proposition~\ref{prop:fragmentation} says that a single closed-form quantity tracks, up to constant factors, what the firm's whole optimization is worth, so a workflow with a high fragmentation index yields less benefit from AI however cleverly the firm deploys it.
-What Equation~\eqref{eq:fragmentation} measures is easiest to see through a prophet who can look ahead and tell which steps AI would complete on its first attempt.
+What the quantity in \eqref{eq:fragmentation} measures is easiest to see through a prophet who can look ahead and tell which steps AI would complete on its first attempt.
 Runs of steps that will all succeed are natural candidates for a chain, so the prophet chains each such run and executes every remaining step on its own, in whichever of the two modes is cheaper for it; the fragmentation index is the expected cost of that strategy.
 This is not the optimal strategy even with foresight, since a long chain with a good chance of success may be worth attempting even when the prophet knows it will fail on the first try.
 What Proposition~\ref{prop:fragmentation} establishes is that its cost nonetheless approximates the cost of the optimal strategy, which enjoys no foresight at all.
