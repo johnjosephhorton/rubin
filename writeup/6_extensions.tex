@@ -36,7 +36,7 @@ The aggregate representation asks more of the economy than the firm-level argume
 The micro and macro representations of production are therefore not in competition.
 Our account of how chaining redraws tasks and jobs is not an alternative to the aggregate view of automation but a foundation for it, and the implications people draw from improving AI quality in a CES economy carry over intact.
 The organization of work, however, does not disappear in aggregation; it is absorbed into the parameters of the CES function.
-Two economies with identical production steps, arranged differently within workflows, aggregate to the same CES form in Equation~\eqref{eq:lr_macro_ces} but with different production parameters and input requirements.
+Two economies with identical production steps, arranged differently within workflows, aggregate to the same CES form in \eqref{eq:lr_macro_ces} but with different production parameters and input requirements.
 Aggregate data therefore cannot reveal workflow structure, so objects such as the fragmentation index must be measured where the arrangement of work is still visible, which is what our empirical exercise in Section~\ref{sec:empirics} does.
 
 
@@ -56,24 +56,24 @@ In the long run the configuration's cost carries not just the time but also the 
 We take the cost minimization of the two horizons in turn, collecting the proofs in Appendix~\ref{app:omitted_proofs}.
 
 \paragraph{The Short Run Optimization.}
-With the job and its wage fixed, the firm minimizes total expected time in Equation~\eqref{eq:totalcost_shortterm}.
+With the job and its wage fixed, the firm minimizes total expected time in Problem~\eqref{eq:totalcost_shortterm}.
 For $k \leq m$, let $C[k]$ denote the minimum time needed to complete a hypothetical workflow containing only steps $1$ through $k$, so that $C[0] = 0$ and $C[m]$ is the optimum.
 Step $k$ is either performed manually, or augmented as the endpoint of an AI chain reaching back to some earlier step $\ell$; in either case the steps before that point are optimized separately, which gives
 \begin{align}
 \label{eq:shortrun_recursion}
 C[k] = \min\Biggl\{ \underbrace{C[k-1] + \manualTime{k}}_{\text{step $k$ manual}}, \ \underbrace{\min_{\ell < k}\ \Bigl( C[\ell] + \frac{\AItime{k}}{\prod_{i=\ell+1}^{k} q_i} \Bigr)}_{\text{step $k$ ends a chain begun at } \ell+1} \Biggr\}.
 \end{align}
-Because time costs enter Equation~\eqref{eq:totalcost_shortterm} additively, a stretch's time cost is all that Equation~\eqref{eq:shortrun_recursion} needs from it.
+Because time costs enter Problem~\eqref{eq:totalcost_shortterm} additively, a stretch's time cost is all that the recursion in \eqref{eq:shortrun_recursion} needs from it.
 Each of the $m$ values costs $O(m)$ to evaluate, since the chain ending at step $k$ may begin anywhere before it.
 This makes the computational complexity of the algorithm $O(m^2)$.
 Proposition~\ref{prop:shortrun_dp} formalizes this.
 \begin{proposition}[Short-run AI Deployment]
 \label{prop:shortrun_dp}
-Given a workflow with $m$ steps, the AI strategy minimizing Equation~\eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
+Given a workflow with $m$ steps, the AI strategy that solves Problem~\eqref{eq:totalcost_shortterm} can be calculated in time $O(m^2)$ via dynamic programming.
 \end{proposition}
 
 \paragraph{The Long Run Optimization.}
-The firm now chooses job boundaries as well, and Equation~\eqref{eq:totalcost_with_handoff} multiplies each job's total skill by its total time.
+The firm now chooses job boundaries as well, and the objective in \eqref{eq:totalcost_with_handoff} multiplies each job's total skill by its total time.
 A task's contribution to cost therefore depends on how much skill and how much time its job already carries, so the position alone no longer summarizes a stretch and we carry two further coordinates.
 Let $R(i,\, \skillcost{},\, \timecost{})$ be the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating tasks already holds total skill $\skillcost{}$ and total time $\timecost{}$, the latter including their hand-off, and let $V(i) = R(i,\, 0,\, \handofftime{i})$ be the corresponding cost when that worker's job closes at step $i$.
 The base case is $R(0,\, \skillcost{},\, \timecost{}) = \skillcost{}\,\timecost{}$, and the firm faces three options at each step rather than two,
@@ -91,7 +91,7 @@ Proposition~\ref{prop:totalcost_optimization_dp} formalizes the resulting approx
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
 Fix a workflow with $m$ steps whose skill and time costs, and whose non-zero hand-off costs, lie in $[1/B, B]$ for some $B > 0$.
-For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost in Equation~\eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost in \eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
 
 Together these results also suggest a use for the framework beyond what we do here.
