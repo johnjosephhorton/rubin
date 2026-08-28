@@ -68,7 +68,7 @@ Panel~B enters only once the firm chooses how to divide the workflow among worke
 
 Section~\ref{sec:longrun.specialization} works through a three-task workflow whose four job designs are drawn in Figure~\ref{fig:job_design}.
 Table~\ref{tab:job_design} reports what each of them costs, first with hand-off costs switched off and then with them on.
-Reading down either panel, a design's total is the sum over its jobs of the job's total skill times the total time it takes, hand-off included, which is \eqref{eq:wagebill} applied job by job.
+Reading down either panel, a design's total is the sum over its jobs of the job's total skill times the total time it takes, hand-off included, which is Equation~\eqref{eq:wagebill} applied job by job.
 
 Section~\ref{sec:nonlinear} works through a two-step workflow in which the marginal gain from improving AI quality is non-monotone.
 Table~\ref{tab:nonmonotone_costs} lists the five AI strategies available there, the cost of each as a function of AI quality $\alpha$, the marginal benefit of raising $\alpha$ under each, and the range of $\alpha$ over which each is cost-minimizing.
@@ -140,7 +140,7 @@ Augmenting it on its own costs $3.5\alpha^{-11}$, which is prohibitive while AI 
 
 \subsection{Additional Tests for Prediction \#2}
 \label{app:additional_robustness_pred2}
-To ensure that our results for the second prediction are not driven by how fragmentation is measured using the AI exposure classifications of \citet{eloundou2023gpts}, we re-estimate \eqref{eq:fragmentation_index_regression} using an additional measure of task fragmentation (EFI Definition~2) constructed directly from realized AI execution outcomes, rather than from AI-exposed tasks.
+To ensure that our results for the second prediction are not driven by how fragmentation is measured using the AI exposure classifications of \citet{eloundou2023gpts}, we re-estimate Equation~\eqref{eq:fragmentation_index_regression} using an additional measure of task fragmentation (the execution-based EFI) constructed directly from realized AI execution outcomes, rather than from AI-exposed tasks.
 The corresponding regression results are reported in Table~\ref{tab:fragmentation_index_regression_execution}.
 
 \begin{table}[!t]
@@ -152,10 +152,10 @@ The corresponding regression results are reported in Table~\ref{tab:fragmentatio
     \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Standardized coefficients. Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table reports results from estimating regression~\eqref{eq:fragmentation_index_regression}.
+This table reports results from estimating Equation~\eqref{eq:fragmentation_index_regression}.
 The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\text{ai\_execution}$).
 The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation, while the ``Empirical Fragmentation Index'' captures how dispersed AI-able steps are across the occupation's workflow.
-The execution-based empirical fragmentation index (Definition~2) treats any AI-executed task, automated or augmented, as contributing equally to the formation of AI chains in measuring task fragmentation.
+The execution-based empirical fragmentation index treats any AI-executed task, automated or augmented, as contributing equally to the formation of AI chains in measuring task fragmentation.
 All three variables are standardized to unit standard deviation within the sample, so the reported coefficients are in standard-deviation units. All specifications additionally control for the number of AI-exposed (E1 or E2) steps in the occupation, so that the fragmentation coefficient is identified from how the AI-able steps are arranged rather than from how many of them the workflow contains.}
 \end{spacing}
 \end{minipage}\end{table}
@@ -177,16 +177,16 @@ In this sense, the execution-based EFI functions as a falsification-style check 
 \label{app:additional_robustness_pred3}
 
 Although DWAs are intended to group conceptually similar tasks, one might argue that even within a given DWA tasks may still somewhat differ in their objectives, execution nature, or required skills.
-To address this concern, we re-estimate regression~\eqref{eq:DWA_regression_ai} using a more restrictive definition of task similarity within DWAs.
+To address this concern, we re-estimate Equation~\eqref{eq:DWA_regression_ai} using a more restrictive definition of task similarity within DWAs.
 Specifically, for each DWA, we ask GPT-5-mini to select the subset of tasks that are most similar in terms of skill requirements and execution complexity.\footnote{The prompt used to identify similar DWA tasks is provided in Appendix~\ref{app:prompts}.}
 This procedure yields, for each DWA, a set of highly comparable tasks that appear across different occupational contexts.
 Panel~(a) of Table~\ref{tab:DWA_tasks} presents example DWAs and their associated O*NET tasks across occupations, along with execution modes, while Panel~(b) reports the subset of tasks retained after applying the similarity filter.
 
-In this robustness test we treat these tasks as instances of the same underlying step appearing across occupations and re-estimate regression~\eqref{eq:DWA_regression_ai} on this restricted sample.
+In this robustness test we treat these tasks as instances of the same underlying step appearing across occupations and re-estimate Equation~\eqref{eq:DWA_regression_ai} on this restricted sample.
 The resulting estimates, reported in Table~\ref{tab:DWA_regression_aiExecution_GPTsample} and Figure~\ref{fig:DWA_regression_aiExecution_GPTsample}, closely mirror the baseline patterns of the main specification in both sign and magnitude.
 
 Finally, we examine a stricter notion of AI execution that is directly implied by our model, under which automated steps can only precede other AI-executed steps, whether automated or augmented.
-Accordingly, we repeat the analysis focusing specifically on AI automation rather than AI execution more broadly, replacing the dependent variable in equation~\eqref{eq:DWA_regression_ai} with an indicator for whether step $k$ is AI-automated ($\text{is\_automated}_{k}$) instead of AI-executed ($\text{is\_ai}_{k}$).
+Accordingly, we repeat the analysis focusing specifically on AI automation rather than AI execution more broadly, replacing the dependent variable in Equation~\eqref{eq:DWA_regression_ai} with an indicator for whether step $k$ is AI-automated ($\text{is\_automated}_{k}$) instead of AI-executed ($\text{is\_ai}_{k}$).
 The corresponding estimates for the main sample are reported in Table~\ref{tab:DWA_regression_aiAutomation_mainSample} and Figure~\ref{fig:DWA_regression_aiAutomation_mainSample}, while results for the GPT-filtered sample are reported in Table~\ref{tab:DWA_regression_aiAutomation_GPTsample} and Figure~\ref{fig:DWA_regression_aiAutomation_GPTsample}.\footnote{
 Because relatively few tasks in the data are AI-automated, and because we further restrict attention to highly similar tasks across occupations, we retain tasks associated with multiple DWAs in the original O*NET dataset and randomly assign each such task to one of its associated DWAs for these exercises.
 }
@@ -204,7 +204,7 @@ Under this stricter specification, the estimated effects are smaller in magnitud
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai}.
+This table reports average marginal effects from estimating Equation~\eqref{eq:DWA_regression_ai}.
 The dependent variable in all specifications is an indicator for whether task $k$ is AI-executed ($\text{is\_ai}_{k}$).
 The sample is restricted to similar tasks across occupations, identified by GPT-5-mini as tasks belonging to the same DWA with similar execution nature and skill characteristics.
 Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.}
@@ -222,7 +222,7 @@ Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$).
+This table reports average marginal effects from estimating Equation~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$).
 The sample is restricted to similar tasks across occupations, identified as tasks belonging to the same DWA in the O*NET dataset.
 Tasks that are mapped to multiple DWAs are retained, with one associated DWA assigned randomly for estimation to preserve sufficient variation in the data.
 Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.}
@@ -240,7 +240,7 @@ Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table reports average marginal effects from estimating regression~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$).
+This table reports average marginal effects from estimating Equation~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$).
 The sample is restricted to similar tasks across occupations, identified by GPT-5-mini as tasks belonging to the same DWA with similar execution nature and skill characteristics.
 Tasks that are mapped to multiple DWAs are retained, with one associated DWA assigned randomly for estimation to preserve sufficient variation in the data.
 Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.}
@@ -285,7 +285,7 @@ Controls and standard errors are as in Table~\ref{tab:DWA_regression_aiExecution
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being executed by AI, while more distant neighbors have little to no effect on a task's AI execution likelihood.
 The dashed line, shaded band, and histograms are constructed as in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}, with the observed estimates taken from Table~\ref{tab:DWA_regression_aiExecution_GPTsample}.
-Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai}, while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+Panel~(a) reports results from Equation~\eqref{eq:DWA_regression_ai}, while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
 \end{spacing}
 \end{minipage}
 \end{figure}
@@ -328,7 +328,7 @@ Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai}, while
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being automated by AI, while more distant neighbors have little to no effect on a task's AI automation likelihood.
 The dashed line, shaded band, and histograms are constructed as in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}, with the observed estimates taken from Table~\ref{tab:DWA_regression_aiAutomation_mainSample}.
-Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+Panel~(a) reports results from Equation~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
 \end{spacing}
 \end{minipage}
 \end{figure}
@@ -371,7 +371,7 @@ Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but wi
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: The pattern is the same as in Figure~\ref{fig:DWA_regression_aiAutomation_mainSample}, now on the GPT-filtered sample.
 The dashed line, shaded band, and histograms are constructed as in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}, with the observed estimates taken from Table~\ref{tab:DWA_regression_aiAutomation_GPTsample}.
-Panel~(a) reports results from specification~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+Panel~(a) reports results from Equation~\eqref{eq:DWA_regression_ai} but with dependent variable ($\text{is\_automated}_{k}$) instead of ($\text{is\_ai}_{k}$), while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
 \end{spacing}
 \end{minipage}
 \end{figure}
