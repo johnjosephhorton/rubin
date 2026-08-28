@@ -17,6 +17,7 @@ A \emph{job} is a contiguous block of tasks $J = (T_b, \dotsc, T_{b'})$, with $b
 A \emph{job design} is a partition $\mathcal{J} = (J_1, \dotsc, J_p)$ of the task sequence $\T$ into $p$ such jobs, one for each worker the firm hires.
 \end{definition}
 In the bottom two layers of Figure~\ref{fig:hierarchical_production}, Tasks~1 and~2 form Job~1, Task~3 forms Job~2, and Tasks~4 and~5 form Job~3.
+Notice that a worker's job can potentially contain both manual and AI chain tasks.
 
 \begin{figure}[!t]
   \centering
@@ -37,7 +38,7 @@ Red curly arrows mark the hand-offs incurred at job boundaries, and can be trace
 Completing a step demands not only time but also skill, by which we mean the body of knowledge and the specific know-how a worker must acquire in order to perform it.
 The short run had no need of this notion, as we assumed workers had acquired the skills necessary to perform all activities in their job.
 In the long run, however, the firm chooses which steps to assign to which worker, effectively changing the skill requirement of their jobs.
-We thus introduce skills to capture this dimension of work.
+We thus introduce skills to capture this other work dimension.
 
 Accordingly, we extend Definitions~\ref{def:manual_step}--\ref{def:ai_chain} to incorporate the skill requirement of steps as well: 
 the skill and time requirement of performing step $i$ manually is $(\manualSkill{i},\, \manualTime{i})$, while verifying the output of one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
@@ -48,7 +49,11 @@ Both components of a chain's pair are therefore inherited from its augmented end
 The firm hires one worker for each job in its job design $\mathcal{J}$.
 The worker for job $J_j$ completes all tasks associated with their job.
 The total time needed to complete all tasks in job $J_j$ is $\sum_{T_b \in J_j} \timecost{b}$.
-The total skill required to complete the tasks in job $J_j$ is $\sum_{T_b \in J_j} \skillcost{b}$.
+The total skill required to complete the tasks in job $J_j$ is $\sum_{T_b \in J_j} \skillcost{b}$.\footnote{
+We assume that the skills different steps require are non-overlapping, and thus add up linearly in jobs.
+Human capital requirements of steps do overlap in practice, but modeling that overlap would burden the results this section derives with complexities that obscure the main channels we aim to describe.
+That said, the results rest on a considerably weaker version of this assumption, namely that each step demand some increment of skill no other step supplies, so that a worker who takes on more steps in their job must acquire more skill.
+}
 We then assume that a worker's wage is proportional to the skill level of their job.\footnote{
 One motivation for this formulation is workers paying a human capital investment to acquire the skills necessary for a job.
 This investment must be offset by wages, and we express skill levels in units of their corresponding requisite wage.
@@ -73,7 +78,7 @@ Taking into account both time and skill requirements, the total wage bill paid t
 \label{eq:jobcost}
 \text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr)\Biggl(\sum_{T_b \in J_j} \timecost{b} \Biggr).
 \end{align}
-Note what \eqref{eq:jobcost} implies for a job.
+Note what Equation~\eqref{eq:jobcost} implies for a job.
 The worker is compensated for every skill the job demands over its whole duration, even though at any given moment they are performing a single task and drawing on only the portion of their knowledge that task requires.
 The remainder of their human capital sits idle at that moment and is paid for regardless.
 
@@ -97,7 +102,7 @@ Because production in our model exhibits an order, we can be more specific about
 A hand-off happens at a particular point in production, and what it costs depends on which point.
 Some places are natural seams, where the work has reached a self-contained intermediate output, a finished design or a signed-off specification, that can be described briefly and passed on.
 Others fall in the middle of something, where whoever receives the work has to reconstruct the context the previous worker had built up.
-We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs as in \citet{becker1992division}, so that \emph{where} the firm divides the workflow matters and not merely how often it divides it.
+We therefore attach the hand-off cost to the step at which the break occurs rather than to the worker or to the number of jobs, so that \emph{where} the firm divides the workflow matters and not merely how often it divides it as in \citet{becker1992division}.
 The red curly arrows in Figure~\ref{fig:hierarchical_production} illustrate that hand-offs occur at job boundaries and that their cost reflects the characteristics of the last step in a worker's job.
 
 Formally, given step $s_i$, we write $\handofftime{i}$ for the additional hand-off time spent by a worker for whom the last step of their job is $s_i$, and $\handofftime{}(J_j)$ for the hand-off time of job $J_j$, which is equal to $\handofftime{i}$ if $s_i$ is the final step in $J_j$.
@@ -108,7 +113,7 @@ Thus the total time needed to complete job $J_j$, including hand-off costs, is
 \handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}.
 \]
 
-Because the worker is paid for as long as their job takes, this time enters the wage bill exactly as execution time does, so \eqref{eq:jobcost} becomes
+Because the worker is paid for as long as their job takes, this time enters the wage bill exactly as execution time does, so Equation~\eqref{eq:jobcost} becomes
 \begin{align}
 \label{eq:wagebill}
 \text{WageBill}_j = \Biggl(\sum_{T_b \in J_j} \skillcost{b} \Biggr) \Biggl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b} \Biggr).
@@ -117,7 +122,10 @@ Equation~\eqref{eq:wagebill} highlights the two opposing forces that shape a job
 Adding more tasks to a worker's job increases the cumulative skill requirement and thus the wage rate for that worker.
 However, if tasks are kept separate, workers must incur additional hand-off costs at each job boundary.
 These two effects jointly determine the optimal degree of task aggregation.
-We explore this trade-off in greater detail in Section~\ref{sec:longrun.specialization}.
+
+Going back to the university professor example, this is perhaps why the chores fall to the professor in the first place. On wages alone the university should hand the cleaning of the board to a cheaper worker. What stops it is that the work would have to change hands mid-lecture: the professor must find someone, the lecture waits, and the worker must be told what is wanted. That costs more than the professorial minutes it saves, so the professor's job absorbs the chore.
+
+We explore this trade-off in greater detail in Section~\ref{sec:longrun.specialization}, after introducing the problem the firm solves in choosing its jobs.
 
 
 \subsection{Long-Run Production}
@@ -138,9 +146,9 @@ Then the full optimization problem faced by the firm can be expressed as
 \end{align}
 where recall that, for each $T_b \in \T$, $\timecost{b}$ is as described in Section~\ref{sec:model.tasks} and $\skillcost{b}$ as above, both depending on the selected mode of operation for individual steps.
 
-We refer to \eqref{eq:totalcost_with_handoff} as the firm's long-run optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
-It nests the short-run problem \eqref{eq:totalcost_shortterm} of Section~\ref{sec:shortrun.production} as the case of a single job spanning the whole production, with wage being fixed rather than chosen.
-%In Section~\ref{sec:extensions.computation} we discuss how the solution to \eqref{eq:totalcost_with_handoff} can be approximated to any desired accuracy in polynomial time.
+We refer to Equation~\eqref{eq:totalcost_with_handoff} as the firm's long-run optimization problem, as it anticipates the adjustment of worker wages to fit the skill requirements of each job and sets job responsibilities accordingly.
+It nests the short-run problem in Equation~\eqref{eq:totalcost_shortterm} of Section~\ref{sec:shortrun.production} as the case of a single job spanning the whole production, with wage being fixed rather than chosen.
+%In Section~\ref{sec:extensions.computation} we discuss how the solution to Equation~\eqref{eq:totalcost_with_handoff} can be approximated to any desired accuracy in polynomial time.
 
 Next we discuss the implications of this optimization problem.
 
@@ -149,10 +157,10 @@ Next we discuss the implications of this optimization problem.
 \label{sec:longrun.specialization}
 
 Here we discuss how AI affects the boundaries of jobs.
-Because the firm chooses those boundaries when it solves \eqref{eq:totalcost_with_handoff}, the answer runs through the trade-off that fixes them, between the skill a broad job demands and the coordination a narrow one requires.
+Because the firm chooses those boundaries when it solves Equation~\eqref{eq:totalcost_with_handoff}, the answer runs through the trade-off that fixes them, between the skill a broad job demands and the coordination a narrow one requires.
 We set that trade-off out first, and then ask how AI moves it.
 
-The wage bill \eqref{eq:wagebill} is a product of a skill and a time, so it reads naturally as an area, which is what makes the trade-off visible.
+The wage bill in Equation~\eqref{eq:wagebill} is a product of a skill and a time, so it reads naturally as an area, which is what makes the trade-off visible.
 Draw each task as a rectangle whose height is its skill cost $\skillcost{b}$ and whose width its time cost $\timecost{b}$; a job's wage bill is then the area of the rectangle that spans the tasks it contains, as tall as the total skill it demands and as wide as the total time it takes.
 Figure~\ref{fig:lr_job_design} draws the two-task case, the smallest in which the firm has a choice to make.
 \begin{figure}[!t]
@@ -179,7 +187,7 @@ Consider a workflow that, under a fixed AI deployment strategy $\T$, has $n=3$ t
 \[ \bigl(\skillcost{b},\, \timecost{b},\, \handofftime{b}\bigr)_{b=1,2,3} = (3,\,1,\,3),\quad (1,\,2,\,0.5),\quad (2,\,2,\,0). \]
 With three tasks there are four ways the firm can design jobs,\footnote{
 More generally, a production sequence with $n$ tasks has $2^{(n-1)}$ unique job designs.
-} and Figure~\ref{fig:job_design} draws all four in the same terms, once with hand-off costs switched off and once with them on; Table~\ref{tab:job_design} in Appendix~\ref{app:jobdesign_example} reports the cost of each.
+} and Figure~\ref{fig:job_design} draws all four in the same terms, once with hand-off costs switched off and once with them on; Table~\ref{tab:job_design} in Appendix~\ref{app:jobdesign_example} reports the cost of each job design.
 \begin{figure}[!t]
 \begin{center}
 \caption{Geometric Interpretation of Optimal Job Design} \label{fig:job_design}
@@ -210,9 +218,7 @@ But the same reduction works in the opposite direction as well, because what a h
 In the workflow above, for instance, tasks 1 and 2 share a job because a skill-$3$ worker would otherwise sit through a hand-off of length $3$; were AI to take over task 1 and leave only verification skill behind, that reason would weaken along with the wage rate it applies to.
 
 The second channel is the hand-off cost itself.
-We have treated $\handofftime{i}$ as a primitive, but AI plausibly lowers it, by absorbing the peripheral coordination a transfer requires, such as summarizing what was done or drafting the documentation that accompanies it.\footnote{
-A useful reading of the hand-off cost is that it has two components: peripheral coordination work that AI can facilitate, and a remainder that rests on tacit, interpersonal, or social knowledge and is not easily executable by AI \citep{deming2017growing}.
-}
+We have treated $\handofftime{i}$ as a primitive, but AI plausibly lowers it, by absorbing the peripheral coordination a transfer requires, such as summarizing what was done or drafting the documentation that accompanies it.
 Cheaper hand-offs make every boundary cheaper to draw, which pushes toward narrower jobs and more specialization.
 Panel~(a) of Figure~\ref{fig:job_design} is the limiting case, with hand-offs free and full specialization optimal.
 
