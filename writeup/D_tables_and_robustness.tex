@@ -176,6 +176,62 @@ In this sense, the execution-based EFI functions as a falsification-style check 
 \subsection{Additional Tests for Prediction \#3}
 \label{app:additional_robustness_pred3}
 
+Because we do not have a benchmark for what constitutes a large versus small effect in our context, interpreting the magnitudes in a vacuum is difficult.
+To better understand these results and to check whether the observed patterns could have arisen by chance, we conduct a robustness exercise in which we re-estimate Equation~\eqref{eq:DWA_regression_ai} for 1,000 placebo datasets constructed by randomizing the positions of tasks within occupations.
+The results are shown in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}.
+In each graph, the red dashed line marks the AME estimated using the actual data (i.e., the values reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample}) along with the 90\% confidence interval around it.
+The blue bars in Panel~(a) show the histogram of AMEs obtained from reshuffled datasets estimated using the baseline specification.
+Panels~(b), (c), and (d) report the corresponding histograms when SOC major group, SOC minor group, and DWA fixed effects are included, respectively.
+
+\begin{figure}[p]
+  \centering
+  \caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution}
+  \label{fig:DWA_regression_aiExecution_mainSample}
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{No Fixed Effects}
+    \label{fig:ame_nofe}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{SOC Major Group Fixed Effects}
+    \label{fig:ame_major}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_major_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{SOC Minor Group Fixed Effects}
+    \label{fig:ame_minor}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_minor_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{Detailed Work Activity Fixed Effects}
+    \label{fig:ame_dwa}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_with_dwa.png}
+  \end{subfigure}
+  \par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being executed by AI, while more distant neighbors have little to no effect on a task's AI execution likelihood.
+The red dashed line in each graph indicates the observed average marginal effect of the corresponding variable in the original dataset reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+The red shaded area marks the 90\% confidence interval around the observed point estimates in the main sample.
+The histograms plot the distribution of average marginal effects across 1{,}000 randomized reshuffles of task positions within occupations.
+Panel~(a) reports results from Equation~\eqref{eq:DWA_regression_ai}, while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+\end{spacing}
+\end{minipage}
+\end{figure}
+
 Although DWAs are intended to group conceptually similar tasks, one might argue that even within a given DWA tasks may still somewhat differ in their objectives, execution nature, or required skills.
 To address this concern, we re-estimate Equation~\eqref{eq:DWA_regression_ai} using a more restrictive definition of task similarity within DWAs.
 Specifically, for each DWA, we ask GPT-5-mini to select the subset of tasks that are most similar in terms of skill requirements and execution complexity.\footnote{The prompt used to identify similar DWA tasks is provided in Appendix~\ref{app:prompts}.}
