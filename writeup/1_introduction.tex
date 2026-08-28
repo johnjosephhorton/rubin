@@ -74,9 +74,8 @@ Steps 2 and 3 are automated because their outputs feed directly into subsequent 
 Step 4 is augmented because its output is verified by a human before proceeding.
 The resulting worker tasks in this job thus become $1$, $4$, and $5$.
 
-When a single step is performed by an AI, there is always a human verifying its output in an augmented manner.
-But with two or more steps it is possible to re-configure production so that an AI completing one step passes its output directly into the next step without human intervention (i.e., the first step is automated).
-This chaining is potentially a source of large productivity gains, \emph{but} it requires AIs that can perform each step with a high probability of success.
+Automation is therefore available only inside a chain: a lone AI step must have its output verified, so chaining is what lets AI work unsupervised.
+This is potentially a source of large productivity gains, \emph{but} it requires AIs that can perform each step with a high probability of success.
 In this sense, the model's basic setup is conceptually close to the O-ring model of production \citep{kremer1993oring, gans2026oring}.
 
 \paragraph{Optimizing Automation and Fragmentation.}
@@ -92,7 +91,7 @@ A job is more or less ``fragmented'' in its AI exposure depending on whether the
 We formalize this idea in a \emph{fragmentation index}, the expected cost of a simple execution plan endowed with foresight into AI's successes and failures, and show analytically that it approximately tracks the impact of optimal AI deployment.
 We then provide empirical evidence that jobs with higher fragmentation see a weaker translation from AI exposure to AI execution.
 
-Because chaining makes the cost of automating a step depend on its neighbors, the firm must optimize costs over all possible configurations rather than proceeding step by step.
+\pscomment{Yeah. Reads weird and feels forced... :)} Because chaining makes the cost of automating a step depend on its neighbors, the firm must optimize costs over all possible configurations rather than proceeding step by step.
 Whether the firm can actually calculate its optimum is not obvious, as the number of feasible arrangements for production grows exponentially in the number of steps.
 We show how the firm can solve its optimization problem, exactly in the short run and to any desired accuracy once wages and job boundaries are also chosen in the long run.
 
@@ -110,7 +109,13 @@ Our framework thus provides a micro-foundation for the productivity J-curve phen
 As the firm can reorganize its production around what AI can do, AI changes what workers do and not only how quickly they do it, and through that, wages and labor demand.
 How broadly to define each job involves a trade-off: adding more tasks to a worker's job raises the wage that job must pay, since the worker has to acquire the skills all of those tasks require, while dividing them across more jobs adds coordination cost, since every job boundary forces a \emph{hand-off} of intermediate output among workers.
 Because production runs in an order, what a hand-off costs depends on where the break falls, so the firm chooses not merely how finely to divide the work but where to cut it.
+
+Which way improvements in AI move job boundaries is ambiguous, because it presses on both sides of this trade-off.
+Absorbing steps into chains strips skill out of the tasks a worker retains, making broad jobs cheaper to sustain, while the same reduction---and any direct saving in coordination---makes each boundary cheaper to draw.
+The framework thus supplies not a prediction about job breadth but an account of what determines it, and of what would have to be measured to settle the question empirically.
+
 \paragraph{Aggregate Production.}
+\pscomment{Should we move this after the empirics? We go: firm -- aggregate -- firm.}
 Although we develop these results at the level of a single firm, we show that, under additional assumptions, aggregating this firm-level production across the economy yields a constant elasticity of substitution (CES) aggregate production function for the economy.
 Our framework can thus serve as a micro-foundation for economy-wide production functions and be used to study the aggregate effects of AI on outcomes such as the labor market and total productivity.
 
@@ -128,13 +133,13 @@ In the data, controlling for the share of steps exposed to AI, occupations whose
 Third, chaining also creates strong local complementarities in AI automation decisions within a workflow, so that a step positioned next to AI-executed neighbors may be pulled into AI execution by the gains from automating it as part of a chain, even if human execution would be preferred for that step in isolation.
 We find that when conceptually similar steps appear across different occupations, a given step is more likely to be executed by AI in the occupation where its neighboring steps in the workflow are also AI-executed.
 
+Because our empirical exercise relies on specific data sources to measure the sequence of steps, AI exposure, and AI execution, we show that our findings are robust to the way each of these measures is constructed.
+First, we show that our findings are not artifacts of the particular prompt we use to elicit workflow sequences from an LLM (Appendix~\ref{app:gptPrompts_robustness}).
+Second, they are not artifacts of the particular way O*NET lists occupation tasks (Appendix~\ref{app:frequency_robustness}).
+Third, we repeat the exercise on two external sources of task sequences, ordered based on actual workplace data rather than by a language model.
+Our sequencing approach recovers the orderings in both external sources to a substantial degree, and our main predictions continue to hold when we re-estimate them on these sequences (Appendix~\ref{app:external_validation}).
+
 Taken together, these results show that the sequencing logic at the heart of the model is already visible in how firms use AI at this early stage of adoption.
 What AI executes depends not only on comparative advantage and step-level characteristics, but also on where a step sits relative to its neighbors.
 This is why the share of steps exposed to AI can be a misleading predictor of occupational impacts when production steps are technologically interdependent.
 As adoption widens and AI becomes reliable enough to sustain longer chains, we expect these patterns to grow more pronounced.
-
-Because our empirical exercise relies on specific data sources to measure the sequence of steps, AI exposure, and AI execution, we show that our findings are robust to the way each of these measures is constructed.
-First, we show that our findings are not artifacts of the particular prompt we use to elicit workflow sequences from an LLM (Appendix~\ref{app:gptPrompts_robustness}).
-Second, they are not artifacts of the particular way O*NET lists the tasks that make up each occupation's workflow (Appendix~\ref{app:frequency_robustness}).
-Third, we repeat the exercise on two external sources of task sequences, ordered based on actual workplace data rather than by a language model.
-Our sequencing approach recovers the orderings in both external sources to a substantial degree, and our main predictions continue to hold when we re-estimate them on these sequences (Appendix~\ref{app:external_validation}).
