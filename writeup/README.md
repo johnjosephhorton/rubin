@@ -22,9 +22,11 @@ were removed, and the two-level search path was collapsed.
 ./build.sh
 ```
 
-produces `0_main.pdf` (127 pages) and prints a summary of the log. The Online
-Appendix uses `bibunits`, so `bibtex` has to run once on `0_main.aux` and once on
-`bu1.aux`, and plain `latexmk` does not pick the `bu*.aux` files up on its own.
+produces `0_main.pdf` (128 pages: the paper, then the Online Appendix, then the
+Supplementary Appendix) and prints a summary of the log. The Online
+Appendix uses `bibunits`, so `bibtex` has to run once on `0_main.aux` and once per
+appendix on `bu1.aux` and `bu2.aux`, and plain `latexmk` does not pick the `bu*.aux`
+files up on its own.
 
 `latexmkrc` in this folder teaches it to, so
 
@@ -39,10 +41,11 @@ the path Overleaf takes; keep the file alongside `0_main.tex` when syncing.
 
 | File | Contents |
 |---|---|
-| `0_main.tex` | Main file: title page, section list, bibliography, Online Appendix scaffolding |
+| `0_main.tex` | Main file: title page, section list, bibliography, and the scaffolding for both appendices |
 | `preamble.tex` | House format (identical to the bilateral-oligopoly preamble), plus a clearly marked block of paper-specific definitions at the bottom |
 | `1_introduction.tex` … `8_conclusion.tex` | Body sections; the numeric prefix is the section number in the paper |
-| `A_tables_and_figures.tex` … `I_external_validation.tex` | Online Appendix sections; the letter prefix is the appendix letter in the paper |
+| `OA_A_*.tex` … `OA_C_*.tex` | Online Appendix sections; the prefix is the part and the appendix letter |
+| `SA_A_*.tex` … `SA_F_*.tex` | Supplementary Appendix sections, same convention |
 | `rubin.bib` | Bibliography |
 | `plots/` | Figures: PNGs from the analysis notebooks, plus `TikZ_visualization/` for the diagrams drawn in TeX |
 | `tables/` | Regression and illustration tables, written by the analysis notebooks or by hand |
@@ -51,56 +54,76 @@ the path Overleaf takes; keep the file alongside `0_main.tex` when syncing.
 
 ## Appendix organization
 
-The Online Appendix runs theory first, then empirics. Each appendix is one file and
-one `\section`; `0_main.tex` `\clearpage`s between them.
+The document builds as three parts in one PDF: the paper, then the Online Appendix,
+then the Supplementary Appendix. Each appendix is self-contained, with its own title
+page, its own contents list, its own page sequence and its own reference list, so that
+either can be lifted out as a standalone file later.
+
+The split exists because ReStud caps the online appendix at 30 pages. What a referee
+must have to check the paper goes in the Online Appendix; the data construction and the
+further tests go in the Supplementary Appendix.
+
+**Online Appendix** (`OA - n` pages, sections `OA.A` to `OA.C`):
 
 | | Appendix | File | What belongs in it |
 |---|---|---|---|
-| A | Additional Tables and Figures | `A_tables_and_figures.tex` | Exhibits the body refers to but does not print: the notation summary, the job-design costs of Section 5.4, the configuration costs of Section 4.3, and the Prediction #3 position-reshuffle placebo figure |
-| B | Omitted Proofs | `B_omitted_proofs.tex` | Proofs of the propositions stated in the body, in body order |
-| C | CES Representation at Macro Level | `C_CES_representation.tex` | The Leontief-to-CES aggregation and the effective-AI-quality distribution behind it |
-| D | Construction Details of the Main Sample | `D_sample_construction.tex` | How the four data sources are assembled, and the model-chain vs. Anthropic-label discrepancy |
-| E | Alternative Definitions of Fragmentation, Similarity, and Execution | `E_prediction_robustness.tex` | Predictions #2 and #3 re-estimated under different definitions of the objects they are built from, sequences held fixed: execution-based EFI, the GPT-filtered similarity criterion, AI automation as the outcome |
-| F | GPT-5-mini Prompts | `F_gpt_prompts.tex` | The two prompts, verbatim |
-| G | Robustness to Alternative GPT Prompts | `G_prompt_robustness.tex` | All three predictions re-run on ten alternative orderings |
-| H | Robustness to Frequently-Executed Tasks Sample Restriction | `H_frequency_robustness.tex` | All three predictions re-run on frequency-pruned samples |
-| I | External Validation of the Sequencing Results | `I_external_validation.tex` | APQC PCF and 4TU event-log benchmarks |
+| OA.A | Additional Tables and Figures | `OA_A_tables_and_figures.tex` | Exhibits the body cites but does not print: the notation summary, the job-design costs of Section 5.4, the configuration costs of Section 4.3, and the Prediction #3 position-reshuffle placebo figure |
+| OA.B | Omitted Proofs | `OA_B_omitted_proofs.tex` | Proofs of the propositions stated in the body, in body order |
+| OA.C | CES Representation at Macro Level | `OA_C_CES_representation.tex` | The Leontief-to-CES aggregation and the effective-AI-quality distribution behind it |
 
-The rule A encodes is the one worth keeping: an exhibit belongs in A when the body
+**Supplementary Appendix** (`SA - n` pages, sections `SA.A` to `SA.F`):
+
+| | Appendix | File | What belongs in it |
+|---|---|---|---|
+| SA.A | Construction Details of the Main Sample | `SA_A_sample_construction.tex` | How the four data sources are assembled, and the model-chain vs. Anthropic-label discrepancy |
+| SA.B | Alternative Definitions of Empirical Fragmentation, Step Similarity, and AI Execution | `SA_B_alternative_definitions.tex` | Predictions #2 and #3 re-estimated under different definitions of the objects they are built from, sequences held fixed |
+| SA.C | GPT-5-mini Prompts | `SA_C_gpt_prompts.tex` | The two prompts, verbatim |
+| SA.D | Robustness to Alternative GPT Prompts | `SA_D_prompt_robustness.tex` | All three predictions re-run on ten alternative orderings |
+| SA.E | Robustness to Frequently-Executed Tasks Sample Restriction | `SA_E_frequency_robustness.tex` | All three predictions re-run on frequency-pruned samples |
+| SA.F | External Validation of the Sequencing Results | `SA_F_external_validation.tex` | APQC PCF and 4TU event-log benchmarks |
+
+**As of the last build the Online Appendix runs to `OA - 33`, three pages over the
+ReStud limit.** OA.B is 18 pages of it and OA.C 11, so that is where any further
+trimming has to come from.
+
+Two rules the layout encodes, worth keeping. An exhibit belongs in OA.A when the body
 cites it but no appendix discusses it, and in the appendix that discusses it otherwise.
-A used to be folded together with E in a single "Additional Tables and Robustness Tests"
-appendix.
+And SA.B, SA.D, SA.E and SA.F are all robustness, but their titles rank them: SA.B
+varies the *definitions* while holding the sequences fixed, whereas SA.D, SA.E and SA.F
+vary the *sequences*, which is where the paper's identifying assumption lives, so those
+three keep the heavier "Robustness to ..." and "External Validation of ..." forms.
 
-E and G through I are both robustness, and the titles are meant to rank them. E varies
-the *definitions* while holding the sequences fixed: a different fragmentation index, a
-stricter notion of when two tasks are the same step, AI automation in place of AI
-execution. G, H and I vary the *sequences*, which is where the paper's identifying
-assumption lives, so they keep the heavier "Robustness to ..." and "External Validation
-of ..." forms. Naming E "Additional Robustness Tests" put it on a level with them and
-was the reason it read as more central than it is.
-
-E's title enumerates rather than generalizing, deliberately. "Alternative Measures and
-Sample Definitions", the first attempt, collided with both neighbours: D is
-"Construction Details of the Main Sample" and H restricts the sample by task frequency,
-so a reader scanning the contents could not tell which appendix redefined what. Naming
-the three objects that actually change leaves no room for that. It carries one label, `app:tables_and_figures`; the older `app:theory_tables`
-and `app:jobdesign_example` are gone, having stopped describing the contents once the
-Prediction #3 placebo figure moved in from E.
-
-A goes first because it is the only cross-cutting appendix: it holds exhibits cited from
-Sections 3, 4, 5 and 7, so it belongs to neither the theory block nor the empirical block
-and reads as an interruption anywhere between them. Of the two ends, the front wins
-because A's most-consulted item is a lookup aid rather than a result. `Table A.1` is the
-notation summary, cited from the fourteenth line of Section 3, and a reader who turns to
-it mid-section should not have to cross the whole appendix first. Nothing in the paper
-hardcodes an appendix letter in prose, so reordering is three file renames and three
-reordered `\input` lines.
+OA.A goes first within its part because it is the only cross-cutting appendix: it holds
+exhibits cited from Sections 3, 4, 5 and 7, so it belongs to neither the theory block
+nor the empirical block and reads as an interruption anywhere between them. Of the two
+ends, the front wins because its most-consulted item is a lookup aid rather than a
+result: `Table OA.A.1` is the notation summary, cited from the fourteenth line of
+Section 3.
 
 ### Appendix numbering
 
-Every numbered object in the appendix carries the letter of the appendix it sits in and
-restarts at 1 there: `Table A.1`, `Figure D.2`, `Equation (C.15)`, `Example B.2`. The
-scheme is one macro in `0_main.tex`, applied to each counter:
+Every numbered object carries the part marker and the letter of the appendix it sits in,
+and restarts at 1 there: `Table OA.A.1`, `Equation (OA.C.15)`, `Example OA.B.2`,
+`Table SA.B.5`. The part marker is what makes a bare `\ref` unambiguous, since both
+appendices have an Appendix A.
+
+`0_main.tex` does this with one macro per part:
+
+```latex
+\startappendixpart{OA}{Online Appendix}
+...
+\startappendixpart{SA}{Supplementary Appendix}
+```
+
+which sets `\thesection` to `OA.\Alph{section}`, resets every counter, restarts the page
+sequence at `OA - 1`, and lays out the part's title page. To go back to bare appendix
+letters, drop the marker from `\thesection` there; nothing else depends on it.
+
+`\theHsection` gets the marker too, and that part is not optional. hyperref builds PDF
+anchors from a hidden second name per counter, `\theH<counter>`, not from the printed
+number. Without the marker the two Appendix A's would both anchor at `A`, every exhibit
+under them would collide, and the duplicates would be dropped, which is the bug the old
+`OA-` scheme had. The counters themselves are attached to `section` by
 
 ```latex
 \newcommand{\oaNumberWithin}[1]{%
@@ -109,37 +132,32 @@ scheme is one macro in `0_main.tex`, applied to each counter:
 }
 ```
 
-`\thesection` is already `\Alph{section}` by then, and `\counterwithin*` installs the
-per-section reset without touching the printed form the `\renewcommand` just set.
+`\counterwithin*` installs the per-section reset without touching the printed form, and,
+because hyperref hooks `\@addtoreset`, it redefines `\theH<counter>` to
+`\theHsection.\arabic{<counter>}` as a side effect. Setting `\theH<counter>` by hand in
+that macro does nothing: `\counterwithin*` runs afterwards and overwrites it.
 
-The starred `\counterwithin` also fixes the hyperlinks, which is the part worth knowing
-about. hyperref builds PDF anchors out of a hidden second name per counter,
-`\theH<counter>`, not out of the printed number. Nothing ever set it under the old `OA-`
-scheme, so appendix `Equation (OA.1)` and body `Equation (1)` both anchored at
-`equation.1`; the appendix anchor was dropped as a duplicate and every appendix link
-landed in the main text. hyperref hooks `\@addtoreset`, so `\counterwithin*` redefines
-`\theH<counter>` to `\theHsection.\arabic{<counter>}` as a side effect and the anchors
-come out as `equation.C.15`. Setting `\theH<counter>` by hand in the macro does nothing:
-`\counterwithin*` runs afterwards and overwrites it.
+Separating the two appendices takes three pieces beyond the numbering:
 
-The log went from 56 `destination with the same identifier` warnings to 15: 13 `cite.*`
-anchors that `bibunits` necessarily duplicates between the two reference lists, plus
-`page.OA-1` and `page.OA-2`, which collide because the appendix resets the page counter
-twice, once for its title page and contents and once for its first content page.
+- **Contents.** Three `etoc` depth tags now, `main`, `onlineappendix` and
+  `suppappendix`, one `\etocdepthtag.toc` per part. Each `\tableofcontents` shows its
+  own tag and hides the other two.
+- **References.** One `bibunit` per part, each with its own `\putbib[rubin]` and its own
+  `\refname`, so the build writes `bu1.aux` and `bu2.aux`. `build.sh` already loops over
+  `bu*.aux`, so nothing there changes.
+- **Contents column widths.** The labels are `OA.A` and `SA.B.1`, not `A` and `B.1`, so
+  tocloft's defaults are too narrow and the label collides with the title.
+  `\cftsetindents` widens both, set once after the draft front matter is typeset.
 
-Page numbers are unaffected and stay `OA - n`.
-
-This is why the leading table of Appendix E is `[t]` rather than `[!t]`, with
-`\suppressfloats[t]` at the top of the appendix: `!` overrides `\suppressfloats`, so
-with `[!t]` that table was typeset at the top of the page carrying its own appendix
-heading, above it. Appendix A reaches the same end differently, by placing its four
-exhibits by hand with `[h!]` and `\newpage`; it keeps `\suppressfloats[t]` as a guard
-in case any of them goes back to floating.
+The log carries 15 `destination with the same identifier` warnings, all benign: 13
+`cite.*` anchors that `bibunits` necessarily duplicates between the two reference lists,
+plus `page.OA-1` and `page.SA-1`, which collide because each part restarts its page
+counter once for its title page and again for its first content page.
 
 ### Displays that ran into the right margin
 
-The text block is 469.76pt. Eight places, in the body as well as the appendix, put ink
-past the right margin. All eight are fixed, and no glyph in the document now sits right
+The text block is 469.76pt. Nine places, in the body as well as the appendices, put ink
+past the right margin. All nine are fixed, and no glyph in the document now sits right
 of 540pt except on the landscape DWA table page, where the check measures the rotated
 page in portrait coordinates and the reading is meaningless.
 
@@ -147,19 +165,20 @@ page in portrait coordinates and the reading is meaningless.
 |---|---|---|---|
 | p. 15, the three parameter triples of Section 4.1 | 500.3pt | `\smalldisplay` | 456.5pt |
 | p. 38, `(12)`, the neighbour regression | 522.7pt | broken after the `\beta_2` term | 312.2 / 205.2pt |
-| `(C.14)`, the CES identity in aggregate variables | 505.0pt | `\smalldisplay` | 463.6pt |
-| `(C.15)`, the effective AI quality distribution | 563.5pt | `\smalldisplay` + broken after `(\bar\alpha)^{1/(\rho-1)}` | 266.4 / 255.6pt |
-| the `\Gamma'(u)` derivative and `(C.21)` in C.3 | same | same | same |
-| `Table A.3`, configuration costs | 518.6pt | `\footnotesize`, as every other table float | 445pt |
+| `(OA.C.14)`, the CES identity in aggregate variables | 505.0pt | `\smalldisplay` | 463.6pt |
+| `(OA.C.15)`, the effective AI quality distribution | 563.5pt | `\smalldisplay` + broken after `(\bar\alpha)^{1/(\rho-1)}` | 266.4 / 255.6pt |
+| the `\Gamma'(u)` derivative and `(OA.C.21)` in OA.C.3 | same | same | same |
+| `Table OA.A.3`, configuration costs | 518.6pt | `\footnotesize`, as every other table float | 445pt |
 | OA - 20, the three-option `\min` recursion for `R` | 481.4pt | `\smalldisplay` | 439.9pt |
+| OA - 30, the sentence citing `(OA.C.11)`, `(OA.C.12)` and `(OA.C.13)` | 18pt overfull line | `sloppypar` | fits |
 | OA - 7, the `Reduction 1` paragraph | 6pt overfull line | `sloppypar` | breaks before the `\min` |
 
-Two of these needed more than a size change. `\footnotesize` alone still leaves (C.15)
+Two of these needed more than a size change. `\footnotesize` alone still leaves (OA.C.15)
 2pt over (471.8pt) and `\scriptsize` is 8.5pt type in a 12pt document, so it is `\small`
 *and* broken. Equation (12) is 477.3pt at `\small`, still over, so it is broken at full
 size. The OA - 7 case is not a wide box at all but a line TeX could not break within the
 house `\tolerance`; `\mbox`-ing the formula makes it worse (25pt over), and `sloppypar`
-is the fix. Table A.3 was the source of the document's long-standing
+is the fix. Table OA.A.3 was the source of the document's long-standing
 `Overfull \hbox (48.87pt too wide)`, now gone; the only overfull boxes left in the log
 are the two inside the landscape DWA table's `\resizebox`, harmless because the box is
 scaled afterwards.
@@ -225,9 +244,9 @@ document order. `rubin.bib` keeps its name for continuity with the parent projec
 Three adjustments were needed because the house format sets 12pt type in a narrower
 text block:
 
-- `F_gpt_prompts.tex`: the two verbatim prompt blocks are set `\footnotesize` so
+- `SA_C_gpt_prompts.tex`: the two verbatim prompt blocks are set `\footnotesize` so
   they stay inside their `tcolorbox`.
-- `I_external_validation.tex`: the two APQC tables are wrapped in
+- `SA_F_external_validation.tex`: the two APQC tables are wrapped in
   `\adjustbox{max width=\textwidth}{...}`.
 - `0_main.tex`: `\droptitle` is `-7em` rather than the house `-4em`, so that a
   two-line title, five authors and a three-line date block still leave room for the
@@ -239,11 +258,11 @@ Matched to the bilateral-oligopoly paper:
 
 - **Placement.** 40 of the 46 live floats are `[!t]`, so exhibits sit at the top of a
   page, as they do in the bilateral draft (which uses `[t]`/`[!t]` throughout the main
-  text). Six are not: `Figure A.1` and `Table E.5` are `[p]`, the first because it is a
-  four-panel full-page figure and the second because a landscape float cannot sit at the
-  top of a portrait page; Appendix A's three tables are `[h!]`, placed by hand between
-  `\newpage`s; and Appendix E's leading table is `[t]` so that `\suppressfloats[t]` can
-  keep it off the appendix's heading page (see "Appendix numbering" above).
+  text). Six are not: `Figure OA.A.1` and `Table SA.B.5` are `[p]`, the first because it
+  is a four-panel full-page figure and the second because a landscape float cannot sit at
+  the top of a portrait page; OA.A's three tables are `[h!]`, placed by hand between
+  `\newpage`s; and SA.B's leading table is `[t]` so that `\suppressfloats[t]` can keep it
+  off the appendix's heading page (see "Appendix numbering" above).
 - **Caption first.** All 41 floats already had `\caption` before the graphic or tabular,
   matching the house `position=top` caption setup. Nothing to change.
 - **Notes.** All 38 live notes blocks were rewritten from
@@ -268,7 +287,7 @@ which is what you want for them.
 
 ### Pre-existing: the landscape DWA table is too tall for its page
 
-`Table E.5`, the landscape DWA table, is the document's one remaining float warning:
+`Table SA.B.5`, the landscape DWA table, is the document's one remaining float warning:
 
 ```
 LaTeX Warning: Float too large for page by 49.28372pt
@@ -335,8 +354,8 @@ preamble's `\renewcommand\thesubfigure{(\alph{subfigure})}` in the house bold-la
 Prose references to Panel (A)/(B)/(C)/(D) were lower-cased to match, including the two
 stacked panels of the landscape DWA table.
 
-In the appendix, `Figure A.1` and `Table E.5` are `[p]`, so each takes a full page with
-no body text on it. No main-text figure is `[p]`.
+In the appendices, `Figure OA.A.1` and `Table SA.B.5` are `[p]`, so each takes a full
+page with no body text on it. No main-text figure is `[p]`.
 
 ## A second bug: footnotes did not match the house format
 

@@ -179,114 +179,132 @@ We then embed this chaining problem in the firm's longer-run redesign of jobs ar
 \oaNumberWithin{observation}
 \oaNumberWithin{example}
 
-\renewcommand*{\thepage}{OA - \arabic{page}}
 \newcommand{\appendixletter}{\Alph{section}}
 
-\setcounter{figure}{0}
-\setcounter{table}{0}
-\setcounter{page}{1}
-\setcounter{definition}{0}
-\setcounter{lemma}{0}
-\setcounter{assumption}{0}
-\setcounter{constraint}{0}
-\setcounter{proposition}{0}
-\setcounter{corollary}{0}
-\setcounter{theorem}{0}
-\setcounter{observation}{0}
-\setcounter{example}{0}
-\setcounter{figure}{0}
-\setcounter{table}{0}
-\setcounter{equation}{0}
-\setcounter{section}{0}
+% Each of the two appendices is a self-contained document: its own title page, its own
+% contents, its own reference list, its own page sequence. \startappendixpart does the
+% bookkeeping for one of them. #1 is the short marker that prefixes both the page
+% numbers and the section numbers (OA or SA), #2 the name on the title page.
+%
+% \thesection carries the marker so that a bare \ref is unambiguous across the two:
+% Appendix OA.A and Appendix SA.A are different appendices and now read that way, and
+% the exhibits below them come out as Table OA.A.1 and Table SA.A.1 since \thefigure is
+% \thesection.\arabic{figure}. To go back to bare letters, drop the marker from
+% \thesection here; nothing else depends on it.
+%
+% \theHsection is the hyperref anchor and has to carry the marker too. Without it the
+% two Appendix A's would both anchor at "A", every exhibit under them would collide,
+% and the duplicates would be dropped, which is the bug the OA- scheme used to have.
+\newcommand{\startappendixpart}[2]{%
+  \clearpage
+  \gdef\thesection{#1.\Alph{section}}%
+  \gdef\theHsection{#1.\Alph{section}}%
+  \expandafter\gdef\csname thepage\endcsname{#1 - \arabic{page}}%
+  \setcounter{section}{0}%
+  \setcounter{figure}{0}\setcounter{table}{0}\setcounter{equation}{0}%
+  \setcounter{definition}{0}\setcounter{lemma}{0}\setcounter{assumption}{0}%
+  \setcounter{constraint}{0}\setcounter{proposition}{0}\setcounter{corollary}{0}%
+  \setcounter{theorem}{0}\setcounter{observation}{0}\setcounter{example}{0}%
+  \setcounter{page}{1}%
+  \pagestyle{empty}%
+  \begin{center}
+    {\LARGE Chaining Tasks, Redefining Work: \\ A Theory of AI Automation}\\[1em]
+    \large Mert Demirer, John J. Horton, Nicole Immorlica, Brendan Lucier, and Peyman Shahidi \\[1em]
+    \Large #2 \\[1em]
+  \end{center}
+}
 
-\pagestyle{empty}
-\begin{center}
-	{\LARGE Chaining Tasks, Redefining Work: \\ A Theory of AI Automation}\\[1em]
-	\large Mert Demirer, John J. Horton, Nicole Immorlica, Brendan Lucier, and Peyman Shahidi \\[1em]
-	\Large Online Appendix \\[1em]
-\end{center}
 
-% TABLE OF CONTENTS FOR THE APPENDIX
-% Show only the appendix sections; hide the main body.
+% ============================================================ ONLINE APPENDIX
+% Sections OA.A to OA.C: the exhibits the body cites, the proofs, and the macro
+% aggregation. Kept short on purpose; the data construction and the further tests
+% live in the Supplementary Appendix that follows.
+\startappendixpart{OA}{Online Appendix}
+
 \setcounter{tocdepth}{2}
+% The section numbers in these two contents lists are "OA.A" and "SA.B.1", not "A" and
+% "B.1", so tocloft's default number columns (1.5em for sections, 2.3em for subsections)
+% are too narrow and the label runs into the title. Widened once here, after the draft
+% front matter at the top of this file has already been typeset with plain numbers.
+\cftsetindents{section}{0em}{2.9em}
+\cftsetindents{subsection}{2.9em}{4.0em}
 % Initialize etoc's depth-tag store: tocloft/hyperref can bypass etoc's \tableofcontents,
 % leaving \Etoc@savedtocdepth undefined when the .toc depth tags are processed.
 \makeatletter\xdef\Etoc@savedtocdepth{\number\c@tocdepth}\makeatother
 \tocloftpagestyle{empty}
-% The house preamble suppresses page numbers in the appendix Contents with
-%     \cftpagenumbersoff{section}
-%     \cftpagenumbersoff{subsection}
-% They are left on here: this appendix runs to OA - 82, so the numbers earn their place.
-% The widened page-number column that "OA - 11" needs is set once, before the draft
-% front matter, at the top of this file.
+% Three tags now, not two: the body, and one per appendix. Each contents list shows its
+% own tag and hides the other two, which is what makes the two appendices separable.
 \etocsettagdepth{main}{none}
-\etocsettagdepth{appendix}{subsection}
+\etocsettagdepth{onlineappendix}{subsection}
+\etocsettagdepth{suppappendix}{none}
 \tableofcontents
 \clearpage
 \pagestyle{plain}
-\renewcommand*{\thepage}{OA - \arabic{page}}
-
-
-\newpage
-
 \setcounter{page}{1}
-\appendix
-
-\clearpage
-\renewcommand*{\thepage}{OA - \arabic{page}}
-\setcounter{page}{1}
-
 
 \begin{bibunit}[chicago]
+\etocdepthtag.toc{onlineappendix}
 
-% Tag everything from here on as "appendix" so the appendix TOC can filter out the main body.
-\etocdepthtag.toc{appendix}
-
-% Appendix order: the exhibit shelf first, then the theory (proofs, the macro
-% aggregation result), then the empirics (sample construction, the supplementary tests
-% for Predictions #2 and #3, the prompts, and the three robustness/validation
-% appendices).
-%
 % A goes first because it is the only cross-cutting appendix: it holds exhibits cited
 % from Sections 3, 4, 5 and 7, so it belongs to neither the theory block nor the
 % empirical block and reads as an interruption anywhere between them. Of the two ends,
 % the front wins because its most-consulted item is a lookup aid rather than a result:
-% Table A.1 is the notation summary, cited from the fourteenth line of Section 3, and a
-% reader who turns to it mid-section should not have to cross the whole appendix first.
-\input{A_tables_and_figures.tex}
+% Table OA.A.1 is the notation summary, cited from the fourteenth line of Section 3.
+\input{OA_A_tables_and_figures.tex}
 
 \clearpage
-\input{B_omitted_proofs.tex}
+\input{OA_B_omitted_proofs.tex}
 
 \clearpage
-\input{C_CES_representation.tex}
+\input{OA_C_CES_representation.tex}
 
-\clearpage
-\input{D_sample_construction.tex}
-
-\clearpage
-\input{E_prediction_robustness.tex}
-
-\clearpage
-\input{F_gpt_prompts.tex}
-
-\clearpage
-\input{G_prompt_robustness.tex}
-
-\clearpage
-\input{H_frequency_robustness.tex}
-
-\clearpage
-\input{I_external_validation.tex}
-
-% References for the Online Appendix.
 \clearpage
 \renewcommand{\refname}{\large References for Online Appendix}
 \setlength{\bibsep}{0.2ex}
 \begin{spacing}{0.98}
 \putbib[rubin]
 \end{spacing}
-
 \end{bibunit}
+
+% ====================================================== SUPPLEMENTARY APPENDIX
+% Sections SA.A to SA.F: how the sample is built, and the tests that probe it.
+\startappendixpart{SA}{Supplementary Appendix}
+
+\etocsettagdepth{main}{none}
+\etocsettagdepth{onlineappendix}{none}
+\etocsettagdepth{suppappendix}{subsection}
+\tableofcontents
+\clearpage
+\pagestyle{plain}
+\setcounter{page}{1}
+
+\begin{bibunit}[chicago]
+\etocdepthtag.toc{suppappendix}
+
+\input{SA_A_sample_construction.tex}
+
+\clearpage
+\input{SA_B_alternative_definitions.tex}
+
+\clearpage
+\input{SA_C_gpt_prompts.tex}
+
+\clearpage
+\input{SA_D_prompt_robustness.tex}
+
+\clearpage
+\input{SA_E_frequency_robustness.tex}
+
+\clearpage
+\input{SA_F_external_validation.tex}
+
+\clearpage
+\renewcommand{\refname}{\large References for Supplementary Appendix}
+\setlength{\bibsep}{0.2ex}
+\begin{spacing}{0.98}
+\putbib[rubin]
+\end{spacing}
+\end{bibunit}
+
 
 \end{document}

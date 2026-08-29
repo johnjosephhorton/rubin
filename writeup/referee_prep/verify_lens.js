@@ -61,28 +61,36 @@ LaTeX source: ${ROOT}   (read with Bash: cat, sed -n, grep)
 Files: 0_main.tex (abstract), 1_introduction.tex, 2_literature.tex, 3_shortrun.tex (model),
 4_implications.tex (Prop 1 overturning, Prop 2 fragmentation, 4.3 non-monotonicity),
 5_longrun.tex (jobs/wages/hand-offs), 6_extensions.tex (CES + DP algorithms), 7_empirics.tex,
-8_conclusion.tex, A_omitted_proofs.tex, B_macro_production.tex (macro CES aggregation),
-C_theory_tables.tex (notation and the two theory example tables), D_sample_construction.tex,
-E_prediction_robustness.tex (extra tests for Predictions #2 and #3), F_gpt_prompts.tex,
-G_prompt_robustness.tex, H_frequency_robustness.tex, I_external_validation.tex.
+8_conclusion.tex. The appendix is split in two, each part self-contained:
+Online Appendix OA_A_tables_and_figures.tex (exhibits the body cites),
+OA_B_omitted_proofs.tex, OA_C_CES_representation.tex (macro CES aggregation);
+Supplementary Appendix SA_A_sample_construction.tex,
+SA_B_alternative_definitions.tex (extra tests for Predictions #2 and #3),
+SA_C_gpt_prompts.tex, SA_D_prompt_robustness.tex, SA_E_frequency_robustness.tex,
+SA_F_external_validation.tex.
 
-The findings you are given were written before the appendix was reorganized, so their
-"location" fields still name the old files and letters. Translate as you read; line
-numbers in them are approximate either way, so locate quotes by grepping for the text.
-  C_sample_construction.tex     -> D_sample_construction.tex   (Appendix C -> D)
+The findings you are given were written before the appendix was reorganized and split,
+so their "location" fields name files and letters that no longer exist. Translate as you
+read; line numbers in them are approximate either way, so locate quotes by grepping for
+the text.
+  A_omitted_proofs.tex          -> OA_B_omitted_proofs.tex        (Appendix A -> OA.B)
+  B_macro_production.tex        -> OA_C_CES_representation.tex    (Appendix B -> OA.C)
+  C_sample_construction.tex     -> SA_A_sample_construction.tex   (Appendix C -> SA.A)
   D_tables_and_robustness.tex   -> the notation and theory-example tables are now
-                                   C_theory_tables.tex (Appendix C); the Prediction #2
-                                   and #3 robustness is E_prediction_robustness.tex
-                                   (Appendix E)
-  E_gpt_prompts.tex             -> F_gpt_prompts.tex            (Appendix E -> F)
-  F_prompt_robustness.tex       -> G_prompt_robustness.tex      (Appendix F -> G)
-  G_frequency_robustness.tex    -> H_frequency_robustness.tex   (Appendix G -> H)
-  H_external_validation.tex     -> I_external_validation.tex    (Appendix H -> I)
+                                   OA_A_tables_and_figures.tex (OA.A); the Prediction #2
+                                   and #3 material is SA_B_alternative_definitions.tex
+                                   (SA.B)
+  E_gpt_prompts.tex             -> SA_C_gpt_prompts.tex           (Appendix E -> SA.C)
+  F_prompt_robustness.tex       -> SA_D_prompt_robustness.tex     (Appendix F -> SA.D)
+  G_frequency_robustness.tex    -> SA_E_frequency_robustness.tex  (Appendix G -> SA.E)
+  H_external_validation.tex     -> SA_F_external_validation.tex   (Appendix H -> SA.F)
   writeup/draft_mert/<file>     -> writeup/<file>
-Exhibit numbers moved with them: the appendix no longer numbers figures and tables
-"OA-n" straight through, but "<appendix letter>.n" restarting in each appendix, so a
-finding citing "Figure OA-18" means the eighteenth appendix figure under the old scheme,
-which is Figure I.1 today.
+Exhibit numbers moved with them. The appendix no longer numbers figures and tables
+"OA-n" straight through; each carries its part and its appendix letter and restarts
+there, so exhibits read "Table OA.A.1" or "Figure SA.E.3". A finding citing
+"Figure OA-18" means the eighteenth appendix figure under the old scheme, which is
+Figure SA.F.1 today.
+
 Data and code, if a claim needs checking numerically:
   data/computed_objects/
   analysis/
