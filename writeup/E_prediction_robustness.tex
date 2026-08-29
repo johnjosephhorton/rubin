@@ -1,149 +1,23 @@
-\section{Additional Tables and Robustness Tests}
+\section{Additional Robustness Tests for Predictions \#2 and \#3}
 \label{app:additional_robustness}
+% The house format sets every float [!t]. On the first page of an appendix, that
+% puts the leading table at the top of the page that carries the appendix heading,
+% above the heading itself, so the table reads as though it belonged to the
+% previous appendix. \suppressfloats[t] keeps the top of this page clear, and the
+% leading table drops the ! so that it honours the suppression and starts at the
+% top of the next page; the tables after it keep [!t] and follow in order behind it.
+\suppressfloats[t]
 
-This appendix collects the notation table and two further tables referenced from the theory sections, together with supplementary robustness results for Predictions~\#2 and~\#3 of Section~\ref{sec:empirics}.
-
-
-\subsection{Tables Referenced in the Theory Sections}
-\label{app:theory_tables}
-\label{app:jobdesign_example}
-
-Table~\ref{tab:notation} collects the notation the theory sections use.
-Panel~A covers the step-, task-, and strategy-level objects of Sections~\ref{sec:shortrun} and~\ref{sec:results}, and Panel~B the skill, job, and wage objects that Section~\ref{sec:longrun} adds.
-
-\begin{table}[!t]
-\centering
-\caption{Notation Used in the Theory Sections}
-\label{tab:notation}
-\footnotesize
-\begin{tabularx}{\textwidth}{l X}
-\toprule
-\multicolumn{2}{l}{\textbf{Panel A: Steps, Tasks, and AI Deployment (Section~\ref{sec:shortrun})}} \\
-\midrule
-\textbf{Symbol} & \textbf{Description} \\
-\midrule
-\addlinespace
-$\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
-\addlinespace
-$s_i$ & Production step $i$ \\
-$\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
-$\manualTime{i}$ & Time cost of completing step $i$ manually \\
-$\AItime{i}$ & Time cost of verifying the output of one AI attempt at step $i$ \\
-$d_i$ & Difficulty of step $i$ for AI \\
-$q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
-\addlinespace
-$T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
-$\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
-$\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual step, $\AItime{r}/\prod_{i=\ell}^{r} q_i$ if an AI chain over steps $\ell, \dotsc, r$ \\
-\addlinespace
-\midrule
-\multicolumn{2}{l}{\textbf{Panel B: Skills, Jobs, Wages, and Job Design (Section~\ref{sec:longrun})}} \\
-\midrule
-\textbf{Symbol} & \textbf{Description} \\
-\midrule
-\addlinespace
-$\manualSkill{i}$ & Skill required to complete step $i$ manually \\
-$\AIskill{i}$ & Skill required to verify the output of one AI attempt at step $i$ \\
-$\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step, $\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none \\
-\addlinespace
-$J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
-$\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
-\addlinespace
-$\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
-$\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
-\addlinespace
-$\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
-$\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
-\bottomrule
-\end{tabularx}
-
-\begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Step-level primitives are indexed by $i$, task-level objects by $b$, and jobs by $j$; superscripts $M$ and $A$ denote the manual and AI modes of executing a step, and $H$ denotes a hand-off between consecutive workers.
-Panel~A is all the short-run problem requires: with the whole workflow assigned to one worker at a fixed wage, execution time is the only margin and no notion of skill is needed.
-Panel~B enters only once the firm chooses how to divide the workflow among workers, and it extends rather than replaces Panel~A, which the long-run problem continues to use.}
-\end{spacing}
-\end{minipage}
-\end{table}
-
-Section~\ref{sec:longrun.specialization} works through a three-task workflow whose four job designs are drawn in Figure~\ref{fig:job_design}.
-Table~\ref{tab:job_design} reports what each of them costs, first with hand-off costs switched off and then with them on.
-Reading down either panel, a design's total is the sum over its jobs of the job's total skill times the total time it takes, hand-off included, which is Equation~\eqref{eq:wagebill} applied job by job.
-
-Section~\ref{sec:nonlinear} works through a two-step workflow in which the marginal gain from improving AI quality is non-monotone.
-Table~\ref{tab:nonmonotone_costs} lists the five AI strategies available there, the cost of each as a function of AI quality $\alpha$, the marginal benefit of raising $\alpha$ under each, and the range of $\alpha$ over which each is cost-minimizing.
-Appendix~\ref{app:nonmonotone} states and proves the general result the example illustrates.
-
-\begin{table}[!t]
-    \caption{Role of Hand-off Costs in Organizational Structure}
-    \vspace{-0.3cm}
-    \centering
-    \resizebox{0.9\textwidth}{!}{%
-    \begin{tabular}{c}
-    \begin{minipage}{\textwidth}
-    \centering
-    Panel (a): Without Hand-off Costs \\[1ex]
-    \input{tables/job_design_example_no_handoff.tex}
-    \end{minipage} \\[15ex]
-
-    \begin{minipage}{\textwidth}
-    \centering
-    Panel (b): Including Hand-off Costs \\[1ex]
-    \input{tables/job_design_example_with_handoff.tex}
-    \end{minipage}
-    \end{tabular}
-    }
-    \label{tab:job_design}
-    \footnotesize
-    \begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: This table reports total production costs for each possible job design in an example workflow with a fixed automation strategy and $n = 3$ tasks.
-The cost parameters of the tasks are given in Section~\ref{sec:longrun.specialization}.
-In Panel (a), in the absence of hand-off frictions, full specialization, corresponding to job design [1][2][3], is cost-minimizing.
-Once hand-off costs are taken into account, in Panel (b) the optimal organizational structure changes to job design [1,2][3], which avoids the large coordination cost between tasks 1 and 2 at the expense of employing a higher-cost (more skilled) worker to complete those tasks.}
-\end{spacing}
-\end{minipage}
-\end{table}
-
-\begin{table}[!t]
-\centering
-\caption{Configurations, Costs, and Marginal Gains in Example~\ref{ex:nonmonotone}}
-\label{tab:nonmonotone_costs}
-\singlespacing
-\setlength{\tabcolsep}{10pt}
-\begin{tabular}{lccc}
-\toprule
-Configuration & Time cost ($C$) & $-\mathrm{d}C/\mathrm{d}\alpha$ & Optimal for \\
-\midrule
-Both steps manual & $\manualTime{1} + \manualTime{2} = 14$ & $0$ & $\alpha \leq 0.50$ \\
-\midrule
-Step 1 augmented & $\AItime{1}/q_1 + \manualTime{2} = 3.5\alpha^{-11} + 8$ & $38.5/\alpha^{12}$ & never \\
-\midrule
-Step 2 augmented & $\manualTime{1} + \AItime{2}/q_2 = 6 + 4/\alpha$ & $4/\alpha^{2}$ & $0.50 \leq \alpha \lesssim 0.92$ \\
-\midrule
-Both steps augmented & $\AItime{1}/q_1 + \AItime{2}/q_2 = 3.5\alpha^{-11} + 4/\alpha$ & $38.5/\alpha^{12} + 4/\alpha^{2}$ & never \\
-\midrule
-Steps 1--2 chained & $\AItime{2}/(q_1 q_2) = 4\alpha^{-12}$ & $48/\alpha^{13}$ & $\alpha \gtrsim 0.92$ \\
-\bottomrule
-\end{tabular}
-\par\vspace{\fignotesskip}
-\begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: The two-step workflow of Example~\ref{ex:nonmonotone}, the AI-hard and AI-easy steps of Section~\ref{sec:comparative_advantage}, in which $\manualTime{1}=6$, $\manualTime{2}=8$, $\AItime{1}=3.5$, $\AItime{2}=4$, and the AI succeeds at step $i$ with probability $q_i = \alpha^{d_i}$ for $d_1 = 11$ and $d_2 = 1$, so that $q_1 = \alpha^{11}$ and $q_2 = \alpha$.
-Costs follow from the task time costs of Section~\ref{sec:model.tasks}, and $-\mathrm{d}C/\mathrm{d}\alpha$ is the marginal benefit of improving AI quality.
-The last column gives the range of $\alpha$ over which each configuration is cost-minimizing.
-Neither configuration in which step~1 is augmented ever minimizes cost.
-Augmenting it on its own costs $3.5\alpha^{-11}$, which is prohibitive while AI is unreliable, and by the time AI is reliable enough for that to be affordable, folding step~1 into a chain is cheaper still: an automated step is never prompted or verified on its own, so its management cost is never paid at all.}
-\end{spacing}
-\end{minipage}
-\end{table}
+This appendix reports supplementary tests for the last two predictions of Section~\ref{sec:empirics}.
+For Prediction~\#2 it re-estimates the fragmentation regression with an execution-based fragmentation measure in place of the exposure-based one.
+For Prediction~\#3 it reports placebo estimates from reshuffled task orderings, a stricter definition of when two tasks count as the same step across occupations, and the same regressions run on AI automation rather than on AI execution.
 
 \subsection{Additional Tests for Prediction \#2}
 \label{app:additional_robustness_pred2}
 To ensure that our results for the second prediction are not driven by how fragmentation is measured using the AI exposure classifications of \citet{eloundou2023gpts}, we re-estimate Equation~\eqref{eq:fragmentation_index_regression} using an additional measure of task fragmentation (the execution-based EFI) constructed directly from realized AI execution outcomes, rather than from AI-exposed tasks.
 The corresponding regression results are reported in Table~\ref{tab:fragmentation_index_regression_execution}.
 
-\begin{table}[!t]
+\begin{table}[t]
     \caption{Role of AI-able Task Fragmentation in Determining AI Execution Outcomes (Execution-Based Empirical Fragmentation Measure)}
     \label{tab:fragmentation_index_regression_execution}
     \footnotesize
@@ -447,14 +321,15 @@ Panel~(a) reports results from Equation~\eqref{eq:DWA_regression_ai} but with de
 
 \vspace{-0.1cm}
 
-\captionsetup{labelformat=empty}
-\caption{\hfill \Large{Panel (a)}}
+% \caption*, not \captionsetup{labelformat=empty} + \caption: the latter hides the
+% "Table N:" label but still steps the table counter, so these two panel headings were
+% consuming E.6 and E.7 and adding two captionless rows to the draft List of Tables.
+\caption*{\hfill \Large{Panel (a)}}
 \input{tables/DWA_tasks_before_filter.tex}
 
 \vspace{0.3cm}
 
-\captionsetup{labelformat=empty}
-\caption{\hfill \Large{Panel (b)}}
+\caption*{\hfill \Large{Panel (b)}}
     \footnotesize
 \input{tables/DWA_tasks_after_filter.tex}
 \end{minipage}

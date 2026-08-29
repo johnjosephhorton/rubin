@@ -31,6 +31,14 @@ This version: \today}
 %\etocsettagdepth{main}{subsection}
 %\etocsettagdepth{appendix}{none}
 
+% "OA - 11" is wider than tocloft's default 1.55em page-number box, so widen it and
+% the right margin to match, otherwise the dot leaders run into the number. This has to
+% be set before the draft Contents / List of Figures / List of Tables below and not
+% just before the appendix Contents: those three lists carry appendix page numbers too,
+% and at the default width the number is printed on top of the entry title.
+\cftsetpnumwidth{3.9em}
+\cftsetrmarg{4.9em}
+
 \ifoptionfinal
 {}%
 {
@@ -131,24 +139,46 @@ We then embed this chaining problem in the firm's longer-run redesign of jobs ar
 \newpage
 
 \clearpage
-\renewcommand\thefigure{OA-\arabic{figure}}
-\renewcommand\thetable{OA-\arabic{table}}
-\renewcommand*{\thepage}{OA - \arabic{page}}
 %\renewcommand\thesection{Appendix \Alph{section}}
 %\renewcommand\thesubsection{\Alph{section}.\arabic{subsection}}
 
-\renewcommand\thedefinition{OA-\arabic{definition}}
-\renewcommand\thelemma{OA-\arabic{lemma}}
-\renewcommand\theassumption{OA-\arabic{assumption}}
-\renewcommand\theconstraint{OA-\arabic{constraint}}
-\renewcommand\theproposition{OA-\arabic{proposition}}
-\renewcommand\thecorollary{OA-\arabic{corollary}}
-\renewcommand\thetheorem{OA-\arabic{theorem}}
-\renewcommand\theobservation{OA-\arabic{observation}}
-\renewcommand\theexample{OA-\arabic{example}}
-\renewcommand\thefigure{OA-\arabic{figure}}
-\renewcommand\thetable{OA-\arabic{table}}
-\renewcommand\theequation{OA.\arabic{equation}}
+% Appendix exhibit numbering.
+%
+% Every numbered object in the Online Appendix carries the letter of the appendix it
+% sits in and restarts at 1 there: Table C.1, Figure E.1, Equation (B.15),
+% Example A.3. \appendix has already redefined \thesection to \Alph{section}, so
+% \thesection expands to that letter at the point the object is numbered.
+%
+% \counterwithin* installs the "reset at every \section" rule without touching
+% \the<counter>, which the \renewcommand above it has already set.
+%
+% It also repairs the hyperlinks, which is why it has to be \counterwithin* and not a
+% bare \@addtoreset-free reset. hyperref keeps a second, hidden name per counter,
+% \theH<counter>, and builds PDF anchors out of that rather than out of the printed
+% number. Under the previous OA- scheme nothing ever set it, so appendix Equation
+% (OA.1) and body Equation (1) both anchored at "equation.1", the appendix anchors
+% were dropped as duplicates, and every appendix link landed in the main text: 56
+% "destination with the same identifier" warnings in the log. hyperref hooks
+% \@addtoreset, so the \counterwithin* below redefines \theH<counter> to
+% \theHsection.\arabic{<counter>} as a side effect, and the anchors come out as
+% "equation.B.15", distinct from the body's "equation.15".
+\newcommand{\oaNumberWithin}[1]{%
+  \expandafter\renewcommand\csname the#1\endcsname{\thesection.\arabic{#1}}%
+  \counterwithin*{#1}{section}%
+}
+\oaNumberWithin{figure}
+\oaNumberWithin{table}
+\oaNumberWithin{equation}
+\oaNumberWithin{definition}
+\oaNumberWithin{lemma}
+\oaNumberWithin{assumption}
+\oaNumberWithin{constraint}
+\oaNumberWithin{proposition}
+\oaNumberWithin{corollary}
+\oaNumberWithin{theorem}
+\oaNumberWithin{observation}
+\oaNumberWithin{example}
+
 \renewcommand*{\thepage}{OA - \arabic{page}}
 \newcommand{\appendixletter}{\Alph{section}}
 
@@ -186,11 +216,9 @@ We then embed this chaining problem in the firm's longer-run redesign of jobs ar
 % The house preamble suppresses page numbers in the appendix Contents with
 %     \cftpagenumbersoff{section}
 %     \cftpagenumbersoff{subsection}
-% They are left on here: this appendix runs to OA - 75, so the numbers earn their place.
-% "OA - 11" is wider than tocloft's default 1.55em page-number box, so widen it and the
-% right margin to match, otherwise the dot leaders run into the number.
-\cftsetpnumwidth{3.9em}
-\cftsetrmarg{4.9em}
+% They are left on here: this appendix runs to OA - 82, so the numbers earn their place.
+% The widened page-number column that "OA - 11" needs is set once, before the draft
+% front matter, at the top of this file.
 \etocsettagdepth{main}{none}
 \etocsettagdepth{appendix}{subsection}
 \tableofcontents
@@ -214,28 +242,35 @@ We then embed this chaining problem in the firm's longer-run redesign of jobs ar
 % Tag everything from here on as "appendix" so the appendix TOC can filter out the main body.
 \etocdepthtag.toc{appendix}
 
+% Appendix order: the three theory appendices first (proofs, the macro aggregation
+% result, and the tables the theory sections refer to but do not print), then the
+% empirical ones (sample construction, the supplementary tests for Predictions #2
+% and #3, the prompts, and the three robustness/validation appendices).
 \input{A_omitted_proofs.tex}
 
 \clearpage
 \input{B_macro_production.tex}
 
 \clearpage
-\input{C_sample_construction.tex}
+\input{C_theory_tables.tex}
 
 \clearpage
-\input{D_tables_and_robustness.tex}
+\input{D_sample_construction.tex}
 
 \clearpage
-\input{E_gpt_prompts.tex}
+\input{E_prediction_robustness.tex}
 
 \clearpage
-\input{F_prompt_robustness.tex}
+\input{F_gpt_prompts.tex}
 
 \clearpage
-\input{G_frequency_robustness.tex}
+\input{G_prompt_robustness.tex}
 
 \clearpage
-\input{H_external_validation.tex}
+\input{H_frequency_robustness.tex}
+
+\clearpage
+\input{I_external_validation.tex}
 
 % References for the Online Appendix.
 \clearpage

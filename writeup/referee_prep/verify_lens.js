@@ -7,7 +7,10 @@ export const meta = {
 // args = { lens: "identification", findings: [ {title, severity, location, claim, why_it_matters, already_addressed, fix}, ... ] }
 // One agent per invocation. Nothing fans out. Worst case cost is one agent.
 
-const ROOT = '/Users/peymansh/MIT Dropbox/Peyman Shahidi/GitHub/rubin/writeup/draft_mert'
+// Repo-relative on purpose: this repo lives under Dropbox and appears at more than one
+// absolute path, and draft_mert/ (the old hard-coded root) was folded into writeup/ on
+// 2026-08-26. Agents run with the repo root as their working directory.
+const ROOT = 'writeup'
 
 const lens = (args && args.lens) || 'unknown'
 const findings = (args && args.findings) || []
@@ -58,12 +61,31 @@ LaTeX source: ${ROOT}   (read with Bash: cat, sed -n, grep)
 Files: 0_main.tex (abstract), 1_introduction.tex, 2_literature.tex, 3_shortrun.tex (model),
 4_implications.tex (Prop 1 overturning, Prop 2 fragmentation, 4.3 non-monotonicity),
 5_longrun.tex (jobs/wages/hand-offs), 6_extensions.tex (CES + DP algorithms), 7_empirics.tex,
-8_conclusion.tex, A_omitted_proofs.tex, B_macro_production.tex, C_sample_construction.tex,
-D_tables_and_robustness.tex, E_gpt_prompts.tex, F_prompt_robustness.tex,
-G_frequency_robustness.tex, H_external_validation.tex.
+8_conclusion.tex, A_omitted_proofs.tex, B_macro_production.tex (macro CES aggregation),
+C_theory_tables.tex (notation and the two theory example tables), D_sample_construction.tex,
+E_prediction_robustness.tex (extra tests for Predictions #2 and #3), F_gpt_prompts.tex,
+G_prompt_robustness.tex, H_frequency_robustness.tex, I_external_validation.tex.
+
+The findings you are given were written before the appendix was reorganized, so their
+"location" fields still name the old files and letters. Translate as you read; line
+numbers in them are approximate either way, so locate quotes by grepping for the text.
+  C_sample_construction.tex     -> D_sample_construction.tex   (Appendix C -> D)
+  D_tables_and_robustness.tex   -> the notation and theory-example tables are now
+                                   C_theory_tables.tex (Appendix C); the Prediction #2
+                                   and #3 robustness is E_prediction_robustness.tex
+                                   (Appendix E)
+  E_gpt_prompts.tex             -> F_gpt_prompts.tex            (Appendix E -> F)
+  F_prompt_robustness.tex       -> G_prompt_robustness.tex      (Appendix F -> G)
+  G_frequency_robustness.tex    -> H_frequency_robustness.tex   (Appendix G -> H)
+  H_external_validation.tex     -> I_external_validation.tex    (Appendix H -> I)
+  writeup/draft_mert/<file>     -> writeup/<file>
+Exhibit numbers moved with them: the appendix no longer numbers figures and tables
+"OA-n" straight through, but "<appendix letter>.n" restarting in each appendix, so a
+finding citing "Figure OA-18" means the eighteenth appendix figure under the old scheme,
+which is Figure I.1 today.
 Data and code, if a claim needs checking numerically:
-  /Users/peymansh/MIT Dropbox/Peyman Shahidi/GitHub/rubin/data/computed_objects/
-  /Users/peymansh/MIT Dropbox/Peyman Shahidi/GitHub/rubin/analysis/
+  data/computed_objects/
+  analysis/
 
 Another referee, working the "${lens}" lens, raised the ${findings.length} criticisms below.
 Your job is to REFUTE them where you can. Referee agents routinely misremember the text, invent

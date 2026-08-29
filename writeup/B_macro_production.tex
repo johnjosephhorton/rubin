@@ -1,6 +1,21 @@
 \section{Macro-level Production Function}
 \label{sec:aggregation}
 
+% \smalldisplay is \small for a display, without the side effect a bare
+% \begingroup\small has here. A display does not end the paragraph around it, so the
+% lines TeX has already accumulated for that paragraph are contributed to the page at
+% the display's start, using whatever \baselineskip is current then. Opening the group
+% with a plain \small therefore re-leads the two or three lines of text above each
+% display from 14.44pt down to 13.55pt, which is the same trap the removed
+% \AtBeginEnvironment{table}{\singlespacing} hook fell into (see README). Saving
+% \baselineskip before \small and restoring it after keeps the surrounding text at its
+% own leading and shrinks only the display.
+\newcommand{\smalldisplay}{%
+  \edef\restorebaselineskip{\baselineskip=\the\baselineskip\relax}%
+  \small\restorebaselineskip
+}
+
+
 So far, the model has focused on individual firm decision-making: how a firm allocates production steps among automation, augmentation, and manual execution, and how its micro-level choices of task assignment and job design determine internal productivity and costs.
 Ultimately, however, our interest extends beyond the firm to the broader economy. 
 Improvements in AI quality not only alter how individual firms organize production but also affect the composition of inputs used across the economy and the aggregate relationship between labor, capital, and output.
@@ -196,6 +211,10 @@ Y & = \int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\m
 \end{align}
 
 Substituting the aggregated variables from the micro-level Equations~\eqref{eq:micro_Y}, \eqref{eq:micro_M}, and \eqref{eq:micro_H} into the aggregate production function in \eqref{eq:macro_agg_prod}, we obtain:
+% \small for the same reason as the display below it: at full size this one is 505pt
+% wide against a 470pt measure and its closing exponent ran into the right margin.
+% It needs no line break, since \small brings it to 464pt on its own.
+\begingroup\smalldisplay
 \begin{equation}
 \int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha}
 =
@@ -208,10 +227,21 @@ Substituting the aggregated variables from the micro-level Equations~\eqref{eq:m
 \right)^{\frac{1}{\rho}}.
 \label{eq:macro_agg_prod_with_micro_aggregates}
 \end{equation}
+\endgroup
 Solving for $\phi(\bar{\alpha})$ in terms of \( \theta_{\AIletter}, \theta_{\manualLetter}, \rho \) we get the following  distribution for effective AI quality:
+% Set \small and broken after the (\bar{\alpha})^{1/(\rho-1)} factor: at full size the
+% display is 563pt wide against a 470pt measure, so the closing bracket and its
+% exponent ran off the page. \footnotesize alone still overflows (472pt); \small plus
+% the break leaves each line about 266pt, well inside the measure.
+\begingroup\smalldisplay
 \begin{equation}
-\phi(\bar{\alpha})=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.\label{eq:phi}
+\begin{aligned}
+\phi(\bar{\alpha})={}&\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}\,(\bar{\alpha})^{\frac{1}{\rho-1}} \\[0.35em]
+&\times \left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
+\end{aligned}
+\label{eq:phi}
 \end{equation}
+\endgroup
 See Subsection~\ref{sec:aggregationDist} below for derivation details.
 
 This completes the production function aggregation procedure.
@@ -284,12 +314,20 @@ Rearranging terms to solve for \( \Gamma(u) \), we get:
 
 Recall that \( \Gamma'(u)=-\phi(u) \).
 Differentiating \( \Gamma(u) \), we obtain:
+\begingroup\smalldisplay
 \begin{align*}
 \Gamma'(u)&=\frac{\partial}{\partial u}\left[\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1}{\rho}}\right] \\
-&=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{\rho-1}u^{\frac{1}{\rho-1}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
+&=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{\rho-1}\,u^{\frac{1}{\rho-1}} \\[0.35em]
+&\qquad\times \left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
 \end{align*}
+\endgroup
 Thus, we have:
+\begingroup\smalldisplay
 \begin{equation}
-\phi(\bar{\alpha})=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}},
+\begin{aligned}
+\phi(\bar{\alpha})={}&\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}\,(\bar{\alpha})^{\frac{1}{\rho-1}} \\[0.35em]
+&\times \left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}},
+\end{aligned}
 \end{equation}
+\endgroup
 which is the formula provided in \eqref{eq:phi} above.
