@@ -110,52 +110,54 @@ leading table of Appendix C and of Appendix E are `[t]`, and each appendix opens
 carrying their own appendix heading, above it. Every later float keeps `[!t]` and
 follows the deferred leader in order.
 
-### Displays and tables that ran into the right margin
+### Displays that ran into the right margin
 
-The text block is 469.76pt. Four exhibits in the appendix were wider than that and
-overhung the right margin; all four are fixed:
+The text block is 469.76pt. Eight places, in the body as well as the appendix, put ink
+past the right margin. All eight are fixed, and no glyph in the document now sits right
+of 540pt except on the landscape DWA table page, where the check measures the rotated
+page in portrait coordinates and the reading is meaningless.
 
-| Exhibit | Natural width | Fix | After |
+| Where | Natural width | Fix | After |
 |---|---|---|---|
-| `(B.14)`, the CES identity in aggregate variables | 505.0pt | `\small` | 463.6pt |
-| `(B.15)`, the effective AI quality distribution | 563.5pt | `\small` + broken after `(\bar\alpha)^{1/(\rho-1)}` | 266.4 / 255.6pt |
+| p. 15, the three parameter triples of Section 4.1 | 500.3pt | `\smalldisplay` | 456.5pt |
+| p. 38, `(12)`, the neighbour regression | 522.7pt | broken after the `\beta_2` term | 312.2 / 205.2pt |
+| `(B.14)`, the CES identity in aggregate variables | 505.0pt | `\smalldisplay` | 463.6pt |
+| `(B.15)`, the effective AI quality distribution | 563.5pt | `\smalldisplay` + broken after `(\bar\alpha)^{1/(\rho-1)}` | 266.4 / 255.6pt |
 | the `\Gamma'(u)` derivative and `(B.21)` in B.3 | same | same | same |
 | `Table C.3`, configuration costs | 518.6pt | `\footnotesize`, as every other table float | 445pt |
+| OA - 16, the three-option `\min` recursion for `R` | 481.4pt | `\smalldisplay` | 439.9pt |
+| OA - 3, the `Reduction 1` paragraph | 6pt overfull line | `sloppypar` | breaks before the `\min` |
 
-`\footnotesize` alone was not enough for (B.15): it comes to 471.8pt, still 2pt over.
-`\scriptsize` fits but is 8.5pt type in a 12pt document, so the display is set `\small`
-and broken instead. Table C.3 was the source of the document's long-standing
-`Overfull \hbox (48.87pt too wide)`, which is now gone; the only overfull boxes left in
-the log are the two inside the landscape DWA table's `\resizebox`, which are harmless
-because the box is scaled afterwards.
+Two of these needed more than a size change. `\footnotesize` alone still leaves (B.15)
+2pt over (471.8pt) and `\scriptsize` is 8.5pt type in a 12pt document, so it is `\small`
+*and* broken. Equation (12) is 477.3pt at `\small`, still over, so it is broken at full
+size. The OA - 3 case is not a wide box at all but a line TeX could not break within the
+house `\tolerance`; `\mbox`-ing the formula makes it worse (25pt over), and `sloppypar`
+is the fix. Table C.3 was the source of the document's long-standing
+`Overfull \hbox (48.87pt too wide)`, now gone; the only overfull boxes left in the log
+are the two inside the landscape DWA table's `\resizebox`, harmless because the box is
+scaled afterwards.
 
-Four places still put glyphs past the right margin. None is new and none was in scope
-for the appendix pass, but they are worth a look:
-
-| PDF page | What | Over by |
-|---|---|---|
-| 15 | the `(8, 4, 0.9)` parameter display in Section 4 | 30pt |
-| 38 | the neighbour regression, Equation (12), in Section 7 | 26pt |
-| OA - 3 | a `\min\{V_1, V_2, V_3\} <` line in Appendix A | 6pt |
-| OA - 16 | a display in Appendix A | 13pt |
-
-The same walk also flags PDF page 97, the landscape DWA table; that one is the
-known clipping documented under "the landscape DWA table overflows its page" below.
+**The log will not tell you about any of this.** `preamble.tex` sets `\hfuzz=100pt`, so
+TeX reports nothing that overhangs by less than 100pt, and display math can overrun
+without a word either way. Six of the eight above were invisible in a clean build log.
+Walk the glyph boxes instead, with the command below.
 
 Setting a display `\small` needs care in this document. A display does not end the
 paragraph around it, so the lines TeX has already accumulated for that paragraph are
 contributed to the page when the display opens, at whatever `\baselineskip` is current
 then. A bare `\begingroup\small` before the display therefore re-leads the text above
 it, 14.44pt down to 13.55pt, which is the same trap the removed
-`\AtBeginEnvironment{table}{\singlespacing}` hook fell into. `B_macro_production.tex`
-defines `\smalldisplay`, which saves `\baselineskip` before `\small` and restores it
-after, and the four displays use `\begingroup\smalldisplay ... \endgroup`.
+`\AtBeginEnvironment{table}{\singlespacing}` hook fell into. `preamble.tex` defines
+`\smalldisplay`, which saves `\baselineskip` before `\small` and restores it after.
+Write `\begingroup\smalldisplay ... \endgroup` around a display, never a bare
+`\begingroup\small`.
 
-To re-check, walk the glyph boxes rather than trusting the log, which stays quiet for
-some display math:
+To re-check, walk the glyph boxes. Everything on a page should end at 540pt or less;
+page 97 is the rotated landscape table and always reads as an outlier.
 
 ```bash
-python3 -c "import fitz;d=fitz.open('0_main.pdf');[print(i+1,round(max(c['bbox'][2] for b in d[i].get_text('rawdict')['blocks'] if b['type']==0 for l in b['lines'] for s in l['spans'] for c in s['chars']),1)) for i in range(len(d))]" | awk '$2>544'
+python3 -c "import fitz;d=fitz.open('0_main.pdf');[print(i+1,round(max(c['bbox'][2] for b in d[i].get_text('rawdict')['blocks'] if b['type']==0 for l in b['lines'] for s in l['spans'] for c in s['chars']),1)) for i in range(len(d))]" | awk '$2>540.5'
 ```
 
 ## What the house format changed relative to the superseded `main.tex`

@@ -400,3 +400,17 @@
 % by 25%% and is the only reason table geometry differed from the bilateral paper (it
 % pushed the first row further below the caption). The house format uses the LaTeX
 % default, so the line is dropped and caption-to-table spacing now matches.
+
+% \smalldisplay is \small for a display, without the side effect a bare
+% \begingroup\small has. A display does not end the paragraph around it, so the
+% lines TeX has already accumulated for that paragraph are contributed to the page at
+% the display's start, using whatever \baselineskip is current then. Opening the group
+% with a plain \small therefore re-leads the two or three lines of text above each
+% display from 14.44pt down to 13.55pt, which is the same trap the removed
+% \AtBeginEnvironment{table}{\singlespacing} hook fell into (see README). Saving
+% \baselineskip before \small and restoring it after keeps the surrounding text at its
+% own leading and shrinks only the display.
+\newcommand{\smalldisplay}{%
+  \edef\restorebaselineskip{\baselineskip=\the\baselineskip\relax}%
+  \small\restorebaselineskip
+}

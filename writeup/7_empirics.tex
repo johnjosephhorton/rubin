@@ -165,17 +165,25 @@ Together, these restrictions reduce the sample to 10{,}708 tasks spread across 1
 We treat the remaining tasks as instances of the same step appearing across different occupations and estimate the following regression\footnote{In a robustness exercise we refine our definition of ``similar'' tasks.
 The resulting estimates closely mirror the patterns observed in the full sample in both sign and magnitude.
 See Appendix~\ref{app:additional_robustness_pred3} for details.}:
+% Broken after the \beta_2 term: on one line the regression is 523pt wide against a
+% 470pt measure and the closing \Big) and comma ran past the right margin. \small is
+% not enough on its own (477pt), and the two rows come to 312pt and 205pt at full size.
+% \Big( and \Big) are explicit-size delimiters, not \left ... \right, so they can sit on
+% different rows of the alignment.
 \begin{equation}
+\begin{aligned}
     \Pr\!\left( \text{is\_ai}_{k} = 1 \mid X_k \right)
-    =
-    \Lambda\!\Big(
+    ={}
+    &\Lambda\!\Big(
         \beta_0
         + \beta_1 \, \text{prev2\_is\_ai}_{k}
-        + \beta_2 \, \text{prev\_is\_ai}_{k}
+        + \beta_2 \, \text{prev\_is\_ai}_{k} \\
+    &\qquad
         + \beta_3 \, \text{next\_is\_ai}_{k}
         + \beta_4 \, \text{next2\_is\_ai}_{k}
         + \varepsilon_k
     \Big),
+\end{aligned}
     \label{eq:DWA_regression_ai}
 \end{equation}
 where $\Lambda$ is the logistic CDF and \emph{$\text{is\_ai}_{k}$} indicates whether step $k$ is executed by AI.

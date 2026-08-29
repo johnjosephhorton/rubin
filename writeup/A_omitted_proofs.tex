@@ -81,12 +81,21 @@ The proof turns the upward-closure statement into one about the three difference
 each of which compares one arrangement that has AI execute step $k$ against the arrangement that does not.
 Three reductions get us there.
 
+% sloppypar for this paragraph only. Its first line is a long run-in italic head followed
+% by two inline formulas with no break points of their own, and at the house \tolerance
+% TeX's least-bad option overran the right margin by 6pt. \sloppy's \emergencystretch
+% lets it break before the \min instead, and its \hfuzz=0.5pt means an overfull line here
+% would actually be reported: the preamble sets \hfuzz=100pt document-wide, so the log is
+% silent about margin overruns (check them with the glyph-box walk in README).
+% The environment has to close after the display, which does not end this paragraph.
+\begin{sloppypar}
 \emph{Reduction 1: from $\mathcal{A}$ to one chain at a time.}
 AI executes step $k$ exactly when $\min\{V_1, V_2, V_3\} < V_0$, that is, when $D_j < 0$ for at least one $j$.
 Writing $\mathcal{A}_j = \{(q_{k-1},\, q_k,\, q_{k+1}) \in Q : D_j < 0\}$ for the set on which chain $j$ by itself beats manual execution of step $k$, this says
 \[ \mathcal{A} \;=\; \mathcal{A}_1 \cup \mathcal{A}_2 \cup \mathcal{A}_3 . \]
 A union of upward-closed sets is upward closed, because a triple in the union lies in one of them and every larger triple then lies in that same one.
 It is therefore enough to show that each $\mathcal{A}_j$ is upward closed, and the three can be handled separately: we never need to know which chain is optimal, only whether each one, on its own, is cheaper than leaving the step to the human.
+\end{sloppypar}
 
 \emph{Reduction 2: from all three coordinates at once to one at a time.}
 Suppose each $\mathcal{A}_j$ is upward closed in each single coordinate, at every fixed value of the other two.
@@ -506,11 +515,17 @@ This is because, in $V(i)$, all job designs must end with a job that completes a
 Incurring this hand-off cost is equivalent to assigning the active worker an additional task with zero skill requirement and a time cost of $\handofftime{i}$ right after step $i$ itself, which is exactly the scenario $R(i,\; 0,\; \handofftime{i})$ represents.
 
 For each $i \geq 1$, the minimum cost function $R(i,\; \skillcost{},\; \timecost{})$ satisfies the recursive relation
+% \small (via \smalldisplay): at full size the three-option min is 481pt wide on a
+% 470pt measure and its closing brace and period sat in the right margin. \small brings
+% it to 440pt, which keeps the \Biggl\{ ... \Biggr\} spanning one line rather than
+% forcing a break between the second and third option.
+\begingroup\smalldisplay
 \begin{align*}
 R(i,\; \skillcost{},\; \timecost{}) = \min\Biggl\{
 & \ \underbrace{\skillcost{}\,\timecost{} + V(i)}_{\text{job closed}}, \ \underbrace{R\bigl(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i}\bigr)}_{\text{Step $i$ is manual}}, \ \underbrace{\min_{0 \le r < i}\ R\!\left(r,\; \skillcost{} + \AIskill{i},\; \timecost{} + \frac{\AItime{i}}{\prod_{i'=r+1}^{i} q_{i'}}\right)}_{\text{Step $i$ optimally chained}}
 \Biggr\}.
 \end{align*}
+\endgroup
 In words, when assigning step $i$, the three options the firm considers are:
 \begin{itemize}
     \item \textbf{Job closure.}

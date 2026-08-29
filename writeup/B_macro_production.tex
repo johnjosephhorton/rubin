@@ -1,21 +1,6 @@
 \section{Macro-level Production Function}
 \label{sec:aggregation}
 
-% \smalldisplay is \small for a display, without the side effect a bare
-% \begingroup\small has here. A display does not end the paragraph around it, so the
-% lines TeX has already accumulated for that paragraph are contributed to the page at
-% the display's start, using whatever \baselineskip is current then. Opening the group
-% with a plain \small therefore re-leads the two or three lines of text above each
-% display from 14.44pt down to 13.55pt, which is the same trap the removed
-% \AtBeginEnvironment{table}{\singlespacing} hook fell into (see README). Saving
-% \baselineskip before \small and restoring it after keeps the surrounding text at its
-% own leading and shrinks only the display.
-\newcommand{\smalldisplay}{%
-  \edef\restorebaselineskip{\baselineskip=\the\baselineskip\relax}%
-  \small\restorebaselineskip
-}
-
-
 So far, the model has focused on individual firm decision-making: how a firm allocates production steps among automation, augmentation, and manual execution, and how its micro-level choices of task assignment and job design determine internal productivity and costs.
 Ultimately, however, our interest extends beyond the firm to the broader economy. 
 Improvements in AI quality not only alter how individual firms organize production but also affect the composition of inputs used across the economy and the aggregate relationship between labor, capital, and output.
