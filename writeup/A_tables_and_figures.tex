@@ -1,27 +1,26 @@
-\section{Additional Tables for the Theory Sections}
-\label{app:theory_tables}
-\label{app:jobdesign_example}
-% The house format sets every float [!t]. On the first page of an appendix, that
-% puts the leading table at the top of the page that carries the appendix heading,
-% above the heading itself, so the table reads as though it belonged to the
-% previous appendix. \suppressfloats[t] keeps the top of this page clear, and the
-% leading table drops the ! so that it honours the suppression and starts at the
-% top of the next page; the tables after it keep [!t] and follow in order behind it.
+\section{Additional Tables and Figures}
+\label{app:tables_and_figures}
+% Belt and braces for the first exhibit. The house format sets every float [!t], and on
+% the first page of an appendix that puts the leading exhibit at the top of the page
+% carrying the appendix heading, above the heading itself, so it reads as though it
+% belonged to the previous appendix. The exhibits here are placed by hand with [h!] and
+% \newpage, which already avoids that, and \suppressfloats[t] keeps the top of this
+% page clear should any of them go back to floating.
 \suppressfloats[t]
 
-This appendix collects the three tables that the theory sections cite but do not print.
-
 Table~\ref{tab:notation} collects the notation the theory sections use.
-Panel~A covers the step-, task-, and strategy-level objects of Sections~\ref{sec:shortrun} and~\ref{sec:results}, and Panel~B the skill, job, and wage objects that Section~\ref{sec:longrun} adds.
+Panel~A covers the step-, task-, and AI strategy-level objects of Sections~\ref{sec:shortrun} and~\ref{sec:results}, and Panel~B the skill, job, wage, and hand-off objects that Section~\ref{sec:longrun} adds.
 
-\begin{table}[t]
+\vspace{1cm}
+
+\begin{table}[h!]
 \centering
 \caption{Notation Used in the Theory Sections}
 \label{tab:notation}
 \footnotesize
 \begin{tabularx}{\textwidth}{l X}
 \toprule
-\multicolumn{2}{l}{\textbf{Panel A: Steps, Tasks, and AI Deployment (Section~\ref{sec:shortrun})}} \\
+\multicolumn{2}{l}{\textbf{Panel A: Steps, Tasks, and AI Deployment (Section~\ref{sec:shortrun}: Short Run)}} \\
 \midrule
 \textbf{Symbol} & \textbf{Description} \\
 \midrule
@@ -40,7 +39,7 @@ $\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the 
 $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual step, $\AItime{r}/\prod_{i=\ell}^{r} q_i$ if an AI chain over steps $\ell, \dotsc, r$ \\
 \addlinespace
 \midrule
-\multicolumn{2}{l}{\textbf{Panel B: Skills, Jobs, Wages, and Job Design (Section~\ref{sec:longrun})}} \\
+\multicolumn{2}{l}{\textbf{Panel B: Skills, Jobs, Wages, Hand-offs, and Job Design (Section~\ref{sec:longrun}: Long Run)}} \\
 \midrule
 \textbf{Symbol} & \textbf{Description} \\
 \midrule
@@ -69,15 +68,15 @@ Panel~B enters only once the firm chooses how to divide the workflow among worke
 \end{minipage}
 \end{table}
 
-Section~\ref{sec:longrun.specialization} works through a three-task workflow whose four job designs are drawn in Figure~\ref{fig:job_design}.
+
+\newpage
+\noindent Section~\ref{sec:longrun.specialization} works through a three-task workflow whose four job designs are drawn in Figure~\ref{fig:job_design}.
 Table~\ref{tab:job_design} reports what each of them costs, first with hand-off costs switched off and then with them on.
 Reading down either panel, a design's total is the sum over its jobs of the job's total skill times the total time it takes, hand-off included, which is Equation~\eqref{eq:wagebill} applied job by job.
 
-Section~\ref{sec:nonlinear} works through a two-step workflow in which the marginal gain from improving AI quality is non-monotone.
-Table~\ref{tab:nonmonotone_costs} lists the five AI strategies available there, the cost of each as a function of AI quality $\alpha$, the marginal benefit of raising $\alpha$ under each, and the range of $\alpha$ over which each is cost-minimizing.
-Appendix~\ref{app:nonmonotone} states and proves the general result the example illustrates.
+\vspace{1cm}
 
-\begin{table}[!t]
+\begin{table}[h!]
     \caption{Role of Hand-off Costs in Organizational Structure}
     \vspace{-0.3cm}
     \centering
@@ -108,7 +107,16 @@ Once hand-off costs are taken into account, in Panel (b) the optimal organizatio
 \end{minipage}
 \end{table}
 
-\begin{table}[!t]
+
+
+\newpage
+\noindent Section~\ref{sec:nonlinear} works through a two-step workflow in which the marginal gain from improving AI quality is non-monotone.
+Table~\ref{tab:nonmonotone_costs} lists the five AI strategies available there, the cost of each as a function of AI quality $\alpha$, the marginal benefit of raising $\alpha$ under each, and the range of $\alpha$ over which each is cost-minimizing.
+Appendix~\ref{app:nonmonotone} states and proves the general result the example illustrates.
+
+\vspace{1cm}
+
+\begin{table}[h!]
 \centering
 \caption{Configurations, Costs, and Marginal Gains in Example~\ref{ex:nonmonotone}}
 \label{tab:nonmonotone_costs}
@@ -144,3 +152,54 @@ Augmenting it on its own costs $3.5\alpha^{-11}$, which is prohibitive while AI 
 \end{spacing}
 \end{minipage}
 \end{table}
+
+
+\newpage
+\begin{figure}[p]
+  \centering
+  \caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution}
+  \label{fig:DWA_regression_aiExecution_mainSample}
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{No Fixed Effects}
+    \label{fig:ame_nofe}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{SOC Major Group Fixed Effects}
+    \label{fig:ame_major}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_major_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{SOC Minor Group Fixed Effects}
+    \label{fig:ame_minor}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_minor_fe_no_dwa.png}
+  \end{subfigure}
+
+  \vspace{1em}
+
+  \begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{Detailed Work Activity Fixed Effects}
+    \label{fig:ame_dwa}
+    \includegraphics[width=\textwidth]{plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/AME_full_is_ai_no_fe_with_dwa.png}
+  \end{subfigure}
+  \par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: These graphs show that, among similar tasks appearing in multiple occupations, those whose immediate neighbors are AI-executed exhibit higher probabilities of being executed by AI, while more distant neighbors have little to no effect on a task's AI execution likelihood.
+The red dashed line in each graph indicates the observed average marginal effect of the corresponding variable in the original dataset reported in Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
+The red shaded area marks the 90\% confidence interval around the observed point estimates in the main sample.
+The histograms plot the distribution of average marginal effects across 1{,}000 randomized reshuffles of task positions within occupations.
+Panel~(a) reports results from Equation~\eqref{eq:DWA_regression_ai}, while Panels~(b), (c), and (d) augment the baseline specification with SOC major group, SOC minor group, and DWA fixed effects, respectively.}
+\end{spacing}
+\end{minipage}
+\end{figure}

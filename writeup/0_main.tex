@@ -145,8 +145,8 @@ We then embed this chaining problem in the firm's longer-run redesign of jobs ar
 % Appendix exhibit numbering.
 %
 % Every numbered object in the Online Appendix carries the letter of the appendix it
-% sits in and restarts at 1 there: Table C.1, Figure E.1, Equation (B.15),
-% Example A.3. \appendix has already redefined \thesection to \Alph{section}, so
+% sits in and restarts at 1 there: Table A.1, Figure D.2, Equation (C.15),
+% Example B.3. \appendix has already redefined \thesection to \Alph{section}, so
 % \thesection expands to that letter at the point the object is numbered.
 %
 % \counterwithin* installs the "reset at every \section" rule without touching
@@ -161,7 +161,7 @@ We then embed this chaining problem in the firm's longer-run redesign of jobs ar
 % "destination with the same identifier" warnings in the log. hyperref hooks
 % \@addtoreset, so the \counterwithin* below redefines \theH<counter> to
 % \theHsection.\arabic{<counter>} as a side effect, and the anchors come out as
-% "equation.B.15", distinct from the body's "equation.15".
+% "equation.C.15", distinct from the body's "equation.15".
 \newcommand{\oaNumberWithin}[1]{%
   \expandafter\renewcommand\csname the#1\endcsname{\thesection.\arabic{#1}}%
   \counterwithin*{#1}{section}%
@@ -242,17 +242,24 @@ We then embed this chaining problem in the firm's longer-run redesign of jobs ar
 % Tag everything from here on as "appendix" so the appendix TOC can filter out the main body.
 \etocdepthtag.toc{appendix}
 
-% Appendix order: the three theory appendices first (proofs, the macro aggregation
-% result, and the tables the theory sections refer to but do not print), then the
-% empirical ones (sample construction, the supplementary tests for Predictions #2
-% and #3, the prompts, and the three robustness/validation appendices).
-\input{A_omitted_proofs.tex}
+% Appendix order: the exhibit shelf first, then the theory (proofs, the macro
+% aggregation result), then the empirics (sample construction, the supplementary tests
+% for Predictions #2 and #3, the prompts, and the three robustness/validation
+% appendices).
+%
+% A goes first because it is the only cross-cutting appendix: it holds exhibits cited
+% from Sections 3, 4, 5 and 7, so it belongs to neither the theory block nor the
+% empirical block and reads as an interruption anywhere between them. Of the two ends,
+% the front wins because its most-consulted item is a lookup aid rather than a result:
+% Table A.1 is the notation summary, cited from the fourteenth line of Section 3, and a
+% reader who turns to it mid-section should not have to cross the whole appendix first.
+\input{A_tables_and_figures.tex}
 
 \clearpage
-\input{B_macro_production.tex}
+\input{B_omitted_proofs.tex}
 
 \clearpage
-\input{C_theory_tables.tex}
+\input{C_CES_representation.tex}
 
 \clearpage
 \input{D_sample_construction.tex}
