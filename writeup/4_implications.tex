@@ -1,5 +1,5 @@
 In this section we draw out three implications of AI chaining in the model.
-First, we show that chaining can overturn comparative advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be automated in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
+First, we show that chaining can overturn comparative advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be executed by AI in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
 Second, we introduce a \emph{fragmentation index} that captures how dispersed a workflow's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps (Section~\ref{sec:fragmentation}).
 Third, we show that the marginal gains from improving AI quality are non-monotone, abruptly rising whenever improvements in AI quality make redesigning workflows worthwhile (Section~\ref{sec:nonlinear}).
 All proofs are collected in Appendix~\ref{app:omitted_proofs}.
@@ -50,7 +50,7 @@ Hold the execution of the workflow outside the block $\{k-1,\, k,\, k+1\}$ fixed
 Let the human hold the comparative advantage on step $k$, so that $\manualTime{k} < \AItime{k}/q_k$.
 Then:
 \begin{enumerate}
-\item[(i)] Whatever step $k$'s own parameters, there is a nonempty open set of neighbor parameters at which the cost-minimizing arrangement has AI execute step $k$ no matter how wide the human's advantage on it is.
+\item[(i)] Whatever step $k$'s own parameters, there is a nonempty open set of neighbor parameters at which the cost-minimizing arrangement has step $k$ executed by AI (automated or augmented) no matter how wide the human's advantage on it is.
 \item[(ii)] Fix the cost parameters of the three steps and let their success probabilities vary. If AI executes step $k$ at $(q_{k-1},\, q_k,\, q_{k+1})$, then it does so at every $(q'_{k-1},\, q'_k,\, q'_{k+1})$ with $q'_i \geq q_i$ for each $i$.
 \end{enumerate}
 \end{proposition}
@@ -102,13 +102,13 @@ Nonetheless, the forces determining the execution mode of a single step in the g
 
 The previous section examined interdependence locally, asking how a step's immediate neighbors shape its execution mode.
 The same forces also operate at the level of the workflow as a whole: whether, and how much, a workflow benefits from AI depends not only on how many of its steps AI can reliably perform, but on how those steps are arranged across the entire sequence.
-The logic is again the complementarity that chaining creates: the more fragmented the AI-able steps are across the production sequence, the fewer of them can share a verification, and the more costly deploying AI becomes.
+The logic is again the complementarity that chaining creates. The more fragmented the AI-able steps are across the production sequence, the fewer of them can share a verification.
 This section formalizes this logic and provides an approach to measurement.
 We first start with an example that makes the point numerically.
 
 \begin{example}
 \label{ex:fragmentation}
-Consider a workflow containing four steps built from the AI-hard step of Section~\ref{sec:comparative_advantage} and a version of its AI-easy step that AI completes less reliably, with two steps of each kind.
+Consider a workflow containing four steps built from the AI-hard step of Section~\ref{sec:comparative_advantage} and a version of its AI-easy step that is costlier to verify and that AI completes less reliably, with two steps of each kind.
 Figure~\ref{fig:ex_fragmentation} shows the same four steps arranged in two different orders.
 \begin{figure}[!t]
 \caption{Role of Clustering of AI-able Steps in Facilitating Automation}
@@ -134,7 +134,7 @@ Figure~\ref{fig:ex_fragmentation} shows the same four steps arranged in two diff
 \end{figure}
 
 Panel~(a) interleaves the two kinds, alternating AI-easy and AI-hard steps.
-Because every easy step is flanked by hard ones, no two AI-able steps are ever adjacent, so no AI chain can form and automation, which executes a step for free but is available only inside a chain, never becomes an option.
+Because every easy step is flanked by hard ones, no two AI-easy steps are ever adjacent, and pairing an easy step with a hard one in a chain costs more than running both alone, so no step is automated.
 The firm is left to treat each step on its own, and on its own neither kind of step is worth giving to AI.
 The workflow therefore uses no AI at all, even though half of its steps are ones AI performs comparatively well.
 
@@ -166,14 +166,26 @@ Proposition~\ref{prop:fragmentation} shows how the fragmentation index and optim
    If we further assume $\manualTime{i} \geq 1$ for all $i$, then $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
 \end{proposition}
 
-Proposition~\ref{prop:fragmentation} says that a single closed-form quantity tracks, up to constant factors, what the firm's whole optimization is worth, so a workflow with a high fragmentation index yields less benefit from AI however cleverly the firm deploys it.
+Proposition~\ref{prop:fragmentation} says that a single closed-form quantity tracks, up to constant factors, what the firm's whole optimization is worth, so a workflow with a high fragmentation index is costly to produce however cleverly the firm deploys AI.
 What the quantity in \eqref{eq:fragmentation} measures is easiest to see through a prophet who can look ahead and tell which steps AI would complete on its first attempt.
-Runs of steps that will all succeed are natural candidates for a chain, so the prophet chains each such run and executes every remaining step on its own, in whichever of the two modes is cheaper for it; the fragmentation index is the expected cost of that strategy.
+Runs of steps that will all succeed are natural candidates for a chain, so the prophet chains each such run, unless running that whole run manually is cheaper, and executes every remaining step on its own in whichever of the two modes is cheaper for it; the fragmentation index is the expected cost of that strategy.
 This is not the optimal strategy even with foresight, since a long chain with a good chance of success may be worth attempting even when the prophet knows it will fail on the first try.
 What Proposition~\ref{prop:fragmentation} establishes is that its cost nonetheless approximates the cost of the optimal strategy, which enjoys no foresight at all.
 
-Read this way, the index is lower exactly when the steps AI performs reliably are clustered, since a long run of such steps is more likely to survive as a single connected component once failures are realized, and a single component is charged only once.
-A further implication of the proof is a natural and approximately optimal greedy algorithm for constructing AI strategies: the firm groups steps into a chain as long as the probability of success stays sufficiently high, terminating the chain and starting a new one when it falls too low, and converting chains of length one to manual execution where that is cheaper.
+Read this way, the index is lower when the steps AI performs reliably are clustered, since a long run of such steps is more likely to survive as a single connected component once failures are realized, and a single component is charged only once.
+When every step takes at least as long by hand as a single AI verification, $\manualTime{i} \geq 1$, this reading is exact.
+Every component is then charged $\omega(C) = 1$, and the fragmentation index reduces to
+\begin{equation}
+FI \;=\; \underbrace{\sum_{i=1}^{m} (1-q_i)\min\left\{\manualTime{i}, \frac{1}{q_i}\right\} \;+\; \sum_{i=1}^{m} q_i}_{\text{invariant to the order of the steps}} \;-\; \sum_{i=2}^{m} q_{i-1}\,q_i .
+\label{eq:fragmentation_closed_form}
+\end{equation}
+The first two terms depend on the workflow's steps but not on the order in which they are performed.\footnote{
+To see this, note that $\manualTime{i} \geq 1$ implies $\sum_{s_i \in C} \manualTime{i} \geq 1$ for every component $C$, so $\omega(C) = 1$ and the realized fragmentation in \eqref{eq:fragmentation} becomes $\sum_{s_i \in F}\min\{\manualTime{i}, 1/q_i\} + \lvert \mathcal{C} \rvert$.
+Taking expectations, step $s_i$ fails with probability $1-q_i$, and a component starts at $s_i$ exactly when $s_i$ succeeds and either $i=1$ or $s_{i-1}$ fails, so $\mathbb{E}\lvert \mathcal{C} \rvert = q_1 + \sum_{i=2}^{m} q_i(1-q_{i-1}) = \sum_{i=1}^{m} q_i - \sum_{i=2}^{m} q_{i-1} q_i$.
+}
+Across re-orderings of a given workflow the index is therefore decreasing in $\sum_{i=2}^{m} q_{i-1} q_i$, the total reliability of adjacent pairs of steps, and is lowest precisely when the steps AI performs reliably sit beside one another.
+Without this assumption the charge-once saving can disappear altogether: if the manual costs of a merged run sum to less than the cost of one verification, $\omega$ is additive over that run's steps and the index does not respond to the arrangement at all.
+A further implication of the proof is a natural and approximately optimal greedy algorithm for constructing AI strategies: the firm groups steps into a chain as long as the probability of success stays sufficiently high, terminating the chain and starting a new one when it falls too low, and running an entire chain manually whenever its steps' total manual time is below the cost of one verification.
 
 
 

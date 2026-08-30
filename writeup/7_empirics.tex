@@ -102,9 +102,8 @@ Specifically, we estimate the following regression:
 where \emph{$\text{ai\_execution}_{o}$} is the share of tasks executed by AI in occupation $o$, \emph{$\text{ai\_exposure}_{o}$} is the share of AI-exposed tasks, and \emph{$\text{empirical\_fragmentation\_index}_{o}$} measures how dispersed the AI-able tasks are across the occupation's workflow. We additionally control for the number of AI-exposed steps in the occupation. Because the fragmentation index mechanically depends on the number of AI-able steps a workflow contains, this control ensures that $\beta_2$ is identified from how those steps are arranged rather than how many there are.
 
 The model predicts that occupations with higher AI exposure should have a higher share of steps executed by AI ($\beta_1 > 0$).
-Conditional on exposure, it also predicts that when AI-able steps are more dispersed in the workflow, the share of realized AI-executed steps should be lower ($\beta_2 < 0$).
-The intuition is that, for a given level of AI quality, AI chains are more likely to form when AI-easy steps appear next to each other, as discussed in Example~\ref{ex:fragmentation} of Subsection~\ref{sec:fragmentation}.
-When such clustering occurs, nearby steps that would otherwise remain manual may instead be automated as part of a chain.
+Conditional on exposure, we should also expect less AI execution where AI-able steps are more dispersed ($\beta_2 < 0$).
+The intuition, discussed in Example~\ref{ex:fragmentation} of Subsection~\ref{sec:fragmentation}, is that a chain can span only contiguous steps: clustering AI-able steps creates chaining opportunities that dispersion forecloses, leaving a step that would have been automated inside a chain to be executed on its own or performed manually.
 
 To measure the fragmentation of AI-able tasks in the data, we adapt the fragmentation index of Section~\ref{sec:fragmentation} to our empirical setting.
 The \emph{empirical fragmentation index} (EFI) is the ratio of the number of \emph{potential} tasks, as defined by our theoretical model, to the total number of steps, which is fixed and is measured by the raw count of O*NET tasks in that occupation.
@@ -112,7 +111,9 @@ The following example clarifies the definition.
 Consider an occupation with five O*NET tasks.
 If none of the five tasks are exposed to AI, then the number of tasks in the theoretical sense is five, and the EFI equals $5/5 = 1$.
 If instead two consecutive tasks are exposed to AI (and thus can form an AI chain of length two when all AI-exposed tasks turn into AI-executed tasks), the number of tasks in the model falls to four and the EFI becomes $4/5 = 0.8$.
-Thus, the empirical fragmentation index decreases as more AI-exposed steps can potentially be consolidated into longer AI chains.
+Thus, the empirical fragmentation index decreases as more AI-exposed steps can potentially be consolidated into longer AI chains.\footnote{The EFI is the special case of \eqref{eq:fragmentation} in which every step takes one unit of time in either mode, $\manualTime{i} = \AItime{i} = 1$, and AI either always or never succeeds at a step, $q_i \in \{0,1\}$, normalized by the number of steps.
+It therefore captures the arrangement of a workflow's AI-able steps, which is what we observe, and not the differences in time cost and reliability that the theoretical index also prices.
+Since $\manualTime{i} = 1$ satisfies the hypothesis of \eqref{eq:fragmentation_closed_form}, the EFI is exactly one minus the share of adjacent AI-able pairs in the workflow, so it inherits the ordering that expression establishes.}
 For this calculation, we consider a task AI-able if it is exposed to AI (exposure-based EFI).\footnote{We count as AI-exposed both E1- and E2-exposed tasks, which together account for 44\% of the tasks in the dataset; restricting attention to E1-exposed tasks alone (14\% of tasks) would leave potential AI chains too sparse for fragmentation to be meaningfully measured.}
 For robustness, we also consider an alternative measure that treats AI-executed tasks as AI-able (execution-based EFI).
 
@@ -142,7 +143,7 @@ In Appendix~\ref{app:additional_robustness_pred2} we repeat the same exercise wi
 
 Together, the evidence from both exposure-based (ex-ante) and execution-based (ex-post) empirical fragmentation measures points to a common pattern.
 Occupations with greater AI exposure exhibit higher levels of realized AI execution, but the extent to which exposure translates into execution depends systematically on how AI-able steps are organized within the workflow.
-When AI-able steps are more clustered, realized AI execution is higher and occurs through contiguous chains rather than as isolated step substitutions.
+When AI-able steps are more clustered, realized AI execution is higher.
 
 
 
