@@ -214,25 +214,23 @@ Substituting the aggregated variables from the micro-level Equations~\eqref{eq:m
 \theta_{\manualLetter} \left(\skillAdjustedTimeLetter_{\manualLetter}\int_{\frac{w_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}}{1 - w_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}}}^{1}\,\phi(\bar{\alpha})\,d\bar{\alpha}\right)^{\rho}
 +
 \left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)
-\right)^{\frac{1}{\rho}}.
+\right)^{\frac{1}{\rho}},
 \label{eq:macro_agg_prod_with_micro_aggregates}
 \end{equation}
 \endgroup
-Solving for $\phi(\bar{\alpha})$ in terms of \( \theta_{\AIletter}, \theta_{\manualLetter}, \rho \) we get the following  distribution for effective AI quality:
-% Set \small and broken after the (\bar{\alpha})^{1/(\rho-1)} factor: at full size the
-% display is 563pt wide against a 470pt measure, so the closing bracket and its
-% exponent ran off the page. \footnotesize alone still overflows (472pt); \small plus
-% the break leaves each line about 266pt, well inside the measure.
-\begingroup\smalldisplay
+provided that the CES weights and the skill-adjusted time requirements satisfy
 \begin{equation}
-\begin{aligned}
-\phi(\bar{\alpha})={}&\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}\,(\bar{\alpha})^{\frac{1}{\rho-1}} \\[0.35em]
-&\times \left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
-\end{aligned}
+\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}+\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}=1,
+\label{eq:ces_share_restriction}
+\end{equation}
+which is what the boundary condition $\bar{\alpha} \to 1$ imposes.
+
+Solving for $\phi(\bar{\alpha})$ in terms of $\theta_{\AIletter}$, $\theta_{\manualLetter}$, and $\rho$ then gives the following distribution for effective AI quality:
+\begin{equation}
+\phi(\bar{\alpha})=\frac{1}{1-\rho}\left(\frac{1-\theta_{\AIletter}-\theta_{\manualLetter}}{\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}}\right)^{\frac{1}{\rho}}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
 \label{eq:phi}
 \end{equation}
-\endgroup
-See Subsection~\ref{sec:aggregationDist} below for derivation details.
+Subsection~\ref{sec:aggregationDist} below derives this distribution.
 
 This completes the production function aggregation procedure.
 The derived distribution in \eqref{eq:phi} characterizes firm-level heterogeneity in the effective AI quality level required to support a macro CES production function of the form in \eqref{eq:macro_agg_prod}, with economy-wide aggregate AI management and manual labor inputs and parameters $\theta_{\AIletter}, \theta_{\manualLetter}, \rho$, obtained from micro-level Leontief production functions of the form in \eqref{eq:micro_agg_prod}.
@@ -302,22 +300,29 @@ Rearranging terms to solve for \( \Gamma(u) \), we get:
 \Gamma(u)=\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1}{\rho}}.
 \]
 
-Recall that \( \Gamma'(u)=-\phi(u) \).
-Differentiating \( \Gamma(u) \), we obtain:
-\begingroup\smalldisplay
-\begin{align*}
-\Gamma'(u)&=\frac{\partial}{\partial u}\left[\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1}{\rho}}\right] \\
-&=\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{\rho-1}\,u^{\frac{1}{\rho-1}} \\[0.35em]
-&\qquad\times \left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
-\end{align*}
-\endgroup
-Thus, we have:
-\begingroup\smalldisplay
+The relation $\Gamma'=-\phi$ pins down $\Gamma$ only up to an additive constant, so the expression above must still be checked against the boundary condition $\Gamma(1)=0$ that \eqref{eq:gamma} imposes by construction.
+Evaluating the bracket at $u=1$ leaves
+\[
+1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}},
+\]
+which vanishes if and only if $1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}=\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}$, that is, if and only if Restriction~\eqref{eq:ces_share_restriction} holds.
+Under that restriction the bracket collapses to $\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\bigl[1-u^{\rho/(\rho-1)}\bigr]$, so that
 \begin{equation}
-\begin{aligned}
-\phi(\bar{\alpha})={}&\frac{\left(1-\theta_{\AIletter}-\theta_{\manualLetter}\right)^{\frac{1}{\rho}}\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}}{1-\rho}\,(\bar{\alpha})^{\frac{1}{\rho-1}} \\[0.35em]
-&\times \left[1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}-\left(1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}\right)^{\frac{\rho}{\rho-1}}\left(\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}\right)^{\frac{1}{1-\rho}}(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}},
-\end{aligned}
+\Gamma(u)=\left(\frac{1-\theta_{\AIletter}-\theta_{\manualLetter}}{\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}}\right)^{\frac{1}{\rho}}\left[1-u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1}{\rho}},
+\label{eq:gamma_solved}
 \end{equation}
-\endgroup
+which satisfies $\Gamma(1)=0$ because $-1/\rho>0$ for $\rho<0$.
+Restriction~\eqref{eq:ces_share_restriction} is therefore not an auxiliary assumption but the condition under which a density consistent with \eqref{eq:gamma} exists at all.
+It ties the weights of the aggregate production function to $\skillAdjustedTimeLetter_{\AIletter}$ and $\skillAdjustedTimeLetter_{\manualLetter}$, which are themselves determined by the AI strategy and job design the firm has committed to, so the organization of work is what fixes the CES parameters rather than the two being free of one another.
+It also delivers $1-\theta_{\manualLetter}\,\skillAdjustedTimeLetter_{\manualLetter}^{\rho}=\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}>0$, so the real powers appearing throughout are well defined.
+
+Recall that \( \Gamma'(u)=-\phi(u) \).
+Differentiating \eqref{eq:gamma_solved}, we obtain:
+\[
+\Gamma'(u)=\frac{1}{\rho-1}\left(\frac{1-\theta_{\AIletter}-\theta_{\manualLetter}}{\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}}\right)^{\frac{1}{\rho}}u^{\frac{1}{\rho-1}}\left[1-u^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}}.
+\]
+Thus, we have:
+\[
+\phi(\bar{\alpha})=\frac{1}{1-\rho}\left(\frac{1-\theta_{\AIletter}-\theta_{\manualLetter}}{\theta_{\AIletter}\,\skillAdjustedTimeLetter_{\AIletter}^{\rho}}\right)^{\frac{1}{\rho}}(\bar{\alpha})^{\frac{1}{\rho-1}}\left[1-(\bar{\alpha})^{\frac{\rho}{\rho-1}}\right]^{-\frac{1+\rho}{\rho}},
+\]
 which is the formula provided in \eqref{eq:phi} above.
