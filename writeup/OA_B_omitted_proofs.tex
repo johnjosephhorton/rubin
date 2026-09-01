@@ -324,7 +324,7 @@ Note that if the final step is a singleton task in $\T_I$ then no task is termin
 
     Next we bound $FI$.
     Note that the assumption $\manualTime{i} \geq 1$ implies that, in any realization of the connected components of non-failed steps $\mathcal{C}$, $\omega(C) = 1$ for all $C \in \mathcal{C}$.
-    This implies that the realized fragmentation is equal to $1$ plus, for each $s_i \in F$ (i.e., each step $s_i$ that fails), a contribution of $\minTime{i}$ plus an additional $1$ in the event that $i > 1$ and the step immediately preceding $s_i$ did not fail.
+    This implies that the realized fragmentation is equal to $\mathbf{1}\{s_m \notin F\}$ plus, for each $s_i \in F$ (i.e., each step $s_i$ that fails), a contribution of $\minTime{i}$ plus an additional $1$ in the event that $i > 1$ and the step immediately preceding $s_i$ did not fail.
     (This additional cost of $1$ accounts for creating a new connected component of non-failed steps ending with $s_{i-1}$.)
 
     We claim that $FI \geq N/2 + \frac{1}{2}\sum_{(s_i) \in \T_I} \minTime{i}$.
@@ -335,7 +335,8 @@ Note that if the final step is a singleton task in $\T_I$ then no task is termin
     Also, if $E_b$ occurs, then either some step $s_i \in T_b$ fails, or no step in $T_b$ fails but the step $s_j$ immediately following $T_b$ does.
     In the former case, we will charge the $\minTime{i} \geq 1$ contribution of $s_i$'s failure to $T_b$.
     In the latter case the step immediately preceding $s_j$ is the last step of $T_b$, which did not fail, so $s_j$'s failure creates a new connected component and we charge the additional contribution of $1$ that it carries (as described above) to $T_b$.
-    Additionally, if there is a terminal $T_b$ in $\T_{NI}$, then we charge the baseline $1$ from the calculation of $FI$ to that terminal $T_b$.
+    Additionally, if there is a terminal $T_b$ in $\T_{NI}$, then we charge the baseline $\mathbf{1}\{s_m \notin F\}$ from the calculation of $FI$ to that terminal $T_b$.
+    That baseline is charged with probability $q_m = \alpha^{d_m}$, and since $d(T_b) \geq d_m$ we have $q_m \geq \alpha^{d(T_b)} \geq 1/2$, so the terminal task too is charged at least $1$ with probability at least $1/2$.
     Aggregating over all these cases, we have that at least $1$ is charged to each task $T_b \in \T_{NI}$ with probability at least $1/2$.
     Finally, for each $(s_i) \in \T_I$ that fails (which occurs with probability at least $1/2$, by construction), we charge the $\minTime{i}$ portion of its contribution to task $(s_i)$.
     We conclude that $FI \geq N/2 + \frac{1}{2}\sum_{(s_i) \in \T_I}\minTime{i}$ as claimed.
@@ -395,9 +396,11 @@ We can relax the assumption in Lemma~\ref{lem:FI.lower.bound.4} that $\manualTim
     When it does, we charge to $T_b$ the contribution $\minTime{i}$ to $FI$ from any $s_i \in F$ that lies in $T_b$.
     Furthermore, when $E_b$ occurs, for each connected component $C$ that intersects $T_b$ we additionally charge the contribution $\omega(C)$ from $FI$ to $T_b$.
     Crucially, the contribution from each $C$ can be charged to at most two different tasks $T_b$ in this way: once for the leftmost $T_b$ that it intersects, and once for the rightmost $T_b$ that it intersects.
-    (The reason is that if some $T_b$ is a subset of $C$, then by definition no step of $T_b$ fails and hence $E_b$ did not occur.
-    So this charging can only occur for a task $T_b$ that intersects $C$ but is not a subset of $C$, of which there are at most two.)
+    (The reason is that any $T_b$ meeting $C$ other than these two has its successor step inside $C$ as well, so no step of $\overline{T}_b$ fails and $E_b$ does not occur.
+    Only the leftmost such task, which may extend past a failed step to the left of $C$, and the rightmost, whose successor is the failed step that ends $C$, can trigger $E_b$.)
     Moreover, this charging to $T_b$ adds up to a  total value of at least $\min\left\{1, \sum_{s_i \in T_b} \manualTime{i} \right\}$.
+    The terminal task, for which $E_b$ is not defined, is charged separately: either some step of it fails, in which case the charging above applies verbatim, or no step of it fails, in which case $T_b \subseteq C$ for some connected component $C$ and $\omega(C) \geq \min\{1, \sum_{s_i \in T_b} \manualTime{i}\}$.
+    Either way the terminal task is charged at least $\min\{1, \sum_{s_i \in T_b} \manualTime{i}\}$, and with probability $1$ rather than $1/2$.
     Since the charging occurs with probability $1/2$ for each $T_b \in \T_{NI}$, and we are at most double-counting each $\omega(C)$, we conclude that the expected sum of all $\omega(C)$, plus $\minTime{i}$ for all failed steps $s_i$ that lie in some $T_b \in \T_{NI}$, is at least $1/4$ of $\sum_{T_b \in \T_{NI}}\min\left\{1, \sum_{s_i \in T_b} \manualTime{i} \right\}$.
 
     The charging for $(s_i) \in \T_I$ remains unchanged: the value $\minTime{i}$ is charged in the event that step $s_i$ fails, which occurs with probability at least $1/2$.
