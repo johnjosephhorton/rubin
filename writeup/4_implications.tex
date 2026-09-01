@@ -95,7 +95,7 @@ Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \ap
 Varying a step's own success probability and that of a single neighbor is thus enough to cover all four feasible ways of executing a human-advantaged step, minimal as that adjustment is.
 Part~(ii) of Proposition~\ref{prop:ca_local} can be read off the same figure as well: starting anywhere that AI executes Step~$k$ and moving up, to the right, or both, one never crosses back into the grey region, so improvements in AI reliability only ever add steps to those AI executes.
 
-We must note that Proposition~\ref{prop:ca_local} is a \emph{local} statement. It compares rearrangements of a step and its neighbors while holding the AI strategy on the rest of the workflow fixed, and so it falls short of determining whether the overturning takes place in the overall cost-minimizing arrangement of the entire production sequence, which depends on the whole workflow at once.
+We must note that Proposition~\ref{prop:ca_local} is a \emph{local} statement. It compares rearrangements of a step and its neighbors while holding the AI strategy on the rest of the workflow fixed, and so it falls short of determining whether the overturning takes place in the overall cost-minimizing arrangement of the entire production sequence.
 Nonetheless, the forces determining the execution mode of a single step in the global optimum are the ones outlined here.
 
 \subsection{Workflow-level AI Exposure and the Fragmentation Index}
@@ -118,13 +118,13 @@ Figure~\ref{fig:ex_fragmentation} shows the same four steps arranged in two diff
 \begin{minipage}{\linewidth}
   \centering
   \subcaption{Dispersed AI-able Steps Configuration}
-  \input{plots/TikZ_visualization/example1_visualization_allManual.tex}
+  \input{plots/TikZ_visualization/dispersed_steps_visualization.tex}
 \end{minipage}
 \par\vspace{1.6em}
 \begin{minipage}{\linewidth}
   \centering
   \subcaption{Clustered AI-able Steps Configuration}
-  \input{plots/TikZ_visualization/example2_visualization.tex}
+  \input{plots/TikZ_visualization/clustered_steps_visualization.tex}
 \end{minipage}
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
@@ -139,8 +139,8 @@ Because every easy step is flanked by hard ones, no two AI-easy steps are ever a
 The firm is left to treat each step on its own, and on its own neither kind of step is worth giving to AI.
 The workflow therefore uses no AI at all, even though half of its steps are ones AI performs comparatively well.
 
-Panel~(b) clusters them instead, placing the two AI-easy steps side by side.
-Chaining then becomes a cost-effective option: it automates the first easy step at zero direct cost and verifies only once, at the second, where the run ends.
+Panel~(b) clusters them instead, placing the AI-easy steps side by side.
+Chaining then becomes a cost-effective option: it automates the first easy step at zero direct cost and verifies only once at the second.
 A single verification now covers two steps instead of none, which is enough to make AI worth deploying where it was not before.
 \end{example}
 
@@ -149,7 +149,7 @@ Dispersion of AI-friendly steps in the workflow can therefore stop AI exposure f
 This is precisely the margin that we explore empirically later.
 Example~\ref{ex:fragmentation} isolates the arrangement of steps in the case that matters for what follows, where the steps AI performs poorly are ones the firm would not fold into a chain under any arrangement.\footnote{In the normalized case introduced below ($\AItime{i} = 1$), this holds whenever $\min\{\manualTime{h}, 1/q_h\} \leq 1/q_h - 1$ for each AI-hard step $s_h$: extending a chain over $s_h$ multiplies its expected cost by $1/q_h$ while saving only the cost of executing $s_h$ on its own.}
 
-As gains from automation appear to depend on how clustered or dispersed a workflow's AI-able steps are, having a measure of that arrangement would be useful, one that stands in for them without solving the firm's optimization problem outright.
+As gains from AI automation appear to depend on how clustered or dispersed a workflow's AI-able steps are, having a measure of that arrangement would be useful, one that stands in for them without solving the firm's optimization problem outright.
 To build such a measure, return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.\footnote{The normalization puts every step on the same footing as far as the cost of using AI goes, leaving where the AI-able steps sit as the only thing that separates one workflow from another.}
 Suppose each step $s_i$ succeeds independently with probability $q_i$, and say that any step that does not succeed \emph{fails}.
 Write $F$ for the set of steps that fail and $\mathcal{C}$ for the random collection of maximal connected components of non-failed steps, and assign each $C \in \mathcal{C}$ the weight $\omega(C) = \min\bigl\{ 1, \sum_{s_i \in C} \manualTime{i} \bigr\}$, which is $1$ unless the manual costs of its steps sum to less than the normalized cost of verifying one AI attempt.
@@ -175,18 +175,19 @@ This is not the optimal strategy even with foresight, since a long chain with a 
 What Proposition~\ref{prop:fragmentation} establishes is that its cost nonetheless approximates the cost of the optimal strategy, which enjoys no foresight at all.
 
 Read this way, the index is lower when the steps AI performs reliably are clustered, since a long run of such steps is more likely to survive as a single connected component once failures are realized, and a single component is charged only once.
-When every step takes at least as long manually as a single AI verification (i.e., $\manualTime{i} \geq 1$), this reading is exact.
-Every component is then charged $\omega(C) = 1$, and the fragmentation index reduces to
+When every step takes at least as long manually as a single AI verification, $\manualTime{i} \geq 1$, every component is charged $\omega(C) = 1$ and the fragmentation index reduces to\footnote{
+To see this, note that $\manualTime{i} \geq 1$ implies $\sum_{s_i \in C} \manualTime{i} \geq 1$ for every component $C$, so $\omega(C) = 1$ and the realized fragmentation in \eqref{eq:fragmentation} becomes $\sum_{s_i \in F}\min\{\manualTime{i}, 1/q_i\} + \lvert \mathcal{C} \rvert$.
+Taking expectations, step $s_i$ fails with probability $1-q_i$, and a component starts at $s_i$ exactly when $s_i$ succeeds and either $i=1$ or $s_{i-1}$ fails, so $\mathbb{E}\lvert \mathcal{C} \rvert = q_1 + \sum_{i=2}^{m} q_i(1-q_{i-1}) = \sum_{i=1}^{m} q_i - \sum_{i=2}^{m} q_{i-1} q_i$.
+}
 \begin{equation}
 FI \;=\; \underbrace{\sum_{i=1}^{m} (1-q_i)\min\left\{\manualTime{i}, \frac{1}{q_i}\right\} \;+\; \sum_{i=1}^{m} q_i}_{\text{invariant to the order of the steps}} \;-\; \sum_{i=2}^{m} q_{i-1}\,q_i .
 \label{eq:fragmentation_closed_form}
 \end{equation}
-The first two terms depend on the workflow's steps but not on the order in which they are performed.\footnote{
-To see this, note that $\manualTime{i} \geq 1$ implies $\sum_{s_i \in C} \manualTime{i} \geq 1$ for every component $C$, so $\omega(C) = 1$ and the realized fragmentation in \eqref{eq:fragmentation} becomes $\sum_{s_i \in F}\min\{\manualTime{i}, 1/q_i\} + \lvert \mathcal{C} \rvert$.
-Taking expectations, step $s_i$ fails with probability $1-q_i$, and a component starts at $s_i$ exactly when $s_i$ succeeds and either $i=1$ or $s_{i-1}$ fails, so $\mathbb{E}\lvert \mathcal{C} \rvert = q_1 + \sum_{i=2}^{m} q_i(1-q_{i-1}) = \sum_{i=1}^{m} q_i - \sum_{i=2}^{m} q_{i-1} q_i$.
-}
-Across re-orderings of a given workflow the index is therefore decreasing in $\sum_{i=2}^{m} q_{i-1} q_i$, the total reliability of adjacent pairs of steps, and is lowest precisely when the steps AI performs reliably sit beside one another.
+The first two terms depend on the workflow's steps but not on the order in which they are performed.
+Across re-orderings of a given workflow the index is therefore decreasing in $\sum_{i=2}^{m} q_{i-1} q_i$, the total reliability of adjacent pairs of steps, and is lowest precisely when the steps AI performs reliably sit beside one another.\footnote{That only adjacent pairs enter is a consequence of the assumption rather than an approximation: once every component is charged the same $1$ whatever its length, the arrangement matters only through how many components there are, and a component begins wherever a step that succeeds follows one that failed, which is an event involving two steps.
+Absent the assumption, $\omega(C)$ depends on the whole of $C$ and no such expression in adjacent pairs exists.
 Without this assumption the charge-once saving can disappear altogether: if the manual costs of a merged run sum to less than the cost of one verification, $\omega$ is additive over that run's steps and the index does not respond to the arrangement at all.
+}
 A further implication of the proof is a natural and approximately optimal greedy algorithm for constructing AI strategies: the firm groups steps into a chain as long as the probability of success stays sufficiently high, terminating the chain and starting a new one when it falls too low, and running an entire chain manually whenever its steps' total manual time is below the cost of one verification.
 
 
