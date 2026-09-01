@@ -18,7 +18,7 @@
 
 ---
 
-## Reconciliation status (pass of 2026-09-01)
+## Reconciliation status (second pass, 2026-09-01)
 
 Each item below now carries a colored **Status** line:
 
@@ -27,19 +27,22 @@ Each item below now carries a colored **Status** line:
 | 🟢 | <span style="color:#1a7f37">**RESOLVED**</span> | The fix has landed in the draft |
 | 🟡 | <span style="color:#9a6700">**PARTIAL**</span> | Some of the fix landed; the remainder is named in the status note |
 | 🔴 | <span style="color:#cf222e">**OPEN**</span> | Not yet addressed, or the source file is untouched |
+| 🔵 | <span style="color:#0969da">**IGNORED**</span> | Reviewed and deliberately not actioned |
 
-Statuses were assigned by checking every item against the draft as of this pass, diffing against commit `abaa7c3` (the commit that added this file).
+Statuses were assigned by checking every item against the draft as of this pass, diffing against commit `abaa7c3` (the commit that added this file). The second pass re-checked every item against `HEAD` (`e71b3a1`), which picked up fixes landed in `2ae61b9`, `677089c`, `a2038a0` and `e71b3a1`.
 
-| Severity | 🟢 <span style="color:#1a7f37">Resolved</span> | 🟡 <span style="color:#9a6700">Partial</span> | 🔴 <span style="color:#cf222e">Open</span> | Total |
-|---|---|---|---|---|
-| **Major** | 5 | 1 | 0 | 6 |
-| **Medium** | 13 | 4 | 26 | 43 |
-| **Minor** | 3 | 1 | 53 | 57 |
-| **Total** | **21** | **6** | **79** | **106** |
+| Severity | 🟢 <span style="color:#1a7f37">Resolved</span> | 🟡 <span style="color:#9a6700">Partial</span> | 🔵 <span style="color:#0969da">Ignored</span> | 🔴 <span style="color:#cf222e">Open</span> | Total |
+|---|---|---|---|---|---|
+| **Major** | 5 | 1 | 0 | 0 | 6 |
+| **Medium** | 18 | 2 | 5 | 18 | 43 |
+| **Minor** | 3 | 2 | 0 | 52 | 57 |
+| **Total** | **26** | **5** | **5** | **70** | **106** |
 
-🟢 **<span style="color:#1a7f37">Resolved.</span>** M1, M2, M3, M4, M5; D1, D3, D5, D6, D7, D8, D15, D16, D17, D28, D30, D32, D41; N28, N29, N47.
+🟢 **<span style="color:#1a7f37">Resolved.</span>** M1--M5; D1, D3, D5, D6, D7, D8, D15, D16, D17, D19, D22, D24, D25, D26, D28, D30, D32, D41; N28, N29, N47.
 
-🟡 **<span style="color:#9a6700">Partial.</span>** M6; D4, D22, D23, D25; N23.
+🟡 **<span style="color:#9a6700">Partial.</span>** M6; D4, D23; N23, N38.
+
+🔵 **<span style="color:#0969da">Ignored.</span>** D2, D9, D10, D14, D21. Reviewed and deliberately not actioned; they are excluded from the open worklist.
 
 🔴 **<span style="color:#cf222e">Untouched source files.</span>** `2_literature.tex`, `3_shortrun.tex`, `5_longrun.tex`, `8_conclusion.tex`, `OA_A_tables_and_figures.tex` and `tables/` have not been edited since the review, so every item located only in them is open by construction: D11 (in part), D12, D13, D43; N1--N5, N12--N15, N50, N56.
 
@@ -190,7 +193,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D2 — The grey (manual) region of Figure 3 is misdescribed
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `4_implications.tex:92` · **p. 16** · "Step~$k$ is performed manually only in the lower left where AI is unreliable on both steps $k$ and $k-1$."
 **Issue.** The manual region is not confined to low $q_{k-1}$: it runs the full height of the left edge. At the stated parameters, with a perfectly reliable predecessor ($q_{k-1}=1$) step $k$ is still manual for every $q_k \lesssim 0.11$. Low $q_k$ is necessary; low $q_{k-1}$ is neither necessary nor sufficient.
 **Fix.** Describe the region as bounded by the vertical frontier near $q_k\approx0.43$ together with the hyperbola-like frontier in $q_{k-1}q_k$, and start the "moving right / moving up" sentence explicitly from a point low in the grey region.
@@ -205,7 +208,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D4 — "no chain can form" in Example 1 is a feasibility claim where an optimality claim is meant
 
-🟡 <span style="color:#9a6700">**Status: PARTIAL.**</span> Body text fixed (`4_implications.tex:136`); the Figure 4 notes at `:131` still say "no chain can form".
+🟡 <span style="color:#9a6700">**Status: PARTIAL.**</span> Body text fixed (`4_implications.tex:136`); the Figure 4 notes at `:131` still say “no chain can form”.
 **Where:** `4_implications.tex:137` and the Figure 4 notes at `:131` · **p. 16–17**.
 **Issue.** "Because every easy step is flanked by hard ones, no two AI-able steps are ever adjacent, so no AI chain can form." Nothing in the model restricts chains to AI-able steps: Definition 4 admits any contiguous block, every singleton is a feasible length-one chain, and every adjacent pair is a feasible length-two chain. What is true is only that none of them is cost-minimizing.
 **Fix.** "…so no chain over two or more steps is worth forming, and neither kind of step is worth augmenting on its own; every step is performed manually."
@@ -240,14 +243,14 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D9 — Section 4.3's stated mechanism fails at the first threshold of the paper's own example
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `4_implications.tex:190–192` · **p. 19** · "at each of them those returns jump upward **as longer AI chains become worth deploying**."
 **Issue.** At $\alpha=0.50$ the optimum switches from "both steps manual" to "step 2 augmented alone". No chain is extended, no previously-manual step is absorbed into an existing chain, and nothing compounds over a longer stretch — the chain goes from *absent* to length one. Lemma OA.B.4 proves nothing about chain length; it is purely about the sign of the jump in $g^*$.
 **Fix.** "…and at each of them those returns do not fall, typically jumping upward as the firm redeploys AI over a larger or more chained portion of the workflow." Drop the universal "as longer AI chains become worth deploying", or restrict it to thresholds at which a chain is genuinely extended.
 
 ### D10 — The productivity J-curve attribution is not what the model delivers
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `4_implications.tex:237–239` · **p. 20**.
 **Issue.** The J-curve of Brynjolfsson et al. (2021) is an initial *decline* in measured productivity below trend, driven by unmeasured intangible investment, followed by a later rise. In this model $C^*(\alpha)=\min_{\mathcal{T}}C_{\mathcal{T}}(\alpha)$ is weakly decreasing and $g^*(\alpha)\ge0$ everywhere: cost never rises, so there is no initial dip and no "J". What the model delivers is a flat-then-lumpy marginal-return profile.
 **Fix.** Say what the model gives — "the same *lumpiness* arises within a single workflow, because the returns to better AI wait on discrete reorganizations of it" — and drop the identification with the J-curve shape, or state explicitly that the model captures the delayed-payoff half of the pattern and not the measured-output decline.
@@ -275,7 +278,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D14 — The long-run recursion is self-referential and does not determine $V(i)$
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `6_extensions.tex:78–84` · **p. 31** · same recursion at `OA_B:512–527` · **p. OA - 20**.
 **Issue.** Every branch of Eq. (10) except the first moves to a strictly smaller step index, but "close the job" calls $V(i)=R(i,0,t^H_i)$ at the *same* $i$. Evaluated at the state $(i,0,t^H_i)$ that branch reads $0\cdot t^H_i + V(i) = V(i)$, so the recursion says $V(i)=\min\{V(i),\,A_i\}$, satisfied by every $V(i)\le A_i$. The same self-loop occurs at the root $(m,0,0)$. Substantively it corresponds to closing a job holding no tasks, which Definition 6 does not admit.
 **Fix.** Define $V(i)$ as the minimum over the manual and chain branches only, evaluated at $(i,0,t^H_i)$ — the closure branch is vacuous there because a job with zero skill has zero wage bill — and state the fill order: complete all layers $r<i$, then the entry $(i,0,t^H_i)$, then the remaining layer-$i$ entries.
@@ -316,7 +319,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D19 — The AI failure inflation $\alpha^{-d_b}$ is counted twice
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Fixed in `677089c`. `\tau_b` is now built from the single-attempt time `t^{E(b)}_b`, with `t_b = t^{E(b)}_b \alpha^{-d_b}` stated explicitly, so the inflation is counted once in Eqs. (OA.C.2), (OA.C.7) and the wage-bill sentence.
 **Where:** `OA_C_CES_representation.tex:44` (definition of $\tau_b$) and `:48`, `:80` (Eq. OA.C.2), `:111` (Eq. OA.C.7) · **pp. OA - 24/25/26/27**.
 **Issue.** $\tau_b$ is built from $t_b$, and Definition 5 (p. 12) and Table OA.A.1 (p. OA - 1) define $t_b$ for an AI chain over $(s_\ell,\dots,s_r)$ as $t^A_r/\prod_{i=\ell}^{r} q_i = t^A_r\,\alpha^{-\sum_i d_i}$ — the *expected* time, already inclusive of the success probability. The appendix then multiplies by $\alpha^{-d_b}$ **again**: p. OA-25 writes the expected wage bill of an AI task as $w_A\tau_b\alpha^{-d_b}$, Eq. (OA.C.2) divides labour by $\tau^A_b\alpha^{-d_b}$, and Eq. (OA.C.7) defines $\bar\alpha$ the same way.
 **Why it matters.** $\bar\alpha$ — the single dimension of firm heterogeneity in the whole aggregation — is defined by this expression, so the double count propagates through everything downstream.
@@ -332,42 +335,42 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D21 — "No individual firm substitutes … since production is Leontief" is a non sequitur
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `6_extensions.tex:30` · **p. 29**.
 **Issue.** Leontief-ness is over *steps* — every step must be done — but which labour type performs a step is exactly the firm's choice (Definition 5's AI strategy; the whole of Section 4 is about steps moving onto AI). Under the appendix's own wage formulation, Eq. (OA.C.1), the firm's cost depends on $w_A$ and $w_M$ separately, so its cost-minimizing AI strategy does respond to relative wages. What actually shuts down firm-level substitution is the commitment timing.
 **Fix.** "No firm in the aggregation substitutes AI management labour for manual labour, because it commits to its AI strategy and job design before it hires; conditional on that commitment its technology is Leontief in tasks."
 
 ### D22 — Equation (8)'s capital term is assumed, not derived
 
-🟡 <span style="color:#9a6700">**Status: PARTIAL.**</span> Appendix OA.C now states that the capital margin is fixed by construction; Section 6.1 and footnote 18 are unchanged.
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Fixed in `e71b3a1`, though in Appendix OA.C rather than in footnote 18: “its exponent is part of the CES form we posit rather than something the aggregation derives.”
 **Where:** `6_extensions.tex:22–26` · **p. 29**; capital held at $K=1$ throughout `OA_C:138–160`.
 **Issue.** Eq. (8) is presented as a three-input aggregate production function obtained from the firm-level technology, but capital never varies in the derivation: the functional equation the appendix solves, (OA.C.16), carries the capital term as the constant $(1-\theta_A-\theta_M)$. Nothing in the argument identifies the exponent $\rho$ on $K$, or indeed the functional form of the capital term at all.
 **Fix.** Either let $K$ vary in the aggregation and derive the term, or state in Section 6.1 and in footnote 18 that capital is held at its normalized level throughout and that its CES exponent is an assumption rather than a result.
 
 ### D23 — "the implications people draw from improving AI quality in a CES economy carry over intact" is unsupported
 
-🟡 <span style="color:#9a6700">**Status: PARTIAL.**</span> "carry over intact" softened to "largely carry over"; no mapping from $\alpha$ to $(\theta_A,\theta_M,\rho)$ supplied.
+🟡 <span style="color:#9a6700">**Status: PARTIAL.**</span> “carry over intact” softened to “largely carry over”; no mapping from $\alpha$ to $(\theta_A,\theta_M,\rho)$ supplied.
 **Where:** `6_extensions.tex:37` · **p. 29**.
 **Issue.** AI quality $\alpha$ appears nowhere in Eq. (8); its only parameters are $\theta_A,\theta_M,\rho$. The appendix runs the mapping in the opposite direction — it *fixes* $(\theta_A,\theta_M,\rho)$ and solves for the heterogeneity distribution that makes the identity hold. The paper supplies no map from $\alpha$ to the CES parameters, and the next two sentences (parameters absorb the organization of work) point the other way.
 **Fix.** Either supply the mapping from $\alpha$ to $(\theta_A,\theta_M,\rho)$, or weaken to: "the aggregate economy inherits the CES form that literature relies on, though the CES parameters themselves depend on how work is organized and therefore on AI quality."
 
 ### D24 — "Two economies … aggregate to the same CES form but with different parameters" is not established
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Fixed in `a2038a0`: the two-economies sentence is deleted, leaving only the weaker point that aggregate data cannot reveal workflow structure.
 **Where:** `6_extensions.tex:39` · **p. 29**.
 **Issue.** Appendix OA.C never compares two arrangements and never derives $\theta_A,\theta_M,\rho$ from a workflow; it fixes them and solves backwards for $\phi$ (lines 163–164). Under M4's missing restriction $\theta_A\tau_A^\rho+\theta_M\tau_M^\rho=1$, the share parameters are in fact *tied* to $(\tau_A,\tau_M)$, so two arrangements with different $\tau$'s cannot freely share CES parameters — which makes the sentence's independence claim harder, not easier, to sustain.
 **Fix.** Either establish the comparison (fix $\phi$, vary the workflow arrangement, and show the resulting CES parameters differ), or delete the sentence and keep only the weaker point that follows it — that aggregate data cannot reveal workflow structure.
 
 ### D25 — Footnote 18's list of conditions for Equation (8) is incomplete
 
-🟡 <span style="color:#9a6700">**Status: PARTIAL.**</span> Footnote 18 gains the CES-weight restriction; $\rho<0$ (hence $\sigma<1$) is still not stated in the body.
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Fixed in `a2038a0`: $\rho<0$, hence $\sigma<1$, is now stated next to Eq. (8) itself, which is the review's preferred remedy.
 **Where:** `6_extensions.tex:33` · **p. 29**.
 **Issue.** The footnote lists three conditions (common capital productivity, identical organization, one dimension of heterogeneity). The appendix additionally assumes $\rho<0$, hence $\sigma<1$ (`OA_C:165`, p. OA - 29); assumes $0<w_A\tau_A/(1-w_M\tau_M)<1$ (`OA_C:176` footnote); needs $1-\theta_M\tau_M^\rho>0$ and the bracket in (OA.C.21) positive for the real powers to be defined; and needs the normalization identified in M4.
 **Fix.** Extend footnote 18 to say the aggregation is obtained only for $\rho<0$ — an elasticity of substitution below one — and that it also requires the parameter restrictions in Appendix OA.C. Better still, state $\rho<0$ next to Eq. (8) itself, since it is a substantive restriction on the aggregate technology.
 
 ### D26 — The capital normalization is inconsistent with treating $K$ as fixed at 1
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Fixed in `e71b3a1`: the per-output capital normalization is gone; aggregate capital is normalized to 1 once, and capital is stated to play no part in the allocation.
 **Where:** `OA_C_CES_representation.tex:138–140` and `:160` · **pp. OA - 28/29**.
 **Issue.** Line 140 normalizes "exactly one unit of capital … per unit of **output** produced", which makes a firm's capital equal to its output $y$ and hence aggregate capital equal to $Y$. Line 160 instead argues that because the measure of firms is $1$, aggregate capital is $1$ — a per-*firm* normalization. The two cannot both hold unless $Y=1$. Relatedly, the profitability condition at `:170` is $w_A l_A + w_M l_M \le y$ with no capital cost, and the firm's technology (OA.C.4) has no capital argument, so nothing caps firm scale.
 **Fix.** State that $K$ in Eq. (OA.C.9) is the aggregate capital *stock*, fixed at 1 and independent of the entry margin, and that this is an additional assumption; or carry the capacity constraint into the firm problem as $y=\min\{\bar\alpha l_A/\tau_A,\ l_M/\tau_M,\ k\}$ with $k$ the firm's given stock, and re-derive.
@@ -536,7 +539,7 @@ Local slips: notation, indexing, domains, and precision. None changes a result, 
 - 🔴 **N20** · <span style="color:#cf222e">**OPEN**</span> `OA_B_omitted_proofs.tex:556` · **p. OA - 21** — the tabulated ranges are $[1/B,mB]$ and $[1/B,2mB^3]$, which exclude $0$; but every state the algorithm reads its answer from has a zero coordinate ($V(i)=R(i,0,t^H_i)$, $V(m)=R(m,0,0)$), and $0$ is not a power of $(1+\epsilon)$. → Add a distinguished level $0$ to each coordinate; this adds $O(1)$ levels and leaves the entry count unchanged.
 - 🔴 **N21** · <span style="color:#cf222e">**OPEN**</span> `OA_B_omitted_proofs.tex:512` · **p. OA - 20** — the identity $V(i)=R(i,0,t^H_i)$ is asserted "for all $0\le i\le m$", but $t^H_0$ is undefined ($t^H_i$ is introduced only "given step $s_i$"). → Restrict to $1\le i\le m$, or adopt the convention $t^H_0=0$.
 - 🔴 **N22** · <span style="color:#cf222e">**OPEN**</span> `OA_B_omitted_proofs.tex:546` · **p. OA - 21** — "$R(r,\,c,\,t)$ with $r>i$" reuses $r$, bound two sentences earlier as the chain cut with range $0\le r<i$. → Use a fresh letter.
-- 🟡 **N23** · <span style="color:#9a6700">**PARTIAL**</span> `OA_B_omitted_proofs.tex:569` · **p. OA - 22** — "lets the firm read **the optimal** AI strategy and job design off $V(m)$": the table back-traced is the rounded one, so what is recovered is an *approximately* optimal pair. The proof also never argues that the true cost of the recovered pair is within the factor claimed. → "an approximately optimal pair", plus the missing line: rounding down gives $\text{DPval}(\hat\sigma)\le\text{DPval}(\sigma^*)\le OPT$, hence $\text{truecost}(\hat\sigma)\le(1+\epsilon')^{2m}\,\text{DPval}(\hat\sigma)$. **Status note:** The missing guarantee line is supplied (rounding up bounds the returned pair's true cost); `OA_B:611` still says "read the optimal AI strategy".
+- 🟡 **N23** · <span style="color:#9a6700">**PARTIAL**</span> `OA_B_omitted_proofs.tex:569` · **p. OA - 22** — "lets the firm read **the optimal** AI strategy and job design off $V(m)$": the table back-traced is the rounded one, so what is recovered is an *approximately* optimal pair. The proof also never argues that the true cost of the recovered pair is within the factor claimed. → "an approximately optimal pair", plus the missing line: rounding down gives $\text{DPval}(\hat\sigma)\le\text{DPval}(\sigma^*)\le OPT$, hence $\text{truecost}(\hat\sigma)\le(1+\epsilon')^{2m}\,\text{DPval}(\hat\sigma)$. **Status note:** The missing guarantee line is supplied (rounding up bounds the returned pair's true cost); `OA_B:611` still says “read the optimal AI strategy”.
 
 ## Appendix OA.B (proofs)
 
@@ -557,7 +560,7 @@ Local slips: notation, indexing, domains, and precision. None changes a result, 
 ## Appendix OA.C (CES)
 
 - 🔴 **N37** · <span style="color:#cf222e">**OPEN**</span> `OA_C_CES_representation.tex:26`, `:33`, `:44` · **p. OA - 24** — Eq. (OA.C.1) and the $\tau_b$ display sum $c^M_b$ and $c^A_b$ over **tasks**, but Table OA.A.1 and Section 5 define $c^M_i$, $c^A_i$ at the **step** level; the task-level skill is $c_b$. → Write the sums with $c_b$.
-- 🔴 **N38** · <span style="color:#cf222e">**OPEN**</span> `OA_C_CES_representation.tex:48`, `:80`, `:111`, `:181` · **pp. OA - 25 to OA - 29** — $d_b$, the total AI difficulty of task $b$, is used four times and defined nowhere; the paper already has two other symbols for the same object, $d(T_b)$ (`OA_B:234`) and $D_c$ (`OA_B:401`). → Define it once and use a single symbol across both appendices.
+- 🟡 **N38** · <span style="color:#9a6700">**PARTIAL**</span> `OA_C_CES_representation.tex:48`, `:80`, `:111`, `:181` · **pp. OA - 25 to OA - 29** — $d_b$, the total AI difficulty of task $b$, is used four times and defined nowhere; the paper already has two other symbols for the same object, $d(T_b)$ (`OA_B:234`) and $D_c$ (`OA_B:401`). → Define it once and use a single symbol across both appendices. **Status note:** `d_b` is now defined at `OA_C:41`; the symbol is still not unified with `d(T_b)` and `D_c` in Appendix OA.B.
 - 🔴 **N39** · <span style="color:#cf222e">**OPEN**</span> `OA_C_CES_representation.tex:167` · **p. OA - 29** — "Normalize the output price to $p=1$" collides with $p$, the number of jobs (Definition 6, Table OA.A.1, and this appendix four pages earlier). → Use $P$, or drop the symbol.
 - 🔴 **N40** · <span style="color:#cf222e">**OPEN**</span> `OA_C_CES_representation.tex:188` · **p. OA - 30** vs `OA_B:434` · **p. OA - 18** — $\phi$ denotes the cost gap $C_{\mathcal{T}'}-C_{\mathcal{T}}$ in OA.B and an output density in OA.C, eleven pages apart, both as functions of an AI-quality argument. → Rename one.
 - 🔴 **N41** · <span style="color:#cf222e">**OPEN**</span> `OA_C_CES_representation.tex:189` · **p. OA - 30** — "A firm with effective AI quality $\bar\alpha$ thus produces output $y=\phi(\bar\alpha)$ **by definition**" conflates a density (which is how $\phi$ is used in (OA.C.11)–(OA.C.13), integrated $d\bar\alpha$) with a firm's output level; and line 164 calls $\phi$ a "probability density", which would force $Y=1$. → "$\phi(\bar\alpha)\,d\bar\alpha$ is the output produced by firms with effectiveness in $[\bar\alpha,\bar\alpha+d\bar\alpha]$", and drop "probability".

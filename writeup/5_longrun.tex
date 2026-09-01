@@ -44,7 +44,8 @@ Accordingly, we extend Definitions~\ref{def:manual_step}--\ref{def:ai_chain} to 
 the skill and time requirement of performing step $i$ manually is $(\manualSkill{i},\, \manualTime{i})$, while verifying the output of one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
 The two values need not coincide, since doing the work oneself calls for knowing how to do it, whereas verifying what an AI returns may call for knowledge of a different kind.
 As with time, a task inherits the skill of whichever mode executes it, so each task $T_b$ in the task sequence $\T = (T_1, \dotsc, T_n)$ carries a pair of skill and time requirements $(\skillcost{b}, \timecost{b})$: it is $(\manualSkill{i},\, \manualTime{i})$ if $T_b$ is the manual step $s_i$, and $\bigl(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i\bigr)$ if $T_b$ is an AI chain spanning $(s_\ell, \dotsc, s_r)$.
-Both components of a chain's pair are therefore inherited from its augmented endpoint: the chain demands only the skill required to verify that step's output, and an automated step inside the chain demands no skill of anyone, since no human ever handles it directly.
+Both cost components of a chain's pair (for a single verification attempt) are therefore inherited from its augmented endpoint.
+In particular, the chain demands only the skill required to verify the augmented step's output, and an automated step inside the chain demands no skill of anyone, since no human ever handles it directly.
 
 The firm hires one worker for each job in its job design $\mathcal{J}$.
 The worker for job $J_j$ completes all tasks associated with their job.
@@ -53,6 +54,8 @@ The total skill required to complete the tasks in job $J_j$ is $\sum_{T_b \in J_
 We assume that the skills different steps require are non-overlapping, and thus add up linearly in jobs.
 Human capital requirements of steps do overlap in practice, but modeling that overlap would burden the results this section derives with complexities that obscure the main channels we aim to describe.
 That said, the results rest on a considerably weaker version of this assumption, namely that each step demand some increment of skill no other step supplies, so that a worker who takes on more steps in their job must acquire more skill.
+Any strictly increasing functional form delivers this; linear addition, which we adopt here, is simply the most tractable.
+
 }
 We then assume that a worker's wage is proportional to the skill level of their job.\footnote{
 One motivation for this formulation is workers paying a human capital investment to acquire the skills necessary for a job.
