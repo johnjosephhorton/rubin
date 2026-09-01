@@ -147,6 +147,7 @@ A single verification now covers two steps instead of none, which is enough to m
 Note that the two arrangements contain exactly the same set of steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
 Dispersion of AI-friendly steps in the workflow can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer.
 This is precisely the margin that we explore empirically later.
+Example~\ref{ex:fragmentation} isolates the arrangement of steps in the case that matters for what follows, where the steps AI performs poorly are ones the firm would not fold into a chain under any arrangement.\footnote{In the normalized case introduced below ($\AItime{i} = 1$), this holds whenever $\min\{\manualTime{h}, 1/q_h\} \leq 1/q_h - 1$ for each AI-hard step $s_h$: extending a chain over $s_h$ multiplies its expected cost by $1/q_h$ while saving only the cost of executing $s_h$ on its own.}
 
 As gains from automation appear to depend on how clustered or dispersed a workflow's AI-able steps are, having a measure of that arrangement would be useful, one that stands in for them without solving the firm's optimization problem outright.
 To build such a measure, return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.\footnote{The normalization puts every step on the same footing as far as the cost of using AI goes, leaving where the AI-able steps sit as the only thing that separates one workflow from another.}
@@ -174,7 +175,7 @@ This is not the optimal strategy even with foresight, since a long chain with a 
 What Proposition~\ref{prop:fragmentation} establishes is that its cost nonetheless approximates the cost of the optimal strategy, which enjoys no foresight at all.
 
 Read this way, the index is lower when the steps AI performs reliably are clustered, since a long run of such steps is more likely to survive as a single connected component once failures are realized, and a single component is charged only once.
-When every step takes at least as long by hand as a single AI verification, $\manualTime{i} \geq 1$, this reading is exact.
+When every step takes at least as long manually as a single AI verification (i.e., $\manualTime{i} \geq 1$), this reading is exact.
 Every component is then charged $\omega(C) = 1$, and the fragmentation index reduces to
 \begin{equation}
 FI \;=\; \underbrace{\sum_{i=1}^{m} (1-q_i)\min\left\{\manualTime{i}, \frac{1}{q_i}\right\} \;+\; \sum_{i=1}^{m} q_i}_{\text{invariant to the order of the steps}} \;-\; \sum_{i=2}^{m} q_{i-1}\,q_i .
