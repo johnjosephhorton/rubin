@@ -138,8 +138,8 @@ See \cite{baqaee2019foundations} for a broader formulation of this problem.}
 While most existence results in this literature do not yield a closed-form functional representation, we show here that under certain conditions on firm heterogeneity, firm-level Leontief production functions can be aggregated into an economy-wide CES production function.
 
 Consider a unit mass of firms in the economy, each producing output with AI management labor, human labor, and capital.
-We assume capital is a fixed input, so firms make labor decisions conditional on their given capital stock.
-Moreover, we impose a Leontief structure between capital and labor inputs, normalizing the workflow so that exactly one unit of capital is required per unit of output produced.\footnote{This normalization can be interpreted as assuming identical capital productivity across firms. Since we introduce firm-level heterogeneity through variations in AI quality, we abstract away from additional sources of heterogeneity across firms.} 
+We assume capital is a fixed input whose productivity is common across firms, so that firms make their labor decisions conditional on a given capital stock and capital plays no part in the allocation in \eqref{eq:micro_agg_prod}.\footnote{Since we introduce firm-level heterogeneity through variations in effective AI quality alone, we abstract away from additional sources of heterogeneity across firms.}
+We normalize the economy's aggregate capital stock to $1$.
 Firms do not know their individual effective AI quality level before production occurs; instead, they share a common belief about the distribution from which these quality levels are drawn.
 
 Production unfolds in two stages.
@@ -159,7 +159,7 @@ Suppose specifically that the macro-level production function takes the form:
 Y = \left(\theta_{\AIletter}\,\aggregateAIlabor^{\rho}+\theta_{\manualLetter}\,\aggregateManualLabor^{\rho}+(1-\theta_{\AIletter}-\theta_{\manualLetter})\,K^\rho\right)^{\frac{1}{\rho}},\label{eq:macro_agg_prod}
 \end{equation}
 where $Y$ represents the (economy-wide) aggregate output, $\aggregateAIlabor$ denotes aggregate AI management labor, $\aggregateManualLabor$ denotes aggregate manual labor, $K$ is aggregate capital, and parameters $\theta_{\AIletter}$ and $\theta_{\manualLetter}$ represent the weights of corresponding inputs.
-Since the measure of firms in the economy is normalized to $1$, aggregate capital is also normalized to $1$, making the third term in Equation~\eqref{eq:macro_agg_prod} effectively constant at $1-\theta_{\AIletter}-\theta_{\manualLetter}$.
+Aggregate capital is normalized to $1$ as described above, so the third term is constant at $1-\theta_{\AIletter}-\theta_{\manualLetter}$; its exponent is part of the CES form we posit rather than something the aggregation derives.
 
 To link the macro production function above to the micro production functions, we must relate aggregated firm-level inputs \( \labor{\AIletter}\) and \( \labor{\manualLetter} \) from Equation~\eqref{eq:micro_agg_prod} to their corresponding economy-wide aggregates \( \aggregateAIlabor\) and \( \aggregateManualLabor \) in Equation~\eqref{eq:macro_agg_prod}.
 This requires either determining the macro production function parameters from the distribution of heterogeneity, or specifying the form of heterogeneity given a set of macro production function parameters.
