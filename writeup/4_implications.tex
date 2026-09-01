@@ -9,8 +9,8 @@ All proofs are collected in Appendix~\ref{app:omitted_proofs}.
 
 For a single step, the decision whether or not to deploy AI depends simply on whether the manual execution cost exceeds the AI augmentation cost.
 With more than one step, however, the optimal deployment of AI depends on more than each step's own characteristics, because of the benefits of automating multiple steps together in an AI chain.
-As a result, the factor of production holding the comparative advantage on a step \emph{in isolation} need not be the one that performs it in the optimal production configuration.
-That is, a step that is more cost-effective to perform manually may nonetheless be automated as part of a chain.
+As a result, the factor of production holding the comparative advantage on a step in isolation need not be the one that performs it in the optimal production configuration.
+That is, a step that is more cost-effective to perform manually may nonetheless be executed by AI as part of a chain.
 
 Consider a step $k$ on which the human holds the comparative advantage, so that $\manualTime{k} < \AItime{k}/q_k$, together with its immediate neighbors: a predecessor $k-1$, and a successor $k+1$ executed as a standalone augmented step.\footnote{The augmented step $k+1$ can be thought of as a longer AI chain terminating augmented at some step $r > k+1$. Such a chain can be treated as a single augmented step with composite cost parameters, namely verification cost $\AItime{r}$ and success probability $\prod_{i=k+1}^{r} q_i$, so what follows applies unchanged with these composite values.}
 Ask what it costs to admit $k-1$ and $k$ into the chain that ends at $k+1$, holding the rest of the workflow fixed.
@@ -34,7 +34,8 @@ Writing the joint failure risk as $1-q_{k-1}q_k = (1-q_{k-1}) + q_{k-1}(1-q_k)$ 
 
 There are two channels through which the human-advantaged step $k$ can end up automated.
 The first is that step $k$'s share of the marginal cost, the second term in \eqref{eq:ca_test}, falls below what executing it alone would cost, which by assumption is manual execution $\manualTime{k}$.
-This does not depend on the predecessor, and is easiest to see when we set $q_{k-1}=1$, so that step $k-1$ becomes ``free'' and its share in \eqref{eq:ca_test} vanishes.
+This condition indicates whether chaining steps $k$ and $k+1$ alone costs less than the two being executed optimally on their own.
+Note that this does not depend on the predecessor, and is easiest to see when we set $q_{k-1}=1$, so that step $k-1$ becomes ``free'' and its share in \eqref{eq:ca_test} vanishes.
 Importantly, step $k$'s own verification cost $\AItime{k}$ never enters this comparison, since an automated step's output is never checked on its own.
 
 Even when the comparison above does not favor folding the step into the chain, step $k$ may still end up automated.
