@@ -548,28 +548,34 @@ The cost of the optimal joint AI strategy and job design for the full sequence o
 
 \emph{Discretization and Computation Time.}
 We solve the recursion by dynamic programming, filling in the values of $R(i,\; \skillcost{},\; \timecost{})$ for all $i$, $\skillcost{}$, and $\timecost{}$.
-Since $\skillcost{}$ and $\timecost{}$ take continuous values, we discretize both to powers of $(1+\epsilon)$, where $\epsilon > 0$ is an arbitrarily small error term.
+Since $\skillcost{}$ and $\timecost{}$ take continuous values, we discretize both to powers of $(1+\epsilon')$, rounding every running total \emph{up} to the next such power, where $\epsilon>0$ is the target accuracy and
+\[
+\epsilon' \;=\; \frac{\ln(1+\epsilon)}{2m+1} \;=\; \Theta(\epsilon/m).
+\]
+We show below why $\epsilon'$ must be smaller than $\epsilon$ by a factor of order $m$.
 
 Suppose all skill and time costs, and all non-zero hand-off costs, lie in $[1/B, B]$ for some $B > 0$; recall that the final job's hand-off cost $\handofftime{m}$ is zero.
 Completing every step manually with a separate worker incurs, for each step, a time and hand-off cost of at most $B$ each and a skill cost of at most $B$, for a total cost of at most $2B^2$ per step, so no solution containing a job with total cost above $2mB^2$ need be considered.
 Since skill costs combine additively and every non-zero skill or time cost is at least $1/B$, a job's total skill lies in $[1/B,\, mB]$, and its total time is at most $2mB^2/(1/B) = 2mB^3$.
 It therefore suffices to tabulate skill costs in $[1/B,\, mB]$ and time costs in $[1/B,\, 2mB^3]$.
 
-Each of these ranges contains $O\bigl(\epsilon^{-1}\log(mB)\bigr)$ powers of $(1+\epsilon)$.
-The table is indexed by the step $i$, which takes $m+1$ values, together with the discretized skill and time levels, each taking $O\bigl(\epsilon^{-1}\log(mB)\bigr)$ values, so it holds
+Each of these ranges contains $O\bigl(\epsilon'^{-1}\log(mB)\bigr) = O\bigl(m\,\epsilon^{-1}\log(mB)\bigr)$ powers of $(1+\epsilon')$; rounding upward can carry a total past the bounds above by at most one factor of $(1+\epsilon')$, which changes these counts only by an additive constant.
+The table is indexed by the step $i$, which takes $m+1$ values, together with the discretized skill and time levels, each taking $O\bigl(m\,\epsilon^{-1}\log(mB)\bigr)$ values, so it holds
 \[
-(m+1)\,\cdot\,O\bigl(\epsilon^{-1}\log(mB)\bigr)\,\cdot\,O\bigl(\epsilon^{-1}\log(mB)\bigr) \;=\; O\bigl(m\,\epsilon^{-2}\log^2(mB)\bigr)
+(m+1)\,\cdot\,O\bigl(m\,\epsilon^{-1}\log(mB)\bigr)\,\cdot\,O\bigl(m\,\epsilon^{-1}\log(mB)\bigr) \;=\; O\bigl(m^3\,\epsilon^{-2}\log^2(mB)\bigr)
 \]
 entries in total.
 Each entry is filled in $O(m)$ time by taking the minimum over the job-closure option, the manual option, and the at most $m$ chain cuts $r$ in the recursion above, so filling the whole table takes
 \[
-O\bigl(m\,\epsilon^{-2}\log^2(mB)\bigr)\,\cdot\,O(m) \;=\; O\bigl(m^2\,\epsilon^{-2}\log^2(mB)\bigr)
+O\bigl(m^3\,\epsilon^{-2}\log^2(mB)\bigr)\,\cdot\,O(m) \;=\; O\bigl(m^4\,\epsilon^{-2}\log^2(mB)\bigr)
 \]
 time.
 Recording which option attains each minimum lets the firm read the optimal AI strategy and job design off $V(m) = R(m,\; 0,\; 0)$.
 
 It remains to bound the discretization error.
-Skill and time costs accumulate additively along the manual and chaining options, so rounding the running totals down to powers of $(1+\epsilon)$ maintains a multiplicative error of at most $(1+\epsilon)$ in each coordinate.
-Each job's wage bill is formed by the single multiplication $\skillcost{}\,\timecost{}$ at the point the job-closure option closes it, so it is computed to within a factor of $(1+\epsilon)^2$.
-Rescaling $\epsilon$ by a constant therefore yields the claimed $(1+\epsilon)$ approximation.
+The table is indexed by the rounded totals, so each transition adds an increment to a value that has already been rounded and then rounds again; the distortions therefore compound along a job rather than being incurred once.
+A job holding $k$ tasks rounds its skill coordinate $k$ times, once for each task added, and its time coordinate $k+1$ times, once when the job opens at the state $(i,\, 0,\, \handofftime{i})$ and once for each task thereafter.
+Since we round upward, an induction on the number of accumulations shows that the recorded skill exceeds the exact total by a factor of at most $(1+\epsilon')^{k}$ and the recorded time by a factor of at most $(1+\epsilon')^{k+1}$.
+Each job's wage bill is formed by the single multiplication $\skillcost{}\,\timecost{}$ at the point the job-closure option closes it, so it exceeds the true bill by at most $(1+\epsilon')^{2k+1} \leq (1+\epsilon')^{2m+1}$, which our choice of $\epsilon'$ makes at most $e^{\ln(1+\epsilon)} = 1+\epsilon$.\footnote{Using $1+x \leq e^{x}$, so that $(1+\epsilon')^{2m+1} \leq e^{\epsilon'(2m+1)} = e^{\ln(1+\epsilon)}$.}
+Every job's bill is therefore overstated by at most this factor and understated by none, so the pair $(\T,\, \J)$ the table returns has true cost at most $(1+\epsilon)$ times the minimum.
 \end{proof}

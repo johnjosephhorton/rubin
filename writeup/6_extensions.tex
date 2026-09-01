@@ -86,12 +86,13 @@ Closing a job is where the accumulated skill and time are finally multiplied int
 That is also what makes the long run more complicated to solve.
 
 Skill and time costs are continuous, so the recursion must distinguish between infinitely many situations rather than the $m$ of the short run, and it cannot be carried out to completion.
-We therefore round each of the two costs to a power of $(1+\epsilon)$, which leaves finitely many of them to keep track of at the price of inflating the cost by at most a factor $(1+\epsilon)$.
+We therefore round each of the two costs up to a power of $(1+\epsilon')$, for an $\epsilon'$ smaller than $\epsilon$ by a factor of order $m$, which leaves finitely many of them to keep track of.
+Because the recursion is indexed by the rounded totals, each step of a job rounds again on top of what earlier steps have already rounded, so the distortions compound along the job rather than being incurred once; shrinking $\epsilon'$ by that factor is what keeps the resulting wage bill within $(1+\epsilon)$ of the true one.
 Proposition~\ref{prop:totalcost_optimization_dp} formalizes the resulting approximation of the optimal solution.
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
 Fix a workflow with $m$ steps whose skill and time costs, and whose non-zero hand-off costs, lie in $[1/B, B]$ for some $B > 0$.
-For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost in \eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^2 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
+For any $\epsilon > 0$, a pair of AI strategy $\T$ and job design $\J$ whose long-run cost in \eqref{eq:totalcost_with_handoff} is within a factor $(1+\epsilon)$ of the minimum can be computed in time $O(m^4 \epsilon^{-2} \log^2(mB))$ via dynamic programming.
 \end{proposition}
 
 Together these results also suggest a use for the framework beyond what we do here.
