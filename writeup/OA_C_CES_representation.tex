@@ -1,9 +1,8 @@
 \section{CES Representation at Macro Level}
 \label{sec:aggregation}
 
-So far, the model has focused on individual firm decision-making: how a firm allocates production steps among automation, augmentation, and manual execution, and how its micro-level choices of task assignment and job design determine internal productivity and costs.
-Ultimately, however, our interest extends beyond the firm to the broader economy. 
-Improvements in AI quality not only alter how individual firms organize production but also affect the composition of inputs used across the economy and the aggregate relationship between labor, capital, and output.
+Throughout Sections~\ref{sec:shortrun}--~\ref{sec:longrun} the model focused on individual firm decision-making: how a firm allocates production steps among automation, augmentation, and manual execution, and how its micro-level choices of task assignment and job design determine internal productivity and costs.
+However, improvements in AI quality not only alter how individual firms organize production but also affect the composition of inputs used across the economy and the aggregate relationship between labor, capital, and output.
 Yet the firm-level optimization framework developed above prevents direct analysis of these aggregate effects and also makes our approach distinct from the large literature in which production is modeled directly at the task level and then aggregated to the economy level (e.g., \cite{acemoglu2022artificial, acemoglu2024tasks, acemoglu2025simple}).
 To bridge this gap, this section examines whether the micro-level cost-minimization problem of firms can be aggregated into well-behaved firm- and economy-level production functions. 
 In particular, we show that the detailed, many-input Leontief representation of production at the task level can be reduced to a more compact formulation with only a small number of effective inputs, and that aggregating across heterogeneous firms (in terms of AI quality level) yields a macro-level production function with a CES form. 
@@ -15,37 +14,40 @@ Finally, we explore how the production functions of numerous individual firms, w
 In this macro-level representation, the inputs are economy-wide aggregates of the corresponding micro-level inputs from individual firms, thereby facilitating clearer insights into the overall labor allocation in the economy.
 
 Before the aggregation analysis, let us first describe the setup of production.
-A firm uses two production inputs: (1) skill-adjusted AI management labor (to complete AI-assisted tasks), and (2) skill-adjusted manual labor (to perform manual tasks).
-These two types of labor demand different compensations: executing an AI-assisted task with skill and time cost of one demands $w_{\AIletter}$, while completing a manual task with similar skill and time requirements commands a compensation of $w_{\manualLetter}$.
+A firm uses two production inputs: (1) skill-adjusted AI management labor (to complete AI chains), and (2) skill-adjusted manual labor (to perform manual tasks).
+These two types of labor demand different compensations: executing an AI chain with skill and time cost of one demands $w_{\AIletter}$, while completing a manual task with similar skill and time requirements commands a compensation of $w_{\manualLetter}$.
 We call $w_{\AIletter}$ and $w_{\manualLetter}$ the \emph{base wage rates} for AI management and manual labor, respectively.
 
 Firms use these two inputs to complete tasks.
 Recall that the skill and time requirements of tasks are determined by the firm's AI strategy $\T$, while the aggregate skill requirements of jobs depend jointly on the AI strategy and job design $\J$.
 Specifically, the per unit of time compensation of a worker employed to do tasks of a job is determined by all tasks in that job.
 Consider Job 1 in Figure~\ref{fig:hierarchical_production} for example.
-The worker assigned to perform Job 1 is required to obtain not only the skill required for manual Task 1, $\manualSkill{1}$, but must also possess the required skill for AI-assisted Task 2, $\AIskill{2}$, as the worker's total compensation per unit of time is determined at the job level, and equals $\manualSkill{1} + \AIskill{2}$.
+The worker assigned to perform Job 1 is required to obtain not only the skill required for manual Task 1, $\manualSkill{1}$, but must also possess the required skill for AI chain Task 2, $\AIskill{2}$, as the worker's total compensation per unit of time is determined at the job level, and equals $\manualSkill{1} + \AIskill{2}$.
 Therefore, the more tasks firm includes in a job, the higher required compensation for every task in that job.
 
-In order to produce, the firm hires manual labor to perform manual tasks and AI management labor for AI-assisted tasks.
+In order to produce, the firm hires manual labor to perform manual tasks and AI management labor for AI chains.
 Therefore, the total compensation of a job will be a weighted average of skill costs of the job's tasks, with weights being the base wage rates of each type of labor.
 Specifically, the compensation for job $J$ will be:
 \begin{equation}
 w_{\manualLetter} \left(\sum_{T_b^{\manualLetter} \in J} \manualSkill{b}\right) + w_{\AIletter} \left(\sum_{T_b^{\AIletter} \in J} \AIskill{b}\right),\label{eq:new_wage}
 \end{equation}
-which is composed of the sum of contributions of skill costs from its manual tasks denoted by set $T_b^{\manualLetter}$ (each weighted by $w_{\manualLetter}$) and its AI-assisted tasks denoted by set $T_b^{\AIletter}$ (each weighted by $w_{\AIletter}$).\footnote{
+which is composed of the sum of contributions of skill costs from its manual tasks denoted by set $T_b^{\manualLetter}$ (each weighted by $w_{\manualLetter}$) and its AI chains denoted by set $T_b^{\AIletter}$ (each weighted by $w_{\AIletter}$).\footnote{
 This formulation is essentially equivalent to the original definition of wage in \eqref{eq:wage}.
 If we multiply each skill cost in Equation~\eqref{eq:new_wage} by its respective base wage rate and redefine the task's skill cost as the resulting product, we arrive at the original formulation given by \eqref{eq:wage}.
 The formulation in \eqref{eq:new_wage} allows tasks to contribute differently to the job's wage depending on their mode of execution and type of labor that need to perform them.}
 
 Next, we define skill-adjusted labor, which is the smallest unit of work in our analysis.
 Let $J(b)$ denote the job to which task $b$ belongs, and $E(b)$ be the mode of execution of task $b$ (i.e., $E(b) = \manualLetter$ if $b$ is a manual task, or $E(b) = \AIletter$ if $b$ is an AI chain).
+Write $d_b$ for the total difficulty of the steps task $b$ hands to AI, so that $d_b = \sum_{i=\ell}^{r} d_i$ for a chain spanning $(s_\ell, \dotsc, s_r)$ and $d_b = 0$ for a manual step.
+A task's time requirement for a single attempt inherits its mode from $E(b)$ and is written $\timeCostLetter^{E(b)}_{b}$: it is $\manualTime{b}$ when task $b$ is a manual step, and $\AItime{b}$, the cost of verifying the chain's augmented endpoint, when it is an AI chain.
+Recall from Definition~\ref{def:ai_strategy} that the \emph{expected} time cost of a task is $\timecost{b} = \timeCostLetter^{E(b)}_{b}\,\alpha^{-d_b}$, so that below we write the failure inflation $\alpha^{-d_b}$ explicitly wherever an expected quantity is formed rather than folding it into $\timeCostLetter^{E(b)}_{b}$.
 Define the skill-adjusted time requirement of task $b$ as
 \[
-\skillAdjustedTimeLetter_b = \frac{w_{\manualLetter} \left(\sum_{T_{\ell}^{\manualLetter} \in J(b)} \manualSkill{\ell}\right) + w_{\AIletter} \left(\sum_{T_{\ell}^{\AIletter} \in J(b)} \AIskill{\ell}\right)}{w_{E(b)}} \, \timecost{b}.
+\skillAdjustedTimeLetter_b = \frac{w_{\manualLetter} \left(\sum_{T_{\ell}^{\manualLetter} \in J(b)} \manualSkill{\ell}\right) + w_{\AIletter} \left(\sum_{T_{\ell}^{\AIletter} \in J(b)} \AIskill{\ell}\right)}{w_{E(b)}} \, \timeCostLetter^{E(b)}_{b}.
 \]
-Note that the fraction appearing behind $\timecost{b}$ represents an effective skill adjustment factor, as the numerator captures the total compensation of the job task $b$ belongs to, while the denominator normalizes by the base wage rate for the specific mode of execution of task $b$.
+Note that the fraction appearing behind $\timeCostLetter^{E(b)}_{b}$ represents an effective skill adjustment factor, as the numerator captures the total compensation of the job task $b$ belongs to, while the denominator normalizes by the base wage rate for the specific mode of execution of task $b$.
 The resulting fraction thus has units of skill intensity.
-This characterization becomes useful later as it allows expressing the (expected) wage bill paid for task $b$ simply as $w_{\AIletter}\,\skillAdjustedTimeLetter_{b}\,\alpha^{-d_b}$ if it is AI-assisted or as $w_{\manualLetter}\,\skillAdjustedTimeLetter_{b}$ if it is executed manually.
+This characterization becomes useful later as it allows expressing the (expected) wage bill paid for task $b$ simply as $w_{\AIletter}\,\skillAdjustedTimeLetter_{b}\,\alpha^{-d_b}$ if it is an AI chain or as $w_{\manualLetter}\,\skillAdjustedTimeLetter_{b}$ if it is executed manually.
 
 
 \subsection{Within-Firm Aggregation: Leontief to Leontief}
@@ -71,7 +73,7 @@ This allows us to simplify the analysis in two ways:
 Denote the skill-adjusted time cost of hand-off task of job $J_j$ with $\skillAdjustedTimeHandoff{}(J_j)$.
 }
 (2) The order of tasks, including the newly defined hand-off tasks, can be rearranged within the production sequence.
-Specifically, we relabel tasks such that tasks \( 1 \) to \( k \) are AI-assisted and thus require AI management labor, while tasks \( k+1 \) to \( n \), along with the hand-off tasks \( n+1 \) to \( n+p-1 \), are executed manually and require manual labor.\footnote{
+Specifically, we relabel tasks such that tasks \( 1 \) to \( k \) are AI chains and thus require AI management labor, while tasks \( k+1 \) to \( n \), along with the hand-off tasks \( n+1 \) to \( n+p-1 \), are executed manually and require manual labor.\footnote{
 Recall that the final job \( p \) requires no hand-off by definition. The last hand-off thus occurs at the end of job \( p-1 \).
 }
 
@@ -138,7 +140,7 @@ While most existence results in this literature do not yield a closed-form funct
 Consider a unit mass of firms in the economy, each producing output with AI management labor, human labor, and capital.
 We assume capital is a fixed input, so firms make labor decisions conditional on their given capital stock.
 Moreover, we impose a Leontief structure between capital and labor inputs, normalizing the workflow so that exactly one unit of capital is required per unit of output produced.\footnote{This normalization can be interpreted as assuming identical capital productivity across firms. Since we introduce firm-level heterogeneity through variations in AI quality, we abstract away from additional sources of heterogeneity across firms.} 
-Firms do not know their individual effective AI quality level before production occurs; instead, they share a common prior belief regarding the distribution from which these quality levels are drawn.
+Firms do not know their individual effective AI quality level before production occurs; instead, they share a common belief about the distribution from which these quality levels are drawn.
 
 Production unfolds in two stages.
 In the first stage, firms solve the long-run cost minimization problem in \eqref{eq:totalcost_with_handoff}, committing to an AI deployment strategy $\T$ and a job design $\J$ based on their \emph{expected} AI quality levels.

@@ -90,7 +90,7 @@ Figure~\ref{fig:ca_regions} shows the implications of Proposition~\ref{prop:ca_l
 \end{figure}
 It holds all parameters fixed except the success probabilities of Steps~$k-1$ and~$k$, and shades how the cost-minimizing arrangement executes Step~$k$ as those two vary, with the example itself marked by a star.
 The human keeps the comparative advantage on Step~$k$ throughout, since the horizontal axis stops where augmenting the step in isolation would break even against its manual cost of $6$.
-Even so, Step~$k$ is performed manually only in the lower left where AI is unreliable on both steps $k$ and $k-1$.
+Even so, Step~$k$ is performed manually in the lower left where AI is unreliable on both steps $k$ and $k-1$.
 Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces; moving up instead leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band, where Step $k$ is augmented, is not a general feature. When verifying AI's output at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
 Varying a step's own success probability and that of a single neighbor is thus enough to cover all four feasible ways of executing a human-advantaged step, minimal as that adjustment is.
 Part~(ii) of Proposition~\ref{prop:ca_local} can be read off the same figure as well: starting anywhere that AI executes Step~$k$ and moving up, to the right, or both, one never crosses back into the grey region, so improvements in AI reliability only ever add steps to those AI executes.
@@ -139,8 +139,8 @@ Because every easy step is flanked by hard ones, no two AI-easy steps are ever a
 The firm is left to treat each step on its own, and on its own neither kind of step is worth giving to AI.
 The workflow therefore uses no AI at all, even though half of its steps are ones AI performs comparatively well.
 
-Panel~(b) clusters them instead, placing the AI-easy steps side by side.
-Chaining then becomes a cost-effective option: it automates the first easy step at zero direct cost and verifies only once at the second.
+Panel~(b) clusters the AI-easy steps instead, placing them side by side.
+Chaining then becomes a cost-effective option: AI automates the first easy step at zero direct cost and verifies only once at the second.
 A single verification now covers two steps instead of none, which is enough to make AI worth deploying where it was not before.
 \end{example}
 
@@ -175,8 +175,8 @@ This is not the optimal strategy even with foresight, since a long chain with a 
 What Proposition~\ref{prop:fragmentation} establishes is that its cost nonetheless approximates the cost of the optimal strategy, which enjoys no foresight at all.
 
 Read this way, the index is lower when the steps AI performs reliably are clustered, since a long run of such steps is more likely to survive as a single connected component once failures are realized, and a single component is charged only once.
-When every step takes at least as long manually as a single AI verification, $\manualTime{i} \geq 1$, every component is charged $\omega(C) = 1$ and the fragmentation index reduces to\footnote{
-To see this, note that $\manualTime{i} \geq 1$ implies $\sum_{s_i \in C} \manualTime{i} \geq 1$ for every component $C$, so $\omega(C) = 1$ and the realized fragmentation in \eqref{eq:fragmentation} becomes $\sum_{s_i \in F}\min\{\manualTime{i}, 1/q_i\} + \lvert \mathcal{C} \rvert$.
+When every step takes at least as long manually as a single AI verification (i.e., $\manualTime{i} \geq 1$) every component is charged $\omega(C) = 1$ and the fragmentation index reduces to\footnote{
+To see how Equation~\ref{eq:fragmentation_closed_form} is obtained, note that $\manualTime{i} \geq 1$ implies $\sum_{s_i \in C} \manualTime{i} \geq 1$ for every component $C$, so $\omega(C) = 1$ and the realized fragmentation in \eqref{eq:fragmentation} becomes $\sum_{s_i \in F}\min\{\manualTime{i}, 1/q_i\} + \lvert \mathcal{C} \rvert$.
 Taking expectations, step $s_i$ fails with probability $1-q_i$, and a component starts at $s_i$ exactly when $s_i$ succeeds and either $i=1$ or $s_{i-1}$ fails, so $\mathbb{E}\lvert \mathcal{C} \rvert = q_1 + \sum_{i=2}^{m} q_i(1-q_{i-1}) = \sum_{i=1}^{m} q_i - \sum_{i=2}^{m} q_{i-1} q_i$.
 }
 \begin{equation}
