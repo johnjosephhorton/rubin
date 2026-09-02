@@ -109,8 +109,10 @@ def apply(path, src_for):
         html = html.replace(fig["anchor"],
                             fig["anchor"] + block(fig["key"], src_for(fig), fig["caption"]))
 
-    # css goes right after the last existing </style> so it can use the theme tokens
-    i = html.rindex("</style>") + len("</style>")
+    # CSS goes right after the FIRST </style>, the main stylesheet, so it can use the theme
+    # tokens. Anchoring on the last one instead would make this step fight any other block
+    # appended later and break idempotency.
+    i = html.index("</style>") + len("</style>")
     html = html[:i] + "\n" + FIG_CSS.strip() + html[i:]
 
     with open(path, "w", encoding="utf-8") as f:

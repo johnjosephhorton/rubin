@@ -22,10 +22,50 @@ EFI Definition 1 counts a step as AI-able when its Eloundou label is E1 **or** E
 consecutive AI-able steps into one task. The regression of Equation (11) controls for the E1
 share **alone**. This section derives why that combination cannot identify what it is meant to.
 
-### 1.1 The index decomposes exactly, into a level term and an arrangement term
+### 1.1 Notation: what m, k and r are
 
-Write a workflow as a 0/1 string over its `m` steps, 1 meaning AI-able. Let `k` be the number
-of 1s and `r` the number of maximal runs of consecutive 1s.
+Take one occupation's workflow, the ordered list of its O\*NET tasks, and write it as a 0/1
+string with 1 meaning that step is AI-able (Eloundou label E1 or E2).
+
+| | | |
+|---|---|---|
+| `m` | number of steps in the workflow | its length |
+| `k` | how many of them are AI-able | the *amount* of AI-able material, 0 to `m` |
+| `r` | how many separate **blocks** those AI-able steps form | the *arrangement* of that material |
+
+A **block** is a group of consecutive AI-able steps that cannot be extended: it is bounded on
+each side by a non-AI-able step, or by the start or end of the workflow. That is all "maximal"
+means in the usual phrase "maximal run", and it is worth being explicit because it does not
+mean "the longest block". An isolated AI-able step whose neighbours are both non-AI-able is a
+block of size 1. **`r` counts how many blocks there are, never how long they are.**
+
+```
+step      1   2   3   4   5   6   7   8   9   10
+AI-able   1   1   1   0   0   1   0   1   1   0
+          |_______|           ^       |___|
+           block 1         block 2   block 3
+
+m = 10 steps        k = 6 AI-able        r = 3 blocks
+```
+
+Economically, **each block is one potential AI chain**, which is the object the model is about.
+So `k` says how much AI-able material an occupation has and `r` says how many separate pieces
+it is broken into.
+
+The bounds are what make `r` the arrangement statistic:
+
+```
+0 <= r <= k <= m
+
+r = 0   exactly when k = 0             no AI-able steps, so no blocks
+r = 1   all AI-able steps contiguous   maximally clustered
+r = k   no two AI-able steps adjacent  maximally dispersed, every block a singleton
+```
+
+Holding `k` fixed, `r` runs from 1 to `k` and indexes nothing but arrangement. That is exactly
+the channel Prediction #2 concerns.
+
+### 1.2 The index decomposes exactly, into a level term and an arrangement term
 
 The EFI's construction is that every step begins as its own task and two adjacent AI-able steps
 merge into one, so with `A` the number of adjacent AI-able pairs the index is
@@ -34,12 +74,15 @@ merge into one, so with `A` the number of adjacent AI-able pairs the index is
 EFI = (m - A) / m
 ```
 
-The only combinatorial step: a run of length `L` contains `L - 1` adjacent pairs, and the run
-lengths sum to `k`, so
+The only combinatorial step: a block of length `L` collapses `L` steps into one task, so it
+absorbs `L - 1` merges and contains `L - 1` adjacent pairs. The block lengths sum to `k`, so
 
 ```
-A = sum over the r runs of (L_j - 1) = k - r
+A = sum over the r blocks of (L_j - 1) = k - r
 ```
+
+In the example above that is 3 + 1 + 2 = 6 AI-able steps in 3 blocks, hence 3 merges, 7 tasks,
+and EFI = 7/10 = 0.70.
 
 Substituting, and writing `E = k/m` for the AI-able share and `R = r/m` for runs per step,
 
@@ -52,7 +95,7 @@ exact float equality (max deviation `0.000e+00`) on all 28 estimation samples in
 and regressing the EFI on `E` and `R` returns R-squared = 1.0000000000 with slopes of exactly
 -1 and +1, so there is no third component.
 
-### 1.2 The index therefore confounds two different comparisons
+### 1.3 The index therefore confounds two different comparisons
 
 `E` and `R` answer different questions, and the index moves with both. Compare
 
@@ -73,7 +116,7 @@ C and D carry identical exposure and differ only in arrangement. **Prediction #2
 C-against-D comparison.** The `-E` term is what moves in A-against-B and the `+R` term is what
 moves in C-against-D.
 
-### 1.3 One coefficient is asked to do two jobs
+### 1.4 One coefficient is asked to do two jobs
 
 The estimated equation is
 
@@ -94,7 +137,7 @@ more dispersion lowers execution, which is the intended one and runs through `+b
 higher AI-able share raises execution, which runs through `-b2*E`. The second is trivially true
 and large, so **a negative `b2` would appear even if arrangement did nothing at all.**
 
-### 1.4 Controlling for the E1 share does not separate them
+### 1.5 Controlling for the E1 share does not separate them
 
 Had the regression included `E` itself, `E` would appear twice, the two appearances would be
 separately identified, and `b2` would be pinned to `R` alone. That is the matched
@@ -109,7 +152,7 @@ y = const + (b1 - b2)*X - b2*Z + b2*R + b3*k + e
 as the coefficient on arrangement. E2 tasks are 30% of all tasks and predict execution
 strongly, so `b2` is pulled negative whatever arrangement does.
 
-### 1.5 The confound dominates rather than merely contributes
+### 1.6 The confound dominates rather than merely contributes
 
 Because the decomposition is exact, `Var(EFI) = Var(E) + Var(R) - 2Cov(E,R)`, and on the main
 sample that reads
@@ -432,7 +475,7 @@ confounded.
 the 872 sample moves the coefficient only from -0.007 to -0.019, both null. The -0.211 comes
 from the **871-occupation sample**, which drops the 789
 task rows with missing `human_labels` and recomputes `m`. The mechanism: 183 of the 2,998
-maximal runs in the 872 panel, 6.1%, exist only because an unlabelled task sitting inside a
+blocks in the 872 panel, 6.1%, exist only because an unlabelled task sitting inside a
 block of E1∪E2 tasks is coded "not AI-able" and splits the block.
 
 Reaching that significant result takes three stacked choices, and dropping any one kills it:

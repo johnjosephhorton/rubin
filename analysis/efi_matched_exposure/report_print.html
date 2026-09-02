@@ -1,4 +1,22 @@
-<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0}img{max-width:100%}</style><title>The Fragmentation Null</title>
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0}img{max-width:100%}</style>
+<style id="figure-css">
+figure.plate{margin:26px 0 8px;padding:0}
+figure.plate .mount{
+  background:#fff;border:1px solid var(--rule);border-radius:3px;
+  padding:10px;overflow-x:auto;
+}
+figure.plate img{display:block;width:100%;height:auto;min-width:520px}
+figure.plate figcaption{
+  font-size:12.5px;color:var(--muted);margin-top:9px;max-width:72ch;line-height:1.45;
+}
+@media print{
+  figure.plate{break-inside:avoid;margin:20px 0 6px}
+  figure.plate .mount{overflow:visible;padding:4px;border-color:#d8dbd6}
+  figure.plate img{min-width:0}
+  figure.plate figcaption{font-size:11px;margin-top:7px}
+}
+</style>
+<title>The Fragmentation Null</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
@@ -286,22 +304,22 @@ table.wfx td:first-child{min-width:0}
 table.wfx td.lab{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .derivnote{font-size:13px;color:var(--muted);margin:14px 0 0;max-width:72ch}
 </style>
-<style id="figure-css">
-figure.plate{margin:26px 0 8px;padding:0}
-figure.plate .mount{
-  background:#fff;border:1px solid var(--rule);border-radius:3px;
-  padding:10px;overflow-x:auto;
-}
-figure.plate img{display:block;width:100%;height:auto;min-width:520px}
-figure.plate figcaption{
-  font-size:12.5px;color:var(--muted);margin-top:9px;max-width:72ch;line-height:1.45;
-}
-@media print{
-  figure.plate{break-inside:avoid;margin:20px 0 6px}
-  figure.plate .mount{overflow:visible;padding:4px;border-color:#d8dbd6}
-  figure.plate img{min-width:0}
-  figure.plate figcaption{font-size:11px;margin-top:7px}
-}
+<style id="notat-css">
+table.defs td:first-child{min-width:0;width:1%;padding-right:22px;
+  font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--expo);text-align:left}
+table.defs td:nth-child(2){text-align:left;white-space:normal}
+table.defs td:nth-child(3){text-align:left;white-space:normal;color:var(--muted)}
+.anat{background:var(--surface);border-left:2px solid var(--rule-strong);border-radius:0 3px 3px 0;
+  padding:20px 24px;margin:22px 0;overflow-x:auto}
+.anat pre{font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:1.55;margin:0;
+  white-space:pre;color:var(--ink-soft)}
+.anat pre .on{color:var(--expo);font-weight:600}
+.anat pre .bk{color:var(--efi)}
+.anat .cap{font-size:13px;color:var(--muted);margin:13px 0 0}
+.bounds{background:var(--surface);border-left:2px solid var(--rule-strong);border-radius:0 3px 3px 0;
+  padding:18px 24px;margin:22px 0;overflow-x:auto}
+.bounds pre{font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:1.7;margin:0;
+  white-space:pre;color:var(--ink-soft)}
 </style>
 </head><body><div class="wrap">
 
@@ -316,7 +334,7 @@ figure.plate figcaption{
 
   <div class="identity">
     <p class="eq">EFI &nbsp;=&nbsp; (m &minus; k + r) / m &nbsp;=&nbsp; 1 &nbsp;<span class="lvl">&minus; k/m</span>&nbsp; <span class="arr">+ r/m</span></p>
-    <p class="legend">For a workflow of <span class="mono">m</span> steps with <span class="mono">k</span> AI-able steps forming <span class="mono">r</span> maximal runs: an exposure <span class="lvl">level term</span> entering with coefficient exactly &minus;1, plus an <span class="arr">arrangement term</span>. Verified to exact float equality (max deviation 0.000e+00) on all 28 estimation samples in the paper.</p>
+    <p class="legend">For a workflow of <span class="mono">m</span> steps with <span class="mono">k</span> AI-able steps forming <span class="mono">r</span> blocks: an exposure <span class="lvl">level term</span> entering with coefficient exactly &minus;1, plus an <span class="arr">arrangement term</span>. Verified to exact float equality (max deviation 0.000e+00) on all 28 estimation samples in the paper.</p>
   </div>
 
   <p>Because the E1&cup;E2 level inside the index is never absorbed, the EFI coefficient loads on <span class="mono">&minus;k/m</span> rather than on <span class="mono">r/m</span>. It measures exposure, not arrangement. The correlation between the EFI and the E1&cup;E2 share is <strong>&minus;0.954</strong>, and 91% of the index's variance is that share; the E1 share the paper actually controls for absorbs only 50% of it.</p>
@@ -338,15 +356,51 @@ figure.plate figcaption{
   <h2><span class="sec">01 &middot; The algebra</span>Why the coefficient is not measuring arrangement</h2>
   <p class="lede">The index is an exact function of two things the regression needs to keep apart. Once that is written out, the problem is visible without any estimation.</p>
 
+
+  <h3>Notation: what m, k and r are</h3>
+  <p>Take one occupation's workflow, the ordered list of its O*NET tasks, and write it as a 0/1 string with 1 meaning that step is AI-able (Eloundou label E1 or E2).</p>
+
+  <div class="tw">
+  <table class="defs">
+    <caption>Three quantities per occupation</caption>
+    <tbody>
+      <tr><td>m</td><td>number of steps in the workflow</td><td>its length</td></tr>
+      <tr><td>k</td><td>how many of them are AI-able</td><td>the <em>amount</em> of AI-able material, 0 to m</td></tr>
+      <tr><td>r</td><td>how many separate <strong>blocks</strong> those AI-able steps form</td><td>the <em>arrangement</em> of that material</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>A <strong>block</strong> is a group of consecutive AI-able steps that cannot be extended: it is bounded on each side by a non-AI-able step, or by the start or end of the workflow. That is all "maximal" means in the usual phrase "maximal run", and it is worth being explicit because it does <em>not</em> mean "the longest block". An isolated AI-able step whose neighbours are both non-AI-able is a block of size 1. <strong>r counts how many blocks there are, never how long they are.</strong></p>
+
+  <div class="anat"><pre>step      1   2   3   4   5   6   7   8   9   10
+AI-able   <span class="on">1</span>   <span class="on">1</span>   <span class="on">1</span>   0   0   <span class="on">1</span>   0   <span class="on">1</span>   <span class="on">1</span>   0
+<span class="bk">          |_______|           ^       |___|</span>
+<span class="bk">           block 1         block 2   block 3</span>
+
+m = 10 steps        k = 6 AI-able        r = 3 blocks</pre></div>
+
+  <p>Economically, <strong>each block is one potential AI chain</strong>, which is the object the model is about. So <span class="mono">k</span> says how much AI-able material an occupation has, and <span class="mono">r</span> says how many separate pieces it is broken into.</p>
+
+  <p>The bounds are what make <span class="mono">r</span> the arrangement statistic:</p>
+
+  <div class="bounds"><pre>0 &lt;= r &lt;= k &lt;= m
+
+r = 0   exactly when k = 0             no AI-able steps, so no blocks
+r = 1   all AI-able steps contiguous   maximally clustered
+r = k   no two AI-able steps adjacent  maximally dispersed, every block a singleton</pre></div>
+
+  <p>Holding <span class="mono">k</span> fixed, <span class="mono">r</span> runs from 1 to <span class="mono">k</span> and indexes nothing but arrangement. That is exactly the channel Prediction #2 concerns.</p>
+
   <h3>The index decomposes exactly</h3>
-  <p>Write a workflow as a 0/1 string over its <span class="mono">m</span> steps, 1 meaning AI-able. Let <span class="mono">k</span> be the number of 1s and <span class="mono">r</span> the number of maximal runs of consecutive 1s. The EFI's construction is that every step begins as its own task and two adjacent AI-able steps merge into one, so with <span class="mono">A</span> the number of adjacent AI-able pairs:</p>
+  <p>The EFI's construction is that every step begins as its own task and two adjacent AI-able steps merge into one, so with <span class="mono">A</span> the number of adjacent AI-able pairs:</p>
 
   <div class="identity">
     <p class="eq">EFI &nbsp;=&nbsp; (m &minus; A) / m</p>
     <p class="legend">This is the definition, not yet a result.</p>
   </div>
 
-  <p>Then one combinatorial step. A run of length <span class="mono">L</span> contains <span class="mono">L &minus; 1</span> adjacent pairs, and the run lengths sum to <span class="mono">k</span>, so <span class="mono">A = k &minus; r</span>. Substituting, and writing <span class="mono">E = k/m</span> for the AI-able share and <span class="mono">R = r/m</span> for runs per step:</p>
+  <p>Then one combinatorial step. A block of length <span class="mono">L</span> collapses <span class="mono">L</span> steps into one task, so it absorbs <span class="mono">L &minus; 1</span> merges and contains <span class="mono">L &minus; 1</span> adjacent pairs. The block lengths sum to <span class="mono">k</span>, so <span class="mono">A = k &minus; r</span>. In the example above that is 3 + 1 + 2 = 6 AI-able steps in 3 blocks, hence 3 merges, 7 tasks and EFI = 7/10 = 0.70. Substituting, and writing <span class="mono">E = k/m</span> for the AI-able share and <span class="mono">R = r/m</span> for blocks per step:</p>
 
   <div class="identity">
     <p class="eq">EFI &nbsp;=&nbsp; (m &minus; k + r) / m &nbsp;=&nbsp; 1 &nbsp;<span class="lvl">&minus; E</span>&nbsp; <span class="arr">+ R</span></p>
@@ -545,7 +599,7 @@ figure.plate figcaption{
   <div class="note warn">
     <h4>Correcting one thing I told you earlier</h4>
     <p>The &minus;0.211 in the repo's own <span class="mono">exposure_definition_grid.csv</span> is <strong>not</strong> about the step-count control. Dropping the control moves the matched coefficient only from &minus;0.007 to &minus;0.019, both null. The &minus;0.211 comes from the <strong>871-occupation sample</strong>, which drops the 789 task rows with missing <span class="mono">human_labels</span> and recomputes m.</p>
-    <p>The mechanism: 183 of the 2,998 maximal runs in the 872 panel, 6.1%, exist only because an unlabelled task sitting inside a block of E1&cup;E2 tasks is coded "not AI-able" and splits the block.</p>
+    <p>The mechanism: 183 of the 2,998 blocks in the 872 panel, 6.1%, exist only because an unlabelled task sitting inside a block of E1&cup;E2 tasks is coded "not AI-able" and splits the block.</p>
   </div>
 
   <p>On the 871 sample the matched EFI is &minus;0.209 (p = 0.031) with no FE and &minus;0.192 (p = 0.025) under major-group FE. Reaching that takes three stacked choices, and dropping any one kills it: drop the unlabelled rows, keep the 62 zero-exposure occupations whose EFI is 1.0 by construction (restricting to k &ge; 1 gives &minus;0.173, p = 0.106), and avoid minor-group fixed effects (&minus;0.105, p = 0.291). On that same 871 sample all four scale-free statistics are indistinguishable from zero. A census of 192 matched specifications finds 21 significant with the predicted sign, all 21 on the 871 sample and all 21 the same statistic.</p>

@@ -78,7 +78,18 @@ published side. The comparison PNG is still produced and sits alongside it.
 ## The problem
 
 EFI Definition 1 counts a step as AI-able when its Eloundou label is E1 **or** E2, and merges
-consecutive AI-able steps. For `m` steps with `k` AI-able steps forming `r` maximal runs:
+consecutive AI-able steps. Per occupation:
+
+| | |
+|---|---|
+| `m` | number of steps in the workflow |
+| `k` | how many of them are AI-able, the *amount* of AI-able material |
+| `r` | how many separate **blocks** those AI-able steps form, the *arrangement* of it |
+
+A block is a group of consecutive AI-able steps that cannot be extended, so an isolated AI-able
+step is a block of size 1 and `r` counts blocks rather than their lengths. Each block is one
+potential AI chain. `r` runs from 1 when the AI-able steps are all contiguous to `k` when no two
+are adjacent, so at fixed `k` it indexes nothing but arrangement. Then
 
 ```
 EFI = (m - k + r)/m = 1 - k/m + r/m
@@ -190,7 +201,7 @@ Changing the exposure regressor does not repair it. See `SAB_def2_degeneracy.py`
 matched O\*NET spec at -0.211 (p = 0.031). `sample_871_vs_872.py` traces it: **not** the
 step-count control (dropping that moves -0.007 to -0.020), but the 871-occupation sample,
 which drops the 789 task rows with missing `human_labels` and recomputes `m`. 183 of the 2,998
-maximal runs in the 872 panel, 6.1%, exist only because an unlabelled task inside a block of
+blocks in the 872 panel, 6.1%, exist only because an unlabelled task inside a block of
 E1∪E2 tasks is coded "not AI-able" and splits the block.
 
 Reaching the significant result takes three stacked choices, any one of which kills it: drop
