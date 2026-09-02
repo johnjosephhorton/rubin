@@ -3,7 +3,7 @@
 
 Throughout Sections~\ref{sec:shortrun}--~\ref{sec:longrun} the model focused on individual firm decision-making: how a firm allocates production steps among automation, augmentation, and manual execution, and how its micro-level choices of task assignment and job design determine internal productivity and costs.
 However, improvements in AI quality not only alter how individual firms organize production but also affect the composition of inputs used across the economy and the aggregate relationship between labor, capital, and output.
-Yet the firm-level optimization framework developed above prevents direct analysis of these aggregate effects and also makes our approach distinct from the large literature in which production is modeled directly at the task level and then aggregated to the economy level (e.g., \cite{acemoglu2022artificial, acemoglu2024tasks, acemoglu2025simple}).
+Yet the firm-level optimization framework developed above prevents direct analysis of these aggregate effects and also makes our approach distinct from the large literature in which production is modeled directly at the task level and then aggregated to the economy level (e.g., \cite{acemoglu2018, acemoglu2022tasks, acemoglu2025simple}).
 To bridge this gap, this section examines whether the micro-level cost-minimization problem of firms can be aggregated into well-behaved firm- and economy-level production functions. 
 In particular, we show that the detailed, many-input Leontief representation of production at the task level can be reduced to a more compact formulation with only a small number of effective inputs, and that aggregating across heterogeneous firms (in terms of AI quality level) yields a macro-level production function with a CES form. 
 This provides a tractable link between micro-level organization decisions and macroeconomic implications of improving AI quality.
@@ -26,7 +26,7 @@ The worker assigned to perform Job 1 is required to obtain not only the skill re
 Therefore, the more tasks firm includes in a job, the higher required compensation for every task in that job.
 
 In order to produce, the firm hires manual labor to perform manual tasks and AI management labor for AI chains.
-Therefore, the total compensation of a job will be a weighted average of skill costs of the job's tasks, with weights being the base wage rates of each type of labor.
+Therefore, the total compensation of a job is the sum of the skill costs of its tasks, each weighted by the base wage rate of the labor that performs it.
 Specifically, the compensation for job $J$ will be:
 \begin{equation}
 w_{\manualLetter} \left(\sum_{T_b^{\manualLetter} \in J} \manualSkill{b}\right) + w_{\AIletter} \left(\sum_{T_b^{\AIletter} \in J} \AIskill{b}\right),\label{eq:new_wage}
@@ -163,8 +163,8 @@ Aggregate capital is normalized to $1$ as described above, so the third term is 
 
 To link the macro production function above to the micro production functions, we must relate aggregated firm-level inputs \( \labor{\AIletter}\) and \( \labor{\manualLetter} \) from Equation~\eqref{eq:micro_agg_prod} to their corresponding economy-wide aggregates \( \aggregateAIlabor\) and \( \aggregateManualLabor \) in Equation~\eqref{eq:macro_agg_prod}.
 This requires either determining the macro production function parameters from the distribution of heterogeneity, or specifying the form of heterogeneity given a set of macro production function parameters.
-We adopt the latter approach and derive the output probability density function in terms of effective AI quality, denoted by \( \phi(\bar{\alpha}) \), as a function of \( \theta_{\AIletter}, \theta_{\manualLetter}, \rho \).
-Throughout, we assume that $\rho<0$ (which implies elasticity of substitution $\sigma<1$), indicating that macro-level production exhibits some degree of complementarity between aggregate inputs.
+We adopt the latter approach and derive the output density function in terms of effective AI quality, denoted by \( \phi(\bar{\alpha}) \), as a function of \( \theta_{\AIletter}, \theta_{\manualLetter}, \rho \).
+Throughout, we assume that $\rho<0$, so that the elasticity of substitution is $\sigma<1$, the case usually taken in this literature.
 
 Normalize the output price to $p=1$, so that $w_{\AIletter}$ and $w_{\manualLetter}$ can be interpreted as real wage rates for a unit of skill-adjusted AI management and manual labor, respectively.
 A firm produces only if it earns nonnegative profits:
@@ -187,8 +187,9 @@ Therefore:
 \label{eq:alpha_threshold}
 \end{equation}
 
-Let $\phi(\bar{\alpha})$ be the distribution of output across firms according to their effective AI quality level. 
-A firm with effective AI quality $\bar{\alpha}$ thus produces output $y = \phi(\bar{\alpha})$ by definition.
+Let $\phi(\bar{\alpha})$ be the density of output across firms according to their effective AI quality level, so that aggregate output is the integral of $\phi$ over the range of producing firms.
+Only the product of the density of firms over $\bar{\alpha}$ and the output of a firm of type $\bar{\alpha}$ enters the aggregate quantities below, so we normalize the former to one and let $\phi$ carry the latter: a firm with effective AI quality $\bar{\alpha}$ produces output $y = \phi(\bar{\alpha})$.
+For brevity we refer to $\phi$ below as the distribution of effective AI quality, always in this sense of output across quality levels rather than of firms across quality levels.
 From Condition~\eqref{eq:micro_fixed_proportions}, it directly follows that the AI management labor and manual labor used by this firm are: $\labor{\AIletter} = (\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha})\,\phi(\bar{\alpha}),$ and $\labor{\manualLetter} = \skillAdjustedTimeLetter_{\manualLetter}\,\phi(\bar{\alpha}).$
 Consequently, aggregate output $Y$, aggregate AI management labor $\aggregateAIlabor$, and aggregate manual labor $\aggregateManualLabor$ can be expressed as:
 \begin{align}

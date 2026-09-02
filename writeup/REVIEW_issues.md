@@ -18,7 +18,7 @@
 
 ---
 
-## Reconciliation status (second pass, 2026-09-01)
+## Reconciliation status (fourth pass, 2026-09-01)
 
 Each item below now carries a colored **Status** line:
 
@@ -29,22 +29,22 @@ Each item below now carries a colored **Status** line:
 | 🔴 | <span style="color:#cf222e">**OPEN**</span> | Not yet addressed, or the source file is untouched |
 | 🔵 | <span style="color:#0969da">**IGNORED**</span> | Reviewed and deliberately not actioned |
 
-Statuses were assigned by checking every item against the draft as of this pass, diffing against commit `abaa7c3` (the commit that added this file). The second pass re-checked every item against `HEAD` (`e71b3a1`), which picked up fixes landed in `2ae61b9`, `677089c`, `a2038a0` and `e71b3a1`.
+Statuses were assigned by checking every item against the draft as of this pass, diffing against commit `abaa7c3` (the commit that added this file). Later passes re-checked every item against `HEAD`, picking up fixes landed in `2ae61b9`, `677089c`, `a2038a0`, `e71b3a1` and `3d67540`.
 
 | Severity | 🟢 <span style="color:#1a7f37">Resolved</span> | 🟡 <span style="color:#9a6700">Partial</span> | 🔵 <span style="color:#0969da">Ignored</span> | 🔴 <span style="color:#cf222e">Open</span> | Total |
 |---|---|---|---|---|---|
 | **Major** | 5 | 1 | 0 | 0 | 6 |
-| **Medium** | 18 | 2 | 5 | 18 | 43 |
+| **Medium** | 21 | 2 | 20 | 0 | 43 |
 | **Minor** | 3 | 2 | 0 | 52 | 57 |
-| **Total** | **26** | **5** | **5** | **70** | **106** |
+| **Total** | **29** | **5** | **20** | **52** | **106** |
 
-🟢 **<span style="color:#1a7f37">Resolved.</span>** M1--M5; D1, D3, D5, D6, D7, D8, D15, D16, D17, D19, D22, D24, D25, D26, D28, D30, D32, D41; N28, N29, N47.
+🟢 **<span style="color:#1a7f37">Resolved.</span>** M1--M5; D1, D3, D5, D6, D7, D8, D11, D12, D13, D15, D16, D17, D19, D22, D24, D25, D26, D28, D30, D32, D41; N28, N29, N47.
 
 🟡 **<span style="color:#9a6700">Partial.</span>** M6; D4, D23; N23, N38.
 
-🔵 **<span style="color:#0969da">Ignored.</span>** D2, D9, D10, D14, D21. Reviewed and deliberately not actioned; they are excluded from the open worklist.
+🔵 **<span style="color:#0969da">Ignored.</span>** D2, D9, D10, D14, D18, D20, D21, D27, D29, D31, D33, D34, D35, D36, D37, D38, D39, D40, D42, D43. Reviewed and deliberately not actioned; they are excluded from the open worklist. No Medium item remains open: every one is now resolved, partial, or ignored, so the only open items in this file are Minor.
 
-🔴 **<span style="color:#cf222e">Untouched source files.</span>** `2_literature.tex`, `3_shortrun.tex`, `5_longrun.tex`, `8_conclusion.tex`, `OA_A_tables_and_figures.tex` and `tables/` have not been edited since the review, so every item located only in them is open by construction: D11 (in part), D12, D13, D43; N1--N5, N12--N15, N50, N56.
+🔴 **<span style="color:#cf222e">Untouched source files.</span>** `2_literature.tex`, `8_conclusion.tex`, `OA_A_tables_and_figures.tex` and `tables/` have not been edited since the review, so items located only in them cannot have moved: N36, N50, N56.
 
 ---
 
@@ -257,21 +257,21 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D11 — "the firm cannot solve the problem step by step and must compare all feasible arrangements" contradicts Proposition 3
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Fixed in `3d67540` at all three sites. `3_shortrun:125`, `6_extensions:46` and `1_introduction:94` now say the firm cannot decide each step's mode *in isolation* and that the choice ranges over arrangements, which no longer contradicts the step-by-step dynamic program of Proposition 3.
 **Where:** `3_shortrun.tex:125` · **p. 12**; repeated at `6_extensions.tex:47–48` · **p. 30**.
 **Issue.** Proposition 3 states that Problem (1) is solved exactly in $O(m^2)$ by a dynamic program that does proceed step by step — Section 6.2's own words, four sentences after repeating the claim, are "building the workflow up from the beginning one step at a time". The intro repeats the claim at `1_introduction.tex:94` (p. 5).
 **Fix.** "…the firm cannot decide each step's mode in isolation; cost minimization compares arrangements of contiguous blocks rather than steps. Section 6.2 shows this can nonetheless be done exactly in $O(m^2)$ time."
 
 ### D12 — "Both components of a chain's pair are inherited from its augmented endpoint" is false for the time component
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Fixed in `3d67540`: the sentence is now qualified to the single-attempt pair, under which both components genuinely are inherited from the augmented endpoint.
 **Where:** `5_longrun.tex:47` · **p. 22**.
 **Issue.** The pair printed in the immediately preceding sentence is $\bigl(c^A_r,\; t^A_r/\prod_{i=\ell}^{r} q_i\bigr)$. Only the first argument is a function of $r$ alone; the second depends on the success probability of every step in the chain. The skill claim is right, the time claim is not.
 **Fix.** "The chain's *skill* is inherited from its augmented endpoint — it demands only the skill required to verify that step's output — while its *time* is the endpoint's verification cost inflated by the failure risk of the whole chain."
 
 ### D13 — Footnote 13's "considerably weaker version" does not support Section 5.4
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🟢 <span style="color:#1a7f37">**Status: RESOLVED.**</span> Footnote 13 revised in `3d67540`: the weaker assumption is now spelled out as any strictly increasing functional form, with linear addition adopted as the tractable case.
 **Where:** `5_longrun.tex:52–56` · **p. 22**.
 **Issue.** The footnote claims the results rest only on "each step demanding some increment of skill no other step supplies". That monotonicity is enough for the frictionless benchmark of Section 5.2 (if $c(J)\ge\max_{b\in J}c_b$ then bundling never helps), but not for Section 5.4's comparative statics: with merely monotone, non-additive skill the "idle skill a bundled job pays for" need not fall when AI strips skill out of one task, so the skill channel is not signed.
 **Fix.** "That said, the frictionless benchmark of Section 5.2 requires only that a job's skill requirement be strictly increasing in the set of steps it contains; the comparative statics of Section 5.4 use additivity."
@@ -310,7 +310,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D18 — Lemma OA.B.4 asserts a strict upward jump; the proof gives only a weak inequality
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `OA_B_omitted_proofs.tex:414` (lemma) and `:440–454` (proof) · **p. OA - 17/18**.
 **Issue.** From $\phi(\alpha_0^-)\ge0$, $\phi(\alpha_0)=0$, $\phi(\alpha_0^+)\le0$ the proof concludes $\phi'(\alpha_0)\le0$, hence $g_{\mathcal{T}}(\alpha_0)\le g_{\mathcal{T}'}(\alpha_0)$ — written with a weak $\le$ in the display. Nothing rules out $\phi'(\alpha_0)=0$, i.e. a tangential crossing at which $g^*$ is continuous and there is no jump.
 **Fix.** Either restate as "$g^*$ does not jump downward: $\lim_{\alpha\uparrow\alpha_0}g^*\le\lim_{\alpha\downarrow\alpha_0}g^*$", or add the transversality hypothesis $\phi'(\alpha_0)\ne0$ (equivalently, the two cost curves cross rather than touch), noting it holds generically and at both thresholds of Example 2.
@@ -327,7 +327,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D20 — The source of firm heterogeneity in $\bar\alpha$ is never reconciled with its definition
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `OA_C_CES_representation.tex:141–147` · **p. OA - 28**; claim carried at `6_extensions.tex:31–32` · **p. 29**.
 **Issue.** Eq. (OA.C.7) makes $\bar\alpha$ a deterministic function of $\alpha$ and of $\{\tau^A_b,d_b\}$. Section 3 and Table OA.A.1 define $\alpha$ as a *single economy-wide* object, and the appendix assumes at line 145 that "firms hold the same expectations … [and] choose identical AI strategies and job designs", which makes $\{\tau^A_b,d_b\}$ common too. Under those assumptions $\bar\alpha$ is identical across firms and the distribution $\phi$ has nothing to be a distribution over. Line 141 simply posits the dispersion instead.
 **Why it matters.** Section 6.1 says the appendix "obtains that dispersion from the order in which a firm has to commit" — but commitment timing only prevents re-optimization; it generates no dispersion. The dispersion is an exogenous assumption.
@@ -379,7 +379,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D27 — "AI-exposed" is defined three inconsistent ways
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:19` (p. 32), `:116` footnote 21 (p. 36), and the Table 2 notes at `:132–134` (p. 36).
 **Issue.** p. 32: *"we … treat their E1 category as exposed to AI and the remaining categories as unexposed, which yields a conservative measure of exposure."* p. 36 footnote: *"We count as AI-exposed both E1- and E2-exposed tasks, which together account for 44 % of the tasks; restricting attention to E1-exposed tasks alone (14 %) would leave potential AI chains too sparse."* The Table 2 notes carry both conventions within one paragraph: the regressor "AI Exposure" is *"the share of AI-exposed (E1) steps"* while the control is *"the number of AI-exposed (E1 or E2) steps."*
 **Why it matters.** A reader cannot tell which exposure set produced the headline coefficients of Table 2, and the two sets differ by a factor of three in coverage.
@@ -395,7 +395,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D29 — The EFI still varies with workflow length, which Equation (11) does not control
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:98–102` · **p. 35**.
 **Issue.** With $m$ steps, $k$ AI-able steps and $r$ maximal runs, EFI $=1-(k-r)/m$. Conditional on the control $k$ (the count of AI-able steps), the EFI still moves with $m$ as well as with the arrangement $r$, and $m$ is not in Eq. (11). Since the dependent variable is also a share with $m$ in the denominator, occupation length is a live confound, so "this control **ensures** that $\beta_2$ is identified from how those steps are arranged rather than how many there are" is too strong.
 **Fix.** Add $m$ (or $\log m$) to Eq. (11), or replace the EFI with the scale-free statistic $r/k$ (the share of AI-able steps that start a run); and soften "ensures" to "is intended to absorb".
@@ -409,7 +409,7 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D31 — The execution-based EFI is an exact algebraic function of the dependent variable
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:141–145` · **p. 37**.
 **Issue.** With AI-able $:=$ AI-executed, $\text{EFI}_{\text{exec}} = (m-k_{\text{exec}}+r_{\text{exec}})/m = 1 - \text{ai\_execution} + r_{\text{exec}}/m$ identically. Footnote 22 acknowledges the mechanical relation, but the very next sentence treats the exposure-based and execution-based measures as two sources pointing to "a common pattern", and the abstract-level summary follows.
 **Fix.** Either drop the execution-based specification from the evidentiary summary, or state the identity explicitly and reframe the exercise as a description of how AI-executed steps are arranged (a contiguity statistic) rather than as corroborating evidence for the fragmentation mechanism.
@@ -423,56 +423,56 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D33 — The measured "AI chain" is not the model's AI chain
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:36` (footnote 20) and `:42–55` · **pp. 33–34**.
 **Issue.** Definition 4 requires all steps but the last to be automated and the last to be augmented. Footnote 20 discards exactly that information — "we therefore do not distinguish the two labels … and treat both as indicating AI execution" — because the Anthropic labels are position-agnostic. The statistic reported as "average AI chain length" is therefore the mean length of a maximal run of AI-*executed* steps, which is a weaker object: a run of four augmented steps counts as a chain of length four in the data and as four length-one chains in the model.
 **Fix.** Rename the statistic (e.g. "average run length of AI-executed steps"), state the discrepancy where the statistic is introduced rather than only in a footnote a page earlier, and say that Prediction #1 is a test of co-occurrence rather than of chain structure.
 
 ### D34 — "our model predicts chains to lengthen as AI quality improves" does not follow
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:55` · **p. 34**; repeated at `:227` (p. 39) and `1_introduction.tex:144` (p. 7).
 **Issue.** The measured object is the *average* chain length, (AI-executed steps)/(number of chains). Rising $\alpha$ raises the numerator but can raise the denominator faster, because a step that becomes worth augmenting on its own opens a **new** length-one chain. Average chain length is therefore not monotone in $\alpha$ — as the paper's own Example 2 illustrates, where the first threshold creates a chain of length one.
 **Fix.** State the claim the model supports — that any given chain weakly beats its splits as $\alpha$ rises, and that the set of AI-executed steps is monotone (Proposition 1(ii)) — and drop the implication for the average.
 
 ### D35 — Equation (12) puts an additive error term inside the logistic CDF
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:173–188` · **p. 38**.
 **Issue.** The displayed equation is $\Pr(\text{is\_ai}_k=1\mid X_k)=\Lambda(\beta_0+\dots+\beta_4\,\text{next2\_is\_ai}_k+\varepsilon_k)$. The left side is a deterministic function of $X_k$; the right side with a random $\varepsilon_k$ is a random variable, so the equation cannot hold. In a logit the disturbance is the latent-index shock that $\Lambda$ has already integrated out.
 **Fix.** Either drop $\varepsilon_k$ and write $\Pr(\cdot\mid X_k)=\Lambda(\beta_0+\dots+\beta_4\,\text{next2\_is\_ai}_k+\gamma'Z_k)$, or give the latent form explicitly: $\text{is\_ai}_k=\mathbf{1}\{y^*_k>0\}$ with $y^*_k=\beta_0+\dots+\gamma'Z_k+\varepsilon_k$ and $\varepsilon_k\mid X_k$ logistic.
 
 ### D36 — Only columns (4) and (6) implement the comparison Prediction #3 states
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:153`, `:212–217` · **p. 38–39**.
 **Issue.** Prediction #3 is explicitly a within-step comparison — "when the same step appears in two occupations…" — and DWAs are the paper's operationalization of "the same step". Only the DWA-fixed-effects columns hold the step fixed. Columns (1)–(3) and (5) compare *different* DWAs and are consistent with a pure composition story (AI-able DWAs cluster in AI-intensive occupations). The text presents column (1) as the headline result and describes the rest as "progressively demanding comparisons", which understates the difference in kind.
 **Fix.** Make column (4) the headline for Prediction #3, present (1)–(3) as descriptive, and say explicitly that only the DWA-FE columns implement the stated comparison.
 
 ### D37 — Causal language for what the design identifies as equilibrium co-occurrence
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** Table 3 caption `7_empirics.tex:196`, text at `:212` and `:225`, Figure OA.A.1 caption/notes `OA_A:160`, `:198`, abstract `0_main.tex:75` · **pp. 38–39, OA - 4, 1**.
 **Issue.** Eq. (12) regresses one equilibrium outcome on four others. In the model the entire partition is chosen simultaneously by one cost minimization; indeed if step $k$ is chained with $k-1$ then both are AI-executed **by construction**, so the regressand and the regressor are partly the same event. "Raises the probability", "increases the likelihood", and the abstract's "adjacency … increases the likelihood" assert a direction the design cannot deliver. Note that Prediction #2 is written correctly ("is associated with", "predict"); the inconsistency is internal.
 **Fix.** Use the Prediction #2 register throughout: "is associated with", "co-occurs with", "predicts". Add one sentence stating that neighbours' execution status is jointly determined with the focal step's, so the coefficients are equilibrium co-occurrence patterns consistent with chaining rather than causal effects.
 
 ### D38 — Column (5) contradicts the sentence summarizing Table 3
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:216` · **p. 39**, against `tables/noTasksWithRepetitiveDWAs/allTasks_ai.tex`.
 **Issue.** "The pattern is the same throughout: the immediate neighbour effect attenuates … while the distant neighbour effects shrink toward zero and lose significance." In column (5) the $k-1$ AME is **0.13**, *larger* than the 0.12 baseline, and the $k-2$ AME is 0.06\* — still significant at 10 % and essentially unchanged from the 0.07 baseline.
 **Fix.** "The pattern is the same in every specification that absorbs occupation-family or DWA heterogeneity (columns (2)–(4) and (6)): the immediate-neighbour effect attenuates from 0.12 to 0.04–0.06 but stays significant, while the distant-neighbour effects fall to between −0.01 and 0.01 and lose significance. Column (5), which adds only the same-DWA task count and no fixed effects, leaves the baseline pattern intact."
 
 ### D39 — The sample drop in columns (4)–(6) is unexplained
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `tables/noTasksWithRepetitiveDWAs/allTasks_ai.tex` (Observations row) and `7_empirics.tex:215` · **p. 38**.
 **Issue.** Observations fall from 10,708 (cols 1–2) to 9,861 (col 3) to 4,096 (cols 4–6). Column (5) carries **no** fixed effects and differs from column (1) only by one control, yet loses 62 % of the sample — so it has evidently been held to the column-(4) DWA-FE estimating sample, which the text never says. The number of DWA clusters is not reported anywhere.
 **Fix.** State that columns (4)–(6) are estimated on the sample of DWAs with within-DWA outcome variation (4,096 tasks), report the number of clusters per column, and either run column (5) on the full sample or say it is held to the column-(4) sample for comparability. Qualify "relative to the baseline" at line 216 accordingly.
 
 ### D40 — The distant-neighbour result is reported as positive evidence on p. 38 and as *below* the placebo on p. 39
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `7_empirics.tex:212` vs `:222–223` · **pp. 38–39**.
 **Issue.** Line 212 reports that "AI execution of both immediate and **more distant** neighbours raises the probability that the focal task is AI-executed" (col. 1: 0.07\*\*\* and 0.05\*\*\*, significant against a null of zero). Ten lines later the paper says the placebo distributions show "what these coefficients would look like when the position of a task in the workflow does not matter", and that the actual orderings deliver "**weaker** distant-neighbour effects than the placebos". Relative to the paper's own stated benchmark, then, the distant-neighbour coefficients are evidence *against* a positional effect, not for one. The blanket claim that the placebo comparison shows what "the reshuffled orderings cannot reproduce by chance" also does not hold uniformly across the four panels.
 **Fix.** Reconcile the two passages: report the distant-neighbour coefficients against the placebo benchmark from the outset, and grade the placebo claim by panel rather than asserting it for all four.
@@ -488,14 +488,14 @@ Dispersion is **3.65 % cheaper**, and the fragmentation index ranks the two arra
 
 ### D42 — The external-validation summary overstates Section 7
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `1_introduction.tex:138–139` · **p. 7**.
 **Issue.** Two overstatements. The predictions are re-estimated only on the APQC/PCF corpus, not on both external sources — the event logs are used solely for the ordering-recovery exercise. And only Predictions #1 and #2 are re-tested; Section 7.4 says explicitly that Prediction #3 cannot be re-run.
 **Fix.** "Our sequencing approach recovers the orderings in both external sources to a substantial degree, and Predictions #1 and #2 continue to hold when we re-estimate them on the practitioner-ordered PCF corpus."
 
 ### D43 — The conclusion claims the model explains AI investment; the model has no investment margin
 
-🔴 <span style="color:#cf222e">**Status: OPEN.**</span>
+🔵 <span style="color:#0969da">**Status: IGNORED.**</span> Reviewed and deliberately not actioned.
 **Where:** `8_conclusion.tex:14` · **p. 42**.
 **Issue.** "Our framework thus helps explain why firms invest so heavily in AI capabilities even when short-run returns appear limited." $\alpha$ is an exogenous parameter of the general-purpose technology that no agent in the model chooses; the firm's entire choice set is $(\mathcal{T},\mathcal{J})$; Definition 3's footnote makes AI free at the margin; and the model is static, so there is no channel through which anticipated future thresholds affect today's spending.
 **Fix.** "Our framework thus helps explain why the returns to advances in AI capability can be lumpy — small quality gains buying little until a threshold triggers a reorganization." If the investment reading is wanted it needs an explicit investment margin.

@@ -443,13 +443,15 @@ The firm optimizes costs over many possible AI strategies, expressed as the depl
 At each level of AI quality $\alpha$ the firm adopts the cheapest available strategy, so its optimal cost is the lower envelope of the strategy-specific cost curves, $C^*(\alpha) = \min_{\T} C_\T(\alpha)$.
 We write $g_\T(\alpha) = -\,\mathrm{d}C_\T/\mathrm{d}\alpha$ for the marginal benefit of improving AI quality under a fixed strategy $\T$, and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha \ge 0$ for the firm's marginal benefit at the optimum; the function $g^*(\alpha)$ equals $g_\T(\alpha)$ on the regime of $\alpha$ values where $\T$ is optimal.
 As $\alpha$ rises, the optimal strategy changes at finitely many values of $\alpha$, the reorganization thresholds of Section~\ref{sec:nonlinear}, which separate one regime from the next.
-Lemma~\ref{lem:reorg_threshold} shows that although $g^*$ diminishes within each regime it jumps upward at every reorganization threshold, so the returns to improving AI quality are non-monotone.
+
+Write $\phi = C_{\T'} - C_\T$ for the cost difference between the strategies that are optimal just above and just below a threshold $\alpha_0$, and call the threshold \emph{transversal} if the two curves cross there non-tangentially, that is, if $\phi'(\alpha_0) \neq 0$.
+Lemma~\ref{lem:reorg_threshold} shows that $g^*$ diminishes within each regime and never falls at a reorganization threshold, and that it jumps upward at every transversal threshold, so the returns to improving AI quality are non-monotone.
 
 \begin{lem}[Non-monotone Marginal Returns to AI Quality Improvements]
 \label{lem:reorg_threshold}
 Let $C^*(\alpha) = \min_{\T} C_\T(\alpha)$ be the firm's optimal cost over all feasible AI strategies and $g^*(\alpha) = -\,\mathrm{d}C^*/\mathrm{d}\alpha$ its marginal benefit of improving AI quality.
 Within each regime (an interval of $\alpha$ on which a single AI strategy is optimal), $g^*$ is non-increasing.
-Moreover, at every reorganization threshold (where the optimal AI strategy changes), $g^*$ jumps upward.
+Moreover, at every reorganization threshold (where the optimal AI strategy changes), $g^*$ does not fall, and at every transversal threshold it jumps upward discontinuously.
 \end{lem}
 
 \begin{proof}
@@ -489,7 +491,11 @@ g_\T(\alpha_0) \;=\; -C_\T'(\alpha_0)
 \;\le\;
 -C_{\T'}'(\alpha_0) \;=\; g_{\T'}(\alpha_0).
 \]
-Since $g^*(\alpha)$ coincides with $g_\T(\alpha)$ just below $\alpha_0$ and with $g_{\T'}(\alpha)$ just above, the firm's marginal benefit function $g^*(\alpha)$ jumps upward as $\alpha$ crosses $\alpha_0$.
+Since $g^*(\alpha)$ coincides with $g_\T(\alpha)$ just below $\alpha_0$ and with $g_{\T'}(\alpha)$ just above, and both are continuous at $\alpha_0$, the firm's marginal benefit function $g^*(\alpha)$ does not fall as $\alpha$ crosses $\alpha_0$.
+If in addition $\alpha_0$ is transversal, then $\phi'(\alpha_0) \neq 0$, which together with $\phi'(\alpha_0) \le 0$ gives $\phi'(\alpha_0) < 0$ and hence $g_\T(\alpha_0) < g_{\T'}(\alpha_0)$: the marginal benefit jumps upward discontinuously.
+Transversality cannot be dispensed with, because the sign change only forces $\alpha_0$ to be a root of $\phi$ of odd order, and at a root of order three or higher the envelope's marginal benefit passes through the threshold without a jump.\footnote{With $m = 4$, $d = (2,1,2,1)$, $\manualTime{} = (1000, 1000, 56, 1000)$ and $\AItime{} = (102, 65, 1000, 12)$, the strategy $\T$ that chains steps~1--2, performs step~3 manually, and augments step~4 is uniquely optimal just below $\alpha_0 = 1/2$, and the strategy $\T'$ that augments step~1 and chains steps~2--4 is uniquely optimal just above it. Writing $x = 1/\alpha$, their cost difference is $\phi = 12x^{4} - 65x^{3} + 102x^{2} - 12x - 56 = (x-2)^{3}(12x+7)$, which has a triple root at $x = 2$, and $g^*$ falls through $\alpha_0$ from $3170.5$ to $3165.5$ without jumping.}
+The condition is nonetheless the generic case: a threshold already imposes $\phi(\alpha_0) = 0$, so requiring $\phi'(\alpha_0) = 0$ as well is a second equation in the same unknown, and the time cost vectors $(\manualTime{}, \AItime{})$ for which it holds form a Lebesgue-null set.
+Both thresholds of Example~\ref{ex:nonmonotone} are transversal, with $g^*$ rising from $0$ to $16.0$ at $\alpha = 0.50$ and from $4.7$ to $133.9$ at $\alpha \approx 0.92$.
 \end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:shortrun_dp}}
@@ -547,10 +553,14 @@ Throughout, step $i$ is the highest-indexed step that has not yet been assigned.
 In the base case no steps remain to assign, the active worker's totals are exactly $(\skillcost{}, \timecost{})$, and their wage bill is the product of the two,
 \[ R(0,\; \skillcost{},\; \timecost{}) = \skillcost{}\,\timecost{}. \]
 
-The two functions are linked, for all $0 \leq i \leq m$, by
-\[ V(i) = R(i,\; 0,\; \handofftime{i}). \]
-This is because, in $V(i)$, all job designs must end with a job that completes at step $i$ and hands off to the following worker.
-Incurring this hand-off cost is equivalent to assigning the active worker an additional task with zero skill requirement and a time cost of $\handofftime{i}$ right after step $i$ itself, which is exactly the scenario $R(i,\; 0,\; \handofftime{i})$ represents.
+The two functions are linked as follows.
+In $V(i)$, all job designs must end with a job that completes at step $i$ and hands off to the following worker.
+Incurring this hand-off cost is equivalent to opening a job for the active worker whose accumulated time already includes $\handofftime{i}$ and whose accumulated skill is still $0$, which is the state $(i,\; 0,\; \handofftime{i})$, and then assigning step $i$ to that worker either manually or as the endpoint of an AI chain.
+Since a job must contain at least one task by Definition~\ref{def:job_design}, the active worker's job cannot be closed while it is empty, so $V(0) = 0$ and, for $1 \leq i \leq m$,
+\[
+V(i) = \min\left\{ R\bigl(i-1,\; \manualSkill{i},\; \handofftime{i} + \manualTime{i}\bigr), \;\;
+\min_{0 \le r < i}\ R\!\left(r,\; \AIskill{i},\; \handofftime{i} + \frac{\AItime{i}}{\prod_{i'=r+1}^{i} q_{i'}}\right) \right\}.
+\]
 
 For each $i \geq 1$, the minimum cost function $R(i,\; \skillcost{},\; \timecost{})$ satisfies the recursive relation
 % \small (via \smalldisplay): at full size the three-option min is 481pt wide on a
@@ -571,6 +581,8 @@ In words, when assigning step $i$, the three options the firm considers are:
     All steps $1$ through $i$ will be completed by other workers.
     The active worker's total cost is then $\skillcost{}\,\timecost{}$, and $V(i)$ is the total cost of completing steps $1$ through $i$ (including hand-off costs to the active worker).
     This option is the margin new to the long run.
+    It is available only when the active worker already holds at least one task, that is when $\skillcost{} > 0$.
+    The states with $\skillcost{} = 0$ are exactly the job-opening states $(i,\; 0,\; \handofftime{i})$, whose value is the $V(i)$ defined above; without this restriction the recursion evaluated at such a state would read $V(i) = \min\{V(i),\, \cdot\,\}$, which every value below the other two branches satisfies and which therefore determines nothing.
 
     \item \textbf{Manual step.}
     The term $R(i-1,\; \skillcost{} + \manualSkill{i},\; \timecost{} + \manualTime{i})$ corresponds to designating step $i$ for manual completion, and adding the corresponding (singleton) task.
@@ -582,7 +594,8 @@ In words, when assigning step $i$, the three options the firm considers are:
     The cut $r$ is the highest-indexed step that is not added to this AI chain, which can be any value between $0$ and $i-1$.
 \end{itemize}
 Note that in evaluating the AI chain option, step $i$ can only be augmented (rather than automated), as each step of the recursion adds a full AI chain to the active worker's job; AI strategies in which step $i$ is automated are considered when performing the calculations $R(r,\; \skillcost{},\; \timecost{})$ with $r > i$.
-The cost of the optimal joint AI strategy and job design for the full sequence of $m$ steps is then $V(m) = R(m,\; 0,\; 0)$.
+The two functions are filled in increasing order of $i$: first $V(i)$, which calls $R(r,\; \cdot,\; \cdot)$ only at indices $r < i$, and then $R(i,\; \skillcost{},\; \timecost{})$ for $\skillcost{} > 0$, which may call $V(i)$.
+The cost of the optimal joint AI strategy and job design for the full sequence of $m$ steps is then $V(m)$, recalling that $\handofftime{m} = 0$.
 
 \emph{Discretization and Computation Time.}
 We solve the recursion by dynamic programming, filling in the values of $R(i,\; \skillcost{},\; \timecost{})$ for all $i$, $\skillcost{}$, and $\timecost{}$.
