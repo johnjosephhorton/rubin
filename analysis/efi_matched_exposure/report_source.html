@@ -1,0 +1,467 @@
+<title>The Fragmentation Null</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#FBFBF9;
+  --surface:#F1F3F0;
+  --surface-2:#E7EAE6;
+  --ink:#191D1F;
+  --ink-soft:#3D4548;
+  --muted:#6D7573;
+  --rule:#DCDFDA;
+  --rule-strong:#C3C8C1;
+  --efi:#9E3B2C;
+  --efi-wash:#F3E4E0;
+  --expo:#26597A;
+  --expo-wash:#DFE9F0;
+  --survive:#3A6A48;
+  --survive-wash:#E1ECE3;
+  --shadow:0 1px 2px rgba(25,29,31,.05),0 8px 24px -16px rgba(25,29,31,.25);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#131719;
+    --surface:#1C2124;
+    --surface-2:#252B2E;
+    --ink:#E9EBE6;
+    --ink-soft:#C2C7C3;
+    --muted:#8A928F;
+    --rule:#2C3336;
+    --rule-strong:#3C4448;
+    --efi:#DE8272;
+    --efi-wash:#33211D;
+    --expo:#7FB3D2;
+    --expo-wash:#1A272F;
+    --survive:#89B694;
+    --survive-wash:#1B2722;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#131719;
+  --surface:#1C2124;
+  --surface-2:#252B2E;
+  --ink:#E9EBE6;
+  --ink-soft:#C2C7C3;
+  --muted:#8A928F;
+  --rule:#2C3336;
+  --rule-strong:#3C4448;
+  --efi:#DE8272;
+  --efi-wash:#33211D;
+  --expo:#7FB3D2;
+  --expo-wash:#1A272F;
+  --survive:#89B694;
+  --survive-wash:#1B2722;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 96px}
+.col{max-width:68ch}
+
+/* ---------- masthead ---------- */
+header.mast{
+  border-bottom:1px solid var(--rule-strong);
+  padding:64px 0 32px;
+  margin-bottom:44px;
+}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 18px;
+}
+h1{
+  font-family:Newsreader,Georgia,serif;
+  font-size:clamp(38px,6vw,62px);
+  line-height:1.04;font-weight:500;letter-spacing:-.015em;
+  margin:0 0 20px;text-wrap:balance;
+}
+.standfirst{
+  font-family:Newsreader,Georgia,serif;
+  font-size:20px;line-height:1.5;color:var(--ink-soft);
+  max-width:60ch;margin:0;
+}
+.standfirst em{color:var(--efi);font-style:italic}
+
+/* ---------- verdict strip ---------- */
+.verdicts{
+  display:grid;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:3px;overflow:hidden;
+  grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+  margin:40px 0 12px;
+}
+.v{background:var(--surface);padding:16px 18px 18px}
+.v .where{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;
+  letter-spacing:.08em;color:var(--muted);text-transform:uppercase;
+  display:block;margin-bottom:9px;
+}
+.v .status{font-size:15px;font-weight:600;line-height:1.25;display:block;margin-bottom:6px}
+.v .num{
+  font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  color:var(--muted);font-variant-numeric:tabular-nums;
+}
+.v.dead .status{color:var(--efi)}
+.v.live .status{color:var(--survive)}
+.v.mech .status{color:var(--ink-soft)}
+.stripcap{font-size:13px;color:var(--muted);margin:0 0 52px}
+
+/* ---------- sections ---------- */
+section{margin:0 0 64px;scroll-margin-top:20px}
+h2{
+  font-family:Newsreader,Georgia,serif;
+  font-size:30px;font-weight:500;letter-spacing:-.01em;
+  line-height:1.2;margin:0 0 6px;text-wrap:balance;
+}
+h2 .sec{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;
+  color:var(--muted);letter-spacing:.1em;display:block;margin-bottom:10px;
+  text-transform:uppercase;
+}
+h3{
+  font-size:15px;font-weight:600;margin:34px 0 10px;
+  letter-spacing:.01em;
+}
+p{margin:0 0 15px;max-width:68ch}
+.lede{font-size:17px;color:var(--ink-soft);max-width:66ch;margin-bottom:22px}
+a{color:var(--expo)}
+strong{font-weight:600}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.88em}
+code{background:var(--surface);padding:1px 5px;border-radius:2px;color:var(--ink-soft)}
+
+/* ---------- identity block ---------- */
+.identity{
+  background:var(--surface);border-left:2px solid var(--rule-strong);
+  padding:22px 26px;margin:26px 0;border-radius:0 3px 3px 0;
+  overflow-x:auto;
+}
+.identity .eq{
+  font-family:"IBM Plex Mono",monospace;font-size:16px;
+  white-space:nowrap;margin:0 0 14px;letter-spacing:-.01em;
+}
+.identity .eq .lvl{color:var(--expo);font-weight:600}
+.identity .eq .arr{color:var(--efi);font-weight:600}
+.identity .legend{font-size:13.5px;color:var(--muted);margin:0;max-width:none}
+.identity .legend .lvl{color:var(--expo);font-weight:600}
+.identity .legend .arr{color:var(--efi);font-weight:600}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:24px 0 10px;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+caption{
+  text-align:left;padding:14px 18px 12px;font-size:12px;
+  font-family:"IBM Plex Mono",monospace;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--rule);
+}
+th,td{padding:9px 16px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal;min-width:150px}
+thead th{
+  font-size:11.5px;font-weight:600;color:var(--muted);
+  letter-spacing:.05em;text-transform:uppercase;
+  border-bottom:1px solid var(--rule-strong);
+}
+tbody tr+tr td{border-top:1px solid var(--rule)}
+tbody tr.sub td{border-top:none;padding-top:0;color:var(--muted);font-size:12.5px}
+tbody tr.grp td{
+  background:var(--surface-2);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);font-family:"IBM Plex Mono",monospace;
+  padding-top:7px;padding-bottom:7px;
+}
+td.efi{color:var(--efi);font-weight:600}
+td.expo{color:var(--expo);font-weight:600}
+td.dim{color:var(--muted)}
+.star{font-size:.85em;letter-spacing:.02em}
+.tnote{font-size:12.5px;color:var(--muted);margin:0 0 4px;max-width:72ch}
+
+/* ---------- pull figures ---------- */
+.pulls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:3px;margin:28px 0;overflow:hidden}
+.pull{background:var(--surface);padding:20px}
+.pull .big{
+  font-family:Newsreader,Georgia,serif;font-size:34px;line-height:1;
+  font-variant-numeric:tabular-nums;display:block;margin-bottom:8px;
+}
+.pull.a .big{color:var(--efi)}
+.pull.b .big{color:var(--expo)}
+.pull.c .big{color:var(--survive)}
+.pull p{font-size:13px;color:var(--muted);margin:0;max-width:none;line-height:1.45}
+
+/* ---------- callout ---------- */
+.note{
+  border:1px solid var(--rule-strong);border-radius:3px;
+  padding:20px 24px;margin:28px 0;background:var(--surface);
+}
+.note.warn{border-left:3px solid var(--efi)}
+.note.good{border-left:3px solid var(--survive)}
+.note h4{
+  margin:0 0 9px;font-size:12px;font-family:"IBM Plex Mono",monospace;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;
+}
+.note p:last-child{margin-bottom:0}
+
+/* ---------- inventory list ---------- */
+ul.inv{list-style:none;padding:0;margin:20px 0}
+ul.inv li{
+  display:grid;grid-template-columns:minmax(140px,190px) 1fr;gap:18px;
+  padding:13px 0;border-top:1px solid var(--rule);align-items:baseline;
+}
+ul.inv li:last-child{border-bottom:1px solid var(--rule)}
+ul.inv .loc{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);
+  word-break:break-word;
+}
+ul.inv .txt{font-size:14.5px}
+ul.inv .txt q{color:var(--ink-soft);font-style:italic;quotes:"\201C" "\201D"}
+ul.inv .verdict{
+  display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;padding:1px 7px;border-radius:2px;
+  margin-left:8px;vertical-align:1px;
+}
+.verdict.false{background:var(--efi-wash);color:var(--efi)}
+.verdict.keep{background:var(--survive-wash);color:var(--survive)}
+.verdict.num{background:var(--expo-wash);color:var(--expo)}
+
+ol.plain{padding-left:20px;margin:16px 0;max-width:66ch}
+ol.plain li{margin-bottom:11px}
+ul.plain{padding-left:20px;margin:16px 0;max-width:68ch}
+ul.plain li{margin-bottom:9px}
+
+footer{border-top:1px solid var(--rule-strong);margin-top:72px;padding-top:26px;font-size:13px;color:var(--muted)}
+footer p{max-width:70ch}
+hr.soft{border:none;border-top:1px solid var(--rule);margin:44px 0}
+:focus-visible{outline:2px solid var(--expo);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+@media (max-width:640px){
+  ul.inv li{grid-template-columns:1fr;gap:5px}
+  header.mast{padding-top:44px}
+}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="kicker">Specification audit &middot; Prediction #2 &middot; 872 O*NET occupations</p>
+  <h1>The Fragmentation Null</h1>
+  <p class="standfirst">Measuring AI exposure and the fragmentation index on the same set of steps removes the fragmentation effect from the main text and from two of three robustness appendices. <em>The coefficient was the exposure level in disguise.</em></p>
+</header>
+
+<section>
+  <p class="lede">The empirical fragmentation index counts a step as AI-able when its Eloundou label is E1 <strong>or</strong> E2. The published regressions control for the E1 share <strong>alone</strong>. That gap is the whole finding.</p>
+
+  <div class="identity">
+    <p class="eq">EFI &nbsp;=&nbsp; (m &minus; k + r) / m &nbsp;=&nbsp; 1 &nbsp;<span class="lvl">&minus; k/m</span>&nbsp; <span class="arr">+ r/m</span></p>
+    <p class="legend">For a workflow of <span class="mono">m</span> steps with <span class="mono">k</span> AI-able steps forming <span class="mono">r</span> maximal runs: an exposure <span class="lvl">level term</span> entering with coefficient exactly &minus;1, plus an <span class="arr">arrangement term</span>. Verified to exact float equality (max deviation 0.000e+00) on all 28 estimation samples in the paper.</p>
+  </div>
+
+  <p>Because the E1&cup;E2 level inside the index is never absorbed, the EFI coefficient loads on <span class="mono">&minus;k/m</span> rather than on <span class="mono">r/m</span>. It measures exposure, not arrangement. The correlation between the EFI and the E1&cup;E2 share is <strong>&minus;0.954</strong>, and 91% of the index's variance is that share; the E1 share the paper actually controls for absorbs only 50% of it.</p>
+
+  <div class="verdicts">
+    <div class="v dead"><span class="where">Main text &middot; Table 2</span><span class="status">Effect vanishes</span><span class="num">&minus;0.26 &rarr; &minus;0.007</span></div>
+    <div class="v mech"><span class="where">SA.B &middot; execution EFI</span><span class="status">Mechanical</span><span class="num">level term = the outcome</span></div>
+    <div class="v dead"><span class="where">SA.D &middot; 11 prompts</span><span class="status">Stable null</span><span class="num">0 of 33 cells at 5%</span></div>
+    <div class="v dead"><span class="where">SA.E &middot; 12 frequency cuts</span><span class="status">Stable null</span><span class="num">0 of 39 cells at 5%</span></div>
+    <div class="v live"><span class="where">SA.F &middot; APQC PCF</span><span class="status">Survives</span><span class="num">&minus;0.30**, &minus;0.25*, &minus;0.29**</span></div>
+  </div>
+  <p class="stripcap">Headline specification throughout: exposure and EFI both on E1&cup;E2, step-count control (<span class="mono">num_E1E2_tasks</span>) retained.</p>
+</section>
+
+<hr class="soft">
+
+<section>
+  <h2><span class="sec">01 &middot; Main text</span>Table 2, published against matched</h2>
+  <p>Standardized coefficients, standard errors clustered on O*NET-SOC code, N = 872 throughout. Every number below was produced by a script that first regenerates the published <span class="mono">.tex</span> file byte-for-byte, then changes one variable.</p>
+
+  <div class="tw">
+  <table>
+    <caption>Share of AI-executed tasks &middot; EFI Definition 1</caption>
+    <thead><tr><th></th><th>(1) no FE</th><th>(2) Major FE</th><th>(3) Minor FE</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="4">Published &mdash; exposure = E1 share</td></tr>
+      <tr><td>Fragmentation index</td><td class="efi">&minus;0.261<span class="star">***</span></td><td class="efi">&minus;0.380<span class="star">***</span></td><td class="efi">&minus;0.283<span class="star">***</span></td></tr>
+      <tr class="sub"><td></td><td>(0.073)</td><td>(0.064)</td><td>(0.071)</td></tr>
+      <tr><td>AI exposure</td><td class="expo">+0.241<span class="star">***</span></td><td class="expo">+0.109<span class="star">***</span></td><td class="expo">+0.092<span class="star">*</span></td></tr>
+      <tr class="sub"><td></td><td>(0.046)</td><td>(0.042)</td><td>(0.047)</td></tr>
+      <tr><td class="dim">R&sup2; / adj. R&sup2;</td><td class="dim">0.357 / 0.355</td><td class="dim">0.629 / 0.619</td><td class="dim">0.713 / 0.671</td></tr>
+
+      <tr class="grp"><td colspan="4">Matched &mdash; exposure = E1&cup;E2 share</td></tr>
+      <tr><td>Fragmentation index</td><td class="efi">&minus;0.007</td><td class="efi">&minus;0.086</td><td class="efi">&minus;0.040</td></tr>
+      <tr class="sub"><td></td><td>(0.101)</td><td>(0.086)</td><td>(0.093)</td></tr>
+      <tr class="sub"><td>95% interval</td><td>[&minus;0.204, +0.191]</td><td>[&minus;0.254, +0.082]</td><td>[&minus;0.222, +0.143]</td></tr>
+      <tr><td>AI exposure</td><td class="expo">+0.494<span class="star">***</span></td><td class="expo">+0.479<span class="star">***</span></td><td class="expo">+0.390<span class="star">***</span></td></tr>
+      <tr class="sub"><td></td><td>(0.102)</td><td>(0.094)</td><td>(0.093)</td></tr>
+      <tr><td class="dim">R&sup2; / adj. R&sup2;</td><td class="dim">0.347 / 0.345</td><td class="dim">0.636 / 0.626</td><td class="dim">0.717 / 0.675</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">*** p&lt;0.01, ** p&lt;0.05, * p&lt;0.1. In levels, the fragmentation effect moves from &minus;4.13 / &minus;6.01 / &minus;4.48 percentage points of the AI-execution share per standard deviation to &minus;0.11 / &minus;1.36 / &minus;0.63.</p>
+
+  <h3>What the published coefficient was standing in for</h3>
+  <p>Entering the EFI, the E1 share and the E1&cup;E2 share together settles it. The EFI collapses to &minus;0.010 / &minus;0.080 / &minus;0.044 (p = 0.92 / 0.35 / 0.63) while the E1&cup;E2 share is +0.360 / +0.438 / +0.355, significant at 1% in every column.</p>
+
+  <div class="pulls">
+    <div class="pull a"><span class="big">96.3%</span><p>of the published no-FE coefficient is omitted E1&cup;E2 level, by an exact algebraic identity</p></div>
+    <div class="pull a"><span class="big">79.0%</span><p>the same share under SOC major-group fixed effects</p></div>
+    <div class="pull a"><span class="big">84.4%</span><p>and under minor-group fixed effects</p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="sec">02 &middot; Precision</span>What the matched design can and cannot rule out</h2>
+  <p>Both halves of the power claim hold, column by column. The minimum detectable effect at 80% power and a 5% two-sided test is 0.282 / 0.240 / 0.261 in standard-deviation units, which is 4.47 / 3.80 / 4.13 percentage points. A 4,000-draw wild residual bootstrap reproduces those thresholds at 0.284 / 0.239 / 0.247 with correct size, so <span class="mono">2.802 &times; SE</span> is the right number to quote.</p>
+
+  <div class="note warn">
+    <h4>The honest two-sided statement</h4>
+    <p>The design is <strong>underpowered for a modest effect</strong>: anything up to roughly a 3-point true reduction would routinely go undetected. But it does <strong>exclude the published magnitude</strong> in all three columns, with two-sided p of 0.012 / 0.001 / 0.009 treating the published point as fixed.</p>
+    <p>The exclusion is comfortable under major-group fixed effects (gap 0.126 SD) and <strong>marginal</strong> in the other two columns (gaps 0.057 and 0.061, both under one percentage point). Worth stating as marginal rather than as a clean rejection.</p>
+  </div>
+
+  <p>The cost of the fix is a 1.7&times; to 1.9&times; variance inflation on the EFI coefficient. Once the E1&cup;E2 level and the step count are absorbed, only 30.0% of the index's standard deviation survives under no fixed effects, falling to 23.4% under minor-group FE. That residual is the entire identifying variation the arrangement channel has left, and it is what the confidence intervals are reporting.</p>
+</section>
+
+<section>
+  <h2><span class="sec">03 &middot; Appendices</span>The robustness results do not move together</h2>
+  <p class="lede">Two appendices lose the result and turn into stable nulls. One survives, for a reason that is visible in the data. One was never evidence.</p>
+
+  <h3>SA.D &middot; Eleven GPT prompt orderings</h3>
+  <p>Under the published specification all 33 prompt-by-column cells were negative and significant. Under the matched specification <strong>none</strong> reaches 5% and only two reach 10%. The important point for the appendix is that this is not prompt fragility: the between-prompt dispersion of the matched coefficient (SD 0.044 / 0.023 / 0.040) is two to four times <em>smaller</em> than the sampling noise in any single estimate, and all 33 estimates sit inside the main-prompt confidence interval.</p>
+
+  <div class="tw">
+  <table>
+    <caption>SA.D &middot; cells significant and negative, out of 11 orderings</caption>
+    <thead><tr><th></th><th>no FE</th><th>Major FE</th><th>Minor FE</th><th>Range, matched</th></tr></thead>
+    <tbody>
+      <tr><td>EFI, published</td><td class="efi">11 / 11</td><td class="efi">11 / 11</td><td class="efi">11 / 11</td><td class="dim">&minus;0.30 to &minus;0.24</td></tr>
+      <tr><td>EFI, matched</td><td class="efi">0 / 11</td><td class="efi">0 / 11</td><td class="efi">0 / 11</td><td class="dim">&minus;0.15 to +0.06</td></tr>
+      <tr><td>Exposure, published</td><td class="expo">11 / 11</td><td class="expo">11 / 11</td><td class="expo">0 / 11</td><td class="dim">+0.07 to +0.25</td></tr>
+      <tr><td>Exposure, matched</td><td class="expo">11 / 11</td><td class="expo">11 / 11</td><td class="expo">11 / 11</td><td class="dim">+0.30 to +0.56</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">Note the last two rows. Under the published specification, minor-FE exposure cleared 5% in <strong>zero</strong> of eleven orderings and was resting on 90% bars; matched, it clears 1% in all eleven. The exposure half of SA.D gets stronger, not weaker.</p>
+
+  <h3>SA.E &middot; Twelve frequency cuts</h3>
+  <p>The unpruned row goes from &minus;0.260 / &minus;0.378 / &minus;0.282, all at 1%, to &minus;0.013 / &minus;0.090 / &minus;0.048. Across all 39 cells of the logic-by-threshold-by-FE grid the matched coefficient is <strong>never significant at 5% in either direction</strong>. The three largest cuts have standard errors of 0.085 to 0.101, so these are precise zeros rather than underpowered ones; the sparser cuts genuinely cannot rule out a moderate effect and the appendix should not claim they do. The sign pattern goes from 33 of 39 negative to 16 of 39, which is a coin flip.</p>
+
+  <h3>SA.F &middot; APQC documented process sequences</h3>
+  <div class="tw">
+  <table>
+    <caption>APQC pooled process groups &middot; N = 525</caption>
+    <thead><tr><th></th><th>(1) no FE</th><th>(2) Category FE</th><th>(3) Framework FE</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="4">Published &mdash; exposure = E1 share</td></tr>
+      <tr><td>Fragmentation index</td><td class="efi">&minus;0.375<span class="star">**</span></td><td class="efi">&minus;0.370<span class="star">**</span></td><td class="efi">&minus;0.376<span class="star">**</span></td></tr>
+      <tr class="sub"><td></td><td>(0.150)</td><td>(0.154)</td><td>(0.152)</td></tr>
+      <tr><td>AI exposure</td><td class="expo">+0.139</td><td class="expo">+0.185<span class="star">**</span></td><td class="expo">+0.145</td></tr>
+      <tr class="sub"><td></td><td>(0.100)</td><td>(0.094)</td><td>(0.101)</td></tr>
+      <tr class="grp"><td colspan="4">Matched &mdash; exposure = E1&cup;E2 share</td></tr>
+      <tr><td>Fragmentation index</td><td class="efi">&minus;0.295<span class="star">**</span></td><td class="efi">&minus;0.250<span class="star">*</span></td><td class="efi">&minus;0.290<span class="star">**</span></td></tr>
+      <tr class="sub"><td></td><td>(0.141)</td><td>(0.142)</td><td>(0.144)</td></tr>
+      <tr><td>AI exposure</td><td class="expo">+0.261<span class="star">**</span></td><td class="expo">+0.356<span class="star">***</span></td><td class="expo">+0.280<span class="star">**</span></td></tr>
+      <tr class="sub"><td></td><td>(0.110)</td><td>(0.107)</td><td>(0.112)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note good">
+    <h4>Why APQC survives and O*NET does not</h4>
+    <p>Not a difference in ordering source. The 0.73 similarity floor leaves the PCF corpus at an <strong>8.6%</strong> E1&cup;E2 density against 43.2% in O*NET, so the index's level term no longer dominates it. The R&sup2; of the EFI on the exposure share is <strong>0.58</strong> there against <strong>0.91</strong> in the main sample, and <strong>65%</strong> of the index's standard deviation survives conditioning on exposure against 30% in O*NET. Putting E1&cup;E2 on the right-hand side removes far less identifying variation, and the VIF is 2.4 rather than 11.</p>
+    <p>The observed coefficient still sits outside the within-group reshuffle null (z about &minus;3.1). Note the placebo z is seed-dependent across three seeds at &minus;3.05 to &minus;3.19, with 0 to 3 of 1000 draws below the observed value, so "below all 1000 draws" holds for some seeds only.</p>
+  </div>
+
+  <p>This inverts the appendix's logic. SA.F currently reads its &minus;0.37 against a main-text range of &minus;0.26 to &minus;0.38. Under the matched specification the external validation would be reporting a <strong>larger and better-identified</strong> fragmentation effect than the specification it is validating, and that has to be said out loud rather than papered over.</p>
+
+  <h3>SA.B &middot; The execution-based index was never evidence</h3>
+  <p>Worse than the paper's footnote concedes. The level term of the execution-based EFI is <em>bitwise identical</em> to the dependent variable, max deviation 0.000e+00, so the table regresses <span class="mono">y</span> on <span class="mono">(1 &minus; y + r&#8322;/m)</span>. Substituting that algebraic equivalent leaves the coefficients and R&sup2; unchanged to the digit.</p>
+  <p>Changing the exposure regressor does not repair it: matched, the coefficient barely moves, from &minus;0.780 / &minus;0.703 / &minus;0.679 to &minus;0.777 / &minus;0.682 / &minus;0.666. Isolating the arrangement term alone flips the sign to <strong>+0.871 / +0.748 / +0.715</strong>. And 317 of 872 occupations, 36.4%, have zero AI-executed steps, so their index is exactly 1 and their outcome exactly 0 by construction. This is open review issue D31, now with a proof; it should be raised to Major.</p>
+</section>
+
+<section>
+  <h2><span class="sec">04 &middot; Rescue attempts</span>No better arrangement statistic recovers the effect</h2>
+  <p>The natural objection is that the EFI is simply a poor measure of arrangement. It is not, and the evidence runs the other way.</p>
+
+  <h3>The definition grid</h3>
+  <p>Crossing three exposure definitions with three EFI definitions and three fixed-effect specifications gives 27 cells. Fifteen are significantly negative at 5%, twelve of them at 1%, and <strong>every one is off-diagonal</strong>, meaning the exposure label set and the EFI label set disagree. Every matched cell is null or wrong-signed. The E2-on-E2 cell is significantly <em>positive</em> without fixed effects.</p>
+
+  <h3>Six alternative statistics, all matched, all null</h3>
+  <div class="tw">
+  <table>
+    <caption>Arrangement measures replacing the EFI &middot; 872 occupations</caption>
+    <thead><tr><th>Statistic</th><th>no FE</th><th>Major FE</th><th>Minor FE</th><th>80% MDE</th></tr></thead>
+    <tbody>
+      <tr><td>EFI (reference)</td><td class="dim">&minus;0.007</td><td class="dim">&minus;0.086</td><td class="dim">&minus;0.040</td><td class="dim">0.24 &ndash; 0.28</td></tr>
+      <tr><td>r/m, runs per step</td><td class="dim">&minus;0.002</td><td class="dim">&minus;0.029</td><td class="dim">&minus;0.014</td><td class="dim">identical by algebra</td></tr>
+      <tr><td>r/k, runs per exposed step</td><td class="dim">+0.025</td><td class="dim">+0.056</td><td class="dim">+0.014</td><td class="dim">0.12 &ndash; 0.13</td></tr>
+      <tr><td>Adjacent-pair share</td><td class="dim">&minus;0.022</td><td class="dim">&minus;0.043</td><td class="dim">&minus;0.018</td><td class="dim">0.08 &ndash; 0.09</td></tr>
+      <tr><td>Longest run / k</td><td class="dim">&minus;0.029</td><td class="dim">&minus;0.017</td><td class="dim">&minus;0.029</td><td class="dim">0.06 &ndash; 0.08</td></tr>
+      <tr><td>Permutation z-score</td><td class="dim">+0.032</td><td class="dim">+0.027</td><td class="dim">+0.004</td><td class="dim">0.06 &ndash; 0.08</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tnote">Not one cell is significant at even 10%. The permutation z-score compares each occupation's observed run count against its own null holding m and k fixed. It is the cleanest scale-free arrangement measure available and is <strong>four times better powered</strong> than the EFI, and it comes out wrong-signed and insignificant.</p>
+
+  <div class="note warn">
+    <h4>Correcting one thing I told you earlier</h4>
+    <p>The &minus;0.211 in the repo's own <span class="mono">exposure_definition_grid.csv</span> is <strong>not</strong> about the step-count control. Dropping the control moves the matched coefficient only from &minus;0.007 to &minus;0.019, both null. The &minus;0.211 comes from the <strong>871-occupation sample</strong>, which drops the 789 task rows with missing <span class="mono">human_labels</span> and recomputes m.</p>
+    <p>The mechanism: 183 of the 2,998 maximal runs in the 872 panel, 6.1%, exist only because an unlabelled task sitting inside a block of E1&cup;E2 tasks is coded "not AI-able" and splits the block.</p>
+  </div>
+
+  <p>On the 871 sample the matched EFI is &minus;0.209 (p = 0.031) with no FE and &minus;0.192 (p = 0.025) under major-group FE. Reaching that takes three stacked choices, and dropping any one kills it: drop the unlabelled rows, keep the 62 zero-exposure occupations whose EFI is 1.0 by construction (restricting to k &ge; 1 gives &minus;0.173, p = 0.106), and avoid minor-group fixed effects (&minus;0.105, p = 0.291). On that same 871 sample all four scale-free statistics are indistinguishable from zero. A census of 192 matched specifications finds 21 significant with the predicted sign, all 21 on the 871 sample and all 21 the same statistic.</p>
+</section>
+
+<section>
+  <h2><span class="sec">05 &middot; Consequences</span>What the paper can no longer say</h2>
+  <p>Exhibits regenerate mechanically. These are the sentences that become false, which is the part that needs an authorial decision rather than a re-run.</p>
+
+  <ul class="inv">
+    <li><span class="loc">0_main.tex:75</span><span class="txt"><q>dispersion of AI-exposed steps predicts lower AI execution at the workflow level</q>, abstract clause (2)<span class="verdict false">false</span></span></li>
+    <li><span class="loc">1_introduction.tex:92</span><span class="txt"><q>jobs with higher fragmentation see a weaker translation from AI exposure to AI execution</q><span class="verdict false">false</span></span></li>
+    <li><span class="loc">1_introduction.tex:131</span><span class="txt"><q>exhibit a substantially lower share of their steps executed by AI</q> &mdash; <em>substantially</em> is exactly what dies<span class="verdict false">false</span></span></li>
+    <li><span class="loc">1_introduction.tex:136&ndash;137</span><span class="txt">Prompt and task-listing robustness claims, for Prediction #2 only<span class="verdict false">false</span></span></li>
+    <li><span class="loc">7_empirics.tex:141</span><span class="txt"><q>negative and statistically significant at the 1% level in all specifications</q> &mdash; p = 0.945, 0.317, 0.670<span class="verdict false">false</span></span></li>
+    <li><span class="loc">7_empirics.tex:144&ndash;146</span><span class="txt">The <q>common pattern</q> paragraph. After the correction its only surviving support is the specification the paper itself calls mechanical<span class="verdict false">false</span></span></li>
+    <li><span class="loc">7_empirics.tex:19, :133<br>SA_B:38</span><span class="txt">Definitional statements that AI Exposure is the E1 share. Currently correct, become incorrect<span class="verdict num">redefine</span></span></li>
+    <li><span class="loc">7_empirics.tex:135<br>SA_B:40</span><span class="txt">The step-count control sentence. Currently sits beside a contradicting line; becomes internally consistent for the first time<span class="verdict keep">improves</span></span></li>
+    <li><span class="loc">7_empirics.tex:140</span><span class="txt">Exposure range <q>0.09 to 0.24</q> becomes roughly 0.39 to 0.49<span class="verdict num">number</span></span></li>
+    <li><span class="loc">SA_D:146, :156</span><span class="txt"><q>the EFI coefficients are consistently negative and statistically different from zero</q><span class="verdict false">false</span></span></li>
+    <li><span class="loc">SA_E:133&ndash;136</span><span class="txt"><q>The fragmentation relationship therefore survives the restriction to frequent tasks</q><span class="verdict false">false</span></span></li>
+    <li><span class="loc">SA_F:393&ndash;401</span><span class="txt">Own numbers become &minus;0.29 / &minus;0.25 / &minus;0.29; the cross-referenced main-text range and the <q>too imprecisely estimated to be informative</q> clause both invert<span class="verdict num">rewrite</span></span></li>
+    <li><span class="loc">SA_F:46&ndash;48</span><span class="txt"><q>the fragmentation channel of Prediction #2 &hellip; continue[s] to hold</q><span class="verdict keep">keep</span></span></li>
+    <li><span class="loc">8_conclusion.tex:17&ndash;18</span><span class="txt">The dispersion clause of the closing summary<span class="verdict false">false</span></span></li>
+  </ul>
+
+  <p>Two figures need regenerating rather than re-wording: the SA.D coefficient panel and the SA.E heatmap, where 33 of 39 blue cells and 18 starred cells become 16 blue and none starred.</p>
+
+  <h3>Against the open review log</h3>
+  <ul class="plain">
+    <li><strong>D27</strong> (AI-exposed defined three inconsistent ways) is directly resolved, and should be upgraded from a presentational inconsistency to a specification error. The inconsistency was not only in the prose.</li>
+    <li><strong>D29</strong> (EFI varies with workflow length) is superseded in emphasis. The dominant uncontrolled term is the level share, not length. Its <q>this control ensures</q> objection now has a number behind it.</li>
+    <li><strong>D31</strong> (execution-based EFI is a function of the outcome) escalates sharply. With the exposure-based leg null, it is the only leg left standing.</li>
+    <li><strong>D30</strong> (predicted signs not derived) reopens in substance: the paper still predicts &beta;&#8322; &lt; 0 and now needs a sentence about what [&minus;0.20, +0.19] does and does not rule out.</li>
+    <li><strong>D42</strong> (external validation overstates Section 7) needs rebalancing in the opposite direction from what it anticipated.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="sec">06 &middot; Incidental</span>Errors found along the way, unrelated to this change</h2>
+  <ul class="plain">
+    <li><span class="mono">SA_F:339</span> and <span class="mono">:388</span> say <q>sixteen industry-specific frameworks</q>. The estimation sample carries 18 framework labels: Cross-Industry plus <strong>seventeen</strong> industry frameworks. Column (3)'s fixed effect absorbs 18 levels. The matching script's own docstring repeats the miscount.</li>
+    <li><span class="mono">SA_E:134</span> says the positive cells are <q>+0.05 or smaller in magnitude</q>. Two of the six exceed that, at +0.0705 and +0.1956.</li>
+    <li><span class="mono">7_empirics.tex:117</span> says 44% and 14%; <span class="mono">SA_F:355</span> says 46% and 13%.</li>
+    <li>The APQC reshuffle placebo z is seed-dependent and no seed is set.</li>
+  </ul>
+</section>
+
+<footer>
+  <p><strong>Method.</strong> Ten agents: four re-estimating an appendix each, three running diagnostics, three verifying independently. Every estimate was reproduced twice by scripts written without reference to each other, and each script regenerates the published numbers before changing anything. Both numeric verifiers returned CONFIRMED with no disagreement in any coefficient.</p>
+  <p><strong>Reproducing.</strong> Scripts are in <span class="mono">analysis/efi_matched_exposure/</span> with a README. All 18 run clean and take repo-relative paths. Generated data goes to <span class="mono">data/computed_objects/efi_matched_exposure/</span> and the matched figures to <span class="mono">writeup/plots/efi_matched_exposure/</span>, both gitignored. The published old-specification tables are kept in <span class="mono">published_reference/</span> so the replication checks have something to compare against. No published exhibit has been modified: every table and figure the paper cites is byte-identical to before this pass.</p>
+</footer>
+
+</div>
