@@ -17,7 +17,7 @@ reproduce the published numbers first, then change one variable.
 | Published tables, kept as a fixture for the replication checks | `published_reference/` |
 | Findings memo, with the prose inventory and the open decision | `writeup/EFI_MATCHED_SPECIFICATION.md` |
 | Report, PDF | `writeup/EFI_matched_specification_report.pdf` |
-| Report source and its print build | `report_source.html`, `report_print.html`, `build_report_pdf.sh` |
+| Report source and its print build | `report_source.html`, `report_print.html`, `embed_report_figures.py`, `build_report_pdf.sh` |
 
 Generated CSVs, PNGs and the PDF are gitignored by the repo's existing `*csv` / `*png` /
 `*pdf` rules, in line with the house rule against committing data files and figures. The
@@ -50,10 +50,30 @@ for f in analysis/efi_matched_exposure/*.py analysis/efi_matched_exposure/verify
 done
 ```
 
-All 18 scripts run clean in a few minutes total. Paths are derived from each file's own
+All 19 scripts run clean in a few minutes total. Paths are derived from each file's own
 location, so the folder can move and no home directory is baked in.
 `sample_871_vs_872.py` and `discretion_census.py` import `arrangement_statistics.py`, so keep
 the folder together.
+
+### Rebuilding the report
+
+```bash
+python analysis/efi_matched_exposure/figure_SAD_matched.py
+python analysis/efi_matched_exposure/figure_SAE_matched.py
+python analysis/efi_matched_exposure/embed_report_figures.py
+./analysis/efi_matched_exposure/build_report_pdf.sh
+```
+
+`embed_report_figures.py` is idempotent and delivers the figures two ways, because the two
+builds need different things. The Artifact build (`report_source.html`) inlines them as
+base64 data URIs, since the Artifact CSP blocks external images; they are downscaled to
+1900 px and palette-quantised first, which takes the pair from about 1 MB to about 210 KB with
+no visible loss on line art. The print build (`report_print.html`) references the PNGs by
+relative path, so the PDF gets full resolution and the committed HTML stays small.
+
+The SA.D plate is the matched-only six-panel figure rather than the twelve-panel comparison:
+at 3.47:1 the comparison is not legible on A4, and the table beside it already carries the
+published side. The comparison PNG is still produced and sits alongside it.
 
 ## The problem
 
@@ -89,6 +109,7 @@ step-count control is kept; that is the headline throughout, per the decision of
 | `step_count_controls.py` | main text | Include vs exclude the count control: k, m, log m, both, neither, across both samples |
 | `figure_SAD_matched.py` | `onet_fragmentationIndex_robustness.ipynb` | Redraws the SA.D coefficient panel on matched estimates |
 | `figure_SAE_matched.py` | `make_frag_def1_heatmap.py` | Redraws the SA.E heatmap on matched estimates |
+| `embed_report_figures.py` | nothing | Puts the two comparison figures into the report, inlined for the Artifact and by path for the PDF |
 | `verify/verify_*.py` | nothing | Independent reimplementations of SA.D, SA.E and SA.F, written from the construction rather than from the scripts above |
 
 ## Results

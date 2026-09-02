@@ -278,6 +278,23 @@ hr.soft{border:none;border-top:1px solid var(--rule);margin:44px 0}
   .col,p{max-width:none}
 }
 </style>
+<style id="figure-css">
+figure.plate{margin:26px 0 8px;padding:0}
+figure.plate .mount{
+  background:#fff;border:1px solid var(--rule);border-radius:3px;
+  padding:10px;overflow-x:auto;
+}
+figure.plate img{display:block;width:100%;height:auto;min-width:520px}
+figure.plate figcaption{
+  font-size:12.5px;color:var(--muted);margin-top:9px;max-width:72ch;line-height:1.45;
+}
+@media print{
+  figure.plate{break-inside:avoid;margin:20px 0 6px}
+  figure.plate .mount{overflow:visible;padding:4px;border-color:#d8dbd6}
+  figure.plate img{min-width:0}
+  figure.plate figcaption{font-size:11px;margin-top:7px}
+}
+</style>
 </head><body><div class="wrap">
 
 <header class="mast">
@@ -379,9 +396,17 @@ hr.soft{border:none;border-top:1px solid var(--rule);margin:44px 0}
   </table>
   </div>
   <p class="tnote">Note the last two rows. Under the published specification, minor-FE exposure cleared 5% in <strong>zero</strong> of eleven orderings and was resting on 90% bars; matched, it clears 1% in all eleven. The exposure half of SA.D gets stronger, not weaker.</p>
+  <figure class="plate" id="fig-sad">
+    <div class="mount"><img alt="Prompt robustness under the matched specification. Top row t" src="../../writeup/plots/efi_matched_exposure/fragmentation_index_robustness_definition_1_matched.png"></div>
+    <figcaption>Prompt robustness under the matched specification. Top row the AI exposure coefficient, bottom row the fragmentation index, across eleven GPT task orderings with 90% intervals; the main prompt is red and the dashed line is the cross-prompt mean. The fragmentation row sits on zero in all three columns while exposure sits well clear of it. The published counterpart is the table above; a twelve-panel side-by-side version is at writeup/plots/efi_matched_exposure/fragmentation_index_robustness_definition_1_comparison.png.</figcaption>
+  </figure>
 
   <h3>SA.E &middot; Twelve frequency cuts</h3>
   <p>The unpruned row goes from &minus;0.260 / &minus;0.378 / &minus;0.282, all at 1%, to &minus;0.013 / &minus;0.090 / &minus;0.048. Across all 39 cells of the logic-by-threshold-by-FE grid the matched coefficient is <strong>never significant at 5% in either direction</strong>. The three largest cuts have standard errors of 0.085 to 0.101, so these are precise zeros rather than underpowered ones; the sparser cuts genuinely cannot rule out a moderate effect and the appendix should not claim they do. The sign pattern goes from 33 of 39 negative to 16 of 39, which is a coin flip.</p>
+  <figure class="plate" id="fig-sae">
+    <div class="mount"><img alt="Frequency cuts, published against matched. Each row is one f" src="../../writeup/plots/efi_matched_exposure/frag_logic_threshold_heatmap_def1_comparison.png"></div>
+    <figcaption>Frequency cuts, published against matched. Each row is one frequency rule, each panel one fixed-effects specification. Navy is the published specification, orange the matched one, and the grey arrow is the shift between them. Bars are 95% intervals. The unpruned row is shaded. Every matched interval crosses zero.</figcaption>
+  </figure>
 
   <h3>SA.F &middot; APQC documented process sequences</h3>
   <div class="tw">
