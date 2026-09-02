@@ -8,7 +8,7 @@ Companion material:
 
 | What | Where |
 |---|---|
-| Scripts (18, all runnable) | `analysis/efi_matched_exposure/` and its `README.md` |
+| Scripts (19, all runnable) | `analysis/efi_matched_exposure/` and its `README.md` |
 | Generated data and matched `.tex` tables | `data/computed_objects/efi_matched_exposure/` |
 | Matched versions of the two figures | `writeup/plots/efi_matched_exposure/` |
 | Report, PDF | `writeup/EFI_matched_specification_report.pdf` |
@@ -20,27 +20,125 @@ Companion material:
 
 EFI Definition 1 counts a step as AI-able when its Eloundou label is E1 **or** E2, and merges
 consecutive AI-able steps into one task. The regression of Equation (11) controls for the E1
-share **alone**.
+share **alone**. This section derives why that combination cannot identify what it is meant to.
 
-For a workflow of `m` steps with `k` AI-able steps forming `r` maximal runs:
+### 1.1 The index decomposes exactly, into a level term and an arrangement term
+
+Write a workflow as a 0/1 string over its `m` steps, 1 meaning AI-able. Let `k` be the number
+of 1s and `r` the number of maximal runs of consecutive 1s.
+
+The EFI's construction is that every step begins as its own task and two adjacent AI-able steps
+merge into one, so with `A` the number of adjacent AI-able pairs the index is
 
 ```
-EFI = (m - k + r)/m = 1 - k/m + r/m
+EFI = (m - A) / m
 ```
 
-an exposure **level** term `-k/m` entering with coefficient exactly `-1`, plus an
-**arrangement** term `r/m`. This is an identity, not an approximation: it reproduces the
-notebook-constructed index to exact float equality (max deviation `0.000e+00`) on all 28
-estimation samples in the paper, and regressing the EFI on `k/m` and `r/m` returns
-R-squared = 1.0000000000 with slopes of exactly -1 and +1, so there is no third component.
+The only combinatorial step: a run of length `L` contains `L - 1` adjacent pairs, and the run
+lengths sum to `k`, so
 
-Because the E1∪E2 level is never absorbed, the EFI coefficient loads on `-k/m` rather than on
-`r/m`. On the main sample `corr(EFI, E1∪E2 share) = -0.954` and R-squared is 0.909, while the
-E1 share the paper controls for absorbs only R-squared 0.496 of it.
+```
+A = sum over the r runs of (L_j - 1) = k - r
+```
+
+Substituting, and writing `E = k/m` for the AI-able share and `R = r/m` for runs per step,
+
+```
+EFI = (m - k + r)/m = 1 - k/m + r/m = 1 - E + R
+```
+
+This is an identity, not an approximation. It reproduces the notebook-constructed index to
+exact float equality (max deviation `0.000e+00`) on all 28 estimation samples in the paper,
+and regressing the EFI on `E` and `R` returns R-squared = 1.0000000000 with slopes of exactly
+-1 and +1, so there is no third component.
+
+### 1.2 The index therefore confounds two different comparisons
+
+`E` and `R` answer different questions, and the index moves with both. Compare
+
+```
+A:  1 1 1 1 1 1 0 0 0 0     k=6, r=1, EFI = 0.50
+B:  1 0 0 0 1 0 0 0 0 0     k=2, r=2, EFI = 1.00
+```
+
+B has the higher EFI, but B is not more dispersed in any interesting sense. It is simply less
+exposed. Against that,
+
+```
+C:  1 1 1 1 1 1 0 0 0 0     k=6, r=1, EFI = 0.50
+D:  1 1 0 1 1 0 1 1 0 0     k=6, r=3, EFI = 0.70
+```
+
+C and D carry identical exposure and differ only in arrangement. **Prediction #2 is about the
+C-against-D comparison.** The `-E` term is what moves in A-against-B and the `+R` term is what
+moves in C-against-D.
+
+### 1.3 One coefficient is asked to do two jobs
+
+The estimated equation is
+
+```
+y = b0 + b1*X + b2*EFI + b3*k + e
+```
+
+with `y` the AI-execution share and `X` the E1 share. Substituting the identity,
+
+```
+y = b0 + b1*X + b2*(1 - E + R) + b3*k + e
+  = (b0 + b2) + b1*X - b2*E + b2*R + b3*k + e
+```
+
+`b2` is now simultaneously the coefficient on `-E` and the coefficient on `+R`, constrained to
+be the same number, because only one column was supplied. So `b2 < 0` admits two readings:
+more dispersion lowers execution, which is the intended one and runs through `+b2*R`; or a
+higher AI-able share raises execution, which runs through `-b2*E`. The second is trivially true
+and large, so **a negative `b2` would appear even if arrangement did nothing at all.**
+
+### 1.4 Controlling for the E1 share does not separate them
+
+Had the regression included `E` itself, `E` would appear twice, the two appearances would be
+separately identified, and `b2` would be pinned to `R` alone. That is the matched
+specification. The published regression instead includes `X`, a different variable. Writing
+`E = X + Z` with `Z` the E2 share,
+
+```
+y = const + (b1 - b2)*X - b2*Z + b2*R + b3*k + e
+```
+
+`b2` is still doing double duty, now as the negative of the coefficient on the **E2 share** and
+as the coefficient on arrangement. E2 tasks are 30% of all tasks and predict execution
+strongly, so `b2` is pulled negative whatever arrangement does.
+
+### 1.5 The confound dominates rather than merely contributes
+
+Because the decomposition is exact, `Var(EFI) = Var(E) + Var(R) - 2Cov(E,R)`, and on the main
+sample that reads
+
+```
+Var(E) = 0.0831    Var(R) = 0.0078    -2Cov(E,R) = -0.0235
+                             sum     =  0.0674   = Var(EFI)   exactly
+```
+
+`Var(E)` is **10.7 times** `Var(R)`, both in shares of steps rather than standardized.
+Correspondingly `corr(EFI, E) = -0.954`, so R-squared is 0.909: the index is 91% exposure level.
+And `corr(EFI, X) = -0.704`, R-squared 0.496, so the E1
+control absorbs only about half of what needs absorbing. In one line: **the regressor is 91%
+the thing you meant to hold fixed, and the control removes half of it.**
+
+The horse race confirms it directly. Entering `EFI`, `X` and `E` together, so that `b2` can
+only load on `R`, gives `b2` of -0.010 / -0.080 / -0.044 (p = 0.92 / 0.35 / 0.63) while `E`
+takes +0.360 / +0.438 / +0.355 at 1% in every column. The omitted-variable identity of
+section 2 attributes 96.3% / 79.0% / 84.4% of the published `b2` to the `E` term.
 
 **The matched specification** puts the E1∪E2 share on the right-hand side, so exposure and the
 index are measured on the same steps. Everything else, including the `num_E1E2_tasks`
 step-count control, is unchanged.
+
+What the fix costs is worth stating in the same breath. Conditioning on `E` cuts the standard
+deviation of `R` from 0.088 to 0.078, and in standardized terms leaves about 30% of the EFI's
+variation. The arrangement channel is real and estimable in principle; there is simply not much
+independent variation in it once exposure is held fixed, which is why the matched intervals in
+section 2 are wide.
 
 **Decision taken 2026-09-01 (Peyman): the step-count control stays in the headline.** The
 no-control variant is reported only as a labelled robustness row. As it turns out this choice
@@ -129,7 +227,8 @@ throughout" was resting on 90% bars. Matched, it clears 1% in all eleven.
 
 The unpruned row goes from -0.260 / -0.378 / -0.282, all at 1%, to -0.013 / -0.090 / -0.048.
 Across all 39 cells of the logic x threshold x FE grid the matched coefficient is **never
-significant at 5% in either direction**. Median absolute standardized coefficient 0.055 over the 39 cells, 0.059 over the 36 pruned ones.
+significant at 5% in either direction**. Median absolute standardized coefficient 0.055 over the
+39 cells, 0.059 over the 36 pruned ones.
 
 The three largest cuts (all tasks N=871, Daily+ >=20% N=832, Daily+ >=35% N=725) have SE of
 0.085 to 0.101, so these are precise zeros, not underpowered ones. The sparser cuts genuinely
@@ -176,7 +275,8 @@ validating. That has to be said out loud.
 
 Crossing three exposure definitions with three EFI definitions and three FE specifications
 gives 27 cells, each with its matching step-count control. Fifteen are significantly negative
-at 5% (twelve at 1%), and **every one is off-diagonal**, meaning the exposure label set and the EFI label set
+at 5% (twelve at 1%), and **every one is off-diagonal**, meaning the exposure label set and the
+EFI label set
 disagree. Every matched (diagonal) cell is null or wrong-signed; the E2-on-E2 cell is
 significantly **positive** without fixed effects.
 
@@ -303,7 +403,8 @@ would expect about 5% of cells to clear 5% by chance; 2 of 2,229, or 0.09%, is o
    matched-871 cells are insignificant at 5%, and the pattern is structural rather than
    random: every minor-FE cell is insignificant while every no-FE and major-FE cell is
    significant. The flip also happens inside the paper's own five choices: 871, major FE, no
-   control gives p = 0.056 while `k` gives p = 0.024. Anyone tempted to treat the 871 estimate as the "real" matched result is leaning
+   control gives p = 0.056 while `k` gives p = 0.024. Anyone tempted to treat the 871 estimate
+   as the "real" matched result is leaning
    on something the control choice can dissolve. This strengthens section 6's conclusion.
 3. *The published specification is more control-fragile than the five-control grid shows.*
    Within those five the largest swing is 0.137 (no FE, `m` at -0.376 against `k + m` at
@@ -328,7 +429,8 @@ confounded.
 **The -0.211 is not about the step-count control.** `exposure_definition_grid.csv` in
 `data/computed_objects/apqc_pcf_fragmentation/` reports the matched O\*NET spec at -0.211
 (p = 0.026) without the count control, and -0.209 (p = 0.031) with it. Dropping the control on
-the 872 sample moves the coefficient only from -0.007 to -0.019, both null. The -0.211 comes from the **871-occupation sample**, which drops the 789
+the 872 sample moves the coefficient only from -0.007 to -0.019, both null. The -0.211 comes
+from the **871-occupation sample**, which drops the 789
 task rows with missing `human_labels` and recomputes `m`. The mechanism: 183 of the 2,998
 maximal runs in the 872 panel, 6.1%, exist only because an unlabelled task sitting inside a
 block of E1∪E2 tasks is coded "not AI-able" and splits the block.
@@ -396,7 +498,7 @@ for f in analysis/efi_matched_exposure/*.py analysis/efi_matched_exposure/verify
 done
 ```
 
-All 18 scripts run clean, take repo-relative paths, and write only into
+All 19 scripts run clean, take repo-relative paths, and write only into
 `data/computed_objects/efi_matched_exposure/`. Each reproduces the published numbers before
 changing anything. `table2_and_SAB.py` regenerates the two O\*NET tables byte-for-byte. For
 the APQC table `verify/verify_SAF_bytecheck.py` matches every number and every line except

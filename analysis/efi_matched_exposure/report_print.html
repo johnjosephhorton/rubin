@@ -278,6 +278,14 @@ hr.soft{border:none;border-top:1px solid var(--rule);margin:44px 0}
   .col,p{max-width:none}
 }
 </style>
+<style id="deriv-css">
+.wf{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:14px;letter-spacing:.2em;white-space:nowrap}
+.wf .on{color:var(--expo);font-weight:600}
+.wf .off{color:var(--rule-strong)}
+table.wfx td:first-child{min-width:0}
+table.wfx td.lab{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.derivnote{font-size:13px;color:var(--muted);margin:14px 0 0;max-width:72ch}
+</style>
 <style id="figure-css">
 figure.plate{margin:26px 0 8px;padding:0}
 figure.plate .mount{
@@ -325,8 +333,77 @@ figure.plate figcaption{
 
 <hr class="soft">
 
+
 <section>
-  <h2><span class="sec">01 &middot; Main text</span>Table 2, published against matched</h2>
+  <h2><span class="sec">01 &middot; The algebra</span>Why the coefficient is not measuring arrangement</h2>
+  <p class="lede">The index is an exact function of two things the regression needs to keep apart. Once that is written out, the problem is visible without any estimation.</p>
+
+  <h3>The index decomposes exactly</h3>
+  <p>Write a workflow as a 0/1 string over its <span class="mono">m</span> steps, 1 meaning AI-able. Let <span class="mono">k</span> be the number of 1s and <span class="mono">r</span> the number of maximal runs of consecutive 1s. The EFI's construction is that every step begins as its own task and two adjacent AI-able steps merge into one, so with <span class="mono">A</span> the number of adjacent AI-able pairs:</p>
+
+  <div class="identity">
+    <p class="eq">EFI &nbsp;=&nbsp; (m &minus; A) / m</p>
+    <p class="legend">This is the definition, not yet a result.</p>
+  </div>
+
+  <p>Then one combinatorial step. A run of length <span class="mono">L</span> contains <span class="mono">L &minus; 1</span> adjacent pairs, and the run lengths sum to <span class="mono">k</span>, so <span class="mono">A = k &minus; r</span>. Substituting, and writing <span class="mono">E = k/m</span> for the AI-able share and <span class="mono">R = r/m</span> for runs per step:</p>
+
+  <div class="identity">
+    <p class="eq">EFI &nbsp;=&nbsp; (m &minus; k + r) / m &nbsp;=&nbsp; 1 &nbsp;<span class="lvl">&minus; E</span>&nbsp; <span class="arr">+ R</span></p>
+    <p class="legend">An exposure <span class="lvl">level term</span> and an <span class="arr">arrangement term</span>. Regressing the EFI on <span class="mono">E</span> and <span class="mono">R</span> returns R-squared = 1.0000000000 with slopes of exactly &minus;1 and +1, so there is no third component.</p>
+  </div>
+
+  <h3>It therefore confounds two different comparisons</h3>
+  <div class="tw">
+  <table class="wfx">
+    <caption>Four workflows of ten steps</caption>
+    <thead><tr><th></th><th></th><th>k</th><th>r</th><th>EFI</th></tr></thead>
+    <tbody>
+      <tr><td class="lab">A</td><td><span class="wf"><span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span></span></td><td>6</td><td>1</td><td class="dim">0.50</td></tr>
+      <tr><td class="lab">B</td><td><span class="wf"><span class="on">1</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span> <span class="on">1</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span></span></td><td>2</td><td>2</td><td class="dim">1.00</td></tr>
+      <tr class="grp"><td colspan="5">same exposure, different arrangement</td></tr>
+      <tr><td class="lab">C</td><td><span class="wf"><span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="on">1</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span> <span class="off">0</span></span></td><td>6</td><td>1</td><td class="dim">0.50</td></tr>
+      <tr><td class="lab">D</td><td><span class="wf"><span class="on">1</span> <span class="on">1</span> <span class="off">0</span> <span class="on">1</span> <span class="on">1</span> <span class="off">0</span> <span class="on">1</span> <span class="on">1</span> <span class="off">0</span> <span class="off">0</span></span></td><td>6</td><td>3</td><td class="dim">0.70</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>B has the higher EFI, but B is not more dispersed in any interesting sense. It is simply less exposed. C and D, by contrast, carry identical exposure and differ only in arrangement. <strong>Prediction #2 is about the C-against-D comparison.</strong> The <span class="mono">&minus;E</span> term is what moves in A-against-B; the <span class="mono">+R</span> term is what moves in C-against-D.</p>
+
+  <h3>One coefficient asked to do two jobs</h3>
+  <p>The estimated equation, with <span class="mono">y</span> the AI-execution share and <span class="mono">X</span> the E1 share, becomes on substitution:</p>
+
+  <div class="identity">
+    <p class="eq">y &nbsp;=&nbsp; b0 + b1&middot;X + b2&middot;EFI + b3&middot;k + e</p>
+    <p class="eq">&nbsp;&nbsp;&nbsp;=&nbsp; (b0 + b2) + b1&middot;X &nbsp;<span class="lvl">&minus; b2&middot;E</span>&nbsp; <span class="arr">+ b2&middot;R</span> + b3&middot;k + e</p>
+    <p class="legend">The same <span class="mono">b2</span> multiplies <span class="lvl">&minus;E</span> and <span class="arr">+R</span>, constrained to one number, because only one column was supplied.</p>
+  </div>
+
+  <p>So <span class="mono">b2 &lt; 0</span> admits two readings: more dispersion lowers execution, the intended one, running through <span class="mono">+b2&middot;R</span>; or a higher AI-able share raises execution, running through <span class="mono">&minus;b2&middot;E</span>. The second is trivially true and large, so <strong>a negative <span class="mono">b2</span> would appear even if arrangement did nothing at all.</strong></p>
+
+  <h3>Why controlling for the E1 share does not separate them</h3>
+  <p>Had the regression included <span class="mono">E</span> itself, it would appear twice, the two appearances would be separately identified, and <span class="mono">b2</span> would be pinned to <span class="mono">R</span> alone. That is the matched specification. The published regression instead includes <span class="mono">X</span>, a different variable. Writing <span class="mono">E = X + Z</span> with <span class="mono">Z</span> the E2 share:</p>
+
+  <div class="identity">
+    <p class="eq">y &nbsp;=&nbsp; const + (b1 &minus; b2)&middot;X &nbsp;<span class="lvl">&minus; b2&middot;Z</span>&nbsp; <span class="arr">+ b2&middot;R</span> + b3&middot;k + e</p>
+  </div>
+
+  <p>Still double duty, now as the negative of the coefficient on the E2 share and as the coefficient on arrangement. E2 tasks are 30% of all tasks and predict execution strongly, so <span class="mono">b2</span> is pulled negative whatever arrangement does.</p>
+
+  <h3>Why the confound dominates rather than merely contributes</h3>
+  <p>Because the decomposition is exact, the variance decomposes exactly too:</p>
+  <div class="tw">
+  <table>
+    <caption>Var(EFI) = Var(E) + Var(R) &minus; 2Cov(E,R) &middot; 872 occupations, shares of steps</caption>
+    <thead><tr><th></th><th>Var(E)</th><th>Var(R)</th><th>&minus;2Cov(E,R)</th><th>sum</th><th>Var(EFI)</th></tr></thead>
+    <tbody><tr><td class="dim">shares of steps</td><td class="expo">0.0831</td><td class="efi">0.0078</td><td class="dim">&minus;0.0235</td><td class="dim">0.0674</td><td class="dim">0.0674</td></tr></tbody>
+  </table>
+  </div>
+  <p><span class="mono">Var(E)</span> is <strong>10.7 times</strong> <span class="mono">Var(R)</span>. Correspondingly <span class="mono">corr(EFI, E) = &minus;0.954</span>, R-squared 0.909: the index is 91% exposure level. And <span class="mono">corr(EFI, X) = &minus;0.704</span>, R-squared 0.496, so the E1 control absorbs only about half of what needs absorbing. In one line: <strong>the regressor is 91% the thing you meant to hold fixed, and the control removes half of it.</strong></p>
+
+  <p class="derivnote">What the fix costs, stated in the same breath: conditioning on <span class="mono">E</span> cuts the standard deviation of <span class="mono">R</span> from 0.088 to 0.078, leaving about 30% of the index's variation in standardized terms. The arrangement channel is real and estimable in principle; there is simply not much independent variation in it once exposure is held fixed, which is why the matched intervals in the next section are wide.</p>
+</section>
+<section>
+  <h2><span class="sec">02 &middot; Main text</span>Table 2, published against matched</h2>
   <p>Standardized coefficients, standard errors clustered on O*NET-SOC code, N = 872 throughout. Every number below was produced by a script that first regenerates the published <span class="mono">.tex</span> file byte-for-byte, then changes one variable.</p>
 
   <div class="tw">
@@ -364,7 +441,7 @@ figure.plate figcaption{
 </section>
 
 <section>
-  <h2><span class="sec">02 &middot; Precision</span>What the matched design can and cannot rule out</h2>
+  <h2><span class="sec">03 &middot; Precision</span>What the matched design can and cannot rule out</h2>
   <p>Both halves of the power claim hold, column by column. The minimum detectable effect at 80% power and a 5% two-sided test is 0.282 / 0.240 / 0.261 in standard-deviation units, which is 4.47 / 3.80 / 4.13 percentage points. A 4,000-draw wild residual bootstrap reproduces those thresholds at 0.284 / 0.239 / 0.247 with correct size, so <span class="mono">2.802 &times; SE</span> is the right number to quote.</p>
 
   <div class="note warn">
@@ -377,7 +454,7 @@ figure.plate figcaption{
 </section>
 
 <section>
-  <h2><span class="sec">03 &middot; Appendices</span>The robustness results do not move together</h2>
+  <h2><span class="sec">04 &middot; Appendices</span>The robustness results do not move together</h2>
   <p class="lede">Two appendices lose the result and turn into stable nulls. One survives, for a reason that is visible in the data. One was never evidence.</p>
 
   <h3>SA.D &middot; Eleven GPT prompt orderings</h3>
@@ -442,7 +519,7 @@ figure.plate figcaption{
 </section>
 
 <section>
-  <h2><span class="sec">04 &middot; Rescue attempts</span>No better arrangement statistic recovers the effect</h2>
+  <h2><span class="sec">05 &middot; Rescue attempts</span>No better arrangement statistic recovers the effect</h2>
   <p>The natural objection is that the EFI is simply a poor measure of arrangement. It is not, and the evidence runs the other way.</p>
 
   <h3>The definition grid</h3>
@@ -475,7 +552,7 @@ figure.plate figcaption{
 </section>
 
 <section>
-  <h2><span class="sec">05 &middot; Consequences</span>What the paper can no longer say</h2>
+  <h2><span class="sec">06 &middot; Consequences</span>What the paper can no longer say</h2>
   <p>Exhibits regenerate mechanically. These are the sentences that become false, which is the part that needs an authorial decision rather than a re-run.</p>
 
   <ul class="inv">
@@ -508,7 +585,7 @@ figure.plate figcaption{
 </section>
 
 <section>
-  <h2><span class="sec">06 &middot; Incidental</span>Errors found along the way, unrelated to this change</h2>
+  <h2><span class="sec">07 &middot; Incidental</span>Errors found along the way, unrelated to this change</h2>
   <ul class="plain">
     <li><span class="mono">SA_F:339</span> and <span class="mono">:388</span> say <q>sixteen industry-specific frameworks</q>. The estimation sample carries 18 framework labels: Cross-Industry plus <strong>seventeen</strong> industry frameworks. Column (3)'s fixed effect absorbs 18 levels. The matching script's own docstring repeats the miscount.</li>
     <li><span class="mono">SA_E:134</span> says the positive cells are <q>+0.05 or smaller in magnitude</q>. Two of the six exceed that, at +0.0705 and +0.1956.</li>
