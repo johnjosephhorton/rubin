@@ -207,14 +207,16 @@ This table reports average marginal effects from estimating Equation~\eqref{eq:D
 The dependent variable in all specifications is an indicator for whether task $k$ is AI-executed ($\text{is\_ai}_{k}$).
 The sample is restricted to similar tasks across occupations, identified as tasks belonging to the same DWA in the O*NET dataset.
 All specifications control for the AI exposure status of task $k$ and for the total number of tasks in task $k$'s occupation.
-Standard errors are bootstrapped using $B=200$ replications and clustered at the DWA level.}
+Standard errors are bootstrapped using $B=200$ replications and clustered at the DWA level.
+The estimating sample varies across columns. Minor-group fixed effects in column~(3) drop groups with no within-group variation in the outcome, removing 847 tasks. The DWA fixed effects in columns~(4) and~(6) are identified only from DWAs containing both an AI-executed and a non-AI-executed task, which is 534 of the 1{,}748 DWAs in the sample and leaves 4{,}096 tasks; column~(5) carries no DWA fixed effects but is estimated on that same restricted sample so that it is directly comparable with column~(4). The number of DWA clusters is 1{,}748 in columns~(1)--(2), 1{,}705 in column~(3), and 534 in columns~(4)--(6).}
 \end{spacing}
 \end{minipage}\end{table}
 The baseline in column~(1) shows that AI execution of both immediate and more distant neighbors raises the probability that the focal task is AI-executed, with the immediate neighbor effects roughly twice the size of the distant ones.
-The remaining columns ask how much of this survives progressively demanding comparisons.
+The remaining columns ask how much of this survives more demanding comparisons.
 Columns~(2)--(3) absorb occupation family differences with SOC major and minor group fixed effects, and column~(4) restricts the variation to within detailed work activities with DWA fixed effects, addressing differences in AI-ability across types of task.
-Columns~(5)--(6) repeat the exercise controlling for the number of same-DWA tasks in the focal task's occupation, which rules out mechanical proximity inflating the estimates when several same-DWA tasks sit in one workflow.
-The pattern is the same throughout: the immediate neighbor effect attenuates relative to the baseline but stays statistically and economically meaningful, while the distant neighbor effects shrink toward zero and lose significance.
+Columns~(5)--(6) repeat the exercise controlling for the number of same-DWA tasks in the focal task's occupation, which rules out mechanical proximity inflating the estimates when several same-DWA tasks sit in one workflow; columns~(4)--(6) are all estimated on the same restricted sample, so they are comparable with one another rather than with column~(1).
+Across the specifications that absorb occupation-family or DWA heterogeneity, columns~(2)--(4) and~(6), the pattern is the same: the immediate neighbor effect attenuates from $0.12$ in the baseline to between $0.04$ and $0.06$ but stays statistically and economically meaningful, while the distant neighbor effects fall to between $-0.01$ and $0.01$ and lose significance.
+Column~(5) carries no fixed effects and, estimated on the restricted sample of column~(4), reproduces the baseline pattern rather than the attenuated one.
 That the baseline estimates attenuate tells us they partly reflect systematic differences across occupation families; that the immediate neighbor effect persists tells us the local pattern is not merely such a difference.
 
 Because we have no external benchmark for what constitutes a large or small effect here, the magnitudes are hard to read on their own.
