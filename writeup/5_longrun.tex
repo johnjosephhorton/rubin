@@ -29,7 +29,7 @@ Notice that a worker's job can potentially contain both manual and AI chain task
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: The top two layers reproduce Figure~\ref{fig:steps_tasks}, with $m=7$ steps grouped by dashed boxes into the $n=5$ tasks below them.
-This figure adds the third layer: cyan dashed boxes group tasks into $p=3$ jobs, each assigned to a separate worker.
+This figure adds the third layer, in which cyan dashed boxes group tasks into $p=3$ jobs, each assigned to a separate worker.
 Red curly arrows mark the hand-offs incurred at job boundaries, and can be traced from the bottom layer up to the tasks and steps they separate.}
 \end{spacing}
 \end{minipage}
@@ -40,10 +40,10 @@ The short run had no need of this notion, as we assumed workers had acquired the
 In the long run, however, the firm chooses which steps to assign to which worker, effectively changing the skill requirement of their jobs.
 We thus introduce skills to capture this other work dimension.
 
-Accordingly, we extend Definitions~\ref{def:manual_step}--\ref{def:ai_chain} to incorporate the skill requirement of steps as well: 
+Accordingly, we extend Definitions~\ref{def:manual_step}--\ref{def:ai_chain} to incorporate the skill requirement of steps as well, so that 
 the skill and time requirement of performing step $i$ manually is $(\manualSkill{i},\, \manualTime{i})$, while verifying the output of one AI attempt at it costs $(\AIskill{i},\, \AItime{i})$.
 The two values need not coincide, since doing the work oneself calls for knowing how to do it, whereas verifying what an AI returns may call for knowledge of a different kind.
-As with time, a task inherits the skill of whichever mode executes it, so each task $T_b$ in the task sequence $\T = (T_1, \dotsc, T_n)$ carries a pair of skill and time requirements $(\skillcost{b}, \timecost{b})$: it is $(\manualSkill{i},\, \manualTime{i})$ if $T_b$ is the manual step $s_i$, and $\bigl(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i\bigr)$ if $T_b$ is an AI chain spanning $(s_\ell, \dotsc, s_r)$.
+As with time, a task inherits the skill of whichever mode executes it, so each task $T_b$ in the task sequence $\T = (T_1, \dotsc, T_n)$ carries a pair of skill and time requirements $(\skillcost{b}, \timecost{b})$, which is $(\manualSkill{i},\, \manualTime{i})$ if $T_b$ is the manual step $s_i$, and $\bigl(\AIskill{r},\, \AItime{r}/\prod_{i=\ell}^{r} q_i\bigr)$ if $T_b$ is an AI chain spanning $(s_\ell, \dotsc, s_r)$.
 Both cost components of a chain's pair (for a single verification attempt) are therefore inherited from its augmented endpoint.
 In particular, the chain demands only the skill required to verify the augmented step's output, and an automated step inside the chain demands no skill of anyone, since no human ever handles it directly.
 
@@ -99,7 +99,7 @@ Equation~\eqref{eq:jobcost} implies dividing a job in two splits its skill requi
 Carried to its conclusion, this logic would have the firm fully specialize work and assign every task to its own worker, each of whom acquires exactly the knowledge their task requires and none of whom is ever paid for skill they are not using.
 
 In reality, work is not organized this way, because dividing production among many workers is costly.
-Each division creates a point at which work must pass from one person to the next, and coordinating that intermediate output takes time: whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.\footnote{\cite{lee2023task} formalize such interdependencies and construct an occupation-level index of coordination intensity from the O*NET dataset, which they relate to wages and to exposure to AI.}
+Each division creates a point at which work must pass from one person to the next, and coordinating that intermediate output takes time, because whoever receives it has to be told what was done, why, and what state the output is now in, and whoever hands it over has to put it in a form that can be received.\footnote{\cite{lee2023task} formalize such interdependencies and construct an occupation-level index of coordination intensity from the O*NET dataset, which they relate to wages and to exposure to AI.}
 We model this coordination friction with an additional \emph{hand-off} cost, in time, that a worker spends passing their work on to the next worker, incurred whenever $J_j$ is not the final job in the job design $\mathcal{J}$.
 
 Because production in our model exhibits an order, we can be more specific about what a hand-off costs.
@@ -127,7 +127,7 @@ Adding more tasks to a worker's job increases the cumulative skill requirement a
 However, if tasks are kept separate, workers must incur additional hand-off costs at each job boundary.
 These two effects jointly determine the optimal degree of task aggregation.
 
-Going back to the university professor example, this is perhaps why the chores fall to the professor in the first place. On wages alone the university should hand the cleaning of the board to a cheaper worker. What stops it is that the work would have to change hands mid-lecture: the professor must find someone, the lecture waits, and the worker must be told what is wanted. That costs more than the professorial minutes it saves, so the professor's job absorbs the chore.
+Going back to the university professor example, this is perhaps why the chores fall to the professor in the first place. On wages alone the university should hand the cleaning of the board to a cheaper worker. What stops it is that the work would have to change hands mid-lecture, which means the professor must find someone, the lecture waits, and the worker must be told what is wanted. That costs more than the professorial minutes it saves, so the professor's job absorbs the chore.
 
 We explore this trade-off in greater detail in Section~\ref{sec:longrun.specialization}, after introducing the problem the firm solves in choosing its jobs.
 
@@ -212,14 +212,14 @@ More generally, a production sequence with $n$ tasks has $2^{(n-1)}$ unique job 
 \end{spacing}
 \end{minipage}
 \end{figure}
-Panel~(a) sets hand-off costs to zero and recovers the frictionless benchmark: the cost-minimizing design, outlined in red, is full specialization, with each task its own separate job.
+Panel~(a) sets hand-off costs to zero and recovers the frictionless benchmark. The cost-minimizing design, outlined in red, is full specialization, with each task its own separate job.
 Panel~(b) reinstates hand-offs and the optimum moves to $[1,2][3]$, in which tasks 1 and 2 share a job and task 3 stands alone.
-The reason is the large hand-off time $\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger: bundling them avoids that hand-off at the price of a worker who must hold both skills and be paid for both throughout.
+The reason is the large hand-off time $\handofftime{1}=3$ that a boundary between tasks 1 and 2 would trigger, since bundling them avoids that hand-off at the price of a worker who must hold both skills and be paid for both throughout.
 
 This is the machinery AI acts on, and it does so through two channels.
 The first is skill. An AI chain leaves the worker holding only the skill needed to verify its endpoint, so the tasks AI absorbs become short rectangles in the picture above.
 That cuts the idle skill a bundled job pays for, which makes broader jobs cheaper to sustain and pushes the firm toward consolidation.
-But the same reduction works in the opposite direction as well, because what a hand-off costs is also a skill multiplied by a time: a worker whose job AI has made less skill-intensive is cheaper to leave idle at a boundary, so the hand-off the firm was bundling to avoid becomes less worth avoiding.
+But the same reduction works in the opposite direction as well, because what a hand-off costs is also a skill multiplied by a time. A worker whose job AI has made less skill-intensive is cheaper to leave idle at a boundary, so the hand-off the firm was bundling to avoid becomes less worth avoiding.
 In the workflow above, for instance, tasks 1 and 2 share a job because a skill-$3$ worker would otherwise sit through a hand-off of length $3$; were AI to take over task 1 and leave only verification skill behind, that reason would weaken along with the wage rate it applies to.
 
 The second channel is time.
@@ -229,7 +229,7 @@ The hand-off answers to the same force.
 We have treated $\handofftime{i}$ as a primitive to capture the tacit and social knowledge of transferring work, but AI plausibly lowers it as well, by absorbing the peripheral coordination a transfer requires, such as summarizing what was done or drafting the documentation that accompanies it.
 Cheaper hand-offs make every boundary cheaper to draw, which pushes toward narrower jobs and more specialization.
 Panel~(a) of Figure~\ref{fig:job_design} is the limiting case, with hand-offs free and full specialization optimal.
-Time therefore divides as skill does: a shorter task makes bundling cheaper, a shorter hand-off makes splitting cheaper, and the two work against each other.
+Time therefore divides as skill does, in that a shorter task makes bundling cheaper, a shorter hand-off makes splitting cheaper, and the two work against each other.
 
 What this framework delivers is therefore not a prediction about job breadth but an account of what determines it.
 AI presses on both sides of the specialization trade-off at once, and which way jobs move depends on the relative size of the skill and time it strips out and the coordination it leaves behind.

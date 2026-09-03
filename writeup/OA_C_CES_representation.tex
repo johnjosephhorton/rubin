@@ -15,7 +15,7 @@ In this macro-level representation, the inputs are economy-wide aggregates of th
 
 Before the aggregation analysis, let us first describe the setup of production.
 A firm uses two production inputs: (1) skill-adjusted AI management labor (to complete AI chains), and (2) skill-adjusted manual labor (to perform manual tasks).
-These two types of labor demand different compensations: executing an AI chain with skill and time cost of one demands $w_{\AIletter}$, while completing a manual task with similar skill and time requirements commands a compensation of $w_{\manualLetter}$.
+These two types of labor demand different compensations, in that executing an AI chain with skill and time cost of one demands $w_{\AIletter}$, while completing a manual task with similar skill and time requirements commands a compensation of $w_{\manualLetter}$.
 We call $w_{\AIletter}$ and $w_{\manualLetter}$ the \emph{base wage rates} for AI management and manual labor, respectively.
 
 Firms use these two inputs to complete tasks.
@@ -39,7 +39,7 @@ The formulation in \eqref{eq:new_wage} allows tasks to contribute differently to
 Next, we define skill-adjusted labor, which is the smallest unit of work in our analysis.
 Let $J(b)$ denote the job to which task $b$ belongs, and $E(b)$ be the mode of execution of task $b$ (i.e., $E(b) = \manualLetter$ if $b$ is a manual task, or $E(b) = \AIletter$ if $b$ is an AI chain).
 Write $d_b$ for the total difficulty of the steps task $b$ hands to AI, so that $d_b = \sum_{i=\ell}^{r} d_i$ for a chain spanning $(s_\ell, \dotsc, s_r)$ and $d_b = 0$ for a manual step.
-A task's time requirement for a single attempt inherits its mode from $E(b)$ and is written $\timeCostLetter^{E(b)}_{b}$: it is $\manualTime{b}$ when task $b$ is a manual step, and $\AItime{b}$, the cost of verifying the chain's augmented endpoint, when it is an AI chain.
+A task's time requirement for a single attempt inherits its mode from $E(b)$ and is written $\timeCostLetter^{E(b)}_{b}$, which is $\manualTime{b}$ when task $b$ is a manual step, and $\AItime{b}$, the cost of verifying the chain's augmented endpoint, when it is an AI chain.
 Recall from Definition~\ref{def:ai_strategy} that the \emph{expected} time cost of a task is $\timecost{b} = \timeCostLetter^{E(b)}_{b}\,\alpha^{-d_b}$, so that below we write the failure inflation $\alpha^{-d_b}$ explicitly wherever an expected quantity is formed rather than folding it into $\timeCostLetter^{E(b)}_{b}$.
 Define the skill-adjusted time requirement of task $b$ as
 \[
@@ -188,7 +188,8 @@ Therefore:
 \end{equation}
 
 Let $\phi(\bar{\alpha})$ be the density of output across firms according to their effective AI quality level, so that aggregate output is the integral of $\phi$ over the range of producing firms.
-Only the product of the density of firms over $\bar{\alpha}$ and the output of a firm of type $\bar{\alpha}$ enters the aggregate quantities below, so we normalize the former to one and let $\phi$ carry the latter: a firm with effective AI quality $\bar{\alpha}$ produces output $y = \phi(\bar{\alpha})$.
+Only the product of the density of firms over $\bar{\alpha}$ and the output of a firm of type $\bar{\alpha}$ enters the aggregate quantities below, so we normalize the former to one and let $\phi$ carry the latter.
+A firm with effective AI quality $\bar{\alpha}$ then produces output $y = \phi(\bar{\alpha})$.
 For brevity we refer to $\phi$ below as the distribution of effective AI quality, always in this sense of output across quality levels rather than of firms across quality levels.
 From Condition~\eqref{eq:micro_fixed_proportions}, it directly follows that the AI management labor and manual labor used by this firm are: $\labor{\AIletter} = (\skillAdjustedTimeLetter_{\AIletter}/\bar{\alpha})\,\phi(\bar{\alpha}),$ and $\labor{\manualLetter} = \skillAdjustedTimeLetter_{\manualLetter}\,\phi(\bar{\alpha}).$
 Consequently, aggregate output $Y$, aggregate AI management labor $\aggregateAIlabor$, and aggregate manual labor $\aggregateManualLabor$ can be expressed as:
@@ -242,7 +243,8 @@ The derived distribution in \eqref{eq:phi} characterizes firm-level heterogeneit
 Two features of this construction are worth making explicit.
 First, because $\skillAdjustedTimeLetter_{\manualLetter}$ is common to all firms, Equation~\eqref{eq:micro_H} gives $\aggregateManualLabor = \skillAdjustedTimeLetter_{\manualLetter}\,Y$ at every wage vector, while capital is normalized to $K=1$.
 As the participation threshold varies, the economy therefore traces a one-dimensional locus along which $\aggregateManualLabor/Y$ and $K$ are both fixed, rather than filling out the space of input combinations.
-Equation~\eqref{eq:macro_agg_prod} should accordingly be read as a representation valid along that locus rather than as an identification of the economy's technology over arbitrary $(\aggregateAIlabor, \aggregateManualLabor, K)$: it captures how the economy substitutes between AI management and manual labor as the participation threshold moves, and says nothing testable about the manual-input-per-output or capital margins, which are fixed by construction.
+Equation~\eqref{eq:macro_agg_prod} should accordingly be read as a representation valid along that locus rather than as an identification of the economy's technology over arbitrary $(\aggregateAIlabor, \aggregateManualLabor, K)$.
+It captures how the economy substitutes between AI management and manual labor as the participation threshold moves, and says nothing testable about the manual-input-per-output or capital margins, which are fixed by construction.
 Second, recovering a genuine three-input CES requires firms to differ in at least two of their input requirements, as in \citet{houthakker1955pareto} and \citet{levhari1968note}.
 Our two-stage timing rules this out by construction, since every firm commits to the same $\T$ and $\J$ before learning $\bar{\alpha}$.
 Allowing firms that anticipate deploying AI more effectively to organize work differently would make $\skillAdjustedTimeLetter_{\manualLetter}$ vary with $\bar{\alpha}$ and restore the missing dimension, at the cost of a joint distribution over organizational choices and realized quality that would be intractable without imposing further assumptions on the type of heterogeneity and firm behavior.

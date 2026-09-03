@@ -13,7 +13,7 @@ topical similarity instead of production logic.
 Since AI exposure and execution are themselves correlated with what a task is about, such an ordering could manufacture the
 contiguity we document without any underlying sequence and contaminate our other exercises.
 Appendix~\ref{app:gptPrompts_robustness} showed our orderings are stable across prompts, but stability is
-not accuracy: an instrument can be consistently wrong.
+not accuracy, since an instrument can be consistently wrong.
 
 The second is that not all O*NET tasks may be performed as part of a single workflow sequence.
 O*NET is a catalogue of what an occupation involves, not a process map, and if its task lists do not describe
@@ -30,23 +30,25 @@ The second is a collection of process-mining event logs from the 4TU.ResearchDat
 record case by case the activities organizations actually executed and when, so that the order is observed
 rather than asserted.
 
-We first establish that the LLM can recover an ordering of activities at all, against corpora whose order is
-already known.
+The bulk of the appendix establishes that the LLM can recover an ordering of activities at all, against corpora
+whose order is already known.
 Appendix~\ref{app:apqc_validation} shuffles the steps of 345 documented process branches and asks the LLM to
 order them in a sequence, under the main analysis's prompt and each of its ten alternatives.
-It recovers the practitioners' order to a substantial degree, and does so despite presence of branches whose activities 
+It recovers the practitioners' order to a substantial degree, and does so despite the presence of branches whose activities
 are mutually exclusive options for which no true order exists.
 Appendix~\ref{app:eventlog_validation} repeats the exercise against the event logs, where the data reveal
 which precedences are real and the comparison can be restricted to them.
 The two benchmarks agree closely about how much sequence structure the instrument recovers.
 
-We then turn the same corpus on the second concern.
-Subsection~\ref{app:apqc_fragmentation_top} re-estimates the paper's predictions on the PCF's own sequences,
-matching APQC activities to O*NET tasks with natural-language embeddings so that AI exposure and AI execution labels carry over to a corpus no language model ordered.
-Both Prediction~\#1, that AI-executed steps form contiguous chains, and the fragmentation channel of
-Prediction~\#2, that dispersion of AI-exposed steps impedes the conversion of exposure into execution,
-continue to hold.
-We are unable to test Prediction~\#3, however, as the matching procedure is lossy and the surviving sample too small to support
+Subsection~\ref{app:apqc_fragmentation_top} then turns the PCF corpus on the second concern.
+It documents how AI exposure and AI execution labels are carried onto PCF steps with natural-language
+embeddings, which is the construction behind columns~(4)\textendash(6) of
+Table~\ref{tab:fragmentation_index_regression_exposure}, where the PCF estimates of the fragmentation channel
+of Prediction~\#3 are reported alongside the main sample and discussed in
+Subsection~\ref{sec:fragmentation_prediction}.
+It then re-runs Prediction~\#1 on those documented sequences, where AI-executed steps again form chains longer
+than chance allows.
+We are unable to test Prediction~\#2, however, as the matching procedure is lossy and the surviving sample too small to support
 the required comparison.
 
 Taken together, the exercises conducted in this appendix indicate that our findings are artifacts neither of how LLMs
@@ -154,9 +156,9 @@ Kendall's $\tau$ is coarse on short branches, which is why the extreme bins at b
 \end{figure}
 Under the main prompt the average Kendall's $\tau$ between the LLM's ordering and APQC's is $0.53$, with a median of $0.60$; $86\%$ of branches have positive $\tau$.
 The LLM places $70\%$ of APQC-adjacent step pairs in the correct direction against a null of $50\%$, and reproduces the practitioner sequence \emph{exactly} in $24\%$ of branches.
-The last of these is the most demanding: exact recovery by chance is one in $120$ for a five-step branch and one in $40{,}320$ for an eight-step branch.
+The last of these is the most demanding, because exact recovery by chance is one in $120$ for a five-step branch and one in $40{,}320$ for an eight-step branch.
 Against the permutation null the average $\tau$ corresponds to $z = 22.6$ ($p = 0.001$).
-The LLM is not reproducing the order in which the steps were shown to it: the average $\tau$ between its output and the shuffled input list is $0.11$.
+The LLM is not reproducing the order in which the steps were shown to it. The average $\tau$ between its output and the shuffled input list is $0.11$.
 
 Running the ten alternative prompts leaves this essentially unchanged.
 Prompt-specific averages span a narrow range, from $0.49$ to $0.53$, so the result is not an artifact of the particular phrasing used in the main prompt.
@@ -169,23 +171,23 @@ Across PCF categories the average $\tau$ ranges from $0.67$ in ``Deliver Service
 \paragraph{Reading the left tail.}
 \label{app:apqc_validation_tail}
 A tenth of branches record a negative $\tau$ under the main prompt, and it is worth being clear about what they are, since the sign of $\tau$ overstates the disagreement on short branches.
-Kendall's $\tau$ is coarse when there are few steps to order: on a three-step branch it can only take the values $\{-1, -1/3, +1/3, +1\}$, so a single inverted pair already registers as a large negative number, whereas on a ten-step branch the same inversion costs $0.02$ and leaves $\tau$ near $+1$.
-Figure~\ref{fig:apqc_tau_by_size} decomposes the distribution by branch length and shows the consequence directly: the mass at $\tau = -1$ consists entirely of three- and four-step branches, and so does most of the spike at $\tau = +1$, where $56\%$ of three-step branches sit against none of the branches with five steps or more.
+Kendall's $\tau$ is coarse when there are few steps to order. On a three-step branch it can only take the values $\{-1, -1/3, +1/3, +1\}$, so a single inverted pair already registers as a large negative number, whereas on a ten-step branch the same inversion costs $0.02$ and leaves $\tau$ near $+1$.
+Figure~\ref{fig:apqc_tau_by_size} decomposes the distribution by branch length and shows the consequence directly. The mass at $\tau = -1$ consists entirely of three- and four-step branches, and so does most of the spike at $\tau = +1$, where $56\%$ of three-step branches sit against none of the branches with five steps or more.
 
 The tail is not, however, purely an artifact of short branches.
-Negative values are about as common among the longest branches as among the shortest, $14\%$ in both cases, and what differs is their magnitude: short branches produce reversals; long branches produce values between $-0.03$ and $-0.20$, that is, a handful of misordered pairs within an otherwise correct sequence.
+Negative values are about as common among the longest branches as among the shortest, $14\%$ in both cases, and what differs is their magnitude, in that short branches produce reversals while long branches produce values between $-0.03$ and $-0.20$, that is, a handful of misordered pairs within an otherwise correct sequence.
 Inspecting the branches that remain negative after averaging over all ten alternative prompts, the recurring case is the one anticipated above: parents whose children are parallel streams or mutually exclusive alternatives, for which no true ordering exists and the sign of $\tau$ is close to a coin flip.
 
 \subsubsection{Benchmark \#2: Observed Process Execution (4TU.ResearchData)}
 \label{app:eventlog_validation}
 
-The benchmark above has a limitation it cannot overcome: a documented ordering is an editorial convention, so where a process has no true sequence, disagreement says nothing about the instrument.
+The benchmark above has a limitation it cannot overcome. A documented ordering is an editorial convention, so where a process has no true sequence, disagreement says nothing about the instrument.
 Moving from documented to \emph{observed} order removes it.
 
 A process-mining event log records, case by case, the activities an organization actually executed and when.
 Two things follow.
 First, the ordering is a fact about production rather than an assertion about it.
-Second, and more useful here, the data reveal \emph{which precedences are real}: if activity $x$ precedes $y$ in $97\%$ of cases the precedence is genuine, whereas a $50$/$50$ split means the two run concurrently and no ordering could be correct.
+Second, and more useful here, the data reveal \emph{which precedences are real}. If activity $x$ precedes $y$ in $97\%$ of cases the precedence is genuine, whereas a $50$/$50$ split means the two run concurrently and no ordering could be correct.
 We can therefore condition on the pairs that have a true order before asking whether the model recovers it, which is the step the documented benchmark does not permit.
 
 These logs record processes carried out by several people, with the case passing between them, and that property is what makes them the right benchmark here rather than the wrong one.
@@ -249,7 +251,7 @@ No log is told which activity starts or ends a case.
 We report two levels of analysis.
 At the \emph{log level} we compute Kendall's $\tau$ between the model's ordering and the observed ordering, which is directly comparable to the APQC numbers, benchmarked against a permutation null of $1{,}000$ random orderings per log.
 At the \emph{pair level} we ask only whether the model places a pair in the direction the traces show.
-The pair level is the more informative of the two here, both because it is where the determinacy conditioning bites and because it is closer to what the paper's predictions actually use: Predictions~\#1 and~\#3 depend on adjacency rather than on the global ordering.
+The pair level is the more informative of the two here, both because it is where the determinacy conditioning bites and because it is closer to what the paper's predictions actually use, since Predictions~\#1 and~\#2 depend on adjacency rather than on the global ordering.
 
 \paragraph{Results.}
 \label{app:eventlog_results}
@@ -257,9 +259,9 @@ Table~\ref{tab:eventlog_ordering_validation} reports the results and Figure~\ref
 
 Against a null of $0.5$, the model places $78.8\%$ of all activity pairs in the direction the traces show.
 Restricting to the determinate pairs, those the data confirm have a real order, gives $78.9\%$, and weighting each pair by how determinate it is gives $78.8\%$.
-That these three numbers coincide is itself informative: the model does no better on the pairs that a real organization orders strictly than on pairs in general, so the aggregate is not being propped up by easy cases.
+That these three numbers coincide is itself informative. The model does no better on the pairs that a real organization orders strictly than on pairs in general, so the aggregate is not being propped up by easy cases.
 At the log level the mean Kendall's $\tau$ is $0.48$ with a median of $0.56$, against a permutation null centered at $0.00$ ($z = 6.8$, $p = 0.001$).
-The model is not echoing the list it was shown: the average $\tau$ between its output and the shuffled input is $0.007$.
+The model is not echoing the list it was shown. The average $\tau$ between its output and the shuffled input is $0.007$.
 
 The ten alternative prompts again leave the picture unchanged.
 Determinate-pair accuracy under individual prompts spans $0.767$ to $0.817$ and log-level mean $\tau$ spans $0.433$ to $0.559$, so no conclusion here depends on the phrasing used in the main analysis.
@@ -332,87 +334,89 @@ The model is therefore working with substantially less context than an O*NET tas
 Accuracy here is, in that specific sense, a conservative estimate of what the procedure achieves on the task statements the paper actually uses.
 
 
-\subsection{Concern \#2: Re-Estimating the Predictions on Documented Sequences}
+\subsection{Concern \#2: Transferring the Labels onto Documented Sequences}
 \label{app:apqc_fragmentation_top}
 
-Testing the predictions of the theoretical model on APQC sequences requires transferring AI exposure and execution labels, since those are measured over O*NET tasks and have no counterpart defined on PCF elements.
+Estimating anything on APQC sequences requires transferring AI exposure and execution labels, since those are measured over O*NET tasks and have no counterpart defined on PCF elements.
 We pool the Cross-Industry framework with APQC's sixteen industry-specific frameworks, discard duplicate
 process groups, embed each leaf element and each labeled O*NET task with the language embedding model \texttt{all-mpnet-base-v2}, and match every step to its nearest task by cosine similarity.
-Matching process steps to task statements is lossy, so we set a similarity threshold of $0.73$ and carry a
-label across only when the match clears it.\footnote{We chose the $0.73$ similarity threshold after manual inspection of some of the matches.}
-A step whose best match falls below the threshold is not discarded: doing so would shorten the very sequences
-the exercise is about, and the shortening would not be random, since the steps that fail to match are
-concentrated in the operational and industry-specific parts of the frameworks.
+Matching process steps to task statements is lossy, so we set a similarity threshold of $0.71$ and carry a
+label across only when the match clears it.\footnote{We chose the $0.71$ similarity threshold after manual inspection of some of the matches. The paragraph on the similarity floor below reports how the results move as it is varied.}
+A step whose best match falls below the threshold is not discarded.
+Doing so would shorten the very sequences the exercise is about, and the shortening would not be random, since
+the steps that fail to match are concentrated in the operational and industry-specific parts of the frameworks.
 We instead keep every step in place and code the sub-threshold ones as neither AI-exposed nor AI-executed,
 which preserves the documented ordering intact and treats an unverifiable label as an absent one.
 Process groups with fewer than five steps are dropped, leaving $13{,}482$ steps in $525$ process groups and
 $26$ steps per group, against $20$ tasks per occupation in the main sample.
 
 \paragraph{What survives the threshold.}
-The $0.73$ cosine similarity threshold is demanding, and it should be read as such before the estimates are.
-Only $1{,}364$ steps, $10\%$ of the corpus, clear it, at a mean cosine similarity of $0.77$.
-Because every step below it is coded manual and unexposed, the resulting sample is very thin in AI content:
-$8\%$ of steps are AI-exposed and $3\%$ are AI-executed, against $46\%$ and $13\%$ in the O*NET task
+The $0.71$ cosine similarity threshold is demanding, and it should be read as such before any estimate is.
+Only $2{,}067$ steps, $15\%$ of the corpus, clear it, at a mean cosine similarity of $0.75$.
+Because every step below it is coded manual and unexposed, the resulting sample is very thin in AI content, where
+$12\%$ of steps are AI-exposed and $4\%$ are AI-executed, against $44\%$ and $13\%$ in the O*NET task
 universe.
-The exercise therefore asks whether the predictions hold on a corpus carrying roughly a fifth of the main
-sample's AI density, with every label that does survive verified at high similarity.
-This is a deliberately conservative reading of the transfer, and it sets the terms for why the point estimates stay in place but the precision does not.
+Anything estimated on these sequences therefore asks whether a prediction holds on a corpus carrying roughly a
+third of the main sample's AI density, with every label that does survive verified at high similarity.
+The caveat applies to the fragmentation estimates in those columns as much as to the chain-length test below, though Subsection~\ref{sec:fragmentation_prediction} explains why the same sparsity works in the fragmentation test's favor.
+
+\paragraph{How much the similarity floor matters.}
+The floor is a judgement call, so we vary it from $0.65$ to $0.75$ in steps of $0.01$ and re-run both exercises at each value.
+The $525$ process groups are held fixed throughout, since the five-step minimum applies to the raw step count rather than to the labels, so raising the floor only relabels steps as unexposed and unexecuted.
+Figure~\ref{fig:apqc_similarity_threshold} reports the result.
+Both signs survive the whole range.
+The average AI chain exceeds its reshuffle null at all eleven floors, and the fragmentation coefficient is negative at all eleven under each of the three fixed-effect specifications, reaching the $5\%$ level in eight of them without fixed effects.
+The magnitude is not monotone, however, running from $-0.26$ at $0.65$ to $-0.63$ at $0.69$ and back to $-0.11$ at $0.72$, and the standard error roughly doubles across the range as the labels thin out.
+Neighboring floors can therefore fall on opposite sides of a significance threshold without the underlying estimates differing, as at $0.72$ and $0.73$, whose point estimates each lie inside the other's confidence interval, so the range matters more than any single cell.
+We therefore choose the floor on the density of the transferred labels rather than on the estimates it produces.
+Raising it thins both the AI exposure and the AI execution content of the corpus, and exposure, the more common of the two labels, is the binding one.
+At $0.71$ the corpus retains $12\%$ of its steps as AI-exposed and $4\%$ as AI-executed, and every floor above it drops the exposure share below $10\%$, which is why we settled there.
+\begin{figure}[!t]
+\caption{PCF Results as the Label-Transfer Similarity Floor Varies}
+\label{fig:apqc_similarity_threshold}
+\centering
+\includegraphics[width=\textwidth]{plots/apqc_similarity_threshold/apqc_similarity_threshold.png}
+\par\vspace{\fignotesskip}
+\begin{minipage}{1\linewidth}
+\begin{spacing}{0.2}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Each point re-runs the label transfer at the indicated cosine similarity floor and re-estimates on the resulting labels.
+The $525$ process groups are the same at every floor, since the five-step minimum is applied to the raw step count and not to the labels.
+The left panel reports the average AI chain length against the mean of $1{,}000$ within-group step-order reshuffles, with the shaded band covering two standard deviations of that null and the annotation giving the $z$-statistic.
+The right panel reports the coefficient on the empirical fragmentation index from Equation~\eqref{eq:fragmentation_index_regression} with $90\%$ confidence intervals, under each of the three fixed-effect specifications of columns~(4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression_exposure}.
+The dotted line marks the $0.71$ floor used throughout the paper.}
+\end{spacing}
+\end{minipage}
+\end{figure}
 
 \paragraph{Prediction \#1.}
-The average AI chain in the PCF dataset spans $1.14$ steps, against $1.45$ in the main text for O*NET.
-The magnitude is small, and mechanically so: with only $3\%$ of steps AI-executed, there is little
+The average AI chain in the PCF dataset spans $1.16$ steps, against $1.45$ in the main text for O*NET.
+The magnitude is small, and mechanically so, because with only $4\%$ of steps AI-executed, there is little
 opportunity for long runs to form, and the ceiling on the statistic is far below the main sample's.
 What the exercise can still ask is whether the runs that do form are longer than the same labels arranged at
 random along the same sequences, and they clearly are.
 Benchmarked as in Section~\ref{sec:chainLength_prediction} against $1{,}000$ draws of a within-group
-step-order reshuffle, the null averages $1.07$ with a standard deviation of $0.01$, and the observed value
-sits at the 100th percentile ($z = 5.4$); against a within-category reassignment that preserves group size,
-the null averages $1.04$ and the observed value again sits at the 100th percentile ($z = 9.7$).
+step-order reshuffle, the null averages $1.09$ with a standard deviation of $0.01$, and the observed value
+sits at the 100th percentile ($z = 6.6$); against a within-category reassignment that preserves group size,
+the null averages $1.06$ and the observed value again sits at the 100th percentile ($z = 10.2$).
 The economic magnitude of AI chain length is therefore modest, but the co-occurrence of AI-executed content behind it is unambiguous.
+Since no language model placed these steps in order, the contiguity is a property of the documented workflow
+rather than of the ordering procedure.
 
 \paragraph{Prediction \#2.}
-Table~\ref{tab:apqc_fragmentation_index_regression} reports the PCF counterpart of Table~\ref{tab:fragmentation_index_regression_exposure} for the empirical fragmentation index regression of Equation~\eqref{eq:fragmentation_index_regression}.
-\begin{table}[!t]
-    \caption{Fragmentation and AI Execution on APQC's Documented Process Sequences}
-    \label{tab:apqc_fragmentation_index_regression}
-    \footnotesize
-    \centering
-    \adjustbox{max width=\textwidth}{\input{tables/apqc_fragmentation_index_regression.tex}}
-    \begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Standardized coefficients. Robust standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table re-estimates the main-text fragmentation regression of Equation~\eqref{eq:fragmentation_index_regression} on APQC process sequences.
-The dependent variable is the share of steps executed by AI; the fragmentation index is EFI Definition~1, computed over APQC's documented step ordering.
-Exposure and execution labels are transferred from each step's nearest O*NET task in \texttt{all-mpnet-base-v2} embedding space, carried across only when the match reaches $0.73$ cosine similarity.
-Steps below that threshold are retained in sequence and coded as neither AI-exposed nor AI-executed, so the documented ordering is preserved; $8\%$ of steps are AI-exposed and $3\%$ AI-executed in the resulting sample.
-The unit is the PCF Process Group, pooled across the Cross-Industry framework and APQC's sixteen industry-specific frameworks with duplicate groups removed.
-All columns control for the number of AI-able steps in the group, as in Table~\ref{tab:fragmentation_index_regression_exposure}, and all variables are standardized within the sample.}
-\end{spacing}
-\end{minipage}\end{table}
-In the regression all variables are z-scored against their mean and standard deviation in the PCF sample, so that magnitudes are comparable across datasets.
-The estimated empirical fragmentation index coefficient is negative and significant in all three columns, at $-0.37$, $-0.37$ and $-0.38$, against $-0.26$ to $-0.38$ in Table~\ref{tab:fragmentation_index_regression_exposure}: the more dispersed the AI-able
-steps are across a workflow, the less of that exposure converts into execution.
-The index varies far less across PCF process groups than across O*NET occupations, however, with a standard
-deviation of $0.04$ against $0.26$, so the same standardized coefficient is a different quantity in levels.
-A one-standard-deviation increase in fragmentation lowers the AI-execution share by about $2$ percentage
-points here against $4$ to $6$ points in the main sample, while per unit of the index itself the PCF slope is
-two to three times as steep.
-The AI exposure coefficient carries the right sign in all three columns, at $0.14$, $0.19$ and $0.15$ against
-$0.24$, $0.11$ and $0.09$ in the main text, but it is significant only under PCF Category fixed effects in column (2).
-That loss of precision is the direct cost of the thin sample described above.
-The empirical fragmentation index is far less exposed to that attrition, however, because it depends on the \emph{arrangement} of AI-able steps along the sequence rather than on the exposure category of any individual step.
-The channel the prediction is about, that dispersion impedes the conversion of exposure into execution,
-survives the transfer intact while the level relationship between exposure and execution is estimated too imprecisely here to be informative.
-
-\paragraph{Prediction \#3.}
-We do not attempt a counterpart of the neighbor-execution regression.
-That test requires the same step to appear in several workflows with \emph{different} execution outcomes, and
-transferred labels are a deterministic function of the matched task, so identifying variation is scarce.
+We do not attempt a counterpart of the neighbor-execution regression, since that test requires the same step
+to appear in several workflows with \emph{different} execution outcomes, while transferred labels are a
+deterministic function of the matched task.
 Restricting to steps that clear the threshold and whose matched task maps to a single DWA appearing in more
 than one process group leaves $981$ observations across $137$ DWAs, of which only $9$ contain both an
 AI-executed and a non-executed step, against $10{,}708$ tasks across $1{,}748$ DWAs in the baseline specification of
-Table~\ref{tab:DWA_regression_aiExecution_mainSample}.
-The matched corpus is underpowered for that exercise by roughly an order of magnitude.
+Table~\ref{tab:DWA_regression_aiExecution_mainSample}, so the matched corpus is underpowered for that exercise
+by roughly an order of magnitude.
+
+\paragraph{Reading the PCF fragmentation coefficient.}
+The fragmentation regression of Equation~\eqref{eq:fragmentation_index_regression} is estimated on this corpus in columns~(4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression_exposure} and discussed in Subsection~\ref{sec:fragmentation_prediction}, which also explains why the sparsity of the transferred labels leaves the fragmentation coefficient identified here and not on the main sample.
+One feature of the transfer belongs here rather than in the main text.
+All variables are z-scored against their mean and standard deviation within the PCF sample, and the index varies far less across PCF process groups than across O*NET occupations, with a standard deviation of $0.06$ against $0.26$.
+A one-standard-deviation move is thus a much smaller move in the index here, and the slope per unit of the index is correspondingly steeper.
 
 \subsection{Summary and Takeaways}
 \label{app:external_validation_discussion}
@@ -438,7 +442,7 @@ self-consistent than it is accurate.
 Three limitations qualify what these exercises establish.
 First, they validate the ordering \emph{procedure} rather than the specific O*NET orderings used in the paper,
 since neither the PCF nor the event logs is crosswalked to O*NET tasks.
-Second, the PCF is not a random sample of work: it is weighted toward enterprise process work such as finance,
+Second, the PCF is not a random sample of work, since it is weighted toward enterprise process work such as finance,
 procurement, human resources, information technology, and supply chain.
 Third, the PCF serves as a validation sample rather than as the main sample because our AI exposure labels
 come from \citet{eloundou2023gpts} and our AI execution labels from the Anthropic Economic Index

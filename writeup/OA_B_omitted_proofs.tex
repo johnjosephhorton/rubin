@@ -12,7 +12,8 @@ Because chains are contiguous and none crosses the boundary of the block $\{k-1,
 
 Before comparing them, note which of these arrangements can have AI execute step $k$ at all.
 Executed as a singleton, step $k$ costs $\minTime{k} = \manualTime{k}$, since $\manualTime{k} < \AItime{k}/q_k$ by hypothesis, so augmenting it on its own is strictly dominated by performing it manually and never occurs in an optimum.
-AI therefore executes step $k$ only if step $k$ belongs to a chain of length at least two, and since chains are contiguous and confined to the block, that chain is $\{k,\, k+1\}$, $\{k-1,\, k,\, k+1\}$, or $\{k-1,\, k\}$: in the first two, step $k$ is not the chain's last step, so its output is never verified and it is automated, while in the third it is the last step, hence augmented.
+AI therefore executes step $k$ only if step $k$ belongs to a chain of length at least two, and since chains are contiguous and confined to the block, that chain is $\{k,\, k+1\}$, $\{k-1,\, k,\, k+1\}$, or $\{k-1,\, k\}$.
+In the first two, step $k$ is not the chain's last step, so its output is never verified and it is automated, while in the third it is the last step, hence augmented.
 
 Pricing a singleton $\{k\}$ at $\manualTime{k}$ accordingly, the four partitions cost
 \begin{align*}
@@ -70,7 +71,7 @@ Fix the six cost parameters of the three steps and let their success probabiliti
 Write
 \[ \mathcal{A} \;=\; \bigl\{ (q_{k-1},\, q_k,\, q_{k+1}) \in Q \; : \; \text{AI executes step } k \bigr\} \]
 for the set of reliabilities at which the cost-minimizing arrangement does not leave step $k$ to the human.
-Part~(ii) is precisely the statement that $\mathcal{A}$ is \emph{upward closed} in the coordinatewise order: whenever a triple belongs to $\mathcal{A}$, so does every triple at least as large in all three coordinates.
+Part~(ii) is precisely the statement that $\mathcal{A}$ is \emph{upward closed} in the coordinatewise order, meaning that whenever a triple belongs to $\mathcal{A}$, so does every triple at least as large in all three coordinates.
 
 Before the main argument, dispose of the points at which the standing hypothesis lapses.
 Raising $q_k$ can push $\AItime{k}/q_k$ below $\manualTime{k}$, and at any such point step $k$ is cheaper augmented than performed manually even on its own, so AI executes it in every arrangement of the block and the conclusion holds there regardless of the other two coordinates.
@@ -94,7 +95,8 @@ AI executes step $k$ exactly when $\min\{V_1, V_2, V_3\} < V_0$, that is, when $
 Writing $\mathcal{A}_j = \{(q_{k-1},\, q_k,\, q_{k+1}) \in Q : D_j < 0\}$ for the set on which chain $j$ by itself beats manual execution of step $k$, this says
 \[ \mathcal{A} \;=\; \mathcal{A}_1 \cup \mathcal{A}_2 \cup \mathcal{A}_3 . \]
 A union of upward-closed sets is upward closed, because a triple in the union lies in one of them and every larger triple then lies in that same one.
-It is therefore enough to show that each $\mathcal{A}_j$ is upward closed, and the three can be handled separately: we never need to know which chain is optimal, only whether each one, on its own, is cheaper than leaving the step to the human.
+It is therefore enough to show that each $\mathcal{A}_j$ is upward closed, and the three can be handled separately.
+We never need to know which chain is optimal, only whether each one, on its own, is cheaper than leaving the step to the human.
 \end{sloppypar}
 
 \emph{Reduction 2: from all three coordinates at once to one at a time.}
@@ -156,7 +158,7 @@ Its content is that raising a neighbor's reliability always cheapens a chain tha
 
 \emph{Closure in $q_{k-1}$.}
 Fix $q_k$ and $q_{k+1}$ and let $q = q_{k-1}$ vary.
-The difference $D_1$ does not depend on $q$ at all: the two arrangements it compares, the chain $\{k,\, k+1\}$ and manual execution of step $k$, both leave the predecessor to be executed on its own, so the term $\minTime{k-1}$ appears in $V_1$ and $V_0$ alike and cancels.
+The difference $D_1$ does not depend on $q$ at all, because the two arrangements it compares, the chain $\{k,\, k+1\}$ and manual execution of step $k$, both leave the predecessor to be executed on its own, so the term $\minTime{k-1}$ appears in $V_1$ and $V_0$ alike and cancels.
 A constant function is nonincreasing, so $\mathcal{A}_1$ is upward closed in this coordinate.
 The other two differences are instances of the claim, with $B = \AItime{k-1}$ and $m = \manualTime{k-1}$ throughout and
 \begin{align*}
@@ -165,24 +167,26 @@ D_3: \quad A &= \frac{\AItime{k}}{q_k}, & c &= \manualTime{k},
 \end{align*}
 neither of which moves with $q$.
 The claim therefore makes $\mathcal{A}_2$ and $\mathcal{A}_3$ upward closed in $q_{k-1}$.
-Nothing here ties $A$ to $B$, so both of the claim's second-branch cases can occur: a predecessor whose own augmented cost falls faster than the cost of the chain it would anchor is exactly the case $A < B$, and it is settled not by monotonicity but by the chain's being cheaper throughout that branch to begin with.
+Nothing here ties $A$ to $B$, so both of the claim's second-branch cases can occur.
+A predecessor whose own augmented cost falls faster than the cost of the chain it would anchor is exactly the case $A < B$, and it is settled not by monotonicity but by the chain's being cheaper throughout that branch to begin with.
 
 \emph{Closure in $q_{k+1}$.}
 The successor coordinate is the counterpart of the predecessor one, and the milder half of it, so the claim disposes of it directly.
-The difference $D_3$ now plays the role $D_1$ played above and drops out for the mirror-image reason: the chain $\{k-1,\, k\}$ and manual execution of step $k$ both leave the successor to be executed on its own, so $\minTime{k+1}$ cancels between $V_3$ and $V_0$.
+The difference $D_3$ now plays the role $D_1$ played above and drops out for the mirror-image reason, namely that the chain $\{k-1,\, k\}$ and manual execution of step $k$ both leave the successor to be executed on its own, so $\minTime{k+1}$ cancels between $V_3$ and $V_0$.
 The remaining two differences are again instances of the claim, read in $q = q_{k+1}$, with $B = \AItime{k+1}$ and $m = \manualTime{k+1}$ throughout and
 \begin{align*}
 D_1: \quad A &= \frac{\AItime{k+1}}{q_k}, & c &= \manualTime{k}, \\
 D_2: \quad A &= \frac{\AItime{k+1}}{q_{k-1}\, q_k}, & c &= \minTime{k-1} + \manualTime{k} .
 \end{align*}
-The one difference from the predecessor case is that $A$ and $B$ are no longer free of each other: a chain terminating at the successor pays that same verification cost $\AItime{k+1}$, inflated by the failure risk of the steps ahead of it, so $A/B$ equals $1/q_k$ or $1/(q_{k-1} q_k)$ and is at least $1$.
+The one difference from the predecessor case is that $A$ and $B$ are no longer free of each other.
+A chain terminating at the successor pays that same verification cost $\AItime{k+1}$, inflated by the failure risk of the steps ahead of it, so $A/B$ equals $1/q_k$ or $1/(q_{k-1} q_k)$ and is at least $1$.
 Only the case $A \geq B$ of the claim can arise, and $\mathcal{A}_1$ and $\mathcal{A}_2$ are upward closed in $q_{k+1}$, with the differences nonincreasing outright.
 
 \emph{Closure in $q_k$.}
 This coordinate needs no work beyond the pricing already in hand.
 With the human's advantage in force, the no-chain arrangement performs step $k$ manually and prices the two neighbors on their own, so $V_0$ does not involve $q_k$ at all, while each of $V_1$, $V_2$, and $V_3$ carries a factor $1/q_k$ in the cost of the chain covering step $k$ and is therefore strictly decreasing in it.
 Every $D_j$ is thus strictly decreasing in $q_k$, and each $\mathcal{A}_j$ is upward closed in that coordinate.
-This is the sense in which the step's own reliability and its neighbors' enter differently: a better neighbor cheapens the chain and the alternative to it at once, and the argument above is what settles the race between them, whereas a better step $k$ cheapens only the chain.
+This is the sense in which the step's own reliability and its neighbors' enter differently, in that a better neighbor cheapens the chain and the alternative to it at once, and the argument above is what settles the race between them, whereas a better step $k$ cheapens only the chain.
 
 Each $\mathcal{A}_j$ is therefore upward closed in each coordinate separately, hence upward closed in the coordinatewise order by Reduction~2, and $\mathcal{A}$ is upward closed by Reduction~1.
 \end{proof}
@@ -209,7 +213,8 @@ We begin with the upper bound.
 \end{lem}
 \begin{proof}
 Fix an arbitrary task sequence $\T = (T_1, \dotsc, T_n)$.
-Note that $FI$ depends only on the step sequence $\mathcal{S}$: every step carries its own success probability $q_i$ whatever $\T$ does with it, so the realization of $F$ is unaffected by $\T$.
+Note that $FI$ depends only on the step sequence $\mathcal{S}$.
+Every step carries its own success probability $q_i$ whatever $\T$ does with it, so the realization of $F$ is unaffected by $\T$.
 We use $\T$ only to organize the terms of $FI$, grouping steps so that they can be compared with the cost $\T$ incurs on them.
 Partition this into two sets of tasks: $\T_{\manualLetter}$ containing all (singleton) tasks that are completed manually, and $\T_{\AIletter}$ containing AI chains.
 We first claim that
@@ -354,7 +359,7 @@ Consider a sequence of $m$ identical steps:
 = 
 \bigl(\sqrt{2},\, 1,\, 1/\sqrt{2}\bigr) \ \text{ for all $i$}. 
 \]
-The optimal task sequence chains the steps three at a time: a chain of $k$ steps costs $2^{k/2}$, or $2^{k/2}/k$ per step, which is minimized at $k=3$ with value $\tfrac{2\sqrt{2}}{3} \approx 0.9428$, below both the manual cost $\sqrt{2}$ and the per-step cost of any other chain length, so $OPT \to \tfrac{2\sqrt{2}}{3}\,m$.
+The optimal task sequence chains the steps three at a time, since a chain of $k$ steps costs $2^{k/2}$, or $2^{k/2}/k$ per step, which is minimized at $k=3$ with value $\tfrac{2\sqrt{2}}{3} \approx 0.9428$, below both the manual cost $\sqrt{2}$ and the per-step cost of any other chain length, so $OPT \to \tfrac{2\sqrt{2}}{3}\,m$.
 The fragmentation index is such that each step contributes $\sqrt{2}$ if it fails, plus $1$ if the preceding step did not fail, for a total contribution of $(1-1/\sqrt{2})(\sqrt{2} + 1/\sqrt{2}) = \tfrac{3}{2}(\sqrt{2}-1) \approx 0.6213$.
 As $m$ grows large, the ratio between $\tfrac{2\sqrt{2}}{3}m$ and $1 + m \times 0.6213$ approaches $\tfrac{4\sqrt{2}}{9(\sqrt{2}-1)} \approx 1.52$.
 \end{example}
@@ -403,7 +408,8 @@ We can relax the assumption in Lemma~\ref{lem:FI.lower.bound.4} that $\manualTim
     Either way the terminal task is charged at least $\min\{1, \sum_{s_i \in T_b} \manualTime{i}\}$, and with probability $1$ rather than $1/2$.
     Since the charging occurs with probability $1/2$ for each $T_b \in \T_{NI}$, and we are at most double-counting each $\omega(C)$, we conclude that the expected sum of all $\omega(C)$, plus $\minTime{i}$ for all failed steps $s_i$ that lie in some $T_b \in \T_{NI}$, is at least $1/4$ of $\sum_{T_b \in \T_{NI}}\min\left\{1, \sum_{s_i \in T_b} \manualTime{i} \right\}$.
 
-    The charging for $(s_i) \in \T_I$ remains unchanged: the value $\minTime{i}$ is charged in the event that step $s_i$ fails, which occurs with probability at least $1/2$.
+    The charging for $(s_i) \in \T_I$ remains unchanged.
+    The value $\minTime{i}$ is charged in the event that step $s_i$ fails, which occurs with probability at least $1/2$.
 
     Taken together, we obtain our desired $8$ approximation.
 \end{proof}
@@ -422,7 +428,8 @@ As $K$ grows large, the ratio tends to $\tfrac{2}{3}(2+\sqrt{2}) \approx 2.276$.
 \end{example}
 
 \begin{proof}[Proof of Proposition~\ref{prop:fragmentation}]
-Combining Lemmas~\ref{lem:FI.upper.bound}, \ref{lem:FI.lower.bound.4}, and~\ref{lem:FI.lower.bound.8} yields Proposition~\ref{prop:fragmentation}: in general $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$, and under the additional assumption $\manualTime{i} \geq 1$ for all $i$, $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
+Combining Lemmas~\ref{lem:FI.upper.bound}, \ref{lem:FI.lower.bound.4}, and~\ref{lem:FI.lower.bound.8} yields Proposition~\ref{prop:fragmentation}.
+In general $\tfrac{1}{8}OPT \leq FI \leq \tfrac{5}{4}OPT$, and under the additional assumption $\manualTime{i} \geq 1$ for all $i$, $\tfrac{1}{4}OPT \leq FI \leq \tfrac{5}{4}OPT$.
 \end{proof}
 
 \subsection{Non-Monotone Gains from AI Improvements: Formal Statement and Proof}
@@ -492,9 +499,10 @@ g_\T(\alpha_0) \;=\; -C_\T'(\alpha_0)
 -C_{\T'}'(\alpha_0) \;=\; g_{\T'}(\alpha_0).
 \]
 Since $g^*(\alpha)$ coincides with $g_\T(\alpha)$ just below $\alpha_0$ and with $g_{\T'}(\alpha)$ just above, and both are continuous at $\alpha_0$, the firm's marginal benefit function $g^*(\alpha)$ does not fall as $\alpha$ crosses $\alpha_0$.
-If in addition $\alpha_0$ is transversal, then $\phi'(\alpha_0) \neq 0$, which together with $\phi'(\alpha_0) \le 0$ gives $\phi'(\alpha_0) < 0$ and hence $g_\T(\alpha_0) < g_{\T'}(\alpha_0)$: the marginal benefit jumps upward discontinuously.
+If in addition $\alpha_0$ is transversal, then $\phi'(\alpha_0) \neq 0$, which together with $\phi'(\alpha_0) \le 0$ gives $\phi'(\alpha_0) < 0$ and hence $g_\T(\alpha_0) < g_{\T'}(\alpha_0)$, so the marginal benefit jumps upward discontinuously.
 Transversality cannot be dispensed with, because the sign change only forces $\alpha_0$ to be a root of $\phi$ of odd order, and at a root of order three or higher the envelope's marginal benefit passes through the threshold without a jump.\footnote{With $m = 4$, $d = (2,1,2,1)$, $\manualTime{} = (1000, 1000, 56, 1000)$ and $\AItime{} = (102, 65, 1000, 12)$, the strategy $\T$ that chains steps~1--2, performs step~3 manually, and augments step~4 is uniquely optimal just below $\alpha_0 = 1/2$, and the strategy $\T'$ that augments step~1 and chains steps~2--4 is uniquely optimal just above it. Writing $x = 1/\alpha$, their cost difference is $\phi = 12x^{4} - 65x^{3} + 102x^{2} - 12x - 56 = (x-2)^{3}(12x+7)$, which has a triple root at $x = 2$, and $g^*$ falls through $\alpha_0$ from $3170.5$ to $3165.5$ without jumping.}
-The condition is nonetheless the generic case: a threshold already imposes $\phi(\alpha_0) = 0$, so requiring $\phi'(\alpha_0) = 0$ as well is a second equation in the same unknown, and the time cost vectors $(\manualTime{}, \AItime{})$ for which it holds form a Lebesgue-null set.
+The condition is nonetheless the generic case.
+A threshold already imposes $\phi(\alpha_0) = 0$, so requiring $\phi'(\alpha_0) = 0$ as well is a second equation in the same unknown, and the time cost vectors $(\manualTime{}, \AItime{})$ for which it holds form a Lebesgue-null set.
 Both thresholds of Example~\ref{ex:nonmonotone} are transversal, with $g^*$ rising from $0$ to $16.0$ at $\alpha = 0.50$ and from $4.7$ to $133.9$ at $\alpha \approx 0.92$.
 \end{proof}
 
@@ -530,7 +538,8 @@ In the long-run optimization problem, the firm anticipates the adjustment of wor
 This contrasts with the AI deployment problem of Section~\ref{sec:shortrun.production}, which minimizes the time production takes while holding the assignment of steps to a single worker fixed. 
 The long-run problem additionally optimizes how tasks are bundled into jobs.
 
-The firm's long-run problem is stated in \eqref{eq:totalcost_with_handoff} of Section~\ref{sec:longrun.production}: it designs both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs, where the choice of $\T$ determines the time and skill requirements of each task and, given $\T$, the choice of $\mathcal{J}$ determines worker wage rates and the time needed per unit of output, including hand-off costs.
+The firm's long-run problem is stated in \eqref{eq:totalcost_with_handoff} of Section~\ref{sec:longrun.production}.
+It designs both the partition $\T$ of steps into tasks and the partition $\mathcal{J}$ of tasks into jobs, where the choice of $\T$ determines the time and skill requirements of each task and, given $\T$, the choice of $\mathcal{J}$ determines worker wage rates and the time needed per unit of output, including hand-off costs.
 
 What makes this harder than the short-run problem of Proposition~\ref{prop:shortrun_dp} is that steps must be assigned to tasks and the resulting tasks to workers at the same time, with the hand-off costs incurred at the boundary of jobs counted along the way.
 Proposition~\ref{prop:totalcost_optimization_dp} of Section~\ref{sec:extensions.computation} states that the problem nonetheless admits a polynomial-time approximation scheme.
@@ -548,7 +557,8 @@ Note also that it is implicitly assumed in the definition of $V(i)$ that it opti
 
 For job designs whose final job does not necessarily terminate after step $i$ but rather continues onward to subsequent steps, we need an auxiliary function.
 For $0 \leq i \leq m$ and skill and time levels $\skillcost{}$ and $\timecost{}$, let $R(i,\; \skillcost{},\; \timecost{})$ denote the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating work, whom we call the ``active worker,'' has already been assigned tasks with total skill cost $\skillcost{}$ and total time cost $\timecost{}$, where $\timecost{}$ also includes any hand-off cost for the active worker.
-The minimum is taken over AI deployment strategies and job designs together: the recursion may either expand the active worker's job or close it and assign the remaining steps to other workers.
+The minimum is taken over AI deployment strategies and job designs together.
+The recursion may either expand the active worker's job or close it and assign the remaining steps to other workers.
 Throughout, step $i$ is the highest-indexed step that has not yet been assigned.
 In the base case no steps remain to assign, the active worker's totals are exactly $(\skillcost{}, \timecost{})$, and their wage bill is the product of the two,
 \[ R(0,\; \skillcost{},\; \timecost{}) = \skillcost{}\,\timecost{}. \]

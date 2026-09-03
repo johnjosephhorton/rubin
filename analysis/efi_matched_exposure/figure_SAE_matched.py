@@ -165,51 +165,48 @@ def colour_limit(sweep, spec):
 
 # ------------------------------------------------------------------- heatmap
 def draw_panel(ax, M, P, N, vlim, cmap, show_ylabels=True):
-    norm = TwoSlopeNorm(vmin=-vlim, vcenter=0.0, vmax=vlim)   # centred at zero, as published
+    """Published convention: each panel autoscales to its own largest absolute coefficient,
+    TwoSlopeNorm centred at zero, no clipping and no hatching. `vlim` is ignored.
+
+    The Hourly+ / >=65% cut is blanked, following the neighbour heatmaps, which leave that cell
+    white with an en-dash. It retains 20 occupations, too few for the three-regressor
+    specification to say anything, and on the matched spec it returns +0.95 and +1.01, which would
+    otherwise set the colour scale for the whole panel."""
+    M = M.copy()
+    i_out, j_out = row_order.index(OUTLIER_CUT[0]), SWEEP_THRESHOLDS.index(OUTLIER_CUT[1])
+    M[i_out, j_out] = np.nan
+    vmax = float(np.nanmax(np.abs(M))) if np.isfinite(M).any() else 1.0
+    norm = TwoSlopeNorm(vmin=-vmax, vcenter=0.0, vmax=vmax)
     im = ax.imshow(M, cmap=cmap, norm=norm, aspect="auto")
     ax.set_xticks(range(len(SWEEP_THRESHOLDS)))
     ax.set_xticklabels([f"≥{t}%" for t in SWEEP_THRESHOLDS])
     ax.set_yticks(range(len(row_order)))
     ax.set_yticklabels([row_label[f] for f in row_order] if show_ylabels else [""] * len(row_order))
-    ax.axhline(0.5, color="black", lw=2)                      # separate the all-tasks baseline row
+    ax.axhline(0.5, color="black", lw=2)
     for i in range(len(row_order)):
         for j in range(len(SWEEP_THRESHOLDS)):
             v = M[i, j]
             if np.isnan(v):
-                # published placeholder for an unestimable cell; no matched cell is NaN
-                ax.text(j, i, "n.a.", ha="center", va="center", fontsize=CELL_FS, color="black")
+                # blank cell, as in the neighbour heatmaps
+                ax.text(j, i, "\u2013", ha="center", va="center", fontsize=CELL_FS + 2,
+                        color="black")
                 continue
-            clipped = abs(v) > vlim
-            txt = f"{v:.2f}{star(P[i, j])}\nN={N[i, j]}"
-            fx = []
-            if clipped:
-                txt += "\n(off scale)"
-                ax.add_patch(plt.Rectangle((j - .5, i - .5), 1, 1, fill=False, hatch="//",
-                                           edgecolor="white", alpha=0.55, lw=0, zorder=2))
-                # white text over white hatching needs a halo to stay readable
-                fx = [path_effects.withStroke(linewidth=2.2, foreground=OVER_COLOR)]
-            colr = "white" if abs(v) >= WHITE_TEXT_FRAC * vlim else "black"
-            ax.text(j, i, txt, ha="center", va="center", fontsize=CELL_FS - (1 if clipped else 0),
-                    color=colr, zorder=3, path_effects=fx)
+            colr = "white" if abs(v) >= WHITE_TEXT_FRAC * vmax else "black"
+            ax.text(j, i, f"{v:.2f}{star(P[i, j])}\nN={N[i, j]}", ha="center", va="center",
+                    fontsize=CELL_FS, color=colr, zorder=3)
     ax.set_xlabel("Threshold")
     return im
 
 
 def figure_matched(sweep, vlim, raw):
     cmap = plt.get_cmap(CMAP_NAME).copy()
-    cmap.set_over(OVER_COLOR)
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5.4))
-    im = None
+    cmap.set_bad("white")
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5.0))
     for ax, (fe_code, fe_name) in zip(axes, FE_SPECS):
         M, P, S, N = grid(sweep, "MATCHED", fe_code)
-        im = draw_panel(ax, M, P, N, vlim, cmap)
+        draw_panel(ax, M, P, N, vlim, cmap)
         ax.set_title(fe_name, fontsize=11)
-    fig.subplots_adjust(left=0.075, right=0.985, top=0.92, bottom=0.235, wspace=0.28)
-    cax = fig.add_axes([0.30, 0.075, 0.40, 0.028])
-    cb = fig.colorbar(im, cax=cax, orientation="horizontal", extend="max")
-    cb.set_label("EFI coefficient (standardized). One scale for all three panels; the two cells "
-                 f"outside ±{vlim:.2f} are hatched and labelled with their true value.", fontsize=9)
-    cb.ax.tick_params(labelsize=8)
+    fig.subplots_adjust(left=0.075, right=0.985, top=0.92, bottom=0.14, wspace=0.28)
     fig.savefig(OUT_MATCHED, dpi=DPI, bbox_inches="tight")
     plt.close(fig)
     print("Saved", OUT_MATCHED)

@@ -1,5 +1,5 @@
 In this section we draw out three implications of AI chaining in the model.
-First, we show that chaining can overturn comparative advantage logic: a step that is cheaper to perform manually in isolation may nonetheless be executed by AI in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
+First, we show that chaining can overturn comparative advantage logic, in that a step that is cheaper to perform manually in isolation may nonetheless be executed by AI in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
 Second, we introduce a \emph{fragmentation index} that captures how dispersed a workflow's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps (Section~\ref{sec:fragmentation}).
 Third, we show that the marginal gains from improving AI quality are non-monotone, abruptly rising whenever improvements in AI quality make redesigning workflows worthwhile (Section~\ref{sec:nonlinear}).
 All proofs are collected in Appendix~\ref{app:omitted_proofs}.
@@ -93,7 +93,7 @@ The human keeps the comparative advantage on Step~$k$ throughout, since the hori
 Even so, Step~$k$ is performed manually in the lower left where AI is unreliable on both steps $k$ and $k-1$.
 Moving to the right, the chain $\{k,\, k+1\}$ becomes more efficient at $q_k \approx 0.43$, where the failure risk Step~$k$ adds to it falls below the manual work it displaces; moving up instead leaves Step~$k$ untouched and reaches the three-step chain by way of the band in which the chain stops at Step~$k$.\footnote{The orange band, where Step $k$ is augmented, is not a general feature. When verifying AI's output at Step~$k$ is expensive enough relative to executing Step~$k+1$ on its own, stopping the chain at Step~$k$ never pays, and the firm crosses directly from manual execution to automation.}
 Varying a step's own success probability and that of a single neighbor is thus enough to cover all four feasible ways of executing a human-advantaged step, minimal as that adjustment is.
-Part~(ii) of Proposition~\ref{prop:ca_local} can be read off the same figure as well: starting anywhere that AI executes Step~$k$ and moving up, to the right, or both, one never crosses back into the grey region, so improvements in AI reliability only ever add steps to those AI executes.
+Part~(ii) of Proposition~\ref{prop:ca_local} can be read off the same figure as well. Starting anywhere that AI executes Step~$k$ and moving up, to the right, or both, one never crosses back into the grey region, so improvements in AI reliability only ever add steps to those AI executes.
 
 We must note that Proposition~\ref{prop:ca_local} is a \emph{local} statement. It compares rearrangements of a step and its neighbors while holding the AI strategy on the rest of the workflow fixed, and so it falls short of determining whether the overturning takes place in the overall cost-minimizing arrangement of the entire production sequence.
 Nonetheless, the forces determining the execution mode of a single step in the global optimum are the ones outlined here.
@@ -102,7 +102,7 @@ Nonetheless, the forces determining the execution mode of a single step in the g
 \label{sec:fragmentation}
 
 The previous section examined interdependence locally, asking how a step's immediate neighbors shape its execution mode.
-The same forces also operate at the level of the workflow as a whole: whether, and how much, a workflow benefits from AI depends not only on how many of its steps AI can reliably perform, but on how those steps are arranged across the entire sequence.
+The same forces also operate at the level of the workflow as a whole. Whether, and how much, a workflow benefits from AI depends not only on how many of its steps AI can reliably perform, but on how those steps are arranged across the entire sequence.
 The logic is again the complementarity that chaining creates. The more fragmented the AI-able steps are across the production sequence, the fewer of them can share a verification.
 This section formalizes this logic and provides an approach to measurement.
 We first start with an example that makes the point numerically.
@@ -140,14 +140,14 @@ The firm is left to treat each step on its own, and on its own neither kind of s
 The workflow therefore uses no AI at all, even though half of its steps are ones AI performs comparatively well.
 
 Panel~(b) clusters the AI-easy steps instead, placing them side by side.
-Chaining then becomes a cost-effective option: AI automates the first easy step at zero direct cost and verifies only once at the second.
+Chaining then becomes a cost-effective option, because AI automates the first easy step at zero direct cost and verifies only once at the second.
 A single verification now covers two steps instead of none, which is enough to make AI worth deploying where it was not before.
 \end{example}
 
 Note that the two arrangements contain exactly the same set of steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
 Dispersion of AI-friendly steps in the workflow can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer.
 This is precisely the margin that we explore empirically later.
-Example~\ref{ex:fragmentation} isolates the arrangement of steps in the case that matters for what follows, where the steps AI performs poorly are ones the firm would not fold into a chain under any arrangement.\footnote{In the normalized case introduced below ($\AItime{i} = 1$), this holds whenever $\manualTime{h} \leq 1/q_h - 2$ for each AI-hard step $s_h$. Extending a chain over $s_h$ multiplies its expected cost by $1/q_h$ while saving only the cost of executing $s_h$ on its own, which requires $1/q_h \geq 1 + \min\{\manualTime{h}, 1/q_h\}$. The binding deviation is the one that instead merges the chains on either side of $s_h$, since it saves one of the two verifications those chains pay separately: it requires $1/q_h \geq 2 + \min\{\manualTime{h}, 1/q_h\}$, and the minimum must then be $\manualTime{h}$, which gives the condition above.}
+Example~\ref{ex:fragmentation} isolates the arrangement of steps in the case that matters for what follows, where the steps AI performs poorly are ones the firm would not fold into a chain under any arrangement.\footnote{In the normalized case introduced below ($\AItime{i} = 1$), this holds whenever $\manualTime{h} \leq 1/q_h - 2$ for each AI-hard step $s_h$. Extending a chain over $s_h$ multiplies its expected cost by $1/q_h$ while saving only the cost of executing $s_h$ on its own, which requires $1/q_h \geq 1 + \min\{\manualTime{h}, 1/q_h\}$. The binding deviation is the one that instead merges the chains on either side of $s_h$, since it saves one of the two verifications those chains pay separately. It requires $1/q_h \geq 2 + \min\{\manualTime{h}, 1/q_h\}$, and the minimum must then be $\manualTime{h}$, which gives the condition above.}
 
 As gains from AI automation appear to depend on how clustered or dispersed a workflow's AI-able steps are, having a measure of that arrangement would be useful, one that stands in for them without solving the firm's optimization problem outright.
 To build such a measure, return to the firm's AI deployment problem in \eqref{eq:totalcost_shortterm} and consider the special case in which AI verification costs are normalized, $\AItime{i} = 1$ for all $i$, so that every step takes the same time to prompt and verify.\footnote{The normalization puts every step on the same footing as far as the cost of using AI goes, leaving where the AI-able steps sit as the only thing that separates one workflow from another.}
@@ -184,11 +184,11 @@ FI \;=\; \underbrace{\sum_{i=1}^{m} (1-q_i)\min\left\{\manualTime{i}, \frac{1}{q
 \label{eq:fragmentation_closed_form}
 \end{equation}
 The first two terms depend on the workflow's steps but not on the order in which they are performed.
-Across re-orderings of a given workflow the index is therefore decreasing in $\sum_{i=2}^{m} q_{i-1} q_i$, the total reliability of adjacent pairs of steps, and is lowest precisely when the steps AI performs reliably sit beside one another.\footnote{That only adjacent pairs enter is a consequence of the assumption rather than an approximation: once every component is charged the same $1$ whatever its length, the arrangement matters only through how many components there are, and a component begins wherever a step that succeeds follows one that failed, which is an event involving two steps.
+Across re-orderings of a given workflow the index is therefore decreasing in $\sum_{i=2}^{m} q_{i-1} q_i$, the total reliability of adjacent pairs of steps, and is lowest precisely when the steps AI performs reliably sit beside one another.\footnote{That only adjacent pairs enter is a consequence of the assumption rather than an approximation. Once every component is charged the same $1$ whatever its length, the arrangement matters only through how many components there are, and a component begins wherever a step that succeeds follows one that failed, which is an event involving two steps.
 Absent the assumption, $\omega(C)$ depends on the whole of $C$ and no such expression in adjacent pairs exists.
-Without this assumption the charge-once saving can disappear altogether: if the manual costs of a merged run sum to less than the cost of one verification, $\omega$ is additive over that run's steps and the index does not respond to the arrangement at all.
+Without this assumption the charge-once saving can disappear altogether. If the manual costs of a merged run sum to less than the cost of one verification, $\omega$ is additive over that run's steps and the index does not respond to the arrangement at all.
 }
-A further implication of the proof is a natural and approximately optimal greedy algorithm for constructing AI strategies: the firm groups steps into a chain as long as the probability of success stays sufficiently high, terminating the chain and starting a new one when it falls too low, and running an entire chain manually whenever its steps' total manual time is below the cost of one verification.
+A further implication of the proof is a natural and approximately optimal greedy algorithm for constructing AI strategies, where the firm groups steps into a chain as long as the probability of success stays sufficiently high, terminating the chain and starting a new one when it falls too low, and running an entire chain manually whenever its steps' total manual time is below the cost of one verification.
 
 
 
@@ -200,10 +200,10 @@ We now turn to what happens as that capability rises.
 We show that the gains from marginal improvements in AI quality accrue non-monotonically, because improvements that are at first absorbed within the existing arrangement eventually trigger a discrete reorganization of work.
 
 Recall that $\alpha$ measures the quality of the general-purpose AI technology, so that advances in that technology are represented by increases in its value.
-When AI quality is so low that the firm deploys AI nowhere, marginal improvements offer no return at all: every step is performed manually, and production costs do not depend on $\alpha$.
+When AI quality is so low that the firm deploys AI nowhere, marginal improvements offer no return at all, since every step is performed manually and production costs do not depend on $\alpha$.
 Once $\alpha$ passes the level at which deploying AI somewhere in the workflow becomes worthwhile, further improvements do pay off, but at a diminishing rate, since a more reliable AI is being applied to a fixed set of AI-executed steps.
 And when $\alpha$ reaches a level at which the firm re-optimizes its deployment strategy, extending a chain to absorb steps that were previously manual, the marginal return jumps up discontinuously, because improvements in quality now compound over a longer stretch of the workflow.
-We call the values of $\alpha$ at which the optimal strategy changes reorganization thresholds: between them the returns to AI progress diminish, and at each of them those returns jump upward as longer AI chains become worth deploying.\footnote{Stated precisely, the returns never fall at a threshold, and they jump upward at every threshold where the cost curves of the two adjacent strategies cross non-tangentially. That is the generic case, and it holds at both thresholds of Example~\ref{ex:nonmonotone}; Lemma~\ref{lem:reorg_threshold} in Appendix~\ref{app:nonmonotone} gives the condition and shows it cannot be dropped.}
+We call the values of $\alpha$ at which the optimal strategy changes reorganization thresholds. Between them the returns to AI progress diminish, and at each of them those returns jump upward as longer AI chains become worth deploying.\footnote{Stated precisely, the returns never fall at a threshold, and they jump upward at every threshold where the cost curves of the two adjacent strategies cross non-tangentially. That is the generic case, and it holds at both thresholds of Example~\ref{ex:nonmonotone}; Lemma~\ref{lem:reorg_threshold} in Appendix~\ref{app:nonmonotone} gives the condition and shows it cannot be dropped.}
 The example below traces these thresholds in a simple two-step workflow.
 
 \begin{example}
@@ -242,7 +242,7 @@ Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:tables_and_figures} colle
 Below $\alpha = 0.5$ the firm uses no AI; between $0.5$ and roughly $0.92$ it augments the easy step alone; above that it chains the two.
 
 Panel~(b) shows that the marginal return to improving AI quality jumps up at each threshold where the optimal strategy switches, since a different strategy governs cost on either side of the threshold.
-It is also worth noting that the jump at $\alpha \approx 0.92$ is larger than the one at $\alpha = 0.50$: forming the chain pulls a second step under AI, so cost falls more steeply.
+It is also worth noting that the jump at $\alpha \approx 0.92$ is larger than the one at $\alpha = 0.50$. Forming the chain pulls a second step under AI, so cost falls more steeply.
 This ordering is specific to this example, however, since a later threshold does not necessarily introduce a longer chain than an earlier one.
 \end{example}
 

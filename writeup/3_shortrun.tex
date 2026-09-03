@@ -65,7 +65,7 @@ We do not model this overhead verification cost to avoid complicating the notati
 Assuming independent failures across steps, an AI attempt succeeds with probability $\prod_{i=\ell}^{r} q_i$, and the chain is retried until it succeeds, for a total expected time of $\AItime{r}/\prod_{i=\ell}^{r} q_i$.
 Since $q_i = \alpha^{d_i}$, the chain succeeds with probability $\alpha^{\sum_{i=\ell}^{r} d_i}$, so $\sum_{i=\ell}^{r} d_i$ is the chain's total difficulty, aggregating additively over its constituent steps.
 
-Note that a chain may consist of a single step, with $\ell = r$: in this case, the chain is simply an augmented step, so an augmented step is equivalent to an AI chain of length one, a convention we adopt throughout the paper.
+Note that a chain may consist of a single step, with $\ell = r$, in which case the chain is simply an augmented step, so an augmented step is equivalent to an AI chain of length one, a convention we adopt throughout the paper.
 We now give the formal definitions of automated steps and AI chains.
 
 \begin{definition}[Automated Step]
@@ -91,7 +91,7 @@ If steps are the smallest unit of work, tasks are the smallest unit of \emph{hum
 The distinction follows from the execution modes of steps above. 
 A worker is involved in a step only when they perform it manually or verify what the AI returns at the end of a chain, whereas an automated step runs inside the chain entirely beneath their awareness.
 Every point at which a worker executes or verifies work therefore opens a task for them, and that task absorbs whatever the AI has run automatically since the previous such point.
-The steps of a workflow map into tasks accordingly: a manual step is a task on its own, and an entire AI chain is a single \emph{composite} task, delegated to the AI at its start and received back at its augmented endpoint.
+The steps of a workflow map into tasks accordingly. A manual step is a task on its own, and an entire AI chain is a single \emph{composite} task, delegated to the AI at its start and received back at its augmented endpoint.
 
 The firm's choice of where to place chains is therefore what creates the tasks its workers hold, and we record that choice as an \emph{AI deployment strategy}.
 
@@ -109,7 +109,7 @@ The AI deployment strategy in Figure~\ref{fig:steps_tasks} maps the seven steps 
 \label{sec:shortrun.production}
 
 The firm employs human labor to perform tasks and produce the output, and labor is the only input used in production.\footnote{
-Viewed as a production function, our sequential technology is Leontief at the level of the individual firm: producing a unit of output requires completing every step of the workflow, in fixed proportions.
+Viewed as a production function, our sequential technology is Leontief at the level of the individual firm, because producing a unit of output requires completing every step of the workflow, in fixed proportions.
 }
 The worker carries out the entire step sequence $\mathcal{S} = (s_1, \dotsc, s_m)$, which the firm's AI strategy organizes into the task sequence $\T = (T_1, \dotsc, T_n)$, and is paid at the normalized rate of $w = 1$ per unit of time for the whole time production takes.
 The cost of production is therefore the total expected time requirement of the workflow's tasks, and the firm chooses the AI deployment strategy that minimizes

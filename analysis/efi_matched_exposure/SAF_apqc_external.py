@@ -2,7 +2,7 @@
 
 Reimplements, without touching the repo:
   (A) analysis/apqc_pooled_predictions.py  -> writeup/tables/apqc_fragmentation_index_regression.tex
-      pooled Cross-Industry + 17 industry PCFs (18 framework labels in all; the paper says 16, which is a miscount), SIM_FLOOR 0.73, MIN_STEPS 5, num_E1E2_tasks control
+      pooled Cross-Industry + 17 industry PCFs (18 framework labels in all; the paper says 16, which is a miscount), SIM_FLOOR 0.71, MIN_STEPS 5, num_E1E2_tasks control
   (B) analysis/apqc_pcf_fragmentationIndex.ipynb section 6 -> exposure_definition_grid.csv
       cross-industry PCF only, NO similarity floor, MIN_STEPS 3, NO step-count control
 
@@ -30,7 +30,7 @@ POOLED = f"{MAIN}/data/computed_objects/apqc_pred3_industry/industry_leaf_matche
 PCFXI  = f"{MAIN}/data/computed_objects/apqc_pcf_fragmentation/pcf_leaf_matches.csv"
 ONETP  = f"{MAIN}/data/computed_objects/ONET_Eloundou_Anthropic_GPT/ONET_Eloundou_Anthropic_GPT.csv"
 ONETOCC= f"{MAIN}/data/computed_objects/fragmentationIndex/occupation_analysis_with_fragmentationIndex_def1.csv"
-SIM_FLOOR, MIN_STEPS_POOLED, N_DRAWS = 0.73, 5, 1000
+SIM_FLOOR, MIN_STEPS_POOLED, N_DRAWS = 0.71, 5, 1000
 
 star = lambda p: '***' if p < .01 else '**' if p < .05 else '*' if p < .1 else ''
 
