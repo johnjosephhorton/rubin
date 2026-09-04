@@ -67,7 +67,7 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 Entries addressed so far are marked ✅ in their heading and carry a **Status** line giving what changed.
 Everything not listed here is still open.
 
-**Addressed (16 of 107):**
+**Addressed (18 of 107):**
 
 | Entry | Landed in |
 |---|---|
@@ -77,6 +77,8 @@ Everything not listed here is still open.
 | M4 | `1d64cb0` (removed SA.B.2) |
 | D27 | `1d64cb0` (moot with SA.B.2) |
 | D28 | working tree |
+| D32 | `b2d11a8` (figure regenerated) |
+| D39 | `b2d11a8` (sentence softened) |
 | N7 | `f9d4a4a` |
 | N24 | `f9d4a4a` |
 | N25 | `f9d4a4a` |
@@ -340,7 +342,8 @@ _Last updated 2026-09-04, after `b2d11a8`. Entries whose quoted numbers came fro
 - **Why it's a problem**: `SA_D:66` attributes the measured 0.60 to "the diversity of prompt formulations considered" and `7_empirics.tex:35` uses it to say the orderings overlap substantially across ten varied prompts. Much of the measured disagreement is run-to-run instability of the **same** prompt, not prompt variation.
 - **Proposed fix**: Either recompute Figure SA.D.1 with the main-analysis sequences as the prompt-0 leg, or keep the re-run and report the re-run-versus-main tau of about 0.70 as a same-prompt benchmark against which the cross-prompt 0.60 should be read. Say which dataset "Prompt 0" means in each figure.
 
-### D32. Figure SA.D.1 Panel (b) plots a superseded EFI split
+### ✅ D32. Figure SA.D.1 Panel (b) plots a superseded EFI split
+- **Status**: ✅ **Addressed** 2026-09-04 (`b2d11a8`, comment in a follow-up). Regenerating the SA.D.1 figure against the current `occupation_analysis_with_fragmentationIndex_def1.csv` moved Panel (b) from the superseded 328/540 split to **433 (mean 0.573) / 435 (mean 0.630)**, matching the values this entry derived. The `_count` twin was regenerated with it. The now-false cell-7 comment in `GPT_task_sequences_overlap.ipynb` was corrected in the same pass: the ceiling it describes belonged to the old series, and the current file has median 0.8095 with 0.7% tied. The `>=` tie rule was left as is, since at 0.7% tied it moves about six occupations and changing it would alter the split for a reason unrelated to this entry; that part of the proposed fix is still open as a judgment call.
 - **Location**: p. SA-22 (PDF 106), `SA_D_prompt_robustness.tex:38-42, 62, 68`.
 - **Issue**: The Panel (b) legend prints **n = 328 / 540** (mean 0.56 / 0.63), a 38/62 split, while Panels (c) and (d) print 428/440 and 430/438. Re-running the notebook's own split rule on the current `occupation_analysis_with_fragmentationIndex_def1.csv` gives **n = 433 (mean 0.573) / 435 (mean 0.630)**. The cause is a data revision: the current index has median **0.8095** with only 0.7% of occupations tied there, whereas the plotted version had median 1.0, matching the notebook comment that "62.3% of occupations sit on that ceiling, so its median IS 1.0" (540/868 = 62.2%). File times confirm the ordering (PNG Sep 1 17:15, CSV Sep 1 18:48).
 - **Why it's a problem**: The panel a reader is told is the EFI split of the current sample is drawn from a superseded series, and anyone re-running the notebook gets different group sizes.
@@ -385,7 +388,8 @@ _Last updated 2026-09-04, after `b2d11a8`. Entries whose quoted numbers came fro
 - **Proposed fix**: "The estimates weaken at the stricter thresholds and, under SOC minor-group fixed effects, lose significance from SeveralDaily+ >= 20% onward; they are uniformly insignificant in the Hourly+ >= 35% and >= 50% cells, where task observations fall into the low hundreds." Report the cell counts alongside.
 - **Corroboration**: found independently by two passes.
 
-### D39. The next-task effect does not escape its null "across the Daily+ cuts"
+### ✅ D39. The next-task effect does not escape its null "across the Daily+ cuts"
+- **Status**: ✅ **Addressed** 2026-09-04 (`b2d11a8`). The sentence at `:175` no longer claims the next-task effect escapes its null across the Daily$+$ cuts. It now reads "escaping its null in nine of the twelve Daily$+$ cells", which is the count on the regenerated figure, so the claim matches the dots the reader sees. The previous-task clause in the same sentence was softened at the same time, from "all four Daily$+$ cuts" to ten of twelve cells. The entry's diagnostics above were computed on the E1-only build and are kept as the record of what prompted the change.
 - **Location**: p. SA-34 (PDF 118), `SA_E_frequency_robustness.tex:175`.
 - **Issue**: Of the 12 Daily+ by specification cells for (k+1), **4 lie inside the 10-90 band and are plotted blue**: Daily+ >= 50% no FE (observed 0.0842, band [0.038, 0.086], 88.9th percentile), and the whole Daily+ >= 65% row (0.0882 in [0.035, 0.092], 85.9th; 0.0424 in [-0.001, 0.043], 89.8th; 0.0343 in [-0.017, 0.035], 89.7th). The parallel previous-task clause does check out exactly (Daily+ percentiles 91.3 to 98.7, matching the drafted "91st to 99th").
 - **Why it's a problem**: The claim asserts red dots where the figure shows blue ones, in the sentence carrying the Prediction #2 placebo robustness claim.
