@@ -73,16 +73,16 @@ Everything not listed here is still open.
 |---|---|
 | M3 | `01a9ae1` |
 | D25 | `228864c` |
-| N7 | working tree |
-| N24 | working tree |
-| N25 | working tree |
-| N26 | working tree |
-| N27 | working tree |
-| N47 | working tree |
-| N49 | working tree |
-| N51 | working tree |
-| N53 | working tree |
-| N55 | working tree |
+| N7 | `f9d4a4a` |
+| N24 | `f9d4a4a` |
+| N25 | `f9d4a4a` |
+| N26 | `f9d4a4a` |
+| N27 | `f9d4a4a` |
+| N47 | `f9d4a4a` |
+| N49 | `f9d4a4a` |
+| N51 | `f9d4a4a` |
+| N53 | `f9d4a4a` |
+| N55 | `f9d4a4a` |
 
 _Last updated 2026-09-04._
 
@@ -463,7 +463,7 @@ _Last updated 2026-09-04._
 - **Proposed fix**: State a third composite parameter (the minimum cost of running k+1, ..., r under any arrangement not containing step k), or limit the footnote's claim to eq. (2) and drop "what follows applies unchanged".
 
 ### ✅ N7. The notes to Figure 5 point to "the table below", which is Table OA.A.3, thirty pages away
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). The notes now cite `Table~\ref{tab:nonmonotone_costs}` in `Appendix~\ref{app:tables_and_figures}`; the semicolon before it became a full stop, since the clause no longer describes panel (a).
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). The notes now cite `Table~\ref{tab:nonmonotone_costs}` in `Appendix~\ref{app:tables_and_figures}`; the semicolon before it became a full stop, since the clause no longer describes panel (a).
 - **Location**: p. 21 (PDF 21), `4_implications.tex:235`; target `tab:nonmonotone_costs` on p. OA-3 (PDF 51).
 - **Issue**: No table appears below or near Figure 5. The body text one sentence later cites the same object correctly as "Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:tables_and_figures}".
 - **Proposed fix**: Replace "the table below" with that `\ref`.
@@ -555,26 +555,26 @@ _Last updated 2026-09-04._
 - **Proposed fix**: Drop i = 0 from the null and state 999 reshuffles, or generate a 1,000th shuffle; adjust the note and the main-text sentence accordingly.
 
 ### ✅ N24. The ratio in the Lemma OA.B.2 upper bound is maximized at alpha^{d} = 1/2, not alpha^{-d} = 1/2
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). Now reads "maximized at $\alpha^{d(T_b)} = 1/2$ (equivalently $\alpha^{-d(T_b)} = 2$)". The tightness example below it builds a chain with $q_1q_2q_3 = 1/2$, which corroborates the corrected orientation.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). Now reads "maximized at $\alpha^{d(T_b)} = 1/2$ (equivalently $\alpha^{-d(T_b)} = 2$)". The tightness example below it builds a chain with $q_1q_2q_3 = 1/2$, which corroborates the corrected orientation.
 - **Location**: p. OA-13 (PDF 61), `OA_B_omitted_proofs.tex:256`.
 - **Issue**: With u = alpha^{d(T_b)} in (0,1], the ratio (1 + u^{-1} - u)/u^{-1} = u + 1 - u^2 is maximized at u = 1/2, i.e. alpha^{d(T_b)} = 1/2, equivalently alpha^{-d(T_b)} = 2. Since q_i in (0,1] forces alpha^{-d} >= 1, the stated maximizer lies outside the feasible range. The value 5/4 is correct.
 - **Proposed fix**: "is maximized at alpha^{d(T_b)} = 1/2 (equivalently alpha^{-d(T_b)} = 2), achieving a value of 5/4".
 
 ### ✅ N25. The constant term of the fragmentation index in Example OA.B.2 is 0.5, not 1
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). Constant changed from 1 to 0.5. Confirmed two ways: the closed form (12), and brute-force enumeration over all $2^m$ failure realizations, which agree at $FI = 0.62132\,m + 0.5$.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). Constant changed from 1 to 0.5. Confirmed two ways: the closed form (12), and brute-force enumeration over all $2^m$ failure realizations, which agree at $FI = 0.62132\,m + 0.5$.
 - **Location**: p. OA-15 (PDF 63), `OA_B_omitted_proofs.tex:364`.
 - **Issue**: With q_i = 1/sqrt(2) and t^M_i = sqrt(2) for all i, FI = m(1-q)sqrt(2) + q + (m-1)q(1-q) = **0.62132 m + 0.5**. The additive constant is 0.5, not 1, so the displayed expression is wrong for every finite m (m = 10 gives FI = 6.7132, not 7.2132). Verified by exhaustive enumeration over failure realizations. The limiting ratio 4 sqrt(2)/(9(sqrt(2)-1)) = 1.5174 is unaffected.
 - **Proposed fix**: Replace "1 + m x 0.6213" with "0.5 + m x 0.6213".
 
 ### ✅ N26. The post-threshold marginal benefit in Example 2 is 134.1, not 133.9
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). 133.9 changed to 134.1. At $\alpha_0 = 0.9239886$, $48/\alpha_0^{13} = 134.145$; the old value was $48/0.9241^{13}$.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). 133.9 changed to 134.1. At $\alpha_0 = 0.9239886$, $48/\alpha_0^{13} = 134.145$; the old value was $48/0.9241^{13}$.
 - **Location**: p. OA-19 (PDF 67), `OA_B_omitted_proofs.tex:506`.
 - **Issue**: Solving 6 + 4/alpha = 4 alpha^{-12} (the two cost expressions in Table OA.A.3) gives alpha_0 = **0.9239886**. There 4/alpha_0^2 = 4.685 (matching the quoted 4.7) but 48/alpha_0^{13} = **134.145**, not 133.9. The printed value is 48/0.9241^13, i.e. the threshold was rounded to four decimals before substitution into a quantity of degree 13. The plotting grid lands on 0.9240570 and gives 134.016, so the plotted value is not 133.9 either.
 - **Proposed fix**: Replace 133.9 with 134.1, or state the threshold as alpha_0 = 0.92399 and the jump as 4.69 to 134.15. The 0, 16.0 and 4.7 figures are correct.
 - **Corroboration**: found independently by two passes.
 
 ### ✅ N27. Job compensation is stated without base wage rates, contradicting Eq. (OA.C.1) four lines later
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). Job 1's compensation now reads $w_M c^M_1 + w_A c^A_2$, the two-task instance of (OA.C.1).
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). Job 1's compensation now reads $w_M c^M_1 + w_A c^A_2$, the two-task instance of (OA.C.1).
 - **Location**: p. OA-25 (PDF 73), `OA_C_CES_representation.tex:25`.
 - **Issue**: w_M and w_A are introduced two paragraphs earlier and (OA.C.1) gives compensation as w_M(sum c^M_b) + w_A(sum c^A_b). For Job 1 that is w_M c^M_1 + w_A c^A_2, not c^M_1 + c^A_2. The sentence reproduces the Section 5 wage, which normalizes w_A = w_M = 1, inside the one subsection whose purpose is to un-normalize them.
 - **Proposed fix**: Change to "... and equals w_M c^M_1 + w_A c^A_2".
@@ -684,7 +684,7 @@ _Last updated 2026-09-04._
 - **Proposed fix**: "to between 1.24 and 1.35 across the remaining cuts, with the largest values in the two sparsest Hourly+ corners (1.40 and 1.50, with 75 and 20 occupations)".
 
 ### ✅ N47. The neighbor heatmap note defers its significance-star convention to a figure that shows no stars
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). The star convention is now stated in place (*** p<0.01, ** p<0.05, * p<0.1, from the DWA-clustered coefficient test, matching the generator). The deferral to Figure SA.E.4 now covers layout only.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). The star convention is now stated in place (*** p<0.01, ** p<0.05, * p<0.1, from the DWA-clustered coefficient test, matching the generator). The deferral to Figure SA.E.4 now covers layout only.
 - **Location**: p. SA-32 (PDF 116), `SA_E_frequency_robustness.tex:133`.
 - **Issue**: The referenced figure is the fragmentation heatmap two subsections later, whose own note says "No cell in the grid is significant at the 10% level, so no significance stars are shown". The neighbor heatmaps do carry stars, and the cutoffs (1/5/10% in the code) are never stated in the appendix.
 - **Proposed fix**: State the convention in place and refer only to the layout of the other figure.
@@ -696,7 +696,7 @@ _Last updated 2026-09-04._
 - **Proposed fix**: State the actual reason and the actual numbers, and say the cell is excluded from the summary counts.
 
 ### ✅ N49. The text says the fragmentation heatmap prints significance stars; the figure's own note says none are shown
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). The text now says the number of occupations is printed beneath each cell, with no stars since no cell is significant at the 10% level. Consistent with the fix to N47.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). The text now says the number of occupations is printed beneath each cell, with no stars since no cell is significant at the 10% level. Consistent with the fix to N47.
 - **Location**: p. SA-35 (PDF 119), `SA_E_frequency_robustness.tex:201` versus `:193`.
 - **Issue**: The rendered heatmap prints only "coef" and "N=" in each of its 36 cells.
 - **Proposed fix**: "with the number of occupations printed beneath (no cell is significant at the 10% level, so no stars appear)".
@@ -708,7 +708,7 @@ _Last updated 2026-09-04._
 - **Corroboration**: found independently by two passes.
 
 ### ✅ N51. The "Deliver Services" category mean tau is reported as 0.67; the source gives 0.66
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). 0.67 changed to 0.66 (`tau_main` = 0.664683). The other four values in the sentence round correctly to their sources.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). 0.67 changed to 0.66 (`tau_main` = 0.664683). The other four values in the sentence round correctly to their sources.
 - **Location**: p. SA-40 (PDF 124), `SA_F_external_validation.tex:169`.
 - **Issue**: `category_summary.csv` gives tau_main = **0.664683** for category 5, which rounds to 0.66. Recomputed from `ordering_accuracy.csv` as the unweighted mean over the 12 category-5 branches, the same value. The other four category figures quoted in the sentence (0.69, 0.65, 0.25, 0.27) match their source to two decimals.
 - **Proposed fix**: Change 0.67 to 0.66.
@@ -720,7 +720,7 @@ _Last updated 2026-09-04._
 - **Corroboration**: found independently by two passes.
 
 ### ✅ N53. The pooled PCF corpus uses seventeen industry-specific frameworks, not sixteen
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). "sixteen" changed to "seventeen" in SA.F and in the docstrings of `analysis/apqc_industry_leaf_matching.py` and `analysis/apqc_pooled_predictions.py`. Re-ran the loader's own file selection: 18 frameworks, Cross-Industry plus 17. The Telecommunications PCF is a `.xls` and so never matches the `K*.xlsx` glob.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). "sixteen" changed to "seventeen" in SA.F and in the docstrings of `analysis/apqc_industry_leaf_matching.py` and `analysis/apqc_pooled_predictions.py`. Re-ran the loader's own file selection: 18 frameworks, Cross-Industry plus 17. The Telecommunications PCF is a `.xls` and so never matches the `K*.xlsx` glob.
 - **Location**: p. SA-45 (PDF 129), `SA_F_external_validation.tex:341`.
 - **Issue**: The matched-step file behind the 13,482 steps and 525 process groups carries **18** distinct framework labels, CrossIndustry plus **17** industry frameworks (Aerospace and Defense, Airline, Automotive, Banking, Broadcasting, City Government, Consumer Electronics, Consumer Products, Education, Health Insurance Payor, Healthcare Provider, Life Sciences, Petroleum Downstream, Petroleum Upstream, Property and Casualty Insurance, Retail, Utilities).
 - **Why it's a problem**: Column (6) of Table 3 is a framework fixed effect, so the count is the number of fixed effects absorbed.
@@ -733,7 +733,7 @@ _Last updated 2026-09-04._
 - **Proposed fix**: "under each of the three specifications of columns (4)-(6) (no fixed effects, PCF Category, Framework), reaching the 5% level at eight of the eleven floors in the specification without fixed effects."
 
 ### ✅ N55. The chain-length z is 6.6 in the text and 6.2 on the figure printed on the same page
-- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). 6.6 changed to 6.2, matching `chain_z` = 6.191137 in the stored 0.71 sweep row and the annotation on Figure SA.F.3. The companion figures (1.09, 0.01, 1.1627) already matched that row.
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `f9d4a4a`). 6.6 changed to 6.2, matching `chain_z` = 6.191137 in the stored 0.71 sweep row and the annotation on Figure SA.F.3. The companion figures (1.09, 0.01, 1.1627) already matched that row.
 - **Location**: p. SA-47 (PDF 131), `SA_F_external_validation.tex:397-399` and Figure SA.F.3.
 - **Issue**: The text gives z = **6.6** for the within-group step-order reshuffle at the 0.71 floor. Figure SA.F.3, on the same page immediately above the paragraph, annotates the 0.71 point as **z = 6.2**, computed deterministically from the stored sweep row (chain_z = 6.1911). Neither pipeline reproduces 6.6; the pooled script's own seed gives 6.06. The observed 1.1627, null mean 1.0878 and null sd 0.0121 quoted in the text all match the stored run.
 - **Proposed fix**: Quote the value the figure is drawn from (z = 6.2), or regenerate the figure from the draw the text reports.
