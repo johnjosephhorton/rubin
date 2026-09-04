@@ -1,0 +1,1154 @@
+\documentclass[10pt]{article}
+
+\usepackage[letterpaper,landscape,top=0.6in,bottom=0.7in,left=0.65in,right=0.65in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{adjustbox}
+\usepackage{changepage}
+\usepackage{fancyvrb}
+\usepackage{needspace}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{./}}
+
+\definecolor{curcol}{HTML}{555555}
+\definecolor{newcol}{HTML}{9C2B1B}
+\definecolor{okcol}{HTML}{1B6B3A}
+\definecolor{warncol}{HTML}{9C2B1B}
+\definecolor{shade}{HTML}{F2F2F0}
+
+\newcommand{\file}[1]{{\ttfamily\detokenize{#1}}}
+\newcommand{\cur}[1]{\textcolor{curcol}{#1}}
+\newcommand{\new}[1]{\textcolor{newcol}{\bfseries #1}}
+\newcommand{\ra}{\ensuremath{\rightarrow}}
+\newcommand{\CUR}{{\small\bfseries\color{curcol}CURRENT\quad(published, mask = \file{isin(['E1'])})}}
+\newcommand{\NEW}{{\small\bfseries\color{newcol}UPDATED\quad(mask = \file{isin(['E1','E2'])})}}
+
+% narrow measure for running prose on a wide page
+\newenvironment{prose}{\begin{adjustwidth}{0pt}{2.6in}}{\end{adjustwidth}}
+
+% stacked figure pair: #1 = filename, #2 = width fraction, #3 = caption
+\newcommand{\pairstack}[3]{%
+\begin{center}
+\begin{minipage}{\textwidth}\centering
+\CUR\\[3pt]
+\includegraphics[width=#2\textwidth]{plots_current/#1}\\[10pt]
+\NEW\\[3pt]
+\includegraphics[width=#2\textwidth]{plots_new/#1}
+\end{minipage}\\[7pt]
+\begin{minipage}{0.95\textwidth}\footnotesize #3\end{minipage}
+\end{center}}
+
+% side-by-side figure pair
+\newcommand{\pairside}[2]{%
+\begin{center}
+\begin{minipage}{\textwidth}\centering
+\begin{minipage}[t]{0.48\textwidth}\centering
+\CUR\\[3pt]\includegraphics[width=\textwidth]{plots_current/#1}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\textwidth}\centering
+\NEW\\[3pt]\includegraphics[width=\textwidth]{plots_new/#1}
+\end{minipage}
+\end{minipage}\\[8pt]
+\begin{minipage}{0.95\textwidth}\footnotesize #2\end{minipage}
+\end{center}}
+
+% side-by-side table pair
+\newcommand{\tabpair}[1]{%
+\begin{center}
+\begin{minipage}[t]{0.49\textwidth}\centering
+\CUR\\[5pt]\adjustbox{max width=\textwidth}{\input{tables_current/#1}}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}\centering
+\NEW\\[5pt]\adjustbox{max width=\textwidth}{\input{tables_new/#1}}
+\end{minipage}
+\end{center}}
+
+\newcommand{\cellhead}{\toprule Row & Col. & Current & Updated & Note \\ \midrule}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\title{\vspace{-1.2cm}\Large\bfseries E1$|$E2 Exposure Regeneration: Reviewer Preview\\[4pt]
+\large\normalfont Staged rebuild of every exhibit whose estimates depend on the AI-exposure mask}
+\author{}
+\date{\today}
+
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+{\Large\bfseries E1$|$E2 Exposure Regeneration: Reviewer Preview}\\[5pt]
+{\large Staged rebuild of every exhibit whose estimates depend on the AI-exposure mask}\\[7pt]
+\today
+\end{center}
+\vspace{-0.2cm}
+
+\begin{prose}
+\textbf{What changed.} One line in the estimation code: the AI-exposure indicator went from
+\file{human_labels.isin(['E1'])} to \file{human_labels.isin(['E1','E2'])}, so a task counts as
+AI-exposed if the Eloundou et al.\ label is E1 \emph{or} E2 rather than E1 only. On the main
+10,708-row estimation sample this takes the exposed share from $0.1422$ to $0.4326$
+(1,523 exposed rows \ra{} 4,632; 3,109 rows flip $0\!\to\!1$, none flip $1\!\to\!0$).
+Exposure is a right-hand-side control, never a sample filter, which is why every regression
+$N$ in this document is unchanged.
+\end{prose}
+
+\begin{tcolorbox}[colback=white,colframe=black,boxrule=1pt,arc=1pt,
+  title={\bfseries BUILD STATUS},coltitle=white,colbacktitle=black,fonttitle=\bfseries]
+\begin{minipage}[t]{0.46\textwidth}
+\textbf{\color{okcol}33 artifacts regenerated. 0 failed. 0 skipped.}\\[4pt]
+6 \LaTeX{} tables in \file{tables_new/} and 27 PNGs in \file{plots_new/}. Every promised file exists,
+is non-empty, and is at \file{dpi=300}. No draw count was reduced, no estimate was substituted with a
+faster approximation, and nothing outside \file{writeup/_e1e2_preview/} was written
+(\file{git status --porcelain} on \file{writeup/tables/}, \file{writeup/plots/}, \file{analysis/} and
+\file{data/} is empty).
+\end{minipage}\hfill
+\begin{minipage}[t]{0.50\textwidth}
+\textbf{\color{warncol}But ``0 failed'' is not ``0 problems.'' Before merging:}
+\begin{itemize}[leftmargin=1.4em,topsep=2pt,itemsep=1pt]
+  \item \textbf{1 regenerated table is now an orphan.} Commit \file{1d64cb0} (12:45:53 today,
+        \emph{one minute after} this build finished) deleted Table~SA.B.5 and its whole subsection
+        from the paper. \file{tables_new/fragmentation_index_regression_execution.tex} has nowhere to go.
+  \item \textbf{3 deviations need a human decision} (Section~\ref{sec:dev}): the Figure~SA.A.2(a) axis limits, the
+        SA.E.3/SA.E.4 dpi mismatch, and the stale SA.D.4 panel titles.
+  \item \textbf{7 further deviations are disclosed but need no decision} (Section~\ref{sec:dev}).
+  \item \textbf{7 prose edits are forced and none are applied} (Section~\ref{sec:prose}). One of them, SA.E:144, is a
+        claim that the new numbers contradict.
+  \item \textbf{The task brief's merge instruction is wrong}: the mask lives in \emph{six} notebooks
+        plus one variable swap, not two (Section~\ref{sec:merge}).
+\end{itemize}
+\end{minipage}
+\end{tcolorbox}
+
+\vspace{2pt}
+\begin{tcolorbox}[colback=shade,colframe=warncol,boxrule=0.8pt,arc=1pt,
+  title={\bfseries Four results that change what the paper can claim},coltitle=white,colbacktitle=warncol,fonttitle=\bfseries]
+\footnotesize
+\begin{enumerate}[leftmargin=1.5em,topsep=1pt,itemsep=2pt]
+\item \textbf{Figure SA.E.3(a), Hourly$+$ $\geq$50\% row: insignificant \ra{} significant.}
+      $0.149 \ra 0.279^{***}$ (No FE), $0.196 \ra 0.328^{***}$ (Major FE), $0.121 \ra 0.283^{**}$
+      (Minor FE), on $N=61/44/41$. SA\_E:144 says the estimates ``weaken and lose significance only in
+      the sparsest cells.'' Under E1$|$E2 the sparsest estimable cells do the opposite. These three
+      cells are also what re-shades panel~(a) paler.
+\item \textbf{Figure SA.D.4: four plotted 90\% error bars change whether they cover zero.}
+      Markers whose 90\% CI excludes zero go $124/176 \ra 122/176$. The build log's claim that
+      ``NONE'' cross the 10\% line is wrong: the plotted bar is $\hat{\beta}\pm1.645\,\mathrm{SE}$ and
+      the $p$-value is the normal approximation to the same ratio, so a $p$ crossing $0.10$ \emph{is}
+      the bar crossing zero, and it is visible.
+\item \textbf{Figure SA.E.4: 35 red dots \ra{} 33.} Three previous-task cells leave the 10-to-90 null
+      band and one next-task cell enters it. SA\_E:175 quotes counts and percentile ranges that all move.
+\item \textbf{Figure SA.A.2(a) becomes a different picture.} Mean exposed share $0.138 \ra 0.432$,
+      occupations with at least one exposed task $605 \ra 809$, tallest bar $309 \ra 76$, and both
+      hard-coded axis limits have to be relaxed. This is not a numerical nudge; it is a new histogram.
+\end{enumerate}
+\end{tcolorbox}
+
+\clearpage
+\section{What this changes}\label{sec:summary}
+
+\begin{prose}
+Page numbers are from \file{writeup/0_main.pdf} as compiled at 12:44 today (133 pages).
+``Star change'' counts only changes to the printed significance stars in a table, or to a printed
+significance marker on a figure; for the placebo figures, which print no stars, it records the
+band-crossing equivalent. Every regression $N$ is identical on both sides of every row below.
+\end{prose}
+
+{\footnotesize
+\begin{longtable}{@{}p{3.4cm}p{1.5cm}p{11.2cm}p{5.2cm}@{}}
+\toprule
+\textbf{Exhibit} & \textbf{PDF page} & \textbf{What moved} & \textbf{Significance star changed?} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Exhibit} & \textbf{PDF page} & \textbf{What moved} & \textbf{Significance star changed?} \\
+\midrule
+\endhead
+Table 2 & 38 &
+8 of 24 coefficient cells change their printed text (6 values, 2 star-only); 0 SE cells move at 2 dp;
+Pseudo $R^2$ rises in cols (1)--(4); largest $|\Delta\mathrm{AME}|=0.0114$; one sign flip at the
+4th decimal (col (2) $k{+}2$) &
+\textcolor{warncol}{\bfseries Yes, 3}: (4) and (6) $k{-}1$ gain a star; (1) $k{+}2$ loses one \\
+\addlinespace
+Table 3 \textbf{(CONTROL)} & 41 &
+\textcolor{okcol}{\bfseries Nothing. Byte-identical, 0 of 42 cells changed.} Already on E1$|$E2 before
+this build, so it must not move, and it does not &
+\textcolor{okcol}{No} \\
+\addlinespace
+Figure OA.A.1 (a)--(d) & 52 &
+All 16 printed ``Observed'' labels move (e.g.\ (a) $0.065/0.124/0.117/0.050 \ra 0.055/0.113/0.105/0.041$).
+The placebo null slides left with the red line, so the visual message is unchanged.
+Tail shares $P(\text{null}\!\geq\!\text{obs})$ move in the direction the paper's claim wants &
+n/a (no stars printed) \\
+\addlinespace
+Figure SA.A.2(a) & 87 &
+Mean share $0.138 \ra 0.432$, median $0.111 \ra 0.421$, zero-share occupations $267 \ra 63$,
+tallest bar $309 \ra 76$, max $0.750 \ra 1.000$; \textbf{both hard-coded axis limits relaxed} &
+n/a \\
+\addlinespace
+Table SA.B.1 & 94 &
+6 of 24 cells (4 coefficients, 2 SEs); Pseudo $R^2$ moves in cols (1),(2),(4),(6) &
+\textcolor{okcol}{No} \\
+\addlinespace
+Table SA.B.2 & 95 &
+7 of 24 cells (6 coefficients, 3 SEs); largest AME move in the SA.B group, $+0.0064$ at (5) $k{+}2$ &
+\textcolor{okcol}{No} \\
+\addlinespace
+Table SA.B.3 & 96 &
+9 of 24 cells (3 coefficients, 6 SEs); Pseudo $R^2$ moves in cols (4),(5),(6) &
+\textcolor{warncol}{\bfseries Yes, 1}: (5) $k{+}1$ $0.09^{*}\ra0.10^{**}$ \\
+\addlinespace
+Figure SA.B.1 (a)--(d) & 97 &
+15 of 16 observed labels move, all by $\leq0.002$ &
+n/a. Panel (d) $k{+}1$ crosses the 10--90 null band, $89.9 \ra 90.1$ pctile (not printed) \\
+\addlinespace
+Figure SA.B.2 (a)--(d) & 98 &
+Observed labels move in (a), (c), (d); panel (b) prints identically &
+n/a. Panel (a) $k{-}1$ slips $90.5 \ra 89.2$ pctile, out of the band (not printed) \\
+\addlinespace
+Figure SA.B.3 (a)--(d) & 99 &
+Observed labels move in (b), (c), (d); panel (a) prints identically &
+n/a. \textcolor{warncol}{Panel (c) $k{+}1$: randomization $p$ $0.0500 \ra 0.0529$}, crossing the null's
+95th percentile (not printed) \\
+\addlinespace
+Table SA.B.5 &
+\textcolor{warncol}{\bfseries none} &
+\textcolor{warncol}{\bfseries Removed from the paper by commit \file{1d64cb0}, after this build ran.}
+Had it survived: exposure row $0.11^{***}/0.07^{***}/0.07^{**} \ra 0.21^{***}/0.22^{***}/0.17^{***}$,
+the largest proportional move anywhere in this preview &
+Yes, 1 (col (3) $^{**}\ra{}^{***}$), but moot \\
+\addlinespace
+Figure SA.D.1(c) & 104 &
+Legend $n$ $428/440 \ra 430/438$, means $0.64/0.56 \ra 0.63/0.57$; the median cut moves
+$0.111 \ra 0.421$ and 158 of 868 occupations change side of the split; the gap narrows
+$-0.0776 \ra -0.0652$ &
+n/a \\
+\addlinespace
+Figure SA.D.4 (a)--(d) & 108 &
+176 markers, largest $|$shift$|$ $0.0175$, 3 sign flips (all on cells with published $p>0.68$);
+panel (a)'s dashed across-prompt means $0.08/0.11/0.11/0.07 \ra 0.06/0.10/0.09/0.06$;
+panels (b)--(d) print the same means &
+\textcolor{warncol}{\bfseries Yes, 15} bootstrap-$p$ star changes, of which \textbf{4 cross 10\%}
+and visibly change whether the plotted 90\% bar covers zero \\
+\addlinespace
+Figure SA.E.3 (a)--(b) & 114 &
+71 of 72 printed cell labels move; 0 sign flips; largest $|$shift$|$ $0.1625$. Panel (a) re-shades
+paler and panel (b) darker, because the code recomputes each panel's colour scale from its own extreme cell &
+\textcolor{warncol}{\bfseries Yes, 14} printed star changes, including the three
+Hourly$+$ $\geq$50\% cells going from blank to $^{***}/^{***}/^{**}$ \\
+\addlinespace
+Figure SA.E.4 (a)--(b) & 115 &
+Red dots (observed outside its own 10--90 null) $35 \ra 33$ of 72; 4 dot-colour flips; 0 sign flips;
+the all-tasks row stays red at the 100th percentile in all six sub-panels &
+\textcolor{warncol}{\bfseries Yes, 4} dot-colour flips (the figure's significance marker) \\
+\bottomrule
+\end{longtable}
+}
+
+\clearpage
+\section{Control check: is the pipeline faithful?}\label{sec:control}
+
+\begin{prose}
+\textbf{Table 3 came back byte-identical.} This is the headline control. The file is\\
+\file{writeup/tables/fragmentation_index_regression_combined.tex} (PDF p.\ 41),\\
+and it was already estimated on the E1$|$E2 mask before this work started, so a faithful pipeline
+must reproduce it exactly and a broken one would not. It was regenerated through the same driver as everything else and the result is
+md5 \file{44b7017c91d21a4cb2f533ea624e80cc} on both sides, \file{diff} exit 0, 0 of 42 cells changed.
+The two files are typeset side by side in Section~\ref{sec:t3} so this can be checked by eye as well.
+
+\textbf{Honest caveat on Table 3.} \file{writeup/tables/*tex} is git-ignored (\file{.gitignore} line 6),
+so Table 3 is untracked and there is no committed blob to diff against. The comparison is
+disk-against-disk. The four SA.B/Table-2 \file{.tex} files below \emph{are} tracked and were compared
+against their \file{git show HEAD:} blobs, not just against the working tree.
+
+\textbf{Eight further controls, all run before any E1$|$E2 number was believed:}
+\end{prose}
+
+{\footnotesize
+\begin{longtable}{@{}p{6.2cm}p{14.5cm}@{}}
+\toprule
+\textbf{Control} & \textbf{Result} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Control} & \textbf{Result} \\
+\midrule
+\endhead
+Table 3 regenerated, E1$|$E2 & \textcolor{okcol}{\bfseries Byte-identical} to the published file. 0 of 42 cells changed. \\
+Table 2 rebuilt under E1-only & \textcolor{okcol}{\bfseries Byte-identical} to the committed \file{.tex}. Full re-estimation plus the $B=200$ bootstrap; AMEs sit $1.04\mathrm{e}{-16}$ and SEs $1.62\mathrm{e}{-12}$ from the published CSV, i.e.\ it was a genuine rerun, not a file copy. \\
+Table 2 \LaTeX{} emitter fed the published CSV & \textcolor{okcol}{\bfseries Byte-identical} to the committed \file{.tex}. Separates ``the estimator is right'' from ``the printer is right.'' \\
+Tables SA.B.1--SA.B.3 rebuilt under E1-only & \textcolor{okcol}{\bfseries Byte-identical} to all three committed \file{.tex} files, and to an \emph{independently written} second estimation chain's output. \\
+Table SA.B.5 rebuilt under E1-only & \textcolor{okcol}{\bfseries Byte-identical} to the published file (\file{md5 30c3f1b3576a465fc4a37c0cb9eb7cd9}). \\
+Figure OA.A.1, four panels, E1-only & \textcolor{okcol}{\bfseries Pixel-identical} to the four committed PNGs (max channel difference 0). \\
+Figures SA.B.1--SA.B.3, twelve panels, E1-only & \textcolor{okcol}{\bfseries Byte-identical} (sha256) to all twelve committed PNGs. \\
+Figure SA.E.4, two panels, re-rendered from the paper's cached draws & \textcolor{okcol}{\bfseries Pixel-identical} (0.0000\% of pixels differ). The strongest control in the preview. \\
+Figure SA.D.4, E1-only re-estimation (6.8 min, $4\times44$ fits $\times$ 200 bootstrap replicates) & Reproduces the published CSV on all 176 plotted cells to $4.0\mathrm{e}{-16}$; its render is byte-identical to the render from the published CSV. \\
+Figure SA.E.3, E1-only re-estimation & Reproduces the published sweep CSV on all 144 cells to $1.9\mathrm{e}{-16}$. \\
+Placebo reshuffle draws $i=1..60$, E1-only & Match the repo's cached draws to $4.02\mathrm{e}{-16}$ over 1,440 cells. \\
+Committed \file{is_exposed} column & Reproduced exactly by \file{isin(['E1'])} on the committed frame (10,708 rows, 1,748 DWAs). \\
+\midrule
+Figures SA.A.2(a) and SA.D.1(c), E1-only & \textcolor{warncol}{\bfseries Not pixel-identical.} Every printed value reproduces (all 15 bar labels; legend $n=428$/mean$=0.64$ and $n=440$/mean$=0.56$), but 4.66\% of pixels differ on SA.D.1(c). 73\% of that is inside text regions and 86\% of the in-plot residual lies within 3 px of a drawn line; every histogram bar top agrees to within 2 px. Cause is matplotlib 3.11.0 font metrics in this environment, not the mask. \\
+\bottomrule
+\end{longtable}
+}
+
+\begin{prose}
+\textbf{Repository integrity.} \file{git status --porcelain} prints one line, \file{?? writeup/_e1e2_preview/}.
+Because \file{*png}, \file{*csv} and \file{writeup/tables/*tex} are git-ignored, git status alone cannot
+prove nothing was clobbered, so an mtime sweep was run too: no file under \file{writeup/plots},
+\file{writeup/tables}, \file{analysis/} or \file{data/} was written today by this work. Four notebooks
+under \file{analysis/} carry today's mtimes, but \file{git hash-object} returns their HEAD blob sha in
+every case, so the mtimes are reads or Dropbox syncs and no notebook was executed in place.
+One earlier ``0 files touched'' sweep in the build log was a false negative
+(\file{find -newermt '-8 hours'} is rejected by this machine's \file{bfs}); the corrected sweep is the
+one reported here.
+\end{prose}
+
+\clearpage
+\section{Exhibit by exhibit}\label{sec:exhibits}
+
+\begin{prose}
+Tables are typeset from the actual staged \file{.tex} files, current on the left and updated on the
+right, with every changed cell listed underneath. \textbf{Figures depart from left/right for one
+reason:} the AME panels are 4.9:1, the robustness grids 4.7:1 and the heatmaps 3.3:1, so at half
+page width their axis labels stop being readable. Every figure with an aspect ratio above 2:1 is
+therefore stacked, \textbf{current on top, updated below}, at equal width. The two figures that are
+close to square (SA.A.2(a) and SA.D.1(c)) are side by side as asked.
+\end{prose}
+
+\subsection{Table 2 --- Neighboring tasks' AI execution, main sample (PDF p.\ 38)}
+\file{writeup/tables/noTasksWithRepetitiveDWAs/allTasks_ai.tex}
+
+\tabpair{allTasks_ai.tex}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}llllp{10cm}@{}}
+\cellhead
+Task ($k-2$) & (1) & \cur{0.07***} & \new{0.05***} & $0.0651 \ra 0.0547$, the largest AME move in the table after $k{-}1$ \\
+Task ($k-1$) & (1) & \cur{0.12***} & \new{0.11***} & $0.1239 \ra 0.1125$. \textbf{This is the number 7\_empirics.tex:170 quotes} \\
+Task ($k-1$) & (4) & \cur{0.05**} & \new{0.05***} & star only; $p$ $0.0120 \ra 0.0096$ \\
+Task ($k-1$) & (6) & \cur{0.05**} & \new{0.05***} & star only; $p$ $0.0116 \ra 0.0093$ \\
+Task ($k+1$) & (1) & \cur{0.12***} & \new{0.11***} & $0.1166 \ra 0.1052$ \\
+Task ($k+1$) & (2) & \cur{0.06***} & \new{0.05***} & $0.0572 \ra 0.0541$ \\
+Task ($k+2$) & (1) & \cur{0.05***} & \new{0.04**} & $0.0495 \ra 0.0408$; value \emph{and} star \\
+Task ($k+2$) & (2) & \cur{0.00} & \new{-0.00} & $+0.0039 \ra -0.0001$; a sign flip at the 4th decimal, printed as $-0.00$ \\
+\midrule
+Pseudo $R^2$ & (1) & \cur{0.112} & \new{0.130} & \\
+Pseudo $R^2$ & (2) & \cur{0.173} & \new{0.183} & \\
+Pseudo $R^2$ & (3) & \cur{0.171} & \new{0.180} & \\
+Pseudo $R^2$ & (4) & \cur{0.196} & \new{0.197} & cols (5) and (6) do not move \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{prose}
+\textbf{Not changed:} no standard-error cell moves at 2 dp; Observations are identical in all six
+columns (10,708 / 10,708 / 9,861 / 4,096 $\times$ 3); DWA cluster counts identical (1,748 / 1,705 / 534).
+Agreement with both independent audit agents is exact at double precision: max $|\Delta\mathrm{AME}| = 0.0$,
+max $|\Delta\mathrm{SE}| = 0.0$, max $|\Delta$Pseudo $R^2| = 0.0$ on all 24 target cells.
+\end{prose}
+
+\clearpage
+\subsection{Table 3 --- Fragmentation, combined O*NET and APQC (PDF p.\ 41). THE CONTROL}\label{sec:t3}
+\file{writeup/tables/fragmentation_index_regression_combined.tex}
+
+\tabpair{fragmentation_index_regression_combined.tex}
+
+\begin{prose}
+\textcolor{okcol}{\textbf{No changed cells. The two files are byte-identical.}} Table 3 was already
+estimated on E1$|$E2, so any movement here would mean the regeneration pipeline was not the published
+one. The exposure row stays $0.49^{***}$, $0.48^{***}$, $0.39^{***}$, $0.28^{***}$, $0.42^{***}$,
+$0.28^{***}$ and the EFI row stays $-0.01$, $-0.09$, $-0.04$, $-0.35^{***}$, $-0.26^{**}$,
+$-0.34^{***}$.
+\end{prose}
+
+\clearpage
+\subsection{Figure OA.A.1 --- Observed AMEs against their placebo nulls (PDF p.\ 52)}
+\file{writeup/plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/}
+
+\pairstack{AME_full_is_ai_no_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (a), no fixed effects.} All four observed labels move:
+$k{-}2$ $0.065\ra\mathbf{0.055}$, $k{-}1$ $0.124\ra\mathbf{0.113}$, $k{+}1$ $0.117\ra\mathbf{0.105}$,
+$k{+}2$ $0.050\ra\mathbf{0.041}$. The placebo null slides left with the red line (null mean
+$0.0859/0.0860/0.0859/0.0857 \ra 0.0766/0.0768/0.0766/0.0764$), so the picture reads the same.
+Tail shares $P(\text{null}\!\geq\!\text{obs})$: $0.960/0.001/0.001/0.999 \ra 0.973/0.001/0.002/0.999$.}
+
+\clearpage
+\pairstack{AME_full_is_ai_major_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (b), SOC major-group FE.} $0.014/0.061/0.057/0.004 \ra
+\mathbf{0.010}/\mathbf{0.059}/\mathbf{0.054}/\mathbf{-0.000}$. The $k{+}2$ label crosses zero and now
+prints $-0.000$. Null mean $0.0265/0.0263/0.0262/0.0264 \ra 0.0247/0.0246/0.0245/0.0246$;
+tail shares $0.901/0.001/0.001/0.992 \ra 0.936/0.001/0.001/0.996$.}
+
+\clearpage
+\pairstack{AME_full_is_ai_minor_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (c), SOC minor-group FE.} $0.004/0.051/0.048/-0.007 \ra
+\mathbf{0.000}/\mathbf{0.050}/\mathbf{0.046}/\mathbf{-0.011}$. Tail shares
+$0.834/0.001/0.001/0.982 \ra 0.891/0.001/0.001/0.989$; the $k{-}2$ cell's $+0.057$ is the largest
+tail-share move in the group and it moves \emph{further} into the tail, the direction the paper's
+claim wants.}
+
+\clearpage
+\pairstack{AME_full_is_ai_no_fe_with_dwa.png}{1.0}{%
+\textbf{Panel (d), DWA FE.} $-0.006/0.052/0.041/0.003 \ra
+\mathbf{-0.007}/\mathbf{0.053}/\mathbf{0.042}/\mathbf{0.002}$. The null is essentially frozen
+(max $|\Delta$ null mean$| = 0.0001$), because the DWA dummies already absorb what the exposure
+control carries.\\[3pt]
+\textbf{Axis note for all four panels.} The shared $x$-limits move
+$(-0.158673, 0.158673) \ra (-0.159201, 0.159201)$, $+0.33\%$. This is \emph{not} a styling choice:
+\file{plot_comparison_hist} derives a symmetric bound from $\max|\text{value}|$ over all six specs
+$\times$ four terms with a 1\% pad, so the limit is an output of the data. Nothing is clipped under
+either mask. See Section~\ref{sec:dev}, item D5.}
+
+\clearpage
+\subsection{Figure SA.A.2(a) --- Distribution of the AI-exposed task share (PDF p.\ 87)}
+\file{writeup/plots/ONET_Eloundou_Anthropic_GPT/ai_exposed_task_share_distribution.png}
+
+\pairside{ai_exposed_task_share_distribution.png}{%
+\textbf{This exhibit changes character, not just numbers.} Mean $0.1377\ra\mathbf{0.4321}$,
+median $0.1111\ra\mathbf{0.4211}$, sd $0.1388\ra\mathbf{0.2883}$, max $0.7500\ra\mathbf{1.0000}$,
+$p10/p25/p75/p90$ $0.000/0.000/0.231/0.333 \ra \mathbf{0.063/0.167/0.685/0.815}$.
+Occupations with a zero share $267\ra\mathbf{63}$; occupations with at least one exposed task
+$605\ra\mathbf{809}$ (this is the number SA\_A:35 quotes). The tallest bar falls $309\ra\mathbf{76}$
+and the histogram spreads from 15 non-empty bins to 21.\\[4pt]
+\textbf{Both hard-coded axis limits had to change, and one of the two values is a free parameter.}
+$x$-limits $(-0.02,0.82)\ra(-0.02,1.07)$ is forced: 82 of 872 occupations (9.4\%) sit right of $0.82$
+and would be silently clipped, and $1.07$ follows the published rule (right edge of the last non-empty
+bin, $+0.02$). $y$-limits $(0,460)\ra(0,115)$ is necessary but $115$ is not forced: the stated headroom
+rule $460/309$ gives $113.1$, and anything in roughly $[105,120]$ would do. \textbf{This needs the
+author's sign-off} (Section~\ref{sec:dev}, item D1).}
+
+\clearpage
+\subsection{Table SA.B.1 --- GPT-filtered sample, AI execution (PDF p.\ 94)}
+\file{writeup/tables/noTasksWithRepetitiveDWAs/GPT_ai.tex}
+
+\tabpair{GPT_ai.tex}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}llllp{10cm}@{}}
+\cellhead
+Task ($k-2$) & (3) & \cur{0.01} & \new{0.00} & coefficient \\
+Task ($k-1$) & (2) & \cur{0.07**} & \new{0.06**} & coefficient \\
+Task ($k-1$) & (3) & \cur{(0.02)} & \new{(0.03)} & standard error \\
+Task ($k+1$) & (3) & \cur{(0.03)} & \new{(0.02)} & standard error \\
+Task ($k+1$) & (5) & \cur{0.09***} & \new{0.10***} & coefficient \\
+Task ($k+2$) & (3) & \cur{-0.02} & \new{-0.03} & coefficient \\
+\midrule
+Pseudo $R^2$ & (1) & \cur{0.031} & \new{0.032} & \\
+Pseudo $R^2$ & (2) & \cur{0.055} & \new{0.056} & \\
+Pseudo $R^2$ & (4) & \cur{0.198} & \new{0.199} & \\
+Pseudo $R^2$ & (6) & \cur{0.198} & \new{0.199} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{prose}
+6 of 24 printed cells (4 coefficients, 2 SEs), \textcolor{okcol}{0 star changes, 0 sign flips}.
+$N$ identical: 3,689 / 3,689 / 3,567 / 2,544 $\times$ 3.
+\end{prose}
+
+\clearpage
+\subsection{Table SA.B.2 --- Main sample, AI automation (PDF p.\ 95)}
+\file{writeup/tables/randomTieBreak/allTasks_automated.tex}
+
+\tabpair{allTasks_automated.tex}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}llllp{10cm}@{}}
+\cellhead
+Task ($k-2$) & (5) & \cur{0.01} & \new{0.02} & coefficient \\
+Task ($k-1$) & (1) & \cur{0.05***} & \new{0.04***} & coefficient \\
+Task ($k-1$) & (2) & \cur{0.02*} & \new{0.01*} & coefficient \\
+Task ($k-1$) & (4) & \cur{0.02 (0.03)} & \new{0.01 (0.02)} & coefficient and standard error \\
+Task ($k-1$) & (5) & \cur{0.09** (0.04)} & \new{0.08** (0.03)} & coefficient and standard error \\
+Task ($k-1$) & (6) & \cur{(0.03)} & \new{(0.02)} & standard error \\
+Task ($k+2$) & (5) & \cur{0.05*} & \new{0.06*} & \textbf{largest AME move in the SA.B group, $+0.0064$} \\
+\midrule
+Pseudo $R^2$ & (1) & \cur{0.101} & \new{0.102} & \\
+Pseudo $R^2$ & (4) & \cur{0.245} & \new{0.242} & \\
+Pseudo $R^2$ & (5) & \cur{0.033} & \new{0.036} & \\
+Pseudo $R^2$ & (6) & \cur{0.245} & \new{0.242} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{prose}
+7 of 24 printed cells (6 coefficients, 3 SEs), \textcolor{okcol}{0 star changes, 0 sign flips}.
+$N$ identical: 13,786 / 12,777 / 10,390 / 2,815 $\times$ 3. The column spanner reads ``AI-automated'',
+which is the wording commit \file{228864c} introduced; the regenerated file carries it, so it is a
+true drop-in replacement.
+\end{prose}
+
+\clearpage
+\subsection{Table SA.B.3 --- GPT-filtered sample, AI automation (PDF p.\ 96)}
+\file{writeup/tables/randomTieBreak/GPT_automated.tex}
+
+\tabpair{GPT_automated.tex}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}llllp{10cm}@{}}
+\cellhead
+Task ($k-2$) & (3) & \cur{(0.01)} & \new{(0.02)} & standard error \\
+Task ($k-2$) & (4) & \cur{(0.02)} & \new{(0.03)} & standard error \\
+Task ($k-2$) & (5) & \cur{0.00} & \new{0.01} & coefficient \\
+Task ($k-2$) & (6) & \cur{(0.02)} & \new{(0.03)} & standard error \\
+Task ($k-1$) & (5) & \cur{(0.05)} & \new{(0.04)} & standard error \\
+Task ($k+1$) & (5) & \cur{0.09*} & \new{0.10**} & \textcolor{warncol}{\bfseries the only star change in the SA.B tables} \\
+Task ($k+2$) & (3) & \cur{(0.01)} & \new{(0.02)} & standard error \\
+Task ($k+2$) & (4) & \cur{0.00} & \new{0.01} & coefficient \\
+Task ($k+2$) & (6) & \cur{(0.02)} & \new{(0.03)} & standard error \\
+\midrule
+Pseudo $R^2$ & (4) & \cur{0.247} & \new{0.244} & \\
+Pseudo $R^2$ & (5) & \cur{0.031} & \new{0.033} & \\
+Pseudo $R^2$ & (6) & \cur{0.247} & \new{0.244} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{prose}
+9 of 24 printed cells (3 coefficients, 6 SEs), 1 star change, 0 sign flips.
+$N$ identical: 5,156 / 5,077 / 4,490 / 1,771 $\times$ 3.
+\end{prose}
+
+\clearpage
+\subsection{Figure SA.B.1 --- GPT-filtered sample, AI execution (PDF p.\ 97)}\label{sec:sab1fig}
+
+\pairstack{AME_filtered_is_ai_no_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (a), no FE.} $0.045/0.109/0.110/0.014 \ra
+\mathbf{0.044}/\mathbf{0.108}/\mathbf{0.109}/\mathbf{0.013}$.
+\textbf{Documentation correction:} the build log's digest says the $k{+}1$ label goes to $0.110$.
+The PNG prints $\mathbf{0.109}$ (audited AME $0.10947$); $0.110$ was the E1 value carried over by
+mistake. The artifact is right, the prose was wrong.}
+
+\clearpage
+\pairstack{AME_filtered_is_ai_major_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (b), SOC major-group FE.} $0.011/0.065/0.078/-0.020 \ra
+\mathbf{0.010}/0.065/\mathbf{0.077}/\mathbf{-0.021}$.}
+
+\clearpage
+\pairstack{AME_filtered_is_ai_minor_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (c), SOC minor-group FE.} $0.006/0.061/0.072/-0.025 \ra
+\mathbf{0.005}/\mathbf{0.060}/\mathbf{0.071}/\mathbf{-0.027}$.}
+
+\clearpage
+\pairstack{AME_filtered_is_ai_no_fe_with_dwa.png}{1.0}{%
+\textbf{Panel (d), DWA FE.} $0.041/0.059/0.089/-0.003 \ra
+0.041/\mathbf{0.060}/\mathbf{0.090}/\mathbf{-0.004}$. Unprinted: the $k{+}1$ cell crosses the 10--90
+null band, $89.9 \ra 90.1$ percentile. The build log's claim that panel SA.B.2(a) carries ``the only
+10--90 band crossing in the group'' is incomplete; this is a second one. Both are cosmetic and neither
+is printed on the figure.\\[3pt]
+\textbf{Axis note for the twelve SA.B panels.} Their $x$-limits are \emph{pinned} at the published
+values rather than recomputed, because only the four plotted specs were re-simulated under E1$|$E2
+while the published pipeline derives the bound from all six. Nothing is clipped: the drawn range is
+$[-0.083,+0.179]$ against limits $\pm0.181$ for SA.B.1, $[-0.072,+0.109]$ against $\pm0.181$ for
+SA.B.2, $[-0.106,+0.152]$ against $\pm0.187$ for SA.B.3. See Section~\ref{sec:dev}, item D4.}
+
+\clearpage
+\subsection{Figure SA.B.2 --- Main sample, AI automation (PDF p.\ 98)}
+
+\pairstack{AME_full_is_automated_no_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (a), no FE.} $0.019/0.046/0.053/0.027 \ra
+\mathbf{0.017}/\mathbf{0.043}/\mathbf{0.050}/\mathbf{0.026}$. Unprinted: the $k{-}1$ cell slips from
+the 90.5th to the 89.2nd percentile of its own null, leaving the 10--90 band.}
+
+\clearpage
+\pairstack{AME_full_is_automated_major_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (b), SOC major-group FE.} $-0.006/0.015/0.020/0.001$ on both sides.
+\textcolor{okcol}{Nothing printed on this panel changes.}}
+
+\clearpage
+\pairstack{AME_full_is_automated_minor_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (c), SOC minor-group FE.} $-0.011/0.014/0.020/-0.002 \ra
+\mathbf{-0.012}/\mathbf{0.013}/\mathbf{0.019}/-0.002$.}
+
+\clearpage
+\pairstack{AME_full_is_automated_no_fe_with_dwa.png}{1.0}{%
+\textbf{Panel (d), DWA FE.} $-0.014/0.018/0.013/0.019 \ra
+\mathbf{-0.012}/\mathbf{0.015}/\mathbf{0.010}/\mathbf{0.022}$.\\[3pt]
+\textbf{Layout note.} On this pair and on panel (b), the whole axes block sits about 5 px left or
+right of the published one. That is the histogram's automatic $y$-max rising ($80\ra100$ on the
+$k{-}1$ and $k{+}1$ sub-panels), which re-flows the \file{bbox_inches="tight"} crop. It is the data
+moving the axis, not a restyle: $x$-limits, colours, bin count, fonts, band and legend text all match.}
+
+\clearpage
+\subsection{Figure SA.B.3 --- GPT-filtered sample, AI automation (PDF p.\ 99)}
+
+\pairstack{AME_filtered_is_automated_no_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (a), no FE.} $0.009/0.056/0.061/0.011$ on both sides.
+\textcolor{okcol}{Nothing printed on this panel changes.}}
+
+\clearpage
+\pairstack{AME_filtered_is_automated_major_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (b), SOC major-group FE.} $-0.018/0.018/0.026/-0.016 \ra
+\mathbf{-0.019}/\mathbf{0.019}/0.026/\mathbf{-0.017}$.}
+
+\clearpage
+\pairstack{AME_filtered_is_automated_minor_fe_no_dwa.png}{1.0}{%
+\textbf{Panel (c), SOC minor-group FE.} $-0.023/0.018/0.026/-0.020 \ra
+-0.023/\mathbf{0.019}/\mathbf{0.025}/\mathbf{-0.021}$.
+\textcolor{warncol}{\textbf{The sharpest thing that moves in the three SA.B figures is here and is
+not printed on the panel:}} the $k{+}1$ cell's randomization $p$ goes $0.0500 \ra 0.0529$, so the
+observed estimate crosses the null's 95th percentile. It is a boundary case, and the panel shows only
+the histogram, the observed line and the SE band, so nothing on the page moves. Flagged because any
+text that leans on this cell should be checked.}
+
+\clearpage
+\pairstack{AME_filtered_is_automated_no_fe_with_dwa.png}{1.0}{%
+\textbf{Panel (d), DWA FE.} $0.001/0.027/0.025/0.005 \ra
+\mathbf{0.002}/\mathbf{0.026}/\mathbf{0.022}/\mathbf{0.006}$.}
+
+\clearpage
+\subsection{Table SA.B.5 --- Execution-based EFI. \textcolor{warncol}{NO LONGER IN THE PAPER}}
+
+\begin{tcolorbox}[colback=shade,colframe=warncol,boxrule=0.8pt,arc=1pt]
+\textbf{Read this before looking at the table.} Commit \file{1d64cb0}, ``Drop the execution-based EFI
+check (M4)'', landed at 12:45:53 today, one minute after this regeneration finished at 12:44. It
+deleted the entire subsection ``Prediction \#3: An Execution-Based Empirical Fragmentation Measure''
+from \file{writeup/SA_B_alternative_definitions.tex}, including the
+\file{\input{tables/fragmentation_index_regression_execution.tex}} line. Nothing in
+\file{writeup/*.tex} now includes this file, and Table~SA.B.5 does not appear in the compiled PDF.
+\textbf{The regenerated file is an orphan. Do not copy it into the repo.} It is shown here only so the
+decision is made with the numbers visible, and because the same two commits also delete the prose
+lines the task brief asked to be updated (see Section~\ref{sec:prose}).
+\end{tcolorbox}
+
+\tabpair{fragmentation_index_regression_execution.tex}
+
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}llllp{10cm}@{}}
+\cellhead
+Share of AI-exposed Tasks & (1) & \cur{0.11*** (0.02)} & \new{0.21*** (0.03)} & $0.1131 \ra 0.2057$ \\
+Share of AI-exposed Tasks & (2) & \cur{0.07*** (0.02)} & \new{0.22*** (0.04)} & $0.0718 \ra 0.2186$, a three-fold move \\
+Share of AI-exposed Tasks & (3) & \cur{0.07** (0.03)} & \new{0.17*** (0.04)} & $0.0664 \ra 0.1661$; \textcolor{warncol}{\bfseries star change $^{**}\ra{}^{***}$} \\
+EFI (Definition 2) & (2) & \cur{-0.70***} & \new{-0.68***} & $-0.7033 \ra -0.6821$, the largest EFI move, $|\Delta| = 0.0212$ \\
+EFI (Definition 2) & (3) & \cur{-0.68***} & \new{-0.67***} & $-0.6790 \ra -0.6657$; no sign flip, all six cells stay $^{***}$ \\
+R-squared & (2) & \cur{0.86} & \new{0.87} & Adj.\ $R^2$ and $N=872$ unchanged \\
+\midrule
+\multicolumn{5}{@{}l@{}}{\textcolor{warncol}{\bfseries Unprinted, and the reason the exposure row moves so much:}} \\
+\file{num_E1E2_tasks} control & (1) & \cur{0.16***} & \new{0.06*} & $p$ $1.4\mathrm{e}{-14} \ra 0.079$ \\
+\file{num_E1E2_tasks} control & (2) & \cur{0.09***} & \new{-0.00} & $p$ $2.4\mathrm{e}{-04} \ra 0.913$ \\
+\file{num_E1E2_tasks} control & (3) & \cur{0.07**} & \new{0.00} & $p$ $1.3\mathrm{e}{-02} \ra 0.923$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{prose}
+The control collapses because the regressor and its own control now count the same pool: across the
+872 occupations, corr(exposure share, number of E1$|$E2 steps) rises from $0.6747$ under E1 to
+$0.8786$ under E1$|$E2. That near-collinearity is what mechanically drives the exposure coefficient up
+two- to three-fold, and it would have left the table note ``Number of AI-able Steps Control'' sitting
+next to a control that is no longer separately identified. Moot now that the table is gone, but it is
+the same identification concern the commit message gives as the reason for dropping the exhibit, so
+the two decisions agree.
+\end{prose}
+
+\clearpage
+\subsection{Figure SA.D.1(c) --- Kendall's $\tau$ by AI-exposure split (PDF p.\ 104)}
+\file{writeup/plots/GPT_task_sequences_overlap_analysis/}\\
+\file{GPT_task_sequence_robustness_by_human_E1_fraction_distribution.png}
+
+\pairside{GPT_task_sequence_robustness_by_human_E1_fraction_distribution.png}{%
+Legend: below-median $n=428$, mean $0.64$ \ra{} $n=\mathbf{430}$, mean $\mathbf{0.63}$; above-median
+$n=440$, mean $0.56$ \ra{} $n=\mathbf{438}$, mean $\mathbf{0.57}$. At full precision the means go
+$0.6411/0.5635 \ra 0.6347/0.5695$ and the above-minus-below gap narrows $-0.0776 \ra -0.0652$.
+The median cut of the splitting variable moves $0.1111 \ra 0.4211$ and \textbf{158 of 868 occupations
+change side of the split}, so this is a materially different partition even though the picture looks
+similar. No axis limit changes.\\[4pt]
+The file keeps its published name (\file{..._by_human_E1_fraction_...}) so it is a drop-in
+replacement, but the variable behind it is now \file{human_aiExposure_fraction_above_median}. That
+makes the filename, the subcaption at SA\_D:48 and the sentence at SA\_D:68 all say ``E1'' about an
+E1$|$E2 split. The prose fixes are in Section~\ref{sec:prose}; the filename is left alone deliberately.}
+
+\clearpage
+\subsection{Figure SA.D.4 --- Robustness of Table 2 to GPT prompts (PDF p.\ 108)}
+\file{writeup/plots/execTypeVaryingDWA_noTasksWithRepetitiveDWAs_robustness/}
+
+\begin{tcolorbox}[colback=shade,colframe=warncol,boxrule=0.8pt,arc=1pt]
+\textbf{Two things about this exhibit are not the mask.}
+\textbf{(i) The panel titles differ, and that is a pre-existing staleness, not a consequence of the
+swap.} The committed PNGs print ``($t-2$) Task AI \dots ($t+2$) Task AI''; cell 5 of the notebook that
+draws them now reads \file{PLOT_TITLES = ['Task ($k-2$) is AI', ...]}, matching Table 2 and the SA.D/SA.E
+prose. The regenerated PNGs print the $k$ titles because the pipeline is the code, not the stale image.
+The plotted \emph{data} in the committed PNGs is current. Title-matched pairs, if a like-for-like
+comparison is wanted, are in \file{plots_fixture/SAD4_E1E2_oldTitles/} against
+\file{plots_fixture/SAD4_E1_from_published_csv_oldTitles/}.
+\textbf{(ii) The build log understates what moves.} It says 15 bootstrap-$p$ star changes with ``NONE
+crossing the 10\% line'', and the diff calls them ``a diagnostic only'' because ``the figure plots
+bars, not stars''. Both are wrong. The plotted bar is $\hat\beta \pm 1.645\,\mathrm{SE}$ and the
+$p$-value is the normal approximation to the same ratio, so $p$ crossing $0.10$ \emph{is} the bar
+crossing zero. Four do:
+\file{(b) Major FE k-2 prompt 3} $0.0196\,(p{=}0.078) \ra 0.0158\,(p{=}0.155)$, bar now covers 0;
+\file{(b) Major FE k-2 prompt 9} $0.0248\,(p{=}0.062) \ra 0.0201\,(p{=}0.131)$, bar now covers 0;
+\file{(c) Minor FE k+2 prompt 8} $0.0183\,(p{=}0.083) \ra 0.0169\,(p{=}0.117)$, bar now covers 0;
+\file{(d) DWA FE k+2 prompt 5} $0.0321\,(p{=}0.105) \ra 0.0330\,(p{=}0.097)$, bar now clears 0.
+Markers whose 90\% CI excludes zero: $124/176 \ra 122/176$.
+\end{tcolorbox}
+
+\clearpage
+\pairstack{ame_no_fe_no_dwa_robustness.png}{1.0}{%
+\textbf{Panel (a), no fixed effects.} The only panel whose printed dashed across-prompt means move:
+$0.08/0.11/0.11/0.07 \ra \mathbf{0.06}/\mathbf{0.10}/\mathbf{0.09}/\mathbf{0.06}$. The purple prompt-0
+dot on each sub-panel is the Figure OA.A.1 observed estimate and lands on exactly the values reported
+there ($0.0547/0.1125/0.1052/0.0408$), which is a genuine cross-check: this group and the Table-2
+group were estimated by different scripts and agree to four decimals. Note the title change from
+``($t-2$) Task AI'' to ``Task ($k-2$) is AI'', which is the stale-PNG issue above, not the mask.}
+
+\clearpage
+\pairstack{ame_major_fe_no_dwa_robustness.png}{1.0}{%
+\textbf{Panel (b), SOC major-group FE.} Printed means unchanged at $0.02/0.05/0.05/0.02$.
+Two of the four error bars that change whether they cover zero are on this panel:
+$k{-}2$ at prompts 3 and 9 both lose the 10\% margin and their bars now span zero.}
+
+\clearpage
+\pairstack{ame_minor_fe_no_dwa_robustness.png}{1.0}{%
+\textbf{Panel (c), SOC minor-group FE.} Printed means unchanged at $0.01/0.05/0.04/0.01$
+(the $k{+}2$ mean is $0.0095$ against $0.0100$, both printing as $0.01$).
+$k{+}2$ at prompt 8 loses the 10\% margin and its bar now spans zero.}
+
+\clearpage
+\pairstack{ame_no_fe_with_dwa_robustness.png}{1.0}{%
+\textbf{Panel (d), DWA FE.} Printed means unchanged at $0.01/0.06/0.03/0.02$.
+$k{+}2$ at prompt 5 moves the other way and its bar now clears zero.\\[3pt]
+\textbf{Across all four panels:} 176 markers, largest $|$shift$|$ $0.0175$, 3 sign flips (all on cells
+whose published $p$ was $0.678$, $0.977$ and $0.990$, i.e.\ noise around zero), $N$ identical in all
+176. The hard-coded \file{ax.set_ylim(-0.075, 0.175)} is kept and nothing is clipped: under E1$|$E2 the
+extreme plotted values are $-0.0682$ and $+0.1505$.}
+
+\clearpage
+\subsection{Figure SA.E.3 --- Neighbor effects across frequency cuts (PDF p.\ 114)}
+\file{writeup/plots/execTypeVaryingDWA_weeklyTasks/}
+
+\pairstack{neighbor_logic_threshold_heatmap_prev_bySpec.png}{0.80}{%
+\textbf{Panel (a), previous task ($k-1$).} 36 plotted cells, 0 sign flips, \textbf{9 star changes}.
+The all-tasks row moves $0.1239/0.0607/0.0506 \ra 0.1125/0.0591/0.0498$.
+\textcolor{warncol}{\textbf{The single largest move in the whole preview is here:}} the
+Hourly$+$ $\geq$50\% row goes from insignificant to significant in all three specifications ---
+No FE $0.149 \ra \mathbf{0.279^{***}}$, Major FE $0.196 \ra \mathbf{0.328^{***}}$,
+Minor FE $0.121 \ra \mathbf{0.283^{**}}$, on $N=61/44/41$ ($\Delta = +0.130/+0.132/+0.163$).
+The other six star changes are smaller: Daily$+$ $\geq$20\% Minor $0.032^{***}\ra0.029^{**}$;
+Daily$+$ $\geq$50\% Minor $0.033^{*}\ra0.028$; Daily$+$ $\geq$65\% Minor $0.047^{**}\ra0.037^{*}$;
+SeveralDaily$+$ $\geq$65\% No FE $0.204^{***}\ra0.194^{**}$ and Minor $0.173\ra0.234^{*}$;
+Hourly$+$ $\geq$20\% Major $0.045^{*}\ra0.040$.\\[3pt]
+\textbf{Why the panel looks paler.} Not a restyle. Each panel's colour scale is
+\file{TwoSlopeNorm(vmax = max|AME| in that panel)}, recomputed from the data, so the whole panel
+re-shades when its extreme cell moves: \file{vmax} $0.204/0.207/0.173 \ra 0.279/0.328/0.283$.
+\textbf{Also note the current image is dpi 200 and the updated one is dpi 300} (Section~\ref{sec:dev}, item D2),
+so the updated panel will look sharper here at equal print width.}
+
+\clearpage
+\pairstack{neighbor_logic_threshold_heatmap_next_bySpec.png}{0.80}{%
+\textbf{Panel (b), next task ($k+1$).} 36 plotted cells, 0 sign flips, \textbf{5 star changes}:
+Daily$+$ $\geq$65\% Major $0.042^{***}\ra0.039^{**}$;
+SeveralDaily$+$ $\geq$50\% No FE $0.082^{**}\ra0.060^{*}$ and Major $0.063^{*}\ra0.050$;
+SeveralDaily$+$ $\geq$65\% No FE $0.205^{*}\ra0.098$;
+Hourly$+$ $\geq$20\% No FE $0.086^{***}\ra0.065^{**}$.
+The all-tasks row moves $0.1166/0.0572/0.0479 \ra 0.1052/0.0541/0.0455$.
+This panel re-shades \emph{darker} for the same reason panel (a) pales:
+\file{vmax} $0.254/0.188/0.111 \ra 0.171/0.131/0.074$.
+Across both panels, 71 of 72 printed labels change and the largest $|$shift$|$ is $0.1625$.}
+
+\clearpage
+\subsection{Figure SA.E.4 --- Observed neighbor effects against their placebo nulls (PDF p.\ 115)}
+\file{writeup/plots/placebo_summary/}
+
+\pairstack{placebo_summary_forest_neighbor_t1_byCut.png}{0.52}{%
+\textbf{Panel (a), previous task ($k-1$).} Three cells leave the 10--90 null band and turn from red to
+blue: Daily$+$ $\geq$50\% No FE 91st \ra{} 87th; Daily$+$ $\geq$50\% Major FE 92nd \ra{} 89th;
+SeveralDaily$+$ $\geq$20\% No FE 95th \ra{} 90th. The all-tasks row stays red at the 100th percentile
+in all three specifications.
+\textcolor{warncol}{\textbf{These three flips are what forces the rewrite of SA\_E:175}} (Section~\ref{sec:prose}).
+\\[3pt]
+\textbf{Disclosed rebuild noise.} The E1 side of this figure was re-simulated from scratch rather than
+read from cache. 66 of the 72 plotted cells reproduce to the last digit; the six cells of the single
+Hourly$+$ $\geq$50\% row ($N=49$ occupations / 61 observations) move slightly because the logit sits at
+its convergence limit there. That noise produces 0 dot-colour flips and exactly one printed-ordinal
+change (Hourly$+$ $\geq$50\%, Major FE, 57th \ra{} 58th). So that one row carries a sliver of rebuild
+noise on top of the mask change; the other eleven rows are clean like-for-like.
+\textbf{Current is dpi 190, updated is dpi 300} (Section~\ref{sec:dev}, item D2).}
+
+\clearpage
+\pairstack{placebo_summary_forest_neighbor_t2_byCut.png}{0.52}{%
+\textbf{Panel (b), next task ($k+1$).} One cell \emph{enters} the tail and turns from blue to red:
+Daily$+$ $\geq$50\% No FE 89th \ra{} 91st. This takes the $(k{+}1)$ Daily$+$ count from 8 of 12 outside
+the band to 9 of 12, so for this clause the published sentence becomes \emph{more} accurate, not less.
+The all-tasks row stays red at the 100th percentile in all three specifications (the $(k{+}1)$ cell
+sits at 99.8, which the ordinal formatter prints as 100th).\\[3pt]
+\textbf{Across both panels:} red dots $35 \ra 33$ of 72, 4 dot-colour flips, 0 sign flips in the
+observed AME. The full 1,000-draw position reshuffle was re-simulated under \emph{both} masks at the
+published draw count with the paper's own seeds ($42+i$, $i = 0\dots999$); no draw count was reduced.}
+
+\clearpage
+\section{Deviations requiring approval}\label{sec:dev}
+
+\begin{prose}
+Three items are genuine choices that a human has to make. Seven more are departures from a pure mask
+flip that were made deliberately, are validated, and are listed so that nothing is hidden, but that do
+not need a decision. The split is stated rather than blurred.
+\end{prose}
+
+\subsection*{Needs a decision before merge}
+
+{\footnotesize
+\begin{longtable}{@{}p{0.7cm}p{4.2cm}p{15.5cm}@{}}
+\toprule
+& \textbf{Item} & \textbf{The decision} \\
+\midrule
+\endfirsthead
+\toprule
+& \textbf{Item} & \textbf{The decision} \\
+\midrule
+\endhead
+D1 & \textbf{Figure SA.A.2(a) axis limits} &
+The panel hard-codes \file{ax.set_xlim(-0.02, 0.82)} and \file{ax.set_ylim(0, 460)}.
+\textbf{$x$: forced.} 82 of 872 occupations (9.4\%) now exceed $0.82$ and would be silently clipped.
+The replacement $1.07$ follows the published rule (right edge of the last non-empty bin $+\,0.02$),
+verified directly under both masks.
+\textbf{$y$: necessary, but the value is free.} The tallest bar falls $309 \ra 76$; at $460$ the panel
+is unreadable. The stated headroom rule $460/309 = 1.4887$ gives $76 \times 1.4887 = 113.1$, and the
+staged figure uses $115$, a round-up. Anything in roughly $[105,120]$ works and nothing is clipped at
+$115$. \textbf{Pick a number or accept 115.}
+\textbf{Knock-on.} \file{SA_A_sample_construction.tex:55-64} places panel (a) and panel (b) side by
+side at equal width. Panel (b) is the AI-\emph{execution} histogram, which the exposure swap does not
+touch, and it hard-codes the same $(-0.02,0.82)$ / $(0,460)$ limits in cell 6 of the same notebook.
+Adopting (a) on the new limits leaves the two sub-panels on different $x$ scales. Panel (b) was not
+regenerated. \textbf{This is a presentation decision, and it is the reason to look at the pair before
+merging.} \\
+\addlinespace
+D2 & \textbf{dpi mismatch on SA.E.3 and SA.E.4} &
+The staged PNGs are written at \file{dpi=300} per the project figure rule. The published SA.E.3
+heatmaps are \file{dpi=200} and the SA.E.4 forests \file{dpi=190} (SA.D.4 is already 300). Layout and
+content are unaffected, only raster resolution, but the new files are correspondingly larger and a
+same-size pixel diff is not possible. \textbf{Byte-comparable renders at the published dpi are ready
+in \file{plots_fixture/E1E2_dpi200/} (SA.E.3) and \file{plots_fixture/E1E2_dpi190/} (SA.E.4)} if the
+published resolution should be preserved instead. \\
+\addlinespace
+D3 & \textbf{SA.D.4 panel titles} &
+The staged PNGs print ``Task ($k-2$) is AI'', because that is what cell 5 of the generating notebook
+says today. The committed PNGs print ``($t-2$) Task AI'' and are stale relative to their own notebook;
+their plotted data is current. Merging the new PNGs therefore also silently applies a title change
+that has nothing to do with the exposure mask. \textbf{Either accept the title update (it matches
+Table 2 and the SA.D/SA.E prose) or take the title-matched renders from
+\file{plots_fixture/SAD4_E1E2_oldTitles/}.} \\
+\bottomrule
+\end{longtable}
+}
+
+\subsection*{Disclosed, no decision needed}
+
+{\footnotesize
+\begin{longtable}{@{}p{0.7cm}p{4.2cm}p{15.5cm}@{}}
+\toprule
+& \textbf{Item} & \textbf{Why it is not a decision} \\
+\midrule
+\endfirsthead
+\toprule
+& \textbf{Item} & \textbf{Why it is not a decision} \\
+\midrule
+\endhead
+D4 & SA.B figure $x$-limits pinned &
+\file{replot.x_bounds} was monkeypatched to the published limits because only the four plotted specs
+were re-simulated under E1$|$E2, while the published code derives the bound from all six. The script
+checks and reports that nothing is clipped under either mask (drawn ranges and limits are in
+Section~\ref{sec:sab1fig}). \file{replot.SPECS} was likewise cut to the four plotted specs; that this changes nothing
+is proved by the twelve E1-control PNGs coming back byte-identical to the committed ones \emph{with
+both patches already in place}. \\
+\addlinespace
+D5 & Figure OA.A.1 $x$-limits move &
+$(-0.158673, 0.158673) \ra (-0.159201, 0.159201)$. This one is \emph{not} a styling choice and no
+limit was overridden: \file{plot_comparison_hist} computes a symmetric bound from the data with a 1\%
+pad, so the limit is an output. Confirmed in the notebook source that nothing is hard-coded here, and
+nothing is clipped under either mask. Recorded because the brief asked that any axis movement be
+surfaced. \\
+\addlinespace
+D6 & Bootstrap frames assembled with \file{.take()} &
+The notebook builds each bootstrap frame with a per-cluster \file{pd.concat}; the staged script
+pre-indexes and uses \file{.take()}. Speed only, same rows in the same order, and
+\file{np.random.choice} is still called once per replicate before anything else, so the RNG stream is
+untouched. Proof it is not a shortcut: the E1 rerun's \file{.tex} is byte-identical to the committed
+table and its AMEs sit $1.04\mathrm{e}{-16}$ from the published CSV with SEs $1.62\mathrm{e}{-12}$
+away. A copied file would read exactly $0.0$. \\
+\addlinespace
+D7 & Placebo draw $i=0$ is the observed estimate &
+Notebook cell 19 loops \file{i in range(1000)} and reads \file{regression_ame_results_full_0.csv} at
+$i=0$, which cell 18 wrote from \emph{unshuffled} data. One draw in a thousand on the Figure OA.A.1
+histograms is therefore the observed estimate. That is a pre-existing property of the published
+figure, reproduced deliberately: fixing it would be a second change. \textbf{Consequence for prose:}
+the reproduced tail shares sit exactly $0.001$ above the audit's (which dropped $i=0$), e.g.\ panel (a)
+$k{+}1$ reads $0.001 \ra 0.002$ where the audit reports $0.000 \ra 0.001$. Anything quoting these
+shares should quote the reproduced-pipeline numbers. \\
+\addlinespace
+D8 & SA.E.4 E1-side rebuild noise &
+Six of 72 cells, all in the single Hourly$+$ $\geq$50\% row ($N=49$ occupations / 61 observations),
+move on the E1 side because the logit is at its convergence limit there. 0 dot-colour flips, exactly
+one printed-ordinal change (57th \ra{} 58th). That row alone is not a pure like-for-like comparison.
+Bounded and reported, not hidden. \\
+\addlinespace
+D9 & SA.B \file{.tex} emitter drops a trailing note line &
+Cell 17 of the notebook currently writes a trailing
+\file{\footnotesize{Clustered standard errors in parentheses...}} line that the three committed SA.B
+files do not carry. The emitter omits it so the output is a true drop-in replacement. Correct for this
+purpose, but a straight notebook re-run would add that line back. \\
+\addlinespace
+D10 & SA.B tables and figures rendered from the audit's estimation CSVs &
+Rather than re-estimated in this session. Permitted by the brief, and validated by the byte-identical
+E1 controls plus byte-identical agreement with an independently written second estimation chain.
+Similarly, only the four plotted SA.D.4 specs and two plotted SA.E.3 terms were computed;
+\file{build_ame_df} calls \file{np.random.seed(123)} at the top of every invocation, so the specs are
+independent and the E1 fixture still reproduces the published numbers to $4\mathrm{e}{-16}$. \\
+\bottomrule
+\end{longtable}
+}
+
+\clearpage
+\section{Prose changes still to make}\label{sec:prose}
+
+\begin{prose}
+\textbf{None of these are applied.} Every \file{.tex} source in the repository is untouched. Line
+numbers were re-checked against the live files after commit \file{1d64cb0}.
+\end{prose}
+
+{\footnotesize
+\begin{longtable}{@{}p{0.6cm}p{6.6cm}p{16.4cm}@{}}
+\toprule
+& \textbf{File and line} & \textbf{Change} \\
+\midrule
+\endfirsthead
+\toprule
+& \textbf{File and line} & \textbf{Change} \\
+\midrule
+\endhead
+P1 & \file{writeup/7_empirics.tex:170} &
+Reads ``The immediate neighbor effect attenuates from \$0.12\$ in the baseline to between \$0.04\$ and
+\$0.06\$\dots''. The E1$|$E2 baseline is $0.1125$, so \textbf{\$0.12\$ becomes \$0.11\$}.
+The rest of the sentence survives unchanged: the immediate-neighbour AMEs over cols (2)--(4) and (6)
+span $0.0420$--$0.0591$ (still prints $0.04$ to $0.06$) and the two-positions-away effects span
+$-0.0109$ to $+0.0102$ (still prints $-0.01$ to $0.01$) and are still insignificant everywhere.
+Checked and \emph{no} edit needed: :165 ``roughly twice the size'' still holds (col (1) ratios
+$1.90\ra2.06$ and $2.35\ra2.58$); :162 table note; :176 the 1,000 placebo datasets. \\
+\addlinespace
+P2 & \file{writeup/SA_A_sample_construction.tex:35} &
+Reads ``Of the 872 occupations, 605 (69\textbackslash\%) contain at least one AI-exposed task and 555
+(64\textbackslash\%) contain at least one AI-executed task.''
+\textbf{605 (69\%) becomes 809 (93\%).} The companion clause ``555 (64\%) \dots AI-executed'' is an
+execution statistic and does \emph{not} move. \\
+\addlinespace
+P3 & \file{writeup/SA_D_prompt_robustness.tex:48} &
+Subcaption reads \file{\subcaption{AI Exposure (E1) Split}}. The split is now on E1 or E2, so
+\textbf{``(E1)'' becomes ``(E1 or E2)''}. \\
+\addlinespace
+P4 & \file{writeup/SA_D_prompt_robustness.tex:68} &
+Reads ``\dots the share of occupation tasks exposed to AI (E1), and the share of tasks executed by
+AI.'' Same qualifier: \textbf{``(E1)'' becomes ``(E1 or E2)''}. \\
+\addlinespace
+P5 & \file{writeup/SA_E_frequency_robustness.tex:142} &
+Reads ``\dots the full-sample adjacent-step effects of \$+0.12\$ under no fixed effects, which
+attenuate to between \$+0.04\$ and \$+0.06\$\dots''. No-FE adjacent goes $0.1239/0.1166 \ra
+0.1125/0.1052$, so \textbf{\$+0.12\$ becomes \$+0.11\$}. The ``between \$+0.04\$ and \$+0.06\$''
+clause stays literally true: the new SOC-FE range is $[0.0455, 0.0591]$. \\
+\addlinespace
+P6 & \file{writeup/SA_E_frequency_robustness.tex:143} &
+Reads ``\dots the previous-task effect rises to \$+0.14\$ in the no-fixed-effects specification.''
+The cell goes $0.13714 \ra 0.12466$, so at 2 dp \textbf{\$+0.14\$ becomes \$+0.12\$}, not $+0.13$. \\
+\addlinespace
+P7 & \file{writeup/SA_E_frequency_robustness.tex:175} &
+\textbf{Must be softened; this is the one sentence whose factual content changes.} It currently reads:
+``The previous-task effect lies outside its 10-to-90 null across all four Daily\$+\$ cuts (the 91st to
+99th percentiles) and at SeveralDaily\$+\$ \$\textbackslash geq 20\textbackslash\%\$ and
+\$\textbackslash geq 50\textbackslash\%\$ (the 93rd to 98th), and the next-task effect behaves
+similarly, escaping its null across the Daily\$+\$ cuts.''
+New facts: $(k{-}1)$ Daily$+$ goes 12/12 outside (91st--99th) \ra{} \textbf{10/12 (87th--97th)};
+$(k{-}1)$ SeveralDaily$+$ $\geq$20\%/$\geq$50\% goes 6/6 (93rd--98th) \ra{} \textbf{5/6 (90th--98th)};
+$(k{+}1)$ Daily$+$ goes 8/12 (86th--100th) \ra{} \textbf{9/12 (77th--100th)}, i.e.\ the next-task
+clause becomes \emph{more} accurate. The figure carries 33 red dots instead of 35. Wording is the
+author's. \\
+\addlinespace
+P8 & \file{writeup/SA_E_frequency_robustness.tex:144} &
+\textcolor{warncol}{\textbf{Not in the task brief. Found during verification, and the most consequential
+of the eight.}} Reads ``The estimates weaken and lose significance only in the sparsest cells, where
+the number of surviving task observations falls into the low hundreds.'' Under E1$|$E2 the sparsest
+estimable cells do the \emph{opposite}: Fig SA.E.3(a) Hourly$+$ $\geq$50\% goes
+$0.149 \ra 0.279^{***}$, $0.196 \ra 0.328^{***}$, $0.121 \ra 0.283^{**}$ on $N=61/44/41$. The
+sentence as written is contradicted by the new panel. 61/44/41 observations carry no weight, so the
+honest fix is probably to say so rather than to claim strength there, but this needs the author. \\
+\bottomrule
+\end{longtable}
+}
+
+\begin{prose}
+\textbf{Checked, no edit needed:} \file{SA_E_frequency_robustness.tex:174} (``at the 100th percentile
+in all three specifications'') survives; every all-tasks cell still prints 100th and stays red.
+\file{SA_D_prompt_robustness.tex:181-186} quotes no point estimate, so Figure SA.D.4 forces no prose
+edit.
+
+\textbf{Two lines the task brief asked for no longer exist.} The brief lists
+\file{SA_B_alternative_definitions.tex:278} (``AI Exposure'' denotes the share of AI-exposed (E1) steps
+\ra{} (E1 or E2)) and \file{:284} (which would have become true). Commit \file{1d64cb0} deleted lines
+260--296 of that file along with the whole execution-EFI subsection, and the file is now 259 lines
+long. \textbf{Both edits are moot.} The brief was written against the pre-\file{1d64cb0} file.
+\end{prose}
+
+\clearpage
+\section{How to merge, how to discard}\label{sec:merge}
+
+\subsection*{Discard}
+
+\begin{prose}
+Nothing in the repository has been modified, so discarding is a single deletion with no cleanup:
+\end{prose}
+
+\begin{Verbatim}[fontsize=\small,frame=single,framesep=4pt]
+rm -rf "/Users/peymansh/MIT Dropbox/Peyman Shahidi/GitHub/rubin/writeup/_e1e2_preview"
+\end{Verbatim}
+
+\begin{prose}
+\file{git status} returns to clean immediately; \file{writeup/_e1e2_preview/} is its only untracked
+entry.
+\end{prose}
+
+\subsection*{Merge, step 1: copy the tables}
+
+\begin{Verbatim}[fontsize=\small,frame=single,framesep=4pt]
+cd "/Users/peymansh/MIT Dropbox/Peyman Shahidi/GitHub/rubin"
+P=writeup/_e1e2_preview
+
+cp "$P/tables_new/allTasks_ai.tex"        writeup/tables/noTasksWithRepetitiveDWAs/allTasks_ai.tex
+cp "$P/tables_new/GPT_ai.tex"             writeup/tables/noTasksWithRepetitiveDWAs/GPT_ai.tex
+cp "$P/tables_new/allTasks_automated.tex" writeup/tables/randomTieBreak/allTasks_automated.tex
+cp "$P/tables_new/GPT_automated.tex"      writeup/tables/randomTieBreak/GPT_automated.tex
+
+# DO NOT copy fragmentation_index_regression_combined.tex -- it is the control and is already
+#   byte-identical to the repo copy; copying it is a no-op but pointless.
+# DO NOT copy fragmentation_index_regression_execution.tex -- Table SA.B.5 was deleted from the
+#   paper by commit 1d64cb0 and nothing includes this file any more.
+\end{Verbatim}
+
+\subsection*{Merge, step 2: copy the figures}
+
+\begin{Verbatim}[fontsize=\small,frame=single,framesep=4pt]
+Q=$P/plots_new
+R=writeup/plots
+
+for f in AME_full_is_ai_no_fe_no_dwa AME_full_is_ai_major_fe_no_dwa \
+         AME_full_is_ai_minor_fe_no_dwa AME_full_is_ai_no_fe_with_dwa \
+         AME_filtered_is_ai_no_fe_no_dwa AME_filtered_is_ai_major_fe_no_dwa \
+         AME_filtered_is_ai_minor_fe_no_dwa AME_filtered_is_ai_no_fe_with_dwa; do
+  cp "$Q/$f.png" "$R/execTypeVaryingDWA_noTasksWithRepetitiveDWAs/is_ai/$f.png"
+done
+
+for f in AME_full_is_automated_no_fe_no_dwa AME_full_is_automated_major_fe_no_dwa \
+         AME_full_is_automated_minor_fe_no_dwa AME_full_is_automated_no_fe_with_dwa \
+         AME_filtered_is_automated_no_fe_no_dwa AME_filtered_is_automated_major_fe_no_dwa \
+         AME_filtered_is_automated_minor_fe_no_dwa AME_filtered_is_automated_no_fe_with_dwa; do
+  cp "$Q/$f.png" "$R/execTypeVaryingDWA/is_automated/$f.png"
+done
+
+cp "$Q/ai_exposed_task_share_distribution.png" "$R/ONET_Eloundou_Anthropic_GPT/"
+
+cp "$Q/GPT_task_sequence_robustness_by_human_E1_fraction_distribution.png" \
+   "$Q/GPT_task_sequence_robustness_by_human_E1_fraction_distribution_count.png" \
+   "$R/GPT_task_sequences_overlap_analysis/"
+
+for f in ame_no_fe_no_dwa_robustness ame_major_fe_no_dwa_robustness \
+         ame_minor_fe_no_dwa_robustness ame_no_fe_with_dwa_robustness; do
+  cp "$Q/$f.png" "$R/execTypeVaryingDWA_noTasksWithRepetitiveDWAs_robustness/$f.png"
+done
+
+# SA.E.3 and SA.E.4: pick ONE of the two lines in each pair (see deviation D2, dpi 300 vs published)
+cp "$Q/neighbor_logic_threshold_heatmap_prev_bySpec.png" \
+   "$Q/neighbor_logic_threshold_heatmap_next_bySpec.png"  "$R/execTypeVaryingDWA_weeklyTasks/"
+# cp "$P/plots_fixture/E1E2_dpi200/"*.png                 "$R/execTypeVaryingDWA_weeklyTasks/"
+
+cp "$Q/placebo_summary_forest_neighbor_t1_byCut.png" \
+   "$Q/placebo_summary_forest_neighbor_t2_byCut.png"      "$R/placebo_summary/"
+# cp "$P/plots_fixture/E1E2_dpi190/"*.png                 "$R/placebo_summary/"
+\end{Verbatim}
+
+\begin{prose}
+\textbf{Warning about step 2.} \file{writeup/plots/**.png} is git-ignored, so these 26 overwrites
+leave \emph{no} trace in \file{git status} and are not recoverable through git. Back the four target
+directories up first if the change might be reverted:
+e.g.\ \file{cp -R writeup/plots/execTypeVaryingDWA/is_automated /tmp/plots_backup/}, and likewise for
+the other three.
+The 27th file, \file{..._distribution_count.png}, is included by no \file{.tex}; it is copied only so
+the plots folder stays internally consistent.
+\end{prose}
+
+\subsection*{Merge, step 3: flip the mask in the notebooks}
+
+\begin{tcolorbox}[colback=shade,colframe=warncol,boxrule=0.8pt,arc=1pt]
+\textbf{The task brief says ``the two notebooks''. That is wrong.} The exhibits above are produced by
+\textbf{six} notebooks carrying the literal \file{isin(['E1'])} plus \textbf{one} notebook where the
+swap is a variable substitution rather than a mask literal. A seventh notebook,
+\file{onet_fragmentationIndex.ipynb}, drives the now-deleted Table SA.B.5 and should be left alone.
+Separately, \textbf{nine other notebooks in \file{analysis/} still carry \file{isin(['E1'])}} and feed
+exhibits that are not in this preview; flipping only the seven below leaves the repository in a mixed
+state, which is defensible but should be a conscious choice.
+\end{tcolorbox}
+
+{\footnotesize
+\begin{longtable}{@{}p{11.4cm}p{2.4cm}p{6.8cm}@{}}
+\toprule
+\textbf{Notebook} & \textbf{Where} & \textbf{Feeds} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Notebook} & \textbf{Where} & \textbf{Feeds} \\
+\midrule
+\endhead
+\file{analysis/onet_antrhopicIndex_execTypeVaryingDWA.ipynb} & cell 13 &
+Table 2, Tables SA.B.1--SA.B.3, Figures OA.A.1 and SA.B.1--SA.B.3 \\
+\file{analysis/onet_antrhopicIndex_execTypeVaryingDWA_robustness.ipynb} & cell 8 & Figure SA.D.4 \\
+\file{analysis/onet_neighborAI_weeklyTasks.ipynb} & cells 17--18 & Figure SA.E.3 \\
+\file{analysis/onet_neighborAI_weeklyTasks_placebo.ipynb} & cell 5 & Figure SA.E.4 \\
+\file{analysis/old/onet_adHoc_stats.ipynb} & cell 5 & Figure SA.A.2(a) \\
+\file{analysis/GPT_task_sequences_overlap.ipynb} & cells 7/8/12 &
+Figure SA.D.1(c). \textbf{Not a mask literal}: swap the split variable
+\file{human_E1_fraction_above_median} \ra{} \file{human_aiExposure_fraction_above_median}, which the
+notebook already computes at cell 7 \\
+\midrule
+\file{analysis/onet_fragmentationIndex.ipynb} & --- &
+\textbf{Leave alone.} Drives the deleted Table SA.B.5 \\
+\bottomrule
+\end{longtable}
+}
+
+\begin{Verbatim}[fontsize=\small,frame=single,framesep=4pt]
+# The edit itself, in each of the first five notebooks:
+#     human_labels.isin(['E1'])   ->   human_labels.isin(['E1','E2'])
+# In GPT_task_sequences_overlap.ipynb, swap the split variable instead (see the table above).
+
+# Notebooks still on the E1-only mask AFTER this merge (nine), for the record:
+grep -rl "isin(\['E1'\])" analysis/
+\end{Verbatim}
+
+\subsection*{Merge, step 4: the prose, and a rebuild}
+
+\begin{prose}
+Apply P1--P8 from Section~\ref{sec:prose} by hand, decide D1--D3 from Section~\ref{sec:dev}, then recompile
+\file{writeup/0_main.tex} and confirm that Table SA.B.5 is still absent and that the Figure SA.A.2
+sub-panels still sit acceptably side by side. Nothing in Sections~\ref{sec:dev} and~\ref{sec:prose} has been applied for you.
+\end{prose}
+
+\vfill
+\begin{prose}
+\footnotesize
+\textbf{Provenance.} Every number in this document was read out of
+\file{writeup/_e1e2_preview/BUILD_LOG.txt}, the six \file{diffs/*.txt} files, the staged \file{.tex}
+files, and the rendered PNGs. Diffs of the six table pairs were recomputed here rather than taken from
+the log. PDF page numbers were located in \file{writeup/0_main.pdf} as compiled at 12:44 today.
+Prose line numbers were re-checked against the live sources after commit \file{1d64cb0}.
+\end{prose}
+
+\end{document}
