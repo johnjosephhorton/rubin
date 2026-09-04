@@ -69,7 +69,7 @@ Entries addressed so far are marked ✅ in their heading and carry a **Status** 
 deliberately left as drafted. Both carry a **Status** line giving the reasoning, so a decision is not
 later mistaken for an oversight. Everything not listed here is still open.
 
-**Addressed (18 of 107):**
+**Addressed (19 of 107):**
 
 | Entry | Landed in |
 |---|---|
@@ -78,6 +78,7 @@ later mistaken for an oversight. Everything not listed here is still open.
 | D25 | `228864c` |
 | M4 | `1d64cb0` (removed SA.B.2) |
 | D27 | `1d64cb0` (moot with SA.B.2) |
+| D16 | 7.3 paragraph rewritten (scope, not power) |
 | D28 | working tree |
 | D32 | `b2d11a8` (figure regenerated) |
 | D39 | `b2d11a8` (sentence softened) |
@@ -248,7 +249,8 @@ _Last updated 2026-09-04, after `b2d11a8`. Entries whose quoted numbers came fro
 - **Why it's a problem**: Panel (d) is the DWA fixed-effects specification, the most demanding comparison in the figure and the one used to rule out task-type heterogeneity. The main-text sentence "In each case, the actual orderings deliver stronger immediate-neighbor effects" is not true of that case.
 - **Proposed fix**: Qualify both the note and the main-text sentence, and report the placebo percentile or p-value in each subpanel.
 
-### D16. Subsection 7.3's reconciliation paragraph denies a cross-panel disagreement the paper's own standard errors reject, counts the O*NET null as evidence, and gives a power explanation the standard errors do not support
+### ✅ D16. Subsection 7.3's reconciliation paragraph denies a cross-panel disagreement the paper's own standard errors reject, counts the O*NET null as evidence, and gives a power explanation the standard errors do not support
+- **Status**: ✅ **Addressed** 2026-09-04. The closing paragraph of 7.3 was rewritten. All three problems go with it. It no longer says the contrast "is not a disagreement between the corpora", no longer says both panels give evidence for the mechanism, and the power explanation is gone, including the "better powered where AI-able material is sparse" sentence and the 30-versus-56 percent surviving-variation comparison that supported it. The paragraph now attributes the divergence to the scope of the two corpora, since O*NET spans occupations whose task lists often describe a repertoire rather than an ordered process and whose sequence has to be imputed, while the PCF documents operational business processes that practitioners record as ordered flows. It closes by stating the result plainly, that the channel is found on the PCF corpus and not detected on O*NET. The parallel claim in SA.F at `:416`, that label sparsity is what leaves the coefficient identified on one corpus and not the other, was reworded to point at the discussion rather than assert the mechanism. `eq:efi_decomposition` is now defined without a `\ref`, which is harmless since lines 204-213 motivate it locally as the reason the regression controls for the exposure share.
 - **Location**: p. 41-42 (PDF 41-42), `7_empirics.tex:256-263`.
 - **Issue**: Three problems in one paragraph.
   - "The contrast between the two panels is not a disagreement between the corpora." Differencing paired coefficients in the units the table reports gives **0.34 with s.e. sqrt(0.10^2 + 0.10^2) = 0.141, t = 2.40** for (1) vs (4), and **0.30 with s.e. 0.142, t = 2.11** for (3) vs (6). The O*NET 95% intervals are [-0.21, 0.19], [-0.27, 0.09], [-0.22, 0.14], and the APQC point estimates -0.35 and -0.34 lie outside the first and third.
