@@ -73,9 +73,16 @@ per-artifact provenance; `diffs/*.txt` carry the per-cell changes.
 
 - `scripts/` estimation and rendering, transcribed out of the notebooks so nothing ran in
   place. `scripts/repro_E1only/` reproduces the published E1-only side as a fixture.
+- `E1E2_PREVIEW.tex` source of the 44-page side-by-side review document.
+
+Present in this folder but **not tracked**, because the repo ignores `*txt` globally
+(`.gitignore:35`):
+
 - `diffs/*.txt` per-cell before/after for each exhibit group.
 - `BUILD_LOG.txt` per-artifact log, including the checks that the repo stayed untouched.
-- `E1E2_PREVIEW.tex` source of the 44-page side-by-side review document.
+
+The numbers that matter are summarised above and in the review file, so the untracked logs
+are a convenience rather than the record. Track them with `git add -f` if that changes.
 
 The rendered PDF, the before/after PNG pairs and the intermediate CSVs were left out of
 version control: 69 MB, and the repo does not track figures or data. They stayed in the
