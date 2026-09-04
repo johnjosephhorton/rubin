@@ -67,13 +67,14 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 Entries addressed so far are marked ✅ in their heading and carry a **Status** line giving what changed.
 Everything not listed here is still open.
 
-**Addressed (13 of 107):**
+**Addressed (14 of 107):**
 
 | Entry | Landed in |
 |---|---|
 | M3 | `01a9ae1` |
 | D25 | `228864c` |
-| M4 | working tree (removed SA.B.2) |
+| M4 | `1d64cb0` (removed SA.B.2) |
+| D28 | working tree |
 | N7 | `f9d4a4a` |
 | N24 | `f9d4a4a` |
 | N25 | `f9d4a4a` |
@@ -308,7 +309,8 @@ _Last updated 2026-09-04._
 - **Why it's a problem**: The fragmentation regressor is described as measuring the dispersion of a different set of steps from the one it is built on, which is the entire point of the table.
 - **Proposed fix**: "The variable 'AI Exposure' denotes the share of AI-exposed (E1 or E2) steps in the occupation, while the 'Empirical Fragmentation Index' here captures how dispersed the AI-executed steps are across the occupation's workflow."
 
-### D28. The EFI variants are cited as "Definition 1" and "Definition 2", numbers already taken by Manual Step and Augmented Step, and never defined anywhere
+### ✅ D28. The EFI variants are cited as "Definition 1" and "Definition 2", numbers already taken by Manual Step and Augmented Step, and never defined anywhere
+- **Status**: ✅ **Addressed** 2026-09-04 (working tree). The six "Definition~1" labels in SA.D and SA.E were removed. Four were plain parentheticals; the other two were reworded so the sentence still reads, keeping the cross-reference and the E1/E2 clause. The "Definition~2" variant went with the removal of SA.B.2 under M4. No EFI variant is now cited by number, so the collision with Definition~1 (Manual Step) and Definition~2 (Augmented Step) is gone; those two remain the only numbered definitions in the PDF.
 - **Location**: p. SA-17 (PDF 101) `tables/fragmentation_index_regression_execution.tex:12`; p. SA-23 to SA-25 (PDF 107-109) `SA_D_prompt_robustness.tex:68, 157, 172`; p. SA-34 to SA-35 (PDF 118-119) `SA_E_frequency_robustness.tex:192, 202`. Colliding targets `3_shortrun.tex:26, 32` (p. 10).
 - **Issue**: These are the only hard-coded numbered cross-references in the draft, and both numbers are occupied. `preamble.tex:154` declares a single running `definition` counter, and the only `\begin{definition}` environments are in `3_shortrun.tex` (Manual Step, Augmented Step, Automated Step, AI Chain, AI Deployment Strategy) and `5_longrun.tex` (Job Design), so **Definition 1 = Manual Step** and **Definition 2 = Augmented Step**, both on PDF page 10. Subsection 7.3 introduces the EFI in running text with no numbered environment, and no "Definition 1" EFI variant appears anywhere in the compiled document. `SA_E:202` goes further and cites "Definition 1 of Section 7.3", which that section does not contain.
 - **Why it's a problem**: A reader chasing "Definition 1" lands on Manual Step. Table SA.B.5 is the only place the execution-based index is tabulated, so its row label is the reader's only handle on which index it is.
