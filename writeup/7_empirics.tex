@@ -3,10 +3,13 @@ The predictions we take to the data are those of the short-run problem of Sectio
 This is a deliberate restriction rather than a limitation of the theory.
 The long-run margins of Section~\ref{sec:longrun} require firms to reorganize and workers to retrain, and not enough time has passed since AI tools became widely available for these adjustments to appear in the data we observe.
 What we can observe is where AI is being deployed inside workflows as they are currently arranged, which is precisely what the short-run problem speaks to.
-The three predictions we test are: (1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; (2) the AI-execution status of a step's neighbors affects the likelihood that the step itself is executed by AI; and (3) workflows in which AI-exposed steps are more dispersed have fewer of those steps actually executed by AI.
+The three predictions we test are: 
+(1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; 
+(2) AI-execution of a step's neighbors raises the likelihood that the step itself is executed by AI; and 
+(3) workflows in which AI-exposed steps are more dispersed have fewer of those steps actually executed by AI.
 
-For our analysis, we construct a dataset that records three attributes of each step: its AI exposure status (exposed or unexposed to AI), which we interpret as the difficulty of the step for AI, its realized mode of execution (manual, AI-augmented, or AI-automated), and its position in the production sequence.
-To create this dataset, we combine data from five sources:
+Our analysis requires three attributes of each step: its AI exposure status (exposed or unexposed to AI), which we interpret as the difficulty of the step for AI, its realized mode of execution (manual or AI-executed), and its position in the production sequence.
+We draw on five sources:
 \begin{enumerate}
     \item The O*NET 27.3 Database \citep{onet27_3},
     \item Human-generated AI exposure labels for O*NET tasks from \cite{eloundou2023gpts},
@@ -14,13 +17,14 @@ To create this dataset, we combine data from five sources:
     \item A GPT-generated task ordering for each O*NET occupation,
     \item The Process Classification Framework (PCF) of the American Productivity \& Quality Center \citep{apqc_pcf}.
 \end{enumerate}
-All of these are existing datasets apart from the task ordering, which we generate ourselves.
+The first four build our main sample, in which a workflow is an O*NET occupation, while the fifth supplies a second corpus of workflows onto which we carry the same labels.
+All of them are existing datasets apart from the task ordering, which we generate ourselves.
 The O*NET database is the standard decomposition of work in the United States.
 It breaks each of more than 850 occupations into a list of constituent tasks, roughly 18,000 in total, and has served as the backbone of a large empirical literature on the task content of jobs and their exposure to new technologies \citep[e.g.,][]{autor2013putting, deming2017growing, brynjolfsson2018can, webb2020impact, felten2021occupational}.
 \cite{eloundou2023gpts} map these O*NET tasks to AI exposure by developing a rubric asking whether access to an LLM would reduce the time required to perform a task by at least half while preserving output quality, and applying it to every task using both human annotators and GPT-4.
 We use their human-generated labels and treat their E1 and E2 category as exposed to AI and the remaining as unexposed.
 Whereas these labels capture what AI could in principle do, the Anthropic Economic Index \citep{handa2025economictasksperformedai} captures what AI actually does.
-It maps millions of anonymized conversations between users and Claude, Anthropic's AI assistant, to O*NET tasks and classifies each conversation by whether the interaction augments or automates the task, providing a task-level measure of realized AI usage.
+It maps millions of conversations between users and Claude, Anthropic's AI chatbot, to O*NET tasks and classifies each conversation by whether the interaction augments or automates the task, providing a task-level measure of realized AI usage.\footnote{One feature of the data shapes how we use it throughout. The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow. We therefore do not distinguish the two labels in what follows and treat both as indicating AI execution. Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.}
 
 O*NET does not record the order in which an occupation's tasks are performed, and our model's predictions turn precisely on where a task sits in the production sequence.
 We therefore construct the workflow orderings ourselves.
@@ -31,10 +35,11 @@ First, we benchmark every result against placebos that randomly reshuffle task p
 Second, the orderings overlap substantially across ten deliberately varied alternative prompts, and our headline results closely mirror those under the main prompt when re-run on these alternative sequences (Appendix~\ref{app:gptPrompts_robustness}).
 
 The PCF, finally, catalogues business processes, with APQC's member working groups recording the activities that compose a process in the order practitioners perform them.
-We bring this corpus in because that ordering is documented rather than imputed, which matters most for the workflow-level test of Subsection~\ref{sec:fragmentation_prediction}.
+Because that ordering is documented rather than imputed, the corpus does two jobs.
+It is a benchmark against which we validate the sequencing procedure, and it supplies a second set of workflows on which to run the workflow-level test of Subsection~\ref{sec:fragmentation_prediction}, where the ordering matters most.
 Since AI exposure and execution are defined on O*NET tasks, we carry those labels onto PCF steps by matching each step to its nearest O*NET task using natural language embeddings, keeping unmatched steps in sequence and coded as neither exposed nor executed.
 Pooling APQC's Cross-Industry framework with its industry-specific ones leaves $13{,}482$ steps in $525$ process groups.
-Appendices~\ref{app:data_prep} and~\ref{app:external_validation} give the construction details of the main O*NET sample and APQC sample, respectively.
+Appendices~\ref{app:data_prep} and~\ref{app:external_validation} respectively give the construction details of the O*NET and APQC samples.
 
 The structure of our theoretical framework closely aligns with the structure of the O*NET dataset.
 Each production step in the model corresponds to an O*NET task, and each occupation's workflow corresponds to the model's step sequence.
@@ -42,7 +47,7 @@ In the absence of AI, a step (that is, an O*NET task) is executed manually and m
 Thus, without AI, an O*NET task can be viewed as both a step and a task, which matches the standard treatment of tasks in the O*NET dataset.
 Under AI execution, however, multiple steps, corresponding to a subset of O*NET tasks, may be chained together and executed jointly, forming a composite task as defined in Section~\ref{sec:shortrun}.
 In the rest of this section, we use the terms step, O*NET task, and task interchangeably and expect the reader to keep these distinctions in mind.
-We similarly use the terms workflow and occupation interchangeably without restating the mapping each time.\footnote{One feature of the data shapes how we use it throughout. The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow. We therefore do not distinguish the two labels in what follows and treat both as indicating AI execution. Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.}
+We similarly use the terms workflow and occupation interchangeably without restating the mapping each time, and note that in the PCF corpus a workflow is a process group rather than an occupation.
 
 
 \subsection{Prediction \#1: Tendency to Have Runs of Consecutive AI-executed Tasks}
@@ -178,7 +183,7 @@ It is possible that with improvements in AI quality, chains become longer and ex
 
 
 
-\subsection{Prediction \#3: Dispersion of AI-able Steps in Workflow Lowers AI Execution}
+\subsection{Prediction \#3: Dispersion of AI-able Steps Lowers AI Execution}
 \label{sec:fragmentation_prediction}
 
 The two tests so far were local, in that they operated over a small window around a step.

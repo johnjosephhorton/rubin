@@ -76,21 +76,20 @@ Given a workflow with $m$ steps, the AI strategy that solves Problem~\eqref{eq:t
 \paragraph{The Long Run Optimization.}
 The firm now chooses job boundaries as well, and the objective in \eqref{eq:totalcost_with_handoff} multiplies each job's total skill by its total time.
 A task's contribution to cost therefore depends on how much skill and how much time its job already carries, so the position alone no longer summarizes a stretch and we carry two further coordinates.
-Let $R(i,\, \skillcost{},\, \timecost{})$ be the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating tasks already holds total skill $\skillcost{}$ and total time $\timecost{}$, the latter including their hand-off, and let $V(i)$ be the corresponding cost when that worker's job closes at step $i$, which is the same recursion evaluated at the job-opening state $(i,\, 0,\, \handofftime{i})$ with the closure option removed, since by Definition~\ref{def:job_design} a job must hold at least one task.
+Let $R(i,\, \skillcost{},\, \timecost{})$ be the minimum cost of completing steps $1$ through $i$ when the worker currently accumulating tasks already holds total skill $\skillcost{}$ and total time $\timecost{}$ (including their hand-off) and let $V(i)$ be the corresponding cost when that worker's job closes at step $i$, so that $V(i) = R(i,\, 0,\, \handofftime{i})$ with the job closure option removed.
 The base case is $R(0,\, \skillcost{},\, \timecost{}) = \skillcost{}\,\timecost{}$, and the firm faces three options at each step rather than two,
 \begin{align}
 \label{eq:longrun_recursion}
 R(i,\, \skillcost{},\, \timecost{}) = \min\Biggl\{ \underbrace{\skillcost{}\,\timecost{} + V(i)}_{\text{close the job}}, \ \underbrace{R\bigl(i-1,\, \skillcost{} + \manualSkill{i},\, \timecost{} + \manualTime{i}\bigr)}_{\text{step $i$ manual}}, \ \underbrace{\min_{0 \le r < i}\ R\Bigl(r,\, \skillcost{} + \AIskill{i},\, \timecost{} + \tfrac{\AItime{i}}{\prod_{i'=r+1}^{i} q_{i'}}\Bigr)}_{\text{step $i$ ends a chain begun at } r+1} \Biggr\},
 \end{align}
-with the optimum at $V(m)$, recalling that the final job hands off at no cost.
+with the optimum at $V(m)$, recalling that the final job hands off at no cost.\footnote{
 The first option is available only when the active worker already holds a task, $\skillcost{} > 0$; the states with $\skillcost{} = 0$ are the job-opening states, and taking their value to be $V(i)$ is what keeps the recursion well founded.
+}
 Closing a job is where the accumulated skill and time are finally multiplied into a wage bill, which is why the recursion has to carry both alongside the position $i$.
 That is also what makes the long run more complicated to solve.
 
 Skill and time costs are continuous, so the recursion must distinguish between infinitely many situations rather than the $m$ of the short run, and it cannot be carried out to completion.
-We therefore round each of the two costs up to a power of $(1+\epsilon')$, for an $\epsilon'$ smaller than $\epsilon$ by a factor of order $m$, which leaves finitely many of them to keep track of.
-Because the recursion is indexed by the rounded totals, each step of a job rounds again on top of what earlier steps have already rounded, so the distortions compound along the job rather than being incurred once; shrinking $\epsilon'$ by that factor is what keeps the resulting wage bill within $(1+\epsilon)$ of the true one.
-Proposition~\ref{prop:totalcost_optimization_dp} formalizes the resulting approximation of the optimal solution.
+Proposition~\ref{prop:totalcost_optimization_dp} states that the optimal cost can nonetheless be approximated up to an error term that can be made arbitrarily small in polynomial time.
 \begin{proposition}[Long-run AI Deployment and Job Design]
 \label{prop:totalcost_optimization_dp}
 Fix a workflow with $m$ steps whose skill and time costs, and whose non-zero hand-off costs, lie in $[1/B, B]$ for some $B > 0$.
