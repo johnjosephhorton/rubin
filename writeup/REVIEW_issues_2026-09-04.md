@@ -65,7 +65,9 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 ## Status of fixes
 
 Entries addressed so far are marked ✅ in their heading and carry a **Status** line giving what changed.
-Everything not listed here is still open.
+◐ marks an entry fixed in part, with the remainder left by author decision. ⏸ marks one reviewed and
+deliberately left as drafted. Both carry a **Status** line giving the reasoning, so a decision is not
+later mistaken for an oversight. Everything not listed here is still open.
 
 **Addressed (18 of 107):**
 
@@ -79,6 +81,14 @@ Everything not listed here is still open.
 | D28 | working tree |
 | D32 | `b2d11a8` (figure regenerated) |
 | D39 | `b2d11a8` (sentence softened) |
+
+Partial or declined:
+
+| Entry | Disposition |
+|---|---|
+| M1 | ◐ intro rewritten; abstract, 7.3 heading and conclusion left by author decision |
+| M5 | ⏸ framing retained by author decision |
+| D21 | ⏸ unlabelled-record coding retained by author decision |
 | N7 | `f9d4a4a` |
 | N24 | `f9d4a4a` |
 | N25 | `f9d4a4a` |
@@ -94,7 +104,9 @@ _Last updated 2026-09-04, after `b2d11a8`. Entries whose quoted numbers came fro
 
 ## Major
 
-### M1. Prediction #3 is null on the main O*NET sample and is asserted as a finding in the abstract, introduction, section heading, conclusion and two appendix summaries
+### ◐ M1. Prediction #3 is null on the main O*NET sample and is asserted as a finding in the abstract, introduction, section heading, conclusion and two appendix summaries
+- **Status**: ◐ **Partially addressed** 2026-09-04. The three introduction sentences were rewritten so the claim is attributed to the corpus that delivers it. `:94` is now scoped to practitioner-documented workflows. `:135` says "process groups" rather than "occupations", which is what columns (4)-(6) estimate, and adds "The same coefficient is negative but imprecisely estimated on O*NET occupations". `:141` no longer says the results "continue to hold" on the PCF corpus, a presupposition that they held in the main sample, and now says the chaining results replicate and the fragmentation channel is detected there.
+  The abstract, the Subsection 7.3 heading and the conclusion were **left as drafted by author decision**. The remaining exposure is that a reader meeting the abstract's "(3) dispersion of AI-exposed steps predicts lower AI execution at the workflow level" or the conclusion's parallel clause is not told which corpus supplies it, and the 7.3 heading asserts the direction the main sample does not establish. The disclosure at `7_empirics.tex:250-251` remains the only place the null is stated.
 - **Location**: p. 1 (PDF 1) abstract, `0_main.tex:76`; p. 5 (PDF 5) `1_introduction.tex:94`; p. 6 (PDF 6) `:129`; p. 7 (PDF 7) `:135` and `:141`; p. 39 (PDF 39) subsection heading `7_empirics.tex:186`; p. 42 (PDF 42) `7_empirics.tex:281-282`; p. 44 (PDF 44) `8_conclusion.tex:17-18`; p. SA-24 (PDF 108) `SA_B_alternative_definitions.tex:264`; p. SA-35 (PDF 119) `SA_E_frequency_robustness.tex:212`.
 - **Issue**: In Table 3 (`tables/fragmentation_index_regression_combined.tex`) the Empirical Fragmentation Index coefficient on the main O*NET sample, columns (1)-(3), is **-0.01 (0.10), -0.09 (0.09), -0.04 (0.09)** over **872 occupations**, with no significance stars (|t| = 0.10, 1.00, 0.44). The significant estimates **-0.35\*\*\* (0.10), -0.26\*\* (0.11), -0.34\*\*\* (0.11)** are columns (4)-(6), **525 APQC PCF process groups**, a different corpus whose exposure and execution labels are transferred from O*NET by embedding match. Subsection 7.3 says so plainly ("the point estimates are small and none is statistically distinguishable from zero. On O*NET occupations we do not detect the workflow-level channel"), and that one sentence is the only acknowledgment of a null anywhere in `0_main.tex`, `1_introduction.tex`, `7_empirics.tex` and `8_conclusion.tex`. Two of the outside statements are explicitly about the wrong unit: the introduction says "occupations whose AI-exposed steps are more dispersed ... are associated with a lower share of their steps executed by AI" (p. 7), and the contribution paragraph says "jobs" (p. 5). The introduction's robustness sentence and SA.E's closing sentence go further and frame the PCF estimate as a re-confirmation ("continue to hold", "all three implications operate"), when it is the only place the result exists and SA.E's own body calls it "the null of Subsection 7.3".
 - **Why it's a problem**: A reader who does not reach Subsection 7.3 comes away believing the workflow-level prediction is confirmed on the paper's 872-occupation main sample. It is not. The evidentiary structure is inverted at every point where the paper summarizes itself.
@@ -138,6 +150,7 @@ _Last updated 2026-09-04, after `b2d11a8`. Entries whose quoted numbers came fro
 - **Why it's a problem**: This paragraph, plus the appendix's opening claim, is the only evidence offered that prompt-induced ordering noise is not differential across the occupation dimensions used in the tests. The sign is the one that matters: the occupations that are **more** AI-exposed and **more** AI-executed, exactly those driving the Prediction #2 and #3 estimates, are the ones whose GPT orderings are **least** stable across prompts.
 - **Proposed fix**: State the numbers and the direction, then make the argument that the size does not overturn the results. For example: "Mean Kendall's tau is 0.06 to 0.08 lower in the above-median AI-exposure and AI-execution groups and about 0.06 higher in the above-median EFI group, differences of roughly a quarter to a half of the cross-occupation standard deviation of 0.17." Then argue from the size, not from the absence of a difference.
 - **Corroboration**: found independently by two passes, both of which recomputed the split means from the source CSV rather than reading the panel.
+- **Status**: ⏸ **Reviewed, framing retained** 2026-09-04. Left as drafted by author decision, on the ground that a gap of 0.04 to 0.06 on a mean of about 0.60 is small and the claim being made is that the two halves are not *systematically* different. Recorded so it is not re-raised as an oversight. The point that survives the decision, should a referee press it, is that the gaps are statistically significant (t = -5.75 on the exposure split, about 0.23 to 0.38 of the 0.17 cross-occupation standard deviation), so "the differences are small relative to the spread" is defensible in a way that "no evidence of systematically different orderings" is not. The panel numbers above were refreshed after `b2d11a8` moved panel (c) onto the E1-or-E2 split.
 
 ## Medium
 

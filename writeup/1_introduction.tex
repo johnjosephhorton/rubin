@@ -91,7 +91,7 @@ What tips a step into automation is therefore not just its own characteristics b
 More generally, we should expect the gains from AI automation to be greater when AI-friendly steps co-occur in the workflow.
 A job is more or less ``fragmented'' in its AI exposure depending on whether the steps where AI is most effective are clustered together or dispersed throughout the workflow.
 We formalize this idea in a \emph{fragmentation index}, the expected cost of a simple execution plan endowed with foresight into AI's successes and failures, and show analytically that it approximately tracks the cost of optimal AI deployment.
-We then provide empirical evidence that jobs with higher fragmentation see a weaker translation from AI exposure to AI execution.
+We then provide empirical evidence that, on practitioner-documented workflows, jobs with higher fragmentation see a weaker translation from AI exposure to AI execution.
 
 Because chaining makes the cost of automating a step depend on its neighbors, the firm cannot settle each step's mode in isolation, and its problem ranges over all possible configurations of the workflow.
 Whether the firm can actually calculate its optimum is not obvious, as the number of feasible arrangements for production grows exponentially in the number of steps.
@@ -132,13 +132,13 @@ This is what we find in the data, where AI execution operates over consecutive s
 Second, chaining also creates strong local complementarities in AI automation decisions within a workflow, so that a step positioned next to AI-executed neighbors may be pulled into AI execution by the gains from automating it as part of a chain, even if human execution would be preferred for that step in isolation.
 We find that when conceptually similar steps appear across different occupations, a given step is more likely to be executed by AI in the occupation where its neighboring steps in the workflow are also AI-executed.
 Third, the model emphasizes that fragmentation of AI-exposed steps plays a central role in determining the returns to AI automation.
-In the data, controlling for the share of steps exposed to AI, occupations whose AI-exposed steps are more dispersed across the production workflow are associated with a lower share of their steps executed by AI.
+In the data, controlling for the share of steps exposed to AI, process groups whose AI-exposed steps are more dispersed across the production workflow are associated with a lower share of their steps executed by AI. The same coefficient is negative but imprecisely estimated on O*NET occupations.
 
 Because our empirical exercise relies on specific data sources to measure the sequence of steps, AI exposure, and AI execution, we show that our findings are robust to the way each of these measures is constructed.
 First, we show that our findings are not artifacts of the particular prompt we use to elicit workflow sequences from an LLM (Appendix~\ref{app:gptPrompts_robustness}).
 Second, they are not artifacts of the particular way O*NET lists occupation tasks (Appendix~\ref{app:frequency_robustness}).
 Third, we repeat the exercise on two external sources of task sequences, ordered based on actual workplace data rather than by a language model.
-Our sequencing approach recovers the orderings in both external sources to a substantial degree, and the fragmentation and chaining results continue to hold when we re-estimate them on the practitioner-ordered PCF corpus (Appendix~\ref{app:external_validation}).
+Our sequencing approach recovers the orderings in both external sources to a substantial degree, and, when we re-estimate on the practitioner-ordered PCF corpus, the chaining results replicate and the fragmentation channel is detected (Appendix~\ref{app:external_validation}).
 
 Taken together, these results show that the sequencing logic at the heart of the model is already visible in how firms use AI at this early stage of adoption.
 What AI executes depends not only on comparative advantage and step-level characteristics, but also on where a step sits relative to its neighbors.
