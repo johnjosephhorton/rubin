@@ -188,13 +188,14 @@ It is possible that with improvements in AI quality, chains become longer and ex
 
 The two tests so far were local, in that they operated over a small window around a step.
 The last prediction of the model that we test is how the positioning of steps over the whole workflow matters for AI execution.
-This is the empirical content of Proposition~\ref{prop:fragmentation}.
 Specifically, we test if realized AI execution in a production sequence is shaped by how clustered or dispersed its AI-able steps are, and not by their AI exposure status alone.
+This is the empirical content of Proposition~\ref{prop:fragmentation}.
+
 A workflow-level test asks more of an ordering than a step-level one does, and it does so in a particular way.
 A step placed one position too early or too late shifts only the immediate neighborhood on which Predictions~\#1 and~\#2 are built, moving a handful of adjacency pairs and leaving the rest of the workflow as it was.
-That same misplacement can split a run of AI-able steps in two, which changes the measured fragmentation of the entire workflow rather than of one part of it.
+That same misplacement can split a run of AI-able steps in two, however, changing the implied fragmentation of AI-able steps over the entire workflow rather than of one part of it.
 Because the measure is a property of the whole arrangement, it inherits every error in that arrangement and not only the local ones.
-We therefore work with the PCF corpus, whose ordering practitioners documented rather than a language model imputed, alongside the main O*NET sample.
+We therefore work with the PCF corpus from APQC, whose ordering of activities practitioners documented rather than a language model imputed, alongside the main O*NET sample.
 
 To measure the fragmentation of AI-able steps in the data, we adapt the fragmentation index of Section~\ref{sec:fragmentation} to our empirical setting.
 The \emph{empirical fragmentation index} (EFI) is the ratio of the number of \emph{potential tasks}, as defined by our theoretical model, to the total number of steps, which is fixed and is measured by the raw count of steps in that workflow.
@@ -223,7 +224,7 @@ We therefore estimate the following regression:
 \end{aligned}
     \label{eq:fragmentation_index_regression}
 \end{equation}
-where \emph{$\text{ai\_execution}_{w}$} is the share of steps executed by AI in workflow $w$, \emph{$\text{ai\_exposure}_{w}$} is the share of AI-exposed steps, \emph{$\text{empirical\_fragmentation\_index}_{w}$} is the index defined above, and \emph{$\text{num\_ai\_able\_steps}_{w}$} is the number of AI-able steps it contains.\footnote{In Equation~\ref{eq:fragmentation_index_regression} we control for $k_w$. Controlling for workflow length $m_w$ instead, or dropping the count control altogether, moves the fragmentation coefficient by at most $0.04$ standard deviations and changes no verdict.}
+where \emph{$\text{ai\_execution}_{w}$} is the share of steps executed by AI in workflow $w$, \emph{$\text{ai\_exposure}_{w}$} is the share of AI-exposed steps, \emph{$\text{empirical\_fragmentation\_index}_{w}$} is the index defined above, and \emph{$\text{num\_ai\_able\_steps}_{w}$} is the number of AI-able steps it contains.\footnote{Controlling for workflow length $m_w$ instead, or dropping the count control altogether, moves the fragmentation coefficient by at most $0.04$ standard deviations and changes no verdict.}
 The model predicts that workflows with higher AI exposure should have a higher share of steps executed by AI ($\beta_1 > 0$), and that, conditional on exposure, AI execution should be lower where AI-able steps are more dispersed ($\beta_2 < 0$).
 
 Table~\ref{tab:fragmentation_index_regression_exposure} reports the results.
@@ -251,21 +252,21 @@ The exposure coefficient behaves as the model predicts in every column of both s
 A one-standard-deviation increase in the share of AI-exposed steps is associated with a $0.39$ to $0.49$ standard-deviation increase in the AI-executed share in O*NET and a $0.28$ to $0.42$ standard-deviation increase in APQC, significant at the 1\% level throughout.
 
 The fragmentation coefficient is where the two samples part company.
-In the main sample it carries the predicted negative sign in all three specifications, but the point estimates are small and none is statistically distinguishable from zero.
-On O*NET occupations we do not detect the workflow-level channel, but the estimates are not precise enough to rule it out either.
+In the O*NET sample it carries the predicted negative sign in all three specifications, but the point estimates are small and none is statistically distinguishable from zero.
+On O*NET occupations therefore we do not detect the workflow-level channel, but the estimates are not precise enough to rule it out either.
 A modest fragmentation effect would go undetected in this sample.
 On APQC's documented sequences, however, the coefficient is negative and statistically significant in all three columns, at $-0.35$, $-0.26$ and $-0.34$, so that process groups whose AI-able steps are more scattered convert less of their exposure into execution.
 Still, the second corpus delivers an effect of the sign the model predicts, on sequences that no language model ordered, which is more than the main sample can offer.
 
-The PCF corpus that carries this result is narrower than the main sample in a way worth stating plainly.
+The PCF corpus that carries this result is narrower than the O*NET sample in a way worth stating plainly.
 APQC's member working groups record the elements of a process in the order practitioners perform them, across operational business processes such as procurement, order management, after-sales service, inventory, and regulatory compliance.
 Those $525$ process groups are a far narrower slice of economic activity than O*NET's coverage of the occupational structure, so the PCF complements the main sample rather than standing in for it.
 
 The exercise is also observational throughout, and we make no causal claim.
-Firms choose how much of their work to hand to AI at the same time as they choose how that work is arranged, and nothing in this section isolates an exogenous change in either, so what we report are associations whose directions agree with the mechanism the model implies rather than estimates of its effect.
+Firms choose how much of their work to hand to AI at the same time as they choose how that work is arranged, and nothing in this section isolates an exogenous change in either, so what we report are associations whose directions agree with the mechanism the model implies rather than causal estimates.
 The PCF evidence carries a further qualification, since its exposure and execution labels are carried over from O*NET and that transfer is lossy, leaving only $12\%$ of PCF steps with an AI-able label against $44\%$ in O*NET.
 Labels that thin make inference on that corpus harder rather than easier.
-We therefore read the fragmentation evidence as corroborating the mechanism rather than as settling it, while noting that the corpus whose sequences were documented rather than imputed is the one that delivers the sign and the significance the model predicts.
+Even so, it is the corpus whose sequences were documented rather than imputed that delivers the sign and the significance the model predicts.
 
 
 \subsection{Robustness Tests}
