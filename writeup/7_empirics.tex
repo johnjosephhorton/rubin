@@ -190,7 +190,11 @@ The two tests so far were local, in that they operated over a small window aroun
 The last prediction of the model that we test is how the positioning of steps over the whole workflow matters for AI execution.
 This is the empirical content of Proposition~\ref{prop:fragmentation}.
 Specifically, we test if realized AI execution in a production sequence is shaped by how clustered or dispersed its AI-able steps are, and not by their AI exposure status alone.
-As a workflow-level test demands more of sequences than a step-level one does, we work with the PCF corpus, whose ordering practitioners documented rather than a language model imputed, alongside the main O*NET sample.
+A workflow-level test asks more of an ordering than a step-level one does, and it does so in a particular way.
+A step placed one position too early or too late shifts only the immediate neighborhood on which Predictions~\#1 and~\#2 are built, moving a handful of adjacency pairs and leaving the rest of the workflow as it was.
+That same misplacement can split a run of AI-able steps in two, which changes the measured fragmentation of the entire workflow rather than of one part of it.
+Because the measure is a property of the whole arrangement, it inherits every error in that arrangement and not only the local ones.
+We therefore work with the PCF corpus, whose ordering practitioners documented rather than a language model imputed, alongside the main O*NET sample.
 
 To measure the fragmentation of AI-able steps in the data, we adapt the fragmentation index of Section~\ref{sec:fragmentation} to our empirical setting.
 The \emph{empirical fragmentation index} (EFI) is the ratio of the number of \emph{potential tasks}, as defined by our theoretical model, to the total number of steps, which is fixed and is measured by the raw count of steps in that workflow.
@@ -253,16 +257,11 @@ A modest fragmentation effect would go undetected in this sample.
 On APQC's documented sequences, however, the coefficient is negative and statistically significant in all three columns, at $-0.35$, $-0.26$ and $-0.34$, so that process groups whose AI-able steps are more scattered convert less of their exposure into execution.
 Still, the second corpus delivers an effect of the sign the model predicts, on sequences that no language model ordered, which is more than the main sample can offer.
 
-Two features of this test shape how we read its results.
-
-The first is that a workflow-level test asks more of an ordering than a step-level one does, and it does so in a particular way.
-A step placed one position too early or too late shifts only the immediate neighborhood on which Predictions~\#1 and~\#2 are built, moving a handful of adjacency pairs and leaving the rest of the workflow as it was.
-That same misplacement can split a run of AI-able steps in two, which raises $r_w$ and moves the fragmentation index of the entire workflow.
-The index is a property of the whole arrangement, so it inherits every error in that arrangement and not only the local ones, and it is for this reason that we bring the PCF alongside the main sample.
+The PCF corpus that carries this result is narrower than the main sample in a way worth stating plainly.
 APQC's member working groups record the elements of a process in the order practitioners perform them, across operational business processes such as procurement, order management, after-sales service, inventory, and regulatory compliance.
 Those $525$ process groups are a far narrower slice of economic activity than O*NET's coverage of the occupational structure, so the PCF complements the main sample rather than standing in for it.
 
-The second is that the exercise is observational throughout, and we make no causal claim.
+The exercise is also observational throughout, and we make no causal claim.
 Firms choose how much of their work to hand to AI at the same time as they choose how that work is arranged, and nothing in this section isolates an exogenous change in either, so what we report are associations whose directions agree with the mechanism the model implies rather than estimates of its effect.
 The PCF evidence carries a further qualification, since its exposure and execution labels are carried over from O*NET and that transfer is lossy, leaving only $12\%$ of PCF steps with an AI-able label against $44\%$ in O*NET.
 Labels that thin make inference on that corpus harder rather than easier.
