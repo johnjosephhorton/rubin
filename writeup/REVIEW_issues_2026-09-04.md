@@ -46,7 +46,7 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 **The five issues that matter most.**
 
 1. **Prediction #3 is a null on the paper's main sample and is stated as a finding in the abstract, the introduction and the conclusion** (M1). O*NET occupations, Table 3 columns (1)-(3): -0.01 (0.10), -0.09 (0.09), -0.04 (0.09), n = 872, no stars. The significant estimates -0.35\*\*\* (0.10), -0.26\*\* (0.11), -0.34\*\*\* (0.11) are 525 APQC PCF process groups. Found independently by five passes.
-2. **AI exposure is declared to be E1 or E2 and implemented as E1-only in four places** (M2). SA.A reports 605 (69%) of occupations containing an AI-exposed task where the declared rule gives 809 (93%); Table 2's exposure control codes 3,109 of the 4,632 E1|E2 tasks as unexposed; Table SA.B.5's exposure row is 0.11/0.07/0.07 against 0.49/0.48/0.39 in Table 3 on the identical 872 occupations.
+2. ✅ **AI exposure is declared to be E1 or E2 and implemented as E1-only in four places** (M2, fixed in `b2d11a8`). SA.A reports 605 (69%) of occupations containing an AI-exposed task where the declared rule gives 809 (93%); Table 2's exposure control codes 3,109 of the 4,632 E1|E2 tasks as unexposed; Table SA.B.5's exposure row is 0.11/0.07/0.07 against 0.49/0.48/0.39 in Table 3 on the identical 872 occupations.
 3. **The execution-based EFI "falsification check" is reproduced by an independence null** (M4). Observed -0.780; within-occupation reshuffle of the execution labels, which makes position independent of execution by construction, gives -0.755 (sd 0.008 over 50 draws). The two fixed-effects columns give z = -1.7 and -1.1 against their nulls, i.e. no separation at all.
 4. **The Anthropic attrition step is wrong and mixes two units** (M3). Drafted 1,017 fully filtered / 2,347 remaining; the source file gives 1,066 / 2,298, and 2,347 is a count of merged occupation-task rows, not of Anthropic tasks.
 5. **SA.D's "no evidence of systematically different orderings" is contradicted by its own figure** (M5). The printed panel means are 0.64 vs 0.56 (AI exposure), 0.62 vs 0.58 (AI execution), 0.56 vs 0.63 (EFI), with Welch t of -6.90, -3.37 and +4.96. The occupations that drive Predictions #2 and #3 are the ones whose GPT orderings are least stable.
@@ -67,13 +67,15 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 Entries addressed so far are marked ✅ in their heading and carry a **Status** line giving what changed.
 Everything not listed here is still open.
 
-**Addressed (14 of 107):**
+**Addressed (16 of 107):**
 
 | Entry | Landed in |
 |---|---|
+| M2 | `b2d11a8` (E1 or E2 adopted; exhibits regenerated) |
 | M3 | `01a9ae1` |
 | D25 | `228864c` |
 | M4 | `1d64cb0` (removed SA.B.2) |
+| D27 | `1d64cb0` (moot with SA.B.2) |
 | D28 | working tree |
 | N7 | `f9d4a4a` |
 | N24 | `f9d4a4a` |
@@ -86,7 +88,7 @@ Everything not listed here is still open.
 | N53 | `f9d4a4a` |
 | N55 | `f9d4a4a` |
 
-_Last updated 2026-09-04._
+_Last updated 2026-09-04, after `b2d11a8`. Entries whose quoted numbers came from an E1-only exhibit (M5, D36, D37) were refreshed to the regenerated values; their arguments are unchanged._
 
 ## Major
 
@@ -97,7 +99,8 @@ _Last updated 2026-09-04._
 - **Proposed fix**: Adopt one attribution rule and apply it at all nine locations. Name the corpus whenever the fragmentation result is asserted, and never assert it of occupations or jobs. Abstract: "... and (3) in a corpus of practitioner-documented process sequences, dispersion of AI-exposed steps predicts lower AI execution at the workflow level." Introduction p. 5 and p. 7: replace "jobs"/"occupations" with the PCF corpus and add that the O*NET estimate carries the predicted sign but is not distinguishable from zero. Conclusion: split the clause and name the corpus. Introduction p. 7 and SA.E:212: replace "continue to hold" and "all three implications operate" with the split verb (the chaining result is reproduced on PCF; the fragmentation channel is detected there and not on O*NET).
 - **Corroboration**: found independently by five passes (per-file abstract, per-file introduction, per-file conclusion, the Prediction #3 hedging lens, and the front-matter number check). Ten raw findings merged.
 
-### M2. AI exposure is declared to be E1 or E2 and implemented as E1-only in four separate places
+### ✅ M2. AI exposure is declared to be E1 or E2 and implemented as E1-only in four separate places
+- **Status**: ✅ **Addressed** 2026-09-04 (`b2d11a8`). The mask was flipped to `isin(['E1','E2'])` in the six notebooks that feed paper exhibits, and the exhibits were regenerated. Table 2: 8 of 24 coefficient cells move and 3 stars change, the immediate neighbour effects easing from 0.12 to 0.11 because a control missing two thirds of the exposed tasks had been leaving execution-level effects for the neighbour dummies to absorb; Observations unchanged in all six columns. Figure OA.A.1 and Tables SA.B.1-SA.B.3 follow from the same cell, with no sign flips across 72 coefficients and one star change. The SA.A statistic now reads 809 (93%). Figure SA.D.1 panel (c) now splits on `human_aiExposure_fraction`, which the notebook already computed. The Table SA.B.5 sub-part is moot: that table and its subsection went under M4. `onet_fragmentationIndex` now defaults to the E1|E2 exposure variable, so the notebook reproduces the published Table 3, which it previously did not. Control: Table 3 regenerates byte-identical, confirming the pipeline is faithful and the movement elsewhere is real. Deliberately not flipped: `onet_neighborAI_E1E2exposureControls` (the E1-only cut is the point of that comparison) and `excludeSOC25` / `sequenceability`, whose outputs the paper does not use.
 - **Location**: declared at p. 34 (PDF 34) `7_empirics.tex:25` and p. SA-1 (PDF 85) `SA_A_sample_construction.tex:16`. Implemented E1-only at: p. 37-38 (PDF 37-38) Table 2's exposure control, `7_empirics.tex:143` and note at `:162`, from `analysis/onet_antrhopicIndex_execTypeVaryingDWA.ipynb` cell 13; p. SA-2 (PDF 86) `SA_A_sample_construction.tex:34` and Figure SA.A.2 panel (a); p. SA-17 (PDF 101) Table SA.B.5, `tables/fragmentation_index_regression_execution.tex`, claim at `SA_B_alternative_definitions.tex:284`; p. SA-23 (PDF 107) Figure SA.D.1 panel (c), `SA_D_prompt_robustness.tex:68`.
 - **Issue**: The declared rule is "we treat tasks with a human-assigned E1 or E2 label as exposed to AI". Table 3 honours it (its note says "the share of steps carrying an E1 or E2 label"). Four places do not.
   - **SA.A statistic**: drafted **605 (69%)** of the 872 occupations contain at least one AI-exposed task. Recomputed from `ONET_taskPosition_AImeasures.csv`: E1-only gives 605 (69.4%), **E1|E2 gives 809 (92.8%)**. A 204-occupation, 23-percentage-point gap. The AI-execution half of the same sentence, 555 (63.6%), is correct.
@@ -129,7 +132,7 @@ _Last updated 2026-09-04._
 
 ### M5. SA.D's "no evidence of systematically different orderings" is contradicted by the printed means in its own figure, and the gap runs against the paper
 - **Location**: p. SA-21 to SA-23 (PDF 105-107), `SA_D_prompt_robustness.tex:5, 67, 69`; Figure SA.D.1 panels (b)-(d).
-- **Issue**: The text says the split means are "very similar" and that there is "no evidence that GPT generates systematically different task orderings across different types of occupations". The figure legends print: **AI exposure split 0.64 (below median) vs 0.56 (above)**; **AI execution split 0.62 vs 0.58**; **EFI split 0.56 vs 0.63**. Recomputing from `GPT_task_sequences_kendall_results.csv` merged to `occupation_analysis_with_fragmentationIndex_def1.csv` (N = 868, mean tau 0.6018, sd 0.1701) reproduces those means exactly and gives Welch t = **-6.90 (p = 1.0e-11)** for E1 exposure, **-3.37 (p = 7.8e-04)** for AI execution and **+4.96 (p = 8.6e-07)** for the EFI, with Cohen's d = -0.47, -0.23, +0.34. Splitting on the E1|E2 measure gives the same verdict (0.635 vs 0.570, t = -5.75). Spearman rho of mean tau with the E1 share is -0.236 (p = 2.1e-12).
+- **Issue**: The text says the split means are "very similar" and that there is "no evidence that GPT generates systematically different task orderings across different types of occupations". The figure legends print: **AI exposure split 0.63 (below median, n = 430) vs 0.57 (above, n = 438)** since `b2d11a8` moved panel (c) onto the E1|E2 share (it read 0.64 vs 0.56 on the E1-only split); **AI execution split 0.62 vs 0.58**; **EFI split 0.57 vs 0.63**. Recomputing from `GPT_task_sequences_kendall_results.csv` merged to `occupation_analysis_with_fragmentationIndex_def1.csv` (N = 868, mean tau 0.6018, sd 0.1701) reproduces those means exactly and gives Welch t = **-6.90 (p = 1.0e-11)** for E1 exposure, **-3.37 (p = 7.8e-04)** for AI execution and **+4.96 (p = 8.6e-07)** for the EFI, with Cohen's d = -0.47, -0.23, +0.34. The E1|E2 split, now the one plotted, gives the same verdict (0.635 vs 0.570, t = -5.75, gap -0.065 against -0.078 on E1-only), so the finding is unaffected by `b2d11a8`. Spearman rho of mean tau with the E1 share is -0.236 (p = 2.1e-12).
 - **Why it's a problem**: This paragraph, plus the appendix's opening claim, is the only evidence offered that prompt-induced ordering noise is not differential across the occupation dimensions used in the tests. The sign is the one that matters: the occupations that are **more** AI-exposed and **more** AI-executed, exactly those driving the Prediction #2 and #3 estimates, are the ones whose GPT orderings are **least** stable across prompts.
 - **Proposed fix**: State the numbers and the direction, then make the argument that the size does not overturn the results. For example: "Mean Kendall's tau is 0.06 to 0.08 lower in the above-median AI-exposure and AI-execution groups and about 0.06 higher in the above-median EFI group, differences of roughly a quarter to a half of the cross-occupation standard deviation of 0.17." Then argue from the size, not from the absence of a difference.
 - **Corroboration**: found independently by two passes, both of which recomputed the split means from the source CSV rather than reading the panel.
@@ -270,6 +273,7 @@ _Last updated 2026-09-04._
 - **Why it's a problem**: The exposure share and the EFI both enter Equation (14) with measurement error correlated with the dependent variable, and a replicator cannot infer the coding choice from the text.
 - **Proposed fix**: State the count and the rule in SA.A ("789 of 17,925 tasks carry no human label from Eloundou et al.; we group these with the unexposed"), then either drop them from the exposure and EFI computations or report that the results hold when they are dropped. Drop SOC 33-3051.00 from the fragmentation sample, since it contributes exposure 0 and EFI 1 with no underlying information.
 - **Corroboration**: found independently by three passes.
+- **Status**: ⏸ **Reviewed, coding retained** 2026-09-04. Treating unlabelled records as unexposed was considered and kept deliberately: the exposure variable must be binary, and dropping the 789 is arguably worse for the index, since removing a step splices its neighbours together and re-joins runs that were genuinely separate. Recorded so the choice is not re-raised as an oversight. The disclosure and coding-sensitivity parts of the proposed fix were declined; the entry stays open only in that sense.
 
 ### D22. The claim that a workflow sequence is generated for every O*NET occupation is false, and five tasks are assigned two positions each
 - **Location**: p. SA-2 (PDF 86), `SA_A_sample_construction.tex:72`.
@@ -303,7 +307,8 @@ _Last updated 2026-09-04._
 - **Why it's a problem**: The note asserts as an established pattern what the body of the same appendix correctly reports as "smaller in magnitude and often statistically insignificant". The exhibit's own benchmark does not separate the automation estimates from chance.
 - **Proposed fix**: Rewrite the note to say the automation estimates keep the sign of the AI-execution estimates but are smaller, mostly indistinguishable from zero, and not separated from the position-reshuffle placebo, especially under DWA fixed effects.
 
-### D27. The note to Table SA.B.5 misdescribes the fragmentation regressor as built on AI-able steps
+### ✅ D27. The note to Table SA.B.5 misdescribes the fragmentation regressor as built on AI-able steps
+- **Status**: ✅ **Moot** 2026-09-04 (`1d64cb0`). The note went with Subsection SA.B.2 and Table SA.B.5 when M4 was addressed by removal. No such note remains in the draft.
 - **Location**: p. SA-17 (PDF 101), `SA_B_alternative_definitions.tex:278`.
 - **Issue**: In this table the index is built on AI-**executed** steps, as the very next sentence of the same note says, not on AI-able/AI-exposed steps. (The same sentence also calls the exposure control "E1", which is the separate problem in M2.)
 - **Why it's a problem**: The fragmentation regressor is described as measuring the dispersion of a different set of steps from the one it is built on, which is the entire point of the table.
@@ -363,15 +368,15 @@ _Last updated 2026-09-04._
 
 ### D36. SA.E attributes the +0.04 attenuation endpoint to SOC fixed effects, but +0.04 exists only in Table 2's DWA-fixed-effects columns, which SA.E's grid does not contain
 - **Location**: p. SA-31 (PDF 115), `SA_E_frequency_robustness.tex:142`; grid defined at `:169, :194`.
-- **Issue**: Table 2's SOC-fixed-effects columns give **0.06 and 0.06** (column 2, SOC major) and **0.05 and 0.05** (column 3, SOC minor), so under SOC fixed effects the range is +0.05 to +0.06. The value **+0.04 appears only in columns (4) and (6)**, the DWA-fixed-effects columns. The main text is correct because it scopes the range to "columns (2)-(4) and (6)"; SA.E imports the same range while scoping it to SOC fixed effects. SA.E's sweep carries only `no_fe_no_dwa`, `major_fe_no_dwa` and `minor_fe_no_dwa`, whose all-tasks cells are 0.1239/0.1166, 0.0607/0.0572 and 0.0506/0.0479. **No cell of SA.E's grid equals +0.04.**
+- **Issue**: Table 2's SOC-fixed-effects columns give **0.06 and 0.05** (column 2, SOC major) and **0.05 and 0.05** (column 3, SOC minor) since `b2d11a8`, so under SOC fixed effects the range is +0.05 to +0.06. The value **+0.04 appears only in columns (4) and (6)**, the DWA-fixed-effects columns. The main text is correct because it scopes the range to "columns (2)-(4) and (6)"; SA.E imports the same range while scoping it to SOC fixed effects. SA.E's sweep carries only `no_fe_no_dwa`, `major_fe_no_dwa` and `minor_fe_no_dwa`, whose all-tasks cells are 0.1125/0.1052, 0.0591/0.0541 and 0.0498/0.0455 since `b2d11a8`. **No cell of SA.E's grid equals +0.04.**
 - **Why it's a problem**: The sentence tells the reader the top row of the figure reproduces a main-text range against which the pruned cells below can be read. That benchmark is one the figure's own specifications cannot generate.
 - **Proposed fix**: Change the range to "+0.05 to +0.06", or add the DWA specification to the frequency grid, or say the main text's lower endpoint comes from a specification not re-estimated here.
 
 ### D37. "Neighbor effects often grow" cites only cells the next sentence dismisses as too sparse
 - **Location**: p. SA-32 (PDF 116), `SA_E_frequency_robustness.tex:143`.
-- **Issue**: In the no-fixed-effects previous-task panel the AME is **0.124** in the all-tasks row and **0.093, 0.091, 0.086, 0.113, 0.090, 0.073, 0.137, 0.204, 0.093, 0.083, 0.149** across the eleven pruned cuts. Only three exceed the baseline, and those three are SeveralDaily+ >= 50% (N = 574), SeveralDaily+ >= 65% (N = 161) and Hourly+ >= 50% (N = 61), the three smallest samples in the panel. Across every inclusive and moderate cut the effect shrinks by roughly a quarter. Pooling all three specifications, about ten of thirty-three previous-task cells exceed their baseline, all at the strict, sparse end.
+- **Issue**: In the no-fixed-effects previous-task panel the AME is **0.113** in the all-tasks row and **0.081, 0.074, 0.070, 0.092, 0.074, 0.059, 0.125, 0.194, 0.078, 0.051, 0.279** across the eleven pruned cuts (values as of `b2d11a8`). Only three exceed the baseline, and those three are SeveralDaily+ >= 50% (N = 574), SeveralDaily+ >= 65% (N = 161) and Hourly+ >= 50% (N = 61), the three smallest samples in the panel. Across every inclusive and moderate cut the effect shrinks by roughly a quarter. Pooling all three specifications, about ten of thirty-three previous-task cells exceed their baseline, all at the strict, sparse end.
 - **Why it's a problem**: The very next sentence says the estimates "weaken and lose significance only in the sparsest cells", so the appendix cites one of its smallest cells as evidence that the effect grows and then dismisses small cells as uninformative.
-- **Proposed fix**: "The positive adjacent-step effect persists across the inclusive and moderate cuts, attenuating modestly (0.07 to 0.11 under no fixed effects against a 0.12 baseline); the larger point estimates in the grid, up to +0.20, occur only in the sparsest cuts, where they are correspondingly imprecise."
+- **Proposed fix**: "The positive adjacent-step effect persists across the inclusive and moderate cuts, attenuating modestly (0.06 to 0.09 under no fixed effects against a 0.11 baseline); the larger point estimates in the grid, up to +0.20, occur only in the sparsest cuts, where they are correspondingly imprecise."
 
 ### D38. "Lose significance only in the sparsest cells, where task observations fall into the low hundreds" is contradicted by insignificant cells with 2,533 and 1,412 observations
 - **Location**: p. SA-32 (PDF 116), `SA_E_frequency_robustness.tex:144`.
