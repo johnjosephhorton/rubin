@@ -253,7 +253,7 @@ First, since $\minTime{i} \leq \alpha^{-d_i}$ for each $s_i \in \mathcal{S}$, we
 
 Next note that for any $x,y\in [0,1]$, $(1-x)(1+\tfrac{1}{x}) + (1-y)(1+\tfrac{1}{y}) \leq (1-xy)(1+\tfrac{1}{xy}) $.
 Repeatedly applying this fact, we get that $1 + \sum_{s_i \in T_b}(1-\alpha^{d_i})(1+\alpha^{-d_i}) \leq 1 + (1-\alpha^{d(T_b)})(1+\alpha^{-d(T_b)}) = 1 + \alpha^{-d(T_b)} - \alpha^{d(T_b)}$ for any $T_b \in \T_{\AIletter}$.
-The ratio between this expression and $\alpha^{-d(T_b)}$ is maximized at $\alpha^{-d(T_b)} = 1/2$, achieving a value of $5/4$ as claimed.
+The ratio between this expression and $\alpha^{-d(T_b)}$ is maximized at $\alpha^{d(T_b)} = 1/2$ (equivalently $\alpha^{-d(T_b)} = 2$), achieving a value of $5/4$ as claimed.
 \end{proof}
 
 The bound of $\tfrac{5}{4}$ in Lemma~\ref{lem:FI.upper.bound} is tight, as the following example shows.
@@ -361,7 +361,7 @@ Consider a sequence of $m$ identical steps:
 \]
 The optimal task sequence chains the steps three at a time, since a chain of $k$ steps costs $2^{k/2}$, or $2^{k/2}/k$ per step, which is minimized at $k=3$ with value $\tfrac{2\sqrt{2}}{3} \approx 0.9428$, below both the manual cost $\sqrt{2}$ and the per-step cost of any other chain length, so $OPT \to \tfrac{2\sqrt{2}}{3}\,m$.
 The fragmentation index is such that each step contributes $\sqrt{2}$ if it fails, plus $1$ if the preceding step did not fail, for a total contribution of $(1-1/\sqrt{2})(\sqrt{2} + 1/\sqrt{2}) = \tfrac{3}{2}(\sqrt{2}-1) \approx 0.6213$.
-As $m$ grows large, the ratio between $\tfrac{2\sqrt{2}}{3}m$ and $1 + m \times 0.6213$ approaches $\tfrac{4\sqrt{2}}{9(\sqrt{2}-1)} \approx 1.52$.
+As $m$ grows large, the ratio between $\tfrac{2\sqrt{2}}{3}m$ and $0.5 + m \times 0.6213$ approaches $\tfrac{4\sqrt{2}}{9(\sqrt{2}-1)} \approx 1.52$.
 \end{example}
 
 We can relax the assumption in Lemma~\ref{lem:FI.lower.bound.4} that $\manualTime{i} \geq 1$ for all $s_i$, but at the cost of a worse approximation factor.
@@ -503,7 +503,7 @@ If in addition $\alpha_0$ is transversal, then $\phi'(\alpha_0) \neq 0$, which t
 Transversality cannot be dispensed with, because the sign change only forces $\alpha_0$ to be a root of $\phi$ of odd order, and at a root of order three or higher the envelope's marginal benefit passes through the threshold without a jump.\footnote{With $m = 4$, $d = (2,1,2,1)$, $\manualTime{} = (1000, 1000, 56, 1000)$ and $\AItime{} = (102, 65, 1000, 12)$, the strategy $\T$ that chains steps~1--2, performs step~3 manually, and augments step~4 is uniquely optimal just below $\alpha_0 = 1/2$, and the strategy $\T'$ that augments step~1 and chains steps~2--4 is uniquely optimal just above it. Writing $x = 1/\alpha$, their cost difference is $\phi = 12x^{4} - 65x^{3} + 102x^{2} - 12x - 56 = (x-2)^{3}(12x+7)$, which has a triple root at $x = 2$, and $g^*$ falls through $\alpha_0$ from $3170.5$ to $3165.5$ without jumping.}
 The condition is nonetheless the generic case.
 A threshold already imposes $\phi(\alpha_0) = 0$, so requiring $\phi'(\alpha_0) = 0$ as well is a second equation in the same unknown, and the time cost vectors $(\manualTime{}, \AItime{})$ for which it holds form a Lebesgue-null set.
-Both thresholds of Example~\ref{ex:nonmonotone} are transversal, with $g^*$ rising from $0$ to $16.0$ at $\alpha = 0.50$ and from $4.7$ to $133.9$ at $\alpha \approx 0.92$.
+Both thresholds of Example~\ref{ex:nonmonotone} are transversal, with $g^*$ rising from $0$ to $16.0$ at $\alpha = 0.50$ and from $4.7$ to $134.1$ at $\alpha \approx 0.92$.
 \end{proof}
 
 \subsection{Proof of Proposition~\ref{prop:shortrun_dp}}

@@ -1,4 +1,4 @@
-"""Prediction #3 on APQC sequences, pooling the cross-industry and 16 industry PCFs."""
+"""Prediction #3 on APQC sequences, pooling the cross-industry and 17 industry PCFs."""
 import os, glob, re, warnings
 import numpy as np, pandas as pd
 warnings.filterwarnings('ignore')

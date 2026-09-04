@@ -1,4 +1,4 @@
-"""Predictions #1 and #2 on APQC's documented sequences, pooling the cross-industry and 16 industry PCFs.
+"""Predictions #1 and #2 on APQC's documented sequences, pooling the cross-industry and 17 industry PCFs.
 
 Consumes the step-to-task match file written by `apqc_industry_leaf_matching.py`.
 

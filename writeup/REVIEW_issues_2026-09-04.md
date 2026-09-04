@@ -62,6 +62,30 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Proposition 2 as the warrant for Prediction #3 (D4).** Minor in the per-file pass, medium in the cross-cutting lens, which inverted the sandwich and showed the ranking needs FI_A/FI_B > 5. **Medium taken.**
 - **Prediction #3 hedging (M1).** Medium in the abstract-level finding, major in four other passes. **Major taken.**
 
+## Status of fixes
+
+Entries addressed so far are marked ✅ in their heading and carry a **Status** line giving what changed.
+Everything not listed here is still open.
+
+**Addressed (12 of 107):**
+
+| Entry | Landed in |
+|---|---|
+| M3 | `01a9ae1` |
+| D25 | `228864c` |
+| N7 | working tree |
+| N24 | working tree |
+| N25 | working tree |
+| N26 | working tree |
+| N27 | working tree |
+| N47 | working tree |
+| N49 | working tree |
+| N51 | working tree |
+| N53 | working tree |
+| N55 | working tree |
+
+_Last updated 2026-09-04._
+
 ## Major
 
 ### M1. Prediction #3 is null on the main O*NET sample and is asserted as a finding in the abstract, introduction, section heading, conclusion and two appendix summaries
@@ -82,7 +106,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Proposed fix**: Re-estimate on E1|E2 wherever the declared rule is meant to apply (the matched SA.B.5 table already exists; `onet_neighborAI_E1E2exposureControls.ipynb` already builds the Table 2 control), and update the SA.A statistic to 809 (93%) with Figure SA.A.2 panel (a) regenerated. Where the narrow cut is deliberate, invoke SA.A's "unless explicitly mentioned otherwise" clause explicitly and say why, in the table note as well as the text.
 - **Corroboration**: found independently by five passes (per-file SA.A, per-file SA.D, the exposure-label lens, the EFI-definition lens, and the empirics and SA.A number checks). Seven raw findings merged.
 
-### M3. The Anthropic attrition step is wrong by 49 tasks and states two different units as one
+### ✅ M3. The Anthropic attrition step is wrong by 49 tasks and states two different units as one
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `01a9ae1`). SA.A now states 1,066 fully filtered / 2,298 labeled, and derives the 2,347 occupation-task records through the 1,830 matched task statements. A footnote was added for the 23 statements whose augmenting and automating shares tie and break toward automation (28 of the 721 automation records).
 - **Location**: p. SA-1 (PDF 85), `SA_A_sample_construction.tex:28-29`.
 - **Issue**: Drafted: 3,364 tasks, of which **1,017** are fully filtered, leaving **2,347**. Source `data/Anthropic_EconomicIndex/automation_vs_augmentation_by_task.csv` has 3,364 rows (matching), of which **1,066** have `filtered == 1`, leaving **2,298**. The construction notebook prints this verbatim ("Number of rows after filtering: 2,298", with Automation 566 + Augmentation 1,732 = 2,298). The drafted 2,347 is a different object, the number of *occupation-task rows* in the merged O*NET panel carrying a non-Manual label (1,626 Augmentation + 721 Automation), spanning only 1,830 distinct task titles; 1,017 is then back-derived as 3,364 - 2,347.
 - **Why it's a problem**: Neither count is reproducible from the cited source, the sentence understates by 49 the number of tasks Anthropic could not classify, and the next sentence ("we assign each of these 2,347 tasks an AI execution label") assigns labels in the wrong unit.
@@ -261,7 +286,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Why it's a problem**: The exercise is sold as tightening the outcome to the concept the model implies, but by the paper's own account the label does not measure that concept.
 - **Proposed fix**: Reframe as a robustness check on the subset of AI-executed tasks whose conversations are predominantly directive, with a pointer to SA.A noting that this label is not the model's automated step.
 
-### D25. Tables SA.B.2 and SA.B.3 carry the wrong dependent-variable header
+### ✅ D25. Tables SA.B.2 and SA.B.3 carry the wrong dependent-variable header
+- **Status**: ✅ **Addressed** 2026-09-04 (commit `228864c`). The spanner in both tables now reads "is AI-automated". `generate_latex_table` keys the label on `dependent_var`, so re-running the notebooks cannot reintroduce it.
 - **Location**: p. SA-11 to SA-12 (PDF 95-96), `tables/randomTieBreak/allTasks_automated.tex:4` and `GPT_automated.tex:4`, input at `SA_B_alternative_definitions.tex:65, 83`.
 - **Issue**: Both tables carry the spanning header "Probability that Focal Task (k) is AI-executed", while the estimated outcome is `is_automated`: the captions read "Task's AI Automation Likelihood", the notes say the dependent variable is `is_automated_k`, and the notebook calls `run_regressions_on(..., dependent_var='is_automated')`. The printed numbers are correct for `is_automated` (verified cell by cell against `regression_summaries_is_automated/regression_ame_results_full_0.csv`: 0.01864, 0.04592, 0.05318, 0.02711, nobs 13,786).
 - **Why it's a problem**: The header names the outcome, so as printed the tables claim to be the same regressions as Table SA.B.1 on a different sample when they are a different outcome.
@@ -436,7 +462,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Issue**: The footnote collapses a successor chain spanning k+1, ..., r into one pseudo-step with two composite parameters (t^A_r and prod_{i=k+1}^{r} q_i). That suffices for eq. (2), which prices only the chain and the successor-alone chain. It does not suffice for Proposition 1, whose V_0 and V_3 price the successor at min{t^M_{k+1}, t^A_{k+1}/q_{k+1}}: substituting gives min{t^M_{k+1}, t^A_r/prod q_i}, whose first branch is the manual time of a single step while the second covers the whole run, leaving k+2, ..., r unpriced.
 - **Proposed fix**: State a third composite parameter (the minimum cost of running k+1, ..., r under any arrangement not containing step k), or limit the footnote's claim to eq. (2) and drop "what follows applies unchanged".
 
-### N7. The notes to Figure 5 point to "the table below", which is Table OA.A.3, thirty pages away
+### ✅ N7. The notes to Figure 5 point to "the table below", which is Table OA.A.3, thirty pages away
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). The notes now cite `Table~\ref{tab:nonmonotone_costs}` in `Appendix~\ref{app:tables_and_figures}`; the semicolon before it became a full stop, since the clause no longer describes panel (a).
 - **Location**: p. 21 (PDF 21), `4_implications.tex:235`; target `tab:nonmonotone_costs` on p. OA-3 (PDF 51).
 - **Issue**: No table appears below or near Figure 5. The body text one sentence later cites the same object correctly as "Table~\ref{tab:nonmonotone_costs} in Appendix~\ref{app:tables_and_figures}".
 - **Proposed fix**: Replace "the table below" with that `\ref`.
@@ -527,23 +554,27 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Issue**: The notebook writes `regression_ame_results_full_0.csv` from the **unshuffled** data in the preceding cell, then loops `for i in range(n_shuffles)` starting at i = 0. Only files i = 1..999 are genuine reshuffles, so the observed value is counted as one of its own placebos.
 - **Proposed fix**: Drop i = 0 from the null and state 999 reshuffles, or generate a 1,000th shuffle; adjust the note and the main-text sentence accordingly.
 
-### N24. The ratio in the Lemma OA.B.2 upper bound is maximized at alpha^{d} = 1/2, not alpha^{-d} = 1/2
+### ✅ N24. The ratio in the Lemma OA.B.2 upper bound is maximized at alpha^{d} = 1/2, not alpha^{-d} = 1/2
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). Now reads "maximized at $\alpha^{d(T_b)} = 1/2$ (equivalently $\alpha^{-d(T_b)} = 2$)". The tightness example below it builds a chain with $q_1q_2q_3 = 1/2$, which corroborates the corrected orientation.
 - **Location**: p. OA-13 (PDF 61), `OA_B_omitted_proofs.tex:256`.
 - **Issue**: With u = alpha^{d(T_b)} in (0,1], the ratio (1 + u^{-1} - u)/u^{-1} = u + 1 - u^2 is maximized at u = 1/2, i.e. alpha^{d(T_b)} = 1/2, equivalently alpha^{-d(T_b)} = 2. Since q_i in (0,1] forces alpha^{-d} >= 1, the stated maximizer lies outside the feasible range. The value 5/4 is correct.
 - **Proposed fix**: "is maximized at alpha^{d(T_b)} = 1/2 (equivalently alpha^{-d(T_b)} = 2), achieving a value of 5/4".
 
-### N25. The constant term of the fragmentation index in Example OA.B.2 is 0.5, not 1
+### ✅ N25. The constant term of the fragmentation index in Example OA.B.2 is 0.5, not 1
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). Constant changed from 1 to 0.5. Confirmed two ways: the closed form (12), and brute-force enumeration over all $2^m$ failure realizations, which agree at $FI = 0.62132\,m + 0.5$.
 - **Location**: p. OA-15 (PDF 63), `OA_B_omitted_proofs.tex:364`.
 - **Issue**: With q_i = 1/sqrt(2) and t^M_i = sqrt(2) for all i, FI = m(1-q)sqrt(2) + q + (m-1)q(1-q) = **0.62132 m + 0.5**. The additive constant is 0.5, not 1, so the displayed expression is wrong for every finite m (m = 10 gives FI = 6.7132, not 7.2132). Verified by exhaustive enumeration over failure realizations. The limiting ratio 4 sqrt(2)/(9(sqrt(2)-1)) = 1.5174 is unaffected.
 - **Proposed fix**: Replace "1 + m x 0.6213" with "0.5 + m x 0.6213".
 
-### N26. The post-threshold marginal benefit in Example 2 is 134.1, not 133.9
+### ✅ N26. The post-threshold marginal benefit in Example 2 is 134.1, not 133.9
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). 133.9 changed to 134.1. At $\alpha_0 = 0.9239886$, $48/\alpha_0^{13} = 134.145$; the old value was $48/0.9241^{13}$.
 - **Location**: p. OA-19 (PDF 67), `OA_B_omitted_proofs.tex:506`.
 - **Issue**: Solving 6 + 4/alpha = 4 alpha^{-12} (the two cost expressions in Table OA.A.3) gives alpha_0 = **0.9239886**. There 4/alpha_0^2 = 4.685 (matching the quoted 4.7) but 48/alpha_0^{13} = **134.145**, not 133.9. The printed value is 48/0.9241^13, i.e. the threshold was rounded to four decimals before substitution into a quantity of degree 13. The plotting grid lands on 0.9240570 and gives 134.016, so the plotted value is not 133.9 either.
 - **Proposed fix**: Replace 133.9 with 134.1, or state the threshold as alpha_0 = 0.92399 and the jump as 4.69 to 134.15. The 0, 16.0 and 4.7 figures are correct.
 - **Corroboration**: found independently by two passes.
 
-### N27. Job compensation is stated without base wage rates, contradicting Eq. (OA.C.1) four lines later
+### ✅ N27. Job compensation is stated without base wage rates, contradicting Eq. (OA.C.1) four lines later
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). Job 1's compensation now reads $w_M c^M_1 + w_A c^A_2$, the two-task instance of (OA.C.1).
 - **Location**: p. OA-25 (PDF 73), `OA_C_CES_representation.tex:25`.
 - **Issue**: w_M and w_A are introduced two paragraphs earlier and (OA.C.1) gives compensation as w_M(sum c^M_b) + w_A(sum c^A_b). For Job 1 that is w_M c^M_1 + w_A c^A_2, not c^M_1 + c^A_2. The sentence reproduces the Section 5 wage, which normalizes w_A = w_M = 1, inside the one subsection whose purpose is to un-normalize them.
 - **Proposed fix**: Change to "... and equals w_M c^M_1 + w_A c^A_2".
@@ -652,7 +683,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Issue**: The sweep gives Daily+ >= 20% = **1.354**, printed as 1.35 in the forest plot's second row. That value lies above the stated band while not being one of the "two sparsest Hourly+ corners" (1.40 and 1.50). The remaining nine pruned cuts do fall in 1.24 to 1.31.
 - **Proposed fix**: "to between 1.24 and 1.35 across the remaining cuts, with the largest values in the two sparsest Hourly+ corners (1.40 and 1.50, with 75 and 20 occupations)".
 
-### N47. The neighbor heatmap note defers its significance-star convention to a figure that shows no stars
+### ✅ N47. The neighbor heatmap note defers its significance-star convention to a figure that shows no stars
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). The star convention is now stated in place (*** p<0.01, ** p<0.05, * p<0.1, from the DWA-clustered coefficient test, matching the generator). The deferral to Figure SA.E.4 now covers layout only.
 - **Location**: p. SA-32 (PDF 116), `SA_E_frequency_robustness.tex:133`.
 - **Issue**: The referenced figure is the fragmentation heatmap two subsections later, whose own note says "No cell in the grid is significant at the 10% level, so no significance stars are shown". The neighbor heatmaps do carry stars, and the cutoffs (1/5/10% in the code) are never stated in the appendix.
 - **Proposed fix**: State the convention in place and refer only to the layout of the other figure.
@@ -663,7 +695,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Why it's a problem**: The three suppressed cells are the largest positive coefficients in the grid and are excluded from the summary that follows ("negative in 13 of 33, median absolute estimate 0.05").
 - **Proposed fix**: State the actual reason and the actual numbers, and say the cell is excluded from the summary counts.
 
-### N49. The text says the fragmentation heatmap prints significance stars; the figure's own note says none are shown
+### ✅ N49. The text says the fragmentation heatmap prints significance stars; the figure's own note says none are shown
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). The text now says the number of occupations is printed beneath each cell, with no stars since no cell is significant at the 10% level. Consistent with the fix to N47.
 - **Location**: p. SA-35 (PDF 119), `SA_E_frequency_robustness.tex:201` versus `:193`.
 - **Issue**: The rendered heatmap prints only "coef" and "N=" in each of its 36 cells.
 - **Proposed fix**: "with the number of occupations printed beneath (no cell is significant at the 10% level, so no stars appear)".
@@ -674,7 +707,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Proposed fix**: Keep SA.C's "Prompt #1 (ordering)" and "Prompt #2 (similarity)" as prompt names, relabel SA.D's eleven variants as "Ordering variant 0" through "Ordering variant 10", and change the APQC table row to "Main prompt (Prompt #1 of Appendix SA.C)".
 - **Corroboration**: found independently by two passes.
 
-### N51. The "Deliver Services" category mean tau is reported as 0.67; the source gives 0.66
+### ✅ N51. The "Deliver Services" category mean tau is reported as 0.67; the source gives 0.66
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). 0.67 changed to 0.66 (`tau_main` = 0.664683). The other four values in the sentence round correctly to their sources.
 - **Location**: p. SA-40 (PDF 124), `SA_F_external_validation.tex:169`.
 - **Issue**: `category_summary.csv` gives tau_main = **0.664683** for category 5, which rounds to 0.66. Recomputed from `ordering_accuracy.csv` as the unweighted mean over the 12 category-5 branches, the same value. The other four category figures quoted in the sentence (0.69, 0.65, 0.25, 0.27) match their source to two decimals.
 - **Proposed fix**: Change 0.67 to 0.66.
@@ -685,7 +719,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Proposed fix**: Soften to "consists almost entirely of three- and four-step branches", or name the exception.
 - **Corroboration**: found independently by two passes.
 
-### N53. The pooled PCF corpus uses seventeen industry-specific frameworks, not sixteen
+### ✅ N53. The pooled PCF corpus uses seventeen industry-specific frameworks, not sixteen
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). "sixteen" changed to "seventeen" in SA.F and in the docstrings of `analysis/apqc_industry_leaf_matching.py` and `analysis/apqc_pooled_predictions.py`. Re-ran the loader's own file selection: 18 frameworks, Cross-Industry plus 17. The Telecommunications PCF is a `.xls` and so never matches the `K*.xlsx` glob.
 - **Location**: p. SA-45 (PDF 129), `SA_F_external_validation.tex:341`.
 - **Issue**: The matched-step file behind the 13,482 steps and 525 process groups carries **18** distinct framework labels, CrossIndustry plus **17** industry frameworks (Aerospace and Defense, Airline, Automotive, Banking, Broadcasting, City Government, Consumer Electronics, Consumer Products, Education, Health Insurance Payor, Healthcare Provider, Life Sciences, Petroleum Downstream, Petroleum Upstream, Property and Casualty Insurance, Retail, Utilities).
 - **Why it's a problem**: Column (6) of Table 3 is a framework fixed effect, so the count is the number of fixed effects absorbed.
@@ -697,7 +732,8 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 - **Issue**: In `tables/fragmentation_index_regression_combined.tex` the "Fixed Effect" row for columns (4)-(6) reads blank, "PCF Category", "Framework". Only two of the three carry fixed effects, as the same sentence implicitly concedes with "without fixed effects".
 - **Proposed fix**: "under each of the three specifications of columns (4)-(6) (no fixed effects, PCF Category, Framework), reaching the 5% level at eight of the eleven floors in the specification without fixed effects."
 
-### N55. The chain-length z is 6.6 in the text and 6.2 on the figure printed on the same page
+### ✅ N55. The chain-length z is 6.6 in the text and 6.2 on the figure printed on the same page
+- **Status**: ✅ **Addressed** 2026-09-04 (in the working tree, not yet committed). 6.6 changed to 6.2, matching `chain_z` = 6.191137 in the stored 0.71 sweep row and the annotation on Figure SA.F.3. The companion figures (1.09, 0.01, 1.1627) already matched that row.
 - **Location**: p. SA-47 (PDF 131), `SA_F_external_validation.tex:397-399` and Figure SA.F.3.
 - **Issue**: The text gives z = **6.6** for the within-group step-order reshuffle at the 0.71 floor. Figure SA.F.3, on the same page immediately above the paragraph, annotates the 0.71 point as **z = 6.2**, computed deterministically from the stored sweep row (chain_z = 6.1911). Neither pipeline reproduces 6.6; the pooled script's own seed gives 6.06. The observed 1.1627, null mean 1.0878 and null sd 0.0121 quoted in the text all match the stored run.
 - **Proposed fix**: Quote the value the figure is drawn from (z = 6.2), or regenerate the figure from the draw the text reports.
