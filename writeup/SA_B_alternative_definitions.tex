@@ -3,7 +3,7 @@
 % contents list and the PDF bookmark on one unbroken string; the starred break puts the
 % printed heading's turn at a comma instead of inside a word. \texorpdfstring is needed
 % because a bare \\ is not allowed in a bookmark string.
-\section{Alternative Definitions of Step Similarity, AI Execution, and Empirical Fragmentation}
+\section{Alternative Definitions of Step Similarity and AI Execution}
 \label{app:additional_robustness}
 % The house format sets every float [!t]. On the first page of an appendix, that
 % puts the leading table at the top of the page that carries the appendix heading,
@@ -13,9 +13,8 @@
 % top of the next page; the tables after it keep [!t] and follow in order behind it.
 \suppressfloats[t]
 
-This appendix re-estimates the last two predictions of Section~\ref{sec:empirics} under alternative definitions of the variables they are built from, holding the task sequences fixed.
-For Prediction~\#2 it tightens what it means for two tasks to be the same step across occupations, and replaces AI execution with the stricter outcome of AI automation.
-For Prediction~\#3 it replaces the exposure-based fragmentation measure with an execution-based one.
+This appendix re-estimates Prediction~\#2 of Section~\ref{sec:empirics} under alternative definitions of the variables it is built from, holding the task sequences fixed.
+It tightens what it means for two tasks to be the same step across occupations, and replaces AI execution with the stricter outcome of AI automation.
 Appendices~\ref{app:gptPrompts_robustness}, \ref{app:frequency_robustness}, and~\ref{app:external_validation} vary the sequences themselves rather than the definitions, and carry the weight of the sequencing assumption accordingly.
 
 \subsection{Prediction \#2: Stricter Step Similarity and AI Automation}
@@ -37,8 +36,7 @@ Because relatively few tasks in the data are AI-automated, and because we furthe
 }
 Under this stricter specification, the estimated effects are smaller in magnitude and often statistically insignificant, reflecting the more limited prevalence of AI automation in the data. Nevertheless, the signs and qualitative patterns of the estimates remain consistent with those obtained for AI execution.
 
-
-\begin{table}[!t]
+\begin{table}[h!]
 \centering
 \caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution Likelihood (GPT-filtered Sample)}
 \label{tab:DWA_regression_aiExecution_GPTsample}
@@ -259,38 +257,3 @@ Panel (b) shows the set of tasks for DWAs of Panel (a) that successfully survive
 \end{minipage}
 \end{table}
 \end{landscape}
-\subsection{Prediction \#3: An Execution-Based Empirical Fragmentation Measure}
-\label{app:additional_robustness_pred2}
-To ensure that our results for the third prediction are not driven by how fragmentation is measured using the AI exposure classifications of \citet{eloundou2023gpts}, we re-estimate Equation~\eqref{eq:fragmentation_index_regression} using an additional measure of task fragmentation (the execution-based EFI) constructed directly from realized AI execution outcomes, rather than from AI-exposed tasks.
-The corresponding regression results are reported in Table~\ref{tab:fragmentation_index_regression_execution}.
-
-\begin{table}[t]
-    \caption{Role of AI-able Task Fragmentation in Determining AI Execution Outcomes (Execution-Based Empirical Fragmentation Measure)}
-    \label{tab:fragmentation_index_regression_execution}
-    \footnotesize
-    \centering
-    \input{tables/fragmentation_index_regression_execution.tex}
-    \begin{minipage}{1\linewidth}
-\begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Standardized coefficients. Clustered standard errors in parentheses. *** p$<$0.01, ** p$<$0.05, * p$<$0.1.
-This table reports results from estimating Equation~\eqref{eq:fragmentation_index_regression}.
-The dependent variable in all specifications is the share of steps executed by AI in an occupation ($\text{ai\_execution}$).
-The variable ``AI Exposure'' denotes the share of AI-exposed (E1) steps in the occupation, while the ``Empirical Fragmentation Index'' captures how dispersed AI-able steps are across the occupation's workflow.
-The execution-based empirical fragmentation index treats any AI-executed task, automated or augmented, as contributing equally to the formation of AI chains in measuring task fragmentation.
-All three variables are standardized to unit standard deviation within the sample, so the reported coefficients are in standard-deviation units. All specifications additionally control for the number of AI-exposed (E1 or E2) steps in the occupation, so that the fragmentation coefficient is identified from how the AI-able steps are arranged rather than from how many of them the workflow contains.}
-\end{spacing}
-\end{minipage}\end{table}
-
-The specification mirrors the main-text regression exactly, including the control for the number of AI-exposed steps in the occupation; the only difference is that fragmentation is measured over realized AI execution rather than over exposure.
-By construction, the execution-based EFI measure is mechanically related to the share of tasks executed by AI.
-Holding the task sequence fixed, an additional AI-executed task necessarily increases the occupation's AI execution share while weakly reducing its EFI.\footnote{The reduction is weak because adding an isolated AI-executed task does not change fragmentation, whereas adding a task adjacent to an existing AI-executed task extends an AI chain and reduces fragmentation.}
-As a result, this measure mechanically amplifies the negative relationship between AI execution and fragmentation in the regression, as reflected in the estimated coefficients on the EFI.
-Accordingly, it is not intended to provide an independent characterization of the relationship between task fragmentation and AI execution.
-
-Instead, this measure serves as a diagnostic of the \emph{form} that AI adoption takes within occupations.
-The model predicts not only that greater clustering of AI-able tasks facilitates higher overall AI execution, but also that realized AI adoption should occur disproportionately through the extension of contiguous AI chains rather than through scattered, isolated task substitutions.
-If AI execution were independent across steps, then conditional on AI exposure, increases in execution would primarily appear as isolated events and would not substantially reduce fragmentation.
-The strong negative relationship observed between the execution-based EFI and AI execution therefore indicates that AI adoption follows the clustered, chain-based pattern implied by the model.
-In this sense, the execution-based EFI functions as a falsification-style check on the model's underlying mechanism rather than as a separate test of its predictions.
-
-

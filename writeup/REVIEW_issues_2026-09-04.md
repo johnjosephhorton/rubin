@@ -67,12 +67,13 @@ Two lenses (`sample-units`, `prompt-numbering`) completed their refute passes la
 Entries addressed so far are marked ✅ in their heading and carry a **Status** line giving what changed.
 Everything not listed here is still open.
 
-**Addressed (12 of 107):**
+**Addressed (13 of 107):**
 
 | Entry | Landed in |
 |---|---|
 | M3 | `01a9ae1` |
 | D25 | `228864c` |
+| M4 | working tree (removed SA.B.2) |
 | N7 | `f9d4a4a` |
 | N24 | `f9d4a4a` |
 | N25 | `f9d4a4a` |
@@ -114,7 +115,8 @@ _Last updated 2026-09-04._
 - **Proposed fix**: "In total, conversations are linked to 3,364 tasks, of which 1,066 have all of their conversations filtered, leaving 2,298 with at least one non-filtered conversation. Of these, 1,830 match an O*NET task title, yielding 2,347 labeled occupation-task observations (1,626 augmentation, 721 automation) in the final 17,925-row sample."
 - **Corroboration**: found by two passes; severity reconciled upward to major on the number pass's direct read of the source file.
 
-### M4. The execution-based EFI "falsification check" is reproduced almost exactly by an independence null, so the stated inference does not follow
+### ✅ M4. The execution-based EFI "falsification check" is reproduced almost exactly by an independence null, so the stated inference does not follow
+- **Status**: ✅ **Addressed** 2026-09-04 (working tree). Subsection SA.B.2 was **removed** rather than repaired, together with its table and the falsification argument. The check cannot do the job it was included for: since EFI = 1 - k/m + r/m and the execution-based variant sets k to AI-executed steps, the regressor contains the dependent variable by identity (verified exactly on the 872-occupation panel), and a within-occupation reshuffle that destroys clustering by construction still reproduces 96% of the estimate. The AI-exposed count control cannot net out a level term that is the execution share, so the note at `:280` went with it. Nothing referenced the subsection. The section title and the SA.B roadmap were rescoped to Prediction #2 alone.
 - **Location**: p. SA-18 (PDF 102), `SA_B_alternative_definitions.tex:292-294`; table note at `:280`; exhibit `tables/fragmentation_index_regression_execution.tex`.
 - **Issue**: The subsection argues that a strong negative EFI coefficient could not arise if AI adoption were independent of position, and reads the observed **-0.78 / -0.70 / -0.68** as evidence of clustered, chain-based adoption. Two things break it.
   - By Equation (13), EFI_w = 1 - k_w/m_w + r_w/m_w, and for the execution-based index k_w counts AI-**executed** steps, so k_w/m_w *is* the dependent variable (the identity reproduces to 1.1e-16 on the 872-occupation panel). Under independent placement of k executed steps among m, E[EFI | k] = 1 - k(k-1)/m^2, strictly decreasing in the execution share with zero clustering, so the stated null is false as stated.
