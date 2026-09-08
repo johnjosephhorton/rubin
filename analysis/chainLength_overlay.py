@@ -1,10 +1,11 @@
 """Prediction #1 as one panel per corpus, with both placebo distributions overlaid.
 
 Replaces the four separate histograms with two. Within a panel the two nulls are drawn as
-outlines over a light fill, which keeps both readable where they coincide: in O*NET the two
-nulls sit on top of each other (means 1.3823 and 1.3818, a gap of 0.04 standard deviations),
-so filled bars there resolve into one muddy shape and the visible colour is bin-by-bin Monte
-Carlo noise rather than a difference between the placebos.
+semi-transparent filled bars with black bin edges, matching the histograms this replaces.
+In O*NET the two nulls sit almost exactly on top of each other, with means of 1.3823 and
+1.3818, a gap of 0.04 standard deviations, so their overlap region reads as a single blended
+shape; that they coincide is the point the panel makes, and the body and the figure notes
+say so.
 
 Colours follow the rest of the paper. Orange is the position reshuffle, as in the histograms
 this replaces, blue is the reassignment placebo, and red marks the observed value.
@@ -49,11 +50,9 @@ PANELS = [
 for tag, obs, a, b, unit in PANELS:
     edges = np.histogram_bin_edges(np.concatenate([a, b]), bins=NBINS)
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.hist(a, bins=edges, histtype="stepfilled", color=ORANGE, alpha=.45, lw=0, zorder=1)
-    ax.hist(b, bins=edges, histtype="stepfilled", color=BLUE,   alpha=.35, lw=0, zorder=1)
-    ax.hist(a, bins=edges, histtype="step", color=ORANGE, lw=2.2, zorder=3,
+    ax.hist(a, bins=edges, color=ORANGE, alpha=.62, edgecolor="black", lw=.5, zorder=2,
             label=f"Shuffled {unit} Positions")
-    ax.hist(b, bins=edges, histtype="step", color=BLUE, lw=2.2, zorder=3,
+    ax.hist(b, bins=edges, color=BLUE, alpha=.62, edgecolor="black", lw=.5, zorder=2,
             label=f"Shuffled {unit} Execution Labels")
     ax.axvline(obs, color="red", linestyle="dashed", linewidth=2, zorder=4,
                label=f"Observed = {obs:.2f}")
