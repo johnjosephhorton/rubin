@@ -71,54 +71,33 @@ First, we permute task positions within each occupation's workflow.
 Second, we reassign tasks, each carrying its AI-execution label, randomly across occupations within the same major SOC group, preserving each occupation's task count and randomizing task positions within each occupation.
 The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains.
 
-Panel~(a) of Figure~\ref{fig:aiChains_graphs_def1} shows the placebo distribution of average AI chain length across 1{,}000 task position permutations (left) and 1{,}000 task AI-execution label reassignment permutations (right), and compares each with the observed mean AI chain length, marked by the dashed vertical line in each histogram.
+Panel~(a) of Figure~\ref{fig:aiChains_graphs_def1} overlays the two placebo distributions of average AI chain length, one across 1{,}000 task position permutations and one across 1{,}000 task AI-execution label reassignment permutations, and compares both with the observed mean AI chain length, marked by the dashed vertical line.
+The two nulls are almost indistinguishable, so the comparison does not turn on which margin is randomized.
 We observe that the average AI chain length in the data is noticeably larger than in both placebo distributions.
 This indicates that AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
 At the same time, the modest magnitude of 1.45 indicates that long AI chains remain rare, perhaps reflecting the early stage of AI adoption; our model predicts chains to lengthen as AI quality improves.
-% Two corpora, one figure. The panel letters run over the corpora, since that is the
-% comparison the subsection is making; the two placebos are the columns within each
-% panel and are named by the header above each column and by each histogram's own
-% legend. The columns are plain minipages rather than nested subfigures, which would
-% need subsubcaption and would number as (a1), (a2).
+% Two corpora, one figure, one panel each. Both placebo distributions are overlaid within
+% a panel rather than given a panel apiece: in O*NET the two nulls sit on top of each other
+% (means 1.3823 and 1.3818, a gap of 0.04 standard deviations), so drawing them separately
+% spent half the figure showing the same distribution twice. They are outlines over a light
+% fill because filled bars resolve into one muddy shape wherever they coincide.
 \begin{figure}[!t]
 \caption{Average Length of AI Chains: Actual versus Placebo Datasets}
 \label{fig:aiChains_graphs_def1}
 
 \centering
-\begin{subfigure}[b]{\textwidth}
+\begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \subcaption{O*NET Occupations, GPT-imputed Ordering}
+    \subcaption{O*NET Occupations}
     \label{fig:aiChains_onet}
-    \begin{minipage}[t]{0.49\textwidth}
-        \centering
-        {\fontsize{9.5pt}{10pt}\selectfont Random Task Position Assignment}\par\vspace{0.25em}
-        \includegraphics[width=\textwidth]{plots/aiChain_length_count/aiChains_chainLength_taskPositionReshuffle_definition1.png}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.49\textwidth}
-        \centering
-        {\fontsize{9.5pt}{10pt}\selectfont Random Task Execution Label}\par\vspace{0.25em}
-        \includegraphics[width=\textwidth]{plots/aiChain_length_count/aiChains_chainLength_taskAssignmentReshuffle_definition1.png}
-    \end{minipage}
+    \includegraphics[width=\textwidth]{plots/chainLength_overlay/aiChains_chainLength_overlay_onet.png}
 \end{subfigure}
-
-\vspace{1.5em}
-
-\begin{subfigure}[b]{\textwidth}
+\hfill
+\begin{subfigure}[b]{0.49\textwidth}
     \centering
-    \subcaption{PCF Process Groups, Practitioner-documented Ordering}
+    \subcaption{PCF Process Groups}
     \label{fig:aiChains_pcf}
-    \begin{minipage}[t]{0.49\textwidth}
-        \centering
-        {\fontsize{9.5pt}{10pt}\selectfont Random Step Position Assignment}\par\vspace{0.25em}
-        \includegraphics[width=\textwidth]{plots/apqc_chainLength_placebo/aiChains_chainLength_stepPositionReshuffle_apqc.png}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.49\textwidth}
-        \centering
-        {\fontsize{9.5pt}{10pt}\selectfont Random Step Execution Label}\par\vspace{0.25em}
-        \includegraphics[width=\textwidth]{plots/apqc_chainLength_placebo/aiChains_chainLength_stepAssignmentReshuffle_apqc.png}
-    \end{minipage}
+    \includegraphics[width=\textwidth]{plots/chainLength_overlay/aiChains_chainLength_overlay_apqc.png}
 \end{subfigure}
 
 \par\vspace{\fignotesskip}
@@ -126,9 +105,10 @@ At the same time, the modest magnitude of 1.45 indicates that long AI chains rem
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Red dashed lines show the observed average AI chain length in the actual dataset.
 Panel~(a) uses the main O*NET sample, in which a workflow is an occupation and the ordering is the GPT-imputed task sequence; Panel~(b) uses APQC's Process Classification Framework, in which a workflow is a PCF Process Group and the ordering is the one documented by practitioners, with exposure and execution labels transferred from each step's nearest O*NET task.
-Within each panel, the left histogram reports 1{,}000 placebo datasets in which the positions of steps within each workflow are randomized, and the right histogram 1{,}000 placebo datasets in which steps, each carrying its execution label, are randomly reassigned across workflows within the same group, preserving workflow sizes.
-The grouping is the major SOC group in Panel~(a) and the PCF Category in Panel~(b).
-The horizontal scale differs between the two panels, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which lowers the attainable chain length throughout the PCF corpus.}
+Each panel overlays both placebo distributions, each over $1{,}000$ draws.
+The orange outline randomizes the positions of steps within each workflow, and the blue outline reassigns steps, each carrying its execution label, across workflows within the same group, preserving workflow sizes; the grouping is the major SOC group in Panel~(a) and the PCF Category in Panel~(b).
+The two nulls nearly coincide in Panel~(a), where their means are $1.382$ and $1.382$, so the observed value does not depend on which margin is randomized; they separate in Panel~(b), where the reassignment null is the looser of the two.
+The horizontal scale differs between the panels, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which lowers the attainable chain length throughout the PCF corpus.}
 \end{spacing}
 \end{minipage}
 \end{figure}
