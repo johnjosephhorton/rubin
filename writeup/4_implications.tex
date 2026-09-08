@@ -1,6 +1,6 @@
 In this section we draw out three implications of AI chaining in the model.
 First, we show that chaining can overturn comparative advantage logic, in that a step that is cheaper to perform manually in isolation may nonetheless be executed by AI in the optimal configuration of production (Section~\ref{sec:comparative_advantage}).
-Second, we introduce a \emph{fragmentation index} that captures how dispersed a workflow's AI-suitable steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps (Section~\ref{sec:fragmentation}).
+Second, we introduce a \emph{fragmentation index} that captures how dispersed a workflow's AI-able steps are, and show that it approximates the cost of the firm's optimal AI strategy, so that the gains from AI depend on the arrangement of AI-able steps (Section~\ref{sec:fragmentation}).
 Third, we show that the marginal gains from improving AI quality are non-monotone, abruptly rising whenever improvements in AI quality make redesigning workflows worthwhile (Section~\ref{sec:nonlinear}).
 All proofs are collected in Appendix~\ref{app:omitted_proofs}.
 
@@ -57,14 +57,11 @@ Then:
 \end{proposition}
 
 Intuitively, part~(i) of Proposition~\ref{prop:ca_local} says that whether a step is executed by AI depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors.
-A step with identical characteristics can thus be automated in one workflow where it sits beside an AI-suitable run, yet remain manual in another where AI completes the neighboring steps only with low probability.
+A step with identical characteristics can thus be automated in one workflow where it sits beside an AI-able run, yet remain manual in another where AI completes the neighboring steps only with low probability.
 Where part~(i) says that being human-advantaged carries no guarantee of being executed one way or the other, part~(ii) says that whatever the answer at a given set of parameters, making a step and/or its neighbors friendlier to AI can only push it toward AI execution.
 A step that AI executes thus never reverts to manual as its neighbors become more reliable, and the same holds when the step's own reliability improves alongside theirs.
 
 To put this result into perspective, consider a workflow containing the following three steps: an expensive step that AI completes very reliably at position $k-1$, an \emph{AI-hard} step at $k$, and an \emph{AI-easy} step at $k+1$,\footnote{One can think of an AI-easy step as one that is ``exposed'' to AI, and an AI-hard step as ``unexposed.''}
-% \small (via \smalldisplay, which keeps the leading of the paragraph above): the three
-% triples come to 500pt on a 470pt measure at full size and the last one ran into the
-% right margin. \small brings them to 457pt and keeps all three parallel on one line.
 \begingroup\smalldisplay
 \[
 \bigl(\manualTime{k-1},\, \AItime{k-1},\, q_{k-1}\bigr) = (25,\,25,\,0.95), \quad
@@ -145,7 +142,7 @@ A single verification now covers two steps instead of none, which is enough to m
 \end{example}
 
 Note that the two arrangements contain exactly the same set of steps and differ only in the order in which those steps are performed, yet one of them uses no AI while the other hands half of its steps to AI.
-Dispersion of AI-friendly steps in the workflow can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer.
+Dispersion of AI-able steps in the workflow can therefore stop AI exposure from converting into AI execution altogether, rather than merely making that execution dearer.
 This is precisely the margin that we explore empirically later.
 Example~\ref{ex:fragmentation} isolates the arrangement of steps in the case that matters for what follows, where the steps AI performs poorly are ones the firm would not fold into a chain under any arrangement.\footnote{In the normalized case introduced below ($\AItime{i} = 1$), this holds whenever $\manualTime{h} \leq 1/q_h - 2$ for each AI-hard step $s_h$. Extending a chain over $s_h$ multiplies its expected cost by $1/q_h$ while saving only the cost of executing $s_h$ on its own, which requires $1/q_h \geq 1 + \min\{\manualTime{h}, 1/q_h\}$. The binding deviation is the one that instead merges the chains on either side of $s_h$, since it saves one of the two verifications those chains pay separately. It requires $1/q_h \geq 2 + \min\{\manualTime{h}, 1/q_h\}$, and the minimum must then be $\manualTime{h}$, which gives the condition above.}
 

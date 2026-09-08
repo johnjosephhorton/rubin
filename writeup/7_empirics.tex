@@ -7,12 +7,8 @@ The three predictions we test are:
 (1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; 
 (2) AI-execution of a step's neighbors raises the likelihood that the step itself is executed by AI; and 
 (3) workflows in which AI-exposed steps are more dispersed have fewer of those steps actually executed by AI.
-Each prediction is a statement about where a step sits in its workflow, so testing any of them requires an ordering of the steps, and no existing dataset records one.
-We therefore take the ordering from two independent sources, described below, and put the predictions to both.
-Neither source dominates the other, and we test each prediction on both corpora wherever the data allow, which is the case for Predictions~\#1 and~\#3.
-Prediction~\#2 can be tested only on the first, for a reason we give in Subsection~\ref{sec:DWA_prediction}.
 
-Our analysis requires three attributes of each step: its AI exposure status (exposed or unexposed to AI), which we interpret as the difficulty of the step for AI, its realized mode of execution (manual or AI-executed), and its position in the production sequence.
+Our analysis requires three attributes of each step: its AI exposure status (exposed or unexposed to AI), which is how we measure whether a step is AI-able in the sense of Section~\ref{sec:results}, its realized mode of execution (manual or AI-executed), and its position in the production sequence.
 We draw on five sources:
 \begin{enumerate}
     \item The O*NET 27.3 Database \citep{onet27_3},
@@ -21,9 +17,9 @@ We draw on five sources:
     \item A GPT-generated task ordering for each O*NET occupation,
     \item The Process Classification Framework (PCF) of the American Productivity \& Quality Center \citep{apqc_pcf}.
 \end{enumerate}
-The first three supply the step-level attributes, the fourth and the fifth the two orderings.
-Sources~1--4 form the O*NET corpus, in which a workflow is an occupation, and source~5 the PCF corpus, in which a workflow is a business process group and onto whose steps we carry the same labels.
-All of them are existing datasets apart from the task ordering, which we generate ourselves.
+The first four build our O*NET sample, in which a workflow is an O*NET occupation, while the fifth supplies a second corpus of workflows with native ordering of steps onto which we carry the same O*NET exposure and execution labels.
+All sources are existing datasets apart from the O*NET task ordering, which we generate ourselves.
+
 The O*NET database is the standard decomposition of work in the United States.
 It breaks each of more than 850 occupations into a list of constituent tasks, roughly 18,000 in total, and has served as the backbone of a large empirical literature on the task content of jobs and their exposure to new technologies \citep[e.g.,][]{autor2013putting, deming2017growing, brynjolfsson2018can, webb2020impact, felten2021occupational}.
 \cite{eloundou2023gpts} map these O*NET tasks to AI exposure by developing a rubric asking whether access to an LLM would reduce the time required to perform a task by at least half while preserving output quality, and applying it to every task using both human annotators and GPT-4.
@@ -35,9 +31,10 @@ O*NET does not record the order in which an occupation's tasks are performed, an
 We therefore construct the workflow orderings ourselves.
 For each O*NET occupation, we prompt GPT-5-mini \citep[through Expected Parrot;][]{Horton2024EDSL} with the occupation's complete set of tasks and ask it to determine the most reasonable order in which these tasks would be performed in practice.
 Generating sequences this way inevitably introduces some noise and arbitrary choices, most notably the wording of the prompt.
-We therefore validate the orderings in two ways.
+We therefore validate the orderings in three ways.
 First, we benchmark every result against placebos that randomly reshuffle task positions within occupations; the GPT-generated orderings differ sharply from these placebos, indicating that they capture meaningful workflow structure.
 Second, the orderings overlap substantially across ten deliberately varied alternative prompts, and our headline results closely mirror those under the main prompt when re-run on these alternative sequences (Appendix~\ref{app:gptPrompts_robustness}).
+Third, we test our sequencing procedure on two corpora ordered from actual work practice rather than by a language model, the PCF and a set of process-mining event logs, and it recovers the orderings in both to a substantial degree (Appendix~\ref{app:external_validation}).
 
 The PCF, finally, catalogues business processes, with APQC's member working groups recording the activities that compose a process in the order practitioners perform them.
 It is our second corpus of workflows, and the ordering it supplies is documented rather than imputed.
@@ -45,8 +42,8 @@ Since AI exposure and execution are defined on O*NET tasks, we carry those label
 Pooling APQC's Cross-Industry framework with its industry-specific ones leaves $13{,}482$ steps in $525$ process groups.
 The two corpora trade off against each other rather than ranking.
 O*NET spans the whole occupational structure and carries its exposure and execution labels natively, but its orderings are imputed.
-The PCF's orderings are recorded by practitioners, but it covers operational business processes rather than the economy at large, and the label transfer is lossy, leaving $12\%$ of PCF steps AI-able against $44\%$ in the O*NET sample.
-That loss is what confines the PCF to Predictions~\#1 and~\#3, since Prediction~\#2 needs the same step observed with different execution outcomes across workflows.
+The PCF's orderings are recorded by practitioners, but it covers operational business processes rather than the economy at large, and the label transfer is lossy, leaving $12\%$ ($4\%$) of PCF steps AI-exposed (AI-executed) against $44\%$ ($13\%$) in the O*NET sample.
+That loss confines the PCF to Predictions~\#1 and~\#3, since Prediction~\#2 requires a much more demanding sample restriction.
 Appendices~\ref{app:data_prep} and~\ref{app:external_validation} respectively give the construction details of the O*NET and PCF samples.
 
 The structure of our theoretical framework closely aligns with the structure of the O*NET dataset.
@@ -58,6 +55,7 @@ In the rest of this section, we use the terms step, O*NET task, and task interch
 We similarly use the terms workflow and occupation interchangeably without restating the mapping each time, and note that in the PCF corpus a workflow is a process group rather than an occupation.
 
 
+
 \subsection{Prediction \#1: Tendency to Have Runs of Consecutive AI-executed Tasks}
 \label{sec:chainLength_prediction}
 
@@ -65,21 +63,16 @@ The first prediction of the model that we test is that AI-executed steps appear 
 This prediction follows directly from Definition~\ref{def:ai_chain} on how AI chains are formed in the model.
 If firms deploy AI, chaining can lower costs because the worker verifies the output only once, at the end of the chain, rather than after every step.
 
-We begin with the O*NET sample, where a workflow is an occupation, and take the same exercise to the PCF corpus at the end of the subsection.
+We begin with the O*NET sample.
 We compute the observed average AI chain length and benchmark it against two randomization placebos.
 First, we permute task positions within each occupation's workflow.
 Second, we reassign tasks, each carrying its AI-execution label, randomly across occupations within the same major SOC group, preserving each occupation's task count and randomizing task positions within each occupation.
 The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains.
 
 Panel~(a) of Figure~\ref{fig:aiChains_graphs_def1} overlays the two placebo distributions of average AI chain length, one across 1{,}000 task position permutations and one across 1{,}000 task AI-execution label reassignment permutations, and compares both with the observed mean AI chain length, marked by the dashed vertical line.
-The two nulls are almost indistinguishable, so the comparison does not turn on which margin is randomized.
-We observe that the average AI chain length in the data is noticeably larger than in both placebo distributions.
+We observe that the average AI chain length in the data is 1.45, and is noticeably larger than in both placebo distributions.
 This indicates that AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
 At the same time, the modest magnitude of 1.45 indicates that long AI chains remain rare, perhaps reflecting the early stage of AI adoption; our model predicts chains to lengthen as AI quality improves.
-% Two corpora, one figure, one panel each. Both placebo distributions are overlaid within a
-% panel rather than given a panel apiece: in O*NET the two nulls sit on top of each other
-% (means 1.3823 and 1.3818, a gap of 0.04 standard deviations), so drawing them separately
-% spent half the figure showing the same distribution twice.
 \begin{figure}[!t]
 \caption{Average Length of AI Chains: Actual versus Placebo Datasets}
 \label{fig:aiChains_graphs_def1}
@@ -103,27 +96,20 @@ At the same time, the modest magnitude of 1.45 indicates that long AI chains rem
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Red dashed lines show the observed average AI chain length in the actual dataset.
-Panel~(a) uses the main O*NET sample, in which a workflow is an occupation and the ordering is the GPT-imputed task sequence; Panel~(b) uses APQC's Process Classification Framework, in which a workflow is a PCF Process Group and the ordering is the one documented by practitioners, with exposure and execution labels transferred from each step's nearest O*NET task.
+Panel~(a) uses the O*NET sample, in which a workflow is an occupation and the ordering is the GPT-imputed task sequence; Panel~(b) uses APQC's Process Classification Framework, in which a workflow is a PCF Process Group and the ordering is the one documented by practitioners, with exposure and execution labels transferred from each step's nearest O*NET task.
 Each panel overlays both placebo distributions, each over $1{,}000$ draws.
 The orange histogram randomizes the positions of steps within each workflow, and the blue histogram reassigns steps, each carrying its execution label, across workflows within the same group, preserving workflow sizes; the grouping is the major SOC group in Panel~(a) and the PCF Category in Panel~(b).
-The two nulls nearly coincide in Panel~(a), where their means are $1.382$ and $1.382$, so the observed value does not depend on which margin is randomized; they separate in Panel~(b), where the reassignment null is the looser of the two.
 The horizontal scale differs between the panels, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which lowers the attainable chain length throughout the PCF corpus.}
 \end{spacing}
 \end{minipage}
 \end{figure}
 
-This exercise also mitigates two potential concerns regarding the structure of our dataset.
-Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels distributed randomly across occupations, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
-Instead, it lies at the extreme tail of both distributions, suggesting that the GPT-generated sequences capture genuine workflow structure and that the clustering of AI-executed tasks within occupations is systematic rather than chance.
-
-We now repeat the exercise on the PCF corpus, substituting its own units throughout, with a process group standing in for an occupation, the activity sequence practitioners documented for the GPT-imputed task sequence, and the PCF Category for the major SOC group within which the second placebo reassigns.
+Next we repeat the exercise on the PCF corpus, substituting its own units throughout, with a process group standing in for an occupation, the activity sequence practitioners documented for the GPT-imputed task sequence, and the PCF Category for the major SOC group within which the second placebo reassigns.
 Nothing else about the test changes, and Panel~(b) of Figure~\ref{fig:aiChains_graphs_def1} reports the same verdict.
 The average AI chain there spans $1.16$ steps, against $1.45$ in O*NET.
-The smaller magnitude is mechanical, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which leaves far less opportunity for long runs to form and puts the ceiling on the statistic well below the main sample's.
+The smaller magnitude is mechanical, since the AI execution in PCF is thinner than in O*NET, which leaves far less opportunity for long runs to form and puts the ceiling on the statistic well below the main sample's.
 What the corpus can still ask is whether the runs that do form are longer than the same labels arranged at random along the same sequences, and they are.
-Against $1{,}000$ draws of a within-group step-order reshuffle the null averages $1.09$ with a standard deviation of $0.01$, and the observed value sits at the 100th percentile ($z = 6.2$); against a within-category reassignment preserving group size the null averages $1.06$ and the observed value again sits at the 100th percentile ($z = 10.2$).
 Because no language model placed these steps in order, the contiguity here is a property of the documented workflow and not of our sequencing procedure.
-Appendix~\ref{app:external_validation} reports the exercise in full.
 
 
 
@@ -137,17 +123,12 @@ For example, step X is more likely to be executed by AI in the first occupation 
 
 \input{plots/TikZ_visualization/same_task_different_occupations.tex}
 
-Testing this prediction requires identifying steps that appear across different occupations.
+Testing this prediction requires identifying steps that appear across different workflows.
 Because O*NET tasks are occupation-specific, no single task is shared across occupations in the data.
 To work around this, we rely on O*NET's broader categories of Detailed Work Activities (DWAs), which group conceptually similar tasks across occupations.
-In our main sample, we drop tasks that are mapped to multiple DWAs.
+In our main O*NET sample, we drop tasks that are mapped to multiple DWAs.
 We further restrict attention to DWAs that contain tasks appearing in more than one occupation.
 Together, these restrictions reduce the sample to 10{,}708 tasks spread across 1{,}748 DWAs.
-
-This is also the one prediction we test on the O*NET corpus alone, and the reason is a property of the label transfer rather than a judgment about the two orderings.
-The test needs the same step observed in several workflows with \emph{different} execution outcomes, whereas a label carried onto a PCF step is a deterministic function of the O*NET task it was matched to, so the variation the test reads is largely matched away.
-Restricting the PCF to steps that clear the similarity threshold and whose matched task maps to a single DWA appearing in more than one process group leaves $981$ observations across $137$ DWAs, of which only $9$ contain both an AI-executed and a non-executed step, against the $1{,}748$ DWAs above.
-The matched corpus is thus short of the comparison this test requires by roughly an order of magnitude, and Appendix~\ref{app:external_validation} reports the counts.
 
 We treat the remaining tasks as instances of the same step appearing across different occupations and estimate the following regression\footnote{In a robustness exercise we refine our definition of ``similar'' tasks.
 The resulting estimates closely mirror the patterns observed in the full sample in both sign and magnitude.
@@ -215,6 +196,8 @@ Overall, the results indicate that AI execution of immediate neighbors of the fo
 This aligns with the relatively short average AI chain length observed in the data (mean length 1.45 reported in Subsection~\ref{sec:chainLength_prediction}), implying that tasks two positions away rarely fall in the same chain as the focal task.
 It is possible that with improvements in AI quality, chains become longer and execution status of more distant neighbors becomes more relevant for the execution mode of the focal task.
 
+For this prediction, we do not attempt a counterpart on the PCF corpus, where too few steps are observed with both execution outcomes to support the comparison. See Appendix~\ref{app:external_validation} for details.
+
 
 
 \subsection{Prediction \#3: Dispersion of AI-able Steps Lowers AI Execution}
@@ -222,16 +205,10 @@ It is possible that with improvements in AI quality, chains become longer and ex
 
 The two tests so far were local, in that they operated over a small window around a step.
 The last prediction of the model that we test is how the positioning of steps over the whole workflow matters for AI execution.
-Specifically, we test if realized AI execution in a production sequence is shaped by how clustered or dispersed its AI-able steps are, and not by their AI exposure status alone.
+Specifically, we test if realized AI execution in a production sequence is shaped by how clustered or dispersed its AI-exposed steps are, and not by how many of them are exposed alone.
 This is the empirical content of Proposition~\ref{prop:fragmentation}.
 
-A workflow-level test asks more of an ordering than a step-level one does, and it does so in a particular way.
-A step placed one position too early or too late shifts only the immediate neighborhood on which Predictions~\#1 and~\#2 are built, moving a handful of adjacency pairs and leaving the rest of the workflow as it was.
-That same misplacement can split a run of AI-able steps in two, however, changing the implied fragmentation of AI-able steps over the entire workflow rather than of one part of it.
-Because the measure is a property of the whole arrangement, it inherits every error in that arrangement and not only the local ones.
-This is the prediction on which the difference between our two orderings should tell most, and we report it on both.
-
-To measure the fragmentation of AI-able steps in the data, we adapt the fragmentation index of Section~\ref{sec:fragmentation} to our empirical setting.
+To measure the fragmentation of AI-exposed steps in the data, we adapt the fragmentation index of Section~\ref{sec:fragmentation} to our empirical setting.
 The \emph{empirical fragmentation index} (EFI) is the ratio of the number of \emph{potential tasks}, as defined by our theoretical model, to the total number of steps, which is fixed and is measured by the raw count of steps in that workflow.
 Consider a workflow with five steps.
 If none of the five steps are exposed to AI, then the number of tasks in the theoretical sense is five, and the EFI equals $5/5 = 1$.
@@ -241,15 +218,15 @@ It therefore captures the arrangement of a workflow's AI-able steps, which is wh
 Since $\manualTime{i} = 1$ satisfies the hypothesis of \eqref{eq:fragmentation_closed_form}, the EFI is exactly one minus the share of adjacent AI-able pairs in the workflow, so it inherits the ordering that expression establishes.}
 
 Two components govern the empirical fragmentation index, and only one is the subject of Prediction~\#3.
-Write $m_w$ for the number of steps in a workflow, $k_w$ for how many of them are AI-able, and $r_w$ for the number of maximal blocks of consecutive AI-able steps they form, each block being one potential AI chain.
+Write $m_w$ for the number of steps in a workflow, $k_w$ for how many of them are AI-exposed, and $r_w$ for the number of maximal blocks of consecutive AI-exposed steps they form, each block being one potential AI chain.
 EFI decomposes exactly as
 \begin{equation}
     \text{EFI}_w \;=\; \frac{m_w - (k_w - r_w)}{m_w} \;=\; 1 - \underbrace{\frac{k_w}{m_w}}_{\text{exposure level}} \;+\; \underbrace{\frac{r_w}{m_w}}_{\text{arrangement}},
     \label{eq:efi_decomposition}
 \end{equation}
 where the last term is the object of interest.
-Holding $k_w$ fixed, $r_w$ runs from $1$ when the AI-able steps are perfectly clustered to $k_w$ when no two of them are adjacent.
-To read the index as a measure of dispersion, we must control for the share of AI-able steps, which nets out the level term and leaves the arrangement component.
+Holding $k_w$ fixed, $r_w$ runs from $1$ when the AI-exposed steps are perfectly clustered to $k_w$ when no two of them are adjacent.
+To read the index as a measure of dispersion, we must control for the share of AI-exposed steps, which nets out the level term and leaves the arrangement component.
 We therefore estimate the following regression:
 \begin{equation}
 \begin{aligned}
@@ -263,7 +240,7 @@ The model predicts that workflows with higher AI exposure should have a higher s
 
 Table~\ref{tab:fragmentation_index_regression_exposure} reports the results.
 \begin{table}[!t]
-    \caption{Role of AI-able Step Fragmentation in Determining AI Execution Outcomes}
+    \caption{Role of AI-exposed Step Fragmentation in Determining AI Execution Outcomes}
     \label{tab:fragmentation_index_regression_exposure}
     \footnotesize
     \centering
@@ -289,7 +266,7 @@ The fragmentation coefficient is where the two samples part company.
 In the O*NET sample it carries the predicted negative sign in all three specifications, but the point estimates are small and none is statistically distinguishable from zero.
 On O*NET occupations therefore we do not detect the workflow-level channel, but the estimates are not precise enough to rule it out either.
 A modest fragmentation effect would go undetected in this sample.
-On APQC's documented sequences, however, the coefficient is negative and statistically significant in all three columns, at $-0.35$, $-0.26$ and $-0.34$, so that process groups whose AI-able steps are more scattered convert less of their exposure into execution.
+On APQC's documented sequences, however, the coefficient is negative and statistically significant in all three columns, at $-0.35$, $-0.26$ and $-0.34$, so that process groups whose AI-exposed steps are more scattered convert less of their exposure into execution.
 
 That the channel is detected in the PCF and not in O*NET is what a test built on arrangement would lead one to expect.
 The fragmentation index reads the ordering of a workflow as a whole, so it stands its best chance of detection where that ordering is recorded rather than inferred, which is the PCF's advantage over the imputed sequences and the reason we carry both corpora through this section.
@@ -297,16 +274,15 @@ The trade-off noted earlier cuts the other way here.
 The $525$ process groups of the PCF cover a smaller part of economic activity than O*NET's occupational structure, and they inherit their labels through a lossy match, so the channel is documented on operational business processes such as procurement, order management, after-sales service, inventory, and regulatory compliance rather than across the economy.
 Neither result subsumes the other, and we read them together as saying that the arrangement channel is present where the arrangement is measured well enough to see it.
 
-We must note that what we document are associations that speak to the mechanism the model describes, and not causal effects.
-Measuring the latter would require exogenous variation in how much of a workflow is handed to AI and/or in how that workflow is arranged.
-Firms choose the two together, and in the workflows considered in this section nothing separates them.
+We must note that what we document in these exercises are associations that speak to the mechanism the model describes, and not causal effects.
+Measuring the latter would require exogenous variation in how much of a workflow is handed to AI and/or in how that workflow is arranged, which is not what we work with.
 
 
 \subsection{Robustness Tests}
 \label{sec:robustness}
 
-Each of the three tests above is defined over adjacent steps, so all of them rest on the task ordering rather than on task content alone, and Prediction~\#3 depends on that ordering most heavily, for the reason given in Subsection~\ref{sec:fragmentation_prediction}.
-Two features of how we obtain that ordering warrant scrutiny, and we address each with a separate exercise.
+Each of the three tests above is defined over adjacent steps, so all of them rest on the task ordering rather than on task content alone.
+Two features of how we obtain that ordering for the O*NET dataset warrant scrutiny, and we address each with a separate exercise.
 
 The first concern is the prompt.
 A single prompt produces a single set of sequences, so if the phrasing of our request is what organizes the tasks, the resulting ordering might be a property of our instructions rather than of the work itself.
