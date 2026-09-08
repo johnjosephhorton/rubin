@@ -65,7 +65,8 @@ The first prediction of the model that we test is that AI-executed steps appear 
 This prediction follows directly from Definition~\ref{def:ai_chain} on how AI chains are formed in the model.
 If firms deploy AI, chaining can lower costs because the worker verifies the output only once, at the end of the chain, rather than after every step.
 
-To test this, we compute the observed average AI chain length in each corpus and benchmark it against two randomization placebos.
+We begin with the O*NET sample, where a workflow is an occupation, and take the same exercise to the PCF corpus at the end of the subsection.
+We compute the observed average AI chain length and benchmark it against two randomization placebos.
 First, we permute task positions within each occupation's workflow.
 Second, we reassign tasks, each carrying its AI-execution label, randomly across occupations within the same major SOC group, preserving each occupation's task count and randomizing task positions within each occupation.
 The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains.
@@ -136,7 +137,8 @@ This exercise also mitigates two potential concerns regarding the structure of o
 Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels distributed randomly across occupations, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
 Instead, it lies at the extreme tail of both distributions, suggesting that the GPT-generated sequences capture genuine workflow structure and that the clustering of AI-executed tasks within occupations is systematic rather than chance.
 
-The same test on the PCF corpus returns the same verdict, and Panel~(b) of Figure~\ref{fig:aiChains_graphs_def1} reports it.
+We now repeat the exercise on the PCF corpus, substituting its own units throughout, with a process group standing in for an occupation, the activity sequence practitioners documented for the GPT-imputed task sequence, and the PCF Category for the major SOC group within which the second placebo reassigns.
+Nothing else about the test changes, and Panel~(b) of Figure~\ref{fig:aiChains_graphs_def1} reports the same verdict.
 The average AI chain there spans $1.16$ steps, against $1.45$ in O*NET.
 The smaller magnitude is mechanical, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which leaves far less opportunity for long runs to form and puts the ceiling on the statistic well below the main sample's.
 What the corpus can still ask is whether the runs that do form are longer than the same labels arranged at random along the same sequences, and they are.
