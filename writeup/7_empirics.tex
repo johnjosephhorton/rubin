@@ -70,33 +70,64 @@ First, we permute task positions within each occupation's workflow.
 Second, we reassign tasks, each carrying its AI-execution label, randomly across occupations within the same major SOC group, preserving each occupation's task count and randomizing task positions within each occupation.
 The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains.
 
-Figure~\ref{fig:aiChains_graphs_def1} shows the placebo distribution of average AI chain length across 1{,}000 task position permutations (left) and 1{,}000 task AI-execution label reassignment permutations (right), and compares each with the observed mean AI chain length, marked by the dashed vertical line in each panel.
+Panel~(a) of Figure~\ref{fig:aiChains_graphs_def1} shows the placebo distribution of average AI chain length across 1{,}000 task position permutations (left) and 1{,}000 task AI-execution label reassignment permutations (right), and compares each with the observed mean AI chain length, marked by the dashed vertical line in each histogram.
 We observe that the average AI chain length in the data is noticeably larger than in both placebo distributions.
 This indicates that AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
 At the same time, the modest magnitude of 1.45 indicates that long AI chains remain rare, perhaps reflecting the early stage of AI adoption; our model predicts chains to lengthen as AI quality improves.
+% Two corpora, one figure. The panel letters run over the corpora, since that is the
+% comparison the subsection is making; the two placebos are the columns within each
+% panel and are named by the header above each column and by each histogram's own
+% legend. The columns are plain minipages rather than nested subfigures, which would
+% need subsubcaption and would number as (a1), (a2).
 \begin{figure}[!t]
 \caption{Average Length of AI Chains: Actual versus Placebo Datasets}
 \label{fig:aiChains_graphs_def1}
 
 \centering
-\begin{subfigure}[b]{0.49\textwidth}
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{O*NET Occupations, GPT-imputed Ordering}
+    \label{fig:aiChains_onet}
+    \begin{minipage}[t]{0.49\textwidth}
         \centering
-        \subcaption{Random Task Position Assignment}
+        {\fontsize{9.5pt}{10pt}\selectfont Random Task Position Assignment}\par\vspace{0.25em}
         \includegraphics[width=\textwidth]{plots/aiChain_length_count/aiChains_chainLength_taskPositionReshuffle_definition1.png}
-    \end{subfigure}
+    \end{minipage}
     \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
+    \begin{minipage}[t]{0.49\textwidth}
         \centering
-        \subcaption{Random Task Execution Label}
+        {\fontsize{9.5pt}{10pt}\selectfont Random Task Execution Label}\par\vspace{0.25em}
         \includegraphics[width=\textwidth]{plots/aiChain_length_count/aiChains_chainLength_taskAssignmentReshuffle_definition1.png}
-    \end{subfigure}
+    \end{minipage}
+\end{subfigure}
+
+\vspace{1.5em}
+
+\begin{subfigure}[b]{\textwidth}
+    \centering
+    \subcaption{PCF Process Groups, Practitioner-documented Ordering}
+    \label{fig:aiChains_pcf}
+    \begin{minipage}[t]{0.49\textwidth}
+        \centering
+        {\fontsize{9.5pt}{10pt}\selectfont Random Step Position Assignment}\par\vspace{0.25em}
+        \includegraphics[width=\textwidth]{plots/apqc_chainLength_placebo/aiChains_chainLength_stepPositionReshuffle_apqc.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.49\textwidth}
+        \centering
+        {\fontsize{9.5pt}{10pt}\selectfont Random Step Execution Label}\par\vspace{0.25em}
+        \includegraphics[width=\textwidth]{plots/apqc_chainLength_placebo/aiChains_chainLength_stepAssignmentReshuffle_apqc.png}
+    \end{minipage}
+\end{subfigure}
 
 \par\vspace{\fignotesskip}
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Red dashed lines show the observed average AI chain length in the actual dataset.
-Panel (a) shows the histogram of the average AI chain length for 1,000 placebo datasets in which the positions of tasks within each occupation are randomized.
-Panel (b) shows the corresponding histogram for 1,000 placebo datasets in which tasks, each carrying its execution label, are randomly reassigned across occupations within the same major SOC group, preserving occupation sizes.}
+Panel~(a) uses the main O*NET sample, in which a workflow is an occupation and the ordering is the GPT-imputed task sequence; Panel~(b) uses APQC's Process Classification Framework, in which a workflow is a PCF Process Group and the ordering is the one documented by practitioners, with exposure and execution labels transferred from each step's nearest O*NET task.
+Within each panel, the left histogram reports 1{,}000 placebo datasets in which the positions of steps within each workflow are randomized, and the right histogram 1{,}000 placebo datasets in which steps, each carrying its execution label, are randomly reassigned across workflows within the same group, preserving workflow sizes.
+The grouping is the major SOC group in Panel~(a) and the PCF Category in Panel~(b).
+The horizontal scale differs between the two panels, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which lowers the attainable chain length throughout the PCF corpus.}
 \end{spacing}
 \end{minipage}
 \end{figure}
@@ -105,7 +136,7 @@ This exercise also mitigates two potential concerns regarding the structure of o
 Were the GPT-generated workflow sequences arbitrary, or the Anthropic execution labels distributed randomly across occupations, the observed average AI chain length would be a typical draw from the corresponding placebo distribution.
 Instead, it lies at the extreme tail of both distributions, suggesting that the GPT-generated sequences capture genuine workflow structure and that the clustering of AI-executed tasks within occupations is systematic rather than chance.
 
-The same test on the PCF corpus returns the same verdict.
+The same test on the PCF corpus returns the same verdict, and Panel~(b) of Figure~\ref{fig:aiChains_graphs_def1} reports it.
 The average AI chain there spans $1.16$ steps, against $1.45$ in O*NET.
 The smaller magnitude is mechanical, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which leaves far less opportunity for long runs to form and puts the ceiling on the statistic well below the main sample's.
 What the corpus can still ask is whether the runs that do form are longer than the same labels arranged at random along the same sequences, and they are.
