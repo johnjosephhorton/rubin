@@ -293,10 +293,7 @@ In Appendix~\ref{app:frequency_robustness} we restrict the sample to progressive
 Confidence intervals widen as the restriction shrinks the sample, since dropping infrequent tasks also removes AI-executed ones, which are already scarce to begin with, but the direction of the headline results remains unaffected.
 This raises our confidence that our findings do not hinge on the specific way that O*NET provides its occupation taxonomy.
 
-The two robustness tests above, however, still rely on LLM-generated orderings, so neither can establish that the imputed order corresponds to how work steps are actually sequenced.
-To validate our LLM sequencing approach externally, in Appendix~\ref{app:external_validation} we apply it to two corpora of production processes whose orderings come from actual work practice rather than from a language model.
-The first is the APQC's PCF, the second of the two corpora we have carried through this section.
-The second is a collection of process-mining event logs from the 4TU.ResearchData repository \citep{roadfines_log, sepsis_log, bpi2017_log, bpi2020_log}, covering police, hospital, banking, and university administrative processes, where the order of work is observed in the recorded traces rather than documented after the fact.
-In both cases we shuffle the steps of a process and ask the LLM to restore their order, under our main sequencing prompt and each of the ten alternatives.
-The LLM recovers a large majority of the benchmark precedences in both corpora, the documented and the observed benchmark agree closely with each other, and neither result moves much across prompts.
-The overlap is substantial rather than exact, which is what one would expect of a procedure that infers an order from task descriptions alone, but it is systematic enough that our imputed sequences cannot be read as an artifact of the instrument.
+The two robustness tests above, however, still rely on LLM-generated orderings, so neither can establish that the imputed order matches how work is actually sequenced.
+In Appendix~\ref{app:external_validation} we therefore test the sequencing procedure against two benchmarks whose order is known, the PCF and eight process-mining event logs from the 4TU.ResearchData repository \citep{roadfines_log, sepsis_log, bpi2017_log, bpi2020_log}, which record police, hospital, banking, and university administrative processes as they were carried out.
+When we shuffle the steps of each process and ask the LLM to restore their order, under the main prompt and each of the ten alternatives, it recovers a large majority of the benchmark precedences, the documented and observed benchmarks agree closely, and neither result moves much across prompts.
+The overlap is substantial rather than exact, as one would expect of a procedure that infers order from task descriptions alone, but it is systematic enough that our imputed sequences cannot be read as an artifact of the instrument.
