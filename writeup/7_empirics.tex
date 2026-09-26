@@ -5,7 +5,7 @@ The long-run margins of Section~\ref{sec:longrun} require firms to reorganize an
 What we can observe is where AI is being deployed inside workflows as they are currently arranged, which is precisely what the short-run problem speaks to.
 The three predictions we test are: 
 (1) AI-executed steps tend to appear next to each other in the production sequence, forming AI chains; 
-(2) AI-execution of a step's neighbors raises the likelihood that the step itself is executed by AI; and 
+(2) a step is more likely to be executed by AI when its neighbors are AI-executed; and 
 (3) workflows in which AI-exposed steps are more dispersed have fewer of those steps actually executed by AI.
 
 Our analysis requires three attributes of each step: its AI exposure status (exposed or unexposed to AI), which is how we measure whether a step is AI-able in the sense of Section~\ref{sec:results}, its realized mode of execution (manual or AI-executed), and its position in the production sequence.
@@ -17,30 +17,33 @@ We draw on five sources:
     \item A GPT-generated task ordering for each O*NET occupation,
     \item The Process Classification Framework (PCF) of the American Productivity \& Quality Center \citep{apqc_pcf}.
 \end{enumerate}
-The first four build our O*NET sample, in which a workflow is an occupation, and the fifth builds our PCF sample, in which a workflow is a process group with a native ordering of steps.
+The first four build our O*NET sample, in which a workflow is an occupation, and the fifth builds our PCF sample, in which a workflow is a process group.
 All sources are existing (and publicly available) datasets apart from the O*NET task ordering, which we generate ourselves.
-Appendices~\ref{app:data_prep} and~\ref{app:apqc_fragmentation_top} respectively give the construction details of the O*NET and PCF samples.
 
 The O*NET database is the standard decomposition of work in the United States.
 It breaks each of more than 850 occupations into a list of constituent tasks, roughly 18,000 in total, and has served as the backbone of a large empirical literature on the task content of jobs and their exposure to new technologies \citep[e.g.,][]{autor2013putting, deming2017growing, brynjolfsson2018can, webb2020impact, felten2021occupational}.
 \cite{eloundou2023gpts} map these O*NET tasks to AI exposure by developing a rubric asking whether access to an LLM would reduce the time required to perform a task by at least half while preserving output quality, and applying it to every task using both human annotators and GPT-4.
-We use their human-generated labels and treat their E1 and E2 category as exposed to AI and the remaining as unexposed.
+We use their human-generated labels and treat tasks in their E1 and E2 categories as exposed to AI and all other tasks as unexposed.
 Whereas these labels capture what AI could in principle do, the Anthropic Economic Index \citep{handa2025economictasksperformedai} captures what AI actually does.
 It maps millions of conversations between users and Claude, Anthropic's AI chatbot, to O*NET tasks and classifies each conversation by whether the interaction augments or automates the task, providing a task-level measure of realized AI usage.\footnote{One feature of the data shapes how we use it throughout. The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow. We therefore do not distinguish the two labels in what follows and treat both as indicating AI execution. Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.}
 
-The PCF catalogues business processes, with APQC's member working groups recording the activities that compose a process in the order practitioners perform them.
+The PCF catalogues business processes, with APQC's member working groups recording the activities that compose each process in the order they are performed.
 Pooling APQC's Cross-Industry framework with its industry-specific ones leaves $13{,}482$ steps in $525$ process groups.
 Since AI exposure and execution are defined on O*NET tasks, we carry those labels onto PCF steps by matching each step to its nearest O*NET task using natural language embeddings, keeping unmatched steps in sequence and coding them as neither AI-exposed nor AI-executed.
-The label transfer is lossy, leaving $12\%$ ($4\%$) of PCF steps AI-exposed (AI-executed) against $44\%$ ($13\%$) in the O*NET sample (which is also why we run Prediction~\#2 on the O*NET sample alone; see Subsection~\ref{sec:DWA_prediction}).
+The label transfer is lossy, leaving $12\%$ ($4\%$) of PCF steps AI-exposed (AI-executed) against $44\%$ ($13\%$) in the O*NET sample.
 
 The two corpora complement each other in our analysis.
-The PCF's workflow orderings are recorded by practitioners, but the PCF covers only operational business processes.
+The PCF's workflow orderings are recorded by practitioners and thus native to the dataset.
+However, the PCF covers only operational business processes, and its AI exposure and execution content is thin because of the lossy PCF--O*NET match.
 O*NET, on the other hand, has broader coverage of economic activity but lists an occupation's tasks without the order in which they are performed.
 To make the O*NET dataset suitable for our analysis, we construct workflow orderings for it by prompting GPT-5-mini \citep[through Expected Parrot;][]{Horton2024EDSL} with each occupation's complete set of tasks and asking for the most reasonable order in which they would be performed in practice.
-Because this procedure requires arbitrary choices, we validate the orderings in two ways.
+Appendices~\ref{app:data_prep} and~\ref{app:external_validation} respectively give the construction details of the O*NET and PCF samples.
+
+Because each of our tests is defined over adjacent steps, the O*NET results, unlike the PCF results, rest on LLM-generated orderings, and we probe them in three robustness exercises.
 First, we show that the task orderings, and by extension our conclusions, change little across ten deliberately varied alternative prompts (Appendix~\ref{app:gptPrompts_robustness}).
-Second, applied to the PCF and to eight process-mining event logs whose orderings are known, we show that our sequencing procedure restores the correct workflow order to a substantial degree when the ground truth is known (Appendix~\ref{app:external_validation}).
-These checks increase our confidence that the conclusions we draw from the O*NET sample are not artifacts of our LLM prompting and task sequencing approach.
+Second, we show that, applied to the PCF and to eight process-mining event logs \citep{roadfines_log, sepsis_log, bpi2017_log, bpi2020_log} whose orderings are known, our sequencing procedure restores the correct workflow order to a substantial degree against ground truth (Appendix~\ref{app:external_validation}).
+Third, restricting the O*NET sample to progressively more frequently performed tasks, which drops rarely performed ``filler'' tasks that can separate steps adjacent in practice, leaves our conclusions unchanged (Appendix~\ref{app:frequency_robustness}).
+Our O*NET results are therefore unlikely to be artifacts of the prompt, the sequencing instrument, or the way O*NET catalogues tasks.
 
 The structure of our theoretical framework closely aligns with the structure of both datasets.
 Each production step in the model corresponds to a PCF step or an O*NET task, and each workflow corresponds to the model's step sequence.
@@ -126,7 +129,6 @@ To work around this, we rely on O*NET's broader categories of Detailed Work Acti
 In our main O*NET sample, we drop tasks that are mapped to multiple DWAs.
 We further restrict attention to DWAs that contain tasks appearing in more than one occupation.
 Together, these restrictions reduce the sample to 10{,}708 tasks spread across 1{,}748 DWAs.
-
 We treat the remaining tasks as instances of the same step appearing across different occupations and estimate the following regression\footnote{In a robustness exercise we refine our definition of ``similar'' tasks.
 The resulting estimates closely mirror the patterns observed in the full sample in both sign and magnitude.
 See Appendix~\ref{app:additional_robustness} for details.}:
@@ -193,7 +195,7 @@ Overall, the results indicate that AI execution of immediate neighbors of the fo
 This aligns with the relatively short average AI chain length observed in the data (mean length 1.45 reported in Subsection~\ref{sec:chainLength_prediction}), implying that tasks two positions away rarely fall in the same chain as the focal task.
 It is possible that with improvements in AI quality, chains become longer and execution status of more distant neighbors becomes more relevant for the execution mode of the focal task.
 
-For this prediction, we do not attempt a counterpart on the PCF corpus, where too few steps are observed with both execution outcomes to support the comparison. See Appendix~\ref{app:external_validation} for details.
+We do not attempt a counterpart on the PCF corpus for this prediction, because there are too few steps observed with both execution outcomes to support the comparison in the PCF corpus. See Appendix~\ref{app:external_validation} for details.
 
 
 
@@ -273,27 +275,3 @@ Neither result subsumes the other, and we read them together as saying that the 
 
 We must note that what we document in these exercises are associations that speak to the mechanism the model describes, and not causal effects.
 Measuring the latter would require exogenous variation in how much of a workflow is handed to AI and/or in how that workflow is arranged, which is not what we work with.
-
-
-\subsection{Robustness Tests}
-\label{sec:robustness}
-
-Each of the three tests above is defined over adjacent steps, so all of them rest on the task ordering rather than on task content alone.
-Two features of how we obtain that ordering for the O*NET dataset warrant scrutiny, and we address each with a separate exercise.
-
-The first concern is the prompt.
-A single prompt produces a single set of sequences, so if the phrasing of our request is what organizes the tasks, the resulting ordering might be a property of our instructions rather than of the work itself.
-In Appendix~\ref{app:gptPrompts_robustness} we re-generate the O*NET task sequences under ten alternative prompts that vary the framing and the ordering logic, and re-run all three tests on each of the resulting datasets.
-The estimates move within a narrow band, and none of the conclusions reported above turns on which prompt is used.
-This shows that our findings are not artifacts of the specific prompt or the sequencing logic used to order tasks.
-
-The second concern is the taxonomy of the O*NET dataset itself.
-O*NET catalogues all tasks an occupation involves, including those that are rarely performed, and such tasks might act as ``filler'' steps that lengthen a workflow and separate steps that are adjacent in practice.
-In Appendix~\ref{app:frequency_robustness} we restrict the sample to progressively more frequently-executed tasks, which makes the surviving sequences more workflow-like, and recover the same patterns for all three predictions.
-Confidence intervals widen as the restriction shrinks the sample, since dropping infrequent tasks also removes AI-executed ones, which are already scarce to begin with, but the direction of the headline results remains unaffected.
-This raises our confidence that our findings do not hinge on the specific way that O*NET provides its occupation taxonomy.
-
-The two robustness tests above, however, still rely on LLM-generated orderings, so neither can establish that the imputed order matches how work is actually sequenced.
-In Appendix~\ref{app:external_validation} we therefore test the sequencing procedure against two benchmarks whose order is known, the PCF and eight process-mining event logs from the 4TU.ResearchData repository \citep{roadfines_log, sepsis_log, bpi2017_log, bpi2020_log}, which record police, hospital, banking, and university administrative processes as they were carried out.
-When we shuffle the steps of each process and ask the LLM to restore their order, under the main prompt and each of the ten alternatives, it recovers a large majority of the benchmark precedences, the documented and observed benchmarks agree closely, and neither result moves much across prompts.
-The overlap is substantial rather than exact, as one would expect of a procedure that infers order from task descriptions alone, but it is systematic enough that our imputed sequences cannot be read as an artifact of the instrument.
