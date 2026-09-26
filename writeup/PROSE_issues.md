@@ -1,165 +1,159 @@
-# Prose review of "Chaining Tasks, Redefining Work" — 2026-09-08
+# Prose review of "Chaining Tasks, Redefining Work" (2026-09-26)
 
-Draft reviewed: all 18 `.tex` sources in `writeup/`, main text plus Online and
-Supplementary Appendices. Page numbers from `0_main.pdf`, 133 pages, compiled
-2026-09-08 from the current working tree (which includes uncommitted edits).
+Draft reviewed: all 18 `.tex` sources in `writeup/` (main text, Online Appendix, Supplementary Appendix) at commit `792c8c1`. Page numbers are from a fresh 129-page compile of those sources: body `p. N`, Online Appendix `p. OA-n`, Supplementary Appendix `p. SA-n`.
 
-The draft is mechanically clean. No doubled words, no straight quotes in prose,
-no `\%` spacing errors, no lowercase `figure~\ref`/`table~\ref`, no missing
-commas after `e.g.`/`i.e.`, no comma splices found. The findings below are
-mostly consistency rather than error, and the terminology item (C1) is the one
-worth acting on regardless of the rest.
+This file replaces the 2026-09-08 prose list. All 16 of that list's still-open items are folded in below. Substantive problems are in `REVIEW_issues_2026-09-26.md`.
+
+The draft is mechanically clean: no doubled words, no straight quotes in prose, no stray `\%` spacing. Most of what follows comes from the latest round: the Overleaf edits introduced three or four grammar slips, and the APQC-to-PCF renaming stopped short of the appendices.
 
 ---
 
 ## House style violations
 
-### S1. Em dash, two in one sentence
+### S1. Em dash (the only one left in the prose)
 - **Location**: p. 6, "Long-Run Job Design" (`1_introduction.tex:116`)
-- **Now**: "Absorbing steps into chains strips skill out of the tasks a worker retains, making broad jobs cheaper to sustain, while the same reduction---and any direct saving in coordination---makes each boundary cheaper to draw."
-- **Fix**: "Absorbing steps into chains strips skill out of the tasks a worker retains, making broad jobs cheaper to sustain, while the same reduction, together with any direct saving in coordination, makes each boundary cheaper to draw."
+- **Now**: "while the same reduction---and any direct saving in coordination---makes each boundary cheaper to draw."
+- **Fix**: "while the same reduction, together with any direct saving in coordination, makes each boundary cheaper to draw."
 
-This is the only em dash in the prose. The five other `---` hits are rules in
-`preamble.tex` comments and are fine.
+### S2. Explanatory colons
+Each one splices a sentence to its own unpacking. Colons that introduce genuine lists, such as "three things about every step:", can stay.
 
-### S2. Explanatory colon, plus "crucial"
-- **Location**: p. 4, "Automation versus Augmentation" (`1_introduction.tex:56`)
-- **Now**: "Although augmented and automated production steps both involve AI, they differ in one crucial respect: AI augmentation demands that a human verify the AI's output, whereas automation does not."
-- **Fix**: "Although augmented and automated production steps both involve AI, they differ in one respect that drives everything below. AI augmentation demands that a human verify the AI's output, whereas automation does not."
+| Location | Now | Fix |
+|---|---|---|
+| p. 5, `1_introduction.tex:112` | "How broadly to define each job involves a trade-off: adding more tasks ..." | "How broadly to define each job involves a trade-off. Adding more tasks ..." |
+| p. 10, Fig. 2 notes, `3_shortrun.tex:46` | "The bottom layer shows the resulting tasks: a run of automated steps ..." | "In the bottom layer, a run of automated steps ending in an augmented step forms an AI chain ..." |
+| p. 17, Fig. 4 notes, `4_implications.tex:129` | "which the firm executes as a single AI chain: Step 1 is automated and Step 2 is augmented and verified." | "which the firm executes as a single AI chain, automating Step 1 and verifying Step 2." |
+| p. 30, fn., `6_extensions.tex:35` | "asks more of the economy than the firm-level argument does: capital productivity is common ..." | "asks more of the economy than the firm-level argument does. It requires that capital productivity be common ..." |
+| p. 35, `7_empirics.tex:68` | "The two placebos isolate different margins: the first holds ..." | "The two placebos isolate different margins. The first holds ..." |
+| p. OA-5, `OA_B:5` | "The subsections follow the order in which the results appear in the body: Appendix B.1 proves ..." | "The subsections follow the body's order. Appendix B.1 proves ..." |
+| p. SA-27, `SA_E:57, 65` | "the object used in the main analysis: the occupation's sixteen O*NET tasks ..." | "the object used in the main analysis, which lists the occupation's sixteen O*NET tasks ..." |
+| p. SA-26, `SA_E:66` | "one of the most demanding in the grid: seven of the sixteen tasks ..." | "one of the most demanding in the grid, which keeps seven of the sixteen tasks ..." |
+| p. SA-28, `SA_E:82` | "as a forest plot: each row is a frequency cut ..." | "as a forest plot in which each row is a frequency cut ..." |
+| p. SA-29, Fig. SA.E.2 notes, `SA_E:93` | "for that cut: the mean length of a maximal run ..." | "for that cut, that is, the mean length of a maximal run ..." |
+| p. SA-39, `SA_F:180` | "the recurring case is the one anticipated above: parents whose children are ..." | "the recurring case is the one anticipated above, namely parents whose children are ..." |
+| p. SA-39, `SA_F:196` | "is about exactly this object: a workflow partitioned into jobs, ..." | "is about exactly this object, a workflow partitioned into jobs, ..." |
 
-### S3. Explanatory colon
-- **Location**: p. 35, Section 7.1 (`7_empirics.tex:70`)
-- **Now**: "The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains."
-- **Fix**: Replace the colon with a full stop and start "The first holds...".
-
-### S4. "not just X, but Y" cadence, three instances
-- `1_introduction.tex:89` (p. 5): "What tips a step into automation is therefore not just its own characteristics but also those of its neighbors." → "What tips a step into automation is therefore its neighbors' characteristics as much as its own."
-- `4_implications.tex:59`: "depends not just on its own cost parameters, as comparative advantage logic would predict, but also on those of its neighbors" → "depends on its neighbors' cost parameters as well as its own, which comparative advantage logic would not predict".
-- `6_extensions.tex:56`: "carries not just the time but also the skill of the worker" → "carries both the time and the skill of the worker".
-
-### S5. "Moreover" and "Furthermore" pile-up
-Seven instances, six of them in the appendices. Each can be deleted outright
-without loss, since the sentence that follows already reads as an addition.
-- `5_longrun.tex:5`; `OA_C_CES_representation.tex:68` (p. 75), `:106`, `:183`;
-  `OA_B_omitted_proofs.tex:402`, `:406`, `:461`.
-- `OA_B_omitted_proofs.tex:403` also opens "Crucially, the contribution from each $C$..." → "The contribution from each $C$...".
-
-### S6. "leverage" as a verb
-- **Location**: `SA_A_sample_construction.tex:18`
-- **Now**: "require additional software or tools to fully leverage AI capabilities"
-- **Fix**: "require additional software or tools to make full use of AI capabilities"
+### S3. AI-tell phrasing
+| Location | Now | Fix |
+|---|---|---|
+| p. 4, `1_introduction.tex:56` | "they differ in one crucial respect:" | "they differ in one respect that matters for everything below:" |
+| p. 14, `4_implications.tex:39` | "Importantly, step k's own verification cost ..." | "Step k's own verification cost ..." |
+| p. 21, `4_implications.tex:242` | "It is also worth noting that the jump at α ≈ 0.92 is larger than the one at α = 0.50. Forming the chain pulls ..." | "The jump at α ≈ 0.92 is also larger than the one at α = 0.50, because forming the chain pulls ..." |
+| p. 21, `5_longrun.tex:5` | "Moreover, adjustments in the labor market let ..." | "Adjustments in the labor market also let ..." |
+| p. 26, `5_longrun.tex:185` | "Notably, the hand-off shares the skill requirements of the worker doing it for an extra amount of time added to the last task in their job." | "The hand-off is paid at the skill level of the worker who performs it, as extra time appended to the last task in their job." |
+| p. 29, `6_extensions.tex:30` | "and it is worth stating what makes it work." | "and we state what makes it work." |
+| p. 30, `6_extensions.tex:40` | "Importantly, the organization of work does not disappear ..." | "The organization of work does not disappear ..." |
+| p. SA-1, `SA_A:18` | "to fully leverage AI capabilities" | "to make full use of AI capabilities" |
+| p. SA-2, `SA_A:79` | "it is worth emphasizing a few points about the dataset" | "we note three features of the dataset" |
+| p. SA-39, `SA_F:174` | "and it is worth being clear about what they are" | "and they deserve a closer look" |
+| pp. OA-26, OA-28, OA-31, `OA_C:68, 106, 183`; pp. OA-16, OA-18, `OA_B:402, 403, 406, 461` | "Furthermore", "Moreover" (six), "Crucially" | Delete each one. The following sentence already reads as an addition. |
+| p. 6 and p. 28, `1_introduction.tex:117` and `5_longrun.tex:233` | "not a prediction about job breadth but an account of what determines it" (twice, almost word for word) | Keep it in Section 5.4. In the intro, write "The framework therefore identifies what determines job breadth, and what would have to be measured to settle the question empirically." |
+| `1_introduction.tex:89`, `4_implications.tex:59`, `6_extensions.tex:56` | "not just ... but also" | "its neighbors' characteristics as much as its own" / "on its neighbors' cost parameters as well as its own" / "carries both the time and the skill" |
 
 ---
 
 ## Grammar and punctuation
 
-### G1. Literal Unicode en dash in a figure note
-- **Location**: p. 4, notes to Figure 1 (`1_introduction.tex:68`)
-- **Now**: "while Steps 2–4 form an AI chain task"
-- **Fix**: "while Steps~2--4 form an AI chain task"
+### G1. Pronoun and verb agreement
+- p. 6, `1_introduction.tex:115`. "Which way improvements in AI move job boundaries is ambiguous, because **it presses** on both sides" → "because **they press** on both sides".
+- p. 26, `5_longrun.tex:187`. "where those two prices balance **determine** the firm's degree of specialization" → "**determines**".
+- p. SA-33, `SA_E:212`. "all three implications of our model **appears** to operate ... and **does** not appear" → "appear ... do not appear". The substance of this sentence also has to change; see REVIEW M1.
+- p. OA-27, `OA_C:86`. "the required amount of skill-adjusted time ... **are** fixed" → "**is** fixed".
+- p. OA-25, `OA_C:37`. "type of labor that **need** to perform them" → "the type of labor that performs them".
 
-The rest of the draft uses `--` throughout; this is the only raw Unicode dash.
-It renders as a hyphen-width dash, visibly shorter than the `2--4` on the same page.
+### G2. Missing articles, wrong prepositions (OA.C)
+- p. OA-25, `OA_C:26`. "the more tasks firm includes in a job, the higher required compensation" → "the more tasks the firm includes in a job, the higher the required compensation".
+- p. OA-26, `OA_C:62`. "Specifically, production function of the firm can be represented" → "Specifically, the firm's production function can be represented".
+- p. OA-26 and OA-27, `OA_C:61, 91`. "by the help of AI" → "with the help of AI".
+- p. OA-26, `OA_C:48`. "the fraction appearing behind t" → "the fraction multiplying t".
 
-### G2. Comma before a compound predicate
-- **Location**: p. 36, Section 7.1 (`7_empirics.tex:73`)
-- **Now**: "We observe that the average AI chain length in the data is 1.45, and is noticeably larger than in both placebo distributions."
-- **Fix**: "We observe that the average AI chain length in the data, 1.45, is noticeably larger than in both placebo distributions."
+### G3. Rendering typos
+- p. OA-24, `OA_C:4`. `Sections~\ref{sec:shortrun}--~\ref{sec:longrun}` prints "Sections 3– 5". Use `Sections~\ref{sec:shortrun}--\ref{sec:longrun}`.
+- p. OA-29, `OA_C:135`. "for existence conditions.)." → "for existence conditions)."
+- p. SA-30, `SA_E:145` (fn.). `\footnote{ To save space` has a leading space, and "two **position** away" should be "two **positions** away".
+- pp. OA-14 and OA-16, `OA_B:336, 406`. Double spaces: "charging  the", "a  total".
+- p. 4, Fig. 1 notes, `1_introduction.tex:68`. Literal Unicode "Steps 2–4" → `Steps~2--4`.
 
-### G3. Passive where the agent matters
-- **Location**: p. 3, "Automation versus Augmentation" (`1_introduction.tex:44`)
-- **Now**: "In our model, three modes of step completion are recognized: manual, augmented, and automated."
-- **Fix**: "Our model distinguishes three modes of step completion: manual, augmented, and automated."
+### G4. Sentence construction
+- p. 2, `1_introduction.tex:9` (Overleaf edit). "A step is the primitive unit of work in our framework, what classic models call a 'task.'" The appositive clause doesn't attach. → "..., corresponding to what classic models call a 'task.'"
+- p. 9, `3_shortrun.tex:19`. "each is executed in one of three modes: \emph{manually}, \emph{augmented}, or \emph{automated}" mixes an adverb with participles → "\emph{manual}, \emph{augmented}, or \emph{automated}".
+- p. 11, `3_shortrun.tex:74` (fn.). "The forces described by the model remain unaffected even if we assumed ..." → "would remain unaffected if we assumed ...".
+- p. 39, `7_empirics.tex:206`. "The last prediction of the model that we test is how the positioning of steps ... matters" → "The last prediction we test concerns how the positioning of steps ... matters".
+- p. 23, `5_longrun.tex:56` (fn.). "namely that each step demand some increment" → "namely that each step demands some increment".
+- p. SA-25, `SA_E:5`. "rarely-executed tasks, which a worker might perform only rarely" is tautological → "tasks that a worker performs only occasionally".
+- p. SA-19, `SA_D:8`. "only change the sentence starting with ... with an alternative" → "replace only the sentence starting with ... with an alternative".
+- p. 3, `1_introduction.tex:44`. "three modes of step completion are recognized" → "our model distinguishes three modes of step completion".
 
-The colon here introduces a genuine list and stays.
+### G5. Punctuation
+- p. 41, `7_empirics.tex:268`. "at −0.35, −0.26 and −0.34" needs the serial comma the rest of the draft uses: "−0.26, and −0.34".
+- p. 37, `7_empirics.tex:132-134`. The footnote mark sits before the colon ("regression\footnote{...}:"). Move it after the colon, or after the displayed equation.
+- p. 19, `4_implications.tex:175`. "(i.e., t^M_i ≥ 1) every component" needs a comma after the parenthesis.
+- p. 19, `4_implications.tex:176` (fn.). `Equation~\ref{eq:fragmentation_closed_form}` prints "Equation 4". Everywhere else the draft prints "(4)"; use `\eqref`.
 
-### G4. Doubled spaces mid-sentence
-- `OA_B_omitted_proofs.tex:336` ("by charging  the realized") and `:406` ("adds up to a  total value").
+### G6. Headings
+- p. 30, `6_extensions.tex:44`. "Computation of Firm's Short- and Long-run Optimums" → "Computing the Firm's Short- and Long-Run Optima". The paragraph heads "The Short Run Optimization." and "The Long Run Optimization." → "Short-Run Optimization." and "Long-Run Optimization.", matching "Short-Run Production" and "Long-Run Production".
+- p. SA-25, SA.E title. "Robustness to Frequently-Executed Tasks Sample Restriction" → "Robustness to Restricting the Sample to Frequently Performed Tasks".
+- p. SA-38, Fig. SA.F.1 caption. "Overlap between GPT-orderings and Original APQC-PCF Order" → "Overlap Between GPT Orderings and the Original PCF Order", with "Between" capitalized as in the other captions.
+- p. SA-21, `SA_D:107`. "In the following Subsections" → "subsections".
 
 ---
 
 ## Clarity and consistency
 
-### C1. Three names for one concept, none of them defined
-This is the most consequential item. The draft calls the same object:
+### C1. Sample names were only half renamed
+Section 7 now says "O*NET sample" and "PCF sample". The rest of the draft does not:
+- **"main sample"** survives at `SA_A:1` (the appendix title, "Construction Details of the Main Sample", p. SA-1), `OA_A:201`, `SA_B:30`, `SA_D:118, 144`, and `SA_F:47, 352, 361, 396, 418, 449`. → "O*NET sample".
+- **"APQC Process Groups"** is the Table 3 column header (p. 40), while Figure 9(b) and the table notes say "PCF". → "PCF Process Groups".
+- **"corpus/corpora"** refers to the PCF 16 times in SA.F, plus `7_empirics.tex:35`. **"PCF dataset"** appears at `SA_F:394`. Use "PCF sample" for the analysis data, and keep "corpus" only in the SA.F.1 validation exercise if you want the distinction.
+- `7_empirics.tex:39, 173` say "O*NET dataset" where the sample is meant.
 
-| Term | Count | First use |
-|---|---|---|
-| AI-exposed | 19 | Section 4 |
-| AI-able | 24 | `4_implications.tex:106`, p. 13 |
-| AI-suitable | 1 | `4_implications.tex:3`, p. 13 |
+### C2. "AI-able" is never defined
+`7_empirics.tex:11` sends the reader to "the sense of Section 4" for "AI-able", but Section 4 never defines the term. It is first used at `1_introduction.tex:91` and `4_implications.tex:3`, and the closest definition is the footnote on p. 15 ("One can think of an AI-easy step as one that is 'exposed' to AI"). `7_empirics.tex:237` uses both terms in one sentence. Define "AI-able" once at `4_implications.tex:3` ("steps AI performs reliably, which we measure empirically as AI-exposed"). The Prediction #3 heading could then read "AI-exposed" to match the test.
 
-"AI-able" carries a subsection title ("Prediction \#3: Dispersion of AI-able
-Steps Lowers AI Execution"), a table caption, and two figure subcaptions, yet no
-sentence in the draft ever says what it means or that it is a synonym for
-AI-exposed. A reader meets it first in a figure subcaption on p. 13.
+### C3. Section 7 subsection titles are not parallel
+- 7.1: "Tendency to Have Runs of Consecutive AI-executed **Tasks**" (noun phrase)
+- 7.2: "AI Execution Is More Likely Next to AI-executed **Steps**" (clause)
+- 7.3: "AI Execution Is Lower Where **AI-able** Steps Are Dispersed" (clause)
 
-"AI-suitable" appears exactly once, in the Section 4 roadmap that promises the
-fragmentation index, and never again.
+→ Change 7.1 to "Prediction #1: AI-Executed Steps Form Contiguous Runs". Also decide whether "executed" is capitalized after the hyphen in title case ("AI-executed" or "AI-Executed").
 
-**Fix**: pick one term. "AI-exposed" is the one tied to the data, since the
-labels are Eloundou et al.'s exposure categories, so it is the safest choice.
-If you keep "AI-able" for the theory because exposure is a data construct, say
-so once at first use, at `4_implications.tex:106`.
+### C4. Capitalization of "Step" and "Task" before a numeral
+- p. 4, `1_introduction.tex:76` says "the manual step~1, the AI chain spanning steps~2--4, ... step~4, and the manual step~5", while the same paragraph (`:72-75`) writes "Steps 1 and 5" and "Step 4".
+- p. 10, Fig. 2 notes, `3_shortrun.tex:46`: "steps 4--6 become Task~4", "step~2".
+- p. 20, `4_implications.tex:208`: "relabelled steps~1 and~2".
+- p. 27 to 28, `5_longrun.tex:215-222` and `OA_A:106`: "tasks 1 and 2", "task 3", against "Tasks~1 and~2" at `5_longrun.tex:19`.
 
-### C2. Corpus naming drift
-The two datasets are referred to seven ways in the body: "O\*NET sample" (9),
-"O\*NET dataset" (9), "O\*NET data" (1), "PCF corpus" (5), "PCF sample" (2),
-"PCF dataset" (1), "APQC corpus" (1). Section 7.1 alone uses "PCF corpus" and
-"the corpus" and "APQC's documented sequences" for the same thing.
+→ Capitalize throughout, since the body mostly does.
 
-**Fix**: settle on "the O\*NET sample" and "the PCF sample", and reserve "APQC"
-for the organization rather than the data.
+### C5. Spelling variants
+The draft is American ("labeled", "modeling", "judgment"). The British forms are "labelled" (`4_implications.tex:84`), "relabelled" (`:208`), "grey" (`4_implications.tex:93`; `SA_E:82, 94`; `SA_F:387`), "judgement" (`SA_F:365`) and "honours" (a comment only). "Gray" already appears at `3_shortrun.tex:46`.
 
-Related leftover: `7_empirics.tex:110` still says "the main sample's" where the
-surrounding text now says "O\*NET". Six more "main sample" occurrences survive
-in the appendices.
+### C6. Hyphens after -ly adverbs
+"frequently-executed" (SA.E title), "rarely-executed" (`SA_E:5`), "frequently-performed" (`SA_E:212`) and "rarely-performed" (`SA_E:208`) are all hyphenated, while the body has "more frequently performed tasks" (`7_empirics.tex:45`). Drop the hyphens. Also "highly frequently performed" (`SA_F:21`) → "frequently performed".
 
-### C3. Step versus step before a numeral
-The intro uses capital "Step" 19 times and lowercase 4 times, and one paragraph
-mixes both:
-- p. 4 (`1_introduction.tex:72-75`): "Steps 1 and 5 are performed manually...", "Step 4 is augmented..."
-- p. 4 (`1_introduction.tex:76`), immediately after: "the manual step~1, the AI chain spanning steps~2--4, whose only human input is verifying the output of step~4"
+### C7. "Subsection" and "Section" for the same objects
+The body writes `Section~\ref{sec:comparative_advantage}` for subsections, which prints "Section 4.1". But `7_empirics.tex:195` has "Subsection 7.1", and `SA_E` (3 times), `SA_F` (8 times), `SA_D` and `OA_C` also use "Subsection". Pick "Section".
 
-**Fix**: capitalize in line 76 to match its own paragraph. Same fix at
-`3_shortrun.tex:46` (figure notes) and `4_implications.tex:211` (p. 20,
-"relabelled steps~1 and~2").
+### C8. Number style
+`SA_D:7` says "10 alternative prompts" where Section 7 and SA.F say "ten". Tables SA.F.2 and SA.F.4 also print "10 alternative prompts".
 
-`4_implications.tex:211` also has British "relabelled"; the draft is otherwise
-American throughout.
-
-### C4. fixed-effect versus fixed-effects, attributive
-- `SA_F_external_validation.tex:369` and `:386`: "the three fixed-effect specifications"
-- `SA_E_frequency_robustness.tex:143` (p. 115): "fixed-effects specification"
-
-**Fix**: use the singular attributive, "fixed-effect specification", in both places.
+### C9. Unclear sentences worth rewriting
+- p. 4, `1_introduction.tex:84`. "compares the cost of manual execution to the unified AI-based execution cost". "Unified" is unclear → "compares the cost of manual execution with the cost of executing the step with AI as part of a chain".
+- p. 3, `1_introduction.tex:51-52`. Step 3 is "building an analysis pipeline", then "running the analysis". Step 2 is "finding and fetching data", then "finding data". Use one wording per step.
+- p. 12, `3_shortrun.tex:100`. "an AI chain (automated or augmented)" reads as if a chain were one or the other → "an AI chain (of length one or more)".
+- p. 12, `3_shortrun.tex:127`. "rich dynamics" in a static problem → "rich patterns in how AI is deployed".
+- p. 16, `4_implications.tex:101`. "The previous section examined" → "The previous subsection examined".
+- p. 16, `4_implications.tex:141`. "A single verification now covers two steps instead of none" → "A single verification now covers two steps, whereas panel (a) used AI on none".
+- p. 17, `4_implications.tex:149`. "having a measure of that arrangement would be useful, one that stands in for them" ("them" has no referent) → "a measure of that arrangement that can be computed without solving the firm's problem would be useful".
+- p. 34, `7_empirics.tex:44`. "restores the correct workflow order to a substantial degree against ground truth" is redundant. → "recovers much of the known workflow order". Also see REVIEW Minor 3 on "ground truth".
+- p. 34, `7_empirics.tex:53`. "we use the terms ... interchangeably and expect the reader to keep these distinctions in mind" contradicts itself → "we use the terms ... interchangeably, relying on the mapping above".
+- p. 35, `7_empirics.tex:117`. "in one sitting between strong AI performers" → "in one sitting between AI-executed steps".
 
 ---
 
 ## Substantive issues noticed in passing
-
-Not a prose pass's job; run `paper-review` for a real correctness check.
-
-1. **`SA_F_external_validation.tex`, Prediction \#1 paragraph**: reports
-   `z = 10.2` for the within-category reassignment null. Re-running
-   `analysis/apqc_pooled_predictions.py` at the 0.71 floor gives 9.91, and at
-   0.73 gives 9.73. The companion `z = 6.2` does reproduce, from the
-   threshold-sweep script. The verdict is unaffected, since both are at the
-   100th percentile.
-
-2. **`7_empirics.tex`, Section 7.1, PCF paragraph**: "What the corpus can still
-   ask is whether the runs that do form are longer than the same labels arranged
-   at random along the same sequences, and they are." The sentence that carried
-   the supporting numbers was removed, so "and they are" now rests only on Panel
-   (b) and the appendix.
-
-3. **`1_introduction.tex`, Prediction \#3**: "workflows whose AI-exposed steps
-   are more dispersed across the production sequence execute a lower share of
-   their steps with AI" is stated without qualification, while Table 3 shows the
-   coefficient significant in the PCF and not distinguishable from zero in
-   O\*NET.
-
-4. **`7_empirics.tex`, Section 7.3**: the paragraph explaining why a
-   workflow-level test leans on the ordering harder than a step-level one has
-   been removed, but the later passage explaining the O\*NET/PCF contrast still
-   assumes the reader has that argument.
+These are all in `REVIEW_issues_2026-09-26.md`:
+- the unqualified Prediction #3 summaries (M1);
+- the 151-word abstract (C1);
+- SA.F's validation-only framing (D1);
+- SA.E's misreading of its own heatmaps (D2, D3).
