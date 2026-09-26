@@ -6,7 +6,7 @@ This approach, however, abstracts from the order in which tasks are performed an
 We argue that this sequencing is economically consequential, because it changes equilibrium predictions about how jobs are reorganized and which units of work are automated when technologies such as AI enter production.
 
 We model production as a Leontief technology over an ordered sequence of exogenously specified \emph{steps}, and treat the definition of tasks and their partitioning across jobs as endogenous outcomes.
-A \emph{step} is the primitive unit of work in our framework, corresponding to what classic models would call a ``task.''
+A \emph{step} is the primitive unit of work in our framework, what classic models call a ``task.''
 We instead reserve the term \emph{task} for a contiguous block of steps that the firm endogenously designates for joint execution by a human worker, potentially with the aid of AI.
 In the absence of AI, tasks optimally collapse to single-step blocks so that steps and tasks coincide.
 In the presence of AI, some steps are chained together and automated, creating a meta-task whose output is validated by a human worker.
@@ -51,7 +51,7 @@ We view AI automation as a way of putting certain production steps ``under the h
 To fix ideas, think of the workflow of a data scientist whose job requires completing five steps: defining the business question (Step 1), finding and fetching data needed for answering the question (Step 2), building an analysis pipeline (Step 3), drafting a report (Step 4), and presenting the findings (Step 5).
 As part of an AI-augmented request to complete one of these steps (such as Step 4: drafting a report), the AI might also be assigned to complete one or more preceding steps (such as Step 3: running the analysis, or Steps 2 and 3: finding data and running the analysis) as part of that single request.
 Any such preceding step is said to be automated, and the set of all such automated steps, plus the final step that the worker is actively engaged with, can be thought of as a single worker task which we term an \emph{AI chain}.
-By choosing which steps to automate and which to assign either manually or via augmentation, the firm implicitly designs the set of tasks exposed to its workers.
+By choosing which steps to automate, augment, or perform manually, the firm implicitly designs the set of tasks exposed to its workers.
 
 Although augmented and automated production steps both involve AI, they differ in one crucial respect: AI augmentation demands that a human verify the AI's output, whereas automation does not.
 Figure~\ref{fig:task_division} illustrates these concepts using the five-step data scientist workflow described earlier.
@@ -94,7 +94,7 @@ We formalize this idea in a \emph{fragmentation index}, the expected cost of a s
 We then provide empirical evidence that, on practitioner-documented workflows, jobs with higher fragmentation see a weaker translation from AI exposure to AI execution.
 
 Because chaining makes the cost of automating a step depend on its neighbors, the firm cannot settle each step's mode in isolation, and its problem ranges over all possible configurations of the workflow.
-Whether the firm can actually calculate its optimum is not obvious, as the number of feasible arrangements for production grows exponentially in the number of steps.
+Whether the firm can calculate its optimum is not obvious, as the number of feasible arrangements grows exponentially in the number of steps.
 We show how the firm can solve its optimization problem, exactly in the short run and to any desired accuracy once wages and job boundaries are also chosen in the long run.
 
 
@@ -110,7 +110,7 @@ Our framework thus provides a micro-foundation for the productivity J-curve phen
 \paragraph{Long-Run Job Design.}
 As the firm can reorganize its production around what AI can do, AI changes what workers do and not only how quickly they do it, and through that, wages and labor demand.
 How broadly to define each job involves a trade-off: adding more tasks to a worker's job raises the wage that job must pay, since the worker has to acquire the skills all of those tasks require, while dividing them across more jobs adds coordination cost, since every job boundary forces a \emph{hand-off} of intermediate output among workers.
-Because production runs in an order, what a hand-off costs depends on where the break falls, so the firm chooses not merely how finely to divide the work but where to cut it.
+Because production is sequential, hand-off costs depend on where jobs break, so the firm chooses not only how finely to divide work but where.
 
 Which way improvements in AI move job boundaries is ambiguous, because it presses on both sides of this trade-off.
 Absorbing steps into chains strips skill out of the tasks a worker retains, making broad jobs cheaper to sustain, while the same reduction---and any direct saving in coordination---makes each boundary cheaper to draw.
@@ -118,15 +118,16 @@ The framework thus supplies not a prediction about job breadth but an account of
 
 \paragraph{Aggregate Production.}
 Although we develop these results at the level of a single firm, we show that, under additional assumptions, firm-level production aggregates across the economy to a constant elasticity of substitution (CES) representation.
-Our framework can thus serve as a micro-foundation for economy-wide production functions and be used to study the aggregate effects of AI on outcomes such as the labor market and total productivity.
+Our framework can thus serve as a micro-foundation for economy-wide production functions and be used to study the aggregate effects of AI on labor markets and productivity.
 
 
 \paragraph{Empirical Evidence.}
 We complement our theoretical analysis with new empirical evidence that speaks directly to the core mechanisms emphasized by the model.
 Taking the model to data requires three things about every step: AI's ability to perform it, the extent to which AI currently executes it, and where it sits in the production sequence.
 The first two we draw from existing sources, linking O*NET tasks to human assessments of AI exposure \citep{eloundou2023gpts} and to realized AI execution outcomes from Anthropic's Economic Index \citep{handa2025economictasksperformedai}.
-The third is recorded nowhere, so we generate the ordering of each O*NET occupation's tasks ourselves.
-Because that ordering is ours rather than the data's, we carry the same exposure and execution labels onto a second dataset that comes with an ordering already, the Process Classification Framework (PCF) of the American Productivity \& Quality Center, whose member working groups document the activities of each business process in the order practitioners perform them, and we report our results on both.
+The third, the sequence in which tasks are performed, is not recorded in O*NET, so we take two approaches.
+First, we use the Process Classification Framework (PCF) of the American Productivity \& Quality Center, whose member working groups document the activities of each business process in the order practitioners perform them.
+Because the PCF covers only operational business processes rather than the full range of occupations, we also generate the ordering of each O*NET occupation's tasks ourselves, and we report our results using both.
 
 We test, and find evidence consistent with, three key predictions of the model.
 First, the chaining mechanism implies that AI-executed steps should appear in contiguous blocks rather than scattered across the workflow.

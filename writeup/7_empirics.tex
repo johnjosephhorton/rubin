@@ -10,7 +10,7 @@ The three predictions we test are:
 
 Our analysis requires three attributes of each step: its AI exposure status (exposed or unexposed to AI), which is how we measure whether a step is AI-able in the sense of Section~\ref{sec:results}, its realized mode of execution (manual or AI-executed), and its position in the production sequence.
 We draw on five sources:
-\begin{enumerate}
+\begin{enumerate}[itemsep=0pt, parsep=0pt]
     \item The O*NET 27.3 Database \citep{onet27_3},
     \item Human-generated AI exposure labels for O*NET tasks from \cite{eloundou2023gpts},
     \item Realized AI execution labels for O*NET tasks from the Anthropic Economic Index \citep{handa2025economictasksperformedai},
@@ -68,9 +68,9 @@ Second, we reassign tasks, each carrying its AI-execution label, randomly across
 The two placebos isolate different margins: the first holds each occupation's task composition fixed and randomizes the ordering of its workflow, while the second holds each occupation's size and each major group's AI intensity fixed and randomizes which tasks, and hence which execution labels, an occupation contains.
 
 Panel~(a) of Figure~\ref{fig:aiChains_graphs_def1} overlays the two placebo distributions of average AI chain length, one across 1{,}000 task position permutations and one across 1{,}000 task AI-execution label reassignment permutations, and compares both with the observed mean AI chain length, marked by the dashed vertical line.
-We observe that the average AI chain length in the data is 1.45, and is noticeably larger than in both placebo distributions.
+We observe that the average AI chain length in the data is 1.45 and is noticeably larger than in both placebo distributions.
 This indicates that AI-executed tasks tend to cluster within occupations, forming longer AI chains than would arise under either type of randomization.
-At the same time, the modest magnitude of 1.45 indicates that long AI chains remain rare, perhaps reflecting the early stage of AI adoption; our model predicts chains to lengthen as AI quality improves.
+At the same time, the modest magnitude of 1.45 indicates that long AI chains remain rare, perhaps reflecting the early stage of AI adoption; our model predicts that chains will lengthen as AI quality improves.
 \begin{figure}[!t]
 \caption{Average Length of AI Chains: Actual versus Placebo Datasets}
 \label{fig:aiChains_graphs_def1}
@@ -94,24 +94,24 @@ At the same time, the modest magnitude of 1.45 indicates that long AI chains rem
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: Red dashed lines show the observed average AI chain length in the actual dataset.
-Panel~(a) uses the O*NET sample, in which a workflow is an occupation and the ordering is the GPT-imputed task sequence; Panel~(b) uses APQC's Process Classification Framework, in which a workflow is a PCF Process Group and the ordering is the one documented by practitioners, with exposure and execution labels transferred from each step's nearest O*NET task.
+Panel~(a) uses the O*NET sample, in which a workflow is an occupation and the ordering is the GPT-imputed task sequence; Panel~(b) uses the PCF sample, in which a workflow is a process group and the ordering is the one documented by practitioners, with exposure and execution labels transferred from each step's nearest O*NET task.
 Each panel overlays both placebo distributions, each over $1{,}000$ draws.
 The orange histogram randomizes the positions of steps within each workflow, and the blue histogram reassigns steps, each carrying its execution label, across workflows within the same group, preserving workflow sizes; the grouping is the major SOC group in Panel~(a) and the PCF Category in Panel~(b).
-The horizontal scale differs between the panels, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which lowers the attainable chain length throughout the PCF corpus.}
+The horizontal scale differs between the panels, since only $4\%$ of PCF steps carry an AI-execution label after the transfer against $13\%$ in O*NET, which lowers the attainable chain length throughout the PCF sample.}
 \end{spacing}
 \end{minipage}
 \end{figure}
 
-Next we repeat the exercise on the PCF corpus, substituting its own units throughout, with a process group standing in for an occupation, the activity sequence practitioners documented for the GPT-imputed task sequence, and the PCF Category for the major SOC group within which the second placebo reassigns.
+Next we repeat the exercise on the PCF sample, substituting its own units throughout, with a process group standing in for an occupation, the activity sequence practitioners documented for the GPT-imputed task sequence, and the PCF Category for the major SOC group within which the second placebo reassigns.
 Nothing else about the test changes, and Panel~(b) of Figure~\ref{fig:aiChains_graphs_def1} reports the same verdict.
 The average AI chain there spans $1.16$ steps, against $1.45$ in O*NET.
-The smaller magnitude is mechanical, since the AI execution in PCF is thinner than in O*NET, which leaves far less opportunity for long runs to form and puts the ceiling on the statistic well below the main sample's.
-What the corpus can still ask is whether the runs that do form are longer than the same labels arranged at random along the same sequences, and they are.
+The smaller magnitude is mechanical, since AI execution in the PCF is thinner than in O*NET, which leaves far less opportunity for long runs to form and puts the ceiling on the statistic well below the O*NET sample's.
+What the PCF sample can still ask is whether the runs that do form are longer than the same labels arranged at random along the same sequences, and they are.
 Because no language model placed these steps in order, the contiguity here is a property of the documented workflow and not of our sequencing procedure.
 
 
 
-\subsection{Prediction \#2: Adjacency to AI-executed Steps Increases Likelihood of AI Execution}
+\subsection{Prediction \#2: AI Execution Is More Likely Next to AI-executed Steps}
 \label{sec:DWA_prediction}
 
 The second prediction of the model that we test is that when the same step appears in two occupations, in one sitting between strong AI performers and in the other located between manual ones, it is more likely to be executed by AI in the first occupation.
@@ -126,7 +126,7 @@ For example, step X is more likely to be executed by AI in the first occupation 
 Testing this prediction requires identifying steps that appear across different workflows.
 Because O*NET tasks are occupation-specific, no single task is shared across occupations in the data.
 To work around this, we rely on O*NET's broader categories of Detailed Work Activities (DWAs), which group conceptually similar tasks across occupations.
-In our main O*NET sample, we drop tasks that are mapped to multiple DWAs.
+In our baseline O*NET sample, we drop tasks that are mapped to multiple DWAs.
 We further restrict attention to DWAs that contain tasks appearing in more than one occupation.
 Together, these restrictions reduce the sample to 10{,}708 tasks spread across 1{,}748 DWAs.
 We treat the remaining tasks as instances of the same step appearing across different occupations and estimate the following regression\footnote{In a robustness exercise we refine our definition of ``similar'' tasks.
@@ -154,12 +154,12 @@ See Appendix~\ref{app:additional_robustness} for details.}:
 \end{equation}
 where $\Lambda$ is the logistic CDF and \emph{$\text{is\_ai}_{k}$} indicates whether step $k$ is executed by AI.
 The variables \emph{$\text{prev2\_is\_ai}_{k}$} and \emph{$\text{prev\_is\_ai}_{k}$} equal 1 if the step two positions before or immediately before step $k$ is AI-executed, respectively, and \emph{$\text{next\_is\_ai}_{k}$} and \emph{$\text{next2\_is\_ai}_{k}$} are defined analogously for the steps immediately after and two positions after step $k$.
-In the implementation we also control for the step $k$'s AI exposure status and number of steps in the occupation it appears in.
+In the implementation we also control for step $k$'s AI exposure status and the number of steps in its occupation.
 
 Table~\ref{tab:DWA_regression_aiExecution_mainSample} reports average marginal effects from estimating Equation~\eqref{eq:DWA_regression_ai} for a series of specifications.
 \begin{table}[!t]
 \centering
-\caption{Effect of Neighboring Tasks' AI Execution Status on Task's AI Execution}
+\caption{Neighboring Tasks' AI Execution Status and a Task's AI Execution}
 \label{tab:DWA_regression_aiExecution_mainSample}
     \footnotesize
 \resizebox{\textwidth}{!}{
@@ -173,42 +173,42 @@ The dependent variable in all specifications is an indicator for whether task $k
 The sample is restricted to similar tasks across occupations, identified as tasks belonging to the same DWA in the O*NET dataset.
 All specifications control for the AI exposure status of task $k$ and for the total number of tasks in task $k$'s occupation.
 Standard errors are bootstrapped using $B=200$ replications and clustered at the DWA level.
-The estimating sample varies across columns. Minor-group fixed effects in column~(3) drop groups with no within-group variation in the outcome, removing 847 tasks. The DWA fixed effects in columns~(4) and~(6) are identified only from DWAs containing both an AI-executed and a non-AI-executed task, which is 534 of the 1{,}748 DWAs in the sample and leaves 4{,}096 tasks; column~(5) carries no DWA fixed effects but is estimated on that same restricted sample so that it is directly comparable with column~(4). The number of DWA clusters is 1{,}748 in columns~(1)--(2), 1{,}705 in column~(3), and 534 in columns~(4)--(6).}
+The estimating sample varies across columns. Minor-group fixed effects in column~(3) drop groups with no within-group variation in the outcome, removing 847 tasks. The DWA fixed effects in columns~(4) and~(6) are identified only from DWAs containing both an AI-executed and a non-AI-executed task, a condition met by 534 of the 1{,}748 DWAs in the sample, leaving 4{,}096 tasks; column~(5) carries no DWA fixed effects but is estimated on that same restricted sample so that it is directly comparable with column~(4). The number of DWA clusters is 1{,}748 in columns~(1)--(2), 1{,}705 in column~(3), and 534 in columns~(4)--(6).}
 \end{spacing}
 \end{minipage}\end{table}
-The baseline in column~(1) shows that AI execution anywhere in the focal task's local context raises the probability that the task is AI-executed, at one and at two positions away alike, with the effects of the adjacent steps roughly twice the size of those two positions out.
+The baseline in column~(1) shows that AI execution anywhere in the focal task's local context is associated with a higher probability that the task is AI-executed, at one and at two positions away alike, with the effects of the adjacent steps roughly twice the size of those two positions out.
 The remaining columns ask how much of this survives more demanding comparisons.
 Columns~(2)--(3) absorb occupation family differences with SOC major and minor group fixed effects, and column~(4) restricts the variation to within detailed work activities with DWA fixed effects, addressing differences in AI-ability across types of task.
 Columns~(5)--(6) repeat the exercise controlling for the number of same-DWA tasks in the focal task's occupation, which rules out mechanical proximity inflating the estimates when several same-DWA tasks sit in one workflow; columns~(4)--(6) are all estimated on the same restricted sample, so they are comparable with one another rather than with column~(1).
 Across the specifications that absorb occupation-family or DWA heterogeneity, columns~(2)--(4) and~(6), the pattern is the same.
-The immediate neighbor effect attenuates from $0.11$ in the baseline to between $0.04$ and $0.06$ but stays statistically and economically meaningful, while the effects two positions away fall to between $-0.01$ and $0.01$ and lose significance.
+The immediate neighbor effect attenuates to between $0.04$ and $0.06$, relative to the baseline for columns~(2)--(3) and to the restricted-sample estimate of column~(5) for columns~(4) and~(6), but stays statistically and economically meaningful, while the effects two positions away fall to between $-0.01$ and $0.01$ and lose significance.
 Column~(5) carries no fixed effects and, estimated on the restricted sample of column~(4), reproduces the baseline pattern rather than the attenuated one.
 That the baseline estimates attenuate tells us they partly reflect systematic differences across occupation families; that the immediate neighbor effect persists tells us the local pattern is not merely such a difference.
 
 Because we have no external benchmark for what constitutes a large effect here, the magnitudes are hard to read on their own.
-We therefore re-estimate Equation~\eqref{eq:DWA_regression_ai} on 1,000 placebo datasets that randomize task positions within occupations, for the four specifications in Columns~(1)--(4) of Table~\ref{tab:DWA_regression_aiExecution_mainSample}, and report the result in Figure~\ref{fig:DWA_regression_aiExecution_mainSample}.
+We therefore re-estimate Equation~\eqref{eq:DWA_regression_ai} on 1,000 placebo datasets that randomize task positions within occupations, for the four specifications in columns~(1)--(4) of Table~\ref{tab:DWA_regression_aiExecution_mainSample}, and report the result in Figure~\ref{fig:DWA_regression_aiExecution_mainSample} of Appendix~\ref{app:tables_and_figures}.
 Randomizing positions strips the ordering of any information, so the placebo distributions show what these coefficients would look like when the position of a task in the workflow does not matter.
 In each case, the actual orderings deliver stronger immediate-neighbor effects and weaker distant-neighbor effects than the placebos.
-This implies that local work context and proximity does work that the reshuffled orderings cannot reproduce by chance.
+This implies that local work context and proximity do work that the reshuffled orderings cannot reproduce by chance.
 
-Overall, the results indicate that AI execution of immediate neighbors of the focal task increases the likelihood that the task is executed by AI, whereas execution status of more distant neighbors matters much less, especially after controlling for a range of relevant factors.
+Overall, the results indicate that AI execution of immediate neighbors of the focal task is associated with a higher likelihood that the task is executed by AI, whereas the execution status of more distant neighbors matters much less, especially after controlling for a range of relevant factors.
 This aligns with the relatively short average AI chain length observed in the data (mean length 1.45 reported in Subsection~\ref{sec:chainLength_prediction}), implying that tasks two positions away rarely fall in the same chain as the focal task.
 It is possible that with improvements in AI quality, chains become longer and execution status of more distant neighbors becomes more relevant for the execution mode of the focal task.
 
-We do not attempt a counterpart on the PCF corpus for this prediction, because there are too few steps observed with both execution outcomes to support the comparison in the PCF corpus. See Appendix~\ref{app:external_validation} for details.
+For this prediction, we do not attempt a counterpart on the PCF sample, where too few steps are observed with both execution outcomes to support the comparison. See Appendix~\ref{app:external_validation} for details.
 
 
 
-\subsection{Prediction \#3: Dispersion of AI-able Steps Lowers AI Execution}
+\subsection{Prediction \#3: AI Execution Is Lower Where AI-able Steps Are Dispersed}
 \label{sec:fragmentation_prediction}
 
 The two tests so far were local, in that they operated over a small window around a step.
 The last prediction of the model that we test is how the positioning of steps over the whole workflow matters for AI execution.
-Specifically, we test if realized AI execution in a production sequence is shaped by how clustered or dispersed its AI-exposed steps are, and not by how many of them are exposed alone.
+Specifically, we test whether realized AI execution in a production sequence varies with how clustered or dispersed its AI-exposed steps are, and not merely with how many of its steps are exposed.
 This is the empirical content of Proposition~\ref{prop:fragmentation}.
 
 To measure the fragmentation of AI-exposed steps in the data, we adapt the fragmentation index of Section~\ref{sec:fragmentation} to our empirical setting.
-The \emph{empirical fragmentation index} (EFI) is the ratio of the number of \emph{potential tasks}, as defined by our theoretical model, to the total number of steps, which is fixed and is measured by the raw count of steps in that workflow.
+The \emph{empirical fragmentation index} (EFI) is the ratio of the number of \emph{potential tasks}, as defined by our theoretical model, to the total number of steps, which is fixed and is measured by the raw count of steps in the workflow.
 Consider a workflow with five steps.
 If none of the five steps are exposed to AI, then the number of tasks in the theoretical sense is five, and the EFI equals $5/5 = 1$.
 If instead two consecutive steps are exposed to AI (and thus can form an AI chain of length two when all AI-exposed steps turn into AI-executed steps), the number of tasks in the model falls to four and the EFI becomes $4/5 = 0.8$.
@@ -234,12 +234,12 @@ We therefore estimate the following regression:
 \end{aligned}
     \label{eq:fragmentation_index_regression}
 \end{equation}
-where \emph{$\text{ai\_execution}_{w}$} is the share of steps executed by AI in workflow $w$, \emph{$\text{ai\_exposure}_{w}$} is the share of AI-exposed steps, \emph{$\text{empirical\_fragmentation\_index}_{w}$} is the index defined above, and \emph{$\text{num\_ai\_able\_steps}_{w}$} is the number of AI-able steps it contains.\footnote{Controlling for workflow length $m_w$ instead, or dropping the count control altogether, moves the fragmentation coefficient by at most $0.04$ standard deviations and changes no verdict.}
+where \emph{$\text{ai\_execution}_{w}$} is the share of steps executed by AI in workflow $w$, \emph{$\text{ai\_exposure}_{w}$} is the share of AI-exposed steps, \emph{$\text{empirical\_fragmentation\_index}_{w}$} is the index defined above, and \emph{$\text{num\_ai\_able\_steps}_{w}$} is the number of AI-able steps in workflow $w$.\footnote{Controlling for workflow length $m_w$ instead, or dropping the count control altogether, moves the fragmentation coefficient by at most $0.04$ standard deviations and changes no verdict.}
 The model predicts that workflows with higher AI exposure should have a higher share of steps executed by AI ($\beta_1 > 0$), and that, conditional on exposure, AI execution should be lower where AI-able steps are more dispersed ($\beta_2 < 0$).
 
 Table~\ref{tab:fragmentation_index_regression_exposure} reports the results.
 \begin{table}[!t]
-    \caption{Role of AI-exposed Step Fragmentation in Determining AI Execution Outcomes}
+    \caption{AI-exposed Step Fragmentation and AI Execution Outcomes}
     \label{tab:fragmentation_index_regression_exposure}
     \footnotesize
     \centering
@@ -251,24 +251,24 @@ This table reports results from estimating Equation~\eqref{eq:fragmentation_inde
 The dependent variable in all specifications is the share of steps executed by AI in the workflow.
 ``Share of AI-exposed Steps'' is the share of steps carrying an E1 or E2 label, the same label set from which the Empirical Fragmentation Index is constructed; the index itself captures how dispersed AI-exposed steps are across the workflow.
 All specifications control for the number of AI-able steps in the workflow. 
-Columns~(1)--(3) use the main O*NET sample, where a workflow is an occupation and the ordering is the GPT-imputed task sequence; columns~(4)--(6) use APQC's Process Classification Framework, where a workflow is a PCF Process Group and the ordering is the one documented by practitioners.
-On the APQC side, exposure and execution labels are transferred from each step's nearest O*NET task.
-All variables are standardized to unit standard deviation within their own sample, so the reported coefficients are in standard-deviation units and are not directly comparable in levels across the two panels.}
+Columns~(1)--(3) use the O*NET sample, where a workflow is an occupation and the ordering is the GPT-imputed task sequence; columns~(4)--(6) use the PCF sample, where a workflow is a process group and the ordering is the one documented by practitioners.
+In the PCF sample, exposure and execution labels are transferred from each step's nearest O*NET task.
+All variables are standardized to unit standard deviation within their own sample, so the reported coefficients are in standard-deviation units and are not directly comparable in levels across the two samples.}
 \end{spacing}
 \end{minipage}\end{table}
-In each sample we estimate three specifications: no fixed effects, and then two groupings of workflows (SOC major and minor occupation groups in O*NET, PCF Category and Framework in APQC).
+In each sample we estimate three specifications: no fixed effects, and then two groupings of workflows (SOC major and minor occupation groups in O*NET, PCF Category and Framework in the PCF).
 The fixed effects ensure the results are not driven by a narrow subset of occupation or process families.
 The exposure coefficient behaves as the model predicts in every column of both samples.
-A one-standard-deviation increase in the share of AI-exposed steps is associated with a $0.39$ to $0.49$ standard-deviation increase in the AI-executed share in O*NET and a $0.28$ to $0.42$ standard-deviation increase in APQC, significant at the 1\% level throughout.
+A one-standard-deviation increase in the share of AI-exposed steps is associated with a $0.39$ to $0.49$ standard-deviation increase in the AI-executed share in O*NET and a $0.28$ to $0.42$ standard-deviation increase in the PCF, significant at the 1\% level throughout.
 
 The fragmentation coefficient is where the two samples part company.
 In the O*NET sample it carries the predicted negative sign in all three specifications, but the point estimates are small and none is statistically distinguishable from zero.
 On O*NET occupations therefore we do not detect the workflow-level channel, but the estimates are not precise enough to rule it out either.
 A modest fragmentation effect would go undetected in this sample.
-On APQC's documented sequences, however, the coefficient is negative and statistically significant in all three columns, at $-0.35$, $-0.26$ and $-0.34$, so that process groups whose AI-exposed steps are more scattered convert less of their exposure into execution.
+On the PCF's documented sequences, however, the coefficient is negative and statistically significant in all three columns, at $-0.35$, $-0.26$ and $-0.34$, so that process groups whose AI-exposed steps are more scattered convert less of their exposure into execution.
 
 That the channel is detected in the PCF and not in O*NET is what a test built on arrangement would lead one to expect.
-The fragmentation index reads the ordering of a workflow as a whole, so it stands its best chance of detection where that ordering is recorded rather than inferred, which is the PCF's advantage over the imputed sequences and the reason we carry both corpora through this section.
+The fragmentation index reads the ordering of a workflow as a whole, so it stands its best chance of detection where that ordering is recorded rather than inferred, which is the PCF's advantage over the imputed sequences and the reason we test Predictions~\#1 and~\#3 in both samples.
 The trade-off noted earlier cuts the other way here.
 The $525$ process groups of the PCF cover a smaller part of economic activity than O*NET's occupational structure, and they inherit their labels through a lossy match, so the channel is documented on operational business processes such as procurement, order management, after-sales service, inventory, and regulatory compliance rather than across the economy.
 Neither result subsumes the other, and we read them together as saying that the arrangement channel is present where the arrangement is measured well enough to see it.

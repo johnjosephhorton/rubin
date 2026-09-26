@@ -7,14 +7,14 @@ All proofs are collected in Appendix~\ref{app:omitted_proofs}.
 \subsection{Overturning of Comparative Advantage}
 \label{sec:comparative_advantage}
 
-For a single step, the decision whether or not to deploy AI depends simply on whether the manual execution cost exceeds the AI augmentation cost.
+For a single step, the decision whether to deploy AI depends simply on whether the manual execution cost exceeds the AI augmentation cost.
 With more than one step, however, the optimal deployment of AI depends on more than each step's own characteristics, because of the benefits of automating multiple steps together in an AI chain.
 As a result, the factor of production holding the comparative advantage on a step in isolation need not be the one that performs it in the optimal production configuration.
-That is, a step that is more cost-effective to perform manually may nonetheless be executed by AI as part of a chain.
+That is, a step that is cheaper to perform manually may still be executed by AI as part of a chain.
 
-Consider a step $k$ on which the human holds the comparative advantage, so that $\manualTime{k} < \AItime{k}/q_k$, together with its immediate neighbors: a predecessor $k-1$, and a successor $k+1$ executed as a standalone augmented step.\footnote{The augmented step $k+1$ can be thought of as a longer AI chain terminating augmented at some step $r > k+1$. Such a chain can be treated as a single augmented step with composite cost parameters, namely verification cost $\AItime{r}$ and success probability $\prod_{i=k+1}^{r} q_i$, so what follows applies unchanged with these composite values.}
+Consider a step $k$ on which the human holds the comparative advantage, so that $\manualTime{k} < \AItime{k}/q_k$, together with its immediate neighbors: a predecessor $k-1$, and a successor $k+1$ executed as a standalone augmented step.\footnote{The augmented step $k+1$ can be thought of as a longer AI chain terminating augmented at some step $r > k+1$. Such a chain can be treated as a single augmented step with composite cost parameters, namely verification cost $\AItime{r}$ and success probability $\prod_{i=k+1}^{r} q_i$, so what follows applies unchanged.}
 Ask what it costs to admit $k-1$ and $k$ into the chain that ends at $k+1$, holding the rest of the workflow fixed.
-The marginal cost of admitting the two is what the chain costs over and above verifying step $k+1$ on its own,
+The marginal cost of admitting the two is the chain's cost beyond verifying step $k+1$ alone,
 \[
 \underbrace{\frac{\AItime{k+1}}{q_{k-1}\,q_k\,q_{k+1}}}_{\text{cost of chain over } \{k-1,\,k,\,k+1\}}
 \;-\;
@@ -185,7 +185,7 @@ Across re-orderings of a given workflow the index is therefore decreasing in $\s
 Absent the assumption, $\omega(C)$ depends on the whole of $C$ and no such expression in adjacent pairs exists.
 Without this assumption the charge-once saving can disappear altogether. If the manual costs of a merged run sum to less than the cost of one verification, $\omega$ is additive over that run's steps and the index does not respond to the arrangement at all.
 }
-A further implication of the proof is a natural and approximately optimal greedy algorithm for constructing AI strategies, where the firm groups steps into a chain as long as the probability of success stays sufficiently high, terminating the chain and starting a new one when it falls too low, and running an entire chain manually whenever its steps' total manual time is below the cost of one verification.
+A further implication of the proof is an approximately optimal greedy algorithm for constructing AI strategies, where the firm groups steps into a chain as long as the probability of success stays sufficiently high, terminating the chain and starting a new one when it falls too low, and running a chain manually whenever its steps' total manual time is below the cost of one verification.
 
 
 
@@ -250,4 +250,4 @@ The non-monotone productivity gains described here are a familiar pattern for ge
 The steam engine, electricity, and the computer each delivered only modest improvements in the early days of their adoption, and their full impact arrived once production had been reorganized around them, the shape \citet{brynjolfsson2021productivity} describe as the productivity J-curve.
 What the model shows is that the same shape arises within a single workflow, because the returns to better AI wait on discrete reorganizations of it.
 The reorganizations available here are nonetheless the narrowest kind, since the firm changes only which steps AI executes while job boundaries stay fixed.
-Over the horizon on which AI quality actually improves, firms can redefine jobs themselves, changing the skills each demands and the wages it commands, and it is that larger reorganization we study next.
+Over the horizon on which AI quality improves, firms can redefine jobs, changing the skills each demands and the wages it commands, and it is that larger reorganization we study next.
