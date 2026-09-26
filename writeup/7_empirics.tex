@@ -17,8 +17,9 @@ We draw on five sources:
     \item A GPT-generated task ordering for each O*NET occupation,
     \item The Process Classification Framework (PCF) of the American Productivity \& Quality Center \citep{apqc_pcf}.
 \end{enumerate}
-The first four build our O*NET sample, in which a workflow is an O*NET occupation, while the fifth supplies a second corpus of workflows with native ordering of steps onto which we carry the same O*NET exposure and execution labels.
-All sources are existing datasets apart from the O*NET task ordering, which we generate ourselves.
+The first four build our O*NET sample, in which a workflow is an occupation, and the fifth builds our PCF sample, in which a workflow is a process group with a native ordering of steps.
+All sources are existing (and publicly available) datasets apart from the O*NET task ordering, which we generate ourselves.
+Appendices~\ref{app:data_prep} and~\ref{app:apqc_fragmentation_top} respectively give the construction details of the O*NET and PCF samples.
 
 The O*NET database is the standard decomposition of work in the United States.
 It breaks each of more than 850 occupations into a list of constituent tasks, roughly 18,000 in total, and has served as the backbone of a large empirical literature on the task content of jobs and their exposure to new technologies \citep[e.g.,][]{autor2013putting, deming2017growing, brynjolfsson2018can, webb2020impact, felten2021occupational}.
@@ -27,33 +28,27 @@ We use their human-generated labels and treat their E1 and E2 category as expose
 Whereas these labels capture what AI could in principle do, the Anthropic Economic Index \citep{handa2025economictasksperformedai} captures what AI actually does.
 It maps millions of conversations between users and Claude, Anthropic's AI chatbot, to O*NET tasks and classifies each conversation by whether the interaction augments or automates the task, providing a task-level measure of realized AI usage.\footnote{One feature of the data shapes how we use it throughout. The model's automated versus augmented distinction is defined by production sequencing, whereas the Anthropic labels are assigned on task-level feasibility and are agnostic to workflow position, so the data occasionally shows an automated task followed by a manual one, which the model's definition of a chain does not allow. We therefore do not distinguish the two labels in what follows and treat both as indicating AI execution. Appendix~\ref{app:data_prep} documents the discrepancy and provides examples.}
 
-O*NET does not record the order in which an occupation's tasks are performed, and our model's predictions turn precisely on where a task sits in the production sequence.
-We therefore construct the workflow orderings ourselves.
-For each O*NET occupation, we prompt GPT-5-mini \citep[through Expected Parrot;][]{Horton2024EDSL} with the occupation's complete set of tasks and ask it to determine the most reasonable order in which these tasks would be performed in practice.
-Generating sequences this way inevitably introduces some noise and arbitrary choices, most notably the wording of the prompt.
-We therefore validate the orderings in three ways.
-First, we benchmark every result against placebos that randomly reshuffle task positions within occupations; the GPT-generated orderings differ sharply from these placebos, indicating that they capture meaningful workflow structure.
-Second, the orderings overlap substantially across ten deliberately varied alternative prompts, and our headline results closely mirror those under the main prompt when re-run on these alternative sequences (Appendix~\ref{app:gptPrompts_robustness}).
-Third, we test our sequencing procedure on two corpora ordered from actual work practice rather than by a language model, the PCF and a set of process-mining event logs, and it recovers the orderings in both to a substantial degree (Appendix~\ref{app:external_validation}).
-
-The PCF, finally, catalogues business processes, with APQC's member working groups recording the activities that compose a process in the order practitioners perform them.
-It is our second corpus of workflows, and the ordering it supplies is documented rather than imputed.
-Since AI exposure and execution are defined on O*NET tasks, we carry those labels onto PCF steps by matching each step to its nearest O*NET task using natural language embeddings, keeping unmatched steps in sequence and coded as neither exposed nor executed.
+The PCF catalogues business processes, with APQC's member working groups recording the activities that compose a process in the order practitioners perform them.
 Pooling APQC's Cross-Industry framework with its industry-specific ones leaves $13{,}482$ steps in $525$ process groups.
-The two corpora trade off against each other rather than ranking.
-O*NET spans the whole occupational structure and carries its exposure and execution labels natively, but its orderings are imputed.
-The PCF's orderings are recorded by practitioners, but it covers operational business processes rather than the economy at large, and the label transfer is lossy, leaving $12\%$ ($4\%$) of PCF steps AI-exposed (AI-executed) against $44\%$ ($13\%$) in the O*NET sample.
-That loss confines the PCF to Predictions~\#1 and~\#3, since Prediction~\#2 requires a much more demanding sample restriction.
-Appendices~\ref{app:data_prep} and~\ref{app:external_validation} respectively give the construction details of the O*NET and PCF samples.
+Since AI exposure and execution are defined on O*NET tasks, we carry those labels onto PCF steps by matching each step to its nearest O*NET task using natural language embeddings, keeping unmatched steps in sequence and coding them as neither AI-exposed nor AI-executed.
+The label transfer is lossy, leaving $12\%$ ($4\%$) of PCF steps AI-exposed (AI-executed) against $44\%$ ($13\%$) in the O*NET sample (which is also why we run Prediction~\#2 on the O*NET sample alone; see Subsection~\ref{sec:DWA_prediction}).
 
-The structure of our theoretical framework closely aligns with the structure of the O*NET dataset.
-Each production step in the model corresponds to an O*NET task, and each occupation's workflow corresponds to the model's step sequence.
-In the absence of AI, a step (that is, an O*NET task) is executed manually and maps directly into a task under our model's definition.
-Thus, without AI, an O*NET task can be viewed as both a step and a task, which matches the standard treatment of tasks in the O*NET dataset.
-Under AI execution, however, multiple steps, corresponding to a subset of O*NET tasks, may be chained together and executed jointly, forming a composite task as defined in Section~\ref{sec:shortrun}.
-In the rest of this section, we use the terms step, O*NET task, and task interchangeably and expect the reader to keep these distinctions in mind.
-We similarly use the terms workflow and occupation interchangeably without restating the mapping each time, and note that in the PCF corpus a workflow is a process group rather than an occupation.
+The two corpora complement each other in our analysis.
+The PCF's workflow orderings are recorded by practitioners, but the PCF covers only operational business processes.
+O*NET, on the other hand, has broader coverage of economic activity but lists an occupation's tasks without the order in which they are performed.
+To make the O*NET dataset suitable for our analysis, we construct workflow orderings for it by prompting GPT-5-mini \citep[through Expected Parrot;][]{Horton2024EDSL} with each occupation's complete set of tasks and asking for the most reasonable order in which they would be performed in practice.
+Because this procedure requires arbitrary choices, we validate the orderings in two ways.
+First, we show that the task orderings, and by extension our conclusions, change little across ten deliberately varied alternative prompts (Appendix~\ref{app:gptPrompts_robustness}).
+Second, applied to the PCF and to eight process-mining event logs whose orderings are known, we show that our sequencing procedure restores the correct workflow order to a substantial degree when the ground truth is known (Appendix~\ref{app:external_validation}).
+These checks increase our confidence that the conclusions we draw from the O*NET sample are not artifacts of our LLM prompting and task sequencing approach.
 
+The structure of our theoretical framework closely aligns with the structure of both datasets.
+Each production step in the model corresponds to a PCF step or an O*NET task, and each workflow corresponds to the model's step sequence.
+In the absence of AI, a step (that is, a PCF step or an O*NET task) is executed manually and maps directly into a task under our model's definition.
+Thus, without AI, a PCF step or an O*NET task can be viewed as both a step and a task, which matches how both datasets list their units of work.
+Under AI execution, however, multiple steps, corresponding to a subset of PCF steps or O*NET tasks, may be chained together and executed jointly, forming a composite task as defined in Section~\ref{sec:shortrun}.
+In the rest of this section, we use the terms step, PCF step, O*NET task, and task interchangeably and expect the reader to keep these distinctions in mind.
+We similarly use the term workflow for both an O*NET occupation and a PCF process group without restating the mapping each time.
 
 
 \subsection{Prediction \#1: Tendency to Have Runs of Consecutive AI-executed Tasks}
