@@ -6,16 +6,10 @@
 % belonged to the previous appendix. The exhibits here are placed by hand with [h!] and
 % \newpage, which already avoids that, and \suppressfloats[t] keeps the top of this
 % page clear should any of them go back to floating.
-\suppressfloats[t]
 
-Table~\ref{tab:notation} collects the notation the theory sections use.
-Panel~A covers the step-, task-, and AI strategy-level objects of Sections~\ref{sec:shortrun} and~\ref{sec:results}, and Panel~B the skill, job, wage, and hand-off objects that Section~\ref{sec:longrun} adds.
-
-\vspace{1cm}
-
-\begin{table}[h!]
+\begingroup
 \centering
-\caption{Notation Used in the Theory Sections}
+\captionof{table}{Notation Used in the Theory Sections}
 \label{tab:notation}
 \footnotesize
 \begin{tabularx}{\textwidth}{l X}
@@ -24,36 +18,28 @@ Panel~A covers the step-, task-, and AI strategy-level objects of Sections~\ref{
 \midrule
 \textbf{Symbol} & \textbf{Description} \\
 \midrule
-\addlinespace
 $\alpha \in (0,1]$ & Quality of the general-purpose AI technology \\
-\addlinespace
 $s_i$ & Production step $i$ \\
 $\mathcal{S} = (s_1, \dotsc, s_m)$ & Sequence of the firm's $m$ production steps \\
 $\manualTime{i}$ & Time cost of completing step $i$ manually \\
 $\AItime{i}$ & Time cost of verifying the output of one AI attempt at step $i$ \\
 $d_i$ & Difficulty of step $i$ for AI \\
 $q_i = \alpha^{d_i}$ & Probability that AI completes step $i$ successfully \\
-\addlinespace
 $T_b$ & Task $b$: a manual step or an AI chain (with a standalone augmented step considered a length-one AI chain) \\
 $\mathcal{T} = (T_1, \dotsc, T_n)$ & AI deployment strategy; a partition of the steps into $n$ tasks \\
 $\timecost{b}$ & Expected time cost of task $b$: $\manualTime{i}$ if a manual step, $\AItime{r}/\prod_{i=\ell}^{r} q_i$ if an AI chain over steps $\ell, \dotsc, r$ \\
-\addlinespace
 \midrule
 \multicolumn{2}{l}{\textbf{Panel B: Skills, Jobs, Wages, Hand-offs, and Job Design (Section~\ref{sec:longrun}: Long Run)}} \\
 \midrule
 \textbf{Symbol} & \textbf{Description} \\
 \midrule
-\addlinespace
 $\manualSkill{i}$ & Skill required to complete step $i$ manually \\
 $\AIskill{i}$ & Skill required to verify the output of one AI attempt at step $i$ \\
 $\skillcost{b}$ & Skill required by task $b$: $\manualSkill{i}$ if a manual step, $\AIskill{r}$ if an AI chain augmented at step $r$; an automated step requires none \\
-\addlinespace
 $J_j$ & Job $j$: a contiguous block of tasks assigned to a single worker \\
 $\mathcal{J} = (J_1, \dotsc, J_p)$ & Job design; a partition of the tasks into $p$ jobs \\
-\addlinespace
 $\handofftime{i}$ & Hand-off time incurred when a worker's final step is $s_i$ \\
 $\handofftime{}(J_j)$ & Hand-off time of job $J_j$, equal to $\handofftime{i}$ for its final step $s_i$ \\
-\addlinespace
 $\text{Wage}_j$ & Wage rate of job $J_j$'s worker, equal to the total skill it requires, $\sum_{T_b \in J_j} \skillcost{b}$ \\
 $\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b \in J_j} \skillcost{b}\bigr)\bigl(\handofftime{}(J_j) + \sum_{T_b \in J_j} \timecost{b}\bigr)$ \\
 \bottomrule
@@ -61,33 +47,25 @@ $\text{WageBill}_j$ & Per-unit-output labor cost of job $J_j$: $\bigl(\sum_{T_b 
 
 \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
-{\fontsize{9.5pt}{10pt}\selectfont Notes: Step-level primitives are indexed by $i$, task-level objects by $b$, and jobs by $j$; superscripts $M$ and $A$ denote the manual and AI modes of executing a step, and $H$ denotes a hand-off between consecutive workers.
-Panel~A is all the short-run problem requires.
-With the whole workflow assigned to one worker at a fixed wage, execution time is the only margin and no notion of skill is needed.
-Panel~B enters only once the firm chooses how to divide the workflow among workers, and it extends rather than replaces Panel~A, which the long-run problem continues to use.}
+{\fontsize{9.5pt}{10pt}\selectfont Notes: Steps are indexed by $i$, tasks by $b$, and jobs by $j$; superscripts $M$ and $A$ denote the manual and AI modes of executing a step, and $H$ a hand-off between consecutive workers. The long-run problem uses both panels.}
 \end{spacing}
 \end{minipage}
-\end{table}
+\par\endgroup
+% Keep Table A.1 first among the exhibits of this appendix.
+\FloatBarrier
 
 
-\newpage
-\noindent Section~\ref{sec:longrun.specialization} works through a three-task workflow whose four job designs are drawn in Figure~\ref{fig:job_design}.
-Table~\ref{tab:job_design} reports what each of them costs, first with hand-off costs switched off and then with them on.
-Reading down either panel, a design's total is the sum over its jobs of the job's total skill times the total time it takes, hand-off included, which is Equation~\eqref{eq:wagebill} applied job by job.
-
-\vspace{1cm}
-
-\begin{table}[h!]
+\begin{table}[p]
     \caption{Role of Hand-off Costs in Organizational Structure}
     \vspace{-0.3cm}
     \centering
-    \resizebox{0.9\textwidth}{!}{%
+    \resizebox{0.72\textwidth}{!}{%
     \begin{tabular}{c}
     \begin{minipage}{\textwidth}
     \centering
     Panel (a): Without Hand-off Costs \\[1ex]
     \input{tables/job_design_example_no_handoff.tex}
-    \end{minipage} \\[15ex]
+    \end{minipage} \\[2ex]
 
     \begin{minipage}{\textwidth}
     \centering
@@ -101,23 +79,15 @@ Reading down either panel, a design's total is the sum over its jobs of the job'
     \begin{minipage}{1\linewidth}
 \begin{spacing}{0.2}
 {\fontsize{9.5pt}{10pt}\selectfont Notes: This table reports total production costs for each possible job design in an example workflow with a fixed automation strategy and $n = 3$ tasks.
-The cost parameters of the tasks are given in Section~\ref{sec:longrun.specialization}.
+The four job designs are drawn in Figure~\ref{fig:job_design}, and the cost parameters of the tasks are given in Section~\ref{sec:longrun.specialization}.
+A design's total is the sum over its jobs of the job's total skill times the total time it takes, hand-off included, which is Equation~\eqref{eq:wagebill} applied job by job.
 In Panel (a), in the absence of hand-off frictions, full specialization, corresponding to job design [1][2][3], is cost-minimizing.
 Once hand-off costs are taken into account, in Panel (b) the optimal organizational structure changes to job design [1,2][3], which avoids the large coordination cost between tasks 1 and 2 at the expense of employing a higher-cost (more skilled) worker to complete those tasks.}
 \end{spacing}
 \end{minipage}
-\end{table}
 
+\vspace{0.6cm}
 
-
-\newpage
-\noindent Section~\ref{sec:nonlinear} works through a two-step workflow in which the marginal gain from improving AI quality is non-monotone.
-Table~\ref{tab:nonmonotone_costs} lists the five AI strategies available there, the cost of each as a function of AI quality $\alpha$, the marginal benefit of raising $\alpha$ under each, and the range of $\alpha$ over which each is cost-minimizing.
-Appendix~\ref{app:nonmonotone} states and proves the general result the example illustrates.
-
-\vspace{1cm}
-
-\begin{table}[h!]
 \centering
 \caption{Configurations, Costs, and Marginal Gains in Example~\ref{ex:nonmonotone}}
 \label{tab:nonmonotone_costs}
@@ -148,14 +118,14 @@ Steps 1--2 chained & $\AItime{2}/(q_1 q_2) = 4\alpha^{-12}$ & $48/\alpha^{13}$ &
 {\fontsize{9.5pt}{10pt}\selectfont Notes: The two-step workflow of Example~\ref{ex:nonmonotone}, the AI-hard and AI-easy steps of Section~\ref{sec:comparative_advantage}, in which $\manualTime{1}=6$, $\manualTime{2}=8$, $\AItime{1}=3.5$, $\AItime{2}=4$, and the AI succeeds at step $i$ with probability $q_i = \alpha^{d_i}$ for $d_1 = 11$ and $d_2 = 1$, so that $q_1 = \alpha^{11}$ and $q_2 = \alpha$.
 Costs follow from the task time costs of Section~\ref{sec:model.tasks}, and $-\mathrm{d}C/\mathrm{d}\alpha$ is the marginal benefit of improving AI quality.
 The last column gives the range of $\alpha$ over which each configuration is cost-minimizing.
+Appendix~\ref{app:nonmonotone} states and proves the general result the example illustrates.
 Neither configuration in which step~1 is augmented ever minimizes cost.
-Augmenting it on its own costs $3.5\alpha^{-11}$, which is prohibitive while AI is unreliable, and by the time AI is reliable enough for that to be affordable, folding step~1 into a chain is cheaper still, because an automated step is never prompted or verified on its own, so its management cost is never paid at all.}
+Augmenting it on its own costs $3.5\alpha^{-11}$, which is prohibitive while AI is unreliable, and by the time AI is reliable enough for that to be affordable, folding step~1 into a chain is cheaper still, because an automated step is never prompted or verified on its own, so its management cost is never paid.}
 \end{spacing}
 \end{minipage}
 \end{table}
 
 
-\newpage
 \begin{figure}[p]
   \centering
   \caption{Neighboring Tasks' AI Execution Status and a Task's AI Execution: Placebo Distributions}
@@ -204,3 +174,6 @@ Panel~(a) reports results from Equation~\eqref{eq:DWA_regression_ai}, while Pane
 \end{spacing}
 \end{minipage}
 \end{figure}
+
+% Print every exhibit of this appendix before Appendix B begins.
+\FloatBarrier

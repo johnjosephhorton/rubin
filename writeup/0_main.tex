@@ -108,8 +108,7 @@ Empirically, we show that existing automation patterns are consistent with the m
 \section{Conclusion}
 \input{8_conclusion.tex}
 
-%\newpage
-%\clearpage
+\clearpage
 
 \bibliographystyle{chicago}
 \setlength{\bibsep}{0ex}
@@ -192,8 +191,8 @@ Empirically, we show that existing automation patterns are consistent with the m
   \setcounter{page}{1}%
   \pagestyle{empty}%
   \begin{center}
-    {\LARGE Chaining Tasks, Redefining Work: \\ A Theory of AI Automation}\\[1em]
-    \large Mert Demirer, John J. Horton, Nicole Immorlica, Brendan Lucier, and Peyman Shahidi \\[1em]
+    {\LARGE Chaining Tasks, Redefining Work: \\ A Theory of AI Automation}\\[0.7em]
+    \large Mert Demirer, John J. Horton, Nicole Immorlica, Brendan Lucier, and Peyman Shahidi \\[0.7em]
     {\LARGE #3}\\[0.6em]
     \if\relax\detokenize{#1}\relax\else{\large (#1)}\\[0.6em]\fi
   \end{center}
@@ -205,6 +204,17 @@ Empirically, we show that existing automation patterns are consistent with the m
 % aggregation. Kept short on purpose; the data construction and the further tests
 % live in the Supplementary Appendix that follows.
 \startappendixpart{OA}{Online Appendix}
+% Slightly tighter spacing around displayed equations in the Online Appendix only:
+% 7pt instead of the 9pt the preamble sets for the rest of the paper. \normalsize
+% resets these skips, so they are re-applied through it; the Supplementary Appendix
+% restores the 9pt.
+\makeatletter
+\let\OA@normalsize\normalsize
+\renewcommand\normalsize{\OA@normalsize
+  \setlength\abovedisplayskip{7pt}\setlength\belowdisplayskip{7pt}%
+  \setlength\abovedisplayshortskip{7pt}\setlength\belowdisplayshortskip{7pt}}
+\makeatother
+\normalsize
 % Online Appendix sections are numbered with bare letters (A, B, C), not OA.A.
 % \theHsection keeps the OA marker so hyperref anchors stay distinct from SA.A.
 \gdef\thesection{\Alph{section}}
@@ -225,10 +235,10 @@ Empirically, we show that existing automation patterns are consistent with the m
 \etocsettagdepth{main}{none}
 \etocsettagdepth{onlineappendix}{subsection}
 \etocsettagdepth{suppappendix}{none}
-\tableofcontents
-\clearpage
+% No contents list: Appendix A starts on the title page, as in the Supplementary
+% Appendix, to keep the Online Appendix within REStud's 30-page limit.
+\thispagestyle{plain}
 \pagestyle{plain}
-\setcounter{page}{1}
 
 \begin{bibunit}[chicago]
 \etocdepthtag.toc{onlineappendix}
@@ -240,13 +250,10 @@ Empirically, we show that existing automation patterns are consistent with the m
 % Table OA.A.1 is the notation summary, cited from the fourteenth line of Section 3.
 \input{OA_A_tables_and_figures.tex}
 
-\clearpage
 \input{OA_B_omitted_proofs.tex}
 
-\clearpage
 \input{OA_C_CES_representation.tex}
 
-\clearpage
 \renewcommand{\refname}{\large References for Online Appendix}
 \setlength{\bibsep}{0ex}
 \begin{spacing}{0.98}
@@ -256,6 +263,9 @@ Empirically, we show that existing automation patterns are consistent with the m
 
 % ====================================================== SUPPLEMENTARY APPENDIX
 % Sections SA.A to SA.F: how the sample is built, and the tests that probe it.
+% Back to the preamble's 9pt display spacing after the Online Appendix.
+\makeatletter\let\normalsize\OA@normalsize\makeatother
+\normalsize
 \startappendixpart[Not for Publication]{SA}{Supplementary Appendix}
 % No contents list here: as in the REStud supplement, the first section starts on the
 % title page, which carries a page number like every other page.
