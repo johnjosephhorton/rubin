@@ -5,7 +5,7 @@ The task sequences underlying our empirical analysis combine, for each occupatio
 This raises the concern that rarely-executed tasks, which a worker might perform only rarely, lengthen the workflow and insert ``filler'' steps between the tasks that structure day-to-day production.
 If they do, the average length of the AI chains we document in Prediction~\#1, the adjacency between AI-executed steps we exploit in Prediction~\#2, and the dispersion of AI-exposed steps we measure in Prediction~\#3 may partly reflect infrequent tasks rather than the operative structure of work.
 This appendix re-examines all three predictions on samples restricted to the tasks that workers report performing frequently.
-The chain-length and neighbor results continue to hold, and the fragmentation null of Subsection~\ref{sec:fragmentation_prediction} is likewise unchanged by pruning.
+The chain-length and neighbor results keep their sign under pruning, though they are estimated less precisely as the samples shrink, and the fragmentation null of Subsection~\ref{sec:fragmentation_prediction} is likewise unchanged.
 
 Rather than re-querying the language model to re-sequence each occupation's surviving tasks, we prune the workflows already generated for the main analysis.
 Within each occupation we drop the tasks that fail the frequency filter (discussed below), keep the surviving tasks in their original order, and recompute the average AI chain length, the empirical fragmentation index, and the neighbor-execution flags on the pruned sequence before re-estimating the corresponding statistics. 
@@ -13,7 +13,7 @@ Pruning the existing sequences rather than re-prompting for a fresh ordering iso
 
 To keep the sample definition consistent across the three predictions, we restrict each cut to the occupations whose frequency-pruned workflow retains at least five tasks, and we evaluate all three predictions on this common set of occupations.
 The five-task floor is applied to the pruned workflow, that is, to the steps that survive the frequency filter.
-For Predictions~\#1 and~\#3 the chain length and fragmentation index are computed over each occupation's full pruned workflow; for Prediction~\#2 the neighbor regression uses the eligible tasks of the same occupations, namely those with two neighbors on either side, which a five-task workflow always admits.\footnote{For comparability across cuts, the fragmentation regressions z-score all three variables (the AI-execution share, the empirical fragmentation index, and AI exposure) within each cut, so the reported coefficients are standardized betas, where a one-standard-deviation change in fragmentation maps to a $\beta$-standard-deviation change in the AI-execution share. For the neighbor logits we report average marginal effects with analytic robust standard errors clustered at the DWA level, rather than the bootstrap of Table~\ref{tab:DWA_regression_aiExecution_mainSample}. Point estimates for the ``all tasks'' specification are identical to those reported in the main text.}
+For Predictions~\#1 and~\#3 the chain length and fragmentation index are computed over each occupation's full pruned workflow; for Prediction~\#2 the neighbor regression uses the eligible tasks of the same occupations, namely those with two neighbors on either side, which a five-task workflow always admits, and among these only the tasks whose DWA appears in more than one occupation, as in Section~\ref{sec:DWA_prediction}, so fewer occupations contribute to the neighbor estimates than to the other two.\footnote{For comparability across cuts, the fragmentation regressions z-score all three variables (the AI-execution share, the empirical fragmentation index, and AI exposure) within each cut, so the reported coefficients are standardized betas, where a one-standard-deviation change in fragmentation maps to a $\beta$-standard-deviation change in the AI-execution share. For the neighbor logits we report average marginal effects with analytic robust standard errors clustered at the DWA level, rather than the bootstrap of Table~\ref{tab:DWA_regression_aiExecution_mainSample}. Point estimates for the ``all tasks'' specification of Predictions~\#1 and~\#2 are identical to those reported in the main text. For Prediction~\#3, the five-task floor drops one of the $872$ occupations, which moves the SOC minor-group estimate from $-0.04$ to $-0.05$.}
 
 \subsection{Constructing the Frequent-Task Samples}
 \label{app:frequency_robustness_construction}
@@ -98,10 +98,11 @@ The right margin reports the observed value and its percentile in the null.}
 \end{minipage}
 \end{figure}
 The top all-tasks row reproduces the full-sample value of $1.45$.
-Chains shorten modestly as the sample is restricted to frequent tasks, to between $1.24$ and $1.31$ across most cuts, ticking back up only in the two sparsest Hourly$+$ corners ($1.40$ and $1.50$, with $75$ and $20$ occupations).
+Chains shorten modestly as the sample is restricted to frequent tasks, to between $1.24$ and $1.35$ in every cut except the two sparsest Hourly$+$ corners, where they tick back up ($1.40$ and $1.50$, with $75$ and $20$ occupations).
 In the full sample the observed value sits at the 100th percentile of its null. AI-executed tasks form longer contiguous chains than random reordering would produce, so the chaining pattern is not a compositional artifact.
-The result survives pruning.
-The observed chain length stays in the upper tail of its null across the inclusive and moderate cuts, at the 87th to 100th percentiles under the Daily$+$ logic and the 58th to 100th under SeveralDaily$+$, and falls back toward the middle of the null only in the Hourly$+$ cuts (the 40th to 68th percentiles), which are the smallest samples.
+Pruning preserves the direction of the result but not its precision.
+The observed chain length lies above its null mean in eleven of the twelve pruned cuts and clears the 10-to-90 null band in four of them, all under the inclusive logics, namely Daily$+$ at the $20\%$, $35\%$, and $65\%$ thresholds (the 99th, 100th, and 96th percentiles) and SeveralDaily$+$ at $20\%$ (the 100th).
+In the remaining cuts it sits inside the band, at the 58th to 87th percentiles under Daily$+$ and SeveralDaily$+$ and at the 40th to 68th under Hourly$+$, where the samples are smallest and the null bands widest.
 
 
 
@@ -138,15 +139,18 @@ A ``$-$'' marks a cut with too few observations to estimate.}
 \end{minipage}
 \end{figure}
 Each cell reports the average marginal effect, from re-estimating Equation~\eqref{eq:DWA_regression_ai}, of having the immediately preceding ($k{-}1$, Panel~(a)) or following ($k{+}1$, Panel~(b)) task be AI-executed on the focal task's probability of AI execution.
-A red cell denotes a positive effect, the sign found in the full sample.
-The top row reproduces the full-sample adjacent-step effects of $+0.12$ under no fixed effects, which attenuate to between $+0.04$ and $+0.06$ once SOC fixed effects absorb cross-family differences.
-The positive adjacent-step effect persists across the inclusive and moderate cuts and often grows in magnitude as the workflow is restricted to frequent tasks; under SeveralDaily$+$ $\geq 50\%$, for instance, the previous-task effect rises to $+0.12$ in the no-fixed-effects specification.
-The estimates weaken and lose significance only in the sparsest cells, where the number of surviving task observations falls into the low hundreds.
+A red cell denotes a positive estimate, the sign found in the full sample.
+The top row reproduces the full-sample adjacent-step estimates of $+0.11$ for both the previous and the next task under no fixed effects, which attenuate to between $+0.05$ and $+0.06$ once SOC fixed effects absorb cross-family differences.
+The estimate is positive in 65 of the 66 estimable pruned cells.
+Under the inclusive Daily$+$ logic it is somewhat smaller than in the full sample, at $+0.07$ to $+0.10$ without fixed effects and $+0.03$ to $+0.05$ with SOC fixed effects, and it remains significant in 23 of the 24 cells.
+Under the stricter SeveralDaily$+$ and Hourly$+$ logics the estimates are noisier.
+The previous-task estimate is largest in the sparsest cuts (SeveralDaily$+$ $\geq 50\%$ and $\geq 65\%$, and Hourly$+$ $\geq 50\%$, with $41$ to $574$ task observations), at $+0.12$ to $+0.33$ and significant throughout, while the next-task estimate in the same cells ranges from $+0.05$ to $+0.17$ and is mostly insignificant.
+Outside those cuts, significance is lost mainly in the intermediate SeveralDaily$+$ and Hourly$+$ cuts, and most often with SOC minor-group fixed effects.
 The effects of steps two positions away remain small and, under fixed effects, are statistically indistinguishable from zero across the grid, in line with the main text. The part of a step's local context that predicts its execution mode is the part a chain of average length $1.45$ can actually span.\footnote{ To save space, we do not report the results on steps two position away from the focal step and only focus on the outcomes for immediate neighbors.}
 
 Figure~\ref{fig:neighbor_placebo_forest} benchmarks the previous-task ($k{-}1$, Panel~(a)) and next-task ($k{+}1$, Panel~(b)) effects against their position-reshuffle nulls, one column per specification.
 \begin{figure}[!t]
-\caption{Immediate-Neighbor Effects: Observed Marginal Effects Versus Their Position-Reshuffle Nulls Across Frequency Cuts}
+\caption{Immediate-Neighbor Associations: Observed Average Marginal Effects Versus Their Position-Reshuffle Nulls Across Frequency Cuts}
 \label{fig:neighbor_placebo_forest}
 \centering
 \begin{subfigure}[b]{\textwidth}
@@ -171,10 +175,11 @@ A blank row denotes a cut with too few neighbored task observations to estimate.
 \end{spacing}
 \end{minipage}
 \end{figure}
-Both effects sit far in the upper tail of their nulls in the full sample, at the 100th percentile in all three specifications, and stay there across the inclusive and moderate cuts.
-The previous-task effect lies outside its 10-to-90 null in ten of the twelve Daily$+$ cells (the 87th to 97th percentiles) and in five of the six SeveralDaily$+$ $\geq 20\%$ and $\geq 50\%$ cells (the 90th to 98th), and the next-task effect behaves similarly, escaping its null in nine of the twelve Daily$+$ cells.
-The effects retreat toward the middle of their nulls only at the sparsest cuts, the Hourly$+$ $\geq 35\%$ and $\geq 50\%$ cuts and SeveralDaily$+$ $\geq 35\%$, where the surviving task observations number in the low hundreds and the reshuffle bands are correspondingly wide.
-The positive effect of adjacent-step AI execution on the AI execution likelihood of the focal step persists across the inclusive and moderate cuts and weakens only through lost statistical power at the strictest thresholds, without reversing sign.
+Both estimates sit far in the upper tail of their nulls in the full sample, at the 100th percentile in all three specifications, and mostly stay there under the Daily$+$ logic.
+The previous-task estimate lies outside its 10-to-90 null band in ten of the twelve Daily$+$ cells and the next-task estimate in nine, at the 87th to 97th and the 77th to 100th percentiles across those cells, respectively.
+Under the stricter logics the two separate.
+The previous-task estimate still escapes its null in seven of the twelve SeveralDaily$+$ cells, including all three at the $\geq 50\%$ threshold, but in only one of the nine Hourly$+$ cells, while the next-task estimate stays inside its null band in every SeveralDaily$+$ and Hourly$+$ cell, at the 28th to 86th percentiles.
+The positive association between adjacent-step AI execution and the focal step's AI execution thus persists under the inclusive cuts and loses precision, but rarely its sign, under the strictest thresholds, where the surviving task observations number in the low hundreds and the reshuffle bands are correspondingly wide.
 
 \subsection{Robustness of Prediction \#3 Results}
 \label{app:frequency_robustness_frag}
@@ -209,4 +214,4 @@ What the grid establishes is that the null of Subsection~\ref{sec:fragmentation_
 
 
 
-In short, all three implications of our model appears to operate among the subset of frequently-performed tasks, and does not appear to be an artifact of the rarely-performed activities catalogued in O*NET.
+In short, the chain-length and neighbor patterns keep their sign among frequently performed tasks, and neither they nor the fragmentation null of the O*NET sample appear to be artifacts of the rarely performed activities catalogued in O*NET.

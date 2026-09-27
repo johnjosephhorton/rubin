@@ -1,10 +1,10 @@
 \section{External Validation of the Sequencing Approach and Results}
 \label{app:external_validation}
 
-The task sequences underlying our empirical analysis are not observed.
+The O*NET task sequences underlying our empirical analysis are not observed.
 O*NET catalogues the tasks that belong to an occupation but not the order in which they are performed, so we
 construct that order by prompting a language model (GPT-5-mini).
-Every adjacency-based object in the paper rests on that imputation, which raises two concerns.
+Every adjacency-based object we compute on the O*NET sample rests on that imputation, which raises two concerns.
 
 The first is that the task orderings may be artifacts of how LLMs reason rather than reconstructions of
 how work is done.
@@ -44,7 +44,7 @@ Subsection~\ref{app:apqc_fragmentation_top} then turns the PCF corpus on the sec
 It documents how AI exposure and AI execution labels are carried onto PCF steps with natural-language
 embeddings, which is the construction behind columns~(4)\textendash(6) of
 Table~\ref{tab:fragmentation_index_regression_exposure}, where the PCF estimates of the fragmentation channel
-of Prediction~\#3 are reported alongside the main sample and discussed in
+of Prediction~\#3 are reported alongside the O*NET sample and discussed in
 Subsection~\ref{sec:fragmentation_prediction}.
 It also gives in full the Prediction~\#1 exercise on those documented sequences that
 Subsection~\ref{sec:chainLength_prediction} summarizes, where AI-executed steps again form chains longer
@@ -173,7 +173,7 @@ Across PCF categories the average $\tau$ ranges from $0.66$ in ``Deliver Service
 \label{app:apqc_validation_tail}
 A tenth of branches record a negative $\tau$ under the main prompt, and it is worth being clear about what they are, since the sign of $\tau$ overstates the disagreement on short branches.
 Kendall's $\tau$ is coarse when there are few steps to order. On a three-step branch it can only take the values $\{-1, -1/3, +1/3, +1\}$, so a single inverted pair already registers as a large negative number, whereas on a ten-step branch the same inversion costs $0.02$ and leaves $\tau$ near $+1$.
-Figure~\ref{fig:apqc_tau_by_size} decomposes the distribution by branch length and shows the consequence directly. The mass at $\tau = -1$ consists entirely of three- and four-step branches, and so does most of the spike at $\tau = +1$, where $56\%$ of three-step branches sit against none of the branches with five steps or more.
+Figure~\ref{fig:apqc_tau_by_size} decomposes the distribution by branch length and shows the consequence directly. The mass at $\tau = -1$ consists almost entirely of three- and four-step branches (three of its four branches), and so does most of the spike at $\tau = +1$, where $56\%$ of three-step branches sit against $10\%$ of the branches with five steps or more.
 
 The tail is not, however, purely an artifact of short branches.
 Negative values are about as common among the longest branches as among the shortest, $14\%$ in both cases, and what differs is their magnitude, in that short branches produce reversals while long branches produce values between $-0.03$ and $-0.20$, that is, a handful of misordered pairs within an otherwise correct sequence.
@@ -349,7 +349,7 @@ the steps that fail to match are concentrated in the operational and industry-sp
 We instead keep every step in place and code the sub-threshold ones as neither AI-exposed nor AI-executed,
 which preserves the documented ordering intact and treats an unverifiable label as an absent one.
 Process groups with fewer than five steps are dropped, leaving $13{,}482$ steps in $525$ process groups and
-$26$ steps per group, against $20$ tasks per occupation in the main sample.
+$26$ steps per group, against $20$ tasks per occupation in the O*NET sample.
 
 \paragraph{What survives the threshold.}
 The $0.71$ cosine similarity threshold is demanding, and it should be read as such before any estimate is.
@@ -358,8 +358,8 @@ Because every step below it is coded manual and unexposed, the resulting sample 
 $12\%$ of steps are AI-exposed and $4\%$ are AI-executed, against $44\%$ and $13\%$ in the O*NET task
 universe.
 Anything estimated on these sequences therefore asks whether a prediction holds on a corpus carrying roughly a
-third of the main sample's AI density, with every label that does survive verified at high similarity.
-The caveat applies to the fragmentation estimates in those columns as much as to the chain-length test below, though Subsection~\ref{sec:fragmentation_prediction} explains why the same sparsity works in the fragmentation test's favor.
+third of the O*NET sample's AI density, with every label that does survive verified at high similarity.
+The caveat applies to the fragmentation estimates in columns~(4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression_exposure} as much as to the chain-length test below.
 
 \paragraph{How much the similarity floor matters.}
 The floor is a judgement call, so we vary it from $0.65$ to $0.75$ in steps of $0.01$ and re-run both exercises at each value.
@@ -393,7 +393,7 @@ The grey vertical band marks the $0.71$ floor used throughout the paper, and cov
 Subsection~\ref{sec:chainLength_prediction} reports this exercise alongside the O*NET one; we give it here in full.
 The average AI chain in the PCF dataset spans $1.16$ steps, against $1.45$ in the main text for O*NET.
 The magnitude is small, and mechanically so, because with only $4\%$ of steps AI-executed, there is little
-opportunity for long runs to form, and the ceiling on the statistic is far below the main sample's.
+opportunity for long runs to form, and the ceiling on the statistic is far below the O*NET sample's.
 What the exercise can still ask is whether the runs that do form are longer than the same labels arranged at
 random along the same sequences, and they clearly are.
 Benchmarked as in Section~\ref{sec:chainLength_prediction} against $1{,}000$ draws of a within-group
@@ -415,7 +415,7 @@ Table~\ref{tab:DWA_regression_aiExecution_mainSample}, so the matched corpus is 
 by roughly an order of magnitude.
 
 \paragraph{Reading the PCF fragmentation coefficient.}
-The fragmentation regression of Equation~\eqref{eq:fragmentation_index_regression} is estimated on this corpus in columns~(4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression_exposure} and discussed in Subsection~\ref{sec:fragmentation_prediction}, which also discusses why the workflow-level channel is detected on this corpus and not on the main sample.
+The fragmentation regression of Equation~\eqref{eq:fragmentation_index_regression} is estimated on this corpus in columns~(4)\textendash(6) of Table~\ref{tab:fragmentation_index_regression_exposure} and discussed in Subsection~\ref{sec:fragmentation_prediction}, which also discusses why the workflow-level channel is detected on this corpus and not on the O*NET sample.
 One feature of the transfer belongs here rather than in the main text.
 All variables are z-scored against their mean and standard deviation within the PCF sample, and the index varies far less across PCF process groups than across O*NET occupations, with a standard deviation of $0.06$ against $0.26$.
 A one-standard-deviation move is thus a much smaller move in the index here, and the slope per unit of the index is correspondingly steeper.
@@ -443,14 +443,15 @@ self-consistent than it is accurate.
 
 Three limitations qualify what these exercises establish.
 First, they validate the ordering \emph{procedure} rather than the specific O*NET orderings used in the paper,
-since neither the PCF nor the event logs is crosswalked to O*NET tasks.
+since neither the PCF nor the event logs records the order in which O*NET occupations perform their tasks.
 Second, the PCF is not a random sample of work, since it is weighted toward enterprise process work such as finance,
 procurement, human resources, information technology, and supply chain.
-Third, the PCF serves as a validation sample rather than as the main sample because our AI exposure labels
+Third, the PCF carries no AI exposure or execution labels of its own, since our AI exposure labels
 come from \citet{eloundou2023gpts} and our AI execution labels from the Anthropic Economic Index
 \citep{handa2025economictasksperformedai}, both defined over O*NET tasks.
-There is no corresponding measure for PCF process elements, and constructing one would mean generating the
-very labels the main analysis takes from external sources.
+The labels we use on the PCF sample are transferred from the nearest O*NET task
+(Appendix~\ref{app:apqc_fragmentation_top}), and the lossy match leaves that sample thin in AI content, which is why
+we treat the two samples as complements and report them side by side rather than relying on either alone.
 Working with O*NET keeps our measures comparable to the rest of the literature that uses these now-standard
 objects, at the cost of not observing workflow order directly; this appendix is our attempt to bound that
 cost.

@@ -1,4 +1,4 @@
-\section{Construction Details of the Main Sample}
+\section{Construction Details of the O*NET Sample}
 \label{app:data_prep}
 
 This appendix describes how the dataset used in our analyses is constructed from the four sources listed in Section~\ref{sec:empirics}:
@@ -13,12 +13,12 @@ In what follows, we use the terms step, task, and O*NET task interchangeably, as
 We use the May 2023 release of O*NET. 
 This version contains roughly 18{,}000 tasks assigned to more than 850 U.S. occupations.
 For AI exposure measures, we use human-generated labels from \cite{eloundou2023gpts}.
-Unless explicitly mentioned otherwise, in all analyses we treat tasks with a human-assigned E1 or E2 label as exposed to AI and those with an E0 label as unexposed to AI.\footnote{
-\cite{eloundou2023gpts} define E1 tasks as those that an AI can perform in at least half the time required by a human while preserving human-level output quality.
-E2 tasks meet the same time-saving and quality thresholds but require additional software or tools to fully leverage AI capabilities.
+Throughout the paper, our measure of AI exposure combines their E1 and E2 labels.
+We treat tasks with a human-assigned E1 or E2 label as exposed to AI and all other tasks as unexposed, which is the same label set from which the empirical fragmentation index of Section~\ref{sec:fragmentation_prediction} is constructed.\footnote{
+\cite{eloundou2023gpts} label a task E1 if access to an LLM would reduce the time a human needs to complete it by at least half while preserving output quality.
+E2 tasks reach the same time saving and quality only with additional software or tools built on top of the LLM.
 Any task that is neither E1 nor E2 is labeled E0.
 }
-This gives a conservative measure of exposure to AI for all O*NET tasks.
 
 To obtain AI execution labels, we draw on Anthropic's Economic Index dataset \citep{handa2025economictasksperformedai}, which classifies millions of Claude conversations into six categories: \textit{``Validation'', ``Task Iteration'', ``Learning'', ``Directive'', ``Feedback Loop''}, and \textit{``Filtered.''}
 Conversations in the first three categories (Validation, Task Iteration, Learning) are treated by Anthropic as AI-augmenting activities, whereas those in Directive and Feedback Loop are recognized as AI-automating activities.
